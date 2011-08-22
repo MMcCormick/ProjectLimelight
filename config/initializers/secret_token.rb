@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-ProjectLimelight::Application.config.secret_token = 'fd8cc92e3e2f5128e76af9aa050691aeea7a490313573c5335cfbeed550a4f7436c8a2120e66caf86045997d18d8117dfa3294266b4fdffb0fb7708b007e643d'
+ProjectLimelight::Application.config.secret_token = 'd65b331b87fcc8978b2245e0bf7d458dbf6eec9aeb25a125993d2554c06cd26a6affc30923fa81b0a73a34ab1ddf7c138b3e27d421b4cc177bec2d21ec1e0f41'

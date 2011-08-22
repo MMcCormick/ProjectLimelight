@@ -62,3 +62,6 @@ tmp/*
 
 # vim artifacts
 **.swp
+
+# RubyMine project files
+/.idea

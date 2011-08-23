@@ -1,4 +1,6 @@
 ProjectLimelight::Application.routes.draw do
+  resources :news
+
   #get \"users\/show\"
 
   root :to => "home#index"

@@ -1,4 +1,6 @@
 ProjectLimelight::Application.routes.draw do
+  get "pages/home"
+
   resources :news
 
   #get \"users\/show\"

@@ -1,0 +1,2 @@
+module CoreObjectsHelper
+end

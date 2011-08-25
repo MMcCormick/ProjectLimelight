@@ -19,31 +19,37 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe NewsController do
+  render_views
 
-  # This should return the minimal set of attributes required to create a valid
-  # News. As you add validations to News, be sure to
-  # update the return value of this method accordingly.
-  def valid_attributes
-    {}
+  before(:each) do
+    @user = Factory(:user)
+    @attr = {
+      :title => 'Test Title',
+      :content => 'Test content for news.'
+    }
   end
 
   describe "GET index" do
     it "assigns all news as @news" do
-      news = News.create! valid_attributes
+      news = News.all
       get :index
-      assigns(:news).should eq([news])
+      assigns(:news).should eq(news)
     end
   end
 
   describe "GET show" do
     it "assigns the requested news as @news" do
-      news = News.create! valid_attributes
+      news = @user.news.create!(@attr)
       get :show, :id => news.id.to_s
       assigns(:news).should eq(news)
     end
   end
 
   describe "GET new" do
+    before(:each) do
+      sign_in @user
+    end
+
     it "assigns a new news as @news" do
       get :new
       assigns(:news).should be_a_new(News)
@@ -51,29 +57,37 @@ describe NewsController do
   end
 
   describe "GET edit" do
+    before(:each) do
+      sign_in @user
+    end
+
     it "assigns the requested news as @news" do
-      news = News.create! valid_attributes
+      news = @user.news.create!(@attr)
       get :edit, :id => news.id.to_s
       assigns(:news).should eq(news)
     end
   end
 
   describe "POST create" do
+    before(:each) do
+      sign_in @user
+    end
+
     describe "with valid params" do
       it "creates a new News" do
-        expect {
-          post :create, :news => valid_attributes
-        }.to change(News, :count).by(1)
+        lambda do
+          post :create, :news => @attr
+        end.should change(News, :count).by(1)
       end
 
       it "assigns a newly created news as @news" do
-        post :create, :news => valid_attributes
+        post :create, :news => @attr
         assigns(:news).should be_a(News)
         assigns(:news).should be_persisted
       end
 
       it "redirects to the created news" do
-        post :create, :news => valid_attributes
+        post :create, :news => @attr
         response.should redirect_to(News.last)
       end
     end
@@ -96,9 +110,13 @@ describe NewsController do
   end
 
   describe "PUT update" do
+    before(:each) do
+      sign_in @user
+    end
+
     describe "with valid params" do
       it "updates the requested news" do
-        news = News.create! valid_attributes
+        news = @user.news.create!(@attr)
         # Assuming there are no other news in the database, this
         # specifies that the News created on the previous line
         # receives the :update_attributes message with whatever params are
@@ -108,21 +126,21 @@ describe NewsController do
       end
 
       it "assigns the requested news as @news" do
-        news = News.create! valid_attributes
-        put :update, :id => news.id, :news => valid_attributes
+        news = @user.news.create!(@attr)
+        put :update, :id => news.id, :news => @attr
         assigns(:news).should eq(news)
       end
 
       it "redirects to the news" do
-        news = News.create! valid_attributes
-        put :update, :id => news.id, :news => valid_attributes
+        news = @user.news.create!(@attr)
+        put :update, :id => news.id, :news => @attr
         response.should redirect_to(news)
       end
     end
 
     describe "with invalid params" do
       it "assigns the news as @news" do
-        news = News.create! valid_attributes
+        news = @user.news.create!(@attr)
         # Trigger the behavior that occurs when invalid params are submitted
         News.any_instance.stub(:save).and_return(false)
         put :update, :id => news.id.to_s, :news => {}
@@ -130,7 +148,7 @@ describe NewsController do
       end
 
       it "re-renders the 'edit' template" do
-        news = News.create! valid_attributes
+        news = @user.news.create!(@attr)
         # Trigger the behavior that occurs when invalid params are submitted
         News.any_instance.stub(:save).and_return(false)
         put :update, :id => news.id.to_s, :news => {}
@@ -140,15 +158,19 @@ describe NewsController do
   end
 
   describe "DELETE destroy" do
+    before(:each) do
+      sign_in @user
+    end
+
     it "destroys the requested news" do
-      news = News.create! valid_attributes
+      news = @user.news.create!(@attr)
       expect {
         delete :destroy, :id => news.id.to_s
       }.to change(News, :count).by(-1)
     end
 
     it "redirects to the news list" do
-      news = News.create! valid_attributes
+      news = @user.news.create!(@attr)
       delete :destroy, :id => news.id.to_s
       response.should redirect_to(news_index_url)
     end

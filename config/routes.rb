@@ -1,15 +1,13 @@
 ProjectLimelight::Application.routes.draw do
-  get "pages/home"
+
+  resources :core_objects
 
   resources :news
-
-  #get \"users\/show\"
-
-  root :to => "home#index"
 
   devise_for :users
   resources :users, :only => :show
 
+  root :to => "pages#home"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

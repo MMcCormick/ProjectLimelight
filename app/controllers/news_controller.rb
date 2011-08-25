@@ -1,4 +1,6 @@
 class NewsController < ApplicationController
+  before_filter :authenticate_user!, :except => [:index, :show]
+
   # GET /news
   # GET /news.json
   def index
@@ -40,7 +42,7 @@ class NewsController < ApplicationController
   # POST /news
   # POST /news.json
   def create
-    @news = News.new(params[:news])
+    @news = current_user.news.build(params[:news])
 
     respond_to do |format|
       if @news.save
@@ -58,6 +60,10 @@ class NewsController < ApplicationController
   def update
     @news = News.find(params[:id])
 
+    if !is_current_user_object(@news)
+      redirect_to :back, notice: 'You may only edit your own stories!.'
+    end
+
     respond_to do |format|
       if @news.update_attributes(params[:news])
         format.html { redirect_to @news, notice: 'News was successfully updated.' }
@@ -73,6 +79,11 @@ class NewsController < ApplicationController
   # DELETE /news/1.json
   def destroy
     @news = News.find(params[:id])
+
+    if !is_current_user_object(@news)
+      redirect_to :back, notice: 'You may only delete your own stories!.'
+    end
+
     @news.destroy
 
     respond_to do |format|
@@ -80,4 +91,5 @@ class NewsController < ApplicationController
       format.json { head :ok }
     end
   end
+
 end

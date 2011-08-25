@@ -48,7 +48,19 @@ describe User do
     user_with_duplicate_email = User.new(@attr)
     user_with_duplicate_email.should_not be_valid
   end
-  
+
+  describe "associations" do
+
+    before(:each) do
+      @user = User.new(@attr)
+    end
+
+    it "should have a news attribute" do
+          @user.should respond_to(:news)
+    end
+
+  end
+
   describe "passwords" do
 
     before(:each) do

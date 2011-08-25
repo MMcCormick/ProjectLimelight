@@ -7,10 +7,11 @@ class User
 
   field :name
 
+  has_many :core_objects
   has_many :news
 
-  validates_presence_of :name
-  validates_uniqueness_of :name, :email, :case_sensitive => false
+  validates :name, :presence => true
+  validates :name, :email, :uniqueness => { :case_sensitive => false }
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me
 end
 

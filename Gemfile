@@ -2,6 +2,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.1.0.rc6'
 group :assets do
   gem 'sass-rails', "  ~> 3.1.0.rc"
+  gem 'compass', :git => 'https://github.com/chriseppstein/compass.git', :branch => 'rails31'
   gem 'coffee-rails', "~> 3.1.0.rc"
   gem 'uglifier'
 end
@@ -28,4 +29,6 @@ group :test do
   gem "autotest-growl"
   gem "autotest-fsevent"
   gem "spork"
+  gem "guard"
+  gem "guard-spork"
 end

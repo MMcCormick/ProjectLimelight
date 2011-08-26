@@ -1,11 +1,108 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <%= csrf_meta_tag %>
-  </head>
-  <body>
-    <%= yield %>
-    <%= debug(params) if Rails.env.development? %>
-  </body>
+    <head>
+      <title><%= title %></title>
+      <!--<link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>-->
+      <%= csrf_meta_tag %>
+      <%= stylesheet_link_tag "application" %>
+    </head>
+    <body>
+        <div id="application">
+            <header id="header">
+                <a class="p logo" href="{{ path('homepage') }}">
+                    <img src="{{ asset('bundles/limelight/images/top-logo.png') }}" alt="Tech Limelight"/>
+                </a>
+
+                <a id="contribute" class="ac" href="{{ path('object_contribute') }}">
+                    <div class="plus-green-icon"></div>
+                    Contribute
+                </a>
+
+                <% if signed_in? %>
+                    <%= link_to "Logout", destroy_user_session_path, :id => "logout" %>
+                <% else %>
+                    <%= link_to "Login", new_user_session_path, :id => "login" %>
+                    <%= link_to "Sign Up", new_user_registration_path, :id => "register" %>
+                <% end %>
+
+                <div id="search">
+                    <input type="text" value="Search" class="iclear w"/>
+                </div>
+            </header>
+            <div id="content">
+                <%= render "shared/sidebar_left" %>
+
+                <div id="sidebar-right" class="scroll">
+                    <div class="wrap">
+                        <% yield :sidebar_right %>
+                    </div>
+                </div>
+
+                <div id="page_header">
+                    <div class="wrap">
+                        <section class="round">
+                            <% flash.each do |key, value| %>
+                              <div class="flash <%= key %>"><%= value %></div>
+                            <% end %>
+                        </section>
+                        <% yield :page_header %>
+                    </div>
+                </div>
+
+                <div id="page">
+                    <div id="page-sb1" class="">
+                        <div class="wrap">
+                          <% yield :page_sidebar1 %>
+                        </div>
+                    </div>
+                    <div id="page-sb2" class="">
+                        <div class="wrap">
+                            <% yield :page_sidebar2 %>
+                        </div>
+                    </div>
+                    <div id="page-sb3" class="">
+                        <div class="wrap">
+                            <% yield :page_sidebar3 %>
+                        </div>
+                    </div>
+                    <div id="page_content">
+                        <div class="wrap">
+                          <%= yield %>
+                          <%= debug(params) if Rails.env.development? %>
+                        </div>
+                    </div>
+                    <div id="page_cover"></div>
+                </div>
+            </div>
+            <footer id="footer">
+                <% yield :footer %>
+            </footer>
+
+            <div id="ajax-loading">Loading...</div>
+            <div id="ajax-notice"></div>
+            <div id="ajax-error"></div>
+        </div>
+
+        <!-- HIDDEN TOOLS -->
+        <div id="mouse-score"></div>
+        <div style="display: none">
+            <div id="static-data" data-d='{"oSearchUrl":"", "fetchEmbedUrl":"embedly_oEmbed"}'></div>
+
+            <div id="auth_box">
+              <div class="floating-or">OR</div>
+              <div class="items">
+                <div class="form-toggle auth-login on" data-target="#auth-login">Login</div>
+                <div class="form-toggle auth-register" data-target="#auth-register">Register</div>
+                <div id="auth-login">
+                    {% render "LimelightUserBundle:Security:login" with { 'chromeless': true } %}
+                </div>
+                <div id="auth-register" class="hide">
+                    {% render "LimelightUserBundle:Registration:register" with { 'chromeless': true } %}
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <%= javascript_include_tag "application" %>
+    </body>
 </html>

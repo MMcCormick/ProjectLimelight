@@ -1,0 +1,57 @@
+/*
+    Document   : _topic
+    Created on : Mar 30, 2011, 4:04:51 PM
+    Author     : Marc MacLeod
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+// Topic tags.
+.tag.topic {
+    @include border-radius(2px);
+    border: 1px solid #8CC2DD;
+    background-color: #E7F2F8;
+    font-size: 11px;
+    position: relative;
+    color: #3992C1;
+    cursor: pointer;
+    padding: 2px 8px;
+    z-index: 100;
+
+    .drag-handleC {
+        position: absolute;
+        top: 50%;
+        margin-top: -7px;
+        right: 2px;
+        cursor: move;
+        display: none;
+    }
+    &:hover {
+        padding-right: 21px;
+        /*margin-left: -12px;*/
+        .drag-handleC {
+            display: block;
+        }
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+#topic-panel {
+    h1 {
+        padding:  8px 0 0 10px;
+    }
+    
+    .topic-types {
+        margin: 2px 0 5px 8px;
+
+        li {
+            font-size: 14px;
+            color: #999;
+        }
+        .none {
+            font-style: italic;
+        }
+    }
+}

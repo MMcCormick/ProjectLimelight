@@ -1,0 +1,621 @@
+/*
+    Document   : _object
+    Created on : Apr 14, 2011, 4:59:22 PM
+    Author     : Marc
+    Description:
+        Handles anything that deals with manipulating objects in general.
+*/
+
+#contributeC {
+    padding: 5px 10px 10px;
+    width: 647px;
+    position: relative;
+    
+    .nav {
+        @include clearfix();
+        margin: 0 0 5px 0;
+
+        div {
+            font-size: 14px;
+            float: left;
+            cursor: pointer;
+            padding: 2px 10px 3px;
+            margin:  0 10px 0 0;
+            font-weight: bold;
+        }
+        .on {
+            @include opacity (1);
+        }
+    }
+    
+    form {
+        @include clearfix();
+        
+        .formContent {
+            float: left;
+            width: 275px;
+            height: 250px;
+        }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+        
+        #talk_form_body,
+        #picture_form_body,
+        #picture_form_file,
+        #picture_form_title,
+        #video_form_body,
+        #video_form_url,
+        #video_form_title {
+            width: 260px;
+            margin-bottom: 5px;
+        }
+        
+        #talk_form_body,
+        #picture_form_body,
+        #video_form_body {
+            height: 88px;
+        }
+
+        .submit {
+            @include green-button(3px, 12px);
+            float: right;
+            margin-top: 5px;
+        }
+
+        .embed {
+            position: absolute;
+            left: 300px;
+            top: 10px;
+            @include border-radius(3px);
+            float: left;
+            text-align: center;
+            border: 3px dashed #DDD;
+            width: 340px;
+            height: 260px;
+            padding: 5px;
+            
+
+            .media {
+                margin: auto;
+                text-align: center;
+
+                .none {
+                    font-weight: bold;
+                    font-size: 22px;
+                    color: #AAA;
+                    margin-top: 10%;
+                    .sidenote {
+                        color: #AAA;
+                        font-size: 15px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.objectContent {
+    padding: 0px 20px 20px;
+}
+
+.followB,
+.unfollowB {
+    @include green-button(4px, 13px);
+    margin: 5px 10px;
+    padding: 2px 10px 4px 27px;
+    display: block;
+
+    .icon {
+        position: absolute;
+        top: 6px; left: 8px;
+    }
+}
+
+.object-feed {
+    @include clearfix();
+    padding: 5px 0 35px 0;
+    li {
+        padding: 0px
+    }
+}
+
+.score-C { }
+.score-C .on { font-weight: bold; color: green; }
+
+// Object Teasers
+$teaser-padding: 10px;
+.teaser {
+    position: relative;
+
+    .titleC {
+        font-size: 20px;
+        overflow: hidden;
+        max-height: 22px;
+    }
+
+    .tType {
+        font-size: 12px;
+        position: relative;
+        top: -2px;
+    }
+
+    img {
+        @include border-radius(3px);
+        clear: left;
+        display: block;
+        float: left;
+    }
+
+    .createdC {
+        color: #999;
+        font-size: 9px;
+
+        .tag {
+            position: relative;
+            top: -2px;
+            margin-left: 5px;
+        }
+    }
+
+    p {
+        font-size: 14px;
+        a {
+            text-decoration: none;
+        }
+    }
+    
+    .tag.user,
+    .time { float: left; }
+
+    .scoreBox {
+        @include opacity(.5);
+    }
+
+    .connectionsC {
+        @include opacity(.5);
+        font-size: 10px;
+        font-weight: bold;
+        border-bottom: 3px solid #CCC;
+        width: 100%;
+        .wrapper {
+            padding: 7px $teaser-padding 0 $teaser-padding;
+            position: relative;
+        }
+
+        .tag {
+            float: left;
+            margin: 0 5px 8px 0;
+        }
+    }
+
+    .oType {
+        float: left;
+        font-size: 11px;
+        cursor: default;
+        font-weight: bold;
+        position: relative;
+        top: 2px;
+    }
+    
+    .commentC {
+        display: block;
+        float: left;
+        font-size: 10px;
+        margin: 3px 15px 2px 0;
+        .comment-icon {
+            float: left;
+            margin: 1px 5px 0 0;
+        }
+    }
+    
+    .related-topics {
+        @include border-radius(3px);
+        height: 16px;
+        border: 1px solid transparent;
+        position: absolute;
+        top: 3px;
+        overflow: hidden;
+        padding: 3px;
+        margin: 0 0 0 96px;
+        z-index: 75;
+        
+        &.hover {
+            background: #FFF;
+            overflow: none;
+            border-color: #CCC;
+            height: auto;
+            z-index: 125;
+        }
+    }
+
+    &.hover {
+        .connectionsC,
+        .scoreBox {
+            @include opacity(1);
+        }
+    }
+}
+
+// Grid Teaser
+.teaser.grid {
+    width: 200px;
+    height: 250px;
+    float: left;
+    border-right: 1px solid #EFEFEF;
+    padding-top: $teaser-padding / 2;
+    
+    .titleC {
+        padding: 0 $teaser-padding 0 $teaser-padding;
+        margin-bottom: -2px;
+    }
+    .oType {
+        padding: 0 10px 0 0;
+    }
+    .createdC {
+        @include clearfix();
+    }
+    .scoreBox {
+        display: none;
+    }
+    .bodyC {
+        float: left;
+        padding: 0 $teaser-padding;
+        a {
+            text-decoration: none;
+        }
+    }
+    .connectionsC {
+        position: absolute;
+        bottom: 0;
+    }
+}
+
+// List Teaser
+$scoreBox-width: 140px;
+.teaser.list {
+    @include clearfix();
+    padding: 5px 0 30px 0;
+    .scoreBox {
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        margin-top: -33px;
+    }
+    .content {
+        margin: 0 $scoreBox-width + $teaser-padding * 2 + 2 0 $teaser-padding;
+    }
+    img,
+    .videoC {
+        margin:  0 $teaser-padding 0 0;
+    }
+    .createdC {
+        @include clearfix();
+    }
+    .bodyC {
+        font-size: 14px;
+        padding-top: 2px;
+        float: left;
+    }
+    .oType { width: 55px; }
+    .connectionsC {
+        @include clearfix();
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+    }
+}
+
+// Score Box formatting
+.scoreBox {
+    @include border-radius(5px);
+    border: 1px solid transparent;
+    background-color: #F2F8E4;
+    width: $scoreBox-width;
+    clear: left;
+    .controlsC {
+        @include clearfix();
+        padding: 5px 0px 5px 0px;
+
+        .link-icon, .fav, .repost-icon {
+            float: left;
+            margin-left: 10px;
+        }
+        .link-icon {
+            margin-top: 3px;
+        }
+        .fav {
+            display: block;
+            margin-left: 38px;
+        }
+    }
+    &:hover {
+        border-color: #CAE09D;
+    }
+    
+    .scoreC.large {
+        text-align: center;
+        color: #686868;
+        font-weight: bold;
+        font-size: 28px;
+        position: relative;
+
+        .v {
+            position: absolute;
+            top: 4px;
+        }
+        .thumbs-up-icon {
+            left: 5px;
+        }
+        .thumbs-down-icon {
+            right: 5px;
+        }
+    }
+
+    .scoreC.small {
+        color: #686868;
+        font-weight: bold;
+        font-size: 22px;
+
+        .v {
+            position: absolute;
+            top: 6px;
+        }
+        .thumbs-up-small-icon {
+            left: 1px;
+            top: 35px;
+        }
+        .thumbs-down-small-icon {
+            right: 1px;
+            top: 35px;
+        }
+    }
+}
+
+// Objects that have the mouse score menu available
+.oS.scoring {
+    background-color: #F3F3F3;
+}
+
+#mouse-score {
+    @include border-radius(3px);
+    @include opacity(.85);
+    position: absolute;
+    z-index: 125;
+    font-weight: bold;
+    font-size: 22px;
+    background: #F2F8E4;
+    border: 1px solid #CAE09D;
+    color: #686868;
+
+    .s {
+        padding: 17px 10px 17px 30px;
+    }
+    .thumbs-up-small-icon {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+    }
+    .thumbs-down-small-icon {
+        position: absolute;
+        left: 5px;
+        bottom: 5px;
+    }
+
+}
+
+// the score qtip for grid view
+.scoreQ {
+    .ui-tooltip-content { padding: 7px; }
+    .scoreC {
+        @include clearfix();
+        div {
+            text-align: center;
+            display: block;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 4px 0px 13px 0px;
+        }
+        .thumbs-up-icon {
+            float: left;
+        }
+        .thumbs-down-icon { float: right; }
+    }
+    .controlsC {
+        margin: 10px 0px;
+        .link-icon, .fav, .repost-icon {
+            float: left;
+            margin-left: 10px;
+        }
+        .link-icon {
+            margin-top: 3px;
+        }
+        .fav {
+            display: block;
+            margin-left: 1px;
+        }
+    }
+}
+
+// Right Object Sidebar
+.sbrC { 
+    .scoreBox {
+        margin: 20px 0px 20px 35px;
+    }
+    .connectionsC {
+        @include clearfix();
+        text-align: center;
+        padding: 20px 5px 20px;
+        border-top: 1px solid #CAE09D;
+        .tag {
+            float: left;
+            margin: 2px;
+            font-size: 11px;
+        }
+    }
+}
+
+#feed-filters {
+    height: 30px;
+    padding: 4px 0 4px 10px;
+
+    .node-types,
+    .feed-sort,
+    .feed-type {
+        position: relative;
+        float: left;
+
+        h5 {
+            padding: 8px 0 0 0;
+            color: #B0AEAE;
+            cursor: default;
+        }
+
+        > h5,
+        > div {
+            float: left;
+        }
+        ul {
+            @include border-radius(4px);
+            margin: 3px 0 0 10px;
+            float: left;
+        }
+        a {
+            color: #CFCFCF;
+            font-weight: bold;
+            text-decoration: none;
+            display: block;
+            padding: 3px 8px;
+            font-size: 12px;
+        }
+        a.on {
+            color: #444;
+        }
+    }
+    
+    .node-types {
+        li {
+            margin: 0 3px;
+            float: left;
+        }
+    }
+
+    .feed-type {
+        float: right;
+        margin-right: 8px;
+
+        ul {
+        }
+        li {
+            @include border-radius(2px);
+            border: 1px solid #DDD;
+            margin: 0 3px;
+            float: left;
+        }
+        a {
+            padding: 4px 5px;
+        }
+    }
+
+    .feed-sort {
+        width: 200px;
+
+        .arrow-small {
+            position: absolute; top: 12px; right: 35px;
+            z-index: 10;
+        }
+
+        ul {
+            @include border-radius(2px);
+            background-color: #EFEFEF;
+            border: 1px solid #DDD;
+            position: absolute; top: 0px; left: 51px;
+            z-index: 5;
+
+            a {
+                width: 95px;
+            }
+            a.on:hover {
+                cursor: default;
+            }
+        }
+    }
+}
+// Styling for node-type buttons, (feed filters, contribute, etc)
+#feed-filters,
+#contributeC {
+    .node-types {
+        a, >div {
+            @include border-radius(2px);
+            background-color: #EFEFEF;
+            border: 1px solid #DDD;
+            color: #999;
+        }
+        .on.talk {
+            border-color: adjust-lightness($talk-color, 15);
+            background-color: adjust-lightness($talk-color, 38);
+            color: adjust-lightness($talk-color, -7);
+        }
+        .on.news {
+            border-color: adjust-lightness($news-color, 15);
+            background-color: adjust-lightness($news-color, 38);
+            color: adjust-lightness($news-color, -7);
+        }
+        .on.picture {
+            border-color: adjust-lightness($picture-color, 15);
+            background-color: adjust-lightness($picture-color, 38);
+            color: adjust-lightness($picture-color, -7);
+        }
+        .on.video {
+            border-color: adjust-lightness($video-color, 15);
+            background-color: adjust-lightness($video-color, 38);
+            color: adjust-lightness($video-color, -7);
+        }
+    }
+}
+
+.edit-panel {
+    position: relative;
+
+    h4 {
+    }
+
+    .cancel {
+        @include background-image(linear-gradient(#FD4E21, #E0230B));
+        background-color: #E0230B;
+        @include border-radius(3px);
+        position: absolute; top: 7px; right: 7px;
+        padding: 3px 12px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #FFF;
+        cursor: pointer;
+    }
+
+    .section {
+        @include clearfix();
+        border-bottom:  2px solid #F3F3F3;
+        padding:  5px 0;
+    }
+
+    input {
+        float: left;
+        margin-bottom: 3px;
+    }
+
+    .submit {
+        @include green-button(3px, 13px);
+        padding:  3px 12px;
+        display: block;
+        float: left;
+    }
+
+    .update {
+        margin:  5px 0 0 0;
+    }
+
+    .add { margin: 2px 0 0 5px;}
+}

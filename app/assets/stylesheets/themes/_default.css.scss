@@ -1,0 +1,77 @@
+/*
+    Document   : _default
+    Created on : Mar 30, 2011, 4:06:21 PM
+    Author     : Marc MacLeod
+    Description:
+        Default theme variables.
+*/
+
+$link-color: #156CD8;
+
+$sidebar_background-color: #E4E4E4;
+$sidebar_border_width: 1px;
+$sidebar_width: 210px + $sidebar_border_width;
+$sidebar-minimized-width: 40px + $sidebar_border_width;
+$sidebar-margin: 6px;
+
+$sidebar_right_border_width: 1px;
+$sidebar_right_width: 210px + $sidebar_right_border_width;
+
+$page_header_background-color: #FFF;
+$page_header_color: #000;
+
+$page_content_background-color: #FFF;
+$page_content_color: #000;
+
+$footer_height: 34px;
+
+$picture-color: #7BA821;
+$news-color: #C52828;
+$video-color: #51A2CC;
+$talk-color: #D88E00;
+
+@mixin link {
+    color: $link-color;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+@mixin green-button($radius, $font-size) {
+    @include border-radius($radius);
+    @include background-image(linear-gradient(#A3D73A, #99CA33 25%, #8DBC2C 75%, #76A11D));
+    background-color: #99CA33;
+    color: #FFF;
+    font-weight: bold;
+    font-size: $font-size;
+    position: relative;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+@mixin blue-button($radius, $font-size) {
+    @include border-radius($radius);
+    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
+    background-color: #2061B6;
+    color: #FFF;
+    font-weight: bold;
+    font-size: $font-size;
+    position: relative;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    
+    a {
+        color: #FFF;
+        text-decoration: none;
+    }
+    &:hover {
+        text-decoration: none;
+    }
+}

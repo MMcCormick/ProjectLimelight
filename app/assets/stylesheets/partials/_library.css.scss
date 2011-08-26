@@ -1,0 +1,48 @@
+/*
+    Document   : _library
+    Created on : Apr 14, 2011, 2:59:21 PM
+    Author     : Marc
+    Description:
+        Library overrides.
+*/
+
+/*
+ * qTip
+ */
+
+.jgrowl {
+    @include opacity(.7);
+    .ui-tooltip-title { font-size: 18px; }
+    .ui-tooltip-content { font-size: 16px; padding: 10px; line-height: 1.4em; }
+
+    &:hover {
+        @include opacity(1);
+    }
+}
+
+.scoreQ .ui-tooltip-content,
+.scoreQ .ui-tooltip-tip {
+    background-color: #F2F8E4;
+    border-color: #CAE09D;
+}
+
+/*
+ * jScrollPane
+ */
+
+.jspVerticalBar {
+    background: transparent;
+    width: 4px;
+}
+.jspHorizontalBar {
+    background: transparent;
+    height: 4px;
+}
+.jspTrack {
+    background: transparent;
+}
+
+.jspDrag {
+    @include opacity(.50);
+    background: #76A11D;
+}

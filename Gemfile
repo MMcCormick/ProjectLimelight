@@ -1,18 +1,20 @@
 source 'http://rubygems.org'
 gem 'rails', '3.1.0.rc6'
-group :assets do
-  gem 'sass-rails', "  ~> 3.1.0.rc"
-  gem 'compass', :git => 'https://github.com/chriseppstein/compass.git', :branch => 'rails31'
-  gem 'coffee-rails', "~> 3.1.0.rc"
-  gem 'uglifier'
-end
 gem 'execjs'
 gem 'therubyracer'
 gem 'jquery-rails'
-gem "bson_ext", ">= 1.3.1"
-gem "mongoid", ">= 2.1.5"
-gem "devise", ">= 1.4.2"
+gem "bson_ext"
+gem "mongoid"
+gem "devise"
 gem "frontend-helpers"
+gem "cells"
+gem "rspec-cells"
+group :assets do
+  gem 'sass-rails', "  ~> 3.1.0.rc"
+  gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'
+  gem 'coffee-rails', "~> 3.1.0.rc"
+  gem 'uglifier'
+end
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 group :development do
   gem "rails-footnotes", ">= 3.7"

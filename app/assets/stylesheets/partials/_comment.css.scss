@@ -1,0 +1,203 @@
+/*
+    Document   : _comment
+    Created on : Jun 8, 2011, 2:16:23 PM
+    Author     : Matt
+    Description:
+        Handles css for comments
+*/
+
+$big-image-width: 50px;
+$small-image-width: 30px;
+$scoreC-width: 50px;
+$indent: 20px;
+
+.comment_thread {
+    margin: 0 20px;
+    padding: 10px 0 0 0;
+    border-top: 1px solid #CAE09D;
+    .comment_form {
+        @include clearfix();
+        display: block;
+        width: 400px;
+        textarea {
+            height: 50px;
+            width: 386px;
+        }
+        .submit,
+        .comment_reply_cancel {
+            @include green-button(3px, 12px);
+            margin: 5px 0 0 15px;
+            float: right;
+        }
+    }
+    .comment_reply {
+        margin: 5px 0 0 3px;
+    }
+    .commentCount {
+        margin: 10px 0 5px 0;
+    }
+    .comments {
+        max-width: 800px;
+    }
+    .comment {
+        position: relative;
+        border-left: 2px solid #EEE;
+        margin-top: -2px;
+        min-height: 60px;
+        border-top: 2px solid #EEE;
+        border-bottom: 2px solid #EEE;
+        padding: 2px $scoreC-width+20 5px $small-image-width+13;
+
+        .profileImage {
+            position: absolute;
+            top: 9px;
+            left: 7px;
+        }
+        .titleC {
+            @include clearfix();
+            font-size: 14px;
+        }
+        .user {
+            float: left;
+        }
+        .time {
+            float: left;
+            font-size: 10px;
+            color: #777;
+            margin: 5px 0 0 8px;
+        }
+        .reply_show {
+            @include link();
+            float: left;
+            font-size: 10px;
+            margin: 5px 0 0 8px;
+        }
+
+        .createdC {
+            float: left;
+            font-size: 12px;
+            padding: 1px 0 0 15px;
+        }
+        p {
+            font-size: 14px;
+        }
+        .scoreBox {
+            width: $scoreC-width;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            text-align: center;
+        }
+        &.d-0 {
+            border-left: none;
+            padding: 2px $scoreC-width+20 5px $big-image-width+14;
+            margin-left: 0px;
+            border-bottom-width: 3px;
+            border-top-width: 3px;
+        }
+        &.d-1 { margin-left: $indent; }
+        &.d-2 { margin-left: $indent*2; }
+        &.d-3 { margin-left: $indent*3; }
+        &.d-4 { margin-left: $indent*4; }
+        &.d-5 { margin-left: $indent*5; }
+        &.d-6 { margin-left: $indent*6; }
+
+        &.hover-0 {
+            border-left-color: $picture-color;
+        }
+        &.hover-1 {
+            border-left-color: $news-color;
+        }
+        &.hover-2 {
+            border-left-color: $video-color;
+        }
+        &.hover-3 {
+            border-left-color: $talk-color;
+        }
+    }
+}
+
+div.fos_comment_thread_show {
+    padding: 1em 4%;
+}
+div.fos_comment_thread_show h3 {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    color: #a0a0a0;
+}
+div.fos_comment_comment_show {
+    color: #555;
+}
+div.fos_comment_comment_metas {
+    margin: 1.5em 0 0.5em 0;
+    padding: 1em 20px;
+    background: #e6e6e6;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+div.fos_comment_comment_body {
+    line-height: 1.5em;
+}
+div.fos_comment_comment_replies {
+    margin-left: 2em;
+}
+div.fos_comment_comment_reply {
+    text-align: right;
+}
+div.fos_comment_comment_reply.replying {
+    text-align: left;
+    margin-top: 1em;
+    padding: 1em 20px;
+    background: #d6d6d6;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+button.fos_comment_comment_reply_show_form {
+    padding: 2px 5px;
+    font-size: 0.8em;
+}
+div.fos_comment_comment_reply.replying button.fos_comment_comment_reply_show_form {
+    display: none;
+}
+div.fos_comment_thread_comments {
+    margin-bottom: 1.5em;
+}
+div.fos_comment_reply_prototype {
+    display: none;
+}
+div.fos_comment_thread_show > form.fos_comment_comment_form {
+    margin-bottom: 1em;
+}
+form.fos_comment_comment_form.processing {
+    opacity: 0.5;
+}
+form.fos_comment_comment_form label.author_name {
+    margin-top: 3px;
+    float:left;
+}
+form.fos_comment_comment_form label.author_name input {
+    border: 1px solid #c0c0c0;
+    padding: 3px 5px;
+    width: 140px;
+}
+form.fos_comment_comment_form textarea {
+    width: 98%;
+    height: 6em;
+    padding: 1%;
+    border: 1px solid #c0c0c0;
+}
+form.fos_comment_comment_form.error textarea {
+    border-color: red;
+}
+div.fos_comment_submit {
+    text-align: right;
+}
+div.fos_comment_submit input {
+    font-size: 1.2em;
+    padding: 3px 12px;
+    margin-top: 3px;
+}

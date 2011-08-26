@@ -1,0 +1,173 @@
+/*
+    Document   : _sprite
+    Created on : May 6, 2011
+    Author     : Marc MacLeod (marbemac@gmail.com
+    Description:
+        Sprite definitions.
+*/
+
+@import "icon/*.png";
+
+.handle-black-small {
+    @include icon-sprite(handle-black-small);
+    width: 13px;
+    height: 13px;
+}
+.handle-white-small {
+    @include icon-sprite(handle-white-small);
+    width: 13px;
+    height: 13px;
+}
+.arrow-small {
+    @include icon-sprite(arrow-small);
+    width: 14px;
+    height: 9px;
+}
+.fav {
+    @include icon-sprite(favorite-off);
+    height: 15px;
+    width: 15px;
+
+    &.on { @include icon-sprite(favorite-on); }
+}
+.settings-icon {
+    @include icon-sprite(settings-icon);
+    height: 16px;
+    width: 16px;
+}
+.badge-icon {
+    @include icon-sprite(badge-icon);
+    width: 16px;
+    height: 16px;
+}
+.feed-icon {
+    @include icon-sprite(feed-icon);
+    width: 16px;
+    height: 16px;
+}
+.user-contributions-icon {
+    @include icon-sprite(user-contributions-icon);
+    width: 16px;
+    height: 16px;
+}
+.user-favorites-icon {
+    @include icon-sprite(user-favorites-icon);
+    width: 16px;
+    height: 16px;
+}
+.panel-close-left-icon {
+    @include icon-sprite(panel-close-left-icon);
+    width: 11px;
+    height: 11px;
+}
+.panel-open-left-icon {
+    @include icon-sprite(panel-open-left-icon);
+    width: 11px;
+    height: 11px;
+}
+.plus-green-icon {
+    @include icon-sprite(plus-green);
+    width: 12px;
+    height: 12px;
+}
+.minus-green-icon {
+    @include icon-sprite(minus-green);
+    width: 12px;
+    height: 12px;
+}
+.comment-icon {
+    @include icon-sprite(comment-bubble);
+    width: 14px;
+    height: 13px;
+}
+.favorite-icon {
+    @include icon-sprite(favorite);
+    width: 16px;
+    height: 14px;
+}
+.link-icon {
+    @include icon-sprite(link);
+    width: 16px;
+    height: 7px;
+}
+.repost-icon {
+    @include icon-sprite(repost);
+    width: 14px;
+    height: 14px;
+}
+.thumbs-up-icon {
+    @include icon-sprite(thumbs-up-off);
+    width: 27px;
+    height: 27px;
+
+    &:hover {
+        @include icon-sprite(thumbs-up);
+        @include opacity(.60);
+    }
+    &.on {
+        @include icon-sprite(thumbs-up);
+        &:hover {
+            @include opacity(1);
+        }
+    }
+}
+.thumbs-down-icon {
+    @include icon-sprite(thumbs-down-off);
+    width: 27px;
+    height: 27px;
+
+    &:hover {
+        @include icon-sprite(thumbs-down);
+        @include opacity(.60);
+    }
+    &.on {
+        @include icon-sprite(thumbs-down);
+        &:hover {
+            @include opacity(1);
+        }
+    }
+}
+.thumbs-up-small-icon {
+    @include icon-sprite(thumbs-up-off-small);
+    width: 18px;
+    height: 18px;
+
+    &:hover {
+        @include icon-sprite(thumbs-up-small);
+        @include opacity(.60);
+    }
+    &.on {
+        @include icon-sprite(thumbs-up-small);
+        &:hover {
+            @include opacity(1);
+        }
+    }
+}
+.thumbs-down-small-icon {
+    @include icon-sprite(thumbs-down-off-small);
+    width: 18px;
+    height: 18px;
+
+    &:hover {
+        @include icon-sprite(thumbs-down-small);
+        @include opacity(.60);
+    }
+    &.on {
+        @include icon-sprite(thumbs-down-small);
+        &:hover {
+            @include opacity(1);
+        }
+    }
+}
+.feed-grid {
+    @include icon-sprite(grid-off);
+    width: 15px;
+    height: 15px;
+    &.on { @include icon-sprite(grid-on); }
+}
+.feed-list {
+    @include icon-sprite(list-off);
+    width: 15px;
+    height: 15px;
+    &.on { @include icon-sprite(list-on); }
+}

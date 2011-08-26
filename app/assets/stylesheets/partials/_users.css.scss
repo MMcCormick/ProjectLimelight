@@ -1,0 +1,407 @@
+/*
+    Document   : _users
+    Created on : Mar 30, 2011, 4:04:51 PM
+    Author     : Marc MacLeod
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#auth_box {
+    position: relative;
+    .form-toggle {
+        float: left;
+        @include blue-button(4px, 16px);
+        @include opacity(.35);
+        &.on {
+            @include opacity(1);
+        }
+        margin-right: 20px;
+        margin-bottom: 10px;
+        padding: 3px 12px;
+    }
+    .items {
+        float: left;
+        margin: 3px 10px 7px 30px;
+        height: 250px;
+    }
+    .floating-or {
+        position: absolute;
+        background-color: #FFF;
+        top: 100px;
+        left: 348px;
+        padding: 5px;
+    }
+}
+
+#jrlogin {
+    width: 380px;
+    height: 260px;
+    float: left;
+    margin-left: -18px;
+    border-right: 2px solid #DDD;
+}
+
+// The login form
+.login_form,
+.user_new {
+    clear: left;
+    width: 320px;
+
+    label {
+        display: block;
+        float: left;
+        width: 100px;
+        padding: 6px 10px 6px 0;
+        text-align: right;
+        font-size: 13px;
+    }
+    ul {
+        color: red;
+        font-size: 12px;
+    }
+    .field,
+    #fos_user_registration_form_plainPassword > div {
+        @include clearfix();
+        position: relative;
+        margin: 5px 0px;
+    }
+    input {
+        position: absolute;
+        top: 50%;
+        margin-top: -14px;
+        width: 190px;
+    }
+    .forgot-pass {
+        display: block;
+        margin:  10px 0 0 0;
+    }
+    .submit {
+        @include green-button(4px, 14px);
+        display: block;
+        width: auto;
+        margin:  15px 0 0 110px;
+    }
+}
+
+// User profile images
+.profileImage {
+    @include border-radius(3px);
+    background: #FFF;
+    float: left;
+}
+
+// User tags.
+.tag.user {
+    position: relative;
+    z-index: 100;
+    padding: 2px 0;
+
+    .drag-handleC {
+        position: absolute;
+        top: 50%;
+        margin-top: -7px;
+        right: 2px;
+        cursor: move;
+        display: none;
+    }
+    &:hover {
+        padding-right: 21px;
+        /*margin-left: -12px;*/
+        .drag-handleC {
+            display: block;
+        }
+    }
+    a {
+        text-decoration: none;
+    }
+}
+
+// The user panel, either left or right sidebar
+.user-panel {
+    @include clearfix();
+    padding: 5px 5px 0 5px;
+
+    h2 {
+        float: left;
+        margin: 0 0 0 5px;
+        padding: 0;
+    }
+    .score {
+        float: left;
+        font-size: 20px;
+        cursor: default;
+        color: #666;
+        font-weight: bold;
+        margin: 2px 0 0 10px;
+    }
+    .profileImage {
+        float: left;
+        margin: 7px 0 0 0;
+    }
+    > .right {
+        float: left;
+        padding: 10px 0 0 0;
+        width: 122px;
+        margin: 0 0 0 5px;
+    }
+    .stat {
+        color: #666;
+        margin: 0;
+        padding: 0 0 0 50px;
+        position: relative;
+
+        .label {
+            position: absolute;
+            top: 50%;
+            margin-top: -9px;
+            left: 2px;
+            font-size: 9px;
+            cursor: default;
+        }
+        a {
+            @include border-radius(2px);
+            position: relative;
+            padding: 1px 3px;
+            display: block;
+            color: #666;
+            font-size: 9px;
+            border:  1px solid transparent;
+        }
+        span {
+            font-weight: bold;
+            font-size: 11px;
+        }
+    }
+    .followers {
+        border-bottom: 1px solid #F3F3F3;
+        padding-bottom: 5px;
+
+        span {
+            padding: 0 5px 0 0;
+        }
+    }
+    .following {
+        border-top: 1px solid #DADADA;
+        padding-top: 3px;
+
+        .label { margin-top: -8px; }
+        .topics {
+            top: -1px;
+        }
+    }
+    .links {
+        @include clearfix();
+        margin: 7px 0 0 0;
+        clear: both;
+                
+        a {
+            float: left;
+            color: #666;
+            font-size: 12px;
+            position: relative;
+            background: #F9F9F9;
+            border:  1px solid #CCC;
+            padding: 4px 7px 4px 26px;
+            
+            .icon {
+                position: absolute; left: 4px; top: 50%;
+                margin-top: -8px;
+            }
+        }
+        .settings,
+        .badge {
+            width: 50px;
+        }
+        .user-notifications,
+        .user-contributions {
+            width: 80px;
+            left: -1px;
+        }
+        .badge,
+        .user-contributions {
+            top: -1px;
+        }
+        .settings {
+            @include border-top-left-radius(3px);
+        }
+        .user-notifications {
+            @include border-top-right-radius(3px);
+            .icon {
+                font-weight: bold;
+                font-size: 14px;
+                left: 3px;
+                margin-top: -9px;
+                text-align: center;
+                width: 20px;
+            }
+        }
+        .badge {
+            @include border-bottom-left-radius(3px);
+        }
+        .user-contributions {
+            @include border-bottom-right-radius(3px);
+        }
+    }
+}
+
+// For the right sidebar only
+.sbrC {
+    .sidebarB { background-color: #E4E4E4; }
+    .links {
+        margin-bottom: 1px;
+        a {
+            background-color: #E4E4E4;
+            top: 0px !important;
+        }
+        // In addition to radii applied above in .user-panel
+        .badge { @include border-top-left-radius(3px); }
+        .user-contributions { @include border-top-right-radius(3px); }
+    }
+    .followB {
+        margin: 5px 55px;
+    }
+}
+    
+
+// Wide buttons for either sidebar
+.sidebarB {
+    @include border-radius(3px);
+    background-color: #FCF9F9;
+    border: 1px solid #CCC;
+    margin: 3px 7px 3px 5px;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 8px 4px 30px;
+    display: block;
+    position: relative;
+    color: #666;
+
+    .icon {
+        position: absolute; top: 50%; left: 7px;
+        margin-top: -8px;
+    }
+}
+// Located in the user sidebar
+#my-feed,
+#my-favorites {
+    &.dragging {
+        background: blue;
+        color: #FFF;
+    }
+    &.dropping {
+        background: green;
+    }
+}
+
+// Confirmation pages
+#confirm {
+    @include clearfix();
+    @include border-radius(10px);
+    background: #E2E8D4;
+    width: 500px;
+    height: 400px;
+    margin-left: 20px;
+    text-align: center;
+    position: relative;
+    .nav {
+        @include clearfix();
+        @include border-radius(5px);
+        background: #F2F8E4;
+        margin: 10px 0 0 28px;
+        width: 440px;
+        font-size: 28px;
+        .stepLabel {
+            float: left;
+            margin: 8px 0 10px 50px;
+            display: block;
+        }
+        .step1, .step2, .step3 {
+            @include green-button(14px, 28px);
+            @include opacity(.5);
+            width: 40px;
+            margin: 10px 0 10px 50px;
+            float: left;
+            &.on {
+                @include opacity(1);
+            }
+        }
+    }
+    #confirmPages {
+        margin-top: 20px;
+        .confirmPage.two,
+        .confirmPage.three {
+            display: none;
+        }
+        .bottomNav {
+            @include border-radius(5px);
+            position: absolute;
+            width: 440px;
+            left: 28px;
+            bottom: 10px;
+            .last, .next {
+                @include green-button(14px, 28px);
+                margin: 10px 0 10px 0;
+                padding: 0 10px;
+            }
+            .last {
+                float: left;
+            }
+            .next {
+                float:right;
+            }
+        }
+    }
+}
+
+// A list of users, aka the following or followers pages
+$column-width: 30%;
+// So the labels float
+#page_header .row {
+    @include clearfix();
+    @include background-image(linear-gradient(#FFF, #EEE 25%, #DDD 75%, #CCC));
+    margin-top: 5px;
+    border: 1px solid #CCC;
+    border-bottom: none;
+    .label {
+        float: left;
+        width: $column-width;
+        margin: 0 5px;
+        border-right: 1px solid #CCC;
+    }
+}
+.user-list {
+    padding: 0 6px;
+    margin-top: -5px;
+    .teaser {
+        @include clearfix();
+        @include border-radius(3px);
+        &.odd { background: #F2F8E4; }
+        &:hover { background: #E2E8D4; }
+        >a, >div {
+            font-size: 13px;
+            display: block;
+            float: left;
+            width: $column-width;
+            overflow: hidden;
+            margin: 0 5px;
+            padding-top: 2px;
+            padding-bottom: 4px;
+            border-right: 1px solid #CCC;
+        }
+        .followB,
+        .unfollowB {
+            @include opacity(.5);
+            margin: 0;
+            padding-top: 2px;
+            padding-bottom: 4px;
+            background: none;
+            color: grey;
+            float: left;
+            border: none;
+            &:hover {
+                @include opacity(1);
+            }
+            
+        }
+    }
+}

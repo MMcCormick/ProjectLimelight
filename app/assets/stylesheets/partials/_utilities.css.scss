@@ -1,0 +1,75 @@
+/*
+    Document   : _utilities
+    Created on : May 30, 2011, 4:04:51 PM
+    Author     : Marc MacLeod
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+// Dragging handles.
+.handle-small { cursor: move; }
+
+// Arrows
+.arrow-small { cursor: default; }
+
+.hide { display: none; }
+.clear { clear: both; }
+
+#ajax-loading {
+    @include border-radius(2px);
+    display:  none;
+    padding: 3px 10px;
+    font-weight: bold;
+    background: #FFF;
+    color: #1A5199;
+    position: fixed;
+    top: 6px;
+    left: 50%;
+    z-index: 175;
+    margin:  0 0 0 -5px;
+
+    &.floating {
+        top: 12px;
+    }
+}
+
+// Input clearning (on click for instance)
+.iclear {
+
+    // White text
+    &.w {
+        color: #FFF !important;
+
+        &.active {
+            color: #A3B9D7 !important;
+        }
+    }
+    // Black text
+    &.b {
+        color: #000 !important;
+
+        &.active {
+            color: #BBB !important;
+        }
+    }
+}
+
+// Hovering on buttons and enlargable images
+.btn.hover,
+.enlarge:hover,
+.enlarge.hover {
+    @include single-box-shadow(#999, 1px, 1px, 3px);
+    border-color:  #888 !important;
+    text-decoration: none;
+    z-index: 200;
+}
+
+// Hovering on img
+.enlarge {
+}
+.enlarge.hover {
+    @include border-radius(5px);
+    border: 2px solid #999;
+    background: #FFF;
+    padding:  2px;
+}

@@ -1,0 +1,39 @@
+/*
+    Document   : _picture
+    Created on : Mar 30, 2011, 4:04:51 PM
+    Author     : Marc MacLeod
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.picture {
+    &.teaser.hover {
+        .oType { color: $picture-color }
+        .connectionsC
+        {
+            border-color: $picture-color;
+        }
+    }
+    
+    &.teaser.grid {
+        p {
+            overflow: hidden;
+            height: 22px;
+            bottom: 22px;
+        }
+        .bodyC {
+            .imageC {
+                text-align: center;
+            }
+        }
+    }
+    
+    &.objectContent {
+        text-align: center;
+    }
+}
+
+// Lightbox Images
+.lbImg {
+    cursor: pointer;
+}

@@ -1,0 +1,317 @@
+// Default theme variables
+@import "themes/_default";
+
+// Import compass mixins
+@import "compass";
+
+html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    background-color: #FFF;
+    position: relative; z-index: 0;
+    font-family: Verdana, Tahoma, Arial, sans-serif;
+}
+
+a {
+    color: $link-color;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+input, textarea {
+    @include border-radius(3px);
+    padding: 3px 6px;
+    font-size: 14px;
+    border:  1px solid #BBB;
+    font-family: Verdana, Tahoma, Arial, sans-serif;
+}
+
+#header {
+    @include single-box-shadow(#AAA, 1px, 1px, 3px);
+    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
+    background-color: #2061B6;
+    height: 40px; width: 100%;
+    border-bottom: 1px solid #003277;
+    position: relative;
+
+    .logo {
+        padding: 0 35px 0 7px;
+        position: relative;
+        top: 3px;
+
+        img { border: none; }
+    }
+}
+
+#contribute {
+    @include green-button(5px, 16px);
+    padding: 3px 10px 4px 28px;
+    top: -7px;
+
+    .plus-green-icon {
+        position: absolute;
+        top: 8px; left: 8px;
+    }
+}
+
+#search {
+    float: right;
+    border-right: 1px solid #08192E;
+    margin-top: 4px;
+    input {
+        @include border-radius(5px);
+        @include background-image(linear-gradient(#1E5293, #1C5197 25%, #164F9E 75%, #134FA1));
+        background-color: #1A5199;
+        border: none;
+        border-top: 1px solid #163967;
+        border-bottom: 1px solid #4075BC;
+        font-size: 16px;
+        padding: 5px 8px;
+        color: #FFF;
+        display: block;
+        margin: 0px 28px 2px 0;
+    }
+}
+
+#login,
+#logout,
+#register {
+    font-size: 16px;
+    color: #FFF;
+    float: right;
+    border-left: 1px solid #4A8BDD;
+    padding: 6px 20px;
+    margin: 4px 0 0 0;
+}
+
+#register {
+    border-right: 1px solid #08192E;
+}
+
+#content { height: 100%; width: 100%; }
+#page {
+    height: 100%;
+    position: relative;
+    margin-left: $sidebar_width+($sidebar_border_width*2)+$sidebar-margin;
+    padding-top: 45px;
+
+    &.minimized-sidebar {
+        margin-left: $sidebar-minimized-width+($sidebar_border_width*2)+$sidebar-margin;
+    }
+}
+#page_cover { height: 100%; width: 100%; background: #FFF; left: 0; top: 0; position: absolute; display: none; }
+#page_header {
+    position: absolute;
+    margin-left: $sidebar_width+($sidebar_border_width*2)+$sidebar-margin;
+    color: #000;
+    top: 47px;
+    z-index: 150;
+
+    &.minimized-sidebar {
+        margin-left: $sidebar-minimized-width+($sidebar_border_width*2)+$sidebar-margin;
+    }
+
+    .wrap {
+        @include border-radius(4px);
+        margin:  0 5px 5px 5px;
+        border: 1px solid transparent;
+        background: #FFF;
+    }
+
+    .titleC {
+        @include clearfix();
+        margin: 6px 0px 0 10px;
+        h1 {
+            float: left;
+        }
+        .time {
+            float: left;
+            margin: 2px 0px 0px 15px;
+        }
+        .tag {
+            float: left;
+            margin: 0 0 0 10px;
+        }
+    }
+
+    .scrollTop {
+        float: left;
+        margin: 8px 0 0 10px;
+        font-size: 8px;
+        cursor: pointer;
+        color: blue;
+    }
+
+    &.floating {
+        position: fixed;
+        top: 0px;
+        padding-top: $sidebar-margin;
+
+        .wrap {
+            @include single-box-shadow(#DDD, 0px, 2px, 5px);
+            border: 1px solid #CCC;
+        }
+    }
+}
+#page-sb1,
+#page-sb2,
+#page-sb3 {
+    float: left;
+    height: 100%;
+    padding-bottom: $footer_height;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+#page_content {
+    background: $page_content_background-color;
+    color: $page_content_color;
+
+    .wrap {
+        padding-bottom: 2px;
+    }
+    .empty {
+        margin-left: 10px;
+    }
+}
+#sidebar {
+    @include border-radius(4px);
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    float: left;
+    border: $sidebar_border_width solid #CCC;
+    background: $sidebar_background-color;
+    margin: $sidebar-margin 0 0 $sidebar-margin;
+
+    .panel-close-left-icon {
+        position: absolute; top: 10px; right: 10px;
+        cursor: pointer;
+    }
+
+    &.floating {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+    }
+
+    .full {
+        width: $sidebar_width;
+    }
+    .minimized {
+        width: $sidebar-minimized-width;
+
+        .panel-open-left-icon {
+            margin:  5px 0 3px 14px;
+            cursor: pointer;
+        }
+        .profileImage {
+            margin:  5px 0 8px 3px;
+        }
+        .btn {
+            @include border-radius(3px);
+            border:  1px solid transparent;
+            display: block;
+            clear: both;
+            padding: 5px;
+            margin:  0 0 0 6px;
+            float: left;
+        }
+        .notifications {
+            padding:  2px 0;
+            width: 26px;
+            font-weight: bold;
+            color: #666;
+            text-align: center;
+        }
+    }
+    .empty {
+        margin: 8px 20px 0 10px;
+        font-size: 12px;
+    }
+    .sidenote {
+        position: absolute;
+        bottom: 50px;
+        left: 10px;
+        font-size: 12px;
+    }
+}
+#sidebar-right {
+    float: right;
+    height: 100%;
+    position: relative;
+    z-index: 50;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .sbrC {
+        @include border-radius(4px);
+        background-color: #FFF;
+        width: $sidebar_right_width;
+        position: relative;
+        border: $sidebar_border_width solid #CCC;
+        margin: $sidebar-margin $sidebar-margin 0 0;
+
+        .edit {
+            @include link;
+        }
+    }
+
+    .edit-panel {
+        @include border-radius(4px);
+        background-color: #FFF;
+        width: $sidebar_right_width+150;
+        position: relative;
+        border: $sidebar_border_width solid #CCC;
+        margin: $sidebar-margin $sidebar-margin 0 0;
+    }
+
+    .footer {
+        border-top: 2px solid #F3F3F3;
+        margin-top: 10px;
+        width: 100%;
+        padding: 0;
+        margin:  0;
+
+        .content {
+            padding:  5px 10px;
+        }
+    }
+
+    &.floating {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+    }
+}
+
+#footer {
+    @include single-box-shadow(#AAA, 1px, -1px, 3px);
+    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
+    background-color: #2061B6;
+    position: fixed; left: 0px; bottom: 0px; height: $footer_height;  width: 100%;
+    z-index: 100;
+    color: #AAE929;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 2px 5px;
+
+    li {
+        display: block;
+        float: left;
+    }
+}
+
+@import "partials/core_objects";
+@import "partials/users";
+@import "partials/topics";
+@import "partials/talks";
+@import "partials/pictures";
+@import "partials/videos";
+@import "partials/list";
+@import "partials/library";
+@import "partials/utilities";
+@import "partials/comment";

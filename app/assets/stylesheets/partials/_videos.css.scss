@@ -1,0 +1,36 @@
+/*
+    Document   : _video
+    Created on : Mar 30, 2011, 4:04:51 PM
+    Author     : Marc MacLeod
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.video {
+    &.teaser.hover {
+        .oType { color: $video-color }
+        .connectionsC
+        {
+            border-color: $video-color;
+        }
+    }
+    
+    &.teaser.grid {
+        p {
+            overflow: hidden;
+            height: 22px;
+            bottom: 22px;
+        }
+    }
+    
+    &.teaser.list {
+        .videoC {
+            float: left;
+            display: block;
+        }
+    }
+    
+    &.objectContent {
+        text-align: center;
+    }
+}

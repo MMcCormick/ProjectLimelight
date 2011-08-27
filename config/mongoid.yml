@@ -13,8 +13,8 @@ production:
 #  username: <%= ENV['MONGOID_USERNAME'] %>
 #  password: <%= ENV['MONGOID_PASSWORD'] %>
 #  database: <%= ENV['MONGOID_DATABASE'] %>
-  host: dbh35.mongolab.com
-  port: 27357
+  host: dbh36.mongolab.com
+  port: 27367
   username: project_limelight
   password: pUtJyt8HCHY8
   database: project_limelight

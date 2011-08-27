@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 gem 'rails', '3.1.0.rc6'
 gem 'execjs'
-gem 'therubyracer'
 gem 'jquery-rails'
 gem "bson_ext"
 gem "mongoid"
@@ -14,6 +13,9 @@ group :assets do
   gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'
   gem 'coffee-rails', "~> 3.1.0.rc"
   gem 'uglifier'
+end
+group :production do
+  gem 'therubyracer'
 end
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 group :development do

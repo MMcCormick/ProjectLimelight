@@ -1,6 +1,11 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  before_filter :init
   layout :layout
+
+  def init
+    @start_time = Time.now
+  end
 
   # TODO: Need to create a simple MongoDB ACL system and use that instead
   # Returns true/false depending on if the currently logged in user has permission to change the object

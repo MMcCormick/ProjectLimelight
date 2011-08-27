@@ -10,6 +10,11 @@ module ApplicationHelper
     end
   end
 
+  # Return the page load time (defined in application_controller.rb init)
+  def load_time
+    "#{(Time.now-@start_time).round(4)}s"
+  end
+
   # Devise helper
   # https://github.com/plataformatec/devise/wiki/How-To:-Display-a-custom-sign_in-form-anywhere-in-your-app
   def resource_name

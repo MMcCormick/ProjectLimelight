@@ -247,7 +247,7 @@ DEPENDENCIES
   mongoid
   mongoid-rspec (>= 1.4.4)
   rails (= 3.1.0.rc6)
-  rails-footnotes (>= 3.7)
+  rails-footnotes
   rspec-cells
   rspec-rails (>= 2.6.1)
   sass-rails (~> 3.1.0.rc)

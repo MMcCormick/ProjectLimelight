@@ -1,0 +1,41 @@
+<div class="user-panel">
+    <h2><%= @user.username %></h2>
+    <div class="score" title="Your Score">0</div>
+    <div class="clear"></div>
+    
+    <!-- USER PROFILE 80X65 -->
+
+    <div class="right">
+        <div class="stat followers">
+            <div class="label">Followers</div>
+            <a class="btn" href="{{ path('user_followers', {'slug': userObject.slug }) }}"><span>0 followers</span></a>
+        </div>
+        <div class="stat following">
+            <div class="label">Following</div>
+            <a class="btn" href="{{ path('user_following_users', {'slug': userObject.slug }) }}"><span>0</span> Users</a>
+            <a class="btn topics" href="{{ path('user_following_topics', {'slug': userObject.slug }) }}"><span>0</span> Topics</a>
+        </div>
+    </div>
+
+    <div class="clear"></div>
+
+    <div class="links">
+        <a class="settings btn" href="#">
+            <div class="icon settings-icon"></div>
+            Settings
+        </a>
+        <a class="user-notifications btn" href="#">
+            <div class="icon">0</div>
+            Notifications
+        </a>
+        <a class="badge btn" href="#">
+            <div class="icon badge-icon"></div>
+            Badges
+        </a>
+        <a class="user-contributions btn" href="{{ path('user_contributions', {'slug': userObject.slug }) }}">
+            <div class="icon user-contributions-icon"></div>
+            Contributions
+        </a>
+    </div>
+
+</div>

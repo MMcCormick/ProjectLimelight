@@ -17,7 +17,7 @@ group :assets do
 end
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 group :development do
-  gem "rails-footnotes", ">= 3.7"
+  gem "rails-footnotes"
 end
 group :test do
   gem "database_cleaner", ">= 0.6.7"

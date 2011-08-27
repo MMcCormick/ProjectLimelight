@@ -9,7 +9,7 @@ class CoreObject
   belongs_to :user
   embeds_one :user_snippet, as: :user_assignable
   validates :user_id, :presence => true
-  attr_accessible :content, :user, :user_snippet
+  attr_accessible :content
 end
 
 # Embeddable user snippet that holds useful (denormalized) user info on various db objects
@@ -21,6 +21,4 @@ class UserSnippet
   field :last_name, :type => String
 
   embedded_in :user_assignable, polymorphic: true
-
-  attr_accessible :username, :first_name, :last_name
 end

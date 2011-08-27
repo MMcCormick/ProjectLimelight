@@ -11,6 +11,18 @@
 */
 
 /* Move rails-footnotes up a little bit */
-#footnotes_debug {
-  margin-bottom: 40px;
+#footnotes_holder {
+  float: left;
+  padding: 15px;
+}
+
+/* Page load time */
+#plt {
+  position: absolute;
+  right: 15px;
+  top: -15px;
+  font-size: 9px;
+  color: #999;
+  font-weight: normal;
+  cursor: default;
 }

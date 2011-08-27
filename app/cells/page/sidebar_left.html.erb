@@ -1,0 +1,64 @@
+<div id="sidebar">
+  <div class="full">
+    <div class="panel-close-left-icon toggleSidebar" title="Minimize Sidebar"></div>
+
+    <% if signed_in? %>
+
+      <%= render('user/panel_left', :user => @user) %>
+
+      <a id="my-feed" class="p sidebarB btn" data-d='{ "url": "{{ path("follow_add") }}" }' href="{{ path('object_show', {'slug': userObject.slug }) }}">
+        <div class="icon feed-icon"></div>
+        My Feed
+      </a>
+      <a id="my-favorites" class="p sidebarB btn" data-d='{ "url": "{{ path("favorite_toggle") }}" }' href="{{ path('user_favorites', {'slug': userObject.slug|default(none)}) }}">
+        <div class="icon user-favorites-icon"></div>
+        Favorites
+      </a>
+
+      <div class="sidebar-list">
+        <h5>My Lists</h5>
+        <a class="list-view" href="#">View All</a>
+
+
+        <div class="clear"></div>
+
+        <!-- render pinned lists -->
+
+        <a class="list-createB" href="{{ path('list_new') }}">Add A List!</a>
+      </div>
+
+    <% else %>
+      <div class="empty">Log in to receive your very own sidebar!*</div>
+      <div class="sidenote">*batteries not included</div>
+    <% end %>
+  </div>
+
+  <% if signed_in? %>
+    <div class="minimized hide">
+      <div class="panel-open-left-icon toggleSidebar" title="Maximize Sidebar"></div>
+
+      <a href="#">
+        <!-- render 30px user profile image -->
+      </a>
+
+      <a class="notifications btn" title="Notifications" href="#">
+        <div class="icon">0</div>
+      </a>
+      <a class="btn" title="Settings" href="#">
+        <div class="icon settings-icon"></div>
+      </a>
+      <a class="btn" title="Badges" href="#">
+        <div class="icon badge-icon"></div>
+      </a>
+      <a class="btn" title="Contributions" href="#">
+        <div class="icon user-contributions-icon"></div>
+      </a>
+      <a id="my-feed" title="My Feed" class="p btn" data-d='{ "url": "{{ path("follow_add") }}" }' href="{{ path('object_show', {'slug': userObject.slug }) }}">
+        <div class="icon feed-icon"></div>
+      </a>
+      <a id="my-favorites" title="My Favorites" class="p btn" data-d='{ "url": "{{ path("favorite_toggle") }}" }' href="{{ path('user_favorites', {'slug': userObject.slug|default(none)}) }}">
+        <div class="icon user-favorites-icon"></div>
+      </a>
+    </div>
+  <% end %>
+</div>

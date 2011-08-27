@@ -1412,7 +1412,7 @@
 				newState = urlState;
 			}
 			else {
-				return;
+				return true;
 			}
 
 			// Check if we have a state with that url

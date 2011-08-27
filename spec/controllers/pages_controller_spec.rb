@@ -7,9 +7,10 @@ describe PagesController do
   end
 
   describe "GET 'home'" do
-    it "should be successful" do
-      get 'home'
-      response.should be_success
+    it "assigns all core_objects as @core_objects" do
+      core_objects = CoreObject.all
+      get :home
+      assigns(:core_objects).should eq(core_objects)
     end
 
     #it "should have the right title" do

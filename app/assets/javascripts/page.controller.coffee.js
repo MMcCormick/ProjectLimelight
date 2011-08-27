@@ -2,123 +2,117 @@
  * This script handles page loads/transitions.
  * It uses history.js and amplify.js functionality.
  */
-(function(window, undefined){
+(function(window, undefined) {
 
-    // Check to see if History.js is enabled for our Browser
-    if ( !History.enabled ) {
-        return false;
-    }
+  // Check to see if History.js is enabled for our Browser
+  if (!History.enabled) {
+    return false;
+  }
 
-    // Ajaxify our Internal Links
-    $application.find('a[href^="/"].p,a[href^="'+rootUrl+'"].p').live('click',function(event){
-        // Continue as normal for cmd clicks etc
-        if ( event.which == 2 || event.metaKey ) {
-            return true;
-        }
+  // Ajaxify our Internal Links
+//  $application.find('a[href^="/"].p,a[href^="' + rootUrl + '"].p').live('click', function(event) {
+//    // Continue as normal for cmd clicks etc
+//    if (event.which == 2 || event.metaKey) {
+//      return true;
+//    }
+//
+//    pageClicked = true;
+//    $currentTarget = $(this);
+//    pageGet({'url': $(this).attr('href')}, pageClick);
+//    event.preventDefault();
+//
+//    return false;
+//  });
 
-        pageClicked = true;
-        $currentTarget = $(this);
-        pageGet({'url': $(this).attr('href')}, pageClick);
-        event.preventDefault();
+  /*
+   * Hook into State Changes.
+   * If this state change is not due to a click, get the new page.
+   */
+  $(window).bind('statechange', function() {
+    if (pageClicked)
+      return false;
 
-        return false;
-    });
+    pageGet({'url': History.getState().url}, null, null);
+  });
 
-    /*
-     * Hook into State Changes.
-     * If this state change is not due to a click, get the new page.
-     */
-    $(window).bind('statechange',function(){
-        if (pageClicked)
-            return false;
+  /*
+   * Gets a new page.
+   */
+  pageGet = function(params, success, error) {
 
-        pageGet({'url': History.getState().url}, null, null);
-    });
+    // Set Loading
+    showLoading();
 
-    /*
-     * Gets a new page.
-     */
-    pageGet = function(params, success, error) {
+    console.log('Page change:' + params.url);
 
-        // Set Loading
-        showLoading();
+    // Add the format parameter (xml) with special case for homepage
+    var $path = params.url.split('.php');
+    $path = $path[$path.length - 1];
+    $delim = !$path ? '/' : '';
 
-        console.log('Page change:' + params.url);
+    var url = (!$path || $path == '/' || params.url[params.url.length - 1] == '/' ? params.url + $delim + 'home.ajax' : params.url + '.ajax');
 
-        // Add the format parameter (xml) with special case for homepage
-        var $path = params.url.split('.php');
-        $path = $path[$path.length-1];
-        $delim = !$path ? '/' : '';
-
-        var url = (!$path || $path == '/' || params.url[params.url.length-1] == '/' ? params.url + $delim + 'home.ajax' : params.url + '.ajax');
-
-        amplify.request( "pageGet", { 'url': url }, function ( data ) {
-            if ($.isEmptyObject(data))
-            {
-                hideLoading();
-                return false;
-            }
-
-            if (pageUpdate(data) && success)
-            {
-                success({'url': params.url}, data);
-            }
-        })
-
-    };
-
-    /*
-     * Updates page content areas in response to a page load.
-     *
-     * @param object params
-     * @attribute html pageHeader
-     * @attribute html pageContent
-     * @attribute html sidebar
-     * @attribute string title
-     */
-    var pageUpdate = function(params){
+    amplify.request("pageGet", { 'url': url }, function (data) {
+      if ($.isEmptyObject(data)) {
         hideLoading();
+        return false;
+      }
 
-        if (appUpdate(params) && params.pageRefresh)
-        {
-            $pageHeader.html(params.pageHeader ? params.pageHeader : '');
-            $feedFilters.html(params.feedFilters ? params.feedFilters : '');
-            $sidebar.html(params.sidebar);
-            $footer.html(params.footer);
+      if (pageUpdate(data) && success) {
+        success({'url': params.url}, data);
+      }
+    })
 
-            // Content areas that have scroll panes
-            $pageSidebar1Content.html(params.pageSidebar1 ? params.pageSidebar1 : '');
-            $pageSidebar2Content.html(params.pageSidebar2 ? params.pageSidebar2 : '');
-            $pageSidebar3Content.html(params.pageSidebar3 ? params.pageSidebar3 : '');
-            $pageContentContent.html(params.pageContent);
+  };
 
-            if (params.sidebarRight)
-            {
-                $sidebarRightContent.html(params.sidebarRight);
-                resetPage(true);
-            }
-            else
-            {
-                $sidebarRightContent.empty();
-                $sidebarRight.width(0);
-                resetPage(false);
-            }
-        }
-        // Do we need to refresh the page?
-        else if (!params.pageRefresh)
-        {
-            return false;
-        }
+  /*
+   * Updates page content areas in response to a page load.
+   *
+   * @param object params
+   * @attribute html pageHeader
+   * @attribute html pageContent
+   * @attribute html sidebar
+   * @attribute string title
+   */
+  var pageUpdate = function(params) {
+    hideLoading();
 
-        return true;
+    if (appUpdate(params) && params.pageRefresh) {
+      $pageHeader.html(params.pageHeader ? params.pageHeader : '');
+      $feedFilters.html(params.feedFilters ? params.feedFilters : '');
+      $sidebar.html(params.sidebar);
+      $footer.html(params.footer);
+
+      // Content areas that have scroll panes
+      $pageSidebar1Content.html(params.pageSidebar1 ? params.pageSidebar1 : '');
+      $pageSidebar2Content.html(params.pageSidebar2 ? params.pageSidebar2 : '');
+      $pageSidebar3Content.html(params.pageSidebar3 ? params.pageSidebar3 : '');
+      $pageContentContent.html(params.pageContent);
+
+      if (params.sidebarRight) {
+        $sidebarRightContent.html(params.sidebarRight);
+        resetPage(true);
+      }
+      else {
+        $sidebarRightContent.empty();
+        $sidebarRight.width(0);
+        resetPage(false);
+      }
+    }
+    // Do we need to refresh the page?
+    else if (!params.pageRefresh) {
+      return false;
     }
 
-    /*
-     * Pushes a new page state, and resets the pageClicked variable.
-     */
-    var pageClick = function(params, data) {
-        History.pushState(null, data.title, params.url);
-        pageClicked = false;
-    }
-    
+    return true;
+  }
+
+  /*
+   * Pushes a new page state, and resets the pageClicked variable.
+   */
+  var pageClick = function(params, data) {
+    History.pushState(null, data.title, params.url);
+    pageClicked = false;
+  }
+
 })(window); // end closure

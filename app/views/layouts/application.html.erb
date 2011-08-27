@@ -6,12 +6,11 @@
       <%= csrf_meta_tag %>
       <%= stylesheet_link_tag "application" %>
     </head>
-    <body>
+    <body id="<%= params[:controller].parameterize %>_c">
         <div id="application">
             <header id="header">
-                <a class="p logo" href="{{ path('homepage') }}">
-                    <img src="{{ asset('bundles/limelight/images/top-logo.png') }}" alt="Tech Limelight"/>
-                </a>
+                <% top_image = image_tag "top-logo.png", :alt => "Project Limelight" %>
+                <%= link_to top_image, :root, :class => "p logo" %>
 
                 <a id="contribute" class="ac" href="{{ path('object_contribute') }}">
                     <div class="plus-green-icon"></div>
@@ -68,7 +67,10 @@
                     <div id="page_content">
                         <div class="wrap">
                           <%= yield %>
-                          <%= debug(params) if Rails.env.development? %>
+                          <% if Rails.env.development? %>
+                            <%= debug(params) %>
+                            <div id="footnotes_holder"></div>
+                          <% end %>
                         </div>
                     </div>
                     <div id="page_cover"></div>
@@ -89,15 +91,14 @@
             <div id="static-data" data-d='{"oSearchUrl":"", "fetchEmbedUrl":"embedly_oEmbed"}'></div>
 
             <div id="auth_box">
-              <div class="floating-or">OR</div>
               <div class="items">
                 <div class="form-toggle auth-login on" data-target="#auth-login">Login</div>
                 <div class="form-toggle auth-register" data-target="#auth-register">Register</div>
                 <div id="auth-login">
-                    {% render "LimelightUserBundle:Security:login" with { 'chromeless': true } %}
+                    <%= render "users/sessions/new" %>
                 </div>
                 <div id="auth-register" class="hide">
-                    {% render "LimelightUserBundle:Registration:register" with { 'chromeless': true } %}
+                    <%= render "users/registrations/new" %>
                 </div>
               </div>
             </div>

@@ -25,18 +25,6 @@ describe CoreObjectsController do
   # update the return value of this method accordingly.
   before(:each) do
     @user = Factory(:user)
-    @attr = {
-      :title => 'Test Title',
-      :content => 'Test content for news.'
-    }
-  end
-
-  describe "GET index" do
-    it "assigns all core_objects as @core_objects" do
-      core_objects = CoreObject.all
-      get :index
-      assigns(:core_objects).should eq(core_objects)
-    end
   end
 
 end

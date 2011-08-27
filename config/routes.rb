@@ -1,6 +1,6 @@
 ProjectLimelight::Application.routes.draw do
 
-  resources :core_objects, :news
+  resources :core_objects, :news, :talks
 
   devise_for :users
   resources :users, :only => :show

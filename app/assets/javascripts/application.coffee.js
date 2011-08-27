@@ -15,7 +15,7 @@
 //= require history.adapter.jquery.js
 //= require history
 //= require history.html4.js
-//= require jquery.colorbox-min.js
+//= require jquery.colorbox.js
 //= require jquery.timer.js
 //= require jquery.qtip.js
 //= require jquery.autocomplete.js

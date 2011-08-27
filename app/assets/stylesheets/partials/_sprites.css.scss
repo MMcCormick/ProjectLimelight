@@ -6,7 +6,7 @@
         Sprite definitions.
 */
 
-@import "icon/*.png";
+@import "/assets/sprites/*.png";
 
 .handle-black-small {
     @include icon-sprite(handle-black-small);

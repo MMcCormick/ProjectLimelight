@@ -1,0 +1,52 @@
+<li class="teaser oS list talk o-<%= object.id %>">
+
+  <div class="content">
+    <h2 class="titleC">
+      <a href="{{ path('object_show', {'slug': object.createdBy.slug }) }}" class="p">
+        <%= object.user_snippet.username %>
+      </a>
+      @
+      <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">
+        [connected title]
+        <span class="tType">Talk</span>
+      </a>
+    </h2>
+    <!-- IMAGE LOCATION -->
+
+    <div class="createdC">
+      <div class="time">[created_at timelapse] by </div>
+      <%= object.user_snippet.username %>
+    </div>
+    <p>
+      <%= object.content %>
+    </p>
+  </div>
+
+  <div class="connectionsC">
+    <div class="wrapper">
+      <div class="oType">
+        Talk
+      </div>
+
+      <a href="{{ path('object_show', {'slug': object.slug}) }}" class="commentC p">
+        <div class="comment-icon"></div>
+        [comment count]
+      </a>
+
+      <!-- IF TOPIC CONNECTIONS -->
+      <div class="related-topics">
+        [topic tags]
+      </div>
+    </div>
+  </div>
+
+  <div class="scoreBox">
+    <!-- VOTE CONTROLS -->
+    <div class="controlsC">
+      <!-- FAVORITE BUTTON -->
+      <div class="link-icon"></div>
+      <!---->
+    </div>
+  </div>
+
+</li>

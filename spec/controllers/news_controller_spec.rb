@@ -29,14 +29,6 @@ describe NewsController do
     }
   end
 
-  describe "GET index" do
-    it "assigns all news as @news" do
-      news = News.all
-      get :index
-      assigns(:news).should eq(news)
-    end
-  end
-
   describe "GET show" do
     it "assigns the requested news as @news" do
       news = @user.news.create!(@attr)
@@ -169,10 +161,10 @@ describe NewsController do
       }.to change(News, :count).by(-1)
     end
 
-    it "redirects to the news list" do
+    it "redirects to the deleted news" do
       news = @user.news.create!(@attr)
       delete :destroy, :id => news.id.to_s
-      response.should redirect_to(news_index_url)
+      response.should redirect_to(@news)
     end
   end
 

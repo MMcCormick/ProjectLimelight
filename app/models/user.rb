@@ -1,17 +1,29 @@
 class User
   include Mongoid::Document
+  include Mongoid::Paranoia
+  include Mongoid::Timestamps
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  field :name
+
+  # Denormilized:
+  # CoreObject.user_snippet.username
+  field :username, :type => String
+  # Denormilized:
+  # CoreObject.user_snippet.first_name
+  field :first_name, :type => String
+  # Denormilized:
+  # CoreObject.user_snippet.last_name
+  field :last_name, :type => String
 
   has_many :core_objects
   has_many :news
+  has_many :talks
 
-  validates :name, :presence => true
-  validates :name, :email, :uniqueness => { :case_sensitive => false }
-  attr_accessible :name, :email, :password, :password_confirmation, :remember_me
+  validates :username, :presence => true
+  validates :username, :email, :uniqueness => { :case_sensitive => false }
+  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me
 end
-

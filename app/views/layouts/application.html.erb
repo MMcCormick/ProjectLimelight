@@ -44,24 +44,24 @@
                 <div class="flash <%= key %>"><%= value %></div>
               <% end %>
             </section>
-            <% yield :page_header %>
+            <%= yield :page_header %>
           </div>
         </div>
 
         <div id="page">
           <div id="page-sb1" class="">
             <div class="wrap">
-              <% yield :page_sidebar1 %>
+              <%= yield :page_sidebar1 %>
             </div>
           </div>
           <div id="page-sb2" class="">
             <div class="wrap">
-              <% yield :page_sidebar2 %>
+              <%= yield :page_sidebar2 %>
             </div>
           </div>
           <div id="page-sb3" class="">
             <div class="wrap">
-              <% yield :page_sidebar3 %>
+              <%= yield :page_sidebar3 %>
             </div>
           </div>
           <div id="page_content">
@@ -77,7 +77,7 @@
         </div>
       </div>
       <footer id="footer">
-        <% yield :footer %>
+        <%= yield :footer %>
         <div id="plt"><%= load_time %></div>
       </footer>
 

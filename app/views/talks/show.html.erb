@@ -1,14 +1,22 @@
-<p id="notice"><%= notice %></p>
+<% content_for :page_header do %>
+  <!--{% if object.connectedFrom[0] is defined %}-->
+  <!--<div class="titleC">-->
+      <!--<h1>-->
+          <!--<a href="{{ path('object_show', {'slug': object.createdBy.slug }) }}" class="p">-->
+              <!--{{ object.createdBy.User.username }}-->
+          <!--</a>-->
+          <!--@-->
+          <!--<a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">-->
+              <!--{{ object.connectedFrom[0].connectedTo.title }}-->
+              <!--<span class="tType">({{ object.connectedFrom[0].connectedTo.nodeType|lower }})</span>-->
+          <!--</a>-->
+      <!--</h1>-->
+  <!--</div>-->
+  <!--{% endif %}-->
+<% end %>
 
-<p>
-  <b>Content:</b>
-  <%= @talk.content %>
-</p>
+<div class="objectContent">
+    <%= @talk.content %>
+</div>
 
-<p>
-  <b>User:</b>
-  <%= @talk.user_id %>
-</p>
-
-
-<%= link_to 'Edit', edit_talk_path(@talk) %> |
+<!--{% render "LimelightCommentBundle:Thread:show" with {"root": object} %}-->

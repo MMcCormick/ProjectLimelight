@@ -1,5 +1,6 @@
 class Talk < CoreObject
 
-  validates :content, :length => { :minimum => 3, :maximum => 200 }
+  slug :content
 
+  validates :content, :length => { :minimum => 3, :maximum => 200 }
 end

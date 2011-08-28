@@ -1,15 +1,15 @@
 // Wait for Document
 $(function() {
 
-  $('form:not(.noajax)').live('submit', function(event) {
-    // Ajaxify this form
-
-    event.preventDefault();
-    $currentTarget = $(this);
-    formSubmit($(this), null, null);
-
-    return false;
-  });
+//  $('form:not(.noajax)').live('submit', function(event) {
+//    // Ajaxify this form
+//
+//    event.preventDefault();
+//    $currentTarget = $(this);
+//    formSubmit($(this), null, null);
+//
+//    return false;
+//  });
 
   /*
    * Submit and handle a form..

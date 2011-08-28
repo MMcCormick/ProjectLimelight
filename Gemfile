@@ -4,6 +4,7 @@ gem 'execjs'
 gem 'jquery-rails'
 gem "bson_ext"
 gem "mongoid"
+gem 'mongoid_slug'
 gem "devise"
 gem "frontend-helpers"
 gem "cells"

@@ -14,8 +14,7 @@
     <!-- IMAGE LOCATION -->
 
     <div class="createdC">
-      <div class="time">[created_at timelapse] by </div>
-      <%= object.user_snippet.username %>
+      <div class="time"><%= time_ago_in_words(object.created_at, false) %> by</div> <%= object.user_snippet.username %>
     </div>
     <p>
       <%= object.content %>
@@ -28,9 +27,9 @@
         Talk
       </div>
 
-      <a href="{{ path('object_show', {'slug': object.slug}) }}" class="commentC p">
+      <a href="<%= url_for object %>" class="commentC p">
         <div class="comment-icon"></div>
-        [comment count]
+        0
       </a>
 
       <!-- IF TOPIC CONNECTIONS -->

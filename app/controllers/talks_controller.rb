@@ -4,7 +4,8 @@ class TalksController < ApplicationController
   # GET /t/1
   # GET /t/1.json
   def show
-    @talk = Talk.find(params[:id])
+    @talk = Talk.find_by_slug(params[:id])
+    @title = @talk.content
 
     respond_to do |format|
       format.html # show.html.erb
@@ -25,7 +26,7 @@ class TalksController < ApplicationController
 
   # GET /talks/1/edit
   def edit
-    @talk = Talk.find(params[:id])
+    @talk = Talk.find_by_slug(params[:id])
   end
 
   # POST /t

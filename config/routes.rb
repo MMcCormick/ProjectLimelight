@@ -1,5 +1,7 @@
 ProjectLimelight::Application.routes.draw do
 
+  resources :topics
+
   resources :core_objects, :news, :talks
 
   devise_for :users

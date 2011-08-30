@@ -15,6 +15,12 @@ module ApplicationHelper
     "#{(Time.now-@start_time).round(4)}s"
   end
 
+  # Parse text via markdown
+  def markdown(text)
+    options = [:hard_wrap, :filter_html, :autolink, :no_intraemphasis, :strikethrough]
+    Redcarpet.new(text, *options).to_html.html_safe
+  end
+
   # Devise helper
   # https://github.com/plataformatec/devise/wiki/How-To:-Display-a-custom-sign_in-form-anywhere-in-your-app
   def resource_name

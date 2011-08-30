@@ -4,7 +4,7 @@ class NewsController < ApplicationController
   # GET /news/1
   # GET /news/1.json
   def show
-    @news = News.find(params[:id])
+    @news = News.find_by_slug(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -32,7 +32,10 @@ class NewsController < ApplicationController
   # POST /news.json
   def create
     @news = current_user.news.build(params[:news])
-    @news.build_user_snippet({username: current_user.username, first_name: current_user.first_name, last_name: current_user.last_name})
+    if @news.valid?
+      @news.set_user_snippet(current_user)
+      @news.set_mentions
+    end
 
     respond_to do |format|
       if @news.save

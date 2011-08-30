@@ -33,7 +33,10 @@ class TalksController < ApplicationController
   # POST /t.json
   def create
     @talk = current_user.talks.build(params[:talk])
-    @talk.build_user_snippet({username: current_user.username, first_name: current_user.first_name, last_name: current_user.last_name})
+    if @talk.valid?
+      @talk.set_user_snippet(current_user)
+      @talk.set_mentions
+    end
 
     respond_to do |format|
       if @talk.save

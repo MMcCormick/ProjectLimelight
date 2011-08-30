@@ -1,0 +1,49 @@
+<div id="feed-filters">
+  <div class="feed-sort">
+    <div class="arrow-small"></div>
+    <h5>SORT BY</h5>
+    <ul class="btn">
+      <li class="<%= 'hide' unless session[:feed_filters][:sort][:target] == 'created_at' %>">
+        <a href="{{ path('object_feed_filter_change', {'key': 'feedSort', 'value': 'created'}) }}" class="ac <%= session[:feed_filters][:sort][:target] == 'created_at' ? 'on' : 'hide' %>">Newest</a>
+      </li>
+      <li class="<%= 'hide' unless session[:feed_filters][:sort][:target] == 'popularity' %>">
+        <a href="{{ path('object_feed_filter_change', {'key': 'feedSort', 'value': 'popularity'}) }}" class="ac <%= session[:feed_filters][:sort][:target] == 'popularity' ? 'on' : 'hide' %>">Popularity</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="node-types">
+    <h5>SHOW</h5>
+    <ul>
+      <li>
+        <a href="{{ path('object_feed_filter_toggle', {'nodeType': 'Talk'}) }}" class="ac btn talk first <%= session[:feed_filters][:display].include?('Talk') ? 'on' : '' %>">Talk</a>
+      </li>
+      <li>
+        <a href="{{ path('object_feed_filter_toggle', {'nodeType': 'News'}) }}" class="ac btn news <%= session[:feed_filters][:display].include?('News') ? 'on' : '' %>">News</a>
+      </li>
+      <li>
+        <a href="{{ path('object_feed_filter_toggle', {'nodeType': 'Picture'}) }}" class="ac btn picture <%= session[:feed_filters][:display].include?('Picture') ? 'on' : '' %>">Pictures</a>
+      </li>
+      <li>
+        <a href="{{ path('object_feed_filter_toggle', {'nodeType': 'Video'}) }}" class="ac btn video last <%= session[:feed_filters][:display].include?('Video') ? 'on' : '' %>">Videos</a>
+      </li>
+    </ul>
+  </div>
+  <div class="scrollTop">Scroll Top</div>
+
+  <div class="feed-type">
+    <h5>VIEW</h5>
+    <ul>
+      <li class="btn">
+        <a href="{{ path('object_feed_filter_change', {'key': 'feedType', 'value': 'list'}) }}" class="ac" title="Organize the feed into a list of items">
+          <div class="feed-list <%= session[:feed_filters][:layout] == 'list' ? 'on' : '' %>"></div>
+        </a>
+      </li>
+      <li class="btn">
+        <a href="{{ path('object_feed_filter_change', {'key': 'feedType', 'value': 'grid'}) }}" class="ac" title="Organize the feed into a grid of items">
+          <div class="feed-grid <%= session[:feed_filters][:layout] == 'grid' ? 'on' : '' %>"></div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

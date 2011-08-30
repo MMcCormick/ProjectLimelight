@@ -9,6 +9,7 @@ gem "devise"
 gem "frontend-helpers"
 gem "cells"
 gem "rspec-cells"
+gem "redcarpet" # Markdown support
 group :assets do
   gem 'sass-rails', "  ~> 3.1.0.rc"
   gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'
@@ -21,6 +22,7 @@ end
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 group :development do
   gem "rails-footnotes"
+  gem "pry"
 end
 group :test do
   gem "database_cleaner", ">= 0.6.7"

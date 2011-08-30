@@ -1,6 +1,9 @@
 class News < CoreObject
 
-  field :title, :type => String
+  # Denormilized:
+  # CoreObject.response_to.name
+  field :title
+
   slug :title
 
   validates :title, :length => { :minimum => 5, :maximum => 100 }

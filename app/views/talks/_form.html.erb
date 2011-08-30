@@ -5,10 +5,9 @@
     <%= f.label :content %><br />
     <%= f.text_field :content %>
   </div>
-  <div class="field">
-    <%= f.label :user_id %><br />
-    <%= f.number_field :user_id %>
-  </div>
+  <% if defined? response_to %>
+    <%= f.hidden_field :response_to, :value => response_to.id %>
+  <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>

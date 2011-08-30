@@ -16,7 +16,7 @@
 <% end %>
 
 <div class="objectContent">
-    <%= @talk.content %>
+    <%= parse_mentions(markdown(@talk.content), @talk) %>
 </div>
 
 <!--{% render "LimelightCommentBundle:Thread:show" with {"root": object} %}-->

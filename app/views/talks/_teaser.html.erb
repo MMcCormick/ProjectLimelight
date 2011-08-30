@@ -5,20 +5,20 @@
       <a href="{{ path('object_show', {'slug': object.createdBy.slug }) }}" class="p">
         <%= object.user_snippet.username %>
       </a>
-      @
-      <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">
-        [connected title]
-        <span class="tType">Talk</span>
-      </a>
+      <% if object.response_to %>
+        @
+        <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">
+          [connected title]
+          <span class="tType">Talk</span>
+        </a>
+      <% end %>
     </h2>
     <!-- IMAGE LOCATION -->
 
     <div class="createdC">
-      <div class="time"><%= time_ago_in_words(object.created_at, false) %> by</div> <%= object.user_snippet.username %>
+      <div class="time"><%= time_ago_in_words(object.created_at, false) %></div>
     </div>
-    <p>
-      <%= object.content %>
-    </p>
+    <%= parse_mentions(markdown(object.content), object) %>
   </div>
 
   <div class="connectionsC">
@@ -32,10 +32,13 @@
         0
       </a>
 
-      <!-- IF TOPIC CONNECTIONS -->
-      <div class="related-topics">
-        [topic tags]
-      </div>
+      <% if object.topic_mentions %>
+        <div class="related-topics">
+          <% object.topic_mentions.each do |topic| %>
+            <%= render 'topics/tag', :topic => topic %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 

@@ -43,7 +43,7 @@ class TopicsController < ApplicationController
   # POST /topics.json
   def create
     @topic = current_user.topics.build(params[:topic])
-    @topic.build_user_snippet({username: current_user.username, first_name: current_user.first_name, last_name: current_user.last_name})
+    @topic.set_user_snippet(current_user)
 
     respond_to do |format|
       if @topic.save

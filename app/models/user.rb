@@ -11,18 +11,21 @@ class User
 
   # Denormilized:
   # CoreObject.user_snippet.username
+  # CoreObject.user_mentions.username
   # Topic.user_snippet.username
-  field :username, :type => String
+  field :username
 
   # Denormilized:
   # CoreObject.user_snippet.first_name
+  # CoreObject.user_mentions.first_name
   # Topic.user_snippet.first_name
-  field :first_name, :type => String
+  field :first_name
 
   # Denormilized:
   # CoreObject.user_snippet.last_name
+  # CoreObject.user_mentions.first_name
   # Topic.user_snippet.last_name
-  field :last_name, :type => String
+  field :last_name
 
   slug :username
 

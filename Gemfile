@@ -10,6 +10,7 @@ gem "frontend-helpers"
 gem "cells"
 gem "rspec-cells"
 gem "redcarpet" # Markdown support
+gem 'foreman'
 group :assets do
   gem 'sass-rails', "  ~> 3.1.0.rc"
   gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'

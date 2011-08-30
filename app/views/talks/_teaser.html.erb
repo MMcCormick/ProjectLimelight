@@ -16,7 +16,7 @@
     <!-- IMAGE LOCATION -->
 
     <div class="createdC">
-      <div class="time"><%= time_ago_in_words(object.created_at, false) %></div>
+      <div class="time"><%= time_ago_in_words(object.created_at, false) %> ago</div>
     </div>
     <%= parse_mentions(markdown(object.content), object) %>
   </div>

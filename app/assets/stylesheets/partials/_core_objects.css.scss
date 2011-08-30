@@ -464,9 +464,9 @@ $scoreBox-width: 140px;
     height: 30px;
     padding: 4px 0 4px 10px;
 
-    .node-types,
+    .feed-display,
     .feed-sort,
-    .feed-type {
+    .feed-layout {
         position: relative;
         float: left;
 
@@ -485,27 +485,28 @@ $scoreBox-width: 140px;
             margin: 3px 0 0 10px;
             float: left;
         }
-        a {
+        .opt {
             color: #CFCFCF;
             font-weight: bold;
             text-decoration: none;
             display: block;
             padding: 3px 8px;
             font-size: 12px;
+            cursor: pointer;
         }
-        a.on {
+        .opt.on {
             color: #444;
         }
     }
     
-    .node-types {
+    .feed-display {
         li {
             margin: 0 3px;
             float: left;
         }
     }
 
-    .feed-type {
+    .feed-layout {
         float: right;
         margin-right: 8px;
 
@@ -517,7 +518,7 @@ $scoreBox-width: 140px;
             margin: 0 3px;
             float: left;
         }
-        a {
+        .opt {
             padding: 4px 5px;
         }
     }
@@ -537,10 +538,10 @@ $scoreBox-width: 140px;
             position: absolute; top: 0px; left: 51px;
             z-index: 5;
 
-            a {
+            .opt {
                 width: 95px;
             }
-            a.on:hover {
+            .opt.on:hover {
                 cursor: default;
             }
         }
@@ -549,8 +550,8 @@ $scoreBox-width: 140px;
 // Styling for node-type buttons, (feed filters, contribute, etc)
 #feed-filters,
 #contributeC {
-    .node-types {
-        a, >div {
+    .feed-display {
+        .opt, > div {
             @include border-radius(2px);
             background-color: #EFEFEF;
             border: 1px solid #DDD;

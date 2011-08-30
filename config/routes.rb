@@ -1,8 +1,10 @@
 ProjectLimelight::Application.routes.draw do
 
   resources :topics
+  resources :news
+  resources :talks
 
-  resources :core_objects, :news, :talks
+  post 'feeds/update' => 'feeds#update', :as => :feed_update
 
   devise_for :users
   resources :users, :only => :show

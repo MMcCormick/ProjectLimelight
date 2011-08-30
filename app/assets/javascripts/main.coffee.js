@@ -109,16 +109,6 @@ $(function() {
     $(this).removeClass('shortcut-on')
   })
 
-  // Feed sort dropdown.
-  $('.feed-sort ul').live({
-    mouseenter: function() {
-      $(this).find('li').show();
-    },
-    mouseleave: function() {
-      $(this).find('a:not(.on)').parent().hide();
-    }
-  })
-
   // Resize grid teasers.
   resizeFeedTeasers();
   $(window).resize(function() {

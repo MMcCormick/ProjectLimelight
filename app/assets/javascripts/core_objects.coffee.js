@@ -96,6 +96,38 @@ $(function() {
     $(window).scrollTo(0, 500);
   })
 
+  // Feed Filters
+  $('#feed-filters .opt').live('click', function () {
+    $parent = $(this).parent().parent().parent()
+    if ($parent.hasClass('feed-display'))
+    {
+      $(this).toggleClass('on')
+    }
+    else
+    {
+      $parent.find('.opt').removeClass('on')
+      $(this).addClass('on')
+    }
+    $payload = {'display':[]}
+    $payload['sort'] = $('#feed-filters .feed-sort .opt.on').data('d')
+    $payload['layout'] = $('#feed-filters .feed-layout .opt.on').data('d')
+    $('#feed-filters .feed-display .opt.on').each(function(i, val) {
+      $payload['display'].push($(val).data('d'))
+    })
+    $.post($('#feed-filters').data('url'), $payload, function(response) {
+      console.log(response)
+    })
+  })
+  // Sort dropdown
+  $('.feed-sort ul').live({
+    mouseenter: function() {
+      $(this).find('li').show();
+    },
+    mouseleave: function() {
+      $(this).find('.opt:not(.on)').parent().hide();
+    }
+  })
+
 //    function split(val) {
 //        return val.split(/@\s*/);
 //    }

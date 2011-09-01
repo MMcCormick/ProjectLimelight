@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-gem 'rails', '3.1.0.rc6'
+gem 'rails', '3.1.0'
 gem 'execjs'
 gem 'jquery-rails'
 gem "bson_ext"
@@ -12,9 +12,9 @@ gem "rspec-cells"
 gem "redcarpet" # Markdown support
 gem 'foreman'
 group :assets do
-  gem 'sass-rails', "  ~> 3.1.0.rc"
+  gem 'sass-rails'
   gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'
-  gem 'coffee-rails', "~> 3.1.0.rc"
+  gem 'coffee-rails'
   gem 'uglifier'
 end
 group :production do

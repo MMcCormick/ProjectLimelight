@@ -1,8 +1,11 @@
+require "acl"
+
 class CoreObject
   include Mongoid::Document
   include Mongoid::Slug
   include Mongoid::Paranoia
   include Mongoid::Timestamps
+  include Limelight::Acl
 
   field :content
   field :status, :default => 'Active'

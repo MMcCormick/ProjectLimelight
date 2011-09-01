@@ -19,10 +19,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # TODO: Need to create a simple MongoDB ACL system and use that instead
-  # Returns true/false depending on if the currently logged in user has permission to change the object
-  def is_current_user_object(object)
-    signed_in? && object.respond_to?('user') && current_user == object.user
+  def has_permission?(object, target, permission)
+    target.has_role?("admin") || target.has_permission?(object.id, permission)
   end
 
   private

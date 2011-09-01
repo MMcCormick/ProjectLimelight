@@ -1,8 +1,11 @@
+require "acl"
+
 class Topic
   include Mongoid::Document
   include Mongoid::Slug
   include Mongoid::Paranoia
   include Mongoid::Timestamps
+  include Limelight::Acl
 
   # Denormilized:
   # CoreObject.topic_mentions.name

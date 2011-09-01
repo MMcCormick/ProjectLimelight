@@ -26,6 +26,10 @@ class NewsController < ApplicationController
   # GET /news/1/edit
   def edit
     @news = News.find(params[:id])
+
+    if !has_permission(current_user, @news, "edit")
+      redirect_to :back, notice: 'You may only edit your own stories!.'
+    end
   end
 
   # POST /news
@@ -35,6 +39,7 @@ class NewsController < ApplicationController
     if @news.valid?
       @news.set_user_snippet(current_user)
       @news.set_mentions
+      @news.grant_owner(current_user.id)
     end
 
     respond_to do |format|
@@ -53,7 +58,7 @@ class NewsController < ApplicationController
   def update
     @news = News.find(params[:id])
 
-    if !is_current_user_object(@news)
+    if !has_permission(current_user, @news, "edit")
       redirect_to :back, notice: 'You may only edit your own stories!.'
     end
 
@@ -73,7 +78,7 @@ class NewsController < ApplicationController
   def destroy
     @news = News.find(params[:id])
 
-    if !is_current_user_object(@news)
+    if !has_permission(current_user, @news, "delete")
       redirect_to :back, notice: 'You may only delete your own stories!'
     end
 

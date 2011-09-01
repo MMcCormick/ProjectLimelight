@@ -27,6 +27,8 @@ class User
   # Topic.user_snippet.last_name
   field :last_name
 
+  field :roles, :type => Array
+
   slug :username
 
   has_many :core_objects
@@ -37,4 +39,18 @@ class User
   validates :username, :presence => true
   validates :username, :email, :uniqueness => { :case_sensitive => false }
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me
+
+  def has_role?(role)
+    self.roles.include? role
+  end
+
+  def grant_role(role)
+    (self.roles ||= []) << role
+  end
+
+  def revoke_role(role)
+    if self.roles
+      self.roles.delete(role)
+    end
+  end
 end

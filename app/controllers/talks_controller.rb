@@ -27,6 +27,10 @@ class TalksController < ApplicationController
   # GET /talks/1/edit
   def edit
     @talk = Talk.find_by_slug(params[:id])
+
+    if !has_permission?(current_user, @talk, "edit")
+      redirect_to :back, notice: 'You may only edit your own stories!.'
+    end
   end
 
   # POST /t
@@ -36,6 +40,7 @@ class TalksController < ApplicationController
     if @talk.valid?
       @talk.set_user_snippet(current_user)
       @talk.set_mentions
+      @talk.grant_owner(current_user.id)
     end
 
     respond_to do |format|
@@ -54,7 +59,7 @@ class TalksController < ApplicationController
   def update
     @talk = Talk.find(params[:id])
 
-    if !is_current_user_object(@talk)
+    if !has_permission?(current_user, @talk, "edit")
       redirect_to :back, notice: 'You may only edit your own stories!.'
     end
 
@@ -74,7 +79,7 @@ class TalksController < ApplicationController
   def destroy
     @talk = Talk.find(params[:id])
 
-    if !is_current_user_object(@talk)
+    if !has_permission?(current_user, @talk, "edit")
       redirect_to :back, notice: 'You may only delete your own talk!'
     end
 

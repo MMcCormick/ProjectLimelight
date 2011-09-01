@@ -1,13 +1,17 @@
 ProjectLimelight::Application.routes.draw do
 
   resources :topics
+  match 't/:id' => 'topics#show', :as => :topic
+
   resources :news
+
   resources :talks
 
   post 'feeds/update' => 'feeds#update', :as => :feed_update
 
   devise_for :users
   resources :users, :only => :show
+  match '/:id' => 'users#show', :as => :user
 
   root :to => "pages#home"
 

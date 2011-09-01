@@ -2,9 +2,7 @@
 
   <div class="content">
     <h2 class="titleC">
-      <a href="{{ path('object_show', {'slug': object.createdBy.slug }) }}" class="p">
-        <%= object.user_snippet.username %>
-      </a>
+      <%= user_link object.user_snippet %>
       <% if object.response_to %>
         @
         <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">

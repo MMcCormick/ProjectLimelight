@@ -6,7 +6,7 @@ module CoreObjectsHelper
       # If we found a match, replace the mention with a link to the topic
       object.topic_mentions.each do |topic_mention|
         if topic_mention.name.to_url == topic.to_url
-          text = text.gsub("[##{topic}]", link_to(topic, topic_path(topic_mention)))
+          text = text.gsub("[##{topic}]", topic_link(topic_mention, topic))
         end
       end
     end
@@ -17,7 +17,7 @@ module CoreObjectsHelper
       # If we found a match, replace the mention with a link to the user
       object.user_mentions.each do |user_mention|
         if user_mention.username.to_url == user.to_url
-          text = text.gsub("[@#{user}]", link_to(user, user_path(user_mention)))
+          text = text.gsub("[@#{user}]", user_link(user_mention, user))
         end
       end
     end

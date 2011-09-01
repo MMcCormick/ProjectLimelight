@@ -48,7 +48,8 @@ module Limelight #:nodoc:
 
       self.permissions ||= {}
       permission.each do |p|
-        (self.permissions[p] ||= []) << object_id
+        self.permissions[p] ||= []
+        self.permissions[p] << object_id unless self.permissions[p].include?(object_id)
       end
     end
 

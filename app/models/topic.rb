@@ -11,13 +11,14 @@ class Topic
   # CoreObject.topic_mentions.name
   field :name
 
-  field :status, :default => 'Active'
-  field :aliases
-  field :user_id
-
   # Denormilized:
   # Topic.aliases
   slug :name
+
+  field :status, :default => 'Active'
+  field :aliases
+  field :user_id
+  field :followers_count, :default => 0
 
   belongs_to :user
   embeds_one :user_snippet, as: :user_assignable
@@ -29,9 +30,14 @@ class Topic
 
   before_create :add_alias
 
-  protected
+  # Return the topic slug instead of its ID
+  def to_param
+    self.slug
+  end
+
   def add_alias
-    self.aliases = Array.new unless !self.aliases.nil?
-    self.aliases << name.to_url unless self.aliases.include?(name.to_url)
+    self.aliases ||= []
+    url = name.to_url
+    self.aliases << url unless self.aliases.include?(url)
   end
 end

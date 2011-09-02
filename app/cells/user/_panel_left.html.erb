@@ -8,12 +8,12 @@
     <div class="right">
         <div class="stat followers">
             <div class="label">Followers</div>
-            <a class="btn" href="{{ path('user_followers', {'slug': userObject.slug }) }}"><span>0 followers</span></a>
+            <a class="btn" href="{{ path('user_followers', {'slug': userObject.slug }) }}"><span><%= @user.followers_count %> followers</span></a>
         </div>
         <div class="stat following">
             <div class="label">Following</div>
-            <a class="btn" href="{{ path('user_following_users', {'slug': userObject.slug }) }}"><span>0</span> Users</a>
-            <a class="btn topics" href="{{ path('user_following_topics', {'slug': userObject.slug }) }}"><span>0</span> Topics</a>
+            <a class="btn" href="{{ path('user_following_users', {'slug': userObject.slug }) }}"><span><%= @user.following_users_count %></span> Users</a>
+            <a class="btn topics" href="{{ path('user_following_topics', {'slug': userObject.slug }) }}"><span><%= @user.following_topics_count %></span> Topics</a>
         </div>
     </div>
 

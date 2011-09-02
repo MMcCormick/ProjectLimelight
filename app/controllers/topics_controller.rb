@@ -94,4 +94,21 @@ class TopicsController < ApplicationController
   #    format.json { head :ok }
   #  end
   #end
+
+  def follow_toggle
+    target_topic = Topic.find(params[:id])
+    if target_topic
+      current_user.toggle_follow_topic(target_topic)
+      current_user.save
+      target_topic.save
+      response = {:status => 'ok', :target => '.fol_'+target_topic.id.to_s, :toggle_classes => ['followB', 'unfollowB']}
+    else
+      response = {:status => 'error', :message => 'Target topic not found!'}
+    end
+
+    respond_to do |format|
+      #format.html # show.html.erb
+      format.json { render json: response }
+    end
+  end
 end

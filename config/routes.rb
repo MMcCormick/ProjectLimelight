@@ -1,18 +1,28 @@
 ProjectLimelight::Application.routes.draw do
 
+  # Topics
   resources :topics
   match 't/:id' => 'topics#show', :as => :topic
 
+  # News
   resources :news
 
+  # Talk
   resources :talks
 
+  # Feeds
   post 'feeds/update' => 'feeds#update', :as => :feed_update
 
+  # Following
+  post 'follow_user' => 'users#follow_toggle', :as => :user_follow
+  post 'follow_topic' => 'topics#follow_toggle', :as => :topic_follow
+
+  # Users
   devise_for :users
   resources :users, :only => :show
   match '/:id' => 'users#show', :as => :user
 
+  # Home
   root :to => "pages#home"
 
   # The priority is based upon order of creation:

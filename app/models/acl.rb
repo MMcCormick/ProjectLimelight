@@ -11,7 +11,7 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      field :permissions, :type => Hash
+      field :permissions, :default => {}
     end
 
     # @example Check to see if the object with the given MongoId has a given permission on this document
@@ -46,7 +46,6 @@ module Limelight #:nodoc:
     def grant_permission(object_id, permission)
       permission = [permission] unless permission.kind_of?(Array)
 
-      self.permissions ||= {}
       permission.each do |p|
         self.permissions[p] ||= []
         self.permissions[p] << object_id unless self.permissions[p].include?(object_id)
@@ -64,7 +63,7 @@ module Limelight #:nodoc:
       permission = [permission] unless permission.kind_of?(Array)
 
       permission.each do |p|
-        if self.permissions && self.permissions[p]
+        if self.permissions[p]
           self.permissions[p].delete(object_id)
         end
       end

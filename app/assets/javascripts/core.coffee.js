@@ -52,13 +52,6 @@
       createGrowl(false, params.flash.message.capitalize(), params.flash.type.capitalize(), theme);
     }
 
-    // does the user have to login?
-    if (params.result && params.result == 'login') {
-      $('#login').click();
-
-      return false;
-    }
-
     if (params.redirect) {
       pageClicked = true;
       pageGet({'url': params.redirect}, pageClick, null);
@@ -76,13 +69,21 @@
   /*
    * Main site-wide action function.
    */
-  doAction = function(params, success, error) {
+  doAction = function(requestType, params, success, error) {
     console.log('Action:' + params.url);
-    var $action = params.requestType == 'POST' ? 'postAction' : 'getAction';
-    amplify.request($action, { 'url': params.url }, function (data) {
-      appUpdate(data);
-      if (success) {
-        success({'url': params.url}, data);
+    var $action = requestType == 'POST' ? 'postAction' : 'getAction';
+    amplify.request($action, params, function (data, xhr) {
+      // Do we need to login?
+      if (xhr.status == 401)
+      {
+        $('#login').click();
+      }
+      else
+      {
+        appUpdate(data);
+        if (success) {
+          success({'url': params.url}, data);
+        }
       }
     })
   };

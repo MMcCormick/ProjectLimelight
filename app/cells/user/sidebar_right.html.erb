@@ -1,0 +1,18 @@
+<div class="sbrC">
+    <%= render('user/panel_right', :user => @user) %>
+
+    <a class="p sidebarB btn" href="{{ path('object_show', {'slug': object.slug}) }}">
+        <div class="icon feed-icon"></div>
+        <%= @user.username %>'s Feed
+    </a>
+
+    <div class="sidebar-list">
+        <h5><%= @user.username %>'s Lists</h5>
+        <a class="list-view" href="#">View All</a>
+
+        <div class="clear"></div>
+
+        {% render "LimelightBundle:LList:list" with {'userId': object.User.id}, {'standalone': true} %}
+        
+    </div>
+</div>

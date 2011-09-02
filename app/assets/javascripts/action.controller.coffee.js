@@ -10,10 +10,45 @@ $(function() {
 
     $currentTarget = $this;
 
-    doAction({'url': url, 'requestType': requestType}, null, null);
+    doAction(requestType, {'url': url}, null, null);
     event.preventDefault();
 
     return false;
   });
+
+  // Perform a button action
+  $('.btnp').live('click', function(event) {
+    // Ajaxify this link
+    var $this = $(this),
+        url = $this.data('url'),
+        requestType = 'POST';
+
+    $currentTarget = $this;
+    var $payload = $this.data('d');
+    $payload['url'] = url;
+
+    doAction(requestType, $payload, toggleButton, null);
+    event.preventDefault();
+
+    $currentTarget.fadeTo(100, .5).css('cursor', 'default');
+
+    return false;
+  });
+
+  function toggleButton(params, data)
+  {
+    if (data.status == 'ok')
+    {
+      var target = $(data.target);
+      $.each(data.toggle_classes, function(i, val) {
+        target.toggleClass(val);
+      })
+    }
+    else
+    {
+      alert('error (fill this)')
+    }
+    $currentTarget.fadeTo(100, 1).css('cursor', 'pointer');
+  }
 
 }); // end onDomLoad

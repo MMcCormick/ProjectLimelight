@@ -1,0 +1,19 @@
+<div id="topic-panel" class="sbrC">
+  <h1><%= @topic.name %></h1>
+
+  <div><%= @topic.followers_count %> followers</div>
+  <ul class="topic-types">
+    <li class="none">Un-typed</li>
+
+  </ul>
+
+  <%= render 'topic/follow_btn', :target_topic => @topic %>
+
+  <div class="summary">summary</div>
+
+  <div class="footer">
+    <div class="content">
+      <div class="edit acg" data-url="{{ path('topic_edit', {'id': object.id}) }}">edit</div>
+    </div>
+  </div>
+</div>

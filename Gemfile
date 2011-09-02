@@ -12,8 +12,8 @@ gem "rspec-cells"
 gem "redcarpet" # Markdown support
 gem 'foreman'
 group :assets do
-  gem 'sass-rails'
   gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'
+  gem 'sass-rails'
   gem 'coffee-rails'
   gem 'uglifier'
 end

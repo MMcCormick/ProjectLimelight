@@ -42,14 +42,7 @@
       type: "POST",
       url: "{url}",
       decoder: function(data, status, xhr, success, error) {
-        // Lets check if it's already an object
-        if ($.isPlainObject(data)) {
-          success(data);
-        }
-        else {
-          // Else parse the XML into an object
-          success(htmlToJson(data));
-        }
+        success(data, xhr);
       }
     });
 

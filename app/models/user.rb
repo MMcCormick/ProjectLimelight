@@ -29,11 +29,11 @@ class User
 
   slug :username
 
-  field :roles, :type => Array
+  field :roles, :default => []
   field :following_users_count, :default => 0
-  field :following_users, :type => Array
+  field :following_users, :default => []
   field :following_topics_count, :default => 0
-  field :following_topics, :type => Array
+  field :following_topics, :default => []
   field :followers_count, :default => 0
 
   has_many :core_objects
@@ -57,7 +57,6 @@ class User
 
   # Adds a role to this user
   def grant_role(role)
-    self.roles ||= []
     self.roles << role unless self.roles.include?(role)
   end
 
@@ -72,8 +71,15 @@ class User
     self.following_users.include? user_id
   end
 
+  def toggle_follow_user(user)
+    if is_following_user? user.id
+      unfollow_user user
+    else
+      follow_user user
+    end
+  end
+
   def follow_user(user)
-    self.following_users ||= []
     if !self.following_users.include?(user.id)
       self.following_users << user.id
       self.following_users_count += 1
@@ -82,19 +88,26 @@ class User
   end
 
   def unfollow_user(user)
-    if self.following_users and self.following_users.include?(user.id)
+    if self.following_users.include?(user.id)
       self.following_users.delete(user.id)
       self.following_users_count -= 1
       user.followers_count -= 1
     end
   end
 
-  def is_following_topic?(topic)
-    self.following_topics.include? topic.id
+  def is_following_topic?(topic_id)
+    self.following_topics.include? topic_id
+  end
+
+  def toggle_follow_topic(topic)
+    if is_following_topic? topic.id
+      unfollow_topic topic
+    else
+      follow_topic topic
+    end
   end
 
   def follow_topic(topic)
-    self.following_topics ||= []
     if !self.following_topics.include?(topic.id)
       self.following_topics << topic.id
       self.following_topics_count += 1
@@ -103,7 +116,7 @@ class User
   end
 
   def unfollow_topic(topic)
-    if self.following_topics and self.following_topics.include?(topic.id)
+    if self.following_topics.include?(topic.id)
       self.following_topics.delete(topic.id)
       self.following_topics_count -= 1
       topic.followers_count -= 1

@@ -1,0 +1,4 @@
+<button class="btnp <%= !signed_in? || !current_user.is_following_user?(target_user.id) ? 'followB' : 'unfollowB' %> fol_<%= target_user.id %>" data-url="<%= user_follow_path %>" data-d='{"id":"<%= target_user.id %>"}'>
+  <span class="default"><div class="plus-green-icon icon"></div>Follow</span>
+  <span class="triggered"><div class="minus-green-icon icon"></div>Unfollow</span>
+</button>

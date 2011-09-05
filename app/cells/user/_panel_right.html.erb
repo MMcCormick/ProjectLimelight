@@ -1,5 +1,5 @@
 <div class="user-panel">
-    <h2><%= user.username %></h2>
+    <h2><%= @user.username %></h2>
     <div class="score" title="Your Score">0</div>
     <div class="clear"></div>
 
@@ -10,12 +10,12 @@
     <div class="right">
         <div class="stat followers">
             <div class="label">Followers</div>
-            <a class="btn" href="{{ path('user_followers', {'slug': object.slug }) }}"><span><%= user.followers_count %></span></a>
+            <a class="btn" href="<%= user_followers_path @user %>"><span><%= user.followers_count %></span></a>
         </div>
         <div class="stat following">
             <div class="label">Following</div>
-            <a class="btn" href="{{ path('user_following_users', {'slug': object.slug }) }}"><span><%= user.following_users_count %></span> Users</a>
-            <a class="btn topics" href="{{ path('user_following_topics', {'slug': userObject.slug }) }}"><span><%= user.following_topics_count %></span> Topics</a>
+            <a class="btn" href="<%= user_following_users_path @user %>"><span><%= user.following_users_count %></span> Users</a>
+            <a class="btn topics" href="<%= user_following_topics_path @user %>"><span><%= user.following_topics_count %></span> Topics</a>
         </div>
     </div>
 

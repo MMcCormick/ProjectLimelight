@@ -20,4 +20,19 @@ class UsersController < ApplicationController
       format.json { render json: response }
     end
   end
+
+  def following_users
+    @user = User.find_by_slug(params[:id])
+    @following_users = User.where(:_id.in => @user.following_users)
+  end
+
+  def followers
+    @user = User.find_by_slug(params[:id])
+    @followers = User.where(:following_users => @user.id)
+  end
+
+  def following_topics
+    @user = User.find_by_slug(params[:id])
+    @following_topics = Topic.where(:_id.in => @user.following_topics)
+  end
 end

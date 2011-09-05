@@ -1,0 +1,9 @@
+<% if !@followers.empty? %>
+  <ul class="user-list">
+    <% @followers.each do |follower| %>
+      <%= render 'users/teaser', :user => follower %>
+    <% end %>
+  </ul>
+<% else %>
+  <div class="empty">This user is not following any topics!</div>
+<% end %>

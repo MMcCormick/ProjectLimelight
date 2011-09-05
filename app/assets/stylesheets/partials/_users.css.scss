@@ -375,8 +375,8 @@ $column-width: 30%;
         .unfollowB {
             @include opacity(.5);
             margin: 0;
-            padding-top: 2px;
-            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-bottom: 3px;
             background: none;
             color: grey;
             float: left;

@@ -1,0 +1,4 @@
+<li class="teaser <%= cycle("odd", "") -%>">
+  <div><%= user_link user %></div>
+  <%= render 'users/follow_btn', :target_user => user %>
+</li>

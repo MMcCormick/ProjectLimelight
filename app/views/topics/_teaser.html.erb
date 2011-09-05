@@ -1,0 +1,4 @@
+<li class="teaser <%= cycle("odd", "") -%>">
+  <div><%= topic_link topic %></div>
+  <%= render 'topics/follow_btn', :target_topic => topic %>
+</li>

@@ -14,6 +14,10 @@ ProjectLimelight::Application.configure do
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
+  # Don't fallback to assets pipeline if a precompiled asset is missing
+  config.assets.compile = false
+
+  # Generate digets for assets URLs
   config.assets.digest = true
 
   # Specifies the header that your server uses for sending files

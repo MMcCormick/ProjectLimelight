@@ -18,7 +18,7 @@ group :assets do
   gem 'uglifier'
 end
 group :production do
-  gem 'therubyracer'
+  #gem 'therubyracer'
 end
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 group :development do
@@ -35,7 +35,7 @@ group :test do
   gem "ZenTest"
   gem "autotest-rails-pure"
   gem "autotest-growl"
-  gem "autotest-fsevent"
+  #gem "autotest-fsevent"
   gem "spork"
   gem "guard"
   gem "guard-spork"

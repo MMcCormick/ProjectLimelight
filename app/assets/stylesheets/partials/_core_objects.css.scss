@@ -125,6 +125,23 @@
   }
 }
 
+// Styling for favorite button
+.favB ,
+.unfavB {
+    margin: 5px 5px;
+    display: block;
+}
+.favB {
+  .triggered {
+    display: none;
+  }
+}
+.unfavB {
+  .default {
+    display: none;
+  }
+}
+
 .object-feed {
     @include clearfix();
     padding: 5px 0 35px 0;

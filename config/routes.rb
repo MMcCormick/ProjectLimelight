@@ -20,6 +20,10 @@ ProjectLimelight::Application.routes.draw do
   post 'follow_user' => 'users#follow_toggle', :as => :user_follow
   post 'follow_topic' => 'topics#follow_toggle', :as => :topic_follow
 
+  # Favoriting
+  post '/:id/add_favorite' => 'favorites#add', :as => :add_favorite
+  post '/:id/remove_favorite' => 'favorites#remove', :as => :remove_favorite
+
   # Users
   devise_for :users
   resources :users, :only => :show

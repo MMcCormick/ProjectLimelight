@@ -9,6 +9,7 @@ class CoreObject
 
   field :content
   field :status, :default => 'Active'
+  field :favorited_by, :default => []
   field :user_id
 
   embeds_one :user_snippet, as: :user_assignable
@@ -22,6 +23,34 @@ class CoreObject
 
   def set_user_snippet(user)
     self.build_user_snippet({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+  end
+
+  def is_following_user?(user_id)
+    self.following_users.include? user_id
+  end
+
+  def toggle_follow_user(user)
+    if is_following_user? user.id
+      unfollow_user user
+    else
+      follow_user user
+    end
+  end
+
+  def follow_user(user)
+    if !self.following_users.include?(user.id)
+      self.following_users << user.id
+      self.following_users_count += 1
+      user.followers_count += 1
+    end
+  end
+
+  def unfollow_user(user)
+    if self.following_users.include?(user.id)
+      self.following_users.delete(user.id)
+      self.following_users_count -= 1
+      user.followers_count -= 1
+    end
   end
 
   def set_mentions

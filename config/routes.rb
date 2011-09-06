@@ -1,5 +1,8 @@
 ProjectLimelight::Application.routes.draw do
 
+  # Videos
+  resources :videos
+
   # Topics
   resources :topics
   match 't/:id' => 'topics#show', :as => :topic

@@ -38,6 +38,7 @@ class User
 
   has_many :core_objects
   has_many :news
+  has_many :videos
   has_many :talks
   has_many :topics
 

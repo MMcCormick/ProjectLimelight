@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   def has_permission?(object, target, permission)
-    target.has_role?("admin") || target.has_permission?(object.id, permission)
+    object.has_role?("admin") || target.has_permission?(object.id, permission)
   end
 
   private

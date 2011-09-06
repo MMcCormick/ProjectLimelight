@@ -6,11 +6,11 @@
 
       <%= render('user/panel_left', :user => @user) %>
 
-      <a id="my-feed" class="p sidebarB btn" data-d='{ "url": "{{ path("follow_add") }}" }' href="{{ path('object_show', {'slug': userObject.slug }) }}">
+      <a id="my-feed" class="p sidebarB btn" data-d='{ "url": "{{ path("follow_add") }}" }' href="<%= user_feed_path @user %>">
         <div class="icon feed-icon"></div>
         My Feed
       </a>
-      <a id="my-favorites" class="p sidebarB btn" data-d='{ "url": "{{ path("favorite_toggle") }}" }' href="{{ path('user_favorites', {'slug': userObject.slug|default(none)}) }}">
+      <a id="my-favorites" class="p sidebarB btn" data-d='{ "url": "{{ path("favorite_toggle") }}" }' href="#">
         <div class="icon user-favorites-icon"></div>
         Favorites
       </a>

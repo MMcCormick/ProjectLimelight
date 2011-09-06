@@ -81,4 +81,28 @@ class CoreObject
       end
     end
   end
+
+
+  # @example Fetch the core_objects for a feed with the given criteria
+  #   CoreObject.feed
+  #
+  # @param [ display_types ] Array of CoreObject types to fetch for the feed
+  # @param [ order_by ] Array of format [field, direction] to sort the feed
+  # @param { options } Options TODO: Fill out these options
+  #
+  # @return [ CoreObjects ]
+  def self.feed(display_types, order_by, options)
+    or_criteria = []
+    or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users]
+    or_criteria << {"topic_mentions._id.in" => options[:mentions_topics]} if options[:mentions_topics]
+    or_criteria << {"user_mentions._id.in" => options[:mentions_users]} if options[:mentions_users]
+
+    if (or_criteria.length > 0)
+      core_objects = self.any_in("_type" => display_types).any_of(or_criteria)
+    else
+      core_objects = self.any_in("_type" => display_types)
+    end
+
+    core_objects.order_by([order_by])
+  end
 end

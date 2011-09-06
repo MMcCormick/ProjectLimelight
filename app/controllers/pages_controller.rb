@@ -2,7 +2,7 @@ class PagesController < ApplicationController
 
   def home
     @title = 'Home'
-    @core_objects = CoreObject.any_in("_type" => session[:feed_filters][:display])
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {})
 
     respond_to do |format|
       format.html # index.html.erb

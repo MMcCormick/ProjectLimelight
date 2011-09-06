@@ -35,4 +35,25 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     @following_topics = Topic.where(:_id.in => @user.following_topics)
   end
+
+  # Get a users main feed
+  # Includes core objects created by users this user is following
+  # Includes core objects mentioning topics this user is following
+  # Includes core objects mentioning this user
+  def feed
+    @user = User.find_by_slug(params[:id])
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
+            :created_by_users => @user.following_users,
+            :mentions_topics => @user.following_topics,
+            :mentions_users => [@user.id]
+    })
+  end
+
+  def contributions
+    @user = User.find_by_slug(params[:id])
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
+            :created_by_users => [@user.id],
+    })
+  end
+
 end

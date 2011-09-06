@@ -20,11 +20,11 @@ $(function() {
   $('.btnp').live('click', function(event) {
     // Ajaxify this link
     var $this = $(this),
-        url = $this.data('url'),
+        url = $this.find('span:visible').data('url'),
         requestType = 'POST';
 
     $currentTarget = $this;
-    var $payload = $this.data('d');
+    var $payload = $this.find('span:visible').data('d');
     $payload['url'] = url;
 
     doAction(requestType, $payload, toggleButton, null);

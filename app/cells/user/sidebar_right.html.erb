@@ -1,7 +1,7 @@
 <div class="sbrC">
     <%= render 'user/panel_right', :user => @user %>
 
-    <a class="p sidebarB btn" href="{{ path('object_show', {'slug': object.slug}) }}">
+    <a class="p sidebarB btn" href="<%= user_feed_path @user %>">
         <div class="icon feed-icon"></div>
         <%= @user.username %>'s Feed
     </a>

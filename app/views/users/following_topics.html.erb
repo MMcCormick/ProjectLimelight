@@ -1,3 +1,7 @@
+<% content_for :sidebar_right do %>
+  <%= render_cell(:user, :sidebar_right, :user => @user) %>
+<% end %>
+
 <% if !@following_topics.empty? %>
   <ul class="user-list">
     <% @following_topics.each do |following_topic| %>

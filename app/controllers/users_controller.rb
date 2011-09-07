@@ -44,6 +44,7 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
             :created_by_users => @user.following_users,
+            :reposted_by_users => @user.following_users,
             :mentions_topics => @user.following_topics,
             :mentions_users => [@user.id]
     })

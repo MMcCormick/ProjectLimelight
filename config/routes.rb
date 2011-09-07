@@ -25,6 +25,10 @@ ProjectLimelight::Application.routes.draw do
   post '/favorite/destroy' => 'favorites#destroy', :as => :destroy_favorite
   get '/:id/favorites' => 'favorites#index', :as => :user_favorites
 
+  # Reposting
+  post '/repost/create' => 'reposts#create', :as => :create_repost
+  post '/repost/destroy' => 'reposts#destroy', :as => :destroy_repost
+
   # Users
   devise_for :users
   resources :users, :only => :show

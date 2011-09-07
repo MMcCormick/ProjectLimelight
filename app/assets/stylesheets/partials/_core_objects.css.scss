@@ -114,29 +114,30 @@
         top: 6px; left: 8px;
     }
 }
-.followB {
-  .triggered {
-    display: none;
-  }
-}
-.unfollowB {
-  .default {
-    display: none;
-  }
-}
 
-// Styling for favorite button
-.favB ,
-.unfavB {
-    margin: 5px 5px;
+// Styling for temporary favorite / repost buttons
+.favB,
+.unfavB,
+.repostB,
+.unrepostB
+ {
+    float: left;
+    font-size: 12px;
+    margin: 2px 2px;
     display: block;
 }
-.favB {
+
+// Styling for btnps that swap
+.followB,
+.favB,
+.repostB {
   .triggered {
     display: none;
   }
 }
-.unfavB {
+.unfollowB,
+.unfavB,
+.unrepostB {
   .default {
     display: none;
   }

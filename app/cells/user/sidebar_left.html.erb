@@ -6,11 +6,11 @@
 
       <%= render('user/panel_left', :user => @user) %>
 
-      <a id="my-feed" class="p sidebarB btn" data-d='{ "url": "{{ path("follow_add") }}" }' href="<%= user_feed_path @user %>">
+      <a id="my-feed" class="p sidebarB btn" href="<%= user_feed_path @user %>">
         <div class="icon feed-icon"></div>
         My Feed
       </a>
-      <a id="my-favorites" class="p sidebarB btn" data-d='{ "url": "{{ path("favorite_toggle") }}" }' href="#">
+      <a id="my-favorites" class="p sidebarB btn" href="<%= user_favorites_path @user %>">
         <div class="icon user-favorites-icon"></div>
         Favorites
       </a>
@@ -53,10 +53,11 @@
       <a class="btn" title="Contributions" href="#">
         <div class="icon user-contributions-icon"></div>
       </a>
-      <a id="my-feed" title="My Feed" class="p btn" data-d='{ "url": "{{ path("follow_add") }}" }' href="{{ path('object_show', {'slug': userObject.slug }) }}">
+      <a id="my-feed" title="My Feed" class="p btn" href="{{ path('object_show', {'slug': userObject.slug }) }}">
         <div class="icon feed-icon"></div>
       </a>
-      <a id="my-favorites" title="My Favorites" class="p btn" data-d='{ "url": "{{ path("favorite_toggle") }}" }' href="{{ path('user_favorites', {'slug': userObject.slug|default(none)}) }}">
+      <%= user_favorites_path @user %>
+      <a id="my-favorites" title="My Favorites" class="p btn" href="<%= user_favorites_path @user %>">
         <div class="icon user-favorites-icon"></div>
       </a>
     </div>

@@ -1,4 +1,10 @@
-<button class="btnp <%= !signed_in? || !object.has_favorite?(current_user) ? 'favB' : 'unfavB' %> fav_<%= object.id %>" data-d='{"id":"<%= object.id %>"}'>
-  <span class="default" data-url="<%= add_favorite_path %>"><div class="plus-green-icon icon"></div>Favorite</span>
-  <span class="triggered" data-url="<%= remove_favorite_path %>"><div class="minus-green-icon icon"></div>Unfavorite</span>
+<button class="btnp <%= !signed_in? || !object.is_favorited_by?(current_user.id) ? 'favB' : 'unfavB' %> fav_<%= object.id %>">
+  <span class="default" data-url="<%= create_favorite_path %>" data-d='{"id":"<%= object.id %>"}'>
+    <div class="plus-green-icon icon"></div>
+    Favorite
+  </span>
+  <span class="triggered" data-url="<%= destroy_favorite_path %>" data-d='{"id":"<%= object.id %>"}'>
+    <div class="minus-green-icon icon"></div>
+    Unfavorite
+  </span>
 </button>

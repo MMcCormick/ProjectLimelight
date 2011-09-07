@@ -9,7 +9,8 @@ class CoreObject
 
   field :content
   field :status, :default => 'Active'
-  field :favorited_by, :default => []
+  field :favorites, :default => []
+  field :favorites_count, :default => 0
   field :user_id
 
   embeds_one :user_snippet, as: :user_assignable
@@ -25,31 +26,23 @@ class CoreObject
     self.build_user_snippet({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
   end
 
-  def is_following_user?(user_id)
-    self.following_users.include? user_id
+  def is_favorited_by?(user_id)
+    self.favorites.include? user_id
   end
 
-  def toggle_follow_user(user)
-    if is_following_user? user.id
-      unfollow_user user
-    else
-      follow_user user
+  def add_to_favorites(user)
+    if !self.is_favorited_by? user.id
+      self.favorites << user.id
+      self.favorites_count += 1
+      user.favorites_count += 1
     end
   end
 
-  def follow_user(user)
-    if !self.following_users.include?(user.id)
-      self.following_users << user.id
-      self.following_users_count += 1
-      user.followers_count += 1
-    end
-  end
-
-  def unfollow_user(user)
-    if self.following_users.include?(user.id)
-      self.following_users.delete(user.id)
-      self.following_users_count -= 1
-      user.followers_count -= 1
+  def remove_from_favorites(user)
+    if self.is_favorited_by? user.id
+      self.favorites.delete(user.id)
+      self.favorites_count -= 1
+      user.favorites_count -= 1
     end
   end
 
@@ -125,6 +118,7 @@ class CoreObject
     or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users]
     or_criteria << {"topic_mentions._id.in" => options[:mentions_topics]} if options[:mentions_topics]
     or_criteria << {"user_mentions._id.in" => options[:mentions_users]} if options[:mentions_users]
+    or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
 
     if (or_criteria.length > 0)
       core_objects = self.any_in("_type" => display_types).any_of(or_criteria)

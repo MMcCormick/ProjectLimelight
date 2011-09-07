@@ -1,8 +1,10 @@
 class Video < CoreObject
-  field :url, :type => String
-  field :title, :type => String
 
-  attr_accessible :url, :title
+  field :url, :type => String
+
+  # Denormilized:
+  # CoreObject.response_to.name
+  field :title, :type => String
 
   slug :title
 
@@ -10,4 +12,7 @@ class Video < CoreObject
                     :presence => true
   validates :url, :presence => true
   validates_format_of :url, :with => URI::regexp(%w(http https))
+
+  attr_accessible :url, :title
+
 end

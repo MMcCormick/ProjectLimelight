@@ -65,3 +65,6 @@ tmp/*
 
 # RubyMine project files
 /.idea
+
+# Uploaded files
+/public/uploads

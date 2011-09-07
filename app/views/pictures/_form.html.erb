@@ -13,6 +13,9 @@
     <%= f.label :content %><br />
     <%= f.text_field :content %>
   </div>
+  <div class="field">
+    <%= f.file_field :image %>
+  </div>
   <% if defined? response_to %>
     <%= f.hidden_field :response_to, :value => response_to.id %>
   <% end %>

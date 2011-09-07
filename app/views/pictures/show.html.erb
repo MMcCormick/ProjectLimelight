@@ -6,11 +6,11 @@
 </p>
 
 <p>
-  <b>Url:</b>
-  <%= @picture.url %>
+  <b>Title:</b>
+  <%= @picture.content %>
 </p>
 
-<%= image_tag @picture.image_url.to_s %>
+<%= image_tag @picture.image_url(:d500_500).to_s %>
 
 
 <%= link_to 'Edit', edit_picture_path(@picture) %> |

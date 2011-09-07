@@ -42,6 +42,7 @@ class User
   has_many :news
   has_many :videos
   has_many :talks
+  has_many :pictures
   has_many :topics
 
   validates :username, :presence => true

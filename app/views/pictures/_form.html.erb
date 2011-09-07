@@ -1,0 +1,22 @@
+<%= form_for(@picture) do |f| %>
+  <%= render 'shared/error_messages', :object => f.object %>
+
+  <div class="field">
+    <%= f.label :url %><br />
+    <%= f.text_field :url %>
+  </div>
+  <div class="field">
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :content %><br />
+    <%= f.text_field :content %>
+  </div>
+  <% if defined? response_to %>
+    <%= f.hidden_field :response_to, :value => response_to.id %>
+  <% end %>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

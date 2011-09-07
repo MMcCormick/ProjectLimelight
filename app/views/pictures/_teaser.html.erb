@@ -1,0 +1,52 @@
+<li class="teaser oS list picture o-<%= object.id %>">
+
+  <div class="content">
+    <h2 class="titleC">
+      <%= link_to object.title, object %>
+      <% if object.response_to %>
+        @
+        <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">
+          [connected title]
+          <span class="tType">Picture</span>
+        </a>
+      <% end %>
+    </h2>
+    <!-- IMAGE LOCATION -->
+
+    <div class="createdC">
+      <div class="time"><%= time_ago_in_words(object.created_at, false) %> ago</div>
+    </div>
+    <%= parse_mentions(markdown(object.content), object) %>
+  </div>
+
+  <div class="connectionsC">
+    <div class="wrapper">
+      <div class="oType">
+        Picture
+      </div>
+
+      <a href="<%= url_for object %>" class="commentC p">
+        <div class="comment-icon"></div>
+        0
+      </a>
+
+      <% if object.topic_mentions %>
+        <div class="related-topics">
+          <% object.topic_mentions.each do |topic| %>
+            <%= render 'topics/tag', :topic => topic %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="scoreBox">
+    <!-- VOTE CONTROLS -->
+    <div class="controlsC">
+      <!-- FAVORITE BUTTON -->
+      <div class="link-icon"></div>
+      <!---->
+    </div>
+  </div>
+
+</li>

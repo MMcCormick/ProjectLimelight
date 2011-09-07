@@ -1,5 +1,7 @@
 ProjectLimelight::Application.routes.draw do
 
+  resources :pictures
+
   # Videos
   resources :videos
 

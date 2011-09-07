@@ -1,51 +1,9 @@
 $(function() {
 
-  jQuery.fn.extend({
-    // Inserts text at the caret
-    // $('#element').insertAtCaret('foo');
-    insertAtCaret: function(myValue, offset) {
-      return this.each(function(i) {
-        if (document.selection) {
-          this.focus();
-          sel = document.selection.createRange();
-          sel.text = myValue;
-          this.focus();
-        }
-        else if (this.selectionStart || this.selectionStart == '0') {
-          var startPos = this.selectionStart;
-          var endPos = this.selectionEnd;
-          var scrollTop = this.scrollTop;
-          this.value = this.value.substring(0, startPos) + myValue + this.value.substring(endPos, this.value.length);
-          this.focus();
-          this.selectionStart = startPos + offset + myValue.length;
-          this.selectionEnd = startPos + offset + myValue.length;
-          this.scrollTop = scrollTop;
-        } else {
-          this.value += myValue;
-          this.focus();
-        }
-      })
-    },
-    textBeforeCursor: function(distanceBefore) {
-      var t = this[0];
-      if ($.browser.msie) {
-        var range = document.selection.createRange();
-        var stored_range = range.duplicate();
-        stored_range.moveToElementText(t);
-        stored_range.setEndPoint('EndToEnd', range);
-        var e = stored_range.text.length - range.text.length;
-        var s = e - distanceBefore;
-      }
-      else {
-        var e = t.selectionStart, s = e - distanceBefore;
-      }
-      if (s < 0) {
-        s = 0;
-      }
-      var te = t.value.substring(s, e);
-      return {start: s, end: e, text: te}
-    }
-  });
+  function isUrl(s) {
+    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+    return regexp.test(s);
+  }
 
   // Sets the cursor to a position in an input
   $.fn.selectRange = function(start, end) {

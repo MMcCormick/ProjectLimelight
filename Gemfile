@@ -11,7 +11,7 @@ gem 'cells' # Components
 gem 'rspec-cells'
 gem 'redcarpet' # Markdown
 gem 'fog' # Cloud support (amazon s3, etc)
-gem 'rmagick' # Image manipulation
+gem 'mini_magick' # Image manipulation
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 

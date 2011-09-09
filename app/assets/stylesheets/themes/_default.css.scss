@@ -76,6 +76,23 @@ $talk-color: #D88E00;
     }
 }
 
+@mixin green-conservative-button($font-size, $radius, $border-width) {
+    @include border-radius($radius);
+    background-color: #E6FAE5;
+    border: $border-width solid #90C399;
+    color: #2D4479;
+    font-weight: bold;
+    font-size: $font-size;
+    position: relative;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: none;
+        background-color: #DFF2DE;
+    }
+}
+
 @mixin list-teaser($column-width) {
     @include clearfix();
         @include border-radius(3px);

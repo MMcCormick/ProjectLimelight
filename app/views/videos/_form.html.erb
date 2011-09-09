@@ -1,19 +1,35 @@
-<%= form_for(@video) do |f| %>
+<%= form_for @video, :html => { :class => 'core_object' } do |f| %>
+  <div class="help">
+    <span>red</span> = required field
+  </div>
+
   <%= render 'shared/error_messages', :object => f.object %>
 
-  <div class="field">
-    <%= f.label :url %><br />
-    <%= f.text_field :url %>
+  <div class="group">
+    <div class="field lClear required bottom" data-tip="Video URL">
+      <%= f.label :url, "The URL where the video can be found..." %>
+      <%= f.url_field :url %>
+    </div>
+    <div class="field lClear required bottom important" data-tip="Video Title">
+      <%= f.label :title, "The title for the video, your hook..." %>
+      <%= f.text_field :title %>
+    </div>
+    <div class="field lClear" data-tip="Video Description">
+      <%= f.label :content, "Describe the video..." %>
+      <%= f.text_area :content %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Post Video", :disable_with => "Working..." %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :title %><br />
-    <%= f.text_field :title %>
+
+  <%= f.hidden_field :provider_name %>
+  <%= f.hidden_field :provider_video_id %>
+
+  <div class="preview">
+    <h4>Preview</h4>
+    <div class="content"></div>
   </div>
-  <div class="field">
-    <%= f.label :content, "Description" %><br />
-    <%= f.text_area :content %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+
 <% end %>

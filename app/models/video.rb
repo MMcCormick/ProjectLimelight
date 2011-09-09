@@ -1,20 +1,22 @@
 class Video < CoreObject
 
-  field :url, :type => String
+  attr_accessible :url, :title, :provider_name, :provider_video_id
+
+  field :url
+  field :provider_name
+  field :provider_video_id
 
   # Denormilized:
   # CoreObject.response_to.name
   # CoreObjectShare.core_object_snippet.name
-  field :title, :type => String
+  field :title
 
   slug :title
 
-  validates :title, :length => { :minimum => 5, :maximum => 50 },
-                    :presence => true
-  validates :url, :presence => true
+  validates :title, :length => { :minimum => 5, :maximum => 50 }, :presence => true
   validates_format_of :url, :with => URI::regexp(%w(http https))
-
-  attr_accessible :url, :title
+  validates :provider_name, :presence => true
+  validates :provider_video_id, :presence => true
 
   def name
     self.title

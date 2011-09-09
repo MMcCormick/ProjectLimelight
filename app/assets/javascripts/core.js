@@ -2,26 +2,26 @@
 
   // Prepare Variables
   History = window.History,
-          rootUrl = History.getRootUrl(),
-          $ = window.jQuery,
-          $body = $(document.body),
-          $application = $('#application'),
-          $pageHeader = $('#page_header .wrap'),
-          $feedFilters = $('#feed-filters'),
-          $pageSidebar1 = $('#page-sb1'),
-          $pageSidebar1Content = $('#page-sb1 .wrap'),
-          $pageSidebar2 = $('#page-sb2'),
-          $pageSidebar2Content = $('#page-sb2 .wrap'),
-          $pageSidebar3 = $('#page-sb3'),
-          $pageSidebar3Content = $('#page-sb3 .wrap'),
-          $pageContent = $('#page_content'),
-          $pageContentContent = $('#page_content .wrap'),
-          $sidebar = $('#sidebar'),
-          $sidebarRight = $('#sidebar-right'),
-          $sidebarRightContent = $('#sidebar-right .wrap'),
-          $footer = $('#footer'),
-          pageClicked = false,// Keeps track of wether a page link has been clicked.
-          $currentTarget = null; // The current clicked element.
+  rootUrl = History.getRootUrl(),
+  $ = window.jQuery,
+  $body = $(document.body),
+  $application = $('#application'),
+  $pageHeader = $('#page_header .wrap'),
+  $feedFilters = $('#feed-filters'),
+  $pageSidebar1 = $('#page-sb1'),
+  $pageSidebar1Content = $('#page-sb1 .wrap'),
+  $pageSidebar2 = $('#page-sb2'),
+  $pageSidebar2Content = $('#page-sb2 .wrap'),
+  $pageSidebar3 = $('#page-sb3'),
+  $pageSidebar3Content = $('#page-sb3 .wrap'),
+  $pageContent = $('#page_content'),
+  $pageContentContent = $('#page_content .wrap'),
+  $sidebar = $('#sidebar'),
+  $sidebarRight = $('#sidebar-right'),
+  $sidebarRightContent = $('#sidebar-right .wrap'),
+  $footer = $('#footer'),
+  pageClicked = false,// Keeps track of wether a page link has been clicked.
+  $currentTarget = null; // The current clicked element.
 
   // Prepare placeholder function variables
   pageGet = '',
@@ -107,70 +107,6 @@
     $('#ajax-loading').fadeOut(150);
   }
 
-  /*
-   * SCROLLING
-   * http://jscrollpane.kelvinluck.com/index.html
-   */
-
-  // Internal scrollpanes
-//    buildScrollPane = function(target)
-//    {
-//        target.each(function() {
-//            var $self = $(this);
-//            $self.jScrollPane({
-//                animateScroll: true,
-//                animateEase: 'swing',
-//                verticalGutter: -4,
-//                hideFocus: true
-//            });
-//            var api = $self.data('jsp');
-//            var throttleTimeout;
-//            $(window).bind(
-//                'resize',
-//                function()
-//                {
-//                    if ($.browser.msie) {
-//                        // IE fires multiple resize events while you are dragging the browser window which
-//                        // causes it to crash if you try to update the scrollpane on every one. So we need
-//                        // to throttle it to fire a maximum of once every 50 milliseconds...
-//                        if (!throttleTimeout) {
-//                            throttleTimeout = setTimeout(
-//                                function()
-//                                {
-//                                    api.reinitialise();
-//                                    throttleTimeout = null;
-//                                },
-//                                50
-//                            );
-//                        }
-//                    } else {
-//                        api.reinitialise();
-//                    }
-//                }
-//            );
-//
-//            $self.bind(
-//                'resize',
-//                function()
-//                {
-//                    api.reinitialise();
-//                }
-//            )
-//        })
-//    }
-
-//    // Initialize all of the scroll panes
-//    buildScrollPane($('.scroll'));
-//
-//    // Rebuild a scroll pane
-//    resetScrollPane = function(target)
-//    {
-//        target.each(function() {
-//            $(this).data('jsp').destroy();
-//        })
-//        buildScrollPane($(target.selector));
-//    }
-//
   // Resize/reset the entire page.
   resetPage = function(rightSidebar) {
     resizeLayout(rightSidebar);

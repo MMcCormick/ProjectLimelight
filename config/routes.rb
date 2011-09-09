@@ -1,13 +1,10 @@
 ProjectLimelight::Application.routes.draw do
 
+  # Pictures
   resources :pictures
 
   # Videos
   resources :videos
-
-  # Topics
-  resources :topics
-  match 't/:id' => 'topics#show', :as => :topic
 
   # News
   resources :news
@@ -23,13 +20,20 @@ ProjectLimelight::Application.routes.draw do
   post 'follow_topic' => 'topics#follow_toggle', :as => :topic_follow
 
   # Favoriting
-  post '/favorite/create' => 'favorites#create', :as => :create_favorite
-  post '/favorite/destroy' => 'favorites#destroy', :as => :destroy_favorite
-  get '/:id/favorites' => 'favorites#index', :as => :user_favorites
+  post 'favorite/create' => 'favorites#create', :as => :create_favorite
+  post 'favorite/destroy' => 'favorites#destroy', :as => :destroy_favorite
+  get ':id/favorites' => 'favorites#index', :as => :user_favorites
 
   # Reposting
-  post '/repost/create' => 'reposts#create', :as => :create_repost
-  post '/repost/destroy' => 'reposts#destroy', :as => :destroy_repost
+  post 'repost/create' => 'reposts#create', :as => :create_repost
+  post 'repost/destroy' => 'reposts#destroy', :as => :destroy_repost
+
+  # Embedly
+  get 'embed' => 'embedly#show', :as => :embedly_fetch
+
+  # Topics
+  resources :topics
+  get 't/:id' => 'topics#show', :as => :topic
 
   # Notifications
   get '/:id/notifications' => 'notifications#index', :as => :notifications
@@ -40,14 +44,12 @@ ProjectLimelight::Application.routes.draw do
   # Users
   devise_for :users
   resources :users, :only => :show
-
-  get '/:id/following/users' => 'users#following_users', :as => :user_following_users
-  get '/:id/following/topics' => 'users#following_topics', :as => :user_following_topics
-  get '/:id/followers' => 'users#followers', :as => :user_followers
-  get '/:id/feed' => 'users#feed', :as => :user_feed
-  get '/:id/contributions' => 'users#contributions', :as => :user_contributions
-  get '/:id' => 'users#show', :as => :user
-
+  get ':id/following/users' => 'users#following_users', :as => :user_following_users
+  get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
+  get ':id/followers' => 'users#followers', :as => :user_followers
+  get ':id/feed' => 'users#feed', :as => :user_feed
+  get ':id/contributions' => 'users#contributions', :as => :user_contributions
+  get ':id' => 'users#show', :as => :user
 
   # Home
   root :to => "pages#home"

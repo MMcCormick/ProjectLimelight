@@ -7,7 +7,9 @@ require "active_resource/railtie"
 require "sprockets/railtie"
 require "compass"
 require "sass-rails"
+require 'uri'
 require 'net/http'
+require 'embedly'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line

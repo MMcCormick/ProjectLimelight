@@ -14,6 +14,7 @@ gem 'fog' # Cloud support (amazon s3, etc)
 gem 'mini_magick' # Image manipulation
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+gem 'embedly'
 
 group :assets do
   gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'

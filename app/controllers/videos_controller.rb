@@ -1,5 +1,7 @@
 class VideosController < ApplicationController
 
+  before_filter :authenticate_user!, :except => [:show]
+
   # GET /videos/1
   # GET /videos/1.json
   def show

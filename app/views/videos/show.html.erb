@@ -10,6 +10,8 @@
   <%= @video.title %>
 </p>
 
+<%= video_embed(@video, 480, 390) %>
+
 <%= render 'favorites/favorite_btn', :object => @video %>
 <%= render 'reposts/repost_btn', :object => @video %>
 

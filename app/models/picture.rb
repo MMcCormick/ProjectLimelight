@@ -5,6 +5,7 @@ class Picture < CoreObject
 
   # Denormilized:
   # CoreObject.response_to.name
+  # CoreObjectShare.core_object_snippet.name
   field :title, :type => String
 
   slug :title
@@ -15,4 +16,7 @@ class Picture < CoreObject
                     :presence => true
   validates_format_of :url, :with => URI::regexp(%w(http https)), :allow_nil => true
 
+  def name
+    self.title
+  end
 end

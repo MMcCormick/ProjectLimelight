@@ -1,0 +1,11 @@
+<form method="post" class="new_core_object_share" action="<%= create_share_path %>" accept-charset="UTF-8">
+
+  <div class="field">
+    <label for="friends">Friends</label><br>
+    <input type="text" size="30" name="core_object_share[receiver_slugs]" class="core_object_share_receivers">
+  </div>
+  <input type="hidden" class="object_id" name="core_object_share[core_object_id]">
+  <div class="actions">
+    <input type="submit" value="Share" name="commit">
+  </div>
+</form>

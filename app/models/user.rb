@@ -12,18 +12,24 @@ class User
   # Denormilized:
   # CoreObject.user_snippet.username
   # CoreObject.user_mentions.username
+  # CoreObjectShare.sender_snippet.username
+  # CoreObjectShare.receiver_snippets.username
   # Topic.user_snippet.username
   field :username
 
   # Denormilized:
   # CoreObject.user_snippet.first_name
   # CoreObject.user_mentions.first_name
+  # CoreObjectShare.sender_snippet.first_name
+  # CoreObjectShare.receiver_snippets.first_name
   # Topic.user_snippet.first_name
   field :first_name
 
   # Denormilized:
   # CoreObject.user_snippet.last_name
-  # CoreObject.user_mentions.first_name
+  # CoreObject.user_mentions.last_name
+  # CoreObjectShare.sender_snippet.last_name
+  # CoreObjectShare.receiver_snippets.last_name
   # Topic.user_snippet.last_name
   field :last_name
 
@@ -44,6 +50,7 @@ class User
   has_many :talks
   has_many :pictures
   has_many :topics
+  has_many :core_object_shares
 
   validates :username, :presence => true
   validates :username, :email, :uniqueness => { :case_sensitive => false }

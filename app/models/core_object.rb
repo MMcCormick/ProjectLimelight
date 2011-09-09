@@ -7,7 +7,10 @@ class CoreObject
   include Mongoid::Timestamps
   include Limelight::Acl
 
+  # Denormilized:
+  # CoreObjectShare.core_object_snippet.name (for talk only, other objects use Title)
   field :content
+
   field :status, :default => 'Active'
   field :favorites, :default => []
   field :favorites_count, :default => 0
@@ -19,6 +22,8 @@ class CoreObject
   embeds_one :response_to
   embeds_many :user_mentions, as: :user_mentionable
   embeds_many :topic_mentions, as: :topic_mentionable
+
+  has_many :core_object_shares
 
   belongs_to :user
   validates :user_id, :status, :presence => true

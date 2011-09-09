@@ -27,6 +27,7 @@
 //= require action.controller.coffee.js
 //= require form.controller.coffee.js
 //= require utilities
+//= require social
 //= require users
 //= require core_objects
 //= require main

@@ -4,6 +4,7 @@ class Video < CoreObject
 
   # Denormilized:
   # CoreObject.response_to.name
+  # CoreObjectShare.core_object_snippet.name
   field :title, :type => String
 
   slug :title
@@ -15,4 +16,7 @@ class Video < CoreObject
 
   attr_accessible :url, :title
 
+  def name
+    self.title
+  end
 end

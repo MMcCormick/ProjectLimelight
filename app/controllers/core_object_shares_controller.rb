@@ -29,7 +29,8 @@ class CoreObjectSharesController < ApplicationController
     end
 
     core_object_share.save!
-    render json: core_object_share
+    render json: { :event => 'core_object_share_created',
+                   :flash => { :type => :success, :message => 'Share successful!' } }
   end
 
 end

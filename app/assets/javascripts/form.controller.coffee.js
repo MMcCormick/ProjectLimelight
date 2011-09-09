@@ -1,15 +1,15 @@
 // Wait for Document
 $(function() {
 
-//  $('form:not(.noajax)').live('submit', function(event) {
-//    // Ajaxify this form
-//
-//    event.preventDefault();
-//    $currentTarget = $(this);
-//    formSubmit($(this), null, null);
-//
-//    return false;
-//  });
+  $('form:not(.noajax)').live('submit', function(event) {
+    // Ajaxify this form
+
+    event.preventDefault();
+    $currentTarget = $(this);
+    formSubmit($(this), null, null);
+
+    return false;
+  });
 
   /*
    * Submit and handle a form..
@@ -19,7 +19,7 @@ $(function() {
     console.log('Form submit');
 
     $.ajax({
-      type: 'POST',
+      type: form.attr('method'),
       url: form.attr('action'),
       data: form.serializeArray(),
       dataType: 'json',
@@ -37,7 +37,15 @@ $(function() {
           success();
         }
       },
-      error: function() {
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR)
+        console.log(textStatus)
+        console.log(errorThrown)
+        if (jqXHR.status == 401) {
+          $('#login').click()
+          $('#user_email').focus()
+          $('.qtip.ui-tooltip').qtip('hide')
+        }
         if (error) {
           error();
         }

@@ -121,4 +121,13 @@ $(function() {
     $('#login,#register').colorbox.resize();
   })
 
+  /*
+   * SHARING
+   */
+
+  amplify.subscribe("core_object_share_created", function (data) {
+    $('.qtip').qtip('hide')
+    $currentTarget.find('.core_object_share_receivers').val('');
+  })
+
 });

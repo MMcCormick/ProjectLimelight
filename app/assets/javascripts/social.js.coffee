@@ -14,17 +14,10 @@ jQuery ->
       }
       position: {
         my: 'top right'
-        at: 'bottom right'
+        at: 'bottom middle'
         viewport: $(window)
       }
+      style: {
+        classes: 'ui-tooltip-shadow coreShareTip'
+      }
     });
-
-  $('.new_core_object_share').live 'submit', (event) ->
-    event.preventDefault()
-    formValues = $(this).serializeArray()
-    $.post(
-      $(this).attr('action')
-      formValues
-      (data) ->
-        console.log(data)
-    )

@@ -6,6 +6,22 @@
         Handles anything that deals with manipulating objects in general.
 */
 
+// QTip for sharing a core object with friends
+.coreShareTip {
+    .ui-tooltip-content {
+        background-color: #F2F8E4;
+        border-color: #CAE09D;
+
+        input {
+            font-size: 10px;
+        }
+        .core_object_share_receivers,
+        .actions {
+            float: left;
+        }
+    }
+}
+
 #contributeC {
     padding: 5px 10px 10px;
     width: 647px;

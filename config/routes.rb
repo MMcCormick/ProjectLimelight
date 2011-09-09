@@ -31,6 +31,9 @@ ProjectLimelight::Application.routes.draw do
   post '/repost/create' => 'reposts#create', :as => :create_repost
   post '/repost/destroy' => 'reposts#destroy', :as => :destroy_repost
 
+  # Notifications
+  get '/:id/notifications' => 'notifications#index', :as => :notifications
+
   # Core Object Shares
   post '/share/create' => 'core_object_shares#create', :as => :create_share
 

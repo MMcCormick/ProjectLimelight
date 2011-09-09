@@ -1,3 +1,3 @@
 <% @core_objects.each do |core_object| %>
-  <%= render core_object.class.to_s.pluralize.downcase! + '/teaser', :object => core_object %>
+  <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object %>
 <% end %>

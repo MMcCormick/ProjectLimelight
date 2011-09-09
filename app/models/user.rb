@@ -43,6 +43,7 @@ class User
   field :followers_count, :default => 0
   field :favorites_count, :default => 0
   field :reposts_count, :default => 0
+  field :unread_notification_count, :default => 0
 
   has_many :core_objects
   has_many :news

@@ -24,8 +24,8 @@
             <div class="icon settings-icon"></div>
             Settings
         </a>
-        <a class="user-notifications btn" href="#">
-            <div class="icon">0</div>
+        <a class="user-notifications btn" href="<%= notifications_path @user %>">
+            <div class="icon"><%= @user.unread_notification_count %></div>
             Notifications
         </a>
         <a class="badge btn" href="#">

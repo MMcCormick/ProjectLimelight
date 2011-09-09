@@ -1,0 +1,4 @@
+<li class="coreObjectShare teaser <%= cycle("odd", "") -%>">
+  <%= user_link notification.sender_snippet %> sent you
+  <%= link_to notification.shared_object_snippet.name, '#{notification.shared_object_snippet.type.underscore}_path'.send(notification.shared_object_snippet) %>
+</li>

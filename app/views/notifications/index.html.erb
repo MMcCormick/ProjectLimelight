@@ -1,0 +1,9 @@
+<% if !@notifications.empty? %>
+  <ul class="notification-list">
+    <% @notifications.each do |notification| %>
+      <%= render notification._type.pluralize.underscore + '/teaser', :notification => notification %>
+    <% end %>
+  </ul>
+<% else %>
+  <div class="empty">You have no notifications!</div>
+<% end %>

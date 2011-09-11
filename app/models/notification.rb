@@ -3,17 +3,15 @@ require "acl"
 class Notification
   include Mongoid::Document
   include Mongoid::Paranoia
-  include Mongoid::Timestamps
   include Limelight::Acl
 
   field :message
   field :status, :default => 'Active'
-  field :is_read, :default => false
   field :user_id
   field :core_object_id
 
   embeds_one :sender_snippet, as: :user_assignable, :class_name => 'UserSnippet'
-  embeds_many :receiver_snippets, as: :user_assignable, :class_name => 'UserSnippet'
+  embeds_many :receiver_snippets, :class_name => 'NotificationReceiverSnippet'
   embeds_one :shared_object_snippet, as: :core_object_assignable, :class_name => 'CoreObjectSnippet'
 
   attr_accessible :message
@@ -32,7 +30,9 @@ class Notification
         found = true if receiver.id == user.id
       end
       if !found
-        self.receiver_snippets << UserSnippet.new({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+        self.receiver_snippets.create({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+        #something.save
+        #self.receiver_snippets << something
         if self.valid?
           user.unread_notification_count += 1
           user.save

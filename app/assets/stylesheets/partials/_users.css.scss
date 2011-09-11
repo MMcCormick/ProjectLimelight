@@ -353,24 +353,10 @@ $column-width: 30%;
     }
 }
 .user-list {
-    padding: 0 6px;
+    padding: 0 10px;
     margin-top: -5px;
     .teaser {
-        @include clearfix();
-        @include border-radius(3px);
-        &.odd { background: #F2F8E4; }
-        &:hover { background: #E2E8D4; }
-        >a, >div {
-            font-size: 13px;
-            display: block;
-            float: left;
-            width: $column-width;
-            overflow: hidden;
-            margin: 0 5px;
-            padding-top: 2px;
-            padding-bottom: 4px;
-            border-right: 1px solid #CCC;
-        }
+        @include list-teaser($column-width);
         .followB,
         .unfollowB {
             @include opacity(.5);

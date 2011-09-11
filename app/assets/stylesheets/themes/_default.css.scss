@@ -75,3 +75,20 @@ $talk-color: #D88E00;
         text-decoration: none;
     }
 }
+
+@mixin list-teaser($column-width) {
+    @include clearfix();
+        @include border-radius(3px);
+        &.odd { background: #F2F8E4; }
+        &:hover { background: #E2E8D4; }
+        font-size: 13px;
+        >a, >div {
+            display: block;
+            float: left;
+            width: $column-width;
+            overflow: hidden;
+            margin: 0 2px;
+            padding-top: 2px;
+            padding-bottom: 4px;
+      }
+}

@@ -1,0 +1,17 @@
+/*
+    Document   : _notifications
+    Created on : Sept 11, 2011, 7:35:51 PM
+    Author     : Matt McCormick
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.notification-list {
+  width: 600px;
+  margin: auto;
+  padding: 0 10px;
+  margin-top: -5px;
+  .teaser {
+    @include list-teaser('none');
+  }
+}

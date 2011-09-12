@@ -7,7 +7,13 @@ class CoreObjectSharesController < ApplicationController
     receivers = User.where(:slug.in => receiver_slugs)
     object = CoreObject.find(params[:core_object_share][:core_object_id])
 
-    if !receivers.empty? and object
+    if receivers.empty?
+      response = { :event => 'core_object_share_finished',
+                   :flash => { :type => :error, :message => 'That user could not be found!' } }
+    elsif !object
+      response = { :event => 'core_object_share_finished',
+                   :flash => { :type => :error, :message => 'The item could not be shared' } }
+    else
       # Searches for a core object share from the current user of the same object
       core_object_share = CoreObjectShare.where(:user_id => current_user.id, :core_object_id => BSON::ObjectId(object.id.to_s)).first
       # If none is found, make a new share and set appropriate vars
@@ -20,11 +26,10 @@ class CoreObjectSharesController < ApplicationController
       # Update the receivers
       core_object_share.set_receiver_snippets(receivers)
       core_object_share.save!
-      response = { :event => 'core_object_share_created',
+      response = { :event => 'core_object_share_finished',
                    :flash => { :type => :success, :message => 'Share successful!' } }
-    else
-      response = { :event => 'core_object_share_created',
-                   :flash => { :type => :error, :message => 'Item could not be shared' } }
+
+
     end
 
     render json: response

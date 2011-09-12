@@ -125,7 +125,7 @@ $(function() {
    * SHARING
    */
 
-  amplify.subscribe("core_object_share_created", function (data) {
+  amplify.subscribe("core_object_share_finished", function (data) {
     $('.qtip').qtip('hide')
     $currentTarget.find('.core_object_share_receivers').val('');
   })

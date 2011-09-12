@@ -1,6 +1,9 @@
+identity_map_enabled: true
+
 development:
   host: localhost
   database: project_limelight_development
+  autocreate_indexes: true
 
 test:
   host: localhost

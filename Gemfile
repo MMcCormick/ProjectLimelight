@@ -5,6 +5,7 @@ gem 'jquery-rails'
 gem 'bson_ext'
 gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
+gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
 gem 'frontend-helpers'
 gem 'cells' # Components
@@ -32,6 +33,7 @@ gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 group :development do
   gem "rails-footnotes"
   gem "pry"
+  gem "ruby-debug19"
 end
 
 group :test do

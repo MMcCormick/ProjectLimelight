@@ -2,7 +2,6 @@ require "acl"
 
 class CoreObject
   include Mongoid::Document
-  include Mongoid::Slug
   include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Limelight::Acl
@@ -18,16 +17,23 @@ class CoreObject
   field :reposts_count, :default => 0
   field :user_id
 
+  auto_increment :_public_id
+
   embeds_one :user_snippet, as: :user_assignable
   embeds_one :response_to
   embeds_many :user_mentions, as: :user_mentionable
   embeds_many :topic_mentions, as: :topic_mentionable
 
-  has_many :core_object_shares
+  index :_public_id, unique: true
 
   belongs_to :user
+  has_many :core_object_shares
   validates :user_id, :status, :presence => true
   attr_accessible :content
+
+  def to_param
+    self._public_id.to_i.to_s(36)
+  end
 
   def set_user_snippet(user)
     self.build_user_snippet({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
@@ -157,5 +163,11 @@ class CoreObject
     end
 
     core_objects.order_by([order_by])
+  end
+
+  class << self
+    def find_by_encoded_id(id)
+      where(:_public_id => id.to_i(36)).first
+    end
   end
 end

@@ -4,7 +4,7 @@ class TalksController < ApplicationController
   # GET /t/1
   # GET /t/1.json
   def show
-    @talk = Talk.find_by_slug(params[:id])
+    @talk = Talk.find_by_encoded_id(params[:id])
     @title = @talk.content
 
     respond_to do |format|
@@ -26,7 +26,7 @@ class TalksController < ApplicationController
 
   # GET /talks/1/edit
   def edit
-    @talk = Talk.find_by_slug(params[:id])
+    @talk = Talk.find_by_encoded_id(params[:id])
 
     if !has_permission?(current_user, @talk, "edit")
       redirect_to :back, notice: 'You may only edit your own talk!.'

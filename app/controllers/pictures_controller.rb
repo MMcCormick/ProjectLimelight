@@ -15,7 +15,7 @@ class PicturesController < ApplicationController
   # GET /pictures/1
   # GET /pictures/1.json
   def show
-    @picture = Picture.find_by_slug(params[:id])
+    @picture = Picture.find_by_encoded_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -27,6 +27,7 @@ class PicturesController < ApplicationController
   # GET /pictures/new.json
   def new
     @picture = Picture.new
+    @picture.asset_image = AssetImage.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -36,7 +37,7 @@ class PicturesController < ApplicationController
 
   # GET /pictures/1/edit
   def edit
-    @picture = Talk.find_by_slug(params[:id])
+    @picture = Talk.find_by_encoded_id(params[:id])
 
     if !has_permission?(current_user, @talk, "edit")
       redirect_to :back, notice: 'You may only edit your own pictures!.'
@@ -51,6 +52,7 @@ class PicturesController < ApplicationController
       @picture.set_user_snippet(current_user)
       @picture.set_mentions
       @picture.grant_owner(current_user.id)
+      @picture.save_image
     end
 
     respond_to do |format|

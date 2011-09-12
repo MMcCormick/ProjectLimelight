@@ -11,8 +11,6 @@ class Video < CoreObject
   # CoreObjectShare.core_object_snippet.name
   field :title
 
-  slug :title
-
   validates :title, :length => { :minimum => 5, :maximum => 50 }, :presence => true
   validates_format_of :url, :with => URI::regexp(%w(http https))
   validates :provider_name, :presence => true

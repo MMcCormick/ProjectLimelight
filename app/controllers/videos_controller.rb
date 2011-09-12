@@ -5,7 +5,7 @@ class VideosController < ApplicationController
   # GET /videos/1
   # GET /videos/1.json
   def show
-    @video = Video.find_by_slug(params[:id])
+    @video = Video.find_by_encoded_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,7 +26,7 @@ class VideosController < ApplicationController
 
   # GET /videos/1/edit
   def edit
-    @video = Video.find_by_slug(params[:id])
+    @video = Video.find_by_encoded_id(params[:id])
 
     if !has_permission?(current_user, @video, "edit")
       redirect_to :back, notice: 'You may only edit your own videos!.'

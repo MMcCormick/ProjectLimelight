@@ -32,7 +32,7 @@ class CoreObject
   attr_accessible :content
 
   def to_param
-    self._public_id.to_i.to_s(36)
+    "#{self._public_id.to_i.to_s(36)}-#{content.parameterize}"
   end
 
   def set_user_snippet(user)

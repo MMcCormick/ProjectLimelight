@@ -1,15 +1,46 @@
-<%= form_for(@news) do |f| %>
+<%= form_for @news, :html => { :class => 'core_object' } do |f| %>
+  <div class="help">
+    <span>red</span> = required field
+  </div>
+
   <%= render 'shared/error_messages', :object => f.object %>
 
-  <div class="field">
-    <%= f.label :title %><br />
-    <%= f.text_field :title %>
+  <div class="group">
+    <div class="field lClear required bottom" data-tip="News Story URL">
+      <%= f.label :url, "The URL where the news story can be found..." %>
+      <%= f.url_field :url %>
+    </div>
+    <div class="field lClear required bottom" data-tip="News Story Publisher">
+      <%= label_tag :publisher, "The organization/website that published the story..." %>
+      <%= text_field_tag :publisher %>
+    </div>
+    <div class="field lClear required bottom important" data-tip="News Story Title">
+      <%= f.label :title, "The story title..." %>
+      <%= f.text_field :title %>
+    </div>
+    <div class="field lClear bottom" data-tip="News Story Summary">
+      <%= f.label :content, "A short summary of the story..." %>
+      <%= f.text_area :content %>
+    </div>
+    <div class="field image" data-tip="New Story Image">
+      <div class="upload">
+        <%= f.fields_for :asset_images do |a| %>
+          <%= a.file_field :image %>
+          <%= a.hidden_field :image_cache %>
+        <% end %>
+      </div>
+      <div class="fetch">
+
+      </div>
+    </div>
+    <div class="actions">
+      <%= f.submit "Post News Story", :disable_with => "Working..." %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :content %><br />
-    <%= f.text_field :content %>
+
+  <div class="preview">
+    <h4>Preview</h4>
+    <div class="content"></div>
   </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+
 <% end %>

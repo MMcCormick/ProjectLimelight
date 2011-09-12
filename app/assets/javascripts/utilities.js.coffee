@@ -1,149 +1,83 @@
-$(function() {
+jQuery ->
 
-  function isUrl(s) {
-    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-    return regexp.test(s);
-  }
+  # Sets the cursor to a position in an input
+  $.fn.selectRange = (start, end) ->
+    return @each ->
+      if @setSelectionRange
+        @focus()
+        @setSelectionRange start, end
+      else if @createTextRange
+        range = @createTextRange()
+        range.collapse true
+        range.moveEnd 'character', end
+        range.moveStart 'character', start
+        range.select()
 
-  // Sets the cursor to a position in an input
-  $.fn.selectRange = function(start, end) {
-    return this.each(function() {
-      if (this.setSelectionRange) {
-        this.focus();
-        this.setSelectionRange(start, end);
-      } else if (this.createTextRange) {
-        var range = this.createTextRange();
-        range.collapse(true);
-        range.moveEnd('character', end);
-        range.moveStart('character', start);
-        range.select();
-      }
-    });
-  };
+  # Automatic toggling of overlay label on inputs
+  $('.lClear input, .lClear textarea').livequery ->
+    $(@).attr 'autocomplete', 'off'
 
-  // Automatic clearing of help text in inputs
-  $('.iclear').live('click', function() {
-    if (!$(this).hasClass('cleared') && (!$(this).data('default') || $(this).val() == $(this).data('default'))) {
-      $(this).addClass('active').data('default', $(this).val()).selectRange(0, 0);
-    }
-  })
-  $('.iclear').live('blur', function() {
-    if (!$.trim($(this).val()) || $(this).val() == $(this).data('default')) {
-      $(this).removeClass('active cleared').val($(this).data('default'));
-    }
-  })
-  $('.iclear').live('keydown', function() {
-    if ($(this).val() == $(this).data('default')) {
-      $(this).removeClass('active').val('');
-    }
-  })
-  $('.iclear').live('keyup', function() {
-    if (!$.trim($(this).val())) {
-      $(this).addClass('active').val($(this).data('default')).selectRange(0, 0);
-    }
-  })
+  $('.lClear input, .lClear textarea').live 'focus', (e) ->
+    self = $(@)
+    self.siblings('label').hide()
 
-  // Add a border/drop shadow to buttons on hover
-  $('.btn').live({
+  $('.lClear input, .lClear textarea').live 'blur', (e) ->
+    self = $(@)
+    if $.trim(self.val()) == ''
+      self.siblings('label').show()
+
+  # Automatic clearing of help text in inputs
+  $('.iclear').live 'click', (e) ->
+    self = $(@)
+    if !self.hasClass('cleared') && !self.data('default') || self.val() == self.data('default')
+      self.addClass('active').data('default', self.val()).selectRange(0, 0)
+
+  $('.iclear').live 'blur', (e) ->
+    self = $(@)
+    if !$.trim(self.val()) || self.val() == self.data('default')
+      self.removeClass('active cleared').val(self.data('default'))
+
+  $('.iclear').live 'keydown', (e) ->
+    self = $(@)
+    if self.val() == self.data('default')
+      self.removeClass('active').val('')
+
+  $('.iclear').live 'keyup', (e) ->
+    self = $(@)
+    if !$.trim(self.val())
+      self.addClass('active').val(self.data('default')).selectRange(0, 0)
+
+  # Add a border/drop shadow to buttons on hover
+  $('.btn').live
     mouseenter:
-            function() {
-              $('.btn').removeClass('hover');
-              $(this).addClass('hover', 1000);
-            },
+      ->
+        $('.btn').removeClass 'hover'
+        $(@).addClass('hover', 1000)
+
     mouseleave:
-            function() {
-              $(this).removeClass('hover', 500);
-            }
-  })
+      ->
+        $(@).removeClass('hover', 500)
 
-  // Enlarge a picture in place when hovered on
-  $('.enlarge').live({
-    mouseenter:
-            function() {
-              if ($(this).hasClass('hover'))
-                return;
+  # Disables text selection (highlighting, etc)
+  $('.noSelect').bind 'selectstart, click', (e) ->
+    false
 
-              var target = $(this).is('a') ? $(this).find('img') : $(this);
+  #  onScreen jQuery plugin v0.2.1
+  #  (c) 2011 Ben Pickles
+  #
+  #  http://benpickles.github.com/onScreen
+  #
+  #  Released under MIT license.
+  $.expr[":"].onScreen = (elem) ->
+    $window = $(window)
+    viewport_top = $window.scrollTop()
+    viewport_height = $window.height()
+    viewport_bottom = viewport_top + viewport_height
+    $elem = $(elem)
+    top = $elem.offset().top
+    height = $elem.height()
+    bottom = top + height
 
-              var newSize = 275;
-
-              var url = target.attr('src'),
-                      parts = url.split('/'),
-                      dimensions = parts[2].split('-'),
-                      newUrl = '/' + parts[1],
-                      newDimensions = '';
-
-              if (dimensions.length == 3) {
-                newDimensions = 'w' + newSize + '-h' + newSize + '-' + dimensions[2];
-              }
-              else if (dimensions.length == 2) {
-                newDimensions = 'h' + newSize;
-              }
-              else {
-
-              }
-
-              newUrl += '/' + newDimensions;
-              $.each(parts, function(index, val) {
-                if (index > 2) {
-                  newUrl += '/' + val;
-                }
-              })
-
-              $(this).oneTime(500, "enlarge-picture", function() {
-                var newTarget = $(this).clone();
-
-                newTarget.addClass('hover')
-                        .css({position: 'absolute', left: $(this).offset().left - target.width() - 30, top: $(this).offset().top + $(this).height() - target.height()})
-
-                if (newTarget.is('a')) {
-                  newTarget.find('img').attr('src', newUrl)
-                }
-                else {
-                  newTarget.attr('src', newUrl);
-                }
-
-                newTarget.oneTime(150, "show-enlarged-picture", function() {
-                  newTarget.appendTo('body');
-                })
-              })
-            },
-    mouseleave:
-            function() {
-              $(this).stopTime();
-            }
-  })
-
-  $('.enlarge.hover').live({
-    mouseleave:
-            function() {
-              $(this).remove();
-            }
-  })
-
-  // Disables text selection (highlighting, etc)
-  $('.noSelect').bind('selectstart, click', function() {
-    return false;
-  })//No text selection on elements with a class of 'noSelect'
-
-  // onScreen jQuery plugin v0.2.1
-  // (c) 2011 Ben Pickles
-  //
-  // http://benpickles.github.com/onScreen
-  //
-  // Released under MIT license.
-  $.expr[":"].onScreen = function(elem) {
-    var $window = $(window)
-    var viewport_top = $window.scrollTop()
-    var viewport_height = $window.height()
-    var viewport_bottom = viewport_top + viewport_height
-    var $elem = $(elem)
-    var top = $elem.offset().top
-    var height = $elem.height()
-    var bottom = top + height
-
-    return (top >= viewport_top && top < viewport_bottom) ||
-            (bottom > viewport_top && bottom <= viewport_bottom) ||
-            (height > viewport_height && top <= viewport_top && bottom >= viewport_bottom)
-  }
-})
+    (top >= viewport_top && top < viewport_bottom) ||
+    (bottom > viewport_top && bottom <= viewport_bottom) ||
+    (height > viewport_height && top <= viewport_top && bottom >= viewport_bottom)

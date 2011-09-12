@@ -10,9 +10,10 @@
     <%= f.text_area :content %>
   </div>
   <div class="field">
-    <%= f.file_field :image %>
-    <%= image_tag @picture.image_url(:d75_75) if @picture.image? %>
-    <%= f.hidden_field :image_cache %>
+    <%= f.fields_for :asset_image do |a| %>
+      <%= a.file_field :image %>
+      <%= a.hidden_field :image_cache %>
+    <% end %>
   </div>
   <% if defined? response_to %>
     <%= f.hidden_field :response_to, :value => response_to.id %>

@@ -11,7 +11,7 @@
         </a>
       <% end %>
     </h2>
-    <%= image_tag object.image_url(:d75_75).to_s %>
+    <%= image_tag object.asset_image.image_url.to_s %>
 
     <div class="createdC">
       <div class="time"><%= time_ago_in_words(object.created_at, false) %> ago</div>

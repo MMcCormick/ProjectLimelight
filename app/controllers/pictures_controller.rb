@@ -27,7 +27,6 @@ class PicturesController < ApplicationController
   # GET /pictures/new.json
   def new
     @picture = Picture.new
-    @picture.asset_image = AssetImage.new
 
     respond_to do |format|
       format.html # new.html.erb

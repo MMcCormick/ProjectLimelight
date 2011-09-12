@@ -10,7 +10,7 @@
   <%= @picture.content %>
 </p>
 
-<%= image_tag @picture.image_url(:d500_500).to_s %>
+<%= image_tag @picture.asset_image.image_url.to_s %>
 
 
 <%= link_to 'Edit', edit_picture_path(@picture) %> |

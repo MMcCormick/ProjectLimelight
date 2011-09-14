@@ -8,7 +8,7 @@ class Video < CoreObject
 
   # Denormilized:
   # CoreObject.response_to.name
-  # CoreObjectShare.core_object_snippet.name
+  # Notification.shared_object_snippet.name
   field :title
 
   validates :title, :length => { :minimum => 5, :maximum => 50 }, :presence => true

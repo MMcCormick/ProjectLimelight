@@ -7,7 +7,7 @@ class CoreObject
   include Limelight::Acl
 
   # Denormilized:
-  # CoreObjectShare.core_object_snippet.name (for talk only, other objects use Title)
+  # Notification.shared_object_snippet.name (for talk only, other objects use Title)
   field :content
 
   field :status, :default => 'Active'
@@ -102,6 +102,7 @@ class CoreObject
     end
   end
 
+  # OLD SET_TOPIC MENTIONS (scans the content rather than accepting string of passed topics)
   # Searches the content attribute for [#foo] mentions.
   # For each found, check if topic is in DB. If valid and not in DB, create it.
   # For each valid topic mention, add as TopicMention to this object.
@@ -142,10 +143,11 @@ class CoreObject
   # Accepts a string of topics separated by commas
   # For each found, check if topic is in DB. If valid and not in DB, create it.
   # For each valid topic mention, add as TopicMention to this object.
-  def set_topic_mentions_to(topics)
-    # Explodes the string. Returns an array of slugified strings without duplicates.
-    topic_mentions = topics.split(%r{,\s*}).map! do |topic|
-      [topic, topic.to_url]
+  def set_topic_mentions_to(passed_topics)
+    # Explodes the string. Returns an array of arrays containting
+    # [string, slugified string] without duplicates.
+    topic_mentions = passed_topics.split(%r{,\s*}).map! do |topic|
+      [topic.strip, topic.to_url]
     end.uniq
 
     # See if any of the topic slugs are already in the DB. Check through topic aliases!

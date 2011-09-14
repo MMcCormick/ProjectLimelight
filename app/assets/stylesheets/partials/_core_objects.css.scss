@@ -28,23 +28,10 @@
 
 form.core_object {
   $form-width: 500px;
+  $tag-width: 130px;
   position: relative;
   h3 {
 
-  }
-  .formTaggable {
-    position: relative;
-    .tagDisplay {
-      position: absolute;
-      left: $form-width - 130;
-      top: 0px;
-
-      input {
-        background: #F2F8E4;
-        z-index: 130;
-        width: 120px;
-      }
-    }
   }
   .help {
     font-size: 12px;
@@ -77,9 +64,21 @@ form.core_object {
     }
     textarea {
       height: 175px;
+      width: $form-width - ($tag-width + 10);
     }
     &.required label {
       color: #CD070E;
+    }
+    .tagDisplay {
+      position: absolute;
+      left: $form-width - $tag-width;
+      top: 0px;
+
+      input {
+        background: #F2F8E4;
+        z-index: 130;
+        width: $tag-width;
+      }
     }
   }
   .group {

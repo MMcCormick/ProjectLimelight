@@ -12,24 +12,24 @@ class User
   # Denormilized:
   # CoreObject.user_snippet.username
   # CoreObject.user_mentions.username
-  # CoreObjectShare.sender_snippet.username
-  # CoreObjectShare.receiver_snippets.username
+  # Notification.sender_snippet.username
+  # Notification.receiver_snippets.username
   # Topic.user_snippet.username
   field :username
 
   # Denormilized:
   # CoreObject.user_snippet.first_name
   # CoreObject.user_mentions.first_name
-  # CoreObjectShare.sender_snippet.first_name
-  # CoreObjectShare.receiver_snippets.first_name
+  # Notification.sender_snippet.first_name
+  # Notification.receiver_snippets.first_name
   # Topic.user_snippet.first_name
   field :first_name
 
   # Denormilized:
   # CoreObject.user_snippet.last_name
   # CoreObject.user_mentions.last_name
-  # CoreObjectShare.sender_snippet.last_name
-  # CoreObjectShare.receiver_snippets.last_name
+  # Notification.sender_snippet.last_name
+  # Notification.receiver_snippets.last_name
   # Topic.user_snippet.last_name
   field :last_name
 

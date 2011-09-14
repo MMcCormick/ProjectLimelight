@@ -12,34 +12,42 @@ jQuery ->
 #    $.colorbox.resize();
 #  })
 
-  $('.formTaggable').livequery ->
+  $('.tagDisplay').livequery ->
+    # Sets self to the element with class tagDisplay
     self = $(@)
     # Target field for tagged topics
-    tagField = self.siblings('.formTagged').find('#tagged_topics')
-    displayField = self.find('.tagDisplay')
-    $(@).typing({
+    tagField = self.find('.formTagged')
+    contentField = self.siblings('textArea')
+    console.log(self.parent())
+    self.parent().typing({
       stop: (e) ->
         # Finds all topic tags, unfortunately with [# still at the beginning
         # This is due to javascript's lack of a ?<= operator for regexes
-        tags = self.find('textarea').val().match(/(?=\[#)(.*?)(?=\])/g)
+        tags = contentField.val().match(/(?=\[#)(.*?)(?=\])/g)
         tagText = ''
         displayText = ''
-        if tags
-          console.log(tags)
-          console.log(tagField.val())
 
-          displayField.find('.inlined').val('').removeClass('inlined')
+        # If there are inline tags
+        if tags
+          # Find inlined topics, clear their contents and remove the class 'inlined'
+          self.find('.inlined').val('').removeClass('inlined')
           for tag in tags
-            if displayField.children('input:text[value=""]:eq(0)').size() == 0
-              alert('you can only add 5 topics!')
+            # Removes the first two characters '[#' and trims whitespace
+            tag = $.trim(tag.substr(2))
+            # If there are no more topic slots left
+            if self.children('input:text[value=""]:eq(0)').size() == 0
+              createGrowl(false, 'You can only tag ' + self.children('input:text').length + ' topics!', 'Error', 'red')
             else
-              # Adds the tag to the tagText (minus the first two characters '[#')
-              tagText = tagText + tag.substr(2) + ", "
+              # Adds the tag to the tagText
+              tagText = tagText + tag + ", "
               # Finds the first empty input in displayField and places the new topic there
-              displayField.find('input:text[value=""]:eq(0)').addClass('inlined').val(tag.substr(2))
-        displayField.find('input:text[value!=""]').not('.inlined').each ->
-          console.log($(this).val())
-          tagText = tagText + $(this).val() + " "
+              self.find('input:text[value=""]:eq(0)').addClass('inlined').val(tag)
+
+        # Insert hand-entered (non-inlined) topics into the tagText
+        self.find('input:text[value!=""]').not('.inlined').each ->
+          tagText = tagText + $.trim($(this).val()) + ", "
+        # Removes trailing comma and space
+        tagText = tagText.slice(0, -2)
         tagField.val(tagText)
       delay: 400
     })

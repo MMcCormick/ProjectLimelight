@@ -5,7 +5,7 @@ class News < CoreObject
 
   # Denormilized:
   # CoreObject.response_to.name
-  # CoreObjectShare.core_object_snippet.name
+  # Notification.shared_object_snippet.name
   field :title
 
   embeds_many :asset_images, as: :image_assignable, :class_name => 'AssetImage'

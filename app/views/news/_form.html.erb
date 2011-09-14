@@ -18,12 +18,10 @@
       <%= f.label :title, "The story title..." %>
       <%= f.text_field :title %>
     </div>
-    <div class="field lClear bottom formTaggable" data-tip="News Story Summary">
+    <div class="field lClear" data-tip="News Story Summary">
       <%= f.label :content, "A short summary of the story..." %>
       <%= f.text_area :content %>
-    </div>
-    <div class="field lClear bottom formTagged" data-tip="News Story Topics">
-      <%= text_field_tag :tagged_topics %>
+      <%= render 'shared/topic_tagger' %>
     </div>
     <div class="field image" data-tip="New Story Image">
       <div class="upload">

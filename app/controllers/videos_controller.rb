@@ -39,14 +39,15 @@ class VideosController < ApplicationController
     @video = current_user.videos.build(params[:video])
     if @video.valid?
       @video.set_user_snippet(current_user)
-      @video.set_mentions
+      @video.set_mentions(params[:tagged_topics])
       @video.grant_owner(current_user.id)
     end
 
     respond_to do |format|
       if @video.save
+        response = { :redirect => video_path(@video) }
         format.html { redirect_to @video, notice: 'Video was successfully created.' }
-        format.json { render json: @video, status: :created, location: @video }
+        format.json { render json: response, status: :created, location: @video }
       else
         format.html { render action: "new" }
         format.json { render json: @video.errors, status: :unprocessable_entity }

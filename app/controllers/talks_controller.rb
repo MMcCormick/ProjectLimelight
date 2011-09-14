@@ -45,8 +45,9 @@ class TalksController < ApplicationController
 
     respond_to do |format|
       if @talk.save
+        response = { :redirect => talk_path(@talk) }
         format.html { redirect_to @talk, notice: 'Talk was successfully created.' }
-        format.json { render json: @talk, status: :created, location: @talk }
+        format.json { render json: response, status: :created,  }
       else
         format.html { render action: "new" }
         format.json { render json: @talk.errors, status: :unprocessable_entity }

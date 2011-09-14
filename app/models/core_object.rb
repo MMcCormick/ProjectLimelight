@@ -81,9 +81,9 @@ class CoreObject
     end
   end
 
-  def set_mentions
+  def set_mentions(topics)
     set_user_mentions
-    set_topic_mentions
+    set_topic_mentions_to(topics)
   end
 
   # Searches the content attribute for [@foo] mentions.
@@ -105,9 +105,46 @@ class CoreObject
   # Searches the content attribute for [#foo] mentions.
   # For each found, check if topic is in DB. If valid and not in DB, create it.
   # For each valid topic mention, add as TopicMention to this object.
-  def set_topic_mentions
-    # Searches for strings contained between [#] delimiters. Returns an array of slugified strings without duplicates.
-    topic_mentions = self.content.scan(/(?<=\[#)(.*?)(?=\])/).flatten(1).map! do |topic|
+  #def set_topic_mentions
+  #  # Searches for strings contained between [#] delimiters. Returns an array of slugified strings without duplicates.
+  #  topic_mentions = self.content.scan(/(?<=\[#)(.*?)(?=\])/).flatten(1).map! do |topic|
+  #    [topic, topic.to_url]
+  #  end.uniq
+  #
+  #  # See if any of the topic slugs are already in the DB. Check through topic aliases!
+  #  topic_slugs = topic_mentions.map { |data| data[1] }
+  #  topics = Topic.any_in("aliases" => topic_slugs)
+  #
+  #  topic_mentions.each do |topic_mention|
+  #    found_topic = false
+  #    # Do we already have a DB topic for this mention?
+  #    topics.each do |topic|
+  #      if topic.slug == topic_mention[1]
+  #        found_topic = topic
+  #      end
+  #    end
+  #    # If we did not find the topic, create it and save it if it is valid
+  #    if found_topic == false
+  #      found_topic = self.user.topics.build({name: topic_mention[0]})
+  #      if found_topic.valid?
+  #        found_topic.save
+  #      else
+  #        found_topic = false
+  #      end
+  #    end
+  #    if found_topic
+  #      payload = {id: found_topic.id, name: found_topic.name}
+  #      self.topic_mentions.build(payload)
+  #    end
+  #  end
+  #end
+
+  # Accepts a string of topics separated by commas
+  # For each found, check if topic is in DB. If valid and not in DB, create it.
+  # For each valid topic mention, add as TopicMention to this object.
+  def set_topic_mentions_to(topics)
+    # Explodes the string. Returns an array of slugified strings without duplicates.
+    topic_mentions = topics.split(%r{,\s*}).map! do |topic|
       [topic, topic.to_url]
     end.uniq
 
@@ -138,7 +175,6 @@ class CoreObject
       end
     end
   end
-
 
   # @example Fetch the core_objects for a feed with the given criteria
   #   CoreObject.feed

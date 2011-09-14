@@ -54,7 +54,8 @@
 
     if (params.redirect) {
       pageClicked = true;
-      pageGet({'url': params.redirect}, pageClick, null);
+      window.location = params.redirect
+//      pageGet({'url': params.redirect}, pageClick, null);
 
       return false;
     }

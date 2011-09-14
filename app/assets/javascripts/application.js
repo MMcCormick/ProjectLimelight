@@ -20,6 +20,7 @@
 //= require jquery.qtip
 //= require jquery.autocomplete
 //= require jquery.scroll
+//= require jquery.typing
 //= require core
 //= require request
 //= require subscribers

@@ -14,14 +14,16 @@ class News < CoreObject
   validates :content, :length => { :minimum => 5, :maximum => 400 }
   #validates_format_of :url, :with => URI::regexp(%w(http https))
 
-<<<<<<< HEAD
+  attr_accessible :url
+
   def name
     self.title
   end
-=======
+
   def save_images(image)
-    self.asset_images << AssetImage.create(image)
+    if image
+      self.asset_images << AssetImage.create(image)
+    end
   end
 
->>>>>>> Misc updates for a bunch of stories...
 end

@@ -39,7 +39,7 @@ class NewsController < ApplicationController
     @news = current_user.news.build(params[:news])
     if @news.valid?
       @news.set_user_snippet(current_user)
-      @news.set_mentions
+      @news.set_mentions(params[:tagged_topics])
       @news.grant_owner(current_user.id)
       # TODO: Use the image_cache if it's there
       @news.save_images(params[:news][:asset_images][:image])
@@ -47,8 +47,9 @@ class NewsController < ApplicationController
 
     respond_to do |format|
       if @news.save
+        response = { :redirect => news_path(@news) }
         format.html { redirect_to @news, notice: 'News was successfully created.' }
-        format.json { render json: @news, status: :created, location: @news }
+        format.json { render json: response, status: :created, location: @news }
       else
         format.html { render action: "new" }
         format.json { render json: @news.errors, status: :unprocessable_entity }

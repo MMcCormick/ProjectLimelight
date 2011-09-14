@@ -12,6 +12,38 @@ jQuery ->
 #    $.colorbox.resize();
 #  })
 
+  $('.formTaggable').livequery ->
+    self = $(@)
+    # Target field for tagged topics
+    tagField = self.siblings('.formTagged').find('#tagged_topics')
+    displayField = self.find('.tagDisplay')
+    $(@).typing({
+      stop: (e) ->
+        # Finds all topic tags, unfortunately with [# still at the beginning
+        # This is due to javascript's lack of a ?<= operator for regexes
+        tags = self.find('textarea').val().match(/(?=\[#)(.*?)(?=\])/g)
+        tagText = ''
+        displayText = ''
+        if tags
+          console.log(tags)
+          console.log(tagField.val())
+
+          displayField.find('.inlined').val('').removeClass('inlined')
+          for tag in tags
+            if displayField.children('input:text[value=""]:eq(0)').size() == 0
+              alert('you can only add 5 topics!')
+            else
+              # Adds the tag to the tagText (minus the first two characters '[#')
+              tagText = tagText + tag.substr(2) + ", "
+              # Finds the first empty input in displayField and places the new topic there
+              displayField.find('input:text[value=""]:eq(0)').addClass('inlined').val(tag.substr(2))
+        displayField.find('input:text[value!=""]').not('.inlined').each ->
+          console.log($(this).val())
+          tagText = tagText + $(this).val() + " "
+        tagField.val(tagText)
+      delay: 400
+    })
+
   $('form.core_object .field').livequery ->
     self = $(@)
     self.qtip({

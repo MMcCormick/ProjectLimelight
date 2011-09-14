@@ -14,13 +14,23 @@
       <%= f.label :title, "The title for the video, your hook..." %>
       <%= f.text_field :title %>
     </div>
-    <div class="field lClear" data-tip="Video Description">
+    <div class="field lClear bottom formTaggable" data-tip="Video Description">
       <%= f.label :content, "Describe the video..." %>
       <%= f.text_area :content %>
+      <div class = "tagDisplay">
+        <input type="text">
+        <input type="text">
+        <input type="text">
+        <input type="text">
+        <input type="text">
+      </div>
+    </div>
+    <div class="field lClear formTagged" data-tip="News Story Topics">
+      <%= text_field_tag :tagged_topics %>
     </div>
 
     <div class="actions">
-      <%= f.submit "Post Video", :disable_with => "Working..." %>
+      <%= f.submit "Post Video" %>
     </div>
   </div>
 

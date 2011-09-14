@@ -32,6 +32,20 @@ form.core_object {
   h3 {
 
   }
+  .formTaggable {
+    position: relative;
+    .tagDisplay {
+      position: absolute;
+      left: $form-width - 130;
+      top: 0px;
+
+      input {
+        background: #F2F8E4;
+        z-index: 130;
+        width: 120px;
+      }
+    }
+  }
   .help {
     font-size: 12px;
     font-style: italic;

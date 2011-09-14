@@ -9,6 +9,6 @@ class AssetImage < Asset
 
   embedded_in :image_assignable, polymorphic: true
 
-  validates :image, :presence => true
+  #validates :image, :presence => true
 
 end

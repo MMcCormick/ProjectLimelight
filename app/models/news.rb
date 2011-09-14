@@ -1,5 +1,5 @@
 class News < CoreObject
-  attr_accessible :title, :image
+  attr_accessible :title, :image, :url
 
   field :url
 
@@ -14,8 +14,6 @@ class News < CoreObject
   validates :content, :length => { :minimum => 5, :maximum => 400 }
   #validates_format_of :url, :with => URI::regexp(%w(http https))
 
-  attr_accessible :url
-
   def name
     self.title
   end
@@ -25,5 +23,4 @@ class News < CoreObject
       self.asset_images << AssetImage.create(image)
     end
   end
-
 end

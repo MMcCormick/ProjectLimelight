@@ -16,6 +16,7 @@ gem 'mini_magick' # Image manipulation
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'embedly'
+gem 'resque', :require => 'resque/server' # Background jobs
 
 group :assets do
   gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'
@@ -34,6 +35,7 @@ group :development do
   gem "rails-footnotes"
   gem "pry"
   gem "ruby-debug19"
+  gem "foreman"
 end
 
 group :test do

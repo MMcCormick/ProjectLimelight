@@ -41,6 +41,11 @@ ProjectLimelight::Application.routes.draw do
   # Core Object Shares
   post '/share/create' => 'core_object_shares#create', :as => :create_share
 
+  # Resque admin
+  authenticate :admin do
+    mount Resque::Server, :at => "/resque"
+  end
+
   # Users
   devise_for :users
   resources :users, :only => :show

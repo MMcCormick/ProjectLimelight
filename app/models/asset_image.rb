@@ -1,6 +1,6 @@
 class AssetImage < Asset
 
-  attr_accessible :image
+  attr_accessible :image, :remote_image_url
 
   field :status, :default => 'Active'
   field :isDefault, :default => true

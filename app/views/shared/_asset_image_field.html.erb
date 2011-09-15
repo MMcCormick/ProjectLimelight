@@ -1,7 +1,8 @@
 <div class="upload">Upload Image</div>
 <div class="hide">
   <%= f.fields_for AssetImage.new do |i| %>
-    <%= i.file_field :image %>
+    <%= i.file_field :image, :autocomplete => 'off' %>
+    <%= i.text_field :remote_image_url, :class => 'remote_image_url', :autocomplete => 'off' %>
     <%= i.hidden_field :image_cache %>
   <% end %>
 </div>

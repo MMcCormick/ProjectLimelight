@@ -1,4 +1,4 @@
-require "acl"
+require "limelight"
 
 class Notification
   include Mongoid::Document

@@ -1,4 +1,4 @@
-<%= form_for @news, :html => { :class => 'core_object' } do |f| %>
+<%= form_for @news, :html => { :multipart => true, :class => 'core_object noajax' } do |f| %>
   <div class="help">
     <span>red</span> = required field
   </div>
@@ -25,17 +25,14 @@
     </div>
     <div class="field image" data-tip="New Story Image">
       <div class="upload">
-        <%= f.fields_for :asset_images do |a| %>
-          <%= a.file_field :image %>
-          <%= a.hidden_field :image_cache %>
-        <% end %>
+        <%= render 'shared/asset_image_field', :f => f %>
       </div>
       <div class="fetch">
 
       </div>
     </div>
     <div class="actions">
-      <%= f.submit "Post News Story", :disable_with => "Working..." %>
+      <%= f.submit "Post News Story" %>
     </div>
   </div>
 

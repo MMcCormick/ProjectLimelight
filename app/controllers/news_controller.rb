@@ -26,7 +26,6 @@ class NewsController < ApplicationController
   # GET /news/1/edit
   def edit
     @news = News.find(params[:id])
-    #@news.asset_image = AssetImage.new
 
     if !has_permission(current_user, @news, "edit")
       redirect_to :back, notice: 'You may only edit your own stories!.'
@@ -41,8 +40,7 @@ class NewsController < ApplicationController
       @news.set_user_snippet(current_user)
       @news.set_mentions(params[:tagged_topics])
       @news.grant_owner(current_user.id)
-      # TODO: Use the image_cache if it's there
-      @news.save_images(params[:news][:asset_images][:image])
+      @news.images.create(params[:news][:asset_image])
     end
 
     respond_to do |format|

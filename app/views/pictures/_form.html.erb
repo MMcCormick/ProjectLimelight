@@ -1,4 +1,4 @@
-<%= form_for(@picture) do |f| %>
+<%= form_for @picture, :html => { :class => 'core_object noajax' } do |f| %>
   <%= render 'shared/error_messages', :object => f.object %>
 
   <div class="field">
@@ -10,10 +10,7 @@
     <%= f.text_area :content %>
   </div>
   <div class="field">
-    <%= f.fields_for :asset_image do |a| %>
-      <%= a.file_field :image %>
-      <%= a.hidden_field :image_cache %>
-    <% end %>
+    <%= render 'shared/asset_image_field', :f => f %>
   </div>
   <% if defined? response_to %>
     <%= f.hidden_field :response_to, :value => response_to.id %>

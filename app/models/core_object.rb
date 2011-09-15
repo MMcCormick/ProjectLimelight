@@ -1,4 +1,4 @@
-require "acl"
+require "limelight"
 
 class CoreObject
   include Mongoid::Document

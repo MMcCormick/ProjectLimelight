@@ -10,14 +10,9 @@
   <%= parse_mentions(markdown(@news.content), @news) %>
 </p>
 
-<p>
-  <b>User:</b>
-  <%= @news.user_id %>
-</p>
-
-<%#= image_tag @news.image_url(:d300_300).to_s %>
+<%= default_image(@news, [100, 100]) %>
 
 <%= render 'favorites/favorite_btn', :object => @news %>
 <%= render 'reposts/repost_btn', :object => @news %>
 
-<%= link_to 'Edit', edit_news_path(@news) %> |
+<%= link_to 'Edit', edit_news_path(@news) %>

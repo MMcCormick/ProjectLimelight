@@ -3,7 +3,7 @@ module Limelight #:nodoc:
 
   # Include this module to get ACL functionality for root level documents.
   # @example Add ACL support to a document.
-  #   require "acl"
+  #   require "limelight"
   #   class Person
   #     include Limelight::Acl
   #   end
@@ -65,6 +65,38 @@ module Limelight #:nodoc:
       permission.each do |p|
         if self.permissions[p]
           self.permissions[p].delete(object_id)
+        end
+      end
+    end
+  end
+
+  # Include this module to get ACL functionality for root level documents.
+  # @example Add ACL support to a document.
+  #   require "limelight"
+  #   class Person
+  #     include Limelight::Images
+  #   end
+  module Images
+    extend ActiveSupport::Concern
+
+    included do
+      embeds_many :images, as: :image_assignable, :class_name => 'AssetImage'
+    end
+
+    # @example Return the url to the current default image at the specified dimension
+    #   document.default_image('d300_300')
+    #
+    # @param [ String ] The dimensions to return
+    #
+    # @return [ String ]
+    def default_image(dimensions)
+      self.images.each do |image|
+        if image.isDefault?
+          if image.has_dimensions? dimensions
+            return image.image_url dimensions
+          else
+            return image.image_url
+          end
         end
       end
     end

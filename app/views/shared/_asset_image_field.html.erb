@@ -1,0 +1,4 @@
+<%= f.fields_for AssetImage.new do |i| %>
+  <%= i.file_field :image %>
+  <%= i.hidden_field :image_cache %>
+<% end %>

@@ -51,7 +51,7 @@ class PicturesController < ApplicationController
       @picture.set_user_snippet(current_user)
       @picture.set_mentions
       @picture.grant_owner(current_user.id)
-      @picture.save_image
+      @picture.images.create(params[:picture][:asset_image])
     end
 
     respond_to do |format|

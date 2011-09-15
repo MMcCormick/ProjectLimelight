@@ -18,7 +18,6 @@ jQuery ->
     # Target field for tagged topics
     tagField = self.find('.formTagged')
     contentField = self.siblings('textArea')
-    console.log(self.parent())
     self.parent().typing({
       stop: (e) ->
         # Finds all topic tags, unfortunately with [# still at the beginning
@@ -27,15 +26,22 @@ jQuery ->
         tagText = ''
         displayText = ''
 
+        # Insert hand-entered (non-inlined) topics into the tagText
+        self.find('input:text[value!=""]').not('.inlined').each ->
+          tagText = tagText + $.trim($(this).val()) + ", "
+        # Find inlined topics, clear their contents and remove the class 'inlined'
+        self.find('.inlined').val('').removeClass('inlined')
         # If there are inline tags
         if tags
-          # Find inlined topics, clear their contents and remove the class 'inlined'
-          self.find('.inlined').val('').removeClass('inlined')
           for tag in tags
             # Removes the first two characters '[#' and trims whitespace
             tag = $.trim(tag.substr(2))
+
+            # If the tag already exists in the display area
+            if self.find('input:text[value=' + tag + ']').addClass('inlined').length > 0
+              console.log('duplicate')
             # If there are no more topic slots left
-            if self.children('input:text[value=""]:eq(0)').size() == 0
+            else if self.children('input:text[value=""]:eq(0)').size() == 0
               createGrowl(false, 'You can only tag ' + self.children('input:text').length + ' topics!', 'Error', 'red')
             else
               # Adds the tag to the tagText
@@ -43,9 +49,6 @@ jQuery ->
               # Finds the first empty input in displayField and places the new topic there
               self.find('input:text[value=""]:eq(0)').addClass('inlined').val(tag)
 
-        # Insert hand-entered (non-inlined) topics into the tagText
-        self.find('input:text[value!=""]').not('.inlined').each ->
-          tagText = tagText + $.trim($(this).val()) + ", "
         # Removes trailing comma and space
         tagText = tagText.slice(0, -2)
         tagField.val(tagText)

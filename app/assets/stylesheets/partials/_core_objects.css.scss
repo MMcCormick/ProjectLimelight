@@ -42,6 +42,7 @@ form.core_object {
     }
   }
   .field {
+    @include clearfix();
     position: relative;
     label {
       position: absolute;
@@ -116,6 +117,87 @@ form.core_object {
         cursor: default;
       }
     }
+  }
+  .field.image {
+    font-weight: bold;
+    color: #62728F;
+  }
+  .choices {
+    float: left;
+    width: 160px;
+    padding: 0;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+    .upload,
+    .fetch {
+      padding: 8px;
+
+      &.on {
+        background: #62728F;
+        color: #FFF;
+      }
+    }
+    .upload {
+
+    }
+    .fetch {
+      border-top: 1px solid #EEE;
+    }
+  }
+  .image-preview {
+    border-left: 2px dotted #CCC;
+    width: 352px;
+    min-height: 70px;
+    float: left;
+    .upload {
+      float: left;
+      text-align: center;
+      width: 30%;
+      text-align: center;
+    }
+    .fetch {
+      float: left;
+      position: relative;
+      left: -2px;
+      padding: 15px 40px;
+      width: 275px;
+      min-height: 23px;
+      text-align: center;
+      font-size: 16px;
+      display: none;
+
+      .default {
+        font-size: 14px;
+        font-style: italic;
+      }
+      .left,
+      .right {
+        position: absolute;
+        top: 13px;
+        cursor: pointer;
+      }
+      .left {
+        left: 10px;
+      }
+      .right {
+        right: 10px;
+      }
+      .images {
+        @include clearfix();
+        margin: 5px 0 0 0;
+        img {
+          @include border-radius(3px);
+          max-width: 270px;
+        }
+      }
+    }
+  }
+  .upload_image {
+    @include border-radius(2px);
+    font-size: 18px;
+    padding: 15px 0;
+    cursor: pointer;
   }
   .preview {
     display: none;

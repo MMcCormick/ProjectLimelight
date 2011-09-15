@@ -18,17 +18,24 @@
       <%= f.label :title, "The story title..." %>
       <%= f.text_field :title %>
     </div>
-    <div class="field lClear" data-tip="News Story Summary">
+    <div class="field lClear bottom" data-tip="News Story Summary">
       <%= f.label :content, "A short summary of the story..." %>
       <%= f.text_area :content %>
       <%= render 'shared/topic_tagger' %>
     </div>
     <div class="field image" data-tip="New Story Image">
-      <div class="upload">
+      <div class="choices">
         <%= render 'shared/asset_image_field', :f => f %>
+        <div class="fetch">Use Image From URL</div>
       </div>
-      <div class="fetch">
-
+      <div class="image-preview">
+        <div class="upload"></div>
+        <div class="fetch">
+          <div class="left"><<</div>
+          <div class="right">>></div>
+          <div class="default">no images found at the given url</div>
+          <div class="images"></div>
+        </div>
       </div>
     </div>
     <div class="actions">

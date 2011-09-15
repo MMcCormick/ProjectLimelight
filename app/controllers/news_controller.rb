@@ -40,7 +40,13 @@ class NewsController < ApplicationController
       @news.set_user_snippet(current_user)
       @news.set_mentions(params[:tagged_topics])
       @news.grant_owner(current_user.id)
-      @news.images.create(params[:news][:asset_image])
+      # Create/attach the news image
+      image_snippet = ImageSnippet.new
+      image_snippet.user_id = current_user.id
+      image_snippet.add_uploaded_version(params[:news][:asset_image], true)
+      @news.images << image_snippet
+      # We must explicitly save the images so that CarrierWave stores them
+      @news.save_images
     end
 
     respond_to do |format|

@@ -31,6 +31,7 @@ jQuery ->
       'json'
     )
 
+  # TODO: Refactor this into it's own object, clean it up.
   # Toggle between uploading an image and choosing an image from those found at the given URL
   $('form.core_object .field.image .choices .fetch').live 'click', (e) ->
     if ($(@).hasClass('on'))

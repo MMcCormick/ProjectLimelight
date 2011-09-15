@@ -1,3 +1,6 @@
+require 'RMagick'
+include Magick
+
 # encoding: utf-8
 module Limelight #:nodoc:
 
@@ -80,24 +83,40 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      embeds_many :images, as: :image_assignable, :class_name => 'AssetImage'
+      embeds_many :images, as: :image_assignable, :class_name => 'ImageSnippet'
     end
 
-    # @example Return the url to the current default image at the specified dimension
-    #   document.default_image('d300_300')
-    #
-    # @param [ String ] The dimensions to return
-    #
-    # @return [ String ]
-    def default_image(dimensions)
+    def save_images
+      test = self.images
       self.images.each do |image|
-        if image.isDefault?
-          if image.has_dimensions? dimensions
-            return image.image_url dimensions
-          else
-            return image.image_url
-          end
+        image.versions.each do |version|
+          version.save
         end
+      end
+    end
+
+    # @example Return the url to the current default image
+
+    # @return AssetImage
+    def default_image
+      self.images.each do |image|
+        image if image.isDefault?
+      end
+    end
+
+    def add_image_version(image_id, dimensions)
+      image = self.images.find(image_id)
+      if image
+        original = image.original.first.image.file
+        new_image = Image.from_blob(original.read).first
+        new_image = new_image.resize_to_fit(dimensions[0], dimensions[1])
+        tmp_location = "/tmp/d#{dimensions[0]}x#{dimensions[1]}_#{original.filename}"
+        new_image.write tmp_location
+        version = AssetImage.new(:isOriginal => false, :resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :width => new_image.columns, :height => new_image.rows)
+        version.id = image.id
+        version.image.store!(File.open(tmp_location))
+        image.versions << version
+        version.save
       end
     end
   end

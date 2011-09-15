@@ -1,19 +1,16 @@
 class AssetImage < Asset
 
-  attr_accessible :image, :remote_image_url
+  attr_accessible :isOriginal, :resizedTo, :width, :height, :image, :remote_image_url
 
-  field :status, :default => 'Active'
-  field :isDefault, :default => true
-  field :dimensions, :default => []
+  field :isOriginal
+  field :resizedTo
+  field :width
+  field :height
 
   mount_uploader :image, ImageUploader
 
-  embedded_in :image_assignable, polymorphic: true
+  embedded_in :image_snippet
 
   validates :image, :presence => true
-
-  def has_dimensions? dimensions
-    self.dimensions.include? dimensions
-  end
 
 end

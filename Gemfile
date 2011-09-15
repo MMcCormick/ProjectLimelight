@@ -12,7 +12,7 @@ gem 'cells' # Components
 gem 'rspec-cells'
 gem 'redcarpet' # Markdown
 gem 'fog' # Cloud support (amazon s3, etc)
-gem 'mini_magick' # Image manipulation
+gem 'rmagick' # Image manipulation
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'typhoeus', :path => 'C:\RailsInstaller\Ruby1.9.2\lib\ruby\gems\1.9.1\gems\typhoeus-0.1.31'

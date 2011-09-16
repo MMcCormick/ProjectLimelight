@@ -36,7 +36,7 @@ class CoreObject
   end
 
   def set_user_snippet(user)
-    self.build_user_snippet({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.build_user_snippet({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
   end
 
   # Favorites
@@ -98,7 +98,7 @@ class CoreObject
     users = User.any_in("slug" => user_mention_slugs)
 
     users.each do |user|
-      self.user_mentions.build({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+      self.user_mentions.build({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
     end
   end
 
@@ -172,7 +172,7 @@ class CoreObject
         end
       end
       if found_topic
-        payload = {id: found_topic.id, name: found_topic.name}
+        payload = {id: found_topic.id, _public_id: found_topic._public_id, name: found_topic.name, slug: found_topic.slug }
         self.topic_mentions.build(payload)
       end
     end

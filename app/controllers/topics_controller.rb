@@ -56,6 +56,11 @@ class TopicsController < ApplicationController
     end
   end
 
+  def hover
+    @topic = Topic.find_by_slug(params[:id])
+    render :partial => 'hover_tab', :topic => @topic
+  end
+
   # TODO: Allow people with access (admins, others via ACL) to edit topics
   # PUT /topics/1
   # PUT /topics/1.json

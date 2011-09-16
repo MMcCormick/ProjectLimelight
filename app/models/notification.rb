@@ -19,7 +19,7 @@ class Notification
   validates_presence_of :receiver_snippets
 
   def set_sender_snippet(user)
-    self.build_sender_snippet({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.build_sender_snippet({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
   end
 
   # TODO: this must always be called last because we are saving the receiver's unread notification count and must check if the notification is valid. Fix.
@@ -30,7 +30,7 @@ class Notification
         found = true if receiver.id == user.id
       end
       if !found
-        self.receiver_snippets.create({id: user.id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+        self.receiver_snippets.create({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
         #something.save
         #self.receiver_snippets << something
         if self.valid?

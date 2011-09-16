@@ -34,4 +34,5 @@
 //= require news
 //= require core_objects
 //= require main
+//= require topic_tagger
 // require_tree .

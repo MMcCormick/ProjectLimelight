@@ -88,6 +88,51 @@ $(function() {
   })
 
   /*
+   * User and Topic Hover Tabs - QTips
+   */
+  $('.ulink, .tlink').livequery(function() {
+    $(this).each(function() {
+      var $self = $(this);
+      $self.qtip({
+        content: {
+          text: 'Loading...',
+          ajax: {
+            once: true,
+            url: $self.data('d').url,
+            type: 'get',
+            success: function(data) {
+              // If self is a ulink, set target to ulink with the given public id, else tlink
+              var target = $self.hasClass('ulink') ? $('.ulink[data-pid="'+$self.data('pid')+'"]') : $('.tlink[data-pid="'+$self.data('pid')+'"]');
+              console.log(data);
+              target.qtip('option', {
+                'content.text': data,
+                'content.ajax': false
+              });
+            },
+            error: function(data) {
+              // If self is a ulink, set target to ulink with the given public id, else tlink
+              var target = $self.hasClass('ulink') ? $('.ulink[data-pid="'+$self.data('pid')+'"]') : $('.tlink[data-pid="'+$self.data('pid')+'"]');
+              console.log(data)
+              target.qtip('option', {
+                'content.text': data.status == 401 ? 'You must sign in to see this user\'s info!' : 'Error',
+                'content.ajax': false
+              });
+            }
+          }
+        },
+        style: {classes: 'userHover ui-tooltip-shadow ui-tooltip-light', tip: true},
+        position: {
+          my: 'left middle',
+          at: 'right middle',
+          viewport: $(window)
+        },
+        show: {delay: 1000},
+        hide: {delay: 300, fixed: true}
+      })
+    })
+  })
+
+  /*
    * FEEDS
    */
 

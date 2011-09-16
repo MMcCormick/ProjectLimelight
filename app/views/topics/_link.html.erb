@@ -1,1 +1,3 @@
-<%= link_to name, topic_path(topic.name.to_url), :class => 'p, tlink' %>
+<a href="<%= topic_path(topic.name) %>" class="p tlink" data-d='{"url":"<%= topic_hover_path topic %>"}' data-pid="<%= topic._public_id %>">
+  <%= name %>
+</a>

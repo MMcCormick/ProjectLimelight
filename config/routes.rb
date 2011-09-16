@@ -34,6 +34,7 @@ ProjectLimelight::Application.routes.draw do
   # Topics
   resources :topics
   get 't/:id' => 'topics#show', :as => :topic
+  get 't/:id/hover' => 'topics#hover' , :as => :topic_hover
 
   # Notifications
   get '/:id/notifications' => 'notifications#index', :as => :notifications
@@ -52,6 +53,7 @@ ProjectLimelight::Application.routes.draw do
   get ':id/followers' => 'users#followers', :as => :user_followers
   get ':id/feed' => 'users#feed', :as => :user_feed
   get ':id/contributions' => 'users#contributions', :as => :user_contributions
+  get ':id/hover' => 'users#hover' , :as => :user_hover
   get ':id' => 'users#show', :as => :user
 
   # Home

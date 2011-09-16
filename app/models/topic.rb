@@ -13,12 +13,15 @@ class Topic
 
   # Denormilized:
   # Topic.aliases
+  # TopicMention.slug
   slug :name
 
   field :status, :default => 'Active'
   field :aliases
   field :user_id
   field :followers_count, :default => 0
+
+  auto_increment :_public_id
 
   belongs_to :user
   embeds_one :user_snippet, as: :user_assignable

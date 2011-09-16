@@ -99,6 +99,21 @@
     }
 }
 
+// User hover tabs
+.userHover {
+  .ui-tooltip-content {
+    background-color: #F2F8E4;
+    border-color: #CAE09D;
+  }
+  .name {
+    font-size: 14px;
+  }
+  .followB,
+  .unfollowB {
+    margin: 5px 0px;
+  }
+}
+
 // The user panel, either left or right sidebar
 .user-panel {
     @include clearfix();

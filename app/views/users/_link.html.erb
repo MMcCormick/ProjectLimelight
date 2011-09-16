@@ -1,1 +1,3 @@
-<%= link_to name, user_path(user.username), :class => 'p, ulink' %>
+<a href="<%= user_path(user.username) %>" class="p, ulink" data-d='{"url":"<%= user_hover_path user %>"}' data-pid="<%= user._public_id %>">
+  <%= name %>
+</a>

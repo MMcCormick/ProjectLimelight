@@ -45,6 +45,8 @@ class User
   field :reposts_count, :default => 0
   field :unread_notification_count, :default => 0
 
+  auto_increment :_public_id
+
   has_many :core_objects
   has_many :news
   has_many :videos

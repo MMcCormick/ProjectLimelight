@@ -21,6 +21,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def hover
+    @user = User.find_by_slug(params[:id])
+    render :partial => 'hover_tab', :user => @user
+  end
+
   def following_users
     @user = User.find_by_slug(params[:id])
     @following_users = User.where(:_id.in => @user.following_users)

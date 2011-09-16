@@ -1,0 +1,3 @@
+<div class="name"><%= @topic.name %></div>
+<%= render 'topics/follow_btn', :target_topic => @topic %>
+<div class="followersCount">Followers: <%= @topic.followers_count %></div>

@@ -12,8 +12,6 @@ class ImageSnippet
   embeds_many :versions, :class_name => 'AssetImage'
 
   embedded_in :image_assignable, polymorphic: true
-  belongs_to :user
-
 
   def add_uploaded_version(params, isOriginal=false)
     params.merge!( {:isOriginal => isOriginal} )

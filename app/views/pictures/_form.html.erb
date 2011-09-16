@@ -1,21 +1,27 @@
 <%= form_for @picture, :html => { :class => 'core_object noajax' } do |f| %>
+
+  <div class="help">
+    <span>red</span> = required field
+  </div>
+
   <%= render 'shared/error_messages', :object => f.object %>
 
-  <div class="field">
-    <%= f.label :title %><br />
-    <%= f.text_field :title %>
+  <div class="group">
+    <div class="field lClear required bottom important" data-tip="Picture Title">
+      <%= f.label :title, "Title the picture..." %>
+      <%= f.text_field :title %>
+    </div>
+    <div class="field lClear bottom" data-tip="Picture Description">
+      <%= f.label :content, "A short picture description..." %>
+      <%= f.text_area :content %>
+      <%= render 'shared/topic_tagger' %>
+    </div>
+    <div class="field image" data-tip="The Picture">
+      <%= render 'shared/core_object_image', :f => f %>
+    </div>
+    <div class="actions">
+      <%= f.submit "Post Picture" %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :content %><br />
-    <%= f.text_area :content %>
-  </div>
-  <div class="field">
-    <%= render 'shared/asset_image_field', :f => f %>
-  </div>
-  <% if defined? response_to %>
-    <%= f.hidden_field :response_to, :value => response_to.id %>
-  <% end %>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+
 <% end %>

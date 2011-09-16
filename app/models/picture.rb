@@ -3,12 +3,12 @@ class Picture < CoreObject
 
   attr_accessible :url, :title
 
-  field :url, :type => String
+  field :url
 
   # Denormilized:
   # CoreObject.response_to.name
-  # CoreObjectShare.core_object_snippet.name
-  field :title, :type => String
+  # Notification.shared_object_snippet.name
+  field :title
 
   validates :title, :length => { :minimum => 5, :maximum => 50 }, :presence => true
   validates_format_of :url, :with => URI::regexp(%w(http https)), :allow_nil => true

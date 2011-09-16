@@ -3,6 +3,7 @@ class User
   include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Mongoid::Slug
+  include Limelight::Images
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
@@ -59,9 +60,29 @@ class User
   validates :username, :email, :uniqueness => { :case_sensitive => false }
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me
 
+  after_create :save_profile_image
+
   # Return the users slug instead of their ID
   def to_param
     self.slug
+  end
+
+  # Pull image from Gravatar
+  def save_profile_image
+    hash = Digest::MD5.hexdigest(self.email.downcase)+'.jpeg'
+    image_url = "http://www.gravatar.com/avatar/#{hash}?s=500&d=monsterid"
+
+    writeOut = open("/tmp/#{hash}", "wb")
+    writeOut.write(open(image_url).read)
+    writeOut.close
+
+    image = self.images.create(:user_id => self.id)
+    version = AssetImage.new(:isOriginal => true)
+    version.id = image.id
+    version.image.store!("/tmp/#{hash}")
+    image.versions << version
+    version.save
+    self.save
   end
 
   # Checks to see if this user has a given role

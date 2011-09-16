@@ -40,6 +40,8 @@ class NewsController < ApplicationController
       @news.set_user_snippet(current_user)
       @news.set_mentions(params[:tagged_topics])
       @news.grant_owner(current_user.id)
+
+      # TODO: Factor this out of the controller
       # Create/attach the news image
       image_snippet = ImageSnippet.new
       image_snippet.user_id = current_user.id

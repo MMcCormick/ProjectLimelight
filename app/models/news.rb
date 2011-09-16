@@ -1,7 +1,7 @@
 class News < CoreObject
   include Limelight::Images
 
-  attr_accessible :title, :url
+  attr_accessible :url, :title
 
   field :url
 
@@ -17,4 +17,5 @@ class News < CoreObject
   def name
     self.title
   end
+
 end

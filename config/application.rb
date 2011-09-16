@@ -8,7 +8,7 @@ require "sprockets/railtie"
 require "compass"
 require "sass-rails"
 require 'uri'
-require 'net/http'
+require 'open-uri'
 require 'embedly'
 
 if defined?(Bundler)

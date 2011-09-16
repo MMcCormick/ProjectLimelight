@@ -24,20 +24,7 @@
       <%= render 'shared/topic_tagger' %>
     </div>
     <div class="field image" data-tip="New Story Image">
-      <div class="choices">
-        <%= render 'shared/asset_image_field', :f => f %>
-        <div class="fetch">Use Image From URL</div>
-      </div>
-      <div class="image-preview">
-        <div class="default">no image chosen</div>
-        <div class="upload"></div>
-        <div class="fetch">
-          <div class="left"><<</div>
-          <div class="right">>></div>
-          <div class="default">no images found at the given url</div>
-          <div class="images"></div>
-        </div>
-      </div>
+      <%= render 'shared/core_object_image', :f => f %>
     </div>
     <div class="actions">
       <%= f.submit "Post News Story" %>

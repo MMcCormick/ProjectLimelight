@@ -1,37 +1,32 @@
 jQuery ->
 
-  # News submission form, handle fetching data from supplied URL
-  $('#news_url').live 'blur', (e) ->
-    self = $(@)
-    if $.trim(self.val()) == ''
-      return
-
+  # TODO: Refactor this into it's own object, clean it up.
+  fetchImages = (pullFrom) ->
     $.get(
       $('#static-data').data('d').fetchEmbedUrl
-      url: self.val()
+      url: pullFrom.val()
       (data) ->
-        console.log(data)
-
-        $('#news_url').val(data.embedly.url)
-        $('#news_content').focus().val(data.embedly.description)
-        $('#news_title').focus().val(data.embedly.title)
-        $('#publisher').focus().val(data.embedly.provider_name)
-
-        target = $('#new_news .image-preview .images');
+        target = $('form.core_object .image-preview .images');
         if data.embedly.images.length > 0
           target.html('').siblings('.default').hide();
 
           for image in data.embedly.images
             target.append("<img src='"+image.url+"' />")
 
+          $('form.core_object .remote_image_url').val(target.find('img:first').attr('src'))
           target.find('img:not(:first)').hide()
+
         else
           target.siblings('.default').show()
+          $('form.core_object .remote_image_url').val('')
 
       'json'
     )
 
-  # TODO: Refactor this into it's own object, clean it up.
+  # Update the images when the image fetch URL is changed
+  $('form.core_object .image_fetch_url').live 'change', (e) ->
+    fetchImages($(@))
+
   # Toggle between uploading an image and choosing an image from those found at the given URL
   $('form.core_object .field.image .choices .fetch').live 'click', (e) ->
     if ($(@).hasClass('on'))
@@ -83,3 +78,24 @@ jQuery ->
 
     $(@).parents('form.core_object').find('.remote_image_url').val(found.attr('src'))
     found.show()
+
+  # News submission form, handle fetching data from supplied URL
+  $('#news_url').live 'blur', (e) ->
+    self = $(@)
+    if $.trim(self.val()) == ''
+      return
+
+    $.get(
+      $('#static-data').data('d').fetchEmbedUrl
+      url: self.val()
+      (data) ->
+        console.log(data)
+
+        $('#news_url, #new_news .image_fetch_url').val(data.embedly.url)
+        fetchImages($('#new_news .image_fetch_url'))
+        $('#news_content').focus().val(data.embedly.description)
+        $('#news_title').focus().val(data.embedly.title)
+        $('#publisher').focus().val(data.embedly.provider_name)
+
+      'json'
+    )

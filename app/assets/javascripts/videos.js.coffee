@@ -19,7 +19,7 @@ jQuery ->
         switch data.embedly.provider_name
           when 'YouTube'
             video_id = data.embedly.payload.video.data.id
-            $('#new_video .preview').show(200).find('.media').html("<iframe
+            $('#new_video .preview').show(200).find('.content').html("<iframe
                                                                     width='220'
                                                                     height='155'
                                                                     src='http://www.youtube.com/embed/"+video_id+"'
@@ -27,7 +27,7 @@ jQuery ->
                                                                     </iframe>")
           when 'Vimeo'
             video_id = data.embedly.payload.video_id
-            $('#new_video .preview').show(200).find('.media').html("<iframe
+            $('#new_video .preview').show(200).find('.content').html("<iframe
                                                                     width='220'
                                                                     height='155'
                                                                     src='http://player.vimeo.com/video/"+video_id+"' frameborder='0'

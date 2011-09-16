@@ -1,14 +1,20 @@
-<%= form_for(@talk) do |f| %>
+<%= form_for @talk, :html => { :class => 'core_object' } do |f| %>
+  <div class="help">
+    <span>red</span> = required field
+  </div>
+
   <%= render 'shared/error_messages', :object => f.object %>
 
-  <div class="field">
-    <%= f.label :content %><br />
-    <%= f.text_field :content %>
+  <div class="group">
+    <div class="field lClear required">
+      <%= f.label :content, "What do you want to talk about?" %>
+      <%= f.text_area :content %>
+      <%= render 'shared/topic_tagger' %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Post Talk" %>
+    </div>
   </div>
-  <% if defined? response_to %>
-    <%= f.hidden_field :response_to, :value => response_to.id %>
-  <% end %>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+
 <% end %>

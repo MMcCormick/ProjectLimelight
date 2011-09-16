@@ -2,7 +2,7 @@ require 'RMagick'
 include Magick
 
 module ImageHelper
-  def default_image(object, dimensions, classes='', id='')
+  def default_image_url(object, dimensions, classes='', id='')
     # TODO: WTF does object.default_image return an array with 1 object in it. Return JUST the object. This applies to ALL uses of .first below...
     image = object.default_image.first
     version = if image then image.find_version dimensions else nil end
@@ -15,6 +15,6 @@ module ImageHelper
       url = image.original.first.image_url
     end
 
-    image_tag url, :width => "#{dimensions[0]}px"
+    url
   end
 end

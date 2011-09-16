@@ -1,0 +1,17 @@
+<div class="choices">
+  <%= render 'shared/asset_image_field', :f => f %>
+  <div class="fetch">Use Image From URL</div>
+</div>
+<div class="image-preview">
+  <div class="default">no image chosen</div>
+  <div class="upload"></div>
+  <div class="fetch">
+    <div class="field iClear">
+      <input type="text" name="image_fetch" autocomplete="off" class="image_fetch_url iclear b" value="URL to fetch the image from..." />
+    </div>
+    <div class="left"><<</div>
+    <div class="right">>></div>
+    <div class="default">no images found at the given url</div>
+    <div class="images"></div>
+  </div>
+</div>

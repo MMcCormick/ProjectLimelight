@@ -148,9 +148,9 @@ form.core_object {
   .image-preview {
     border-left: 2px dotted #CCC;
     width: 352px;
-    min-height: 40px;
+    min-height: 15px;
     float: left;
-    padding: 15px 40px;
+    padding: 40px 40px 15px 40px;
     width: 270px;
     text-align: center;
     font-size: 16px;
@@ -160,6 +160,7 @@ form.core_object {
       font-size: 14px;
       font-style: italic;
       cursor: default;
+      margin: -13px 0 0 0;
     }
     .upload {
       float: left;
@@ -170,10 +171,20 @@ form.core_object {
     .fetch {
       display: none;
 
+      .field {
+        @include border-radius(2px);
+        margin: -35px 0 0 -35px;
+        width: 340px;
+        border: 1px solid #EEE;
+
+        input {
+          font-size: 12px;
+        }
+      }
       .left,
       .right {
         position: absolute;
-        top: 13px;
+        top: 40px;
         cursor: pointer;
       }
       .left {

@@ -87,7 +87,6 @@ module Limelight #:nodoc:
     end
 
     def save_images
-      test = self.images
       self.images.each do |image|
         image.versions.each do |version|
           version.save

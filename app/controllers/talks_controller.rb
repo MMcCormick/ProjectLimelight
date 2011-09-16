@@ -39,7 +39,7 @@ class TalksController < ApplicationController
     @talk = current_user.talks.build(params[:talk])
     if @talk.valid?
       @talk.set_user_snippet(current_user)
-      @talk.set_mentions
+      @talk.set_mentions(params[:tagged_topics])
       @talk.grant_owner(current_user.id)
     end
 

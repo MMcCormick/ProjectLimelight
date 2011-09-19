@@ -29,35 +29,38 @@ jQuery ->
 
   # Toggle between uploading an image and choosing an image from those found at the given URL
   $('form.core_object .field.image .choices .fetch').live 'click', (e) ->
+    parent = $(@).parents('form.core_object')
     if ($(@).hasClass('on'))
       $(@).removeClass('on')
-      $(@).parents('form.core_object').find('.image-preview .fetch').hide()
-      $(@).parents('form.core_object').find('.image-preview .default').show()
-      $(@).parents('form.core_object').find('.remote_image_url').val('')
+      parent.find('.image-preview .fetch').hide()
+      parent.find('.image-preview .default').show()
+      parent.find('.remote_image_url').val('')
     else
       $(@).addClass('on').siblings().removeClass('on')
-      $(@).parents('form.core_object').find('.image-preview .fetch').show()
-      $(@).parents('form.core_object').find('.image-preview .upload').hide()
-      $(@).parents('form.core_object').find('.image-preview .default').hide()
-      $(@).parents('form.core_object').find('input[type="file"]').val('')
-      $(@).parents('form.core_object').find('.remote_image_url').val($(@).parents('form.core_object').find('.image-preview .images img:visible').attr('src'))
+      parent.find('.image-preview .fetch').show()
+      parent.find('.image-preview .upload').hide()
+      parent.find('.image-preview .default').hide()
+      parent.find('input[type="file"]').val('')
+      parent.find('.remote_image_url').val(parent.find('.image-preview .images img:visible').attr('src'))
 
   # When a user clicks on the upload image element, click the hidden file input to show the choose image dialogue
   $('form.core_object .field.image .choices .upload').live 'click', (e) ->
+    parent = $(@).parents('form.core_object')
     if ($(@).hasClass('on'))
       $(@).removeClass('on')
-      $(@).parents('form.core_object').find('input[type="file"]').val('')
-      $(@).parents('form.core_object').find('.image-preview .default').show()
+      parent.find('input[type="file"]').val('')
+      parent.find('.image-preview .default').show()
     else
-      $(@).parents('form.core_object').find('input[type="file"]').click()
+      parent.find('input[type="file"]').click()
 
   # When the hidden file input value changes, update shit
   $('form.core_object input[type="file"]').live 'change', (e) ->
-    $(@).parents('form.core_object').find('.field.image .choices .upload').addClass('on').siblings().removeClass('on')
-    $(@).parents('form.core_object').find('.image-preview .fetch').hide()
-    $(@).parents('form.core_object').find('.image-preview .upload').show().html($(@).val())
-    $(@).parents('form.core_object').find('.image-preview .default').hide()
-    $(@).parents('form.core_object').find('.remote_image_url').val('')
+    parent = $(@).parents('form.core_object')
+    parent.find('.field.image .choices .upload').addClass('on').siblings().removeClass('on')
+    parent.find('.image-preview .fetch').hide()
+    parent.find('.image-preview .upload').show().html($(@).val())
+    parent.find('.image-preview .default').hide()
+    parent.find('.remote_image_url').val('')
 
   $('form.core_object .image-preview .fetch .left').live 'click', (e) ->
     target = $(@).siblings('.images').find('img:visible').hide()

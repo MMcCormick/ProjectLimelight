@@ -22,10 +22,6 @@ class ImageSnippet
 
   def find_version dimensions
     self.versions.where(:resizedTo => "#{dimensions[0]}x#{dimensions[1]}").first
-    #self.versions.each do |version|
-    #  version if version.resizedTo == "#{dimensions[0]}x#{dimensions[1]}"
-    #end
-    #false
   end
 
   def original

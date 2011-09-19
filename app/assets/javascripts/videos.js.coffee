@@ -19,20 +19,34 @@ jQuery ->
         switch data.embedly.provider_name
           when 'YouTube'
             video_id = data.embedly.payload.video.data.id
-            $('#new_video .preview').show(200).find('.content').html("<iframe
+            $('#new_video .preview').find('.content').html("<iframe
                                                                     width='220'
                                                                     height='155'
                                                                     src='http://www.youtube.com/embed/"+video_id+"'
                                                                     frameborder='0' allowfullscreen>
                                                                     </iframe>")
+            $('#new_video .preview').show(200)
           when 'Vimeo'
             video_id = data.embedly.payload.video_id
-            $('#new_video .preview').show(200).find('.content').html("<iframe
+            $('#new_video .preview').find('.content').html("<iframe
                                                                     width='220'
                                                                     height='155'
                                                                     src='http://player.vimeo.com/video/"+video_id+"' frameborder='0'
                                                                     webkitAllowFullScreen allowFullScreen>
                                                                     </iframe>")
+            $('#new_video .preview').show(200)
+          when 'Dailymotion'
+            video_id_parts = $(data.embedly.payload.html).attr('src').split('/')
+            video_id = video_id_parts[video_id_parts.length-1]
+            console.log(video_id_parts)
+            console.log(video_id)
+            $('#new_video .preview').find('.content').html("<iframe
+                                                                    frameborder='0'
+                                                                    width='220'
+                                                                    height='155'
+                                                                    src='http://www.dailymotion.com/embed/video/"+video_id+"'>
+                                                                    </iframe>")
+            $('#new_video .preview').show(200)
           else
             # TODO: Handle this...
             console.log 'Embed link could not be created...'

@@ -14,16 +14,16 @@ jQuery ->
         range.select()
 
   # Automatic toggling of overlay label on inputs
-  $('.lClear input, .lClear textarea').livequery ->
+  $('.lClear > input, .lClear > textarea').livequery ->
     $(@).attr 'autocomplete', 'off'
 
-  $('.lClear label').live 'click', (e) ->
+  $('.lClear > label').live 'click', (e) ->
     $(@).hide().next().focus()
 
-  $('.lClear input, .lClear textarea').live 'focus', (e) ->
+  $('.lClear > input, .lClear > textarea').live 'focus', (e) ->
     $(@).prev().hide()
 
-  $('.lClear input, .lClear textarea').live 'blur', (e) ->
+  $('.lClear > input, .lClear > textarea').live 'blur', (e) ->
     if $.trim($(@).val()) == ''
       $(@).prev().show()
 

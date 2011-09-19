@@ -32,12 +32,10 @@ jQuery ->
         self.find('.inlined').val('').removeClass('inlined')
         # If there are inline tags
         if tags
-          console.log(tags)
           for tag in tags
             # Removes the first two characters '[#' and trims whitespace
             tag = $.trim(tag.substr(2))
 
-            console.log(tag)
             #TODO: make sure the duplicate case below does not fire when there are no duplicates
             # If the tag already exists in the display area
             if self.find('input:text[value="' + tag + '"]').addClass('inlined').length > 0

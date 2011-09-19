@@ -73,8 +73,8 @@ module Limelight #:nodoc:
     end
   end
 
-  # Include this module to get ACL functionality for root level documents.
-  # @example Add ACL support to a document.
+  # Include this module to enable image handling on a document
+  # @example Add image handling.
   #   require "limelight"
   #   class Person
   #     include Limelight::Images

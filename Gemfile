@@ -15,7 +15,7 @@ gem 'fog' # Cloud support (amazon s3, etc)
 gem 'rmagick' # Image manipulation
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
-gem 'typhoeus', :path => 'C:\RailsInstaller\Ruby1.9.2\lib\ruby\gems\1.9.1\gems\typhoeus-0.1.31'
+#gem 'typhoeus', :path => 'C:\RailsInstaller\Ruby1.9.2\lib\ruby\gems\1.9.1\gems\typhoeus-0.1.31'
 gem 'embedly'
 gem 'resque', :require => 'resque/server' # Background jobs
 
@@ -49,7 +49,7 @@ group :test do
   gem "ZenTest"
   gem "autotest-rails-pure"
   gem "autotest-growl"
-  #gem "autotest-fsevent"
+  gem "autotest-fsevent"
   gem "spork"
   gem "guard"
   gem "guard-spork"

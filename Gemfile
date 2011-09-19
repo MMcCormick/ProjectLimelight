@@ -1,8 +1,10 @@
+require 'rbconfig'
+HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
+
 gem 'rails', '3.1.0'
 gem 'execjs'
 gem 'jquery-rails'
-gem 'bson_ext'
 gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
@@ -10,12 +12,12 @@ gem 'devise' # Authentication
 gem 'frontend-helpers'
 gem 'cells' # Components
 gem 'rspec-cells'
+gem 'yajl-ruby' # json processing
 gem 'redcarpet' # Markdown
 gem 'fog' # Cloud support (amazon s3, etc)
 gem 'rmagick' # Image manipulation
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
-#gem 'typhoeus', :path => 'C:\RailsInstaller\Ruby1.9.2\lib\ruby\gems\1.9.1\gems\typhoeus-0.1.31'
 gem 'embedly'
 gem 'resque', :require => 'resque/server' # Background jobs
 
@@ -26,10 +28,6 @@ group :assets do
   gem 'uglifier'
 end
 
-group :production do
-  #gem 'therubyracer'
-end
-
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 
 group :development do
@@ -37,6 +35,29 @@ group :development do
   gem "pry"
   gem "ruby-debug19"
   gem "foreman"
+  gem "guard"
+  gem "guard-bundler", ">= 0.1.3"
+  gem "guard-rails", ">= 0.0.3"
+  gem "guard-livereload"
+  gem "guard-rspec"
+  gem "guard-cucumber"
+  gem "spork"
+  gem "guard-spork"
+  gem 'bson_ext'
+
+  case HOST_OS
+    when /darwin/i
+      gem 'rb-fsevent'
+      gem 'growl'
+    when /linux/i
+      gem 'libnotify'
+      gem 'rb-inotify'
+    when /mswin|windows/i
+      gem 'rb-fchange'
+      gem 'win32console'
+      gem 'rb-notifu'
+  end
+
 end
 
 group :test do
@@ -50,7 +71,12 @@ group :test do
   gem "autotest-rails-pure"
   gem "autotest-growl"
   gem "autotest-fsevent"
-  gem "spork"
-  gem "guard"
-  gem "guard-spork"
+end
+
+if HOST_OS =~ /linux/i
+  gem 'therubyracer', '>= 0.8.2'
+end
+
+if HOST_OS =~ /mswin|windows/i
+  gem 'typhoeus', :path => 'C:\RailsInstaller\Ruby1.9.2\lib\ruby\gems\1.9.1\gems\typhoeus-0.1.31'
 end

@@ -53,7 +53,7 @@ class UsersController < ApplicationController
             :mentions_topics => @user.following_topics,
             :mentions_users => [@user.id]
     })
-end
+  end
 
   def contributions
     @user = User.find_by_slug(params[:id])

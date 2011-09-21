@@ -75,6 +75,10 @@ $(function() {
 
     resetPage(true);
   })
+  // Topic types
+  amplify.subscribe("edit_topic_type", function (data) {
+    $('.qtip').qtip('hide')
+  })
 
   /*
    * TALK

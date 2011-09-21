@@ -36,6 +36,9 @@ ProjectLimelight::Application.routes.draw do
   get 't/:id' => 'topics#show', :as => :topic
   get 't/:id/hover' => 'topics#hover' , :as => :topic_hover
 
+  # Topic Types
+  resources :topic_types
+
   # Notifications
   get '/:id/notifications' => 'notifications#index', :as => :notifications
 

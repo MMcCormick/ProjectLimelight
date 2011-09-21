@@ -1,0 +1,10 @@
+<%= form_for @type do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name %><br />
+
+  <%= collection_select(:topic_type, :id, @types, :id, :name, :prompt => true) %>
+
+  <%= f.hidden_field(:topic_id, {:value => @topic_id}) %>
+
+  <%= f.submit %>
+<% end %>

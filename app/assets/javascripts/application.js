@@ -35,4 +35,5 @@
 //= require core_objects
 //= require main
 //= require topic_tagger
+//= require topics
 // require_tree .

@@ -25,6 +25,7 @@ class Topic
 
   belongs_to :user
   embeds_one :user_snippet, as: :user_assignable
+  embeds_many :topic_type_snippets
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
@@ -42,5 +43,15 @@ class Topic
     self.aliases ||= []
     url = name.to_url
     self.aliases << url unless self.aliases.include?(url)
+  end
+
+  def public_id
+    self[_public_id].to_i.to_s(36)
+  end
+
+  class << self
+    def find_by_encoded_id(id)
+      where(:_public_id => id.to_i(36)).first
+    end
   end
 end

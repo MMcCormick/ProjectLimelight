@@ -2,9 +2,14 @@
   <h1><%= @topic.name %></h1>
 
   <div><%= @topic.followers_count %> followers</div>
-  <ul class="topic-types">
-    <li class="none">Un-typed</li>
 
+  <ul class="topic-types">
+    <% @topic.topic_type_snippets.each do |snippet| %>
+      <li><%= snippet.name %></li>
+    <% end %>
+    <% if current_user.has_role() %>
+      <li class="none"><%= render 'topic_types/add_type_btn', :topic => @topic %></li>
+      <% end %>
   </ul>
 
   <%= render 'topics/follow_btn', :current_user => @current_user, :target_topic => @topic %>

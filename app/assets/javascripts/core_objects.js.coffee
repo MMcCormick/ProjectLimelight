@@ -12,6 +12,7 @@ jQuery ->
 #    $.colorbox.resize();
 #  })
 
+  # Topic tagger for live updating of inlined and separately entered topics
   $('.tagDisplay').livequery ->
     # Sets self to the element with class tagDisplay
     self = $(@)

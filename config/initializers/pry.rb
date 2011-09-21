@@ -4,7 +4,7 @@ ProjectLimelight::Application.configure do
     begin
       require 'pry'
       IRB = Pry
-    rescue LoadError
+      rescue LoadError
     end
   end
 end

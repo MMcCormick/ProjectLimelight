@@ -86,6 +86,10 @@ class User
     self.save
   end
 
+  ###
+  # ROLES
+  ###
+
   # Checks to see if this user has a given role
   def has_role?(role)
     self.roles.include? role
@@ -100,6 +104,41 @@ class User
   def revoke_role(role)
     if self.roles
       self.roles.delete(role)
+    end
+  end
+
+  ###
+  # END ROLES
+  ###
+
+  ###
+  # FOLLOWING
+  ###
+
+  def follow_object(target)
+    case target.class.name
+      when 'User'
+        follow_user(target)
+      when 'Topic'
+        follow_topic(target)
+    end
+  end
+
+  def unfollow_object(target)
+    case target.class.name
+      when 'User'
+        unfollow_user(target)
+      when 'Topic'
+        unfollow_topic(target)
+    end
+  end
+
+  def is_following?(target)
+    case target.class.name
+      when 'User'
+        is_following_user?(target.id)
+      when 'Topic'
+        is_following_topic?(target.id)
     end
   end
 
@@ -158,4 +197,9 @@ class User
       topic.followers_count -= 1
     end
   end
+
+  ###
+  # END FOLLOWING
+  ###
+
 end

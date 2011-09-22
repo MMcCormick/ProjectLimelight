@@ -72,7 +72,7 @@
    */
   doAction = function(requestType, params, success, error) {
     console.log('Action:' + params.url);
-    var $action = requestType == 'POST' ? 'postAction' : 'getAction';
+    var $action = requestType.toLowerCase()+'Action'
     amplify.request($action, params, function (data, xhr) {
       // Do we need to login?
       if (xhr.status == 401)

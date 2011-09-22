@@ -53,14 +53,29 @@
       type: "GET",
       url: "{url}",
       decoder: function(data, status, xhr, success, error) {
-        // Lets check if it's already an object
-        if ($.isPlainObject(data)) {
-          success(data);
-        }
-        else {
-          // Else parse the XML into an object
-          success(htmlToJson(data));
-        }
+        success(data, xhr);
+      }
+    });
+
+    /*
+     * Handles actions that use PUT (updatse).
+     */
+    amplify.request.define("putAction", "ajax", {
+      type: "PUT",
+      url: "{url}",
+      decoder: function(data, status, xhr, success, error) {
+        success(data, xhr);
+      }
+    });
+
+    /*
+     * Handles actions that use DELETE (destroy).
+     */
+    amplify.request.define("deleteAction", "ajax", {
+      type: "DELETE",
+      url: "{url}",
+      decoder: function(data, status, xhr, success, error) {
+        success(data, xhr);
       }
     });
 

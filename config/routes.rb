@@ -16,17 +16,18 @@ ProjectLimelight::Application.routes.draw do
   post 'feeds/update' => 'feeds#update', :as => :feed_update
 
   # Following
-  post 'follow_user' => 'users#follow_toggle', :as => :user_follow
-  post 'follow_topic' => 'topics#follow_toggle', :as => :topic_follow
+  post   '/follows' => 'follows#create', :as => :create_follow
+  delete '/follows' => 'follows#destroy', :as => :destroy_follow
+  get    '/follows' => 'follows#index', :as => :user_follows
 
   # Favoriting
-  post 'favorite/create' => 'favorites#create', :as => :create_favorite
-  post 'favorite/destroy' => 'favorites#destroy', :as => :destroy_favorite
-  get ':id/favorites' => 'favorites#index', :as => :user_favorites
+  post   '/favorites' => 'favorites#create', :as => :create_favorite
+  delete '/favorites' => 'favorites#destroy', :as => :destroy_favorite
+  get    '/favorites' => 'favorites#index', :as => :user_favorites
 
   # Reposting
-  post 'repost/create' => 'reposts#create', :as => :create_repost
-  post 'repost/destroy' => 'reposts#destroy', :as => :destroy_repost
+  post   '/reposts' => 'reposts#create', :as => :create_repost
+  delete '/reposts' => 'reposts#destroy', :as => :destroy_repost
 
   # Embedly
   get 'embed' => 'embedly#show', :as => :embedly_fetch

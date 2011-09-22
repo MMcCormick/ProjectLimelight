@@ -19,7 +19,7 @@
     <%= parse_mentions(markdown(@talk.content), @talk) %>
 </div>
 
-<%= render 'favorites/favorite_btn', :object => @talk %>
-<%= render 'reposts/repost_btn', :object => @talk %>
+<%= render 'favorites/btn', :object => @talk %>
+<%= render 'reposts/btn', :object => @talk %>
 
 <!--{% render "LimelightCommentBundle:Thread:show" with {"root": object} %}-->

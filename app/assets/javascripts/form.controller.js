@@ -1,7 +1,7 @@
 // Wait for Document
 $(function() {
 
-  $('form:not(.noajax)').live('submit', function(event) {
+  $('form.ajax').live('submit', function(event) {
     // Ajaxify this form
 
     event.preventDefault();

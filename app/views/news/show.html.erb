@@ -12,7 +12,7 @@
 
 <%= image_tag default_image_url(@news, [100, 100]), :width => "100px" %>
 
-<%= render 'favorites/favorite_btn', :object => @news %>
-<%= render 'reposts/repost_btn', :object => @news %>
+<%= render 'favorites/btn', :object => @news %>
+<%= render 'reposts/btn', :object => @news %>
 
 <%= link_to 'Edit', edit_news_path(@news) %>

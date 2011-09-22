@@ -17,15 +17,22 @@ $(function() {
   });
 
   // Perform a button action
-  $('.btnp').live('click', function(event) {
+  $('.btn').live('click', function(event) {
     // Ajaxify this link
     var $this = $(this),
         url = $this.find('span:visible').data('url'),
-        requestType = 'POST';
+        requestType = $this.find('span:visible').data('method');
 
     $currentTarget = $this;
     var $payload = $this.find('span:visible').data('d');
     $payload['url'] = url;
+
+    // If there is no URL the user is probably not logged in...
+    if (!$payload['url'])
+    {
+      $('#login').click()
+      return
+    }
 
     doAction(requestType, $payload, toggleButton, null);
     event.preventDefault();

@@ -1,0 +1,10 @@
+<button class="btn <%= !signed_in? || !object.is_reposted_by?(current_user.id) ? 'repostB' : 'unrepostB' %> repost_<%= object.id %>">
+  <span class="default" data-url="<%= create_repost_path %>" data-d='{"id":"<%= object.id %>"}' data-method="post">
+    <div class="plus-green-icon icon"></div>
+    Repost
+  </span>
+  <span class="triggered" data-url="<%= destroy_repost_path %>" data-d='{"id":"<%= object.id %>"}' data-method="delete">
+    <div class="minus-green-icon icon"></div>
+    UnRepost
+  </span>
+</button>

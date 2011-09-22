@@ -3,6 +3,7 @@
 
 // Import compass mixins
 @import "compass";
+@import "compass/utilities";
 
 html, body {
     margin: 0; padding: 0;
@@ -315,7 +316,7 @@ input, textarea {
     }
 }
 
-/*@import "partials/sprites";*/
+@import "partials/sprites";
 @import "partials/core_objects";
 @import "partials/users";
 @import "partials/topics";

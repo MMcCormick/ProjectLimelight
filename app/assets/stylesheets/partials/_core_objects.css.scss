@@ -30,6 +30,7 @@ form.core_object {
   $form-width: 500px;
   $tag-width: 130px;
   position: relative;
+
   h3 {
 
   }
@@ -105,12 +106,13 @@ form.core_object {
     }
     .actions {
       background: #F1F1F1;
-      border-top: 1px solid #89ABC3;
-      padding: 3px;
+      border-top: 2px dotted #CCC;
 
       input {
-        @include green-conservative-button(15px, 2px, 1px);
-        padding: 3px 6px;
+        @include green-conservative-button(15px, 0, 0);
+        padding: 7px 0;
+        width: 160px;
+        text-align: center;
       }
       input.disabled {
         @include opacity(.65);
@@ -705,8 +707,7 @@ $scoreBox-width: 160px;
     }
 }
 // Styling for node-type buttons, (feed filters, contribute, etc)
-#feed-filters,
-#contributeC {
+#feed-filters {
     .feed-display {
         .opt, > div {
             @include border-radius(2px);
@@ -735,6 +736,80 @@ $scoreBox-width: 160px;
             color: adjust-lightness($video-color, -7);
         }
     }
+}
+
+#contributeC {
+  @include border-radius(0 0 3px 3px);
+  @include single-box-shadow(#AAA, 1px, 1px, 3px);
+
+  position: absolute;
+  top: 0px;
+  left: 225px;
+  z-index: 200;
+  background: #FEFEFE;
+  border: 2px solid #94C530;
+  border-top: none;
+  padding: 0;
+
+  .icon {
+    display: none;
+    position: absolute;
+    top: 11px;
+    right: 20px;
+  }
+  .options {
+    float: left;
+    width: 130px;
+    padding: 50px 0 0 15px;
+    .option {
+      font-size: 20px;
+      padding: 10px 0;
+      color: #888;
+      position: relative;
+      &:hover {
+        cursor: pointer;
+        .arrow-r-2424 {
+          display: block;
+        }
+      }
+      &.on {
+        .arrow-g-r-2424 {
+          display: block;
+        }
+      }
+      &.on:hover {
+        cursor: default;
+        .arrow-r-2424 {
+          display: none;
+        }
+      }
+      &.talk.on {
+        color: $talk-color;
+      }
+      &.picture.on {
+        color: $picture-color;
+      }
+      &.video.on {
+        color: $video-color;
+      }
+      &.news.on {
+        color: $news-color;
+      }
+    }
+  }
+  .forms {
+    float: left;
+
+    form {
+      margin: 8px 0 0 0;
+      .group {
+        @include border-radius(2px 0 0 0);
+        border-bottom: none;
+        border-color: #CCC;
+        margin-right: -1px;
+      }
+    }
+  }
 }
 
 .edit-panel {

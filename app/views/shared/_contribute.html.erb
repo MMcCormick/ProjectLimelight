@@ -1,0 +1,38 @@
+<div id="contributeC">
+  <div class="options">
+    <div class="option talk on" data-target="#new_talk">
+      Talk
+      <div class="icon arrow-g-r-2424"></div>
+      <div class="icon arrow-r-2424"></div>
+    </div>
+    <div class="option picture" data-target="#new_picture">
+      Picture
+      <div class="icon arrow-g-r-2424"></div>
+      <div class="icon arrow-r-2424"></div>
+    </div>
+    <div class="option video" data-target="#new_video">
+      Video
+      <div class="icon arrow-g-r-2424"></div>
+      <div class="icon arrow-r-2424"></div>
+    </div>
+    <div class="option news" data-target="#new_news">
+      News
+      <div class="icon arrow-g-r-2424"></div>
+      <div class="icon arrow-r-2424"></div>
+    </div>
+  </div>
+  <div class="forms">
+    <div class="form">
+      <%= render "talks/form", :talk => Talk.new %>
+    </div>
+    <div class="form hide">
+      <%= render "pictures/form", :picture => Picture.new %>
+    </div>
+    <div class="form hide">
+      <%= render "videos/form", :video => Video.new %>
+    </div>
+    <div class="form hide">
+      <%= render "news/form", :news => News.new %>
+    </div>
+  </div>
+</div>

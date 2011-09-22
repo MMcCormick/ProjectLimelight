@@ -23,6 +23,14 @@
     width: 14px;
     height: 9px;
 }
+.arrow-g-r-2424 {
+    @include icon-sprite(arrow_green_right_24x24);
+    width: 24px; height: 24px;
+}
+.arrow-r-2424 {
+    @include icon-sprite(arrow_grey_right_24x24);
+    width: 24px; height: 24px;
+}
 .fav {
     @include icon-sprite(favorite-off);
     height: 15px;

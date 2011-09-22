@@ -12,6 +12,18 @@ jQuery ->
 #    $.colorbox.resize();
 #  })
 
+  $('#contribute').live 'click', (e) ->
+    if $('#contributeC').is(':visible')
+      $('#contributeC').slideUp(200)
+    else
+      $('#contributeC').slideDown(200)
+
+
+  $('#contributeC .option').live 'click', (e) ->
+    $('#contributeC div.form').hide()
+    $($(@).data('target')).parents('.form').show()
+    $(@).addClass('on').siblings().removeClass('on')
+
   # Topic tagger for live updating of inlined and separately entered topics
   $('.tagDisplay').livequery ->
     # Sets self to the element with class tagDisplay

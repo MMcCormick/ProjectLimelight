@@ -78,9 +78,9 @@ $talk-color: #D88E00;
 
 @mixin green-conservative-button($font-size, $radius, $border-width) {
     @include border-radius($radius);
-    background-color: #E6FAE5;
+    background-color: #94C530;
     border: $border-width solid #90C399;
-    color: #2D4479;
+    color: #FFF;
     font-weight: bold;
     font-size: $font-size;
     position: relative;
@@ -89,7 +89,7 @@ $talk-color: #D88E00;
 
     &:hover {
         text-decoration: none;
-        background-color: #DFF2DE;
+        background-color: #85B229;
     }
 }
 

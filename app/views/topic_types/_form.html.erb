@@ -1,4 +1,4 @@
-<%= form_for @type, :class => "ajax" do |f| %>
+<%= form_for @type, :html => { :class => 'ajax' } do |f| %>
   <%= f.label :name %>
   <%= f.text_field :name %><br />
 

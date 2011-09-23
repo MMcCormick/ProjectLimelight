@@ -1,10 +1,12 @@
-<%= form_for picture, :html => { :class => 'core_object' } do |f| %>
+<%= form_for picture, :html => { :class => 'core_object ajax' } do |f| %>
 
   <div class="help">
     <span>red</span> = required field
   </div>
 
   <%= render 'shared/error_messages', :object => f.object %>
+
+  <div class="errors"></div>
 
   <div class="group">
     <div class="field lClear required bottom important" data-tip="Picture Title">

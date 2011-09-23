@@ -1,14 +1,15 @@
-<%= form_for talk, :html => { :class => 'core_object' } do |f| %>
+<%= form_for talk, :html => { :class => 'core_object ajax' } do |f| %>
   <div class="help">
     <span>red</span> = required field
   </div>
 
   <%= render 'shared/error_messages', :object => f.object %>
 
+  <div class="errors"></div>
   <div class="group">
     <div class="field lClear required">
       <%= f.label :content, "What do you want to talk about?" %>
-      <%= f.text_area :content %>
+      <%= f.text_area :content, :class => 'content' %>
       <%= render 'shared/topic_tagger' %>
     </div>
 

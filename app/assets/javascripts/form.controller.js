@@ -16,20 +16,22 @@ $(function() {
    */
   var formSubmit = function(form, success, error) {
 
-    console.log('Form submit');
-
     $.ajax({
       type: form.attr('method'),
       url: form.attr('action'),
       data: form.serializeArray(),
       dataType: 'json',
+      beforeSend: function() {
+        console.log('Form submit');
+        form.find('.errors').html('').hide();
+        form.find('input, textarea').attr('disabled', true);
+        $('#form-submitting').fadeIn(300);
+      },
       success: function(data) {
-        if (data.result == 'error') {
-          form.replaceWith(data.form);
-        }
-        else {
-          $('#contribute').colorbox.close();
-        }
+        $('#form-submitting').fadeOut(300);
+        form.find('input, textarea').removeAttr('disabled');
+
+        $('#contribute').colorbox.close();
 
         appUpdate(data);
 
@@ -39,13 +41,30 @@ $(function() {
       },
       error: function(jqXHR, textStatus, errorThrown) {
         console.log(jqXHR)
-        console.log(textStatus)
-        console.log(errorThrown)
-        if (jqXHR.status == 401) {
+
+        $('#form-submitting').fadeOut(300);
+        form.find('input, textarea').removeAttr('disabled');
+
+        // If they need to login
+        if (jqXHR.status == 401)
+        {
           $('#login').click()
           $('#user_email').focus()
           $('.qtip.ui-tooltip').qtip('hide')
         }
+        // If there was a form error
+        else if (jqXHR.status == 422)
+        {
+          var $error_field = form.find('.errors');
+          $error_field.show();
+          errors = $.parseJSON(jqXHR.responseText)
+          $.each(errors, function(target_field, field_errors) {
+            $.each(field_errors, function(i, error) {
+              $error_field.append('<div class="error">'+target_field+' '+error+'</div>');
+            })
+          })
+        }
+
         if (error) {
           error();
         }

@@ -33,6 +33,20 @@ a {
 
 ol,ul,li { list-style: none; margin: 0; padding: 0; }
 
+form {
+  .errors {
+    display: none;
+    font-size: 12px;
+    color: #CD070E;
+    padding: 0 5px;
+    border: 2px solid #D16A67;
+    background: #FFF9F6;
+    .error {
+      margin: 3px 0;
+    }
+  }
+}
+
 input, textarea {
     @include border-radius(3px);
     padding: 3px 6px;

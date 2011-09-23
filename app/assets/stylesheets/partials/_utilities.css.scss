@@ -33,6 +33,24 @@
     }
 }
 
+#form-submitting {
+    @include opacity(.8);
+    @include border-radius(2px);
+    display: none;
+    background: #FC770D;
+    color: #FFF;
+    border: 4px solid #FCC190;
+    padding: 3px 8px;
+    font-size: 15px;
+    position: fixed;
+    bottom: 75px;
+    left: 50%;
+    margin-left: -110px;
+    cursor: default;
+    z-index: 10000;
+    font-size: 24px;
+}
+
 // Input clearning (on click for instance)
 .iclear {
 

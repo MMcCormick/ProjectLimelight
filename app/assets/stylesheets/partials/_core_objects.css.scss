@@ -8,22 +8,22 @@
 
 // QTip for sharing a core object with friends
 .coreShareTip {
-    .ui-tooltip-content {
-        background-color: #F2F8E4;
-        border-color: #CAE09D;
+  .ui-tooltip-content {
+    background-color: #F2F8E4;
+    border-color: #CAE09D;
 
-        form {
-            margin-top: 3px;
-        }
-        input {
-            font-size: 10px;
-            margin: 5px 5px 5px 0;
-        }
-        .core_object_share_receivers,
-        .actions {
-            float: left;
-        }
+    form {
+      margin-top: 3px;
     }
+    input {
+      font-size: 10px;
+      margin: 5px 5px 5px 0;
+    }
+    .core_object_share_receivers,
+    .actions {
+      float: left;
+    }
+  }
 }
 
 form.core_object {
@@ -41,6 +41,9 @@ form.core_object {
     span {
       color: #CD070E;
     }
+  }
+  .errors {
+    margin: 0 10px 7px 10px;
   }
   .field {
     @include clearfix();

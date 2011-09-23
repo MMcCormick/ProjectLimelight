@@ -66,7 +66,7 @@ class PicturesController < ApplicationController
       if @picture.save
         response = { :redirect => picture_path(@picture) }
         format.html { redirect_to @picture, notice: 'Picture was successfully created.' }
-        format.json { render json: @picture, status: :created, location: @picture }
+        format.json { render json: response, status: :created, location: @picture }
       else
         format.html { render action: "new" }
         format.json { render json: @picture.errors, status: :unprocessable_entity }

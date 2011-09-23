@@ -16,7 +16,10 @@ class ImageSnippet
   def add_uploaded_version(params, isOriginal=false)
     params.merge!( {:isOriginal => isOriginal} )
     version = AssetImage.new(params)
-    version.id = self.id
+    version.id = id
+    if params[:image_cache]
+      version.image.store! params[:image_cache]
+    end
     self.versions << version
   end
 

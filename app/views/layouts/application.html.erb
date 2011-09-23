@@ -18,10 +18,10 @@
         <% top_image = image_tag "top-logo.png", :alt => "Project Limelight" %>
         <%= link_to top_image, :root, :class => "p logo" %>
 
-        <a id="contribute" class="ac" href="{{ path('object_contribute') }}">
+        <span id="contribute">
           <div class="plus-green-icon"></div>
           Contribute
-        </a>
+        </span>
 
         <% if signed_in? %>
           <%= link_to "Logout", destroy_user_session_path, :id => "logout" %>
@@ -75,7 +75,7 @@
               <%= yield %>
               <% if Rails.env.development? %>
                 <%= debug(params) %>
-                <div id="footnotes_holder"></div>
+                <div id="debug-upload-runtime">Upload Runtime: No runtime found</div>
               <% end %>
             </div>
           </div>
@@ -114,5 +114,7 @@
     </div>
 
     <%= javascript_include_tag "application" %>
+    <%= render "pictures/upload_js" %>
+    <%= render "news/upload_js" %>
   </body>
 </html>

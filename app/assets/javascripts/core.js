@@ -1,8 +1,8 @@
 (function(window, undefined) {
 
   // Prepare Variables
-  History = window.History,
-  rootUrl = History.getRootUrl(),
+//  History = window.History,
+//  rootUrl = History.getRootUrl(),
   $ = window.jQuery,
   $body = $(document.body),
   $application = $('#application'),

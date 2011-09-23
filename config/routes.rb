@@ -49,6 +49,9 @@ ProjectLimelight::Application.routes.draw do
   # Resque admin
   mount Resque::Server, :at => "/resque"
 
+  # Uploads
+  match "/upload" => "uploads#create", :as => :upload_tmp
+
   # Users
   devise_for :users
   resources :users, :only => :show

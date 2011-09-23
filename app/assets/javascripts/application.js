@@ -12,15 +12,16 @@
 //= require preload
 //= require jquery-ui.min
 //= require amplify
-//= require history.adapter.jquery
-//= require history
-//= require history.html4
+// require history.adapter.jquery
+// require history
+// require history.html4
 //= require jquery.colorbox
 //= require jquery.timer
 //= require jquery.qtip
 //= require jquery.autocomplete
 //= require jquery.scroll
 //= require jquery.typing
+//= require plupload/plupload.full
 //= require core
 //= require request
 //= require subscribers
@@ -32,6 +33,7 @@
 //= require users
 //= require videos
 //= require news
+//= require pictures
 //= require core_objects
 //= require main
 //= require topic_tagger

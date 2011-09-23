@@ -55,6 +55,7 @@ class User
   has_many :pictures
   has_many :topics
   has_many :core_object_shares
+  has_many :topic_types
 
   validates :username, :presence => true
   validates :username, :email, :uniqueness => { :case_sensitive => false }

@@ -77,6 +77,7 @@ $(function() {
   })
   // Topic types
   amplify.subscribe("edit_topic_type", function (data) {
+    $currentTarget.clearForm();
     $('.qtip').qtip('hide')
   })
 
@@ -131,7 +132,7 @@ $(function() {
 
   amplify.subscribe("core_object_share_finished", function (data) {
     $('.qtip').qtip('hide')
-    $currentTarget.find('.core_object_share_receivers').val('');
+    $currentTarget.clearForm();
   })
 
 });

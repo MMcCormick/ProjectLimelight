@@ -22,7 +22,7 @@ gem 'embedly'
 gem 'resque', :require => 'resque/server' # Background jobs
 
 group :assets do
-  gem 'compass', :git => 'git://github.com/chriseppstein/compass.git', :branch => 'rails31'
+  gem 'compass', '~> 0.12.alpha'
   gem 'sass-rails'
   gem 'coffee-rails'
   gem 'uglifier'
@@ -75,8 +75,4 @@ end
 
 if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.8.2'
-end
-
-if HOST_OS =~ /mswin|windows/i
-  gem 'typhoeus', :path => 'C:\RailsInstaller\Ruby1.9.2\lib\ruby\gems\1.9.1\gems\typhoeus-0.1.31'
 end

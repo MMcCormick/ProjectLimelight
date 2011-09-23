@@ -7,7 +7,7 @@
     <% @topic.topic_type_snippets.each do |snippet| %>
       <li><%= snippet.name %></li>
     <% end %>
-    <% if current_user.has_role() %>
+    <% if @current_user.has_role?('admin') %>
       <li class="none"><%= render 'topic_types/add_type_btn', :topic => @topic %></li>
       <% end %>
   </ul>

@@ -3,7 +3,7 @@ class TopicTypesController < ApplicationController
 
   def new
     @topic_id = params[:topic_id]
-    @types = TopicType.all
+    @types = TopicType.all.asc(:name)
     @type = TopicType.new
 
     respond_to do |format|
@@ -14,23 +14,34 @@ class TopicTypesController < ApplicationController
 
   def create
     topic = Topic.find_by_encoded_id(params[:topic_type][:topic_id])
-    if params[:topic_type][:id] == ''
-      type = current_user.topic_types.build(params[:topic_type])
+    foo = params[:topic_type][:name].to_url
+    # If the user didn't select an option from the select
+    if params[:topic_type][:id].blank?
+      type = TopicType.where(slug: params[:topic_type][:name].to_url).first
+      unless type
+        type = current_user.topic_types.build(params[:topic_type])
+      end
     else
       type = TopicType.find(params[:topic_type][:id])
     end
-    type.topic_count += 1
 
-    if type && type.save
-      snippet = topic.topic_type_snippets.build(type.attributes)
-      snippet.id = type.id
-      snippet.user_id = current_user.id
-      topic.save
+    if topic.topic_type_snippets.where(:name => type.name).exists?
       response = { :event => 'edit_topic_type',
-                   :flash => { :type => :success, :message => 'Topic Type successfully created!' } }
+                   :flash => { :type => :error, :message => 'The topic already has that type!' } }
     else
-      response = { :event => 'edit_topic_type',
-                   :flash => { :type => :error, :message => 'Topic Creation failed.' } }
+      type.topic_count += 1
+
+      if type && type.save
+        snippet = topic.topic_type_snippets.build(type.attributes)
+        snippet.id = type.id
+        snippet.user_id = current_user.id
+        topic.save
+        response = { :event => 'edit_topic_type',
+                     :flash => { :type => :success, :message => 'Topic Type added!' } }
+      else
+        response = { :event => 'edit_topic_type',
+                     :flash => { :type => :error, :message => 'Topic Type could not be added.' } }
+      end
     end
     render json: response
   end

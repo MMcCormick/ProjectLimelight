@@ -1,11 +1,14 @@
 class TopicType
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Slug
 
   # Denormalized in Topic.topic_type_snippet
   field :name
   field :user_id
   field :topic_count, :default => 0
+
+  slug :name
 
   belongs_to :user
 

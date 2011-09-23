@@ -22,7 +22,8 @@ class Notification
     self.build_sender_snippet({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
   end
 
-  # TODO: this must always be called last because we are saving the receiver's unread notification count and must check if the notification is valid. Fix.
+  # TODO: this must always be called last because we are saving the receiver's unread notification count and must check
+  # TODO: if the notification is valid. Fix. Also unread notifications do not seem to be updating properly.
   def set_receiver_snippets(users)
     users.each do |user|
       found = false

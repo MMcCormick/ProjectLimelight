@@ -10,6 +10,6 @@ class TopicMention
 
   # Return the slugified name instead of its ID
   def to_param
-    self.name.to_url
+    slug
   end
 end

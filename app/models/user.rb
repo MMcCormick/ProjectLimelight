@@ -37,13 +37,13 @@ class User
   slug :username
 
   field :roles, :default => []
-  field :following_users_count, :default => 0
+  field :following_users_count, :type => Integer, :default => 0
   field :following_users, :default => []
-  field :following_topics_count, :default => 0
+  field :following_topics_count, :type => Integer, :default => 0
   field :following_topics, :default => []
-  field :followers_count, :default => 0
-  field :favorites_count, :default => 0
-  field :reposts_count, :default => 0
+  field :followers_count, :type => Integer, :default => 0
+  field :favorites_count, :type => Integer, :default => 0
+  field :reposts_count, :type => Integer, :default => 0
   field :unread_notification_count, :default => 0
 
   auto_increment :_public_id

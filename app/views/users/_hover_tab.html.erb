@@ -1,4 +1,4 @@
 <div class="name"><%= @user.username %></div>
-<%= render 'users/follow_btn', :target_user => @user %>
+<%= render 'follows/btn', :target => @user %>
 <div class="followersCount">Followers: <%= @user.followers_count %></div>
 <div class="followersCount">Following: <%= @user.following_users_count %></div>

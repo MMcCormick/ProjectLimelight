@@ -103,7 +103,7 @@ $(function() {
             success: function(data) {
               // If self is a ulink, set target to ulink with the given public id, else tlink
               var target = $self.hasClass('ulink') ? $('.ulink[data-pid="'+$self.data('pid')+'"]') : $('.tlink[data-pid="'+$self.data('pid')+'"]');
-              console.log(data);
+              console.log(target);
               target.qtip('option', {
                 'content.text': data,
                 'content.ajax': false

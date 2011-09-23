@@ -30,31 +30,6 @@ $(function() {
    * USERS
    */
 
-  // Enabling dragging of user tags.
-  $(".tag.user").livequery(function() {
-    $(this).draggable({
-      opacity: 0.7,
-      helper: "clone",
-      handle: ".handle-small",
-      appendTo: "body"
-    });
-  });
-  // Enabling dropping of user tags.
-  $('#my-feed').livequery(function() {
-    $(this).droppable({
-      accept:      ".tag.user, .tag.topic",
-      activeClass: "dragging",
-      hoverClass:  "dropping",
-      drop: function(event, ui) {
-        // Get the base follow_add url and add the target users ID to the end.
-        var $url = $(this).data('d').url + '/' + ui.draggable.data('d').id;
-
-        doAction({'url': $url}, null, null);
-        $(this).text('dropped!');
-      }
-    })
-  });
-
   // Toggle login and register in the authentication box
   $('#auth_box .form-toggle').live('click', function() {
     $('#auth-login, #auth-register').hide();

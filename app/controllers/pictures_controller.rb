@@ -64,6 +64,7 @@ class PicturesController < ApplicationController
 
     respond_to do |format|
       if @picture.save
+        response = { :redirect => picture_path(@picture) }
         format.html { redirect_to @picture, notice: 'Picture was successfully created.' }
         format.json { render json: @picture, status: :created, location: @picture }
       else

@@ -40,7 +40,7 @@ jQuery ->
       parent.find('.image-preview .fetch').show()
       parent.find('.image-preview .upload').hide()
       parent.find('.image-preview .default').hide()
-      parent.find('input[type="file"]').val('')
+      parent.find('.image_upload_cache').val('')
       parent.find('.remote_image_url').val(parent.find('.image-preview .images img:visible').attr('src'))
 
   # When a user clicks on the upload image element, click the hidden file input to show the choose image dialogue

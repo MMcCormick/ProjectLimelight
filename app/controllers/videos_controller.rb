@@ -50,7 +50,7 @@ class VideosController < ApplicationController
         format.json { render json: response, status: :created, location: @video }
       else
         format.html { render action: "new" }
-        format.json { render json: @video.errors, status: :unprocessable_entity }
+        format.json { render json: response, status: :unprocessable_entity }
       end
     end
   end

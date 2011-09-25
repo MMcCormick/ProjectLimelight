@@ -103,12 +103,19 @@ module Limelight #:nodoc:
       end
     end
 
-    def add_image_version(image_id, dimensions)
+    def add_image_version(image_id, dimensions, style)
       image = self.images.find(image_id)
       if image
         original = image.original.first.image.file
         new_image = Image.from_blob(original.read).first
-        new_image = new_image.resize_to_fit(dimensions[0], dimensions[1])
+
+        case style
+          when 'square'
+            new_image = new_image.resize_to_fill(dimensions[0], dimensions[1])
+          else
+            new_image = new_image.resize_to_fit(dimensions[0], dimensions[1])
+        end
+
         tmp_location = "/tmp/d#{dimensions[0]}x#{dimensions[1]}_#{original.filename}"
         new_image.write tmp_location
         version = AssetImage.new(:isOriginal => false, :resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :width => new_image.columns, :height => new_image.rows)

@@ -3,7 +3,8 @@
     <div class="score" title="Your Score">0</div>
     <div class="clear"></div>
     
-    <%= image_tag default_image_url(@user, [85, 65]), :width => "85px" %>
+    <% img = default_image_url(@user, [85, 65]) %>
+    <%= image_tag img[:url], img[:options] %>
 
     <div class="right">
         <div class="stat followers">

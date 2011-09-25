@@ -46,4 +46,28 @@ $(function() {
     resizeFeedTeasers();
   });
 
+  // Autocomplete for Core Object Shares
+  $('.core_object_share_receivers').livequery(function() {
+    $(this).autocomplete($('#static-data').data('d').userAutoUrl, {
+      minChars: 1,
+      width: 175,
+      matchContains: true,
+      autoFill: false,
+      searchKey: 'username',
+      formatItem: function(row, i, max) {
+        return row.formattedItem;
+      },
+      formatMatch: function(row, i, max) {
+        return row.name;
+      },
+      formatResult: function(row) {
+        return row.username;
+      }
+      });
+      $(this).result(function(event, data, formatted) {
+        //TODO: make the qtip not hide when an autocomplete field is clicked (qtip hides on unfocus)
+        //$(this).parents('.qtip').qtip('show');
+      });
+  })
+
 })

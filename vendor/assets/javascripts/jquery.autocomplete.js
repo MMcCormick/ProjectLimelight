@@ -357,7 +357,7 @@ $.Autocompleter = function(input, options) {
 			$.each(options.extraParams, function(key, param) {
 				extraParams[key] = typeof param == "function" ? param() : param;
 			});
-			
+
 			$.ajax({
 				// try to leverage ajaxQueue plugin to abort previous requests
 				mode: "abort",
@@ -436,9 +436,9 @@ $.Autocompleter.Cache = function(options) {
 
 	var data = {};
 	var length = 0;
-	
+
 	function matchSubset(s, sub) {
-		if (!options.matchCase)
+    if (!options.matchCase)
 			s = s[options.searchKey].toLowerCase();
 		var i = s.indexOf(sub);
 		if (options.matchContains == "word"){
@@ -556,9 +556,9 @@ $.Autocompleter.Cache = function(options) {
 				for (var i = q.length - 1; i >= options.minChars; i--) {
 					var c = data[q.substr(0, i)];
 					if (c) {
-						var csub = [];
+            var csub = [];
 						$.each(c, function(i, x) {
-							if (matchSubset(x.value, q)) {
+              if (matchSubset(x.value, q)) {
 								csub[csub.length] = x;
 							}
 						});

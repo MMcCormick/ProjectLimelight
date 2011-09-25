@@ -72,6 +72,13 @@
     }
 }
 
+// Autocomplete results
+.ac_results {
+  z-index: 15000;
+  background: #F2F8E4;
+  //border: 1px solid #CAE09D;
+}
+
 // Hovering on buttons and enlargable images
 .btn.hover,
 .enlarge:hover,

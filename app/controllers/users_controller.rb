@@ -46,4 +46,16 @@ class UsersController < ApplicationController
     })
   end
 
+  def autocomplete
+    #@matches = User.where(:_id.in => current_user.following_users).and(:name => '/'+params[:q]+'/')
+    matches = User.where(:_id.in => current_user.following_users).where(:username => /#{params[:q]}/i)
+    response = Array.new
+    matches.each do |match|
+      @user = match
+      response << {username: match.username, formattedItem: render_to_string(partial: 'auto_helper')}
+    end
+
+    render json: response
+  end
+
 end

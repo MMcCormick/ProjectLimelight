@@ -61,6 +61,7 @@ ProjectLimelight::Application.routes.draw do
   get ':id/feed' => 'users#feed', :as => :user_feed
   get ':id/contributions' => 'users#contributions', :as => :user_contributions
   get ':id/hover' => 'users#hover' , :as => :user_hover
+  get 'autocomplete' => 'users#autocomplete', :as => :user_auto
   get ':id' => 'users#show', :as => :user
 
   # Home

@@ -10,6 +10,7 @@ require "sass-rails"
 require 'uri'
 require 'open-uri'
 require 'embedly'
+require 'resque-loner'
 require 'chronic'
 
 if defined?(Bundler)

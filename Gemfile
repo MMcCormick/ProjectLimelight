@@ -20,6 +20,7 @@ gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'embedly'
 gem 'resque', :require => 'resque/server' # Background jobs
+gem 'resque-loner' # Unique resque jobs
 gem 'chronic' # Date/Time management
 
 group :assets do

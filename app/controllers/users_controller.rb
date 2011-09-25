@@ -48,7 +48,7 @@ class UsersController < ApplicationController
 
   def autocomplete
     #@matches = User.where(:_id.in => current_user.following_users).and(:name => '/'+params[:q]+'/')
-    matches = User.where(:_id.in => current_user.following_users).where(:username => /#{params[:q]}/i)
+    matches = User.where(:_id.in => current_user.following_users).where(:username => /#{params[:q]}/i).asc(:username)
     response = Array.new
     matches.each do |match|
       @user = match

@@ -51,6 +51,7 @@ $(function() {
     $(this).autocomplete($('#static-data').data('d').userAutoUrl, {
       minChars: 1,
       width: 175,
+      multiple: true,
       matchContains: true,
       autoFill: false,
       searchKey: 'username',

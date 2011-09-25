@@ -11,7 +11,9 @@
         </a>
       <% end %>
     </h2>
-    <%= image_tag default_image_url(object, [100, 100]), :width => "100px" %>
+
+    <% img = default_image_url(object, [100, 100]) %>
+    <%= image_tag img[:url], img[:options] %>
 
     <div class="createdC">
       <div class="time">

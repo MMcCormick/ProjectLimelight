@@ -10,6 +10,8 @@ require "sass-rails"
 require 'uri'
 require 'open-uri'
 require 'embedly'
+require 'resque-loner'
+require 'chronic'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -52,6 +54,8 @@ module ProjectLimelight
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
+
+    config.time_zone = "Eastern Time (US & Canada)"
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]

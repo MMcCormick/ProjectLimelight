@@ -36,6 +36,7 @@ class User
 
   slug :username
 
+  field :time_zone, :type => String, :default => "Eastern Time (US & Canada)"
   field :roles, :default => []
   field :following_users_count, :type => Integer, :default => 0
   field :following_users, :default => []

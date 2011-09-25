@@ -10,7 +10,8 @@
   <%= parse_mentions(markdown(@news.content), @news) %>
 </p>
 
-<%= image_tag default_image_url(@news, [100, 100]), :width => "100px" %>
+<% img = default_image_url(@news, [100, 100]) %>
+<%= image_tag img[:url], img[:options] %>
 
 <%= render 'favorites/btn', :object => @news %>
 <%= render 'reposts/btn', :object => @news %>

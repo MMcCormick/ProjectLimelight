@@ -10,7 +10,8 @@
   <%= @picture.content %>
 </p>
 
-<%= image_tag default_image_url(@picture, [100, 100]), :width => "100px" %>
+<% img = default_image_url(@picture, [100, 100]) %>
+<%= image_tag img[:url], img[:options] %>
 
 
 <%= link_to 'Edit', edit_picture_path(@picture) %> |

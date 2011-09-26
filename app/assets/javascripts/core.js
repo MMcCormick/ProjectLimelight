@@ -68,23 +68,19 @@
   }
 
   /*
-   * Main site-wide action function.
+   * Main site-wide action functions.
    */
-  doAction = function(requestType, params, success, error) {
+  doAction = function(params, success, error) {
     console.log('Action:' + params.url);
-    var $action = requestType.toLowerCase()+'Action'
-    amplify.request($action, params, function (data, xhr) {
-      // Do we need to login?
-      if (xhr.status == 401)
-      {
-        $('#login').click();
-      }
-      else
-      {
-        appUpdate(data);
-        if (success) {
-          success({'url': params.url}, data);
-        }
+
+    var $action = params.requestType.toLowerCase() + 'Action';
+    var $payload = params.payload ? params.payload : {};
+    $payload['url'] = params.url;
+
+    amplify.request($action, $payload, function (data) {
+      appUpdate(data);
+      if (success) {
+        success({'url': params.url}, data);
       }
     })
   };

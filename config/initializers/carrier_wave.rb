@@ -1,8 +1,8 @@
 CarrierWave.configure do |config|
   config.fog_credentials = {
     :provider               => 'AWS',       # required
-    :aws_access_key_id      => 'AKIAIQDM2Y5J44SJILXA',       # required
-    :aws_secret_access_key  => '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',       # required
+    :aws_access_key_id      => ENV['S3_KEY'],       # required
+    :aws_secret_access_key  => ENV['S3_SECRET'],       # required
     #:region                 => 'us-east-1b'  # optional, defaults to 'us-east-1'
   }
   #config.fog_host       = 'https://assets.example.com'            # optional, defaults to nil
@@ -11,29 +11,24 @@ CarrierWave.configure do |config|
   config.ensure_multipart_form = false
 end
 
-if Rails.env.development?
+if Rails.env.production?
   CarrierWave.configure do |config|
-    config.storage = :file
-    #config.fog_directory  = 'limelight-dev'
-    #config.fog_host = 'http://duenu7rsiu1ze.cloudfront.net'
-  end
-end
-
-if Rails.env.test?
-  CarrierWave.configure do |config|
-    config.fog_directory  = 'limelight_test'
+    config.storage = :fog
+    config.fog_directory  = 'limelight-img-production'
+    config.fog_host = 'http://img.p-li.me'
   end
 end
 
 if Rails.env.staging?
   CarrierWave.configure do |config|
-    config.fog_directory  = 'limelight_staging'
-    config.fog_host = 'http://dmuzhqpj80uz0.cloudfront.net'
+    config.storage = :fog
+    config.fog_directory  = 'limelight-img-staging'
+    config.fog_host = 'http://staging.img.p-li.me'
   end
 end
 
-if Rails.env.production?
+if Rails.env.development?
   CarrierWave.configure do |config|
-    config.fog_directory  = 'limelight-prod'
+    config.storage = :file
   end
 end

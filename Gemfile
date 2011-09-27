@@ -2,7 +2,8 @@ require 'rbconfig'
 HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.0'
+gem 'rails', '3.1.1.rc1'
+gem 'thin'
 gem 'execjs'
 gem 'jquery-rails'
 gem 'bson_ext'
@@ -18,8 +19,10 @@ gem 'fog' # Cloud support (amazon s3, etc)
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'embedly'
+gem 'heroku'
 gem 'resque', :require => 'resque/server' # Background jobs
 gem 'resque-loner' # Unique resque jobs
+gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
 gem 'chronic' # Date/Time management
 
 group :assets do
@@ -64,10 +67,6 @@ group :test do
   gem "mongoid-rspec"
   gem "spork", "> 0.9.0.rc"
   gem 'guard-spork'
-end
-
-if HOST_OS =~ /linux/i
-  gem 'therubyracer'
 end
 
 gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything)

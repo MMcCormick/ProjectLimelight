@@ -61,7 +61,7 @@ class TalksController < ApplicationController
     @talk = Talk.find(params[:id])
 
     if !has_permission?(current_user, @talk, "edit")
-      redirect_to :back, notice: 'You may only edit your own talk!.'
+      redirect_to :back, notice: 'You may only edit your own talk!'
     end
 
     respond_to do |format|

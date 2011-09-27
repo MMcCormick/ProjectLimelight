@@ -51,6 +51,74 @@
     font-size: 24px;
 }
 
+.lClear {
+  @include clearfix();
+  position: relative;
+  label {
+    position: absolute;
+    top: 8px;
+    left: 7px;
+    font-style: italic;
+    font-size: 13px;
+    color: #666;
+  }
+  input,
+  textarea {
+    @include border-radius(2px);
+    padding: 5px 7px;
+  }
+  input {
+    border: 1px solid #89ABC3;
+    margin-bottom: 10px;
+  }
+  &.required label {
+    color: #CD070E;
+  }
+  .tagDisplay {
+    position: absolute;
+    top: 0px;
+
+    input {
+      background: #F2F8E4;
+      z-index: 130;
+    }
+  }
+}
+.group {
+  @include border-radius(2px);
+  border: 1px solid #89ABC3;
+
+  label {
+    top: 7px;
+  }
+  input,
+  textarea {
+    margin: 0;
+    border: none;
+  }
+  .bottom {
+    border-bottom: 2px dotted #CCC;
+  }
+  .important input {
+    font-weight: bold;
+  }
+  .actions {
+    background: #F1F1F1;
+    border-top: 2px dotted #CCC;
+
+    input {
+      @include green-conservative-button(15px, 0, 0);
+      padding: 7px 0;
+      width: 160px;
+      text-align: center;
+    }
+    input.disabled {
+      @include opacity(.65);
+      cursor: default;
+    }
+  }
+}
+
 // Input clearning (on click for instance)
 .iclear {
 

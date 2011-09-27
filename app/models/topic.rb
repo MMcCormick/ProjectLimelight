@@ -16,6 +16,7 @@ class Topic
   # TopicMention.slug
   slug :name
 
+  field :summary
   field :status, :default => 'Active'
   field :aliases
   field :user_id
@@ -30,7 +31,7 @@ class Topic
   validates :user_id, :presence => true
   validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
   validates :status, :presence => true
-  attr_accessible :name
+  attr_accessible :name, :summary
 
   before_create :add_alias
 

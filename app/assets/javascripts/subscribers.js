@@ -71,10 +71,12 @@ $(function() {
    */
 
   amplify.subscribe("topic_edit_show", function (data) {
-    editCommon(data.form, "#sidebar-right .wrap");
-
-    resetPage(true);
+    $('#topic-edit').hide()
+    $('#topic-panel .content').slideUp(300)
+    $('#topic-edit').html(data.content)
+    $('#topic-edit').slideDown(300)
   })
+
   // Topic types
   amplify.subscribe("edit_topic_type", function (data) {
     $currentTarget.clearForm();

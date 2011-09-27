@@ -1,6 +1,19 @@
-<h1>Editing topic</h1>
+<%# TODO: permissions (admin, etc) %>
 
+<h4>Edit Topic Info</h4>
 <%= render 'form' %>
 
-<%= link_to 'Show', @topic %> |
-<%= link_to 'Back', topics_path %>
+<h4>Edit Topic Types</h4>
+
+<ul class="sidebar-list">
+  <% @topic.topic_type_snippets.each do |snippet| %>
+    <li>
+      <%= snippet.name %>
+      <a data-url="<%= topic_type_path %>" data-d='{ "type_id":"<%= snippet.id %>", "topic_id":"<%= @topic._public_id %>"}' data-m="delete" class="ac delete">X</a>
+    </li>
+  <% end %>
+</ul>
+
+<%= render_cell :topic_type, :new, :topic => @topic %>
+
+<div class="edit topic-done-b">done</div>

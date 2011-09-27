@@ -3,6 +3,11 @@ jQuery ->
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
+  $('.topic-done-b').live 'click', (e) ->
+    $('#topic-panel .content').show()
+    $('#topic-edit').hide()
+
+
   # Creates a qtip with a form to add types to a topic when an .addTypeB is clicked
   $('.addTypeB').livequery ->
     self = $(@)

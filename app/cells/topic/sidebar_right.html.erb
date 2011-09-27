@@ -1,24 +1,27 @@
 <div id="topic-panel" class="sbrC">
-  <h1><%= @topic.name %></h1>
+  <div class="content">
+    <h1><%= @topic.name %></h1>
 
-  <div><%= @topic.followers_count %> followers</div>
+    <div><%= @topic.followers_count %> followers</div>
 
-  <ul class="topic-types">
-    <% @topic.topic_type_snippets.each do |snippet| %>
-      <li><%= snippet.name %></li>
-    <% end %>
-    <% if @current_user.has_role?('admin') %>
-      <li class="none"><%= render 'topic_types/add_type_btn', :topic => @topic %></li>
+    <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>
+
+    <h4>Topic Types:</h4>
+    <ul class="topic-types">
+      <% @topic.topic_type_snippets.each do |snippet| %>
+        <li><%= snippet.name %></li>
       <% end %>
-  </ul>
+    </ul>
 
-  <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>
+    <h4>Topic Summary:</h4>
+    <div class="summary"><%= @topic.summary %></div>
 
-  <div class="summary">summary</div>
-
-  <div class="footer">
-    <div class="content">
-      <div class="edit acg" data-url="{{ path('topic_edit', {'id': object.id}) }}">edit</div>
+    <div class="footer">
+      <%# if signed_in? && @current_user.has_role?('admin') %>
+        <div class="edit-topic-b ac edit" data-url="<%= edit_topic_path %>" data-m="get">edit</div>
+      <%# end %>
     </div>
   </div>
+
+  <div id="topic-edit"></div>
 </div>

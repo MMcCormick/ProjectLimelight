@@ -37,6 +37,14 @@ class TopicsController < ApplicationController
   # GET /topics/1/edit
   def edit
     @topic = Topic.find_by_slug(params[:id])
+    respond_to do |format|
+      if !has_permission?(current_user, @topic, "edit")
+        format.json { render json: { flash: { :type => :error, :message => "You don't have permissions to edit this topic" }}, status: 403 }
+      else
+        html = render_to_string 'edit'
+        format.json { render json: { event: :topic_edit_show, content: html } }
+      end
+    end
   end
 
   # POST /topics
@@ -64,23 +72,22 @@ class TopicsController < ApplicationController
   # TODO: Allow people with access (admins, others via ACL) to edit topics
   # PUT /topics/1
   # PUT /topics/1.json
-  #def update
-  #  @topic = Topic.find(params[:id])
-  #
-  #  if !is_current_user_object(@talk)
-  #    redirect_to :back, notice: 'You may only edit your own topics!.'
-  #  end
-  #
-  #  respond_to do |format|
-  #    if @topic.update_attributes(params[:topic])
-  #      format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
-  #      format.json { head :ok }
-  #    else
-  #      format.html { render action: "edit" }
-  #      format.json { render json: @topic.errors, status: :unprocessable_entity }
-  #    end
-  #  end
-  #end
+  def update
+    @topic = Topic.find_by_slug(params[:id])
+
+    respond_to do |format|
+      if !has_permission?(current_user, @topic, "edit") && !current_user.has_role?('admin')
+        format.html { redirect_to :back, notice: 'You may only edit your own topics!' }
+        format.json { render json: { :status => 'error', :message => 'You may only edit your own topics!' } }
+      elsif @topic.update_attributes(params[:topic])
+        format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
+        format.json { head :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @topic.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   # TODO: Allow people with access (admins, others via ACL) to delete topics
   # DELETE /topics/1

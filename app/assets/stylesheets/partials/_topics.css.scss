@@ -39,19 +39,49 @@
 }
 
 #topic-panel {
-    h1 {
-        padding:  8px 0 0 10px;
-    }
-    
-    .topic-types {
-        margin: 2px 0 5px 8px;
+  padding: 5px;
 
-        li {
-            font-size: 14px;
-            color: #999;
-        }
-        .none {
-            font-style: italic;
-        }
+  .topic-types {
+    margin: 2px 0 5px 8px;
+    li {
+      font-size: 14px;
+      color: #999;
     }
+    .none {
+      font-style: italic;
+    }
+  }
+
+  #topic-edit {
+    font-size: 12px;
+    h4 {
+      font-size: 14px;
+    }
+    ul {
+        margin: 0 0 5px 0;
+    }
+    form {
+      margin-bottom: 5px;
+      .lClear label {
+        top: 5px;
+      }
+      .field {
+        input,
+        textarea {
+          width: 195px;
+        }
+        textarea {
+          height: 150px;
+        }
+      }
+      .actions input {
+        padding: 2px 0;
+        width: 110px;
+      }
+      select {
+        border: none;
+        width: 100%
+      }
+    }
+  }
 }

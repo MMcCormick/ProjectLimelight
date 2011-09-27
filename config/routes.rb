@@ -36,6 +36,7 @@ ProjectLimelight::Application.routes.draw do
   resources :topics
   get 't/:id' => 'topics#show', :as => :topic
   get 't/:id/hover' => 'topics#hover' , :as => :topic_hover
+  put 't/:id' => 'topics#update', :as => :update_topic
 
   # Topic Types
   resources :topic_types

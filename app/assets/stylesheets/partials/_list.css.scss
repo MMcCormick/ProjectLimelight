@@ -63,64 +63,67 @@
 }
 
 .sidebar-list {
-    margin: 15px 0 0 0;
-    padding: 0 10px;
+  margin: 15px 0 0 0;
+  padding: 0 10px;
 
-    h5 {
-        float: left;
-        cursor: default;
-        margin: 0 0 0 1px;
-        color: #666;
+  h5 {
+    float: left;
+    cursor: default;
+    margin: 0 0 0 1px;
+    color: #666;
+  }
+  .list-createB {
+    font-size: 13px;
+    margin: 0 0 0 2px;
+  }
+
+  ul {
+    border-top: 1px solid #F3F3F3;
+    padding: 5px 0 0 0;
+  }
+
+  li {
+    font-size: 13px;
+    @include border-radius(4px);
+    display: block;
+    position: relative;
+    padding: 3px 6px;
+
+    .delete {
+      display: none;
+      position: absolute;
+      right: 10px;
+      top: 3px;
+      font-weight: bold;
+      color: red;
+      &:hover {
+        cursor: pointer;
+        text-decoration: none;
+      }
     }
-    .list-createB {
-        font-size: 13px;
-        margin: 0 0 0 2px;
-    }
-
-    ul {
-        border-top: 1px solid #F3F3F3;
-        padding: 5px 0 0 0;
-
-        li {
-            font-size: 13px;
-            .teaser.llist {
-                @include border-radius(4px);
-                display: block;
-                position: relative;
-                padding: 3px 6px;
-
-                .delete {
-                    display: none;
-                    position: absolute;
-                    right: 10px;
-                    top: 3px;
-                    font-weight: bold;
-                    color: red;
-                }
-                &:hover {
-                    background: #F3F3F3;
-                    text-decoration: none;
-                    .delete {
-                        display: block;
-                    }
-                }
-            }
-        }
-        .first { border-top: none; }
-        .last { border-bottom: none; }
-        .none {
-            border: none;
-            font-style: italic;
-        }
-    }
-    .list-view {
-        float: right;
+    &:hover {
+      background: #F3F3F3;
+      text-decoration: none;
+      .delete {
         display: block;
-        font-size: 12px;
-        margin: 0;
-        position: relative;
-        bottom: 1px;
+      }
     }
+
+    &.first { border-top: none; }
+    &.last { border-bottom: none; }
+    &.none {
+      border: none;
+      font-style: italic;
+    }
+  }
+  .list-view {
+    float: right;
+    display: block;
+    font-size: 12px;
+    margin: 0;
+    position: relative;
+    bottom: 1px;
+  }
 }
 
 .list_new {

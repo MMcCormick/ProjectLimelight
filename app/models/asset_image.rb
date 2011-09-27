@@ -8,8 +8,6 @@ class AssetImage < Asset
   field :width
   field :height
 
-  auto_increment :_public_id
-
   mount_uploader :image, ImageUploader
 
   embedded_in :image_snippet

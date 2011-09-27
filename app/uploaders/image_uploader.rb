@@ -15,9 +15,9 @@ class ImageUploader < CarrierWave::Uploader::Base
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
     if Rails.env.development?
-      "uploads/images/#{model.id}"
+      "uploads/images/#{model.id.to_s}"
     else
-      model.id
+      model.id.to_s
     end
   end
 

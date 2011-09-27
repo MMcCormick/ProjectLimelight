@@ -78,7 +78,7 @@ class User
     writeOut.write(open(image_url).read)
     writeOut.close
 
-    image = self.images.create(:user_id => self.id)
+    image = self.images.create(:user_id => id)
     version = AssetImage.new(:isOriginal => true)
     version.id = image.id
     version.image.store!("/tmp/#{hash}")

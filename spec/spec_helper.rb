@@ -1,6 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'rubygems'
 require 'spork'
+require 'factory_girl_rails'
 
 Spork.prefork do
 
@@ -34,10 +35,11 @@ Spork.prefork do
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
     # examples within a transaction, remove the following line or assign false
     # instead of true.
-    #config.use_transactional_fixtures = true
+    # config.use_transactional_fixtures = true
   end
 end
 
 Spork.each_run do
   FactoryGirl.reload
+  DatabaseCleaner.clean
 end

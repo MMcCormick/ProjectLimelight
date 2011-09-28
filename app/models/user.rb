@@ -59,7 +59,7 @@ class User
   has_many :topic_types
 
   validates :username, :presence => true
-  validates :username, :email, :uniqueness => { :case_sensitive => false }
+  validates :username, :email, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 20 }
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me
 
   after_create :save_profile_image

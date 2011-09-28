@@ -2,63 +2,86 @@ require 'spec_helper'
 
 describe User do
   
-  before(:each) do
-    @attr = {
-      :username => "foousername",
-      :first_name => "First",
-      :last_name => "Last",
-      :email => "user@example.com",
-      :password => "foobar",
-      :password_confirmation => "foobar"
-    }
-  end
+  #before(:each) do
+  #  @attr = {
+  #    :username => "foousername",
+  #    :first_name => "First",
+  #    :last_name => "Last",
+  #    :email => "user@example.com",
+  #    :password => "foobar",
+  #    :password_confirmation => "foobar"
+  #  }
+  #end
   
-  it "should create a new instance given a valid attribute" do
-    User.create!(@attr)
+  it "should create a new instance given valid attributes" do
+    Factory.build(:user).
+      should be_valid
   end
   
   it "should require an email address" do
-    no_email_user = User.new(@attr.merge(:email => ""))
-    no_email_user.should_not be_valid
+    Factory.build(:user, :email => "").
+      should_not be_valid
   end
   
   it "should accept valid email addresses" do
     addresses = %w[user@foo.com THE_USER@foo.bar.org first.last@foo.jp]
     addresses.each do |address|
-      valid_email_user = User.new(@attr.merge(:email => address))
-      valid_email_user.should be_valid
+      Factory.build(:user, :email => address).
+        should be_valid
     end
   end
   
   it "should reject invalid email addresses" do
     addresses = %w[user@foo,com user_at_foo.org example.user@foo.]
     addresses.each do |address|
-      invalid_email_user = User.new(@attr.merge(:email => address))
-      invalid_email_user.should_not be_valid
+      Factory.build(:user, :email => address).
+        should_not be_valid
     end
   end
   
   it "should reject duplicate email addresses" do
-    User.create!(@attr)
-    user_with_duplicate_email = User.new(@attr)
-    user_with_duplicate_email.should_not be_valid
+    user = Factory(:user)
+    Factory.build(:user, :email => user.email).
+      should_not be_valid
   end
   
   it "should reject email addresses identical up to case" do
-    upcased_email = @attr[:email].upcase
-    User.create!(@attr.merge(:email => upcased_email))
-    user_with_duplicate_email = User.new(@attr)
-    user_with_duplicate_email.should_not be_valid
+    user = Factory(:user)
+    Factory.build(:user, :email => user.email.upcase).
+      should_not be_valid
+  end
+
+  it "should reject long usernames" do
+    Factory.build(:user, :username => "thisisaverylongusernamethatisnotok").
+      should_not be_valid
+    end
+
+  it "should reject short usernames" do
+    Factory.build(:user, :username => "bo").
+      should_not be_valid
+  end
+
+  it "should have a profile image after saving" do
+    user = Factory(:user)
+    user.should respond_to(:images)
   end
 
   describe "associations" do
 
     before(:each) do
-      @user = User.new(@attr)
+      @user = Factory.build(:user)
     end
 
-    it "should have a news attribute" do
-          @user.should respond_to(:news)
+    it "should have core object attributes" do
+      @user.should respond_to(:core_objects)
+      @user.should respond_to(:news)
+      @user.should respond_to(:videos)
+      @user.should respond_to(:talks)
+    end
+
+    it "should have topic + topic type attributes" do
+      @user.should respond_to(:topics)
+      @user.should respond_to(:topic_types)
     end
 
   end
@@ -66,7 +89,7 @@ describe User do
   describe "passwords" do
 
     before(:each) do
-      @user = User.new(@attr)
+      @user = Factory.build(:user)
     end
 
     it "should have a password attribute" do
@@ -81,19 +104,18 @@ describe User do
   describe "password validations" do
 
     it "should require a password" do
-      User.new(@attr.merge(:password => "", :password_confirmation => "")).
+      Factory.build(:user, :password => "", :password_confirmation => "").
         should_not be_valid
     end
 
     it "should require a matching password confirmation" do
-      User.new(@attr.merge(:password_confirmation => "invalid")).
+      Factory.build(:user, :password_confirmation => "invalid").
         should_not be_valid
     end
     
     it "should reject short passwords" do
-      short = "a" * 5
-      hash = @attr.merge(:password => short, :password_confirmation => short)
-      User.new(hash).should_not be_valid
+      Factory.build(:user, :password => "aaaaa", :password_confirmation => "aaaaa").
+      should_not be_valid
     end
     
   end
@@ -101,7 +123,7 @@ describe User do
   describe "password encryption" do
     
     before(:each) do
-      @user = User.create!(@attr)
+      @user = Factory.build(:user)
     end
     
     it "should have an encrypted password attribute" do

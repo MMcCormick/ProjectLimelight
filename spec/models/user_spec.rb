@@ -2,31 +2,19 @@ require 'spec_helper'
 
 describe User do
   
-  #before(:each) do
-  #  @attr = {
-  #    :username => "foousername",
-  #    :first_name => "First",
-  #    :last_name => "Last",
-  #    :email => "user@example.com",
-  #    :password => "foobar",
-  #    :password_confirmation => "foobar"
-  #  }
-  #end
-  
-  it "should create a new instance given valid attributes" do
-    Factory.build(:user).
-      should be_valid
+  it "should create + persist a new instance given valid attributes" do
+    FactoryGirl.create(:user).should be_valid
   end
   
   it "should require an email address" do
-    Factory.build(:user, :email => "").
+    FactoryGirl.build(:user, :email => "").
       should_not be_valid
   end
   
   it "should accept valid email addresses" do
     addresses = %w[user@foo.com THE_USER@foo.bar.org first.last@foo.jp]
     addresses.each do |address|
-      Factory.build(:user, :email => address).
+      FactoryGirl.build(:user, :email => address).
         should be_valid
     end
   end
@@ -34,42 +22,42 @@ describe User do
   it "should reject invalid email addresses" do
     addresses = %w[user@foo,com user_at_foo.org example.user@foo.]
     addresses.each do |address|
-      Factory.build(:user, :email => address).
+      FactoryGirl.build(:user, :email => address).
         should_not be_valid
     end
   end
   
   it "should reject duplicate email addresses" do
-    user = Factory(:user)
-    Factory.build(:user, :email => user.email).
+    user = FactoryGirl.create(:user)
+    FactoryGirl.build(:user, :email => user.email).
       should_not be_valid
   end
   
   it "should reject email addresses identical up to case" do
-    user = Factory(:user)
-    Factory.build(:user, :email => user.email.upcase).
+    user = FactoryGirl.create(:user)
+    FactoryGirl.build(:user, :email => user.email.upcase).
       should_not be_valid
   end
 
   it "should reject long usernames" do
-    Factory.build(:user, :username => "thisisaverylongusernamethatisnotok").
+    FactoryGirl.build(:user, :username => "thisisaverylongusernamethatisnotok").
       should_not be_valid
     end
 
   it "should reject short usernames" do
-    Factory.build(:user, :username => "bo").
+    FactoryGirl.build(:user, :username => "bo").
       should_not be_valid
   end
 
   it "should have a profile image after saving" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     user.should respond_to(:images)
   end
 
   describe "associations" do
 
     before(:each) do
-      @user = Factory.build(:user)
+      @user = FactoryGirl.build(:user)
     end
 
     it "should have core object attributes" do
@@ -89,7 +77,7 @@ describe User do
   describe "passwords" do
 
     before(:each) do
-      @user = Factory.build(:user)
+      @user = FactoryGirl.build(:user)
     end
 
     it "should have a password attribute" do
@@ -104,17 +92,17 @@ describe User do
   describe "password validations" do
 
     it "should require a password" do
-      Factory.build(:user, :password => "", :password_confirmation => "").
+      FactoryGirl.build(:user, :password => "", :password_confirmation => "").
         should_not be_valid
     end
 
     it "should require a matching password confirmation" do
-      Factory.build(:user, :password_confirmation => "invalid").
+      FactoryGirl.build(:user, :password_confirmation => "invalid").
         should_not be_valid
     end
     
     it "should reject short passwords" do
-      Factory.build(:user, :password => "aaaaa", :password_confirmation => "aaaaa").
+      FactoryGirl.build(:user, :password => "aaaaa", :password_confirmation => "aaaaa").
       should_not be_valid
     end
     
@@ -123,7 +111,7 @@ describe User do
   describe "password encryption" do
     
     before(:each) do
-      @user = Factory.build(:user)
+      @user = FactoryGirl.build(:user)
     end
     
     it "should have an encrypted password attribute" do

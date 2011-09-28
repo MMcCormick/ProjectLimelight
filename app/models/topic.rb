@@ -33,11 +33,15 @@ class Topic
   validates :status, :presence => true
   attr_accessible :name, :summary
 
-  before_create :add_alias
+  before_create :add_alias, :set_user_snippet
 
   # Return the topic slug instead of its ID
   def to_param
     self.slug
+  end
+
+  def set_user_snippet
+    self.build_user_snippet({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
   end
 
   def add_alias

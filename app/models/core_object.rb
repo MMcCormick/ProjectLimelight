@@ -31,11 +31,13 @@ class CoreObject
   validates :user_id, :status, :presence => true
   attr_accessible :content
 
+  before_create :set_user_snippet
+
   def to_param
     "#{self._public_id.to_i.to_s(36)}-#{name.parameterize}"
   end
 
-  def set_user_snippet(user)
+  def set_user_snippet
     self.build_user_snippet({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
   end
 
@@ -83,7 +85,7 @@ class CoreObject
 
   def set_mentions(topics)
     set_user_mentions
-    set_topic_mentions_to(topics)
+    set_topic_mentions(topics)
   end
 
   # Searches the content attribute for [@foo] mentions.
@@ -105,7 +107,7 @@ class CoreObject
   # Accepts a string of topics separated by commas
   # For each found, check if topic is in DB. If valid and not in DB, create it.
   # For each valid topic mention, add as TopicMention to this object.
-  def set_topic_mentions_to(passed_topics)
+  def set_topic_mentions(passed_topics)
     # Explodes the string. Returns an array of arrays containting
     # [string, slugified string] without duplicates.
     topic_mentions = passed_topics.split(%r{,\s*}).map! do |topic|

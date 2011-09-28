@@ -38,7 +38,6 @@ class VideosController < ApplicationController
   def create
     @video = current_user.videos.build(params[:video])
     if @video.valid?
-      @video.set_user_snippet(current_user)
       @video.set_mentions(params[:tagged_topics])
       @video.grant_owner(current_user.id)
     end

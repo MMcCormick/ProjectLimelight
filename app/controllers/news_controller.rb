@@ -37,7 +37,6 @@ class NewsController < ApplicationController
   def create
     @news = current_user.news.build(params[:news])
     if @news.valid?
-      @news.set_user_snippet(current_user)
       @news.set_mentions(params[:tagged_topics])
       @news.grant_owner(current_user.id)
 

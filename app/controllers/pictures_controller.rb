@@ -48,7 +48,6 @@ class PicturesController < ApplicationController
   def create
     @picture = current_user.pictures.build(params[:picture])
     if @picture.valid?
-      @picture.set_user_snippet(current_user)
       @picture.set_mentions(params[:tagged_topics])
       @picture.grant_owner(current_user.id)
 

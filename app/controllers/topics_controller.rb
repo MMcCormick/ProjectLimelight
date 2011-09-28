@@ -51,7 +51,6 @@ class TopicsController < ApplicationController
   # POST /topics.json
   def create
     @topic = current_user.topics.build(params[:topic])
-    @topic.set_user_snippet(current_user)
 
     respond_to do |format|
       if @topic.save

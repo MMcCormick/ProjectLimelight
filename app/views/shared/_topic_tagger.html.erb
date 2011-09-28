@@ -7,5 +7,5 @@
   <input autocomplete="off" type="text">
   <input autocomplete="off" type="text">
   <input autocomplete="off" type="text">
-  <%= text_field_tag :tagged_topics, nil, :type => 'hidden', :class => 'formTagged' %>
+  <%= f.text_field :tagged_topics, :type => 'hidden', :class => 'formTagged', :autocomplete => 'off' %>
 </div>

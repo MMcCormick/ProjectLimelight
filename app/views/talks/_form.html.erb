@@ -10,7 +10,7 @@
     <div class="field lClear required">
       <%= f.label :content, "What do you want to talk about?" %>
       <%= f.text_area :content, :class => 'content' %>
-      <%= render 'shared/topic_tagger' %>
+      <%= render 'shared/topic_tagger', :f => f %>
     </div>
 
     <div class="actions">

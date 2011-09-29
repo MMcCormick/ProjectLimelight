@@ -1,9 +1,7 @@
 class PicturesController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index, :show]
+  load_and_authorize_resource :find_by => :find_by_encoded_id
 
   def show
-    @picture = Picture.find_by_encoded_id(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @picture }

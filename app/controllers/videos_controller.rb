@@ -1,10 +1,7 @@
 class VideosController < ApplicationController
-
-  before_filter :authenticate_user!, :except => [:show]
+  load_and_authorize_resource :find_by => :find_by_encoded_id
 
   def show
-    @video = Video.find_by_encoded_id(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @video }

@@ -1,5 +1,5 @@
 class CoreObjectSharesController < ApplicationController
-  before_filter :authenticate_user!
+  authorize_resource
 
   def create
     #TODO: move appropriate parts of this to the core_object_share model

@@ -92,7 +92,7 @@ class User
   ###
 
   # Checks to see if this user has a given role
-  def has_role?(role)
+  def role?(role)
     self.roles.include? role
   end
 

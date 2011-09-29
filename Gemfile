@@ -24,7 +24,7 @@ gem 'resque', :require => 'resque/server' # Background jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
 gem 'chronic' # Date/Time management
-#gem 'cancan' # Authorization
+gem 'cancan' # Authorization
 
 group :assets do
   gem 'compass', '~> 0.12.alpha'

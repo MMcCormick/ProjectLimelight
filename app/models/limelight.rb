@@ -24,8 +24,8 @@ module Limelight #:nodoc:
     # @param [ String ] The permission to check
     #
     # @return [ bool ]
-    def has_permission?(object_id, permission)
-      self.permissions[permission] && self.permissions[permission].include?(object_id)
+    def permission?(object_id, permission)
+      permissions and permissions.instance_of? BSON::OrderedHash and permissions.has_key?(permission.to_s) and permissions[permission.to_s].include?(object_id)
     end
 
     # @example Allow the given MongoId to edit & delete this document

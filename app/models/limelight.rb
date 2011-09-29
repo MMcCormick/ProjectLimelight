@@ -84,6 +84,9 @@ module Limelight #:nodoc:
 
     included do
       embeds_many :images, as: :image_assignable, :class_name => 'ImageSnippet'
+
+      attr_accessible :asset_image
+      attr_accessor :asset_image
     end
 
     def save_images
@@ -93,8 +96,6 @@ module Limelight #:nodoc:
         end
       end
     end
-
-    # @example Return the url to the current default image
 
     # @return AssetImage
     def default_image
@@ -131,6 +132,16 @@ module Limelight #:nodoc:
         version.image.store!(File.open(tmp_location))
         image.versions << version
         version.save
+      end
+    end
+
+    def save_original_image
+      if valid? && @asset_image
+        # Create/attach the news image
+        image_snippet = ImageSnippet.new
+        image_snippet.user_id = user.id
+        image_snippet.add_uploaded_version(@asset_image, true)
+        self.images << image_snippet
       end
     end
   end

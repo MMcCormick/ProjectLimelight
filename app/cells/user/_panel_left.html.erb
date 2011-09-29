@@ -4,7 +4,7 @@
     <div class="clear"></div>
     
     <% img = default_image_url(@user, [85, 65]) %>
-    <%= image_tag img[:url], img[:options] %>
+    <%= image_tag img[:url], img[:options] if img %>
 
     <div class="right">
         <div class="stat followers">

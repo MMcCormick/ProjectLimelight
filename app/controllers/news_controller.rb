@@ -12,16 +12,8 @@ class NewsController < ApplicationController
 
   def create
     @news = current_user.news.build(params[:news])
-    if @news.valid?
-      # TODO: Factor this out of the controller
-      # Create/attach the news image
-      image_snippet = ImageSnippet.new
-      image_snippet.user_id = current_user.id
-      image_snippet.add_uploaded_version(params[:news][:asset_image], true)
-      @news.images << image_snippet
-      # We must explicitly save the images so that CarrierWave stores them
-      @news.save_images
-    end
+    @news.save_original_image
+    @news.save_images
 
     respond_to do |format|
       if @news.save

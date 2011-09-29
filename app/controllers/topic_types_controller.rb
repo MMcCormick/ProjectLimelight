@@ -1,10 +1,11 @@
 class TopicTypesController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :find_topic_type, :only => :destroy
+  authorize_resource
 
   def create
     topic = Topic.find_by_encoded_id(params[:topic_type][:topic_id])
 
-    if !has_permission?(current_user, topic, "edit")
+    if cannot? :edit, topic
       response = { :event => 'edit_topic_type', :flash => { :type => :error, :message => 'You are not allowed to add topic types!' } }
     else
       # If the user didn't select an option from the select
@@ -37,18 +38,20 @@ class TopicTypesController < ApplicationController
   end
 
   def destroy
-    topic = Topic.find_by_encoded_id(params[:topic_id])
-    if !has_permission?(current_user, topic, "edit")
-      response = { :event => 'edit_topic_type', :flash => { :type => :error, :message => 'You are not allowed to add topic types!' } }
+    if @topic_type
+      @topic_type.destroy
+      response = { :flash => { :type => :success, :message => 'Topic Type removed!' } }
     else
-      if topic.topic_type_snippets.find(params[:type_id]).destroy
-        type = TopicType.find(params[:type_id])
-        type.topic_count -= 1
-        response = { :flash => { :type => :success, :message => 'Topic Type removed!' } }
-      else
-        response = { :flash => { :type => :error, :message => 'Topic Type could not be removed' } }
-      end
+      response = { :flash => { :type => :error, :message => 'Topic Type could not be removed' } }
     end
+
     render json: response
+  end
+
+  private
+
+  def find_topic_type
+    topic = Topic.find_by_encoded_id(params[:topic_id])
+    @topic_type = topic.topic_type_snippets.find(params[:type_id])
   end
 end

@@ -3,8 +3,17 @@ class ApplicationController < ActionController::Base
   before_filter :init, :set_feed_filters, :set_user_time_zone
   layout :layout
 
-  def has_permission?(object, target, permission)
-    object.has_role?("admin") || target.has_permission?(object.id, permission)
+  # Handle authorization exceptions
+  rescue_from CanCan::AccessDenied do |exception|
+    if request.xhr?
+      if signed_in?
+        render json: {:status => :error, :message => "You don't have permission to #{exception.action} #{exception.subject.class.to_s.pluralize}"}, :status => 403
+      else
+        render json: {:status => :error, :message => "You must be logged in to do that!"}, :status => 401
+      end
+    else
+      redirect_to root_url, :alert => exception.message
+    end
   end
 
   def is_users_page?

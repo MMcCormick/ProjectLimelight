@@ -13,7 +13,7 @@
     </h2>
 
     <% img = default_image_url(object, [100, 100]) %>
-    <%= image_tag img[:url], img[:options] %>
+    <%= image_tag img[:url], img[:options] if img %>
 
     <div class="createdC">
       <div class="time">

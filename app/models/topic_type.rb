@@ -17,8 +17,18 @@ class TopicType
 
   attr_accessible :name
 
+  after_destroy :update_topic_type_counter
+
   # Return the topic slug instead of its ID
   def to_param
     self.name.to_url
+  end
+
+  protected
+
+  def update_topic_type_counter
+    type = TopicType.find(id)
+    type.topic_count -= 1
+    type.save
   end
 end

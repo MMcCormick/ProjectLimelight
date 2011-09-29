@@ -1,8 +1,7 @@
 class CoreObjectSharesController < ApplicationController
-  before_filter :authenticate_user!
+  authorize_resource
 
   def create
-    #TODO: this function logs you out! fix.
     #TODO: move appropriate parts of this to the core_object_share model
     receiver_slugs = params[:core_object_share][:receiver_slugs].split(%r{,\s*}).map! { |elem| elem.strip }
     receiver_slugs.delete(current_user.slug)

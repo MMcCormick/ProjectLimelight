@@ -1,4 +1,5 @@
 class FollowsController < ApplicationController
+  before_filter :authenticate_user!
 
   def create
     if ['User', 'Topic'].include? params[:type]

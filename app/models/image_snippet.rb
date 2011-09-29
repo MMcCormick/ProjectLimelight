@@ -24,11 +24,11 @@ class ImageSnippet
   end
 
   def find_version dimensions, style
-    self.versions.where(:resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :style => style).first
+    versions.where(:resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :style => style).first
   end
 
   def original
-    self.versions.each do |version|
+    versions.each do |version|
       version if version.isOriginal
     end
   end

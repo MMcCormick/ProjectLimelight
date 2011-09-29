@@ -11,7 +11,7 @@
 </p>
 
 <% img = default_image_url(@news, [100, 100]) %>
-<%= image_tag img[:url], img[:options] %>
+<%= image_tag img[:url], img[:options] if img %>
 
 <%= render 'favorites/btn', :object => @news %>
 <%= render 'reposts/btn', :object => @news %>

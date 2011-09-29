@@ -36,6 +36,7 @@ class User
 
   slug :username
 
+  field :email
   field :time_zone, :type => String, :default => "Eastern Time (US & Canada)"
   field :roles, :default => []
   field :following_users_count, :type => Integer, :default => 0
@@ -58,9 +59,11 @@ class User
   has_many :core_object_shares
   has_many :topic_types
 
+  attr_accessor :login
+  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login
+
   validates :username, :presence => true
   validates :username, :email, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 20 }
-  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me
 
   after_create :save_profile_image
 
@@ -111,6 +114,14 @@ class User
   ###
   # END ROLES
   ###
+
+  protected
+
+    def self.find_for_database_authentication(conditions)
+      login = conditions.delete(:login)
+      self.any_of({ :username => login }, { :email => login }).first
+    end
+
 
   ###
   # FOLLOWING

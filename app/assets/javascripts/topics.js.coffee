@@ -39,6 +39,8 @@ jQuery ->
     })
 
 
+  # BELOW IS TEMP SHIT
+
   spliceString = (str, start, count, stringToInsert) ->
     return str.substring(0, start) + stringToInsert + str.substr(start + count);
 
@@ -52,6 +54,7 @@ jQuery ->
     console.log code
     if code == 35 # hash (#) symbol
       #$(@).siblings('.tag_search').show(200).find('input').focus()
+      console.log 'foo'
 
 
   $('.tag_search input').live 'keypress', (e) ->

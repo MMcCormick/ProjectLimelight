@@ -46,6 +46,9 @@ class User
   field :favorites_count, :type => Integer, :default => 0
   field :reposts_count, :type => Integer, :default => 0
   field :unread_notification_count, :default => 0
+  field :vote_pos_count, :default => 0
+  field :vote_neg_count, :default => 0
+  field :vote_ratio, :type => Float, :default => 0
 
   auto_increment :_public_id
 
@@ -85,6 +88,10 @@ class User
     image.versions << version
     version.save
     self.save
+  end
+
+  def recalculate_vote_ratio
+    self.vote_ratio = vote_neg_count > 0 ? vote_pos_count/vote_neg_count : vote_pos_count
   end
 
   ###

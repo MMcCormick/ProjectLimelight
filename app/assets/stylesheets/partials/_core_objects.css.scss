@@ -244,14 +244,16 @@ form.core_object {
 // Styling for btnps that swap
 .followB,
 .favB,
-.repostB {
+.repostB,
+.voteB {
   .triggered {
     display: none;
   }
 }
 .unfollowB,
 .unfavB,
-.unrepostB {
+.unrepostB,
+.unvoteB {
   .default {
     display: none;
   }

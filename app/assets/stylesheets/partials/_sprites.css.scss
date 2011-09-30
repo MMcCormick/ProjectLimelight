@@ -74,14 +74,24 @@
     height: 11px;
 }
 .plus-green-icon {
-    @include icon-sprite(plus-green);
+    @include icon-sprite(plus_green_12x12);
+    width: 12px;
+    height: 12px;
+}
+.plus-grey-icon {
+    @include icon-sprite(plus_grey_12x12);
     width: 12px;
     height: 12px;
 }
 .minus-green-icon {
-    @include icon-sprite(minus-green);
+    @include icon-sprite(minus_green_12x3);
     width: 12px;
-    height: 12px;
+    height: 3px;
+}
+.minus-grey-icon {
+    @include icon-sprite(minus_grey_12x3);
+    width: 12px;
+    height: 3px;
 }
 .comment-icon {
     @include icon-sprite(comment-bubble);

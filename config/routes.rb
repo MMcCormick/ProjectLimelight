@@ -25,6 +25,11 @@ ProjectLimelight::Application.routes.draw do
   delete '/favorites' => 'favorites#destroy', :as => :destroy_favorite
   get    '/favorites' => 'favorites#index', :as => :user_favorites
 
+  # Voting
+  post   '/votes' => 'votes#create', :as => :create_vote
+  delete '/votes' => 'votes#destroy', :as => :destroy_vote
+  get    '/votes' => 'votes#index', :as => :user_votes
+
   # Reposting
   post   '/reposts' => 'reposts#create', :as => :create_repost
   delete '/reposts' => 'reposts#destroy', :as => :destroy_repost

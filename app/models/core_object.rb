@@ -15,12 +15,14 @@ class CoreObject
   field :favorites_count, :default => 0
   field :reposts, :default => []
   field :reposts_count, :default => 0
+  field :votes_count, :default => 0
   field :user_id
 
   auto_increment :_public_id
 
   embeds_one :user_snippet, as: :user_assignable
   embeds_one :response_to
+  embeds_many :votes, as: :votable
   embeds_many :user_mentions, as: :user_mentionable
   embeds_many :topic_mentions, as: :topic_mentionable
 
@@ -38,13 +40,61 @@ class CoreObject
     "#{self._public_id.to_i.to_s(36)}-#{name.parameterize}"
   end
 
+  # Votes
+  def voter?(user_id, amount=nil)
+    if amount
+      vote = votes.where(:_id => user_id, :amount => amount).first
+    elsif
+      vote = votes.where(:_id => user_id).first
+    end
+    vote
+  end
+
+  def add_voter(user, amount)
+    vote = voter? user.id
+    if !vote
+      self.votes.create(:_id => user.id, :amount => amount)
+      self.votes_count += amount
+      if amount > 0
+        user.vote_pos_count += 1
+      else
+        user.vote_neg_count += 1
+      end
+    elsif vote.amount != amount
+      self.votes_count = votes_count - vote.amount + amount
+      vote.amount = amount
+      if amount > 0
+        user.vote_pos_count += 1
+        user.vote_neg_count -= 1
+      else
+        user.vote_pos_count -= 1
+        user.vote_neg_count += 1
+      end
+    end
+    user.recalculate_vote_ratio
+  end
+
+  def remove_voter(user)
+    vote = voter? user.id
+    if vote
+      if vote.amount > 0
+        user.vote_pos_count -= 1
+      else
+        user.vote_neg_count -= 1
+      end
+      user.recalculate_vote_ratio
+      self.votes_count -= vote.amount
+      vote.destroy
+    end
+  end
+
   # Favorites
-  def is_favorited_by?(user_id)
-    self.favorites.include? user_id
+  def favorited_by?(user_id)
+    favorites.include? user_id
   end
 
   def add_to_favorites(user)
-    if !self.is_favorited_by? user.id
+    unless favorited_by? user.id
       self.favorites << user.id
       self.favorites_count += 1
       user.favorites_count += 1
@@ -52,7 +102,7 @@ class CoreObject
   end
 
   def remove_from_favorites(user)
-    if self.is_favorited_by? user.id
+    if favorited_by? user.id
       self.favorites.delete(user.id)
       self.favorites_count -= 1
       user.favorites_count -= 1
@@ -60,12 +110,12 @@ class CoreObject
   end
 
   # Reposts
-  def is_reposted_by?(user_id)
-    self.reposts.include? user_id
+  def reposted_by?(user_id)
+    reposts.include? user_id
   end
 
   def add_to_reposts(user)
-    if !self.is_reposted_by? user.id
+    unless reposted_by? user.id
       self.reposts << user.id
       self.reposts_count += 1
       user.reposts_count += 1
@@ -73,7 +123,7 @@ class CoreObject
   end
 
   def remove_from_reposts(user)
-    if self.is_reposted_by? user.id
+    if reposted_by? user.id
       self.reposts.delete(user.id)
       self.reposts_count -= 1
       user.reposts_count -= 1

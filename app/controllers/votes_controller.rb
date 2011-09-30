@@ -11,9 +11,13 @@ class VotesController < ApplicationController
     amount = params[:a].to_i
 
     if object && [1,0,-1].include?(amount)
-      object.add_voter(current_user, amount)
-      current_user.save if object.save
-      response = {:json => {:status => 'ok', :target => '.v_'+object.id.to_s, :toggle_classes => ['voteB', 'unvoteB'], :event => 'voted', :a => amount}, :status => 201}
+      if object.user_id == current_user.id
+        response = {:json => {:status => 'error', :flash => {:type => 'error', :message => 'You cannot vote on your own posts!'}}, :status => 201}
+      else
+        object.add_voter(current_user, amount)
+        current_user.save if object.save
+        response = {:json => {:status => 'ok', :target => '.v_'+object.id.to_s, :toggle_classes => ['voteB', 'unvoteB'], :event => 'voted', :a => amount}, :status => 201}
+      end
     else
       response = {:json => {:status => 'error', :message => 'Target object not found!'}, :status => 404}
     end
@@ -26,9 +30,13 @@ class VotesController < ApplicationController
   def destroy
     object = CoreObject.find(params[:id])
     if object
-      object.remove_voter(current_user)
-      current_user.save if object.save
-      response = {:json => {:status => 'ok', :target => '.v_'+object.id.to_s, :toggle_classes => ['voteB', 'unvoteB'], :event => 'voted', :a => 0}, :status => 200}
+      if object.user_id == current_user.id
+        response = {:json => {:status => 'error', :flash => {:type => 'error', :message => 'You cannot vote on your own posts!'}}, :status => 201}
+      else
+        object.remove_voter(current_user)
+        current_user.save if object.save
+        response = {:json => {:status => 'ok', :target => '.v_'+object.id.to_s, :toggle_classes => ['voteB', 'unvoteB'], :event => 'voted', :a => 0}, :status => 200}
+      end
     else
       response = {:json => {:status => 'error', :message => 'Target object not found!'}, :status => 404}
     end

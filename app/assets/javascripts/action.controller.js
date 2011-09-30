@@ -47,9 +47,7 @@ $(function() {
         $(data.update_target).html(data.update_value)
       }
     }
-    else {
-      alert('error (fill this)')
-    }
+
     $currentTarget.fadeTo(100, 1).css('cursor', 'pointer');
   }
 

@@ -4,6 +4,4 @@
   <% end %>
 <% end %>
 
-<% @core_objects.each do |core_object| %>
-  <%= render core_object.class.to_s.pluralize.downcase! + '/teaser', :object => core_object %>
-<% end %>
+<%= render "core_objects/feed", :more_path => @more_path %>

@@ -1,5 +1,13 @@
-<% content_for :sidebar_right do %>
-  <%= render_cell(:user, :sidebar_right, :user => @user) %>
+<% if current_user != @user %>
+  <% content_for :sidebar_right do %>
+    <%= render_cell(:user, :sidebar_right, :user => @user) %>
+  <% end %>
+<% end %>
+
+<% content_for :page_header do %>
+  <%= render 'core_objects/feed_filters' %>
 <% end %>
 
 <%= @user.username %>
+
+<%= render "core_objects/feed", :more_path => @more_path %>

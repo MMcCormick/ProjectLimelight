@@ -23,7 +23,7 @@ ProjectLimelight::Application.routes.draw do
   # Favoriting
   post   '/favorites' => 'favorites#create', :as => :create_favorite
   delete '/favorites' => 'favorites#destroy', :as => :destroy_favorite
-  get    '/favorites' => 'favorites#index', :as => :user_favorites
+  get    '/:id/favorites/' => 'favorites#index', :as => :user_favorites
 
   # Voting
   post   '/votes' => 'votes#create', :as => :create_vote
@@ -67,7 +67,6 @@ ProjectLimelight::Application.routes.draw do
   get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
   get ':id/followers' => 'users#followers', :as => :user_followers
   get ':id/feed' => 'users#feed', :as => :user_feed
-  get ':id/contributions' => 'users#contributions', :as => :user_contributions
   get ':id/hover' => 'users#hover' , :as => :user_hover
   get ':id' => 'users#show', :as => :user
 

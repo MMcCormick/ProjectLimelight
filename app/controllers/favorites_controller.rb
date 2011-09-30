@@ -3,6 +3,8 @@ class FavoritesController < ApplicationController
 
   def index
     @user = User.find_by_slug(params[:id])
+    page = params[:p] ? params[:p].to_i : 1
+    @more_path = user_favorites_path :p => page + 1
     @favorite_ids = []
     favs = CoreObject.where(:favorites => @user.id).only(:_id)
     favs.each do |fav|
@@ -10,7 +12,8 @@ class FavoritesController < ApplicationController
     end
 
     @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
-      :includes_ids => @favorite_ids
+            :includes_ids => @favorite_ids,
+            :page => page
     })
   end
 

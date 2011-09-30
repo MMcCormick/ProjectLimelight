@@ -11,12 +11,14 @@ class TopicsController < ApplicationController
   end
 
   def show
+    @title = @topic.name
     page = params[:p] ? params[:p].to_i : 1
-    @more_path = user_feed_path :p => page + 1
+    @more_path = topic_path @topic, :p => page + 1
     @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
-            :mentions_topics => @topic.id,
+            :mentions_topics => [@topic.id],
             :page => page
     })
+
     respond_to do |format|
       if request.xhr?
         html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }

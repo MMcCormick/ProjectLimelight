@@ -20,16 +20,23 @@ $(function() {
   }
 
   // Listens to votes being registered.
-  amplify.subscribe("vote_toggle", function(data) {
+  amplify.subscribe("voted", function(data) {
     // Turn the scorebox voted button on
-    var $target = $currentTarget.hasClass('u') ? '.u' : '.d';
-    $('#mouse-score, .sb-' + $currentTarget.parent().data('id')).find($target).toggleClass('on').siblings().removeClass('on');
-
-    // Update the objects scores
-    $('.s-' + data.objectId).text(data.objectNewScore);
-
-    // Update the user score
-    $('.s-' + data.affectedUserId).text(data.affectedUserNewScore);
+    var $target = $(data.target).parents('.scoreC:first')
+    if (data.a > 0)
+    {
+      $target.find('.up').removeClass('unvoteB').addClass('voteB')
+      $target.find('.down').removeClass('voteB').addClass('unvoteB')
+    }
+    else if (data.a == 0)
+    {
+      $target.find('.up, .down').removeClass('unvoteB').addClass('voteB')
+    }
+    else
+    {
+      $target.find('.up').removeClass('voteB').addClass('unvoteB')
+      $target.find('.down').removeClass('unvoteB').addClass('voteB')
+    }
   });
 
   // Listens for favorite toggles.

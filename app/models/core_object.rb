@@ -151,8 +151,8 @@ class CoreObject
       or_criteria = []
       or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users]
       or_criteria << {:reposts.in => options[:reposted_by_users]} if options[:reposted_by_users]
-      or_criteria << {"topic_mentions._id.in" => options[:mentions_topics]} if options[:mentions_topics]
-      or_criteria << {"user_mentions._id.in" => options[:mentions_users]} if options[:mentions_users]
+      or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics]
+      or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users]
       or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
 
       page_length = 3

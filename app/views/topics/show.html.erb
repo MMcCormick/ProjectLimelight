@@ -2,14 +2,8 @@
   <%= render_cell(:topic, :sidebar_right, :topic => @topic) %>
 <% end %>
 
-<p id="notice"><%= notice %></p>
-
-<p>
-  <b>Name:</b>
-  <%= @topic.name %>
-</p>
-
-<%= link_to 'Edit', edit_topic_path(@topic) %> |
-<%= link_to 'Back', topics_path %>
+<% content_for :page_header do %>
+  <%= render 'core_objects/feed_filters' %>
+<% end %>
 
 <%= render "core_objects/feed", :more_path => @more_path %>

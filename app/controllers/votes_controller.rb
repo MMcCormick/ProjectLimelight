@@ -1,5 +1,5 @@
 class VotesController < ApplicationController
-  authorize_resource
+  before_filter :authenticate_user!
 
   #TODO: This will be stuff you've voted on
   def index

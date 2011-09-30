@@ -1,5 +1,5 @@
 <div class="auto-user">
-  <% img = default_image_url(@picture, [20, 20]) %>
+  <% img = default_image_url(@user, [20, 20]) %>
   <%= image_tag img[:url], img[:options] if img %>
   <span><%= @user.username %></span>
 </div>

@@ -1,0 +1,10 @@
+<div class="auto-topic">
+  <% img = default_image_url(@topic, [20, 20]) %>
+  <%= image_tag img[:url], img[:options] if img %>
+
+  <span class="name"><%= @topic.name %></span>
+
+  <% if @topic.topic_type_snippets.length > 0 %>
+    <span class="types">(<%= @topic.types_array.join(', ') %>)</span>
+  <% end %>
+</div>

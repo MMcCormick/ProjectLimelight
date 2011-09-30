@@ -6,6 +6,7 @@ class Topic
   include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Limelight::Acl
+  include Limelight::Images
 
   # Denormilized:
   # CoreObject.topic_mentions.name
@@ -48,6 +49,10 @@ class Topic
     self.aliases ||= []
     url = name.to_url
     self.aliases << url unless self.aliases.include?(url)
+  end
+
+  def types_array
+    topic_type_snippets.map {|type| type.name}
   end
 
   def public_id

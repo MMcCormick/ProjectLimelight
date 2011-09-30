@@ -1,7 +1,4 @@
 jQuery ->
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
   $('.topic-done-b').live 'click', (e) ->
     $('#topic-panel .content').show()
@@ -40,3 +37,44 @@ jQuery ->
       show: {event: 'click'},
       hide: {event: 'unfocus'}
     })
+
+
+  spliceString = (str, start, count, stringToInsert) ->
+    return str.substring(0, start) + stringToInsert + str.substr(start + count);
+
+
+  cursor_pos = 0
+  current_string = ''
+  $('.taggable .content').live 'keyup', (e) ->
+#    $(@).val())
+    $(@).siblings('.highlighter').html textArea.value = textArea.value.splice(charIndex, 1, "**NEW BIT**");
+    `var code = e.which ? e.which : e.keyCode`
+    console.log code
+    if code == 35 # hash (#) symbol
+      #$(@).siblings('.tag_search').show(200).find('input').focus()
+
+
+  $('.tag_search input').live 'keypress', (e) ->
+    `var code = e.which ? e.which : e.keyCode`
+    console.log code
+    if code == 27 # escape key
+      $(@).parent().hide(200)
+      $(@).parent().siblings('.taggable').focus()
+
+  $('.tag_search input').livequery ->
+    $(@).autocomplete($('#static-data').data('d').topicAutoUrl, {
+      minChars: 1,
+      matchContains: true,
+      autoFill: false,
+      searchKey: 'name',
+      formatItem: (row, i, max) ->
+        return row.formattedItem
+      formatMatch: (row, i, max) ->
+        return row.name
+      formatResult: (row) ->
+        return row.name
+      })
+
+    $(@).result((event, data, formatted) ->
+
+    )

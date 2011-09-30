@@ -24,9 +24,10 @@ class TopicTypesController < ApplicationController
         type.topic_count += 1
 
         if type && type.save
-          snippet = topic.topic_type_snippets.build(type.attributes)
+          snippet = TopicTypeSnippet.new(type.attributes)
           snippet.id = type.id
           snippet.user_id = current_user.id
+          topic.topic_type_snippets << snippet
           topic.save
           response = { :event => 'edit_topic_type', :flash => { :type => :success, :message => 'Topic Type added!' } }
         else

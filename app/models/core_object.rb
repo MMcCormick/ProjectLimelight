@@ -80,6 +80,10 @@ class CoreObject
     end
   end
 
+  def public_id
+    self[_public_id].to_i.to_s(36)
+  end
+
   class << self
     def find_by_encoded_id(id)
       where(:_public_id => id.to_i(36)).first

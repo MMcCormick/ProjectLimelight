@@ -34,6 +34,7 @@ ProjectLimelight::Application.routes.draw do
 
   # Topics
   resources :topics
+  get 't/ac' => 'topics#autocomplete', :as => :topic_auto
   get 't/:id' => 'topics#show', :as => :topic
   get 't/:id/hover' => 'topics#hover' , :as => :topic_hover
   put 't/:id' => 'topics#update', :as => :update_topic
@@ -56,13 +57,13 @@ ProjectLimelight::Application.routes.draw do
   # Users
   devise_for :users
   resources :users, :only => :show
+  get 'u/ac' => 'users#autocomplete', :as => :user_auto
   get ':id/following/users' => 'users#following_users', :as => :user_following_users
   get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
   get ':id/followers' => 'users#followers', :as => :user_followers
   get ':id/feed' => 'users#feed', :as => :user_feed
   get ':id/contributions' => 'users#contributions', :as => :user_contributions
   get ':id/hover' => 'users#hover' , :as => :user_hover
-  get 'autocomplete' => 'users#autocomplete', :as => :user_auto
   get ':id' => 'users#show', :as => :user
 
   # Home

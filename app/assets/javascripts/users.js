@@ -59,7 +59,7 @@ $(function() {
         return row.formattedItem;
       },
       formatMatch: function(row, i, max) {
-        return row.name;
+        return row.username;
       },
       formatResult: function(row) {
         return row.username;

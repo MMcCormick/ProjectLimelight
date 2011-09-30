@@ -18,7 +18,7 @@ $(function() {
   });
 
   // Perform a button action
-  $('.btn').live('click', function(event) {
+  $('.btn-tog').live('click', function(event) {
 
     // Ajaxify this link
     var $this = $(this),

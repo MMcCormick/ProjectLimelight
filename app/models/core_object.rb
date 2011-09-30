@@ -155,10 +155,14 @@ class CoreObject
       or_criteria << {"user_mentions._id.in" => options[:mentions_users]} if options[:mentions_users]
       or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
 
+      page_length = 3
+      page_number = options[:page]? options[:page] : 1
+      num_to_skip = page_length * (page_number - 1)
+
       if (or_criteria.length > 0)
-        core_objects = self.any_in("_type" => display_types).any_of(or_criteria)
+        core_objects = self.any_in("_type" => display_types).any_of(or_criteria).skip(num_to_skip).limit(page_length)
       else
-        core_objects = self.any_in("_type" => display_types)
+        core_objects = self.any_in("_type" => display_types).skip(num_to_skip).limit(page_length)
       end
 
       core_objects.order_by([order_by])

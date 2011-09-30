@@ -4,11 +4,8 @@ require 'spec_helper'
 # and talk is the least complex core object
 
 describe CoreObject do
-  it "should record user info correctly after set_user_snippet" do
+  it "should record user_snippet info correctly" do
     user = FactoryGirl.create(:user)
-    talk = FactoryGirl.create(:talk)
-    talk.set_user_snippet(user)
-    talk.save
     talk.user_snippet.id.should == user.id
     talk.user_snippet.username.should == user.username
     talk.user_snippet._public_id.should == user._public_id

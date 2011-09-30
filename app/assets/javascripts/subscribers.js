@@ -95,6 +95,11 @@ $(function() {
    * FEEDS
    */
 
+  // When a new page of feed items is loaded
+  amplify.subscribe("loaded_feed_page", function (data) {
+    $('#load-more').replaceWith(data.content)
+  });
+
   amplify.subscribe("feed_filter_toggle", function (data) {
   });
 

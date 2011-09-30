@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'spork'
 require 'factory_girl_rails'
+require 'database_cleaner'
 
 Spork.prefork do
 
@@ -24,13 +25,17 @@ Spork.prefork do
     #
     # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
     #
-    # config.mock_with :mocha
+    config.mock_with :mocha
     # config.mock_with :flexmock
     # config.mock_with :rr
-    config.mock_with :rspec
+    # config.mock_with :rspec
     config.treat_symbols_as_metadata_keys_with_true_values = true
     config.filter_run :focus => true
     config.run_all_when_everything_filtered = true
+
+    config.include Devise::TestHelpers, :type => :controller
+
+    DatabaseCleaner.strategy = :truncation
 
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
     # examples within a transaction, remove the following line or assign false
@@ -41,5 +46,6 @@ end
 
 Spork.each_run do
   FactoryGirl.reload
+  DatabaseCleaner.start
   DatabaseCleaner.clean
 end

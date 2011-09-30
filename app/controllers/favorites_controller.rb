@@ -1,5 +1,5 @@
 class FavoritesController < ApplicationController
-  authorize_resource
+  before_filter :authenticate_user!
 
   def index
     @user = User.find_by_slug(params[:id])

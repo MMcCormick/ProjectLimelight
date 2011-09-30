@@ -1,7 +1,7 @@
-<% @core_objects.each do |core_object| %>
-  <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object %>
-<% end %>
-
-<% if @core_objects.size(true) == 3 %>
-  <div id="load-more" class="ac" data-m="get" data-url="<%= more_path %>">load more</div>
+<% @core_objects.each_with_index do |core_object, i| %>
+  <% if i >= 3 %>
+    <div id="load-more" class="ac" data-m="get" data-url="<%= more_path %>">load more</div>
+  <% else %>
+    <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object %>
+  <% end %>
 <% end %>

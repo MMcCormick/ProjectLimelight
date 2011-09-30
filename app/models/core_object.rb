@@ -159,10 +159,11 @@ class CoreObject
       page_number = options[:page]? options[:page] : 1
       num_to_skip = page_length * (page_number - 1)
 
+      # page_length + 1 is used below so that one extra object is returned, allowing the views to check if there are more objects
       if (or_criteria.length > 0)
-        core_objects = self.any_in("_type" => display_types).any_of(or_criteria).skip(num_to_skip).limit(page_length)
+        core_objects = self.any_in("_type" => display_types).any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
       else
-        core_objects = self.any_in("_type" => display_types).skip(num_to_skip).limit(page_length)
+        core_objects = self.any_in("_type" => display_types).skip(num_to_skip).limit(page_length + 1)
       end
 
       core_objects.order_by([order_by])

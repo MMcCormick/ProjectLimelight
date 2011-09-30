@@ -11,6 +11,11 @@ class TopicsController < ApplicationController
   end
 
   def show
+    @title = @topic.name
+    page = params[:p] ? params[:p].to_i : 1
+    @more_path = topic_path @topic, :p => page + 1
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {:mentions_topics => [@topic.id]})
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @topic }

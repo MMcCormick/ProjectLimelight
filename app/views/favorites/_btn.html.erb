@@ -1,4 +1,4 @@
-<button class="btn <%= !signed_in? || !object.is_favorited_by?(current_user.id) ? 'favB' : 'unfavB' %> fav_<%= object.id %>">
+<button class="btn_tog <%= !signed_in? || !object.is_favorited_by?(current_user.id) ? 'favB' : 'unfavB' %> fav_<%= object.id %>">
   <span class="default" data-url="<%= create_favorite_path %>" data-d='{"id":"<%= object.id %>"}' data-m="post">
     <div class="plus-green-icon icon"></div>
     Favorite

@@ -603,6 +603,13 @@ $scoreBox-width: 160px;
     }
 }
 
+#load-more {
+  @include link;
+  text-align: center;
+  margin: 5px;
+  font-size: 12px;
+}
+
 #feed-filters {
     height: 30px;
     padding: 4px 0 4px 10px;

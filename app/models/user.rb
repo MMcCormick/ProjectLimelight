@@ -63,7 +63,7 @@ class User
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login
 
   validates :username, :presence => true
-  validates :username, :email, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 20 }
+  validates :username, :email, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 30 }
 
   after_create :save_profile_image
 
@@ -114,14 +114,6 @@ class User
   ###
   # END ROLES
   ###
-
-  protected
-
-    def self.find_for_database_authentication(conditions)
-      login = conditions.delete(:login)
-      self.any_of({ :username => login }, { :email => login }).first
-    end
-
 
   ###
   # FOLLOWING
@@ -213,5 +205,12 @@ class User
   ###
   # END FOLLOWING
   ###
+
+  protected
+
+  def self.find_for_database_authentication(conditions)
+    login = conditions.delete(:login)
+    self.any_of({ :username => login }, { :email => login }).first
+  end
 
 end

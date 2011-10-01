@@ -1,6 +1,7 @@
 <div class="user-panel">
     <h2><%= @user.username %></h2>
     <div class="score" title="Your Score">0</div>
+    <a href="<%= edit_user_path @user %>">Edit</a>
     <div class="clear"></div>
     
     <% img = default_image_url(@user, [85, 65]) %>

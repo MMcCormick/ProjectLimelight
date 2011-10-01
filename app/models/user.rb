@@ -5,6 +5,8 @@ class User
   include Mongoid::Slug
   include Limelight::Images
 
+  after_update :update_denorms
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -218,6 +220,39 @@ class User
   def self.find_for_database_authentication(conditions)
     login = conditions.delete(:login)
     self.any_of({ :username => login }, { :email => login }).first
+  end
+
+  def update_denorms
+    user_snippet_updates = {}
+    sender_snippet_updates = {}
+    receiver_snippet_updates = {}
+    user_mention_updates = {}
+    if username_changed?
+      user_snippet_updates["user_snippet.username"] = self.username
+      user_mention_updates["user_mentions.$.username"] = self.username
+      sender_snippet_updates["sender_snippet.username"] = self.username
+      receiver_snippet_updates["receiver_snippets.$.username"] = self.username
+    end
+    if first_name_changed?
+      user_snippet_updates["user_snippet.first_name"] = self.first_name
+      user_mention_updates["user_mentions.$.first_name"] = self.first_name
+      sender_snippet_updates["sender_snippet.first_name"] = self.first_name
+      receiver_snippet_updates["receiver_snippets.$.first_name"] = self.first_name
+    end
+    if last_name_changed?
+      user_snippet_updates["user_snippet.last_name"] = self.last_name
+      user_mention_updates["user_mentions.$.last_name"] = self.last_name
+      sender_snippet_updates["sender_snippet.last_name"] = self.last_name
+      receiver_snippet_updates["receiver_snippets.$.last_name"] = self.last_name
+    end
+    if !user_snippet_updates.empty?
+      CoreObject.where(:user_id => id).update_all(user_snippet_updates)
+      CoreObject.where("user_mentions._id" => id).update_all(user_mention_updates)
+      Topic.where(:user_id => id).update_all(user_snippet_updates)
+      Notification.where(:user_id => id).update_all(sender_snippet_updates)
+      Notification.where("receiver_snippets._id" => id).update_all(receiver_snippet_updates)
+      #Notification.collection.update({"receiver_snippets._id" => id},{"$set" => receiver_snippet_updates}, )
+    end
   end
 
 end

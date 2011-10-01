@@ -1,0 +1,33 @@
+<%# Temporary, for testing user callbacks %>
+<%= form_for @user, :html => {:class => "ajax group"} do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :username, "Userame", :class => "bottom" %><br />
+    <%= f.text_field :username, :class => "bottom" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :first_name, "First Name", :class => "bottom" %><br />
+    <%= f.text_field :first_name, :class => "bottom" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :last_name, "Last Name", :class => "bottom" %><br />
+    <%= f.text_field :last_name, :class => "bottom" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

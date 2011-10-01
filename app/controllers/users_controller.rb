@@ -19,6 +19,24 @@ class UsersController < ApplicationController
     end
   end
 
+  # Temporary, for checking callbacks
+  def edit
+    @user = User.find_by_slug(params[:id])
+  end
+
+  def update
+    @user = User.find_by_slug(params[:id])
+    respond_to do |format|
+      if @user.update_attributes(params[:user])
+        format.html { redirect_to @user, notice: 'Topic was successfully updated.' }
+        format.json { head :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def hover
     @user = User.find_by_slug(params[:id])
     render :partial => 'hover_tab', :user => @user

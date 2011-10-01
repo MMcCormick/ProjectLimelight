@@ -438,7 +438,7 @@ $.Autocompleter.Cache = function(options) {
 	var length = 0;
 
 	function matchSubset(s, sub) {
-    if (!options.matchCase)
+    if (!options.matchCase && typeof s != 'string')
 			s = s[options.searchKey].toLowerCase();
 		var i = s.indexOf(sub);
 		if (options.matchContains == "word"){

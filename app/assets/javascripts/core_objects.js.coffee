@@ -68,21 +68,7 @@ jQuery ->
       delay: 400
     })
 
-  # Automatically click the "load more" button if it is visible for more than .5 secs
-  $(window).scroll ->
-    if $('#load-more').is('*') && !$('#load-more').hasClass('on') && isScrolledIntoView($('#load-more'), true)
-      $('#load-more').addClass('on')
-      $('#load-more').oneTime(500, 'load_feed_page', ->
-        $(@).click()
-      )
-    else
-      $('#load-more').removeClass('on')
-      $('#load-more').stopTime('load_feed_page')
-
-  $('#load-more').live 'click', (e) ->
-    $(@).addClass('on')
-    $(@).html("loading...")
-
+  # Help tooltips on core object submission forms
   $('form.core_object .field').livequery ->
     self = $(@)
     self.qtip({
@@ -94,3 +80,21 @@ jQuery ->
         my: 'left center'
         at: 'right center'
     })
+
+  # Automatically click the "load more" button if it is visible for more than .5 secs
+  if isScrolledIntoView($('#load-more'), true)
+    $('#load-more').click()
+
+  $(window).scroll ->
+    if !$('#load-more').hasClass('on') && isScrolledIntoView($('#load-more'), true)
+      $('#load-more').addClass('on')
+      $('#load-more').oneTime(500, 'load_feed_page', ->
+        $(@).click()
+      )
+    else if !isScrolledIntoView($('#load-more'), true)
+      $('#load-more').removeClass('on')
+      $('#load-more').stopTime('load_feed_page')
+
+  $('#load-more').live 'click', (e) ->
+    $(@).addClass('on')
+    $(@).html("loading...")

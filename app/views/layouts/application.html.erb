@@ -18,7 +18,7 @@
         <% top_image = image_tag "top-logo.png", :alt => "Project Limelight" %>
         <%= link_to top_image, :root, :class => "p logo" %>
 
-        <span id="contribute">
+        <span id="contribute" data-target="#top-contribute">
           <div class="plus-green-icon"></div>
           Contribute
         </span>
@@ -94,7 +94,7 @@
 
     <!-- HIDDEN TOOLS -->
     <div id="mouse-score"></div>
-    <%= render "shared/contribute" %>
+    <%= render "shared/contribute", :id => 'top-contribute', :responding => nil %>
     <div id="form-submitting">Form submitting...</div>
     <div style="display: none">
       <div id="static-data" data-d='{"oSearchUrl":"", "fetchEmbedUrl":"<%= embedly_fetch_path %>", "userAutoUrl":"<%= user_auto_path %>", "topicAutoUrl":"<%= topic_auto_path %>"}'></div>

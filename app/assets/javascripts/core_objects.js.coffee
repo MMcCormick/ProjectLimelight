@@ -4,23 +4,16 @@ jQuery ->
 #   * GENERAL OBJECTS
 #   */
 
-#  // Contribute form
-#  $('#contributeC .nav > div').live('click', function() {
-#    $(this).addClass('on').siblings().removeClass('on');
-#    $('#contributeC form').hide();
-#    $($(this).data('target')).show();
-#    $.colorbox.resize();
-#  })
-
-  $('#contribute').live 'click', (e) ->
-    if $('#contributeC').is(':visible')
-      $('#contributeC').slideUp(200)
+  $('#contribute, #add_response').live 'click', (e) ->
+    target = $($(@).data('target'))
+    if target.is(':visible')
+      target.slideUp(200)
     else
-      $('#contributeC').slideDown(200)
+      target.slideDown(200)
 
 
-  $('#contributeC .option').live 'click', (e) ->
-    $('#contributeC div.form').hide()
+  $('.contributeC .option').live 'click', (e) ->
+    $(@).find('div.form').hide()
     $($(@).data('target')).parents('.form').show()
     $(@).addClass('on').siblings().removeClass('on')
 
@@ -82,7 +75,7 @@ jQuery ->
     })
 
   # Automatically click the "load more" button if it is visible for more than .5 secs
-  if isScrolledIntoView($('#load-more'), true)
+  if $('#load-more').length > 0 && isScrolledIntoView($('#load-more'), true)
     $('#load-more').click()
 
   $(window).scroll ->

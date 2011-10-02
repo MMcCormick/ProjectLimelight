@@ -1,18 +1,26 @@
-<p id="notice"><%= notice %></p>
+<div id="core_object_show">
+  <p>
+    <b>Title:</b>
+    <%= @picture.title %>
+  </p>
 
-<p>
-  <b>Title:</b>
-  <%= @picture.title %>
-</p>
+  <p>
+    <b>Title:</b>
+    <%= @picture.content %>
+  </p>
 
-<p>
-  <b>Title:</b>
-  <%= @picture.content %>
-</p>
+  <% img = default_image_url(@picture, [100, 100]) %>
+  <%= image_tag img[:url], img[:options] if img %>
+</div>
 
-<% img = default_image_url(@picture, [100, 100]) %>
-<%= image_tag img[:url], img[:options] if img %>
+<div id="response-divider">
+  <h3>Responses</h3>
+  <div id="add_response" data-target="#response-contribute">+ Add Response</div>
+  <%= render "shared/contribute", :id => 'response-contribute', :responding => @picture %>
+</div>
 
+<%= render 'core_objects/feed_filters' %>
 
-<%= link_to 'Edit', edit_picture_path(@picture) %> |
-<%= link_to 'Back', pictures_path %>
+<div id="responses">
+
+</div>

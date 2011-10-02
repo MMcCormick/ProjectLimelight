@@ -730,7 +730,7 @@ $scoreBox-width: 160px;
     }
 }
 
-#contributeC {
+.contributeC {
   @include border-radius(0 0 3px 3px);
   @include single-box-shadow(#AAA, 1px, 1px, 3px);
 
@@ -790,6 +790,12 @@ $scoreBox-width: 160px;
       }
     }
   }
+  .responding {
+    font-style: italic;
+    color: #333;
+    font-size: 19px;
+    margin: 16px 0 0 10px;
+  }
   .forms {
     float: left;
 
@@ -813,8 +819,8 @@ $scoreBox-width: 160px;
 
     .cancel {
         @include background-image(linear-gradient(#FD4E21, #E0230B));
-        background-color: #E0230B;
         @include border-radius(3px);
+        background-color: #E0230B;
         position: absolute; top: 7px; right: 7px;
         padding: 3px 12px;
         font-size: 13px;
@@ -846,4 +852,46 @@ $scoreBox-width: 160px;
     }
 
     .add { margin: 2px 0 0 5px;}
+}
+
+#core_object_show {
+  border-bottom: 3px solid #CCC;
+  padding: 0 5px 30px 0;
+  margin: 0 0 15px 0;
+}
+
+#response-divider {
+  position: relative;
+  h3 {
+    background: #FFF;
+    color: #444;
+    position: absolute;
+    left: 0;
+    top: -31px;
+    padding: 0 18px 0 10px;
+    cursor: default;
+  }
+}
+#add_response {
+  background: #FFF;
+  position: absolute;
+  color: #444;
+  left: 50;
+  font-size: 15px;
+  top: -28px;
+  left: 125px;
+  padding: 0 20px 0 0px;
+  cursor: pointer;
+  color: $picture-color;
+  z-index: 101;
+}
+#response-contribute {
+  position: absolute;
+  top: -50px;
+  left: 114px;
+  z-index: 100;
+  border-top: 2px solid #94C530;
+}
+#responses {
+
 }

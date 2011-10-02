@@ -1,4 +1,4 @@
-<div id="contributeC">
+<div id="<%= id %>" class="contributeC">
   <div class="options">
     <div class="option talk on" data-target="#new_talk">
       Talk
@@ -22,6 +22,11 @@
     </div>
   </div>
   <div class="forms">
+    <% if responding %>
+      <div class="responding">
+        Responding to <%= responding.class.to_s %>: <%= responding.name %>
+      </div>
+    <% end %>
     <div class="form">
       <%= render "talks/form", :talk => Talk.new %>
     </div>

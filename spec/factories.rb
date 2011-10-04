@@ -7,13 +7,13 @@ FactoryGirl.define do
     password 'please'
   end
 
-  factory :news do
-    title "Foo Title"
+  factory :talk do
     content "Foo Content"
     association :user
   end
 
-  factory :talk do
+  factory :news do
+    title "Foo Title"
     content "Foo Content"
     association :user
   end

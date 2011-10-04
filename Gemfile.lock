@@ -343,7 +343,6 @@ DEPENDENCIES
   resque
   resque-loner
   rmagick
-  rspec
   rspec-cells
   rspec-rails
   ruby-debug19

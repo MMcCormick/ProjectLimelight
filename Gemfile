@@ -35,7 +35,6 @@ end
 
 group :development do
   gem "pry"
-  gem 'rspec-rails'
   gem 'rspec-cells'
   gem 'guard'
   gem 'guard-rspec'
@@ -58,8 +57,11 @@ group :development do
 
 end
 
+group :development, :test do
+  gem 'rspec-rails'
+end
+
 group :test do
-  gem 'rspec'
   gem "capybara"
   gem "factory_girl_rails"
   gem 'growl'
@@ -72,4 +74,4 @@ group :test do
   gem 'mocha'
 end
 
-gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything)
+gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol

@@ -15,6 +15,10 @@ describe Talk do
     FactoryGirl.build(:talk, :content => long_content).should be_invalid
   end
 
+  it "should reject content shorter than 3 chars" do
+    FactoryGirl.build(:talk, :content => "la").should be_invalid
+  end
+
   it "should have a name attr equal to its content" do
     talk = FactoryGirl.build(:talk)
     talk.name.should == talk.content

@@ -1,10 +1,16 @@
 class TalksController < ApplicationController
-  load_and_authorize_resource :find_by => :find_by_encoded_id
+  authorize_resource
 
   def show
+    @talk = Talk.find_by_encoded_id(params[:id])
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @talk }
+      if @talk
+        format.html # show.html.erb
+        format.json { render json: @talk }
+      else
+        format.html { not_found("Talk not found") }
+        format.json { render json: {}, status: 404 }
+      end
     end
   end
 

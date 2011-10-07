@@ -23,6 +23,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Use to throw exceptions
+  def not_found(message)
+    raise ActionController::RoutingError.new(message)
+  end
+
+
   private
 
   # Used to display the page load time on each page

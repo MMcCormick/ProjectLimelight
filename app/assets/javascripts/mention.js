@@ -64,7 +64,9 @@ var settings = [
     selectFirst   : true,
     mustMatch     : true,
     highlight     : 'user-mention',
-    allowNew      : false
+    allowNew      : false,
+    bucket        : $('#static-data').data('d').userAutoBucket,
+    bucketType    : 'user'
   },
   {
     type          : 'topic',
@@ -74,7 +76,9 @@ var settings = [
     selectFirst   : false,
     mustMatch     : false,
     highlight     : 'topic-mention',
-    allowNew      : true
+    allowNew      : true,
+    bucket        : 'topic',
+    bucketType    : 'topic'
   }
 ]
 
@@ -84,19 +88,18 @@ var fields = [];
 // Hooks
 (function($) {
   $.fn.mentionable = function() {
-    return this.each(function(index) {
-      new $.Mentionable($(this), index);
+    return this.each(function(index, val) {
+      new $.Mentionable($(val), index);
     });
   }
 
   $.Mentionable = function(input, index) {
     var under = $('<div class="under"></div>'),
-            autocomplete = $('<input type="text" class="autocomplete" />'),
-            hidden = $('<input type="hidden" class="data" />');
+        autocomplete = $('<input type="text" class="autocomplete" />'),
+        hidden = input.parent().find('.data');
 
     input.before(under);
     input.after(autocomplete);
-    input.after(hidden);
 
     var mentionField = new field(input, autocomplete, under, hidden);
 
@@ -295,27 +298,32 @@ var fields = [];
     this.load_autocomplete = function() {
       var mention = this
       this.autocomplete.autocomplete(settings[this.mode].autocomplete, {
-        highlight: false,
         minChars: 2,
         width: this.input.width(),
         matchContains: true,
-        autoFill: false,
+        autoFill: true,
         selectFirst: settings[this.mode].selectFirst,
         mustMatch: settings[this.mode].mustMatch,
-        searchKey: 'name',
+        searchKey: 'term',
+        max: 10,
+        bucket: settings[this.mode].bucket,
+        bucketType: settings[this.mode].bucketType,
+        extraParams: {"types[]":settings[this.mode].bucket},
+        dataType: 'jsonp',
+        delay: 75,
         formatItem: function(row, i, max) {
           return row.formattedItem;
         },
         formatMatch: function(row, i, max) {
-          return row.name;
+          return row.term;
         },
         formatResult: function(row) {
-          return row.name;
+          return row.term;
         }
       }).result(function(event, data, formatted) {
         if (data)
         {
-          mention.addMention(mention.state - settings[mention.mode].trigger.length, mention.caret, data.id, data.name, data);
+          mention.addMention(mention.state - settings[mention.mode].trigger.length, mention.caret, data.id, data.term, data);
         }
       });
       this.autocompleteLoaded = true;

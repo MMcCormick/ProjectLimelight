@@ -1,5 +1,3 @@
-# Run to start:
-# rake resque:work QUEUE='*'
 require 'resque/tasks'
 require 'resque_scheduler/tasks'
 
@@ -30,7 +28,7 @@ task "resque:setup" => :environment do
   # Note: This feature is only available in >=2.0.0.
   #Resque::Scheduler.dynamic = true
 
-  ENV['QUEUE'] = 'images'
+  ENV['QUEUE'] = 'soulmate_user,soulmate_topic,images'
 end
 
 desc "Alias for resque:work (To run workers on Heroku)"

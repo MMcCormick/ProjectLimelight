@@ -322,7 +322,7 @@
       // if the last user key pressed was backspace, don't autofill
       if (options.autoFill && (lastWord($input.val()).toLowerCase() == q.toLowerCase()) && lastKeyPressCode != KEY.BACKSPACE) {
         // fill in the value (keep the case the user has typed)
-        $input.val($input.val() + sValue.substring(lastWord(previousValue).length));
+        $input.val($input.val() + sValue.term.substring(lastWord(previousValue).length));
         // select the portion of the value not typed by the user (so the next character will erase)
         $(input).selection(previousValue.length, previousValue.length + sValue.length);
       }
@@ -401,10 +401,18 @@
           dataType: options.dataType,
           url: options.url,
           data: $.extend({
-            q: lastWord(term),
+            term: lastWord(term),
             limit: options.max
           }, extraParams),
           success: function(data) {
+            // Used for soulmate redis store
+            if (options.bucket)
+            {
+              data = data.results[options.bucket]
+              $(data).each(function(i, val) {
+                val.formattedItem = formatItem(val)
+              })
+            }
             var parsed = options.parse && options.parse(data) || parse(data);
             cache.add(term, parsed);
             success(term, parsed);
@@ -422,7 +430,31 @@
       }
     }
 
-    ;
+    function formatItem(data)
+    {
+      if (options.bucketType == 'user')
+      {
+        if (data.data.image)
+        {
+          image = '<img width="30" height="30" src="'+data.data.image+'" />';
+        }
+        return '<div class="auto-user">'+image+'<span>'+data.term+'</span></div>';
+      }
+      else if (options.bucketType == 'topic')
+      {
+        var image = '',
+            types = '';
+        if (data.data.types)
+        {
+          types = '<span class="types">('+data.data.types.join(', ')+')</span>';
+        }
+        if (data.data.image)
+        {
+          image = '<img width="30" height="30" src="'+data.data.image+'" />';
+        }
+        return '<div class="auto-topic">'+image+'<span class="name">'+data.term+'</span>'+types+'</div>';
+      }
+    }
 
     function parse(data) {
       var parsed = [];
@@ -480,6 +512,8 @@
     scroll: true,
     scrollHeight: 180,
     scrollJumpPosition: true,
+    bucket: false,
+    bucketType: '',
     searchKey: 'name'
   };
 
@@ -734,6 +768,7 @@
       for (var i = 0; i < max; i++) {
         if (!data[i])
           continue;
+
         var formatted = options.formatItem(data[i].data, i + 1, max, data[i].value, term);
         if (formatted === false)
           continue;

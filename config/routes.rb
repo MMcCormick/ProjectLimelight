@@ -56,6 +56,9 @@ ProjectLimelight::Application.routes.draw do
   # Resque admin
   mount Resque::Server, :at => "/resque"
 
+  # Soulmate api
+  mount Soulmate::Server, :at => "/soulmate"
+
   # Uploads
   match "/upload" => "uploads#create", :as => :upload_tmp
 

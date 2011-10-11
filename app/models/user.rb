@@ -164,6 +164,7 @@ class User
       self.following_users << user.id
       self.following_users_count += 1
       user.followers_count += 1
+      Resque.enqueue(SoulmateUserFollowing, self.id.to_s)
     end
   end
 
@@ -172,6 +173,7 @@ class User
       self.following_users.delete(user.id)
       self.following_users_count -= 1
       user.followers_count -= 1
+      Resque.enqueue(SoulmateUserFollowing, self.id.to_s)
     end
   end
 
@@ -198,6 +200,10 @@ class User
   ###
   # END FOLLOWING
   ###
+
+  def fullname
+    "#{first_name} #{last_name}"
+  end
 
   protected
 

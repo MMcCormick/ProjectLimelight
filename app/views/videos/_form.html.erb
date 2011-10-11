@@ -18,8 +18,7 @@
     </div>
     <div class="field lClear" data-tip="Video Description">
       <%= f.label :content, "Describe the video..." %>
-      <%= f.text_area :content %>
-      <%= render 'shared/topic_tagger', :f => f %>
+      <%= render "shared/mention_box", :f => f %>
     </div>
 
     <div class="actions">

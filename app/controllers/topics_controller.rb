@@ -1,5 +1,5 @@
 class TopicsController < ApplicationController
-  load_and_authorize_resource :find_by => :find_by_slug
+  load_and_authorize_resource :find_by => :find_by_slug, :only => [:show, :edit, :update]
 
   def index
     @topics = Topic.all
@@ -50,16 +50,18 @@ class TopicsController < ApplicationController
   end
 
   def hover
+    @topic = Topic.find_by_slug(params[:id])
     render :partial => 'hover_tab', :topic => @topic
   end
 
   def autocomplete
+    @query = params[:q]
     slug = params[:q].to_url
     matches = Topic.where(:aliases => /#{slug}/i).asc(:slug)
     response = Array.new
     matches.each do |match|
       @topic = match
-      response << {name: match.name, formattedItem: render_to_string(partial: 'auto_helper')}
+      response << {id: match.id, name: match.name, formattedItem: render_to_string(partial: 'autocomplete')}
     end
 
     render json: response

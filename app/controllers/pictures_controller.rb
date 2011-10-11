@@ -1,10 +1,15 @@
 class PicturesController < ApplicationController
-  load_and_authorize_resource :find_by => :find_by_encoded_id
+  authorize_resource
 
   def show
+    @picture = Picture.find_by_encoded_id(params[:id])
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @picture }
+      if @picture
+        format.html # show.html.erb
+        format.json { render json: @picture }
+      else
+        not_found("Picture not found")
+      end
     end
   end
 

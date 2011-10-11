@@ -159,14 +159,6 @@ class User
     self.following_users.include? user_id
   end
 
-  def toggle_follow_user(user)
-    if is_following_user? user.id
-      unfollow_user user
-    else
-      follow_user user
-    end
-  end
-
   def follow_user(user)
     if !self.following_users.include?(user.id)
       self.following_users << user.id
@@ -185,14 +177,6 @@ class User
 
   def is_following_topic?(topic_id)
     self.following_topics.include? topic_id
-  end
-
-  def toggle_follow_topic(topic)
-    if is_following_topic? topic.id
-      unfollow_topic topic
-    else
-      follow_topic topic
-    end
   end
 
   def follow_topic(topic)

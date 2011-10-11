@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NewsController, :focus=>true do
+describe NewsController do
   describe "GET show" do
     context "when html request" do
       context "and news is found" do
@@ -23,20 +23,16 @@ describe NewsController, :focus=>true do
 
       it "should raise a 404 if the news is not found" do
         News.should_receive(:find_by_encoded_id).and_return(false)
-        expect {
-          get :show, :id => 2
-        }.to raise_error(ActionController::RoutingError)
+        get :show, :id => 2
+        response.response_code.should == 404
       end
     end
 
     context "when json request" do
       context "and news is found" do
-        # Note: examples below uses a Factory-made news object so that the json response can be tested
-        # If a mock or mock_model is used, the json object is blank
         let(:news) { FactoryGirl.create(:news) }
         before(:each ) do
           News.should_receive(:find_by_encoded_id).with('1').and_return(news)
-          #news = mock_model(News).as_null_object
           get :show, :id => 1, :format => :json
         end
         it "should respond with success" do
@@ -82,18 +78,33 @@ describe NewsController, :focus=>true do
         news.should_receive(:save)
         post :create, :news => {"content" => "blah blah"}
       end
-      it "should redirect to the news show page on success" do
-        news.should_receive(:save).and_return(true)
-        post :create, :news => {"content" => "blah blah"}
-        response.should redirect_to news
+
+      context "on success" do
+        before(:each) { news.should_receive(:save).and_return(true) }
+
+        it "should redirect to the news show page" do
+          post :create, :news => {"content" => "blah blah"}
+          response.should redirect_to news
+        end
+        it "should redirect to the news show page (json)" do
+          post :create, :news => {"content" => "blah blah"}, :format => :json
+          response.response_code.should == 201
+          JSON.parse(response.body)['redirect'].should == news_path(news)
+        end
       end
-      it "should redirect through json too"
-      it "should redirect to new news path on failure" do
-        news.should_receive(:save).and_return(false)
-        post :create, :news => {"content" => "blah blah"}
-        response.should render_template("new")
+
+      context "on failure" do
+        before(:each) { news.should_receive(:save).and_return(false) }
+
+        it "should redirect to new news path" do
+          post :create, :news => {"content" => "blah blah"}
+          response.should render_template("new")
+        end
+        it "should return a json object with a 422 code (json)" do
+          post :create, :news => {"content" => "blah blah"}, :format => :json
+          response.response_code.should == 422
+        end
       end
-      it "should return a json object with errors and appropriate code on failure"
     end
   end
 end

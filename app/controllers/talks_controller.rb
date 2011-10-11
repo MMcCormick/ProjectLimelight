@@ -8,8 +8,7 @@ class TalksController < ApplicationController
         format.html # show.html.erb
         format.json { render json: @talk }
       else
-        format.html { not_found("Talk not found") }
-        format.json { render json: {}, status: 404 }
+        not_found("Talk not found")
       end
     end
   end
@@ -21,7 +20,7 @@ class TalksController < ApplicationController
       if @talk.save
         response = { :redirect => talk_path(@talk) }
         format.html { redirect_to @talk, notice: 'Talk was successfully created.' }
-        format.json { render json: response, status: :created,  }
+        format.json { render json: response, status: :created }
       else
         format.html { render action: "new" }
         format.json { render json: @talk.errors, status: :unprocessable_entity }

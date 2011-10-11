@@ -1,5 +1,5 @@
 class NewsController < ApplicationController
-  authorize_resource :find_by => :find_by_encoded_id
+  authorize_resource
 
   def show
     @news = News.find_by_encoded_id(params[:id])
@@ -8,8 +8,7 @@ class NewsController < ApplicationController
         format.html # show.html.erb
         format.json { render json: @news }
       else
-        format.html { not_found("News not found") }
-        format.json { render json: {}, status: 404 }
+        not_found("News not found")
       end
     end
   end

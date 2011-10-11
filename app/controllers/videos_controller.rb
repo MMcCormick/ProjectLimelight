@@ -1,10 +1,15 @@
 class VideosController < ApplicationController
-  load_and_authorize_resource :find_by => :find_by_encoded_id
+  authorize_resource
 
   def show
+    @video = Video.find_by_encoded_id(params[:id])
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @video }
+      if @video
+        format.html # show.html.erb
+        format.json { render json: @video }
+      else
+        not_found("Video not found")
+      end
     end
   end
 
@@ -18,7 +23,7 @@ class VideosController < ApplicationController
         format.json { render json: response, status: :created, location: @video }
       else
         format.html { render action: "new" }
-        format.json { render json: response, status: :unprocessable_entity }
+        format.json { render json: @video.errors, status: :unprocessable_entity }
       end
     end
   end

@@ -23,9 +23,8 @@ describe TalksController do
 
       it "should raise a 404 if the talk is not found" do
         Talk.should_receive(:find_by_encoded_id).and_return(false)
-        expect {
-          get :show, :id => 2
-        }.to raise_error(ActionController::RoutingError)
+        get :show, :id => 2
+        response.response_code.should == 404
       end
     end
 
@@ -73,7 +72,6 @@ describe TalksController do
         sign_in user
         Talk.should_receive(:new).with("content" => "blah blah").and_return(talk)
       end
-
       it "should create a new talk" do
         post :create, :talk => {"content" => "blah blah"}
         assigns[:talk].should eq(talk)
@@ -82,18 +80,33 @@ describe TalksController do
         talk.should_receive(:save)
         post :create, :talk => {"content" => "blah blah"}
       end
-      it "should redirect to the talk show page on success" do
-        talk.should_receive(:save).and_return(true)
-        post :create, :talk => {"content" => "blah blah"}
-        response.should redirect_to talk
+
+      context "on success" do
+        before(:each) { talk.should_receive(:save).and_return(true) }
+
+        it "should redirect to the talk show page" do
+          post :create, :talk => {"content" => "blah blah"}
+          response.should redirect_to talk
+        end
+        it "should redirect to the talk show page (json)" do
+          post :create, :talk => {"content" => "blah blah"}, :format => :json
+          response.response_code.should == 201
+          JSON.parse(response.body)['redirect'].should == talk_path(talk)
+        end
       end
-      it "should redirect through json too"
-      it "should redirect to new talk path on failure" do
-        talk.should_receive(:save).and_return(false)
-        post :create, :talk => {"content" => "blah blah"}
-        response.should render_template("new")
+
+      context "on failure" do
+        before(:each) { talk.should_receive(:save).and_return(false) }
+
+        it "should redirect to new talk path" do
+          post :create, :talk => {"content" => "blah blah"}
+          response.should render_template("new")
+        end
+        it "should return a json object with a 422 code (json)" do
+          post :create, :talk => {"content" => "blah blah"}, :format => :json
+          response.response_code.should == 422
+        end
       end
-      it "should return a json object with errors and appropriate code"
     end
   end
 end

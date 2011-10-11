@@ -34,4 +34,9 @@ FactoryGirl.define do
     url "http://video.foo"
     association :user
   end
+
+  factory :topic do
+    sequence(:name) { |n| "topic#{n}" }
+    association :user
+  end
 end

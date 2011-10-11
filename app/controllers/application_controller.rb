@@ -23,19 +23,29 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Exception Helpers
+  # Exception Throwers
 
-  # Not Found (404) exceptions
+  # Not Found (404)
   def not_found(message)
     raise ActionController::RoutingError.new(message)
   end
-
   # Permission denied (401)
   def permission_denied
     render :file => "public/401.html", :status => :unauthorized
   end
 
+  # Exception Handlers
 
+  rescue_from ActionController::RoutingError do
+    render :file => "public/404.html", :status => 404
+  end
+
+  # Used to test error messages as they would be shown in production
+  #protected
+  #
+  #def local_request?
+  #  false
+  #end
 
   private
 

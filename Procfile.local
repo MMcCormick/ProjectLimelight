@@ -1,3 +1,4 @@
 mongo:            sudo mongod
-redis-server:     redis-server /usr/local/etc/redis.conf
-worker:           bundle exec rake resque:work QUEUE=*
+redis:            redis-server /usr/local/etc/redis.conf
+scheduler:        bundle exec rake resque:scheduler
+worker:           bundle exec rake resque:work QUEUE=images

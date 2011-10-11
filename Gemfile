@@ -2,8 +2,8 @@ require 'rbconfig'
 HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.1.rc1'
-gem 'thin'
+gem 'rails', '3.1.1'
+gem 'unicorn'
 gem 'execjs'
 gem 'jquery-rails'
 gem 'bson_ext'
@@ -20,39 +20,32 @@ gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'embedly'
 gem 'heroku'
-gem 'resque', :require => 'resque/server' # Background jobs
+gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive', :require => 'resque/server'
+gem 'resque-scheduler', '2.0.0.e' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
+gem "airbrake" # Exception notification
+#TODO: the rpm_contrib is being pulled from git because of a bug. Check this pull request and use gem if merged. https://github.com/newrelic/rpm_contrib/pull/13
+gem 'rpm_contrib', :git => 'git://github.com/kenn/rpm_contrib.git', :branch => 'mongo140compat' # extra instrumentation for the new relic rpm agent
+gem 'newrelic_rpm' # performance / server monitoring
 
 group :assets do
-  gem 'compass', '~> 0.12.alpha'
-  gem 'sass-rails'
-  gem 'coffee-rails'
+  gem 'compass', '0.12.alpha.0'
+  gem 'sass-rails', "3.1.4"
+  gem 'coffee-rails', "3.1.1"
   gem 'uglifier'
 end
 
 group :development do
+  gem 'heroku_san'
   gem "pry"
   gem 'rspec-cells'
   gem 'guard-rspec'
   gem "rails-footnotes"
   gem "ruby-debug19"
   gem "foreman"
-
-  #case HOST_OS
-  #  when /darwin/i
-  #    gem 'rb-fsevent'
-  #    gem 'growl'
-  #  when /linux/i
-  #    gem 'libnotify'
-  #    gem 'rb-inotify'
-  #  when /mswin|windows/i
-  #    gem 'rb-fchange'
-  #    gem 'win32console'
-  #    gem 'rb-notifu'
-  #end
 
 end
 

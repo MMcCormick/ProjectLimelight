@@ -438,21 +438,21 @@
         {
           image = '<img width="30" height="30" src="'+data.data.image+'" />';
         }
-        return '<div class="auto-user">'+image+'<span>'+data.term+'</span></div>';
+        return '<div class="auto-user">'+image+'<div class="name">'+data.term+'</div></div>';
       }
       else if (options.bucketType == 'topic')
       {
         var image = '',
             types = '';
-        if (data.data.types)
-        {
-          types = '<span class="types">('+data.data.types.join(', ')+')</span>';
-        }
         if (data.data.image)
         {
           image = '<img width="30" height="30" src="'+data.data.image+'" />';
         }
-        return '<div class="auto-topic">'+image+'<span class="name">'+data.term+'</span>'+types+'</div>';
+        if (data.data.types)
+        {
+          types = '<div class="types">'+data.data.types.join(', ')+'</div>';
+        }
+        return '<div class="auto-topic">'+image+'<div class="name '+(types != '' ? 'with-type' : '')+'">'+data.term+'</div>'+types+'</div>';
       }
     }
 

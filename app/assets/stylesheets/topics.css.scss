@@ -85,3 +85,18 @@
     }
   }
 }
+
+.auto-topic
+{
+  .name.with-type {
+    padding: 3px 0 17px 0;
+  }
+  .types {
+    position: absolute;
+    bottom: 2px;
+    left: 39px;
+    font-size: 11px;
+    font-style: italic;
+    color: #000;
+  }
+}

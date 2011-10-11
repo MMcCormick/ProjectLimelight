@@ -165,3 +165,45 @@
     background: #FFF;
     padding:  2px;
 }
+
+.ac_results {
+  @include border-radius(2px);
+  @include single-box-shadow(#AAA, 1px, 1px, 3px);
+  width: 100%;
+  background: #FFFFFF;
+  border: 2px solid #AAA;
+  padding: 5px;
+  display: none;
+  color: #AAA;
+
+  .ac_odd {
+    background: #FFF;
+  }
+  .ac_over {
+    background: #8BCFF2;
+    color: #555;
+  }
+  strong {
+    color: #000;
+    font-weight: normal;
+  }
+}
+
+.auto-user,
+.auto-topic {
+  position: relative;
+  padding: 0 0 0 40px;
+  img {
+    @include border-radius(2px);
+    position: absolute;
+    top: 2px;
+    left: 0;
+    padding: 1px;
+    background: #FFF;
+  }
+  .name {
+    position: relative;
+    font-size: 15px;
+    padding: 10px 0;
+  }
+}

@@ -67,24 +67,4 @@
     border: none;
     z-index: -10;
   }
-  .select {
-    @include border-radius(2px);
-    @include single-box-shadow(#AAA, 1px, 1px, 3px);
-    position: absolute;
-    width: 100%;
-    left: 0px;
-    z-index: 15;
-    background: #FFFFFF;
-    border: 1px solid #AAA;
-    padding: 5px;
-    display: none;
-
-    .option {
-      &:hover,
-      &.active {
-        background: #EFEFEF;
-        cursor: pointer;
-      }
-    }
-  }
 }

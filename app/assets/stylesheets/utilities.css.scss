@@ -52,7 +52,6 @@
 }
 
 .lClear {
-  @include clearfix();
   position: relative;
   label {
     position: absolute;

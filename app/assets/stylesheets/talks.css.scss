@@ -1,0 +1,27 @@
+/*
+    Document   : _talk
+    Created on : Mar 30, 2011, 4:04:51 PM
+    Author     : Marc MacLeod
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.talk {
+  &.teaser.hover {
+    .oType { color: $talk-color }
+    .connectionsC
+    {
+      border-color: $talk-color;
+    }
+  }
+  &.teaser.grid {
+    img {
+      margin: 3px 10px 0 0;
+    }
+  }
+  &.teaser.list {
+    img {
+      margin-top: 2px;
+    }
+  }
+}

@@ -31,13 +31,17 @@ class CoreObject
   belongs_to :user
   has_many :core_object_shares
   validates :user_id, :status, :presence => true
-  attr_accessible :content, :tagged_topics
-  attr_accessor :tagged_topics
+  attr_accessible :content, :content_raw
+  attr_accessor :content_raw
 
   before_create :set_user_snippet, :set_mentions, :current_user_own
 
   def to_param
     "#{self._public_id.to_i.to_s(36)}-#{name.parameterize}"
+  end
+
+  def content_clean
+    content.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([\w ]*)\]/, '\2')
   end
 
   # Votes
@@ -180,18 +184,22 @@ class CoreObject
   def set_mentions
     set_user_mentions
     set_topic_mentions
+    self.content = @content_raw
   end
 
   # Searches the content attribute for [@foo] mentions.
   # For each found, check if user is in DB and add as UserMention to this object if found.
   def set_user_mentions
-    # Searches for strings contained between [@] delimiters. Returns an array of slugified strings without duplicates.
-    user_mention_slugs = content.scan(/(?<=\[@)(.*?)(?=\])/).flatten(1).map! do |user|
-      user.to_url
-    end.uniq
+    found_users = Array.new
+    # Searches for strings contained between @[uid#username] delimiters. Returns an array of arrays of format [[uid,username],[uid,username]...].
+    @content_raw.scan(/\@\[([0-9a-zA-Z]*)#([\w]*)\]/).map do |user|
+      unless found_users.include? user[0]
+        found_users << user[0]
+      end
+    end
 
-    # See if any of the user slugs are already in the DB. Check through topic aliases!
-    users = User.any_in("slug" => user_mention_slugs)
+    # Find the users
+    users = User.where(:_id.in => found_users)
 
     users.each do |user|
       self.user_mentions.build({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
@@ -202,18 +210,33 @@ class CoreObject
   # For each found, check if topic is in DB. If valid and not in DB, create it.
   # For each valid topic mention, add as TopicMention to this object.
   def set_topic_mentions
-    if @tagged_topics
+    if @content_raw
+      found_topics = Array.new
+      # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
+      @content_raw.scan(/\#\[([0-9a-zA-Z]*)#([\w ]*)\]/).map do |topic|
+        unless found_topics.include? topic[0]
+          found_topics << topic[0]
+        end
+      end
+
+      # Add the found topics as snippets
+      mentions = Topic.where(:_id.in => found_topics)
+      mentions.each do |topic|
+        payload = {id: topic.id, _public_id: topic._public_id, name: topic.name, slug: topic.slug }
+        self.topic_mentions.build(payload)
+      end
+
       # Explodes the string. Returns an array of arrays containting
       # [string, slugified string] without duplicates.
-      topic_mentions = @tagged_topics.split(%r{,\s*}).map! do |topic|
+      new_topic_mentions = @content_raw.scan(/\#\[([\w ]*[^#])\]/).flatten(1).map do |topic|
         [topic.strip, topic.to_url]
       end.uniq
 
       # See if any of the topic slugs are already in the DB. Check through topic aliases!
       topic_slugs = topic_mentions.map { |data| data[1] }
-      topics = Topic.any_in("aliases" => topic_slugs)
+      topics = Topic.where("aliases" => { '$in' => topic_slugs})
 
-      topic_mentions.each do |topic_mention|
+      new_topic_mentions.each do |topic_mention|
         found_topic = false
         # Do we already have a DB topic for this mention?
         topics.each do |topic|
@@ -226,6 +249,8 @@ class CoreObject
           found_topic = user.topics.build({name: topic_mention[0]})
           if found_topic.valid?
             found_topic.save
+            # add the new ID to the topic mention
+            @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
           else
             found_topic = false
           end

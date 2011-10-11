@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :except => [:show, :following_users, :followers, :following_topics, :feed, :contributions]
+  before_filter :authenticate_user!, :only => [:edit]
 
   def show
     @user = User.find_by_slug(params[:id])
@@ -83,12 +83,12 @@ class UsersController < ApplicationController
   end
 
   def autocomplete
-    #@matches = User.where(:_id.in => current_user.following_users).and(:name => '/'+params[:q]+'/')
-    matches = User.where(:_id.in => current_user.following_users).where(:username => /#{params[:q]}/i).asc(:username)
+    @query = params[:q]
+    matches = User.where(:_id.in => current_user.following_users).where(:username => /#{@query}/i).asc(:username)
     response = Array.new
     matches.each do |match|
       @user = match
-      response << {username: match.username, formattedItem: render_to_string(partial: 'auto_helper')}
+      response << {id: match.id, name: match.username, formattedItem: render_to_string(partial: 'autocomplete')}
     end
 
     render json: response

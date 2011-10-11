@@ -52,9 +52,13 @@ form.core_object {
       width: $form-width;
       font-size: 15px;
     }
-    textarea {
-      height: 175px;
+    .mention-box {
+      height: 160px;
+      margin-bottom: 10px;
       width: $form-width - ($tag-width + 10);
+      .select {
+        top: 170px;
+      }
     }
     .tagDisplay {
       left: $form-width - $tag-width;

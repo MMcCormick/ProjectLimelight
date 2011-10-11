@@ -4,7 +4,7 @@
 // It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
 // the compiled file.
 //
-//= require jquery
+//= require jquery1.6.4
 //= require jquery_ujs
 //= require modernizr
 //= require json2
@@ -22,6 +22,7 @@
 //= require jquery.scroll
 //= require jquery.typing
 //= require plupload/plupload.full
+//= require mention
 //= require core
 //= require request
 //= require subscribers

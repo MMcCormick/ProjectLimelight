@@ -2,13 +2,13 @@
 var settings = [{
 	type					: 'user',
 	trigger				: '@',
-	autocomplete	: 'u/ac',
+	autocomplete	: $('#static-data').data('d').userAutoUrl,
 	match					: '<b>$1</b>',
 	highlight			: 'user-mention'
 },{
 	type					: 'topic',
 	trigger				: '#',
-	autocomplete	: 't/ac',
+	autocomplete	: $('#static-data').data('d').topicAutoUrl,
 	match					: '<b>$1</b>',
 	highlight			: 'topic-mention'
 }]

@@ -36,7 +36,6 @@ end
 group :development do
   gem "pry"
   gem 'rspec-cells'
-  gem 'guard'
   gem 'guard-rspec'
   gem "rails-footnotes"
   gem "ruby-debug19"

@@ -1,9 +1,6 @@
 require 'spec_helper'
 
-describe TalksController, :focus => true do
-  #include Devise::TestHelpers
-  #render_views
-
+describe TalksController do
   describe "GET show" do
     context "when html request" do
       context "and talk is found" do
@@ -64,7 +61,6 @@ describe TalksController, :focus => true do
         assigns[:talk].should be_nil
       end
       it "should respond with a 401" do
-        pending "stack overflow: http://stackoverflow.com/questions/7681300/how-can-i-use-rspec-to-test-the-response-code-on-a-cancan-failed-authorization"
         post :create
         response.response_code.should == 401
       end
@@ -91,11 +87,13 @@ describe TalksController, :focus => true do
         post :create, :talk => {"content" => "blah blah"}
         response.should redirect_to talk
       end
+      it "should redirect through json too"
       it "should redirect to new talk path on failure" do
         talk.should_receive(:save).and_return(false)
         post :create, :talk => {"content" => "blah blah"}
         response.should render_template("new")
       end
+      it "should return a json object with errors and appropriate code"
     end
   end
 end

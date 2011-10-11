@@ -1,10 +1,16 @@
 class NewsController < ApplicationController
-  load_and_authorize_resource :find_by => :find_by_encoded_id
+  authorize_resource :find_by => :find_by_encoded_id
 
   def show
+    @news = News.find_by_encoded_id(params[:id])
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @news }
+      if @news
+        format.html # show.html.erb
+        format.json { render json: @news }
+      else
+        format.html { not_found("News not found") }
+        format.json { render json: {}, status: 404 }
+      end
     end
   end
 

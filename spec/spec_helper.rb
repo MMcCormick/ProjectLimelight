@@ -33,8 +33,6 @@ Spork.prefork do
     config.filter_run :focus => true
     config.run_all_when_everything_filtered = true
 
-    config.include RSpec::Rails::ControllerExampleGroup
-
     config.include Devise::TestHelpers, :type => :controller
 
     DatabaseCleaner.strategy = :truncation

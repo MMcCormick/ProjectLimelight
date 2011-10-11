@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Talk do
+describe Talk, do
 
   it "should create + persist a new instance given valid attributes" do
     FactoryGirl.create(:talk).should be_valid

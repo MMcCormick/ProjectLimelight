@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
         render json: {:status => :error, :message => "You must be logged in to do that!"}, :status => 401
       end
     else
-      redirect_to root_url, :alert => exception.message
+      permission_denied
     end
   end
 
@@ -23,10 +23,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Use to throw exceptions
+  # Exception Helpers
+
+  # Not Found (404) exceptions
   def not_found(message)
     raise ActionController::RoutingError.new(message)
   end
+
+  # Permission denied (401)
+  def permission_denied
+    render :file => "public/401.html", :status => :unauthorized
+  end
+
 
 
   private

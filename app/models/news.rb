@@ -12,10 +12,10 @@ class News < CoreObject
 
   validates :title, :length => { :minimum => 5, :maximum => 100 }
   validates :content, :length => { :minimum => 5, :maximum => 400 }
-  #validates_format_of :url, :with => URI::regexp(%w(http https))
+  #validates_presence_of :url
+  validates_format_of :url, :with => URI::regexp(%w(http https))
 
   def name
     self.title
   end
-
 end

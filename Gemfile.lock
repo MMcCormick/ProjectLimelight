@@ -324,7 +324,6 @@ DEPENDENCIES
   foreman
   frontend-helpers
   growl
-  guard
   guard-rspec
   guard-spork
   heroku

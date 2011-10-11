@@ -53,11 +53,11 @@ form.core_object {
       font-size: 15px;
     }
     .mention-box {
-      height: 160px;
-      margin-bottom: 10px;
+      height: 170px;
       width: $form-width - ($tag-width + 10);
-      .select {
-        top: 170px;
+      .under,
+      .mention {
+        height: 160px;
       }
     }
     .tagDisplay {

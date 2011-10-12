@@ -43,6 +43,9 @@
     search: function(handler) {
       return this.trigger("search", [handler]);
     },
+    searchFor: function(value) {
+      return this.trigger("searchFor", value);
+    },
     flushCache: function() {
       return this.trigger("flushCache");
     },
@@ -211,6 +214,10 @@
               $.each(trimWords($input.val()), function(i, value) {
                 request(value, findValueCallback, findValueCallback);
               });
+            }).bind("searchFor", function() {
+              hasFocus = true;
+              $input.val(arguments[1]);
+              onChange(0, true);
             }).bind("flushCache",
             function() {
               cache.flush();

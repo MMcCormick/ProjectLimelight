@@ -208,7 +208,7 @@ var fields = [];
                 if (!mentionField.autocompleteLoaded) {
                   mentionField.load_autocomplete()
                 }
-                mentionField.autocomplete.val(mentionField.type).trigger('change');
+                mentionField.autocomplete.searchFor(mentionField.type);
               }
 
               // Update highlighting
@@ -301,7 +301,7 @@ var fields = [];
         minChars: 2,
         width: this.input.width(),
         matchContains: true,
-        autoFill: true,
+        autoFill: false,
         selectFirst: settings[this.mode].selectFirst,
         mustMatch: settings[this.mode].mustMatch,
         searchKey: 'term',

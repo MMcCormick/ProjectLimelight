@@ -5,9 +5,9 @@
 (function(window, undefined) {
 
   // Check to see if History.js is enabled for our Browser
-  if (!History.enabled) {
-    return false;
-  }
+//  if (!History.enabled) {
+//    return false;
+//  }
 
   // Ajaxify our Internal Links
 //  $application.find('a[href^="/"].p,a[href^="' + rootUrl + '"].p').live('click', function(event) {

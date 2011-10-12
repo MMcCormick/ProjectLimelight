@@ -65,6 +65,9 @@ input, textarea {
     font-size: 14px;
     border:  1px solid #BBB;
     font-family: "Helvetica Neue", Verdana, Tahoma, Arial, sans-serif;
+    &:focus {
+      outline: none;
+    }
 }
 
 #header {

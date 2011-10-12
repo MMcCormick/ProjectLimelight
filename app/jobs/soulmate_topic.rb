@@ -19,10 +19,7 @@ class SoulmateTopic
                 }}
 
       if topic.aliases.length > 0
-        nugget['aliases'] = Array.new
-        topic.aliases.each do |name|
-          nugget['aliases'] << name
-        end
+        nugget['aliases'] = topic.aliases
       end
 
       img = default_image_url(topic, [30, 30])

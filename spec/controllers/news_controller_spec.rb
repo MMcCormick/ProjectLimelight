@@ -27,27 +27,6 @@ describe NewsController do
         response.response_code.should == 404
       end
     end
-
-    context "when json request" do
-      context "and news is found" do
-        let(:news) { FactoryGirl.create(:news) }
-        before(:each ) do
-          News.should_receive(:find_by_encoded_id).with('1').and_return(news)
-          get :show, :id => 1, :format => :json
-        end
-        it "should respond with success" do
-          response.should be_success
-        end
-        it "should respond with a json object where the id matches the news id" do
-          JSON.parse(response.body)['_id'].should == news.id.to_s
-        end
-      end
-      it "should respond with a 404 status if the news is not found" do
-        News.should_receive(:find_by_encoded_id).and_return(false)
-        get :show, :id => 2, :format => :json
-        response.response_code.should == 404
-      end
-    end
   end
 
   describe "POST create" do
@@ -67,7 +46,7 @@ describe NewsController do
       let(:news) { mock_model(News).as_null_object }
       before(:each) do
         sign_in user
-        News.should_receive(:new).with("content" => "blah blah").and_return(news)
+        News.should_receive(:new).with({"content" => "blah blah"}, {}).and_return(news)
       end
 
       it "should create a new news" do
@@ -90,6 +69,7 @@ describe NewsController do
           post :create, :news => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 201
           JSON.parse(response.body)['redirect'].should == news_path(news)
+          JSON.parse(response.body)['status'].should == "ok"
         end
       end
 
@@ -103,6 +83,7 @@ describe NewsController do
         it "should return a json object with a 422 code (json)" do
           post :create, :news => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 422
+          JSON.parse(response.body)['status'].should == "error"
         end
       end
     end

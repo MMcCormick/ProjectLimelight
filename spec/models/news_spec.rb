@@ -37,6 +37,7 @@ describe News do
     FactoryGirl.build(:news, :url => "").should be_invalid
   end
 
+  #TODO: url validation
   it "should reject invalid urls" do
     pending "figure out url validation"
     FactoryGirl.build(:picture, :url => "http://poopypants").should be_invalid

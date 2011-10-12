@@ -28,29 +28,30 @@ describe TalksController do
       end
     end
 
-    context "when json request" do
-      context "and talk is found" do
-        # Note: examples below uses a Factory-made talk object so that the json response can be tested
-        # If a mock or mock_model is used, the json object is blank
-        let(:talk) { FactoryGirl.create(:talk) }
-        before(:each ) do
-          Talk.should_receive(:find_by_encoded_id).with('1').and_return(talk)
-          #talk = mock_model(Talk).as_null_object
-          get :show, :id => 1, :format => :json
-        end
-        it "should respond with success" do
-          response.should be_success
-        end
-        it "should respond with a json object where the id matches the talk id" do
-          JSON.parse(response.body)['_id'].should == talk.id.to_s
-        end
-      end
-      it "should respond with a 404 status if the talk is not found" do
-        Talk.should_receive(:find_by_encoded_id).and_return(false)
-        get :show, :id => 2, :format => :json
-        response.response_code.should == 404
-      end
-    end
+    #Example of how to test json objects, just in case
+    #context "when json request" do
+    #  context "and talk is found" do
+    #    # Note: examples below uses a Factory-made talk object so that the json response can be tested
+    #    # If a mock or mock_model is used, the json object is blank
+    #    let(:talk) { FactoryGirl.create(:talk) }
+    #    before(:each ) do
+    #      Talk.should_receive(:find_by_encoded_id).with('1').and_return(talk)
+    #      #talk = mock_model(Talk).as_null_object
+    #      get :show, :id => 1, :format => :json
+    #    end
+    #    it "should respond with success" do
+    #      response.should be_success
+    #    end
+    #    it "should respond with a json object where the id matches the talk id" do
+    #      JSON.parse(response.body)['_id'].should == talk.id.to_s
+    #    end
+    #  end
+    #  it "should respond with a 404 status if the talk is not found" do
+    #    Talk.should_receive(:find_by_encoded_id).and_return(false)
+    #    get :show, :id => 2, :format => :json
+    #    response.response_code.should == 404
+    #  end
+    #end
   end
 
   describe "POST create" do
@@ -70,7 +71,7 @@ describe TalksController do
       let(:talk) { mock_model(Talk).as_null_object }
       before(:each) do
         sign_in user
-        Talk.should_receive(:new).with("content" => "blah blah").and_return(talk)
+        Talk.should_receive(:new).with({"content" => "blah blah"}, {}).and_return(talk)
       end
       it "should create a new talk" do
         post :create, :talk => {"content" => "blah blah"}
@@ -92,6 +93,7 @@ describe TalksController do
           post :create, :talk => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 201
           JSON.parse(response.body)['redirect'].should == talk_path(talk)
+          JSON.parse(response.body)['status'].should == "ok"
         end
       end
 
@@ -102,9 +104,10 @@ describe TalksController do
           post :create, :talk => {"content" => "blah blah"}
           response.should render_template("new")
         end
-        it "should return a json object with a 422 code (json)" do
+        it "should return a json object with error status and a 422 code (json)" do
           post :create, :talk => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 422
+          JSON.parse(response.body)['status'].should == "error"
         end
       end
     end

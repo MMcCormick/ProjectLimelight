@@ -47,9 +47,8 @@
 
     // Is there a message to show?
     if (params.flash) {
-      //alert('Flash: ['++'] '+params.flash.message);
-      var theme = params.flash.type == 'error' ? 'red' : 'green';
-      createGrowl(false, params.flash.message.capitalize(), params.flash.type.capitalize(), theme);
+      var theme = params.status == 'error' ? 'red' : 'green';
+      createGrowl(false, params.flash.capitalize(), params.status.capitalize(), theme);
     }
 
     if (params.redirect) {

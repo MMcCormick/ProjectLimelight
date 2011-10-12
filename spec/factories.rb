@@ -9,12 +9,14 @@ FactoryGirl.define do
 
   factory :talk do
     content "Talk Content"
+    content_raw "Talk Content"
     association :user
   end
 
   factory :news do
     title "News Title"
     content "News Content"
+    content_raw "Talk Content"
     url "http://foobar.news"
     association :user
   end
@@ -22,6 +24,7 @@ FactoryGirl.define do
   factory :picture do
     title "Picture Title"
     content "Picture Content"
+    content_raw "Talk Content"
     url "http://picture.foo"
     association :user
   end
@@ -29,6 +32,7 @@ FactoryGirl.define do
   factory :video do
     title "Video Title"
     content "Video Content"
+    content_raw "Talk Content"
     provider_name "Video Provider"
     provider_video_id "foobarid"
     url "http://video.foo"

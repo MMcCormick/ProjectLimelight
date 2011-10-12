@@ -190,6 +190,7 @@ class CoreObject
   # Searches the content attribute for [@foo] mentions.
   # For each found, check if user is in DB and add as UserMention to this object if found.
   def set_user_mentions
+    return unless @content_raw
     found_users = Array.new
     # Searches for strings contained between @[uid#username] delimiters. Returns an array of arrays of format [[uid,username],[uid,username]...].
     @content_raw.scan(/\@\[([0-9a-zA-Z]*)#([\w]*)\]/).map do |user|
@@ -210,6 +211,7 @@ class CoreObject
   # For each found, check if topic is in DB. If valid and not in DB, create it.
   # For each valid topic mention, add as TopicMention to this object.
   def set_topic_mentions
+    return unless @content_raw
     if @content_raw
       found_topics = Array.new
       # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].

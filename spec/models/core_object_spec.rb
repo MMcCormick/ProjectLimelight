@@ -9,32 +9,41 @@ describe CoreObject do
       FactoryGirl.build(:talk, :user_id => "").should_not be_valid
     end
 
-    it "should set topic mentions correctly based on string sent to set_topic_mentions" do
-      talk = FactoryGirl.create(:talk, :tagged_topics => "foo1, foo 2,   foo 3    ")
-      talk.topic_mentions[0].name.should == "foo1"
-      talk.topic_mentions[1].name.should == "foo 2"
-      talk.topic_mentions[2].name.should == "foo 3"
+    #TODO: topic and user mentions (see 2 alternate pending syntaxes below)
+    it "should set topic mentions"
+
+    it "should set user mentions" do
+      pending "need requirements from marc"
+      # code here won't get executed because the pending is before
     end
 
-    context "based on user" do
-      let(:user) { FactoryGirl.create(:user) }
-
-      it "should record user_snippet info correctly" do
-        talk = FactoryGirl.create(:talk, :user => user)
-        talk.user_snippet.id.should == user.id
-        talk.user_snippet.username.should == user.username
-        talk.user_snippet._public_id.should == user._public_id
-        talk.user_snippet.first_name.should == user.first_name
-      end
-
-      it "should set user mentions correctly based on content + users in db" do
-        talk = FactoryGirl.create(:talk, :content => "Foo [@#{user.username}]")
-        talk.user_mentions[0].username.should == user.username
-        talk.user_mentions[0].first_name.should == user.first_name
-        talk.user_mentions[0].last_name.should == user.last_name
-        talk.user_mentions[0].username.should == user.username
-      end
-    end
+    # OLD
+    #it "should set topic mentions correctly based on string sent to set_topic_mentions" do
+    #  talk = FactoryGirl.create(:talk, :tagged_topics => "foo1, foo 2,   foo 3    ")
+    #  talk.topic_mentions[0].name.should == "foo1"
+    #  talk.topic_mentions[1].name.should == "foo 2"
+    #  talk.topic_mentions[2].name.should == "foo 3"
+    #end
+    #
+    #context "based on user" do
+    #  let(:user) { FactoryGirl.create(:user) }
+    #
+    #  it "should record user_snippet info correctly" do
+    #    talk = FactoryGirl.create(:talk, :user => user)
+    #    talk.user_snippet.id.should == user.id
+    #    talk.user_snippet.username.should == user.username
+    #    talk.user_snippet._public_id.should == user._public_id
+    #    talk.user_snippet.first_name.should == user.first_name
+    #  end
+    #
+    #  it "should set user mentions correctly based on content + users in db" do
+    #    talk = FactoryGirl.create(:talk, :content => "Foo [@#{user.username}]")
+    #    talk.user_mentions[0].username.should == user.username
+    #    talk.user_mentions[0].first_name.should == user.first_name
+    #    talk.user_mentions[0].last_name.should == user.last_name
+    #    talk.user_mentions[0].username.should == user.username
+    #  end
+    #end
   end
 
   describe "to_param" do
@@ -257,6 +266,7 @@ describe CoreObject do
     end
   end
 
+  #TODO: feed
   describe "feed" do
     it "should take care of basically every piece of feed logic, fml"
   end

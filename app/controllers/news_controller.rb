@@ -3,13 +3,8 @@ class NewsController < ApplicationController
 
   def show
     @news = News.find_by_encoded_id(params[:id])
-    respond_to do |format|
-      if @news
-        format.html # show.html.erb
-        format.json { render json: @news }
-      else
-        not_found("News not found")
-      end
+    unless @news
+      not_found("Talk not found")
     end
   end
 
@@ -20,12 +15,13 @@ class NewsController < ApplicationController
 
     respond_to do |format|
       if @news.save
-        response = { :redirect => news_path(@news) }
-        format.html { redirect_to @news, notice: 'News was successfully created.' }
-        format.json { render json: response, status: :created, location: @news }
+        format.html { redirect_to @news }
+        response = build_ajax_response(:ok, news_path(@news), "News was successfully created")
+        format.json { render json: response, status: :created }
       else
         format.html { render action: "new" }
-        format.json { render json: @news.errors, status: :unprocessable_entity }
+        response = build_ajax_response(:error, nil, "News could not be created", @news.errors)
+        format.json { render json: response, status: :unprocessable_entity }
       end
     end
   end

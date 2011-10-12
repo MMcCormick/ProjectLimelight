@@ -67,8 +67,8 @@ class User
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login
 
-  validates :username, :presence => true
-  validates :username, :email, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 30 }
+  validates :username, :presence => true, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 15 }
+  validates :email, :uniqueness => { :case_sensitive => false }
 
   after_create :save_profile_image
 

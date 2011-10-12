@@ -27,27 +27,6 @@ describe PicturesController do
         response.response_code.should == 404
       end
     end
-
-    context "when json request" do
-      context "and picture is found" do
-        let(:picture) { FactoryGirl.create(:picture) }
-        before(:each ) do
-          Picture.should_receive(:find_by_encoded_id).with('1').and_return(picture)
-          get :show, :id => 1, :format => :json
-        end
-        it "should respond with success" do
-          response.should be_success
-        end
-        it "should respond with a json object where the id matches the picture id" do
-          JSON.parse(response.body)['_id'].should == picture.id.to_s
-        end
-      end
-      it "should respond with a 404 status if the picture is not found" do
-        Picture.should_receive(:find_by_encoded_id).and_return(false)
-        get :show, :id => 2, :format => :json
-        response.response_code.should == 404
-      end
-    end
   end
 
   describe "POST create" do
@@ -67,7 +46,7 @@ describe PicturesController do
       let(:picture) { mock_model(Picture).as_null_object }
       before(:each) do
         sign_in user
-        Picture.should_receive(:new).with("content" => "blah blah").and_return(picture)
+        Picture.should_receive(:new).with({"content" => "blah blah"}, {}).and_return(picture)
       end
 
       it "should create a new picture" do
@@ -90,6 +69,7 @@ describe PicturesController do
           post :create, :picture => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 201
           JSON.parse(response.body)['redirect'].should == picture_path(picture)
+          JSON.parse(response.body)['status'].should == "ok"
         end
       end
 
@@ -103,6 +83,7 @@ describe PicturesController do
         it "should return a json object with a 422 code (json)" do
           post :create, :picture => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 422
+          JSON.parse(response.body)['status'].should == "error"
         end
       end
     end

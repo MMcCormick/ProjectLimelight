@@ -3,13 +3,8 @@ class PicturesController < ApplicationController
 
   def show
     @picture = Picture.find_by_encoded_id(params[:id])
-    respond_to do |format|
-      if @picture
-        format.html # show.html.erb
-        format.json { render json: @picture }
-      else
-        not_found("Picture not found")
-      end
+    unless @picture
+      not_found("Picture not found")
     end
   end
 
@@ -20,12 +15,13 @@ class PicturesController < ApplicationController
 
     respond_to do |format|
       if @picture.save
-        response = { :redirect => picture_path(@picture) }
-        format.html { redirect_to @picture, notice: 'Picture was successfully created.' }
-        format.json { render json: response, status: :created, location: @picture }
+        format.html { redirect_to @picture }
+        response = build_ajax_response(:ok, picture_path(@picture), "Picture was successfully created")
+        format.json { render json: response, status: :created }
       else
         format.html { render action: "new" }
-        format.json { render json: @picture.errors, status: :unprocessable_entity }
+        response = build_ajax_response(:error, nil, "Picture could not be created", @picture.errors)
+        format.json { render json: response, status: :unprocessable_entity }
       end
     end
   end

@@ -40,12 +40,18 @@ describe User do
   end
 
   it "should reject long usernames" do
-    FactoryGirl.build(:user, :username => "thisisaverylongusernamethatisnotok").
+    FactoryGirl.build(:user, :username => "thisisaverylongusername").
       should_not be_valid
     end
 
   it "should reject short usernames" do
     FactoryGirl.build(:user, :username => "bo").
+      should_not be_valid
+  end
+
+  it "should reject duplicate usernames" do
+    FactoryGirl.create(:user, :username => "joey")
+    FactoryGirl.build(:user, :username => "joey").
       should_not be_valid
   end
 
@@ -118,6 +124,8 @@ describe User do
     end
 
   end
+
+  #TODO: roles
 
   describe "following users" do
     let(:this_user) { FactoryGirl.create(:user) }
@@ -205,7 +213,7 @@ describe User do
     end
   end
 
-  describe "following topics", :focus=>true do
+  describe "following topics" do
     let(:this_user) { FactoryGirl.create(:user) }
     let(:topic) { FactoryGirl.create(:topic) }
 
@@ -290,4 +298,7 @@ describe User do
       end
     end
   end
+
+  #TODO: find_for_database_authentication
+  #TODO: update_denorms (i can write this since i wrote the function, although i don't know what notifications will look like)
 end

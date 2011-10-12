@@ -97,7 +97,7 @@
     <%= render "shared/contribute", :id => 'top-contribute', :responding => nil %>
     <div id="form-submitting">Form submitting...</div>
     <div style="display: none">
-      <div id="static-data" data-d='{"oSearchUrl":"", "fetchEmbedUrl":"<%= embedly_fetch_path %>", "userAutoUrl":"http://localhost:5678/search","userAutoBucket":"u<%= current_user.username if signed_in? %>","topicAutoUrl":"http://localhost:5678/search"}'></div>
+      <div id="static-data" data-d='{"oSearchUrl":"", "fetchEmbedUrl":"<%= embedly_fetch_path %>", "userAutoUrl":"/soul-data/search","userAutoBucket":"u<%= current_user.username if signed_in? %>","topicAutoUrl":"/soul-data/search"}'></div>
       <%= render "core_object_shares/form" %>
 
       <div id="auth_box">

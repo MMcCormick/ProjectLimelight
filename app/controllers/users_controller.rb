@@ -82,16 +82,4 @@ class UsersController < ApplicationController
     end
   end
 
-  def autocomplete
-    @query = params[:q]
-    matches = User.where(:_id.in => current_user.following_users).where(:username => /#{@query}/i).asc(:username)
-    response = Array.new
-    matches.each do |match|
-      @user = match
-      response << {id: match.id, name: match.username, formattedItem: render_to_string(partial: 'autocomplete')}
-    end
-
-    render json: response
-  end
-
 end

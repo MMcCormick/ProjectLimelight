@@ -54,17 +54,5 @@ class TopicsController < ApplicationController
     render :partial => 'hover_tab', :topic => @topic
   end
 
-  def autocomplete
-    @query = params[:q]
-    slug = params[:q].to_url
-    matches = Topic.where(:aliases => /#{slug}/i).asc(:slug)
-    response = Array.new
-    matches.each do |match|
-      @topic = match
-      response << {id: match.id, name: match.name, formattedItem: render_to_string(partial: 'autocomplete')}
-    end
-
-    render json: response
-  end
 
 end

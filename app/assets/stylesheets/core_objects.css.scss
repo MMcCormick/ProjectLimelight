@@ -28,7 +28,7 @@
 
 form.core_object {
   $form-width: 500px;
-  $tag-width: 130px;
+  $tag-width: 140px;
   position: relative;
 
   h3 {
@@ -37,9 +37,10 @@ form.core_object {
   .help {
     font-size: 12px;
     font-style: italic;
-    margin: 5px 10px;
+    margin: 5px 0;
     span {
       color: #CD070E;
+      margin-left: 15px;
     }
   }
   .errors {
@@ -49,7 +50,6 @@ form.core_object {
   .field {
     input,
     textarea {
-      width: $form-width;
       font-size: 15px;
     }
     .mention-box {
@@ -60,12 +60,8 @@ form.core_object {
         height: 160px;
       }
     }
-    .tagDisplay {
+    .mention-display {
       left: $form-width - $tag-width;
-      input {
-        z-index: 130;
-        width: $tag-width;
-      }
     }
   }
   .group {

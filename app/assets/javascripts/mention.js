@@ -87,11 +87,19 @@ var fields = [];
 
 // Hooks
 (function($) {
-  $.fn.mentionable = function() {
-    return this.each(function(index, val) {
-      new $.Mentionable($(val), index);
-    });
-  }
+  $.fn.extend({
+    mentionable: function() {
+      return this.each(function(index, val) {
+        new $.Mentionable($(val), index);
+      });
+    },
+    mentionAdded: function(handler) {
+      return this.bind("mentionAdded", handler);
+    },
+    mentionRemoved: function(handler) {
+      return this.bind("mentionRemoved", handler);
+    }
+  })
 
   $.Mentionable = function(input, index) {
     var under = $('<div class="under"></div>'),
@@ -287,10 +295,13 @@ var fields = [];
 
       // Update highlighting
       this.highlight();
+
+      this.input.trigger('mentionAdded', data);
     }
 
     // Removes a mention from this field
     this.removeMention = function(index) {
+      this.input.trigger('mentionRemoved', index);
       this.mentions.splice(index, 1);
     }
 
@@ -309,7 +320,7 @@ var fields = [];
         bucket: settings[this.mode].bucket,
         bucketType: settings[this.mode].bucketType,
         extraParams: {"types[]":settings[this.mode].bucket},
-        dataType: 'jsonp',
+        dataType: 'json',
         delay: 75,
         formatItem: function(row, i, max) {
           return row.formattedItem;

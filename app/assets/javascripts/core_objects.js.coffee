@@ -31,7 +31,11 @@ jQuery ->
           at: 'right center'
       })
 
-  $('.mention').mentionable();
+  $('.mention').mentionable(
+  ).mentionAdded (crap, data)->
+    if data.bucketType == 'topic'
+      console.log data
+      console.log $(@)
 
   # Automatically click the "load more" button if it is visible for more than .5 secs
   if $('#load-more').length > 0 && isScrolledIntoView($('#load-more'), true)

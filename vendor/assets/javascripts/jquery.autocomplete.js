@@ -418,6 +418,8 @@
               data = data.results[options.bucket]
               $(data).each(function(i, val) {
                 val.formattedItem = formatItem(val)
+                val.bucketType = options.bucketType;
+                val.bucket = options.bucket;
               })
             }
             var parsed = options.parse && options.parse(data) || parse(data);

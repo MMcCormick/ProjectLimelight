@@ -1,8 +1,5 @@
 <%= form_for news, :html => { :multipart => true, :class => 'core_object ajax' } do |f| %>
-  <div class="help">
-    <span>red</span> = required field
-  </div>
-
+  <%= render "shared/mention_help" %>
   <%= render 'shared/error_messages', :object => f.object %>
 
   <div class="errors"></div>

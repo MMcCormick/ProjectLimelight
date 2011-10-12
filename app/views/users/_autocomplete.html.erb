@@ -1,5 +1,0 @@
-<div class="auto-user">
-  <% img = default_image_url(@user, [20, 20]) %>
-  <%= image_tag img[:url], img[:options] if img %>
-  <span><%= @user.username.gsub(/#{@query}/, '<b>\0</b>').html_safe %></span>
-</div>

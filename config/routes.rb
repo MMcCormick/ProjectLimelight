@@ -39,7 +39,6 @@ ProjectLimelight::Application.routes.draw do
 
   # Topics
   resources :topics
-  get 't/ac' => 'topics#autocomplete', :as => :topic_auto
   get 't/:id' => 'topics#show', :as => :topic
   get 't/:id/hover' => 'topics#hover' , :as => :topic_hover
   put 't/:id' => 'topics#update', :as => :update_topic
@@ -57,7 +56,7 @@ ProjectLimelight::Application.routes.draw do
   mount Resque::Server, :at => "/resque"
 
   # Soulmate api
-  mount Soulmate::Server, :at => "/soulmate"
+  mount Soulmate::Server, :at => "/soul-data"
 
   # Uploads
   match "/upload" => "uploads#create", :as => :upload_tmp
@@ -66,7 +65,6 @@ ProjectLimelight::Application.routes.draw do
   devise_for :users
   # Edit and update are temporary to test callbacks on User model
   resources :users, :only => [:show, :edit, :update]
-  get 'u/ac' => 'users#autocomplete', :as => :user_auto
   get ':id/following/users' => 'users#following_users', :as => :user_following_users
   get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
   get ':id/followers' => 'users#followers', :as => :user_followers

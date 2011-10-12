@@ -2,4 +2,3 @@ mongo:            mongod
 redis:            redis-server /usr/local/etc/redis.conf
 scheduler:        bundle exec rake resque:scheduler
 worker:           bundle exec rake resque:work QUEUE=soulmate_user,soulmate_topic,images
-soulmate:         soulmate-web --foreground --no-launch --redis=redis://localhost:6379/0

@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/hone/resque.git
-  revision: ee716837a8a871883378e82ea5e47297cb5eabc2
+  revision: 87f2981cebbffd2e57246d38a1ac4ff83679e83b
   branch: keepalive
   specs:
     resque (1.19.0)
@@ -302,8 +302,9 @@ GEM
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
     slop (2.1.0)
-    soulmate (0.0.4)
+    soulmate (0.0.5)
       json (~> 1.4.6)
+      multi_json (~> 1.0.3)
       rack-contrib
       redis (>= 2.0)
       redis (~> 2.1.1)

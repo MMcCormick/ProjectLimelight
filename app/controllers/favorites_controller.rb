@@ -3,18 +3,23 @@ class FavoritesController < ApplicationController
 
   def index
     @user = User.find_by_slug(params[:id])
+    unless @user
+      not_found("User not found")
+    end
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_favorites_path :p => page + 1
-    @favorite_ids = []
-    favs = CoreObject.where(:favorites => @user.id).only(:_id)
-    favs.each do |fav|
-      @favorite_ids << fav.id
-    end
 
     @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
-            :includes_ids => @favorite_ids,
+            :includes_ids => @user.favorites,
             :page => page
     })
+    respond_to do |format|
+      format.js {
+        html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
+        render json: { :event => "loaded_feed_page", :content => html } }
+      format.html # index.html.erb
+      format.json { render json: @core_objects }
+    end
   end
 
   def create

@@ -4,6 +4,7 @@ require 'spec_helper'
 # and talk is the least complex core object
 
 describe CoreObject do
+
   describe "core object creation" do
     it "should require a user_id" do
       FactoryGirl.build(:talk, :user_id => "").should_not be_valid
@@ -48,7 +49,7 @@ describe CoreObject do
 
   describe "to_param" do
     it "should return an encoded id followed by a name slug from to_param" do
-      talk = FactoryGirl.create(:talk, :content => "foo bar")
+      talk = FactoryGirl.create(:talk, :content_raw => "foo bar")
       talk.to_param.should == talk._public_id.to_i.to_s(36) + "-foo-bar"
     end
   end
@@ -137,7 +138,7 @@ describe CoreObject do
     end
   end
 
-  describe "favoriting" do
+  describe "favoriting", :focus=>true do
     let(:talk) { FactoryGirl.create(:talk) }
     let(:user) { FactoryGirl.create(:user) }
 
@@ -149,11 +150,10 @@ describe CoreObject do
 
     context "when the user has not already favorited the object" do
       describe "add_to_favorites" do
-        it "should record the user and update counts when passed a valid user" do
+        it "should record the user, update count, and call user.add_to_favorites when passed a valid user" do
+          user.should_receive(:add_to_favorites)
           expect {
-            expect {
-              talk.add_to_favorites(user)
-            }.to change(user, :favorites_count).by(1)
+            talk.add_to_favorites(user)
           }.to change(talk, :favorites_count).by(1)
           talk.favorites.should include(user.id)
           talk.save
@@ -161,10 +161,9 @@ describe CoreObject do
       end
       describe "remove_from_favorites" do
         it "should do nothing" do
+          user.should_not_receive(:remove_from_favorites)
           expect {
-            expect {
-              talk.remove_from_favorites(user)
-            }.to_not change(user, :favorites_count)
+            talk.remove_from_favorites(user)
           }.to_not change(talk, :favorites_count)
           talk.favorites.should_not include(user.id)
         end
@@ -177,11 +176,10 @@ describe CoreObject do
       end
 
       describe "add_to_favorites" do
-        it "should not change counts" do
+        it "should do nothing" do
+          user.should_not_receive(:add_to_favorites)
           expect {
-            expect {
-              talk.add_to_favorites(user)
-            }.to_not change(user, :favorites_count)
+            talk.add_to_favorites(user)
           }.to_not change(talk, :favorites_count)
         end
         it "should keep the user recorded" do
@@ -190,11 +188,10 @@ describe CoreObject do
         end
       end
       describe "remove_from_favorites" do
-        it "should remove the user and update counts" do
+        it "should remove the user and update count" do
+          user.should_receive(:remove_from_favorites)
           expect {
-            expect {
-              talk.remove_from_favorites(user)
-            }.to change(user, :favorites_count).by(-1)
+            talk.remove_from_favorites(user)
           }.to change(talk, :favorites_count).by(-1)
           talk.favorites.should_not include(user.id)
         end

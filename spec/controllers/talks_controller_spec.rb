@@ -2,30 +2,28 @@ require 'spec_helper'
 
 describe TalksController do
   describe "GET show" do
-    context "when html request" do
-      context "and talk is found" do
-        let(:talk) { mock('talk') }
-        before(:each) do
-          Talk.should_receive(:find_by_encoded_id).with('1').and_return(talk)
-          get :show, :id => 1
-        end
-
-        it "should assign the talk variable" do
-          assigns[:talk].should eq(talk)
-        end
-        it "should respond with success" do
-          response.should be_success
-        end
-        it "should render the show template" do
-          response.should render_template "show"
-        end
+    context "when talk is found" do
+      let(:talk) { mock('talk') }
+      before(:each) do
+        Talk.should_receive(:find_by_encoded_id).with('1').and_return(talk)
+        get :show, :id => 1
       end
 
-      it "should raise a 404 if the talk is not found" do
-        Talk.should_receive(:find_by_encoded_id).and_return(false)
-        get :show, :id => 2
-        response.response_code.should == 404
+      it "should assign the talk variable" do
+        assigns[:talk].should eq(talk)
       end
+      it "should respond with success" do
+        response.should be_success
+      end
+      it "should render the show template" do
+        response.should render_template "show"
+      end
+    end
+
+    it "should raise a 404 if the talk is not found" do
+      Talk.should_receive(:find_by_encoded_id).and_return(false)
+      get :show, :id => 2
+      response.response_code.should == 404
     end
 
     #Example of how to test json objects, just in case

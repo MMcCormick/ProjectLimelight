@@ -10,12 +10,11 @@ class UsersController < ApplicationController
             :page => page
     })
     respond_to do |format|
-      if request.xhr?
+      format.js {
         html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
-        format.json { render json: { :event => "loaded_feed_page", :content => html } }
-      else
-        format.html
-      end
+        render json: { :event => "loaded_feed_page", :content => html } }
+      format.html # index.html.erb
+      format.json { render json: @user }
     end
   end
 
@@ -73,12 +72,11 @@ class UsersController < ApplicationController
             :page => page
     })
     respond_to do |format|
-      if request.xhr?
+      format.js {
         html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
-        format.json { render json: { :event => "loaded_feed_page", :content => html } }
-      else
-        format.html
-      end
+        render json: { :event => "loaded_feed_page", :content => html } }
+      format.html # index.html.erb
+      format.json { render json: @core_objects }
     end
   end
 

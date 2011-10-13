@@ -3,13 +3,8 @@ class VideosController < ApplicationController
 
   def show
     @video = Video.find_by_encoded_id(params[:id])
-    respond_to do |format|
-      if @video
-        format.html # show.html.erb
-        format.json { render json: @video }
-      else
-        not_found("Video not found")
-      end
+    unless @video
+      not_found("Video not found")
     end
   end
 
@@ -18,12 +13,13 @@ class VideosController < ApplicationController
 
     respond_to do |format|
       if @video.save
-        response = { :redirect => video_path(@video) }
-        format.html { redirect_to @video, notice: 'Video was successfully created.' }
-        format.json { render json: response, status: :created, location: @video }
+        format.html { redirect_to @video }
+        response = build_ajax_response(:ok, video_path(@video), "Video was successfully created")
+        format.json { render json: response, status: :created }
       else
         format.html { render action: "new" }
-        format.json { render json: @video.errors, status: :unprocessable_entity }
+        response = build_ajax_response(:error, nil, "Video could not be created", @video.errors)
+        format.json { render json: response, status: :unprocessable_entity }
       end
     end
   end

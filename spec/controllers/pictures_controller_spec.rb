@@ -2,30 +2,28 @@ require 'spec_helper'
 
 describe PicturesController do
   describe "GET show" do
-    context "when html request" do
-      context "and picture is found" do
-        let(:picture) { mock('picture') }
-        before(:each) do
-          Picture.should_receive(:find_by_encoded_id).with('1').and_return(picture)
-          get :show, :id => 1
-        end
-
-        it "should assign the picture variable" do
-          assigns[:picture].should eq(picture)
-        end
-        it "should respond with success" do
-          response.should be_success
-        end
-        it "should render the show template" do
-          response.should render_template "show"
-        end
+    context "when picture is found" do
+      let(:picture) { mock('picture') }
+      before(:each) do
+        Picture.should_receive(:find_by_encoded_id).with('1').and_return(picture)
+        get :show, :id => 1
       end
 
-      it "should raise a 404 if the picture is not found" do
-        Picture.should_receive(:find_by_encoded_id).and_return(false)
-        get :show, :id => 2
-        response.response_code.should == 404
+      it "should assign the picture variable" do
+        assigns[:picture].should eq(picture)
       end
+      it "should respond with success" do
+        response.should be_success
+      end
+      it "should render the show template" do
+        response.should render_template "show"
+      end
+    end
+
+    it "should raise a 404 if the picture is not found" do
+      Picture.should_receive(:find_by_encoded_id).and_return(false)
+      get :show, :id => 2
+      response.response_code.should == 404
     end
   end
 

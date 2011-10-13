@@ -1,7 +1,7 @@
 // Wait for Document
 $(function() {
 
-  // Perform an action. .ac for POST actions, .acg for GET actions.
+  // Perform an action.
   $('.ac').live('click', function(event) {
     $currentTarget = $this;
 

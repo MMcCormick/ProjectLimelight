@@ -77,6 +77,7 @@
     $payload['url'] = params.url;
 
     amplify.request($action, $payload, function (data) {
+      console.log(data)
       appUpdate(data);
       if (success) {
         success({'url': params.url}, data);

@@ -299,6 +299,63 @@ describe User do
     end
   end
 
+  describe "favoriting" do
+    let(:talk) { FactoryGirl.create(:talk) }
+    let(:user) { FactoryGirl.create(:user) }
+
+    it "should respond correctly to has_favorite?" do
+      user.has_favorite?(talk.id).should_not be_true
+      user.add_to_favorites(talk)
+      user.has_favorite?(talk.id).should be_true
+    end
+
+    context "when the user has not already favorited the object" do
+      describe "add_to_favorites" do
+        it "should record the object and update count when passed a valid object" do
+          expect {
+            user.add_to_favorites(talk)
+          }.to change(user, :favorites_count).by(1)
+          user.favorites.should include(talk.id)
+          user.save
+        end
+      end
+      describe "remove_from_favorites" do
+        it "should do nothing" do
+          expect {
+            talk.remove_from_favorites(user)
+          }.to_not change(user, :favorites_count)
+          user.favorites.should_not include(talk.id)
+        end
+      end
+    end
+
+    context "when the user has already favorited the object" do
+      before(:each) do
+        user.add_to_favorites(talk)
+      end
+
+      describe "add_to_favorites" do
+        it "should not change count" do
+          expect {
+            user.add_to_favorites(talk)
+          }.to_not change(user, :favorites_count)
+        end
+        it "should keep the user recorded" do
+          user.add_to_favorites(talk)
+          user.favorites.should include(talk.id)
+        end
+      end
+      describe "remove_from_favorites" do
+        it "should remove the user and update count" do
+          expect {
+            user.remove_from_favorites(talk)
+          }.to change(user, :favorites_count).by(-1)
+          user.favorites.should_not include(talk.id)
+        end
+      end
+    end
+  end
+
   #TODO: find_for_database_authentication
   #TODO: update_denorms (i can write this since i wrote the function, although i don't know what notifications will look like)
 end

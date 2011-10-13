@@ -101,7 +101,7 @@ class CoreObject
     unless favorited_by? user.id
       self.favorites << user.id
       self.favorites_count += 1
-      user.favorites_count += 1
+      user.add_to_favorites(self)
     end
   end
 
@@ -109,7 +109,7 @@ class CoreObject
     if favorited_by? user.id
       self.favorites.delete(user.id)
       self.favorites_count -= 1
-      user.favorites_count -= 1
+      user.remove_from_favorites(self)
     end
   end
 

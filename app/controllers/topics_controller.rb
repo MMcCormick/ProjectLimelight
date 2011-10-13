@@ -20,13 +20,11 @@ class TopicsController < ApplicationController
     })
 
     respond_to do |format|
-      if request.xhr?
+      format.js {
         html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
-        format.json { render json: { :event => "loaded_feed_page", :content => html } }
-      else
-        format.html # show.html.erb
-        format.json { render json: @topic }
-      end
+        render json: { :event => "loaded_feed_page", :content => html } }
+      format.html # index.html.erb
+      format.json { render json: @topic }
     end
   end
 

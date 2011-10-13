@@ -2,51 +2,28 @@ require 'spec_helper'
 
 describe VideosController do
   describe "GET show" do
-    context "when html request" do
-      context "and video is found" do
-        let(:video) { mock('video') }
-        before(:each) do
-          Video.should_receive(:find_by_encoded_id).with('1').and_return(video)
-          get :show, :id => 1
-        end
-
-        it "should assign the video variable" do
-          assigns[:video].should eq(video)
-        end
-        it "should respond with success" do
-          response.should be_success
-        end
-        it "should render the show template" do
-          response.should render_template "show"
-        end
+    context "when video is found" do
+      let(:video) { mock('video') }
+      before(:each) do
+        Video.should_receive(:find_by_encoded_id).with('1').and_return(video)
+        get :show, :id => 1
       end
 
-      it "should raise a 404 if the video is not found" do
-        Video.should_receive(:find_by_encoded_id).and_return(false)
-        get :show, :id => 2
-        response.response_code.should == 404
+      it "should assign the video variable" do
+        assigns[:video].should eq(video)
+      end
+      it "should respond with success" do
+        response.should be_success
+      end
+      it "should render the show template" do
+        response.should render_template "show"
       end
     end
 
-    context "when json request" do
-      context "and video is found" do
-        let(:video) { FactoryGirl.create(:video) }
-        before(:each ) do
-          Video.should_receive(:find_by_encoded_id).with('1').and_return(video)
-          get :show, :id => 1, :format => :json
-        end
-        it "should respond with success" do
-          response.should be_success
-        end
-        it "should respond with a json object where the id matches the video id" do
-          JSON.parse(response.body)['_id'].should == video.id.to_s
-        end
-      end
-      it "should respond with a 404 status if the video is not found" do
-        Video.should_receive(:find_by_encoded_id).and_return(false)
-        get :show, :id => 2, :format => :json
-        response.response_code.should == 404
-      end
+    it "should raise a 404 if the video is not found" do
+      Video.should_receive(:find_by_encoded_id).and_return(false)
+      get :show, :id => 2
+      response.response_code.should == 404
     end
   end
 
@@ -67,7 +44,7 @@ describe VideosController do
       let(:video) { mock_model(Video).as_null_object }
       before(:each) do
         sign_in user
-        Video.should_receive(:new).with("content" => "blah blah").and_return(video)
+        Video.should_receive(:new).with({"content" => "blah blah"}, {}).and_return(video)
       end
 
       it "should create a new video" do
@@ -90,6 +67,7 @@ describe VideosController do
           post :create, :video => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 201
           JSON.parse(response.body)['redirect'].should == video_path(video)
+          JSON.parse(response.body)['status'].should == "ok"
         end
       end
 
@@ -103,6 +81,7 @@ describe VideosController do
         it "should return a json object with a 422 code (json)" do
           post :create, :video => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 422
+          JSON.parse(response.body)['status'].should == "error"
         end
       end
     end

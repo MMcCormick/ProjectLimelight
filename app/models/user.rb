@@ -46,6 +46,7 @@ class User
   field :following_topics_count, :type => Integer, :default => 0
   field :following_topics, :default => []
   field :followers_count, :type => Integer, :default => 0
+  field :favorites, :default => []
   field :favorites_count, :type => Integer, :default => 0
   field :reposts_count, :type => Integer, :default => 0
   field :unread_notification_count, :default => 0
@@ -121,10 +122,6 @@ class User
   end
 
   ###
-  # END ROLES
-  ###
-
-  ###
   # FOLLOWING
   ###
 
@@ -198,8 +195,26 @@ class User
   end
 
   ###
-  # END FOLLOWING
+  # FAVORITING
   ###
+
+  def has_favorite?(object_id)
+    favorites.include? object_id
+  end
+
+  def add_to_favorites(object)
+    unless has_favorite? object.id
+      self.favorites << object.id
+      self.favorites_count += 1
+    end
+  end
+
+  def remove_from_favorites(object)
+    if has_favorite? object.id
+      self.favorites.delete(object.id)
+      self.favorites_count -= 1
+    end
+  end
 
   def fullname
     "#{first_name} #{last_name}"

@@ -4,8 +4,7 @@
     <a href="<%= edit_user_path @user %>">Edit</a>
     <div class="clear"></div>
     
-    <% img = default_image_url(@user, [85, 65]) %>
-    <%= image_tag img[:url], img[:options] if img %>
+    <%= image_tag user_default_picture_path(@user, :d => [85, 65]), :style => "max-width: 85px;" %>
 
     <div class="right">
         <div class="stat followers">

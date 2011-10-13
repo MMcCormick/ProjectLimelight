@@ -65,11 +65,14 @@ ProjectLimelight::Application.routes.draw do
   devise_for :users
   # Edit and update are temporary to test callbacks on User model
   resources :users, :only => [:show, :edit, :update]
-  get ':id/following/users' => 'users#following_users', :as => :user_following_users
-  get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
-  get ':id/followers' => 'users#followers', :as => :user_followers
-  get ':id/feed' => 'users#feed', :as => :user_feed
-  get ':id/hover' => 'users#hover' , :as => :user_hover
+  scope 'users' do
+    get ':id/following/users' => 'users#following_users', :as => :user_following_users
+    get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
+    get ':id/followers' => 'users#followers', :as => :user_followers
+    get ':id/feed' => 'users#feed', :as => :user_feed
+    get ':id/hover' => 'users#hover' , :as => :user_hover
+    get ':id/picture' => 'users#default_picture', :as => :user_default_picture
+  end
 
   # Home
   root :to => "pages#home"

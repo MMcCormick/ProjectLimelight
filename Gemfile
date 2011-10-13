@@ -12,7 +12,7 @@ gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
 gem 'frontend-helpers'
-gem 'cells' # Components
+gem 'cells', '3.6.7' # Components
 gem 'yajl-ruby' # json processing
 gem 'redcarpet' # Markdown
 gem 'fog' # Cloud support (amazon s3, etc)
@@ -31,6 +31,7 @@ gem "airbrake" # Exception notification
 gem 'rpm_contrib', :git => 'git://github.com/kenn/rpm_contrib.git', :branch => 'mongo140compat' # extra instrumentation for the new relic rpm agent
 gem 'newrelic_rpm' # performance / server monitoring
 gem 'soulmate' # Redis based autocomplete storage
+gem 'dalli' # memcache
 
 group :assets do
   gem 'compass', '0.12.alpha.0'

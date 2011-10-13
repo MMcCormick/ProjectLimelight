@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :only => [:edit]
+  include ImageHelper
 
   def show
     @user = User.find_by_slug(params[:id])
@@ -34,6 +35,16 @@ class UsersController < ApplicationController
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def default_picture
+    user = User.find_by_slug(params[:id])
+    dimensions = params[:d]
+    style = params[:s]
+
+    url = default_image_url(user, dimensions, style)
+
+    render :text => open(url, "rb").read, :stream => true
   end
 
   def hover

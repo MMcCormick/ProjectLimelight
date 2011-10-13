@@ -41,7 +41,6 @@
   appUpdate = function(params) {
     // if there's an event, publish it!
     if (params.event) {
-      console.log('Event: ' + params.event);
       amplify.publish(params.event, params);
     }
 
@@ -71,8 +70,6 @@
    * Main site-wide action functions.
    */
   doAction = function(params, success, error) {
-    console.log('Action:' + params.url);
-
     var $action = params.requestType.toLowerCase() + 'Action';
     var $payload = params.payload ? params.payload : {};
     $payload['url'] = params.url;

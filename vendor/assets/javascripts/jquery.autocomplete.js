@@ -445,7 +445,7 @@
               {
                 $(tmpData[bucket]).each(function(i2, val) {
                   // If we have not used this id yet
-                  if (used_ids.indexOf(val.id) == -1)
+                  if (!$.inArray(used_ids, val.id))
                   {
                     used_ids.push(val.id);
                     val.formattedItem = formatItem(val);

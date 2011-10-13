@@ -43,8 +43,6 @@
     // Set Loading
     showLoading();
 
-    console.log('Page change:' + params.url);
-
     // Add the format parameter (xml) with special case for homepage
     var $path = params.url.split('.php');
     $path = $path[$path.length - 1];

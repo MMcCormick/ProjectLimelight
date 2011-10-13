@@ -22,7 +22,6 @@ $(function() {
       data: form.serializeArray(),
       dataType: 'json',
       beforeSend: function() {
-        console.log('Form submit');
         form.find('.errors').html('').hide();
         form.find('input, textarea').attr('disabled', true);
         $('#form-submitting').fadeIn(300);
@@ -40,8 +39,6 @@ $(function() {
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR)
-
         $('#form-submitting').fadeOut(300);
         form.find('input, textarea').removeAttr('disabled');
 

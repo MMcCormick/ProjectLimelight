@@ -14,8 +14,6 @@ jQuery ->
       $('#static-data').data('d').fetchEmbedUrl
       url: self.val()
       (data) ->
-        console.log(data)
-
         switch data.embedly.provider_name
           when 'YouTube'
             video_id = data.embedly.payload.video.data.id
@@ -38,8 +36,6 @@ jQuery ->
           when 'Dailymotion'
             video_id_parts = $(data.embedly.payload.html).attr('src').split('/')
             video_id = video_id_parts[video_id_parts.length-1]
-            console.log(video_id_parts)
-            console.log(video_id)
             $('#new_video .preview').find('.content').html("<iframe
                                                                     frameborder='0'
                                                                     width='220'
@@ -49,7 +45,7 @@ jQuery ->
             $('#new_video .preview').show(200)
           else
             # TODO: Handle this...
-            console.log 'Embed link could not be created...'
+            foo = 'bar'
 
         $('#video_url').val(data.embedly.url)
         $('#video_content').focus().val(data.embedly.description)

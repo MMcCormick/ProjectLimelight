@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/hone/resque.git
-  revision: 87f2981cebbffd2e57246d38a1ac4ff83679e83b
+  revision: 22af2cce8bc7b6b73c727927ae68e6cafdede946
   branch: keepalive
   specs:
     resque (1.19.0)
@@ -157,7 +157,7 @@ GEM
     hike (1.2.1)
     hirefireapp (0.0.5)
     i18n (0.6.0)
-    jquery-rails (1.0.14)
+    jquery-rails (1.0.16)
       railties (~> 3.0)
       thor (~> 0.14)
     json (1.4.6)

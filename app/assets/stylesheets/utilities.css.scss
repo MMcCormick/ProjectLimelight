@@ -168,24 +168,59 @@
 
 .ac_results {
   @include border-radius(2px);
-  @include single-box-shadow(#AAA, 1px, 1px, 3px);
+  @include single-box-shadow(#777, 2px, 2px, 4px);
   width: 100%;
   background: #FFFFFF;
-  border: 2px solid #AAA;
-  padding: 5px;
+  padding: 0;
   display: none;
   color: #AAA;
+  border: 1px solid #DDD;;
+  overflow: hidden;
 
-  .ac_odd {
-    background: #FFF;
+  ul {
+    overflow: hidden;
   }
-  .ac_over {
-    background: #8BCFF2;
-    color: #555;
+  .sublist {
+    position: relative;
+    padding: 0;
+    border-top: 1px solid #DDD;
+    margin-top: -1px;
+    ul {
+      margin: 0 0 0 85px;
+    }
+  }
+  .sublist-head {
+    position: absolute;
+    top: 3px;
+    left: 0px;
+    color: #AAA;
+    cursor: default;
+    width: 73px;
+    text-align: right;
+    font-size: 10px;
+  }
+  .sublist-content {
+    padding: 6px 0;
+    border-left: 1px solid #DDD;
+  }
+  .ac_even,
+  .ac_odd {
+    position: relative;
+    background: #FFF;
+    margin-left: -1px;
   }
   strong {
-    color: #000;
+    color: #333;
     font-weight: normal;
+  }
+  .ac_over {
+    @include single-box-shadow(#888, 1px, 1px, 3px);
+    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1551A5));
+    color: #DFDFDF;
+    z-index: 100;
+    strong {
+      color: #FFF;
+    }
   }
 }
 
@@ -197,13 +232,14 @@
     @include border-radius(2px);
     position: absolute;
     top: 2px;
-    left: 0;
+    left: 4px;
     padding: 1px;
     background: #FFF;
+    max-width: 25px;
   }
   .name {
     position: relative;
     font-size: 15px;
-    padding: 10px 0;
+    padding: 8px 0 7px 0;
   }
 }

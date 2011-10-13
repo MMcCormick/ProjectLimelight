@@ -73,10 +73,10 @@ var settings = [
     trigger       : '#',
     autocomplete  : $('#static-data').data('d').topicAutoUrl,
     match         : '<b>$1</b>',
-    selectFirst   : false,
+    selectFirst   : true,
     mustMatch     : false,
     highlight     : 'topic-mention',
-    allowNew      : true,
+    allowNew      : false,
     bucket        : 'topic',
     bucketType    : 'topic'
   }
@@ -114,21 +114,21 @@ var fields = [];
     input.bind('keypress',
             function(e) { // Handle keypresses within mentionField fields that need to fire before keyup()
               var keyCode = catchKey(e);
-              // Intercept enter key
+              // Intercept enter key and tab keys
               if ((keyCode == 13 || keyCode == 9) && mentionField.state >= 0) {
-                active = mentionField.autocompleteLoaded && $('.ac_results .ac_over').length > 0 ? $('.ac_results .ac_over') : false;
-                if (active) {
-                  active.click();
-                } else if (settings[mentionField.mode].allowNew) {
-                  mentionField.addMention(mentionField.state - settings[mentionField.mode].trigger.length, mentionField.caret, null, mentionField.type, null);
-                }
                 if (e.preventDefault) {
                   e.preventDefault();
                 } else {
                   e.cancelBubble = true;
                   e.returnValue = false;
                 }
-                mentionField.input.focus();
+
+                active = mentionField.autocompleteLoaded && $('.ac_results .ac_over').length > 0 ? $('.ac_results .ac_over') : false;
+                if (active) {
+                  active.click();
+                } else if (settings[mentionField.mode].allowNew) {
+                  mentionField.addMention(mentionField.state - settings[mentionField.mode].trigger.length, mentionField.caret, null, mentionField.type, null);
+                }
               }
             }).bind('keydown',
             function(e) { // Handle keypresses within mentionField fields that need to fire before keyup() but don't fire on keypress()
@@ -308,10 +308,21 @@ var fields = [];
     // Loads autocompleter
     this.load_autocomplete = function() {
       var mention = this
+
+      if(settings[this.mode].bucketType == 'user')
+      {
+        var extraParams = {"types[]":[settings[this.mode].bucket, "user"]}
+      }
+      else
+      {
+        var extraParams = {"types[]":"topic"}
+      }
+
       this.autocomplete.autocomplete(settings[this.mode].autocomplete, {
         minChars: 2,
-        width: this.input.width(),
+        width: 500,
         matchContains: true,
+        matchSubset: false,
         autoFill: false,
         selectFirst: settings[this.mode].selectFirst,
         mustMatch: settings[this.mode].mustMatch,
@@ -319,7 +330,7 @@ var fields = [];
         max: 10,
         bucket: settings[this.mode].bucket,
         bucketType: settings[this.mode].bucketType,
-        extraParams: {"types[]":settings[this.mode].bucket},
+        extraParams: extraParams,
         dataType: 'json',
         delay: 75,
         formatItem: function(row, i, max) {
@@ -334,7 +345,15 @@ var fields = [];
       }).result(function(event, data, formatted) {
         if (data)
         {
-          mention.addMention(mention.state - settings[mention.mode].trigger.length, mention.caret, data.id, data.term, data);
+          var passData = null,
+              passId = null;
+          if (data.id)
+          {
+            passData = data;
+            passId = data.id;
+          }
+
+          mention.addMention(mention.state - settings[mention.mode].trigger.length, mention.caret, passId, data.term, passData);
         }
       });
       this.autocompleteLoaded = true;

@@ -36,7 +36,7 @@ namespace :soulmate do
           following_processed += 1
           soulmate_data << user_nugget(following_user)
         end
-        Soulmate::Loader.new("#{user.username}f").load(soulmate_data)
+        Soulmate::Loader.new("#{user.id.to_s}").load(soulmate_data)
       end
     end
 

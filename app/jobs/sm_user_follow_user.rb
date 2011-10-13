@@ -9,7 +9,7 @@ class SmUserFollowUser
   @queue = :soulmate_user
 
   def initialize(user, following)
-    Soulmate::Loader.new("#{user.username}f").add(user_nugget(following))
+    Soulmate::Loader.new("#{user.id.to_s}").add(user_nugget(following))
   end
 
   def self.perform(user_id, following_user_id)

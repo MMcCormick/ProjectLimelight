@@ -14,11 +14,17 @@ class FavoritesController < ApplicationController
             :page => page
     })
     respond_to do |format|
-      format.js {
-        html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
-        render json: { :event => "loaded_feed_page", :content => html } }
-      format.html # index.html.erb
-      format.json { render json: @core_objects }
+      #format.js {
+      #  html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
+      #  render json: { :event => "loaded_feed_page", :content => html } }
+      #format.html # index.html.erb
+      if request.xhr?
+        html = render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
+        format.json { render json: { :event => "loaded_feed_page", :content => html } }
+      else
+        format.html # index.html.erb
+        format.json { render json: @core_objects }
+      end
     end
   end
 

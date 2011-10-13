@@ -19,17 +19,29 @@ describe FavoritesController do
         response.response_code.should == 404
       end
 
-      it "should set the user, more_path, and core_objects variables" do
-        talk = mock('talk')
-        User.should_receive(:find_by_slug).and_return(user)
-        CoreObject.should_receive(:feed).and_return(talk)
-        get :index, :id => "foobar", :p => "2"
-        assigns[:user].should eq(user)
-        assigns[:more_path].should == (user_favorites_path :p => 3)
-        assigns[:core_objects].should == talk
-      end
+      context "with mock talk" do
+        let(:talk) { mock('talk') }
+        before(:each) do
+          User.should_receive(:find_by_slug).with("foobar").and_return(user)
+          CoreObject.should_receive(:feed).and_return(talk)
+        end
 
-      it "should respond appropriately to different types of requests"
+        it "should set the user, more_path, and core_objects variables" do
+          get :index, :id => "foobar", :p => "2"
+          assigns[:user].should eq(user)
+          assigns[:more_path].should == (user_favorites_path :p => 3)
+          assigns[:core_objects].should == talk
+        end
+        it "should render index.html on html request" do
+          get :index, :id => "foobar", :p => 2
+          response.should render_template :index
+        end
+        it "should respond with a json object w/ loaded_feed_page event on xhr request" do
+          xhr :get, :index, :id => "foobar", :p => 2
+          JSON.parse(response.body)['event'].should == "loaded_feed_page"
+        end
+        it "should respond with a json object containing the feed on xhr request"
+      end
     end
   end
 

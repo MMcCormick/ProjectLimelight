@@ -71,7 +71,8 @@ class User
   validates :username, :presence => true, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 15 }
   validates :email, :uniqueness => { :case_sensitive => false }
 
-  after_create :save_profile_image
+  after_create :add_to_soulmate, :save_profile_image
+  before_destroy :remove_from_soulmate
 
   # Return the users slug instead of their ID
   def to_param
@@ -161,7 +162,7 @@ class User
       self.following_users << user.id
       self.following_users_count += 1
       user.followers_count += 1
-      Resque.enqueue(SoulmateUserFollowing, self.id.to_s)
+      Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
     end
   end
 
@@ -170,7 +171,7 @@ class User
       self.following_users.delete(user.id)
       self.following_users_count -= 1
       user.followers_count -= 1
-      Resque.enqueue(SoulmateUserFollowing, self.id.to_s)
+      Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
     end
   end
 
@@ -217,7 +218,15 @@ class User
   end
 
   def fullname
-    "#{first_name} #{last_name}"
+    if first_name and last_name then "#{first_name} #{last_name}" else nil end
+  end
+
+  def add_to_soulmate
+    Resque.enqueue(SmCreateUser, id.to_s)
+  end
+
+  def remove_from_soulmate
+    Resque.enqueue(SmDestroyUser, id.to_s)
   end
 
   protected

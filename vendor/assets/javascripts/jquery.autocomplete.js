@@ -371,10 +371,19 @@
     ;
 
     function receiveData(q, data) {
-      if (data && data.length && hasFocus) {
+      var length = 0;
+      for (bucket in data)
+      {
+        if (data[bucket].length)
+        {
+          length = 1
+        }
+      }
+
+      if (data && length && hasFocus) {
         stopLoading();
         select.display(data, q);
-        autoFill(q, data[0].value);
+//        autoFill(q, data[0].value);
         select.show();
       } else {
         hideResultsNow();
@@ -411,17 +420,43 @@
             term: lastWord(term),
             limit: options.max
           }, extraParams),
-          success: function(data) {
+          success: function(acData) {
             // Used for soulmate redis store
             if (options.bucket)
             {
-              data = data.results[options.bucket]
-              $(data).each(function(i, val) {
-                val.formattedItem = formatItem(val)
-                val.bucketType = options.bucketType;
-                val.bucket = options.bucket;
-              })
+              var tmpData,
+                  data;
+              tmpData = acData.results[options.bucket];
+              if (options.bucketType == 'user')
+              {
+                tmpData = {'FOLLOWING': tmpData, 'OTHER USERS':acData.results['user']}
+                data = {'FOLLOWING':[], 'OTHER USERS':[]}
+              }
+              else
+              {
+                tmpData = {'CREATE':[{'id':0,'term':acData.term,'showName':'create a new topic: <strong>'+acData.term+'</strong>'}], 'TOPICS': tmpData}
+                data = {'CREATE':[], 'TOPICS': []}
+                console.log(tmpData);
+
+              }
+
+              var used_ids = [];
+              for (bucket in tmpData)
+              {
+                $(tmpData[bucket]).each(function(i2, val) {
+                  // If we have not used this id yet
+                  if (used_ids.indexOf(val.id) == -1)
+                  {
+                    used_ids.push(val.id);
+                    val.formattedItem = formatItem(val);
+                    val.bucketType = options.bucketType;
+                    val.bucket = options.bucket;
+                    data[bucket].push(val);
+                  }
+                })
+              }
             }
+
             var parsed = options.parse && options.parse(data) || parse(data);
             cache.add(term, parsed);
             success(term, parsed);
@@ -445,38 +480,47 @@
       {
         if (data.data.image)
         {
-          image = '<img width="30" height="30" src="'+data.data.image+'" />';
+          image = '<img width="25" src="'+data.data.image+'" />';
         }
         return '<div class="auto-user">'+image+'<div class="name">'+data.term+'</div></div>';
       }
       else if (options.bucketType == 'topic')
       {
         var image = '',
-            types = '';
-        if (data.data.image)
+            types = '',
+            name = data.term;
+        if (data.data && data.data.image)
         {
-          image = '<img width="30" height="30" src="'+data.data.image+'" />';
+          image = '<img width="25" src="'+data.data.image+'" />';
         }
-        if (data.data.types)
+        if (data.data && data.data.types)
         {
           types = '<div class="types">'+data.data.types.join(', ')+'</div>';
         }
-        return '<div class="auto-topic">'+image+'<div class="name '+(types != '' ? 'with-type' : '')+'">'+data.term+'</div>'+types+'</div>';
+        if (data.showName)
+        {
+          name = data.showName;
+        }
+        return '<div class="auto-topic">'+image+'<div class="name '+(types != '' ? 'with-type' : '')+'">'+name+'</div>'+types+'</div>';
       }
     }
 
     function parse(data) {
-      var parsed = [];
-      $.each(data, function() {
-        var row = this;
-        if (row) {
-          parsed[parsed.length] = {
-            data: row,
-            value: row,
-            result: options.formatResult && options.formatResult(row) || row
-          };
-        }
-      })
+      parsed = {}
+      for (bucket in data)
+      {
+        parsed[bucket] = []
+        $.each(data[bucket], function() {
+          var row = this;
+          if (row) {
+            parsed[bucket].push({
+              data: row,
+              value: row,
+              result: options.formatResult && options.formatResult(row) || row
+            });
+          }
+        })
+      }
 
       return parsed;
     }
@@ -703,6 +747,7 @@
                 if (target(event).nodeName && target(event).nodeName.toUpperCase() == 'LI') {
                   active = $("li", list).removeClass(CLASSES.ACTIVE).index(target(event));
                   $(target(event)).addClass(CLASSES.ACTIVE);
+                  $('.sublist-head').removeClass(CLASSES.ACTIVE);
                 }
               }).click(
               function(event) {
@@ -773,21 +818,31 @@
 
     function fillList() {
       list.empty();
-      var max = limitNumberOfItems(data.length);
-      for (var i = 0; i < max; i++) {
-        if (!data[i])
+      for (bucket in data)
+      {
+        if (data[bucket].length == 0)
           continue;
 
-        var formatted = options.formatItem(data[i].data, i + 1, max, data[i].value, term);
-        if (formatted === false)
-          continue;
-        var li = $("<li/>").html(options.highlight(formatted, term)).addClass(i % 2 == 0 ? "ac_even" : "ac_odd").appendTo(list)[0];
-        $.data(li, "ac_data", data[i]);
-      }
-      listItems = list.find("li");
-      if (options.selectFirst) {
-        listItems.slice(0, 1).addClass(CLASSES.ACTIVE);
-        active = 0;
+        var sublist = $("<ul/>").addClass('sublist').appendTo(list);
+        $("<li/>").html(bucket).addClass('sublist-head').appendTo(sublist);
+        var sublist_content = $("<ul/>").addClass('sublist-content').appendTo(sublist);
+        var max = limitNumberOfItems(data[bucket].length);
+        for (var i = 0; i < max; i++) {
+          if (!data[bucket][i])
+            continue;
+
+          var formatted = options.formatItem(data[bucket][i].data, i + 1, max, data[bucket][i].value, term);
+          if (formatted === false)
+            continue;
+          var li = $("<li/>").html(options.highlight(formatted, term)).addClass(i % 2 == 0 ? "ac_even" : "ac_odd").appendTo(sublist_content)[0];
+          $.data(li, "ac_data", data[bucket][i]);
+        }
+        listItems = list.find("li:not(.sublist-head)");
+        if (options.selectFirst) {
+          listItems.slice(0, 1).addClass(CLASSES.ACTIVE);
+          active = 0;
+        }
+
       }
       // apply bgiframe if available
       if ($.fn.bgiframe)

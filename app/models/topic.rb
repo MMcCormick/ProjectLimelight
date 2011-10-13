@@ -35,7 +35,8 @@ class Topic
   attr_accessible :name, :summary
 
   before_create :add_alias, :set_user_snippet
-  after_create :regenerate_soulmate
+  after_create :add_to_soulmate
+  before_destroy :remove_from_soulmate
 
   # Return the topic slug instead of its ID
   def to_param
@@ -60,9 +61,12 @@ class Topic
     self[_public_id].to_i.to_s(36)
   end
 
-  # Puts a resque job in to regenerate the redis cache of topics for autocompletes
-  def regenerate_soulmate
-    Resque.enqueue(SoulmateTopic)
+  def add_to_soulmate
+    Resque.enqueue(SmCreateTopic, id.to_s)
+    end
+
+  def remove_from_soulmate
+    Resque.enqueue(SmDestroyTopic, id.to_s)
   end
 
   class << self

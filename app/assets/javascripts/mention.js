@@ -129,6 +129,8 @@ var fields = [];
                 } else if (settings[mentionField.mode].allowNew) {
                   mentionField.addMention(mentionField.state - settings[mentionField.mode].trigger.length, mentionField.caret, null, mentionField.type, null);
                 }
+
+                mentionField.input.focus().setCursorPosition(mentionField.caret);
               }
             }).bind('keydown',
             function(e) { // Handle keypresses within mentionField fields that need to fire before keyup() but don't fire on keypress()
@@ -332,7 +334,7 @@ var fields = [];
         bucketType: settings[this.mode].bucketType,
         extraParams: extraParams,
         dataType: 'json',
-        delay: 75,
+        delay: 150,
         formatItem: function(row, i, max) {
           return row.formattedItem;
         },

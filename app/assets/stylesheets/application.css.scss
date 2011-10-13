@@ -72,8 +72,8 @@ input, textarea {
 
 #header {
     @include single-box-shadow(#AAA, 1px, 1px, 3px);
-    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
     background-color: #2061B6;
+    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
     height: 40px; width: 100%;
     border-bottom: 1px solid #003277;
     position: relative;
@@ -105,8 +105,8 @@ input, textarea {
     margin-top: 4px;
     input {
         @include border-radius(5px);
-        @include background-image(linear-gradient(#1E5293, #1C5197 25%, #164F9E 75%, #134FA1));
         background-color: #1A5199;
+        @include background-image(linear-gradient(#1E5293, #1C5197 25%, #164F9E 75%, #134FA1));
         border: none;
         border-top: 1px solid #163967;
         border-bottom: 1px solid #4075BC;
@@ -331,8 +331,8 @@ input, textarea {
 
 #footer {
     @include single-box-shadow(#AAA, 1px, -1px, 3px);
-    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
     background-color: #2061B6;
+    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
     position: fixed; left: 0px; bottom: 0px; height: $footer_height;  width: 100%;
     z-index: 100;
     color: #AAE929;

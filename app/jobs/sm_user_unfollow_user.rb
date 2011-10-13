@@ -7,6 +7,6 @@ class SmUserUnfollowUser
 
   def self.perform(user_id, unfollow_user_id)
     user = User.find(user_id)
-    Soulmate::Loader.new("#{user.username}f").remove({'id' => unfollow_user_id}) if user
+    Soulmate::Loader.new(user_id).remove({'id' => unfollow_user_id}) if user
   end
 end

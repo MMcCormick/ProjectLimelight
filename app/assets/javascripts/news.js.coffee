@@ -85,8 +85,6 @@ jQuery ->
       $('#static-data').data('d').fetchEmbedUrl
       url: self.val()
       (data) ->
-        console.log(data)
-
         $('#news_url, #new_news .image_fetch_url').val(data.embedly.url)
         fetchImages($('#new_news .image_fetch_url'))
         $('#news_content').focus().val(data.embedly.description)

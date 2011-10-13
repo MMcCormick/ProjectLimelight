@@ -818,9 +818,9 @@ $scoreBox-width: 160px;
     }
 
     .cancel {
-        @include background-image(linear-gradient(#FD4E21, #E0230B));
         @include border-radius(3px);
         background-color: #E0230B;
+        @include background-image(linear-gradient(#FD4E21, #E0230B));
         position: absolute; top: 7px; right: 7px;
         padding: 3px 12px;
         font-size: 13px;

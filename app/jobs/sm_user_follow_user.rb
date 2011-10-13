@@ -4,25 +4,12 @@ require 'json'
 class SmUserFollowUser
   include Resque::Plugins::UniqueJob
   include Rails.application.routes.url_helpers
-  include ImageHelper
+  include SoulmateHelper
 
   @queue = :soulmate_user
 
   def initialize(user, following)
-    nugget = {
-              'id' => following.id.to_s,
-              'term' => following.username,
-              'score' => 1,
-              'data' => {
-                      'url' => user_path(following)
-              }}
-
-    img = default_image_url(following, [25, 25])
-    nugget['data']['image'] = img[:url] if img
-
-    nugget['data']['name'] = following.fullname if following.fullname
-
-    Soulmate::Loader.new("#{user.username}f").add(nugget)
+    Soulmate::Loader.new(user.id.to_s).add(user_nugget(following))
   end
 
   def self.perform(user_id, following_user_id)

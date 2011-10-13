@@ -47,7 +47,6 @@ group :development do
   gem "rails-footnotes"
   gem "ruby-debug19"
   gem "foreman"
-
 end
 
 group :development, :test do

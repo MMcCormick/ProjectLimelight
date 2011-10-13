@@ -217,7 +217,7 @@
             }).bind("searchFor", function() {
               hasFocus = true;
               $input.val(arguments[1]);
-              onChange(0, true);
+              setTimeout(onChange, options.delay);
             }).bind("flushCache",
             function() {
               cache.flush();
@@ -424,6 +424,7 @@
             // Used for soulmate redis store
             if (options.bucket)
             {
+              // APPLICATION SPECIFIC
               var tmpData,
                   data;
               tmpData = acData.results[options.bucket];
@@ -434,10 +435,8 @@
               }
               else
               {
-                tmpData = {'CREATE':[{'id':0,'term':acData.term,'showName':'create a new topic: <strong>'+acData.term+'</strong>'}], 'TOPICS': tmpData}
+                tmpData = {'CREATE':[{'id':0,'term':acData.term,'showName':'create a new topic: <span class="term">'+acData.term+'</span>'}], 'TOPICS': tmpData}
                 data = {'CREATE':[], 'TOPICS': []}
-                console.log(tmpData);
-
               }
 
               var used_ids = [];
@@ -445,7 +444,7 @@
               {
                 $(tmpData[bucket]).each(function(i2, val) {
                   // If we have not used this id yet
-                  if (used_ids.indexOf(val.id) == -1)
+                  if ($.inArray(used_ids, val.id) == -1)
                   {
                     used_ids.push(val.id);
                     val.formattedItem = formatItem(val);
@@ -474,6 +473,7 @@
       }
     }
 
+    // APPLICATION SPECIFIC
     function formatItem(data)
     {
       if (options.bucketType == 'user')
@@ -482,13 +482,13 @@
         {
           image = '<img width="25" src="'+data.data.image+'" />';
         }
-        return '<div class="auto-user">'+image+'<div class="name">'+data.term+'</div></div>';
+        return '<div class="auto-user">'+image+'<div class="name term">'+data.term+'</div></div>';
       }
       else if (options.bucketType == 'topic')
       {
         var image = '',
             types = '',
-            name = data.term;
+            name = '<span class="term">'+data.term+'</span>';
         if (data.data && data.data.image)
         {
           image = '<img width="25" src="'+data.data.image+'" />';
@@ -501,7 +501,7 @@
         {
           name = data.showName;
         }
-        return '<div class="auto-topic">'+image+'<div class="name '+(types != '' ? 'with-type' : '')+'">'+name+'</div>'+types+'</div>';
+        return '<div class="auto-topic">'+image+'<div class="name'+(types != '' ? ' with-type' : '')+'">'+name+'</div>'+types+'</div>';
       }
     }
 
@@ -560,7 +560,11 @@
     inputFocus: true,
     clickFire: false,
     highlight: function(value, term) {
-      return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1") + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+      term = term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1")
+      target = $(value);
+      target.find('.term').html(target.find('.term').text().replace(new RegExp("(" + term.split(' ').join('|') + ")", "gi"), "<strong>$1</strong>"));
+
+      return target[0];
     },
     scroll: true,
     scrollHeight: 180,

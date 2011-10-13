@@ -38,6 +38,7 @@ class User
 
   slug :username
 
+  field :status, :default => 'Active'
   field :email
   field :time_zone, :type => String, :default => "Eastern Time (US & Canada)"
   field :roles, :default => []

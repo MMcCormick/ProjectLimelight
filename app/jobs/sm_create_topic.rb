@@ -3,6 +3,7 @@ require 'json'
 #TODO: We need to update the soulmate data when relevant topic data changes (alias or type added/removed, etc)
 class SmCreateTopic
   include Resque::Plugins::UniqueJob
+  include Rails.application.routes.url_helpers
   include SoulmateHelper
 
   @queue = :soulmate_topic

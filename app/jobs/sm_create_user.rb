@@ -3,6 +3,7 @@ require 'json'
 #TODO: We need to update the soulmate data when relevant user data changes (username, main image, etc)
 class SmCreateUser
   include Resque::Plugins::UniqueJob
+  include Rails.application.routes.url_helpers
   include SoulmateHelper
 
   @queue = :soulmate_user

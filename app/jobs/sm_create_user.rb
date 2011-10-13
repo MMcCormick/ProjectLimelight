@@ -9,19 +9,7 @@ class SmCreateUser
   @queue = :soulmate_user
 
   def initialize(user)
-    nugget = {
-              'id' => user.id.to_s,
-              'term' => user.username,
-              'score' => 0,
-              'data' => {
-                      'url' => user_path(user)
-              }
-    }
-
-    img = default_image_url(user, [25, 25])
-    nugget['data']['image'] = img[:url] if img
-
-    Soulmate::Loader.new("user").add(nugget)
+    Soulmate::Loader.new("user").add(user_nugget(user))
   end
 
   def self.perform(user_id)

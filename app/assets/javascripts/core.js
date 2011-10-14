@@ -47,6 +47,7 @@
 
     // if there's an event, publish it!
     if (data.event) {
+      console.log("event: "+data.event);
       amplify.publish(data.event, data);
     }
 
@@ -57,7 +58,7 @@
     }
 
     if (data.redirect) {
-      window.location = paramdatas.redirect
+      window.location = data.redirect
 
       return false;
     }

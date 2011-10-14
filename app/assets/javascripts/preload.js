@@ -36,23 +36,29 @@ var resizeLayout = function(rightSidebarAdjust) {
 };
 
 // Check if something is visible on the screen
-function isScrolledIntoView(elem, bufferOn) {
+function isScrolledIntoView(elem, bufferOn, checkAll) {
   var docViewTop = $(window).scrollTop();
   var docViewBottom = docViewTop + $(window).height();
 
-  var elemTop = $(elem).offset().top;
+  var elemTop = $(elem).offset() ? $(elem).offset().top : 0;
   var elemBottom = elemTop + $(elem).height();
 
   var pageHeader = $('#page_header.floating').length > 0 && bufferOn ? $('#page_header.floating').height() - 15 : 0;
   var footer = bufferOn ? $('#footer').height() : 0;
 
+  var inView = (elemTop <= docViewBottom - footer) && (elemBottom >= docViewTop + pageHeader);
+
+  if (checkAll)
+  {
+    viewable = viewable && (elemBottom <= docViewBottom - footer) && (elemTop >= docViewTop + pageHeader)
+  }
+
   // Currently checks that the entire element is in view. To check for any part of the element, remove the second line
-  return ((elemTop <= docViewBottom - footer) && (elemBottom >= docViewTop + pageHeader)
-           && (elemBottom <= docViewBottom - footer) && (elemTop >= docViewTop + pageHeader));
+  return inView;
 }
 
 function handleScroll() {
-  if (isScrolledIntoView($('#header'), false)) {
+  if (isScrolledIntoView($('#header'), false, false)) {
     $('#sidebar,#page_header,#sidebar-right,#ajax-loading').removeClass('floating');
     $('#page').css('margin-right', 0);
   }

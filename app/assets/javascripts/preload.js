@@ -9,8 +9,11 @@ var resizeLayout = function(rightSidebarAdjust) {
   var pageHeader = $('#page_header');
   var sidebar = $('#sidebar');
   var rightSidebar = $('#sidebar-right .sbrC');
-  var footer = $(window).height() - $('#footer').offset().top;
+  var footer = $('#footer').height();
   var h = $(window).height() - footer;
+
+  console.log(footer)
+  console.log($(window).height())
 
   sidebar.css('height', h - 2 - parseInt(sidebar.css('margin-top').replace("px", "")) * 2);
 

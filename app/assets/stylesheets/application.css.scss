@@ -22,8 +22,10 @@ html, body {
     width: 100%; height: 100%;
     border: 0;
     background-color: #FFF;
-    position: relative; z-index: 0;
+    position: relative;
+    z-index: 0;
     font-family: "Helvetica Neue", Verdana, Tahoma, Arial, sans-serif;
+    line-height: 1.125em;
 }
 
 h1,h2,h3,h4,h5,h6,p,div,span {
@@ -73,7 +75,7 @@ input, textarea {
 #header {
     @include single-box-shadow(#AAA, 1px, 1px, 3px);
     background-color: #2061B6;
-    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
+    @include background-image(linear-gradient(#1B59AE, #2664B2 25%, #1B59AE 75%, #124895));
     height: 40px; width: 100%;
     border-bottom: 1px solid #003277;
     position: relative;
@@ -88,9 +90,11 @@ input, textarea {
 }
 
 #contribute {
-    @include green-button(5px, 16px);
-    padding: 3px 10px 4px 28px;
-    top: -7px;
+    @include green-button(2px, 16px);
+    padding: 4px 10px 5px 28px;
+    top: 6px;
+    left: 240px;
+    position: absolute;
     z-index: 210;
 
     .plus-green-icon {
@@ -100,21 +104,25 @@ input, textarea {
 }
 
 #search {
-    float: right;
     border-right: 1px solid #08192E;
-    margin-top: 4px;
+    position: absolute;
+    top: 4px;
+    right: 180px;
     input {
-        @include border-radius(5px);
-        background-color: #1A5199;
-        @include background-image(linear-gradient(#1E5293, #1C5197 25%, #164F9E 75%, #134FA1));
+        @include border-radius(2px);
+        background-color: #EFEFEF;
         border: none;
         border-top: 1px solid #163967;
         border-bottom: 1px solid #4075BC;
         font-size: 16px;
         padding: 5px 8px;
-        color: #FFF;
+        color: #333;
         display: block;
-        margin: 0px 28px 2px 0;
+        margin: 0px 28px 0 0;
+        width: 150px;
+    }
+    &.logged {
+      right: 91px;
     }
 }
 
@@ -123,14 +131,19 @@ input, textarea {
 #register {
     font-size: 16px;
     color: #FFF;
-    float: right;
     border-left: 1px solid #4A8BDD;
-    padding: 6px 20px;
-    margin: 4px 0 0 0;
+    padding: 7px 20px;
+    position: absolute;
+    top: 4px;
 }
 
 #register {
     border-right: 1px solid #08192E;
+    right: 81px;
+}
+#login,
+#logout {
+  right: 0px;
 }
 
 #content { height: 100%; width: 100%; }
@@ -332,7 +345,7 @@ input, textarea {
 #footer {
     @include single-box-shadow(#AAA, 1px, -1px, 3px);
     background-color: #2061B6;
-    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
+    @include background-image(linear-gradient(#124895, #1B59AE 25%,#2664B2 75%, #1B59AE));
     position: fixed; left: 0px; bottom: 0px; height: $footer_height;  width: 100%;
     z-index: 100;
     color: #AAE929;

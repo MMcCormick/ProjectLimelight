@@ -12,9 +12,6 @@
 //= require preload
 //= require jquery-ui.min
 //= require amplify
-// require history.adapter.jquery
-// require history
-// require history.html4
 //= require jquery.colorbox
 //= require jquery.timer
 //= require jquery.qtip

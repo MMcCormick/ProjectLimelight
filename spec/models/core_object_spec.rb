@@ -10,12 +10,19 @@ describe CoreObject do
       FactoryGirl.build(:talk, :user_id => "").should_not be_valid
     end
 
-    #TODO: topic and user mentions (see 2 alternate pending syntaxes below)
-    it "should set topic mentions"
+    #TODO: now
+    it "should set topic mentions" do
+      pending "should create a new topic if #[topic name] included in content_raw"
+      pending "should not create a new topic if #[id#name] included in content_raw"
+      pending "should create topic snippets for each #[topic name] included in content raw"
+      pending "should create topic snippets for each #[id#name] included in content raw"
+      pending "should not create duplicate topic snippets if a topic is mentioned twice"
+    end
 
+    #TODO: now
     it "should set user mentions" do
-      pending "need requirements from marc"
-      # code here won't get executed because the pending is before
+      pending "should create a user mentions for each @[id#username] included in content_raw"
+      pending "should not create a user mention if @[fake id#username] included in content raw"
     end
 
     # OLD
@@ -265,6 +272,8 @@ describe CoreObject do
 
   #TODO: feed
   describe "feed" do
-    it "should take care of basically every piece of feed logic, fml"
+    it "should take care of basically every piece of feed logic, fml" do
+
+    end
   end
 end

@@ -15,7 +15,6 @@ class UsersController < ApplicationController
         html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
         render json: { :event => "loaded_feed_page", :content => html } }
       format.html # index.html.erb
-      format.json { render json: @user }
     end
   end
 
@@ -87,7 +86,6 @@ class UsersController < ApplicationController
         html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
         render json: { :event => "loaded_feed_page", :content => html } }
       format.html # index.html.erb
-      format.json { render json: @core_objects }
     end
   end
 

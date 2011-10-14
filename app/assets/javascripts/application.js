@@ -24,7 +24,6 @@
 //= require plupload/plupload.full
 //= require mention
 //= require core
-//= require request
 //= require subscribers
 //= require page.controller
 //= require action.controller

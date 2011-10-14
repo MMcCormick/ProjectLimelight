@@ -1,4 +1,3 @@
-// Wait for Document
 $(function() {
 
   // Perform an action.
@@ -12,7 +11,7 @@ $(function() {
 
     event.preventDefault();
 
-    doAction({requestType: $requestType, payload: $payload, url: $url}, null, null);
+    doAction($url, $requestType, $payload, null, null);
 
     return false;
   });
@@ -29,7 +28,7 @@ $(function() {
     $currentTarget = $this;
 
     event.preventDefault();
-    doAction({requestType: $requestType, payload: $payload, url: $url}, toggleButton, null);
+    doAction($url, $requestType, $payload, toggleButton, null);
 
     $currentTarget.fadeTo(100, .5).css('cursor', 'default');
 
@@ -53,4 +52,4 @@ $(function() {
     $currentTarget.fadeTo(100, 1).css('cursor', 'pointer');
   }
 
-}); // end onDomLoad
+});

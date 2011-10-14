@@ -25,7 +25,7 @@
 
   // Prepare placeholder function variables
   pageGet = '',
-          pageClick = '';
+  pageClick = '';
 
   // Function to capitalize first character of a string
   String.prototype.capitalize = function() {
@@ -34,32 +34,36 @@
 
   /*
    * Performs various site wide updates.
-   * @param object params
+   * @param object data
    *
    * @return bool Returns true if no conditions stopped progress.
    */
-  appUpdate = function(params) {
+  appUpdate = function(data) {
+    if (!data)
+    {
+      console.log('no params!')
+      return false;
+    }
+
     // if there's an event, publish it!
-    if (params.event) {
-      amplify.publish(params.event, params);
+    if (data.event) {
+      amplify.publish(data.event, data);
     }
 
     // Is there a message to show?
-    if (params.flash) {
-      var theme = params.status == 'error' ? 'red' : 'green';
-      createGrowl(false, params.flash.capitalize(), params.status.capitalize(), theme);
+    if (data.flash) {
+      var theme = data.status == 'error' ? 'red' : 'green';
+      createGrowl(false, data.flash.capitalize(), data.status.capitalize(), theme);
     }
 
-    if (params.redirect) {
-      pageClicked = true;
-      window.location = params.redirect
-//      pageGet({'url': params.redirect}, pageClick, null);
+    if (data.redirect) {
+      window.location = paramdatas.redirect
 
       return false;
     }
 
-    if (params.reload) {
-      document.location = params.reload;
+    if (data.reload) {
+      document.location = data.reload;
     }
 
     return true;
@@ -68,16 +72,28 @@
   /*
    * Main site-wide action functions.
    */
-  doAction = function(params, success, error) {
-    var $action = params.requestType.toLowerCase() + 'Action';
-    var $payload = params.payload ? params.payload : {};
-    $payload['url'] = params.url;
+  doAction = function(url, requestType, params, success, error) {
+    $.ajax({
+      url: url,
+      type: requestType,
+      dataType: 'json',
+      data: params,
+      success: function(data) {
+        appUpdate(data);
+        if (success) {
+          success(params, data);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // TODO: handle errors
+        if (jqXHR.status == 401)
+        {
 
-    amplify.request($action, $payload, function (data) {
-      console.log(data);
-      appUpdate(data);
-      if (success) {
-        success({'url': params.url}, data);
+        }
+        else if (jqXHR.status == 500)
+        {
+
+        }
       }
     })
   };

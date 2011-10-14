@@ -34,6 +34,8 @@ Spork.prefork do
     config.run_all_when_everything_filtered = true
 
     config.include Devise::TestHelpers, :type => :controller
+    config.include Warden::Test::Helpers, :type => :request
+
 
     DatabaseCleaner.strategy = :truncation
 

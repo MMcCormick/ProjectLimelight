@@ -64,7 +64,7 @@ group :test do
   gem "spork", "> 0.9.0.rc"
   gem 'guard-spork'
   # gem "cucumber-rails"
-  gem 'mocha'
+  # gem 'mocha'
 end
 
 gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol

@@ -1,5 +1,3 @@
-include ImageHelper
-
 module SoulmateHelper
   include Rails.application.routes.url_helpers
 
@@ -9,12 +7,9 @@ module SoulmateHelper
               'term' => user.username,
               'score' => 0,
               'data' => {
-                      'url' => user_path(user)
               }
     }
 
-    img = default_image_url(user, [25, 25])
-    nugget['data']['image'] = img[:url] if img
     nugget
   end
 
@@ -31,9 +26,6 @@ module SoulmateHelper
     if topic.aliases.length > 0
       nugget['aliases'] = topic.aliases
     end
-
-    img = default_image_url(topic, [25, 25])
-    nugget['data']['image'] = img[:url] if img
 
     if topic.topic_type_snippets.length > 0
       nugget['data']['types'] = Array.new

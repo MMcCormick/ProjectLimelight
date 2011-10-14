@@ -440,11 +440,12 @@
               }
 
               var used_ids = [];
+              var my_id = $('#static-data').data('d').myId
               for (bucket in tmpData)
               {
                 $(tmpData[bucket]).each(function(i2, val) {
                   // If we have not used this id yet
-                  if ($.inArray(used_ids, val.id) == -1)
+                  if ($.inArray(val.id, used_ids) == -1 && val.id != my_id)
                   {
                     used_ids.push(val.id);
                     val.formattedItem = formatItem(val);
@@ -478,10 +479,7 @@
     {
       if (options.bucketType == 'user')
       {
-        if (data.data.image)
-        {
-          image = '<img width="25" src="'+data.data.image+'" />';
-        }
+        image = '<img style="max-width: 25px" src="/users/'+data.term+'/picture?d[]=25&d[]=25&s=square" />';
         return '<div class="auto-user">'+image+'<div class="name term">'+data.term+'</div></div>';
       }
       else if (options.bucketType == 'topic')

@@ -14,17 +14,10 @@ class FavoritesController < ApplicationController
             :page => page
     })
     respond_to do |format|
-      #format.js {
-      #  html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
-      #  render json: { :event => "loaded_feed_page", :content => html } }
-      #format.html # index.html.erb
-      if request.xhr?
-        html = render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
-        format.json { render json: { :event => "loaded_feed_page", :content => html } }
-      else
-        format.html # index.html.erb
-        format.json { render json: @core_objects }
-      end
+      format.js {
+        html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
+        render json: { :event => "loaded_feed_page", :content => html } }
+      format.html # index.html.erb
     end
   end
 
@@ -50,13 +43,15 @@ class FavoritesController < ApplicationController
     if object
       object.remove_from_favorites(current_user)
       current_user.save if object.save
-      response = {:json => {:status => 'ok', :target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB']}, :status => 200}
+      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB']})
+      status = 200
     else
-      response = {:json => {:status => 'error', :message => 'Target object not found!'}, :status => 404}
+      response = build_ajax_response(:error, nil, 'Target object not found!', nil)
+      status = 404
     end
 
     respond_to do |format|
-      format.json { render response }
+      format.json { render :json => response, :status => status }
     end
   end
 end

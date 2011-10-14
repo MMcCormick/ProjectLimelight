@@ -20,22 +20,25 @@ $(function() {
   }
 
   // Listens to votes being registered.
-  amplify.subscribe("voted", function(data) {
-    // Turn the scorebox voted button on
+  amplify.subscribe("votes_create votes_destroy", function(data) {
+    // This function makes the vote buttons turn on and off appropriately
     var $target = $(data.target).parents('.scoreC:first')
     if (data.a > 0)
     {
-      $target.find('.up').removeClass('unvoteB').addClass('voteB')
-      $target.find('.down').removeClass('voteB').addClass('unvoteB')
+      console.log("a > 0")
+      $target.find('.up').removeClass('voteB').addClass('unvoteB')
+      $target.find('.down').removeClass('unvoteB').addClass('voteB')
     }
     else if (data.a == 0)
     {
+      console.log("a == 0")
       $target.find('.up, .down').removeClass('unvoteB').addClass('voteB')
     }
     else
     {
-      $target.find('.up').removeClass('voteB').addClass('unvoteB')
-      $target.find('.down').removeClass('unvoteB').addClass('voteB')
+      console.log("a < 0")
+      $target.find('.up').removeClass('unvoteB').addClass('voteB')
+      $target.find('.down').removeClass('voteB').addClass('unvoteB')
     }
   });
 

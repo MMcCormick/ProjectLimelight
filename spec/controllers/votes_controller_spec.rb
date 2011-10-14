@@ -1,50 +1,6 @@
 require 'spec_helper'
 
-describe FavoritesController do
-  describe "GET index" do
-    context "when not signed in" do
-      it "should redirect to root when not signed in" do
-        get :index, :id => "foobar"
-        response.should redirect_to(root_path)
-      end
-    end
-
-    context "when signed in" do
-      let(:user) { FactoryGirl.create(:user) }
-      before(:each) { sign_in user }
-
-      it "should raise a 404 if the user is not found" do
-        User.should_receive(:find_by_slug).with("foobar").and_return(nil)
-        get :index, :id => "foobar"
-        response.response_code.should == 404
-      end
-
-      context "with mock talk" do
-        let(:talk) { mock('talk') }
-        before(:each) do
-          User.should_receive(:find_by_slug).with("foobar").and_return(user)
-          CoreObject.should_receive(:feed).and_return(talk)
-        end
-
-        it "should set the user, more_path, and core_objects variables" do
-          get :index, :id => "foobar", :p => "2"
-          assigns[:user].should eq(user)
-          assigns[:more_path].should == (user_favorites_path :p => 3)
-          assigns[:core_objects].should == talk
-        end
-        it "should render index.html on html request" do
-          get :index, :id => "foobar", :p => 2
-          response.should render_template :index
-        end
-        it "should respond with a json object w/ loaded_feed_page event on xhr request" do
-          xhr :get, :index, :id => "foobar", :p => 2
-          JSON.parse(response.body)['event'].should == "loaded_feed_page"
-        end
-        it "should respond with a json object containing the feed on xhr request"
-      end
-    end
-  end
-
+describe VotesController do
   describe "POST create" do
     it "should click the login button when not signed in"
 
@@ -63,9 +19,25 @@ describe FavoritesController do
         let(:object) { mock('object').as_null_object }
         before(:each) { CoreObject.should_receive(:find).with("fooid").and_return(object) }
 
-        it "should call add_to_favorites on the object" do
-          object.should_receive(:add_to_favorites).with(user)
+        it "should respond with a 404 + json error object if the amount is > 1" do
+          xhr :post, :create, :id => "fooid", :a => "2"
+          JSON.parse(response.body)['status'].should == "error"
+          response.response_code.should == 404
+        end
+        it "should respond with a 404 + json error object if the amount is < -1" do
+          xhr :post, :create, :id => "fooid", :a => "-2"
+          JSON.parse(response.body)['status'].should == "error"
+          response.response_code.should == 404
+        end
+        it "should respond with a 401 + json error object if the user owns the object" do
+          object.should_receive(:user_id).and_return(user.id)
           xhr :post, :create, :id => "fooid"
+          JSON.parse(response.body)['status'].should == "error"
+          response.response_code.should == 401
+        end
+        it "should call add_voter on the object with the current user and amount passed" do
+          object.should_receive(:add_voter).with(user, 1)
+          xhr :post, :create, :id => "fooid", :a => "1"
         end
         it "should save the current user and object" do
           object.should_receive(:save).and_return(true)
@@ -76,7 +48,7 @@ describe FavoritesController do
           xhr :post, :create, :id => "fooid"
           JSON.parse(response.body)['status'].should == "ok"
           JSON.parse(response.body)['target'].should_not be_blank
-          JSON.parse(response.body)['toggle_classes'].should_not be_blank
+          JSON.parse(response.body)['a'].should_not be_blank
         end
         it "should respond with a 201" do
           xhr :post, :create, :id => "fooid"
@@ -104,8 +76,14 @@ describe FavoritesController do
         let(:object) { mock('object').as_null_object }
         before(:each) { CoreObject.should_receive(:find).with("fooid").and_return(object) }
 
-        it "should call remove_from_favorites on the object" do
-          object.should_receive(:remove_from_favorites).with(user)
+        it "should respond with a 401 + json error object if the user owns the object" do
+          object.should_receive(:user_id).and_return(user.id)
+          xhr :delete, :destroy, :id => "fooid"
+          JSON.parse(response.body)['status'].should == "error"
+          response.response_code.should == 401
+        end
+        it "should call remove_voter on the object with the current user" do
+          object.should_receive(:remove_voter).with(user)
           xhr :delete, :destroy, :id => "fooid"
         end
         it "should save the current user and object" do
@@ -117,7 +95,7 @@ describe FavoritesController do
           xhr :delete, :destroy, :id => "fooid"
           JSON.parse(response.body)['status'].should == "ok"
           JSON.parse(response.body)['target'].should_not be_blank
-          JSON.parse(response.body)['toggle_classes'].should_not be_blank
+          JSON.parse(response.body)['a'].should_not be_blank
         end
         it "should respond with a 200" do
           xhr :delete, :destroy, :id => "fooid"

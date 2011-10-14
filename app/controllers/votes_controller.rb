@@ -12,18 +12,21 @@ class VotesController < ApplicationController
 
     if object && [1,0,-1].include?(amount)
       if object.user_id == current_user.id
-        response = {:json => {:status => 'error', :flash => {:type => 'error', :message => 'You cannot vote on your own posts!'}}, :status => 201}
+        response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
+        status = 401
       else
         object.add_voter(current_user, amount)
         current_user.save if object.save
-        response = {:json => {:status => 'ok', :target => '.v_'+object.id.to_s, :toggle_classes => ['voteB', 'unvoteB'], :event => 'voted', :a => amount}, :status => 201}
+        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => amount})
+        status = 201
       end
     else
-      response = {:json => {:status => 'error', :message => 'Target object not found!'}, :status => 404}
+      response = build_ajax_response(:error, nil, 'Target object not found!', nil)
+      status = 404
     end
 
     respond_to do |format|
-      format.json { render response }
+      format.json { render :json => response, :status => status }
     end
   end
 
@@ -31,18 +34,21 @@ class VotesController < ApplicationController
     object = CoreObject.find(params[:id])
     if object
       if object.user_id == current_user.id
-        response = {:json => {:status => 'error', :flash => {:type => 'error', :message => 'You cannot vote on your own posts!'}}, :status => 201}
+        response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
+        status = 401
       else
         object.remove_voter(current_user)
         current_user.save if object.save
-        response = {:json => {:status => 'ok', :target => '.v_'+object.id.to_s, :toggle_classes => ['voteB', 'unvoteB'], :event => 'voted', :a => 0}, :status => 200}
+        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => 0})
+        status = 200
       end
     else
-      response = {:json => {:status => 'error', :message => 'Target object not found!'}, :status => 404}
+      response = build_ajax_response(:error, nil, 'Target object not found!', nil)
+      status = 404
     end
 
     respond_to do |format|
-      format.json { render response }
+      format.json { render :json => response, :status => status }
     end
   end
 end

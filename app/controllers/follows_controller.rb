@@ -8,14 +8,19 @@ class FollowsController < ApplicationController
         current_user.follow_object(target)
         current_user.save
         target.save
-        response = {:json => {:status => 'ok', :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']}, :status => 201}
+        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
+        status = 201
       else
-        response = {:json => {:status => 'error', :message => 'Target user not found!'}, :status => 404}
+        response = build_ajax_response(:error, nil, 'Target not found!')
+        status = 404
       end
+    else
+      response = build_ajax_response(:error, nil, 'Invalid object type')
+      status = 400
     end
 
     respond_to do |format|
-      format.json { render response }
+      format.json { render :json => response, :status => status }
     end
   end
 
@@ -26,14 +31,19 @@ class FollowsController < ApplicationController
         current_user.unfollow_object(target)
         current_user.save
         target.save
-        response = {:json => {:status => 'ok', :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']}, :status => 201}
+        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
+        status = 201
       else
-        response = {:json => {:status => 'error', :message => 'Target user not found!'}, :status => 404}
+        response = build_ajax_response(:error, nil, 'Target user not found!')
+        status = 404
       end
+    else
+      response = build_ajax_response(:error, nil, 'Invalid object type')
+      status = 400
     end
 
     respond_to do |format|
-      format.json { render response }
+      format.json { render :json => response, :status => status }
     end
   end
 

@@ -8,8 +8,8 @@ class UserCell < Cell::Rails
     render
   end
 
-  def sidebar_right
-    @user = @opts[:user]
+  def sidebar_right(user)
+    @user = user
     @current_user = current_user
 
     render

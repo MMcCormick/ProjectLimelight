@@ -1,6 +1,6 @@
 class TopicTypeCell < Cell::Rails
-  def new
-    @topic = @opts[:topic]
+  def new(topic)
+    @topic = topic
     @types = TopicType.all.asc(:name)
     @type = TopicType.new
 

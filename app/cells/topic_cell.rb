@@ -3,9 +3,9 @@ class TopicCell < Cell::Rails
   include Devise::Controllers::Helpers
   include CanCan::ControllerAdditions
 
-  def sidebar_right
+  def sidebar_right(topic)
     @current_user = current_user
-    @topic = @opts[:topic]
+    @topic = topic
     render
   end
 

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-describe "Login", :js => true, :focus=>true do
+#Method for non-js logins: login_as user1, :scope => :user
+
+describe "Login", :js => true do
 
   it "should sign in + get left sidebar" do
     user1 = FactoryGirl.create(:user)
@@ -10,9 +12,7 @@ describe "Login", :js => true, :focus=>true do
     fill_in "Password", :with => user1.password
     click_button :submit
 
-    #TODO: figure out how to check if a user is logged in
-    #session[:user_id].should == user1.id
-
-    page.should have_selector("div.user-panel")
-  end
+    within("div.user-panel") do
+      page.should have_content(user1.username)
+    end  end
 end

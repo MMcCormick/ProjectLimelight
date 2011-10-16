@@ -145,7 +145,7 @@ describe CoreObject do
     end
   end
 
-  describe "favoriting", :focus=>true do
+  describe "favoriting" do
     let(:talk) { FactoryGirl.create(:talk) }
     let(:user) { FactoryGirl.create(:user) }
 

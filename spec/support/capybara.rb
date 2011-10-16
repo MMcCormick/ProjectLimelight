@@ -1,0 +1,1 @@
+Capybara::Selenium::Driver::DEFAULT_OPTIONS[:resynchronize] = true

@@ -31,13 +31,6 @@
     @include icon-sprite(arrow_grey_right_24x24);
     width: 24px; height: 24px;
 }
-.fav {
-    @include icon-sprite(favorite-off);
-    height: 15px;
-    width: 15px;
-
-    &.on { @include icon-sprite(favorite-on); }
-}
 .settings-icon {
     @include icon-sprite(settings-icon);
     height: 16px;
@@ -74,108 +67,57 @@
     height: 11px;
 }
 .plus-green-icon {
-    @include icon-sprite(plus_green_12x12);
-    width: 12px;
-    height: 12px;
+    @include icon-sprite(plus_green_16x16);
+    width: 16px;
+    height: 16px;
 }
 .plus-grey-icon {
-    @include icon-sprite(plus_grey_12x12);
-    width: 12px;
-    height: 12px;
+    @include icon-sprite(plus_grey_16x16);
+    width: 16px;
+    height: 16px;
 }
-.minus-green-icon {
-    @include icon-sprite(minus_green_12x3);
-    width: 12px;
-    height: 3px;
+.minus-red-icon {
+    @include icon-sprite(minus_red_16x4);
+    width: 16px;
+    height: 4px;
 }
 .minus-grey-icon {
-    @include icon-sprite(minus_grey_12x3);
-    width: 12px;
-    height: 3px;
+    @include icon-sprite(minus_grey_16x4);
+    width: 16px;
+    height: 4px;
 }
 .comment-icon {
-    @include icon-sprite(comment-bubble);
-    width: 14px;
-    height: 13px;
+
 }
-.favorite-icon {
-    @include icon-sprite(favorite);
+.heart-grey-icon {
+    @include icon-sprite(heart_grey_16x14);
     width: 16px;
     height: 14px;
 }
-.link-icon {
-    @include icon-sprite(link);
+.heart-green-icon {
+    @include icon-sprite(heart_green_16x14);
     width: 16px;
-    height: 7px;
-}
-.repost-icon {
-    @include icon-sprite(repost);
-    width: 14px;
     height: 14px;
 }
-.thumbs-up-icon {
-    @include icon-sprite(thumbs-up-off);
-    width: 27px;
-    height: 27px;
-
-    &:hover {
-        @include icon-sprite(thumbs-up);
-        @include opacity(.60);
-    }
-    &.on {
-        @include icon-sprite(thumbs-up);
-        &:hover {
-            @include opacity(1);
-        }
-    }
+.repost-grey-icon {
+    @include icon-sprite(loop_grey_16x14);
+    width: 16px;
+    height: 14px;
 }
-.thumbs-down-icon {
-    @include icon-sprite(thumbs-down-off);
-    width: 27px;
-    height: 27px;
-
-    &:hover {
-        @include icon-sprite(thumbs-down);
-        @include opacity(.60);
-    }
-    &.on {
-        @include icon-sprite(thumbs-down);
-        &:hover {
-            @include opacity(1);
-        }
-    }
+.repost-green-icon {
+    @include icon-sprite(loop_green_16x14);
+    width: 16px;
+    height: 14px;
 }
-.thumbs-up-small-icon {
-    @include icon-sprite(thumbs-up-off-small);
-    width: 18px;
-    height: 18px;
-
-    &:hover {
-        @include icon-sprite(thumbs-up-small);
-        @include opacity(.60);
-    }
-    &.on {
-        @include icon-sprite(thumbs-up-small);
-        &:hover {
-            @include opacity(1);
-        }
-    }
+.share-grey-icon {
+    @include icon-sprite(share_grey_16x16);
+    width: 16px;
+    height: 16px;
 }
-.thumbs-down-small-icon {
-    @include icon-sprite(thumbs-down-off-small);
-    width: 18px;
-    height: 18px;
-
-    &:hover {
-        @include icon-sprite(thumbs-down-small);
-        @include opacity(.60);
-    }
-    &.on {
-        @include icon-sprite(thumbs-down-small);
-        &:hover {
-            @include opacity(1);
-        }
-    }
+.share-green-icon {
+    @include icon-sprite(share_grey_16x16);
+    width: 16px;
+    height: 16px;
 }
 .feed-grid {
     @include icon-sprite(grid-off);

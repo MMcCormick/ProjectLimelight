@@ -1,55 +1,25 @@
-<li class="teaser oS list talk o-<%= object.id %>">
+<% title = capture do %>
+  <%= user_link object.user_snippet %>
+  <% if object.response_to %>
+    @
+    <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">
+      [connected title]
+      <span class="tType">Talk</span>
+    </a>
+  <% end %>
+  <!-- IMAGE LOCATION -->
+<% end %>
 
-  <div class="content">
-    <h2 class="titleC">
-      <%= user_link object.user_snippet %>
-      <% if object.response_to %>
-        @
-        <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">
-          [connected title]
-          <span class="tType">Talk</span>
-        </a>
-      <% end %>
-    </h2>
-    <!-- IMAGE LOCATION -->
+<% content = capture do %>
+  <%= parse_mentions(markdown(object.content), object) %>
+<% end %>
 
-    <div class="createdC">
-      <div class="time"><%= time_ago_in_words(object.created_at, false) %> ago</div>
-    </div>
-    <%= parse_mentions(markdown(object.content), object) %>
-  </div>
+<% created_by = capture do %>
+  <%= time_ago_in_words(object.created_at, false) %> ago
+<% end %>
 
-  <div class="connectionsC">
-    <div class="wrapper">
-      <div class="oType">
-        Talk
-      </div>
+<%= render 'core_objects/list_teaser_title', :object => object, :title => title, :content => content, :created_by => created_by %>
 
-      <a href="<%= url_for object %>" class="commentC p">
-        <div class="comment-icon"></div>
-        0
-      </a>
+<%= render 'core_objects/list_teaser_mentions', :object => object %>
 
-      <% if object.topic_mentions %>
-        <div class="related-topics">
-          <% object.topic_mentions.each do |topic| %>
-            <%= render 'topics/tag', :topic => topic %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="scoreBox">
-    <!-- VOTE CONTROLS -->
-    <div class="controlsC">
-      <%= render 'favorites/btn', :object => object %>
-      <%= render 'reposts/btn', :object => object %>
-      <%= render 'votes/btn', :object => object %>
-      <%= render 'core_object_shares/share_btn', :object => object %>
-      <div class="link-icon"></div>
-      <!---->
-    </div>
-  </div>
-
-</li>
+<%= render 'core_objects/list_teaser_action_box', :object => object %>

@@ -10,7 +10,7 @@
   </p>
 
   <% img = default_image_url(@picture, [100, 100]) %>
-  <%= image_tag img[:url], img[:options] if img %>
+  <%= image_tag img, :style => 'max-width: 100px;' if img %>
 </div>
 
 <div id="response-divider">

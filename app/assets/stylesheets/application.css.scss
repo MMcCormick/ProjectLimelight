@@ -24,7 +24,7 @@ html, body {
     background-color: #FFF;
     position: relative;
     z-index: 0;
-    font-family: "Helvetica Neue", Verdana, Tahoma, Arial, sans-serif;
+    font-family: "Helvetica Neue", Tahoma, Arial, sans-serif;
     line-height: 1.125em;
 }
 
@@ -66,10 +66,15 @@ input, textarea {
     padding: 3px 6px;
     font-size: 14px;
     border:  1px solid #BBB;
-    font-family: "Helvetica Neue", Verdana, Tahoma, Arial, sans-serif;
+    font-family: "Helvetica Neue", Tahoma, Arial, sans-serif;
     &:focus {
       outline: none;
     }
+}
+
+button {
+  background: transparent;
+  border: none;
 }
 
 #header {

@@ -1,0 +1,18 @@
+<div class="connectionsC">
+  <div class="wrapper">
+    <div class="oType"><%= object._type %></div>
+
+    <a href="<%= url_for object %>" class="commentC p">
+      <div class="comment-icon"></div>
+      0
+    </a>
+
+    <% if object.topic_mentions %>
+      <div class="related-topics">
+        <% object.topic_mentions.each do |topic| %>
+          <%= render 'topics/tag', :topic => topic %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

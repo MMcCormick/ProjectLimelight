@@ -41,7 +41,7 @@ class UsersController < ApplicationController
     dimensions = params[:d]
     style = params[:s]
 
-    url = default_image_url(user, dimensions, style)
+    url = default_image_url(user, dimensions, style, true, true)
 
     render :text => open(url, "rb").read, :stream => true
   end

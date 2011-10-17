@@ -41,7 +41,7 @@ $talk-color: #D88E00;
 @mixin green-button($radius, $font-size) {
     @include border-radius($radius);
     background-color: #99CA33;
-    @include background-image(linear-gradient(#A3D73A, #99CA33 25%, #8DBC2C 75%, #76A11D));
+    @include background-image(linear-gradient(#8DBC2C, #94C62E 25%, #8DBC2C 75%, #84B129));
     color: #FFF;
     font-weight: bold;
     font-size: $font-size;
@@ -58,7 +58,7 @@ $talk-color: #D88E00;
 @mixin blue-button($radius, $font-size) {
     @include border-radius($radius);
     background-color: #2061B6;
-    @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1B59AE 75%, #1551A5));
+    @include background-image(linear-gradient(#1B59AE, #1C62C0 25%, #1B59AE 75%, #1551A5));
     color: #FFF;
     font-weight: bold;
     font-size: $font-size;

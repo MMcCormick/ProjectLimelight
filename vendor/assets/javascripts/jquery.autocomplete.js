@@ -422,40 +422,69 @@
           }, extraParams),
           success: function(acData) {
             // Used for soulmate redis store
-            if (options.bucket)
+            // APPLICATION SPECIFIC
+            var buckets = [],
+                tmpData={},
+                tmpData2={},
+                data={},
+                data2={};
+
+            if ($.inArray('user', options.bucketType) != -1)
             {
-              // APPLICATION SPECIFIC
-              var tmpData,
-                  data;
-              tmpData = acData.results[options.bucket];
-              if (options.bucketType == 'user')
+              if (options.bucket)
               {
-                tmpData = {'FOLLOWING': tmpData, 'OTHER USERS':acData.results['user']}
+                buckets.push('user')
+                buckets.push('user')
+                tmpData = {'FOLLOWING': acData.results[options.bucket], 'OTHER USERS':acData.results['user']}
                 data = {'FOLLOWING':[], 'OTHER USERS':[]}
               }
               else
               {
-                tmpData = {'CREATE':[{'id':0,'term':acData.term,'showName':'create a new topic: <span class="term">'+acData.term+'</span>'}], 'TOPICS': tmpData}
-                data = {'CREATE':[], 'TOPICS': []}
+                buckets.push('user')
+                tmpData = {'USERS':acData.results['user']}
+                data = {'USERS':[]}
               }
 
-              var used_ids = [];
-              var my_id = $('#static-data').data('d').myId
-              for (bucket in tmpData)
+            }
+
+            if ($.inArray('topic', options.bucketType) != -1)
+            {
+              if (options.allowNewTopic)
               {
-                $(tmpData[bucket]).each(function(i2, val) {
-                  // If we have not used this id yet
-                  if ($.inArray(val.id, used_ids) == -1 && val.id != my_id)
-                  {
-                    used_ids.push(val.id);
-                    val.formattedItem = formatItem(val);
-                    val.bucketType = options.bucketType;
-                    val.bucket = options.bucket;
-                    data[bucket].push(val);
-                  }
-                })
+                buckets.push('topic')
+                buckets.push('topic')
+                tmpData2 = {'CREATE':[{'id':0,'term':acData.term,'bucket':'topic','showName':'create a new topic: <span class="term">'+acData.term+'</span>'}], 'TOPICS': acData.results['topic']}
+                data2 = {'CREATE':[], 'TOPICS': []}
+              }
+              else
+              {
+                buckets.push('topic')
+                tmpData2 = {'TOPICS':acData.results['topic']}
+                data2 = {'TOPICS':[]}
               }
             }
+
+            $.extend( tmpData, tmpData2 )
+            $.extend( data, data2 )
+
+            var used_ids = [];
+            var my_id = $('#static-data').data('d').myId
+            var x = 0;
+
+            $.each( tmpData, function(i, bucket)
+            {
+              $.each(tmpData[i], function(i2, val) {
+                // If we have not used this id yet
+                if ($.inArray(val.id, used_ids) == -1 && val.id != my_id)
+                {
+                  used_ids.push(val.id);
+                  val.bucketType = buckets[x];
+                  val.formattedItem = formatItem(val);
+                  data[i].push(val);
+                }
+              })
+              x++;
+            })
 
             var parsed = options.parse && options.parse(data) || parse(data);
             cache.add(term, parsed);
@@ -477,12 +506,12 @@
     // APPLICATION SPECIFIC
     function formatItem(data)
     {
-      if (options.bucketType == 'user')
+      if (data.bucketType == 'user')
       {
         image = '<img style="max-width: 25px" src="/users/'+data.term+'/picture?d[]=25&d[]=25&s=square" />';
         return '<div class="auto-user">'+image+'<div class="name term">'+data.term+'</div></div>';
       }
-      else if (options.bucketType == 'topic')
+      else if (data.bucketType == 'topic')
       {
         var image = '',
             types = '',
@@ -490,6 +519,10 @@
         if (data.data && data.data.image)
         {
           image = '<img width="25" src="'+data.data.image+'" />';
+        }
+        else
+        {
+          image = '<img src="/assets/topic_default_25_25.gif" />';
         }
         if (data.data && data.data.types)
         {
@@ -569,7 +602,8 @@
     scrollJumpPosition: true,
     bucket: false,
     bucketType: '',
-    searchKey: 'name'
+    searchKey: 'name',
+    allowNewTopic: false
   };
 
   $.Autocompleter.Cache = function(options) {
@@ -836,6 +870,7 @@
           var formatted = options.formatItem(data[bucket][i].data, i + 1, max, data[bucket][i].value, term);
           if (formatted === false)
             continue;
+
           var li = $("<li/>").html(options.highlight(formatted, term)).addClass(i % 2 == 0 ? "ac_even" : "ac_odd").appendTo(sublist_content)[0];
           $.data(li, "ac_data", data[bucket][i]);
         }

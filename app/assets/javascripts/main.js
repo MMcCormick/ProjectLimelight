@@ -14,32 +14,6 @@ $(function() {
     $('.auth-login').click();
   });
 
-  // Post-registration Pages
-  // Top Nav (1, 2, 3)
-  $('#confirm .nav > div').live('click', function() {
-    $(this).addClass('on').siblings().removeClass('on');
-    $('#confirm .confirmPage').hide();
-    $($(this).data('target')).show();
-  });
-  // Bottom Nav (Next, Last)
-  $('#confirm .bottomNav > div').live('click', function() {
-    $($(this).data('target')).click();
-  });
-
-  /*
-   * TOPICS
-   */
-
-  // Enabling dragging of topic tags.
-  $(".tag.topic").livequery(function() {
-    $(this).draggable({
-      opacity: 0.7,
-      helper: "clone",
-      handle: ".handle-small",
-      appendTo: "body"
-    });
-  });
-
   /*
    * LISTS
    */
@@ -209,6 +183,49 @@ $(function() {
 
     $(this).colorbox({href: $newSrc, photo: true, title: $('#page_header .titleC').text()});
   })
+
+  /*
+   * SEARCH
+   */
+
+  $('#search input').live('focus', function() {
+    $(this).animate({'width':'300px'}, 200);
+  }).live('blur', function() {
+    $(this).animate({'width':'150px'}, 200);
+  }).autocomplete($('#static-data').data('d').autocomplete, {
+    minChars: 2,
+    width: 300,
+    matchContains: true,
+    matchSubset: false,
+    autoFill: false,
+    selectFirst: false,
+    mustMatch: false,
+    searchKey: 'term',
+    max: 10,
+    bucket: false,
+    bucketType: ["topic", "user"],
+    extraParams: {"types[]":["topic", "user"]},
+    dataType: 'json',
+    delay: 150,
+    formatItem: function(row, i, max) {
+      return row.formattedItem;
+    },
+    formatMatch: function(row, i, max) {
+      return row.term;
+    },
+    formatResult: function(row) {
+      return row.term;
+    }
+  }).result(function(event, data, formatted) {
+    if (data.bucketType == 'user')
+    {
+      window.location = '/users/'+data.term
+    }
+    else if (data.bucketType == 'topic')
+    {
+      window.location = data.data.url
+    }
+  });
 
   /*
    * SHORTCUTS

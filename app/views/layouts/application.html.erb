@@ -10,11 +10,12 @@
     <title><%= title %></title>
     <!--<link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>-->
     <%= stylesheet_link_tag "application" %>
+    <!--[if lt IE 9]><%= stylesheet_link_tag "ie" %><![endif]-->
     <%= csrf_meta_tag %>
   </head>
   <body id="<%= params[:controller].parameterize %>_c">
     <div id="application">
-      <header id="header">
+      <div id="header">
         <% top_image = image_tag "top-logo.png", :alt => "Project Limelight" %>
         <%= link_to top_image, :root, :class => "p logo" %>
 
@@ -30,10 +31,10 @@
           <%= link_to "Sign Up", new_user_registration_path, :id => "register" %>
         <% end %>
 
-        <div id="search">
-          <input type="text" value="Search" class="iclear w"/>
+        <div id="search" class="<%= "logged" if signed_in? %>">
+          <input type="text" value="Search" class="iclear b"/>
         </div>
-      </header>
+      </div>
       <div id="content">
         <%= render_cell :user, :sidebar_left %>
 
@@ -82,10 +83,10 @@
           <div id="page_cover"></div>
         </div>
       </div>
-      <footer id="footer">
+      <div id="footer">
         <%= yield :footer %>
         <div id="plt"><%= load_time %></div>
-      </footer>
+      </div>
 
       <div id="ajax-loading">Loading...</div>
       <div id="ajax-notice"></div>
@@ -97,7 +98,7 @@
     <%= render "shared/contribute", :id => 'top-contribute', :responding => nil %>
     <div id="form-submitting">Form submitting...</div>
     <div style="display: none">
-      <div id="static-data" data-d='{"oSearchUrl":"", "fetchEmbedUrl":"<%= embedly_fetch_path %>","myId":"<%= signed_in? ? current_user.id.to_s : 0 %>","userAutoUrl":"/soul-data/search","userAutoBucket":"<%= current_user.id.to_s if signed_in? %>","topicAutoUrl":"/soul-data/search"}'></div>
+      <div id="static-data" data-d='{"oSearchUrl":"", "fetchEmbedUrl":"<%= embedly_fetch_path %>","myId":"<%= signed_in? ? current_user.id.to_s : 0 %>","autocomplete":"/soul-data/search","userAutoBucket":"<%= current_user.id.to_s if signed_in? %>"}'></div>
       <%= render "core_object_shares/form" %>
 
       <div id="auth_box">

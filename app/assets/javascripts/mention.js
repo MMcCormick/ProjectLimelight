@@ -59,7 +59,7 @@ var settings = [
   {
     type          : 'user',
     trigger       : '@',
-    autocomplete  : $('#static-data').data('d').userAutoUrl,
+    autocomplete  : $('#static-data').data('d').autocomplete,
     match         : '<b>$1</b>',
     selectFirst   : true,
     mustMatch     : true,
@@ -71,7 +71,7 @@ var settings = [
   {
     type          : 'topic',
     trigger       : '#',
-    autocomplete  : $('#static-data').data('d').topicAutoUrl,
+    autocomplete  : $('#static-data').data('d').autocomplete,
     match         : '<b>$1</b>',
     selectFirst   : true,
     mustMatch     : false,
@@ -331,8 +331,9 @@ var fields = [];
         searchKey: 'term',
         max: 10,
         bucket: settings[this.mode].bucket,
-        bucketType: settings[this.mode].bucketType,
+        bucketType: [settings[this.mode].bucketType],
         extraParams: extraParams,
+        allowNewTopic: true,
         dataType: 'json',
         delay: 150,
         formatItem: function(row, i, max) {

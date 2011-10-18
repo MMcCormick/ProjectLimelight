@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content <%= 'with-picture' if defined? picture %>">
   <h2 class="titleC">
     <%= title if title %>
   </h2>
@@ -6,6 +6,10 @@
   <div class="createdC">
     <div class="time"><%= created_by if created_by %></div>
   </div>
+
+  <%= picture if defined? picture %>
+
+  <%= video if defined? video %>
 
   <%= content if content %>
 </div>

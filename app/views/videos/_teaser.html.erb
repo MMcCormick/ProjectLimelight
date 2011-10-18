@@ -9,6 +9,10 @@
   <% end %>
 <% end %>
 
+<% video = capture do %>
+  <%= video_embed(object, 150, 120) %>
+<% end %>
+
 <% content = capture do %>
   <%= parse_mentions(markdown(object.content), object) %>
 <% end %>
@@ -18,7 +22,7 @@
   <%= user_link object.user_snippet %>
 <% end %>
 
-<%= render 'core_objects/list_teaser_title', :object => object, :title => title, :content => content, :created_by => created_by %>
+<%= render 'core_objects/list_teaser_content', :object => object, :title => title, :content => content, :created_by => created_by, :video => video %>
 
 <%= render 'core_objects/list_teaser_mentions', :object => object %>
 

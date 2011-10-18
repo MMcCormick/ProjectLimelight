@@ -14,7 +14,9 @@
             border-color: $video-color;
         }
     }
-    
+    .video-embed {
+      float: left;
+    }
     &.teaser.grid {
         p {
             overflow: hidden;

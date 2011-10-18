@@ -1,18 +1,29 @@
 <div class="connectionsC">
-  <div class="wrapper">
-    <div class="oType"><%= object._type %></div>
-
-    <a href="<%= url_for object %>" class="commentC p">
-      <div class="comment-icon"></div>
-      0
-    </a>
-
-    <% if object.topic_mentions %>
-      <div class="related-topics">
-        <% object.topic_mentions.each do |topic| %>
-          <%= render 'topics/tag', :topic => topic %>
-        <% end %>
-      </div>
-    <% end %>
+  <div class="oType">
+    <%=
+        case object._type
+          when 'Talk'
+            '<div class="talk-grey-icon" title="talk"></div>'.html_safe
+          when 'Picture'
+            '<div class="picture-grey-icon" title="picture"></div>'.html_safe
+          when 'Video'
+            '<div class="video-grey-icon" title="video"></div>'.html_safe
+          when 'News'
+            '<div class="news-grey-icon" title="news"></div>'.html_safe
+        end
+    %>
   </div>
+
+  <a href="<%= url_for object %>" class="commentC p">
+    <div class="comment-icon"></div>
+    0
+  </a>
+
+  <% if object.topic_mentions %>
+    <div class="related-topics">
+      <% object.topic_mentions.each do |topic| %>
+        <%= render 'topics/tag', :topic => topic %>
+      <% end %>
+    </div>
+  <% end %>
 </div>

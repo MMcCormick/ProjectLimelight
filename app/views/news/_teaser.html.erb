@@ -9,6 +9,11 @@
   <% end %>
 <% end %>
 
+<% picture = capture do %>
+  <% img = default_image_url(object, [75, 75]) %>
+  <%= image_tag img, :style => 'max-width: 75px;' if img %>
+<% end %>
+
 <% content = capture do %>
   <%= parse_mentions(markdown(object.content), object) %>
 <% end %>
@@ -18,7 +23,7 @@
   <%= user_link object.user_snippet %>
 <% end %>
 
-<%= render 'core_objects/list_teaser_title', :object => object, :title => title, :content => content, :created_by => created_by %>
+<%= render 'core_objects/list_teaser_content', :object => object, :title => title, :content => content, :created_by => created_by, :picture => picture %>
 
 <%= render 'core_objects/list_teaser_mentions', :object => object %>
 

@@ -17,7 +17,7 @@ var resizeLayout = function(rightSidebarAdjust) {
 
   sidebar.css('height', h - 2 - parseInt(sidebar.css('margin-top').replace("px", "")) * 2);
 
-  var w = $(window).width() - 4
+  var w = $('body').width() - 4
           - (sidebar.width() + parseInt(sidebar.css('margin-left').replace("px", "")));
 
 

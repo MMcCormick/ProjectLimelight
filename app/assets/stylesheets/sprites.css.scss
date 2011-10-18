@@ -76,6 +76,16 @@
     width: 16px;
     height: 16px;
 }
+.plus-white-icon {
+    @include icon-sprite(plus_white_16x16);
+    width: 16px;
+    height: 16px;
+}
+.plus-white-s-icon {
+    @include icon-sprite(plus_white_12x12);
+    width: 12px;
+    height: 12px;
+}
 .minus-red-icon {
     @include icon-sprite(minus_red_16x4);
     width: 16px;
@@ -86,8 +96,35 @@
     width: 16px;
     height: 4px;
 }
+.minus-white-s-icon {
+    @include icon-sprite(minus_white_12x3);
+    width: 12px;
+    height: 3px;
+}
 .comment-icon {
-
+    @include icon-sprite(comment_grey_12x12);
+    width: 12px;
+    height: 12px;
+}
+.news-grey-icon {
+    @include icon-sprite(news_grey_12x12);
+    width: 12px;
+    height: 12px;
+}
+.picture-grey-icon {
+    @include icon-sprite(picture_grey_12x12);
+    width: 12px;
+    height: 12px;
+}
+.talk-grey-icon {
+    @include icon-sprite(talk_grey_12x11);
+    width: 12px;
+    height: 11px;
+}
+.video-grey-icon {
+    @include icon-sprite(video_grey_12x12);
+    width: 12px;
+    height: 12px;
 }
 .heart-grey-icon {
     @include icon-sprite(heart_grey_16x14);

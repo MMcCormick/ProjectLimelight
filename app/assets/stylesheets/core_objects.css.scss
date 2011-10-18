@@ -221,12 +221,16 @@ form.core_object {
 .unfollowB {
     @include green-button(4px, 13px);
     margin: 5px 10px;
-    padding: 5px 10px 3px 27px;
+    padding: 5px 10px 3px 25px;
     display: block;
 
-    .icon {
+    .plus-white-s-icon {
         position: absolute;
-        top: 6px; left: 8px;
+        top: 0px; left: -17px;
+    }
+    .minus-white-s-icon {
+        position: absolute;
+        top: 5px; left: -17px;
     }
 }
 
@@ -266,8 +270,10 @@ $teaser-padding: 10px;
 
     .titleC {
         font-size: 20px;
-        overflow: hidden;
-        max-height: 22px;
+        line-height: 1.08em;
+        a {
+          color: #333;
+        }
     }
 
     .tType {
@@ -297,7 +303,7 @@ $teaser-padding: 10px;
 
     p {
         font-size: 14px;
-        margin: 5px 0 0 0;
+        margin: 2px 0 0 0;
         a {
             text-decoration: none;
         }
@@ -328,50 +334,30 @@ $teaser-padding: 10px;
     }
 
     .oType {
-        float: left;
-        font-size: 11px;
-        cursor: default;
-        font-weight: bold;
-        position: relative;
-        top: 2px;
+      float: left;
+      margin: 8px 10px 0 10px;
     }
     
     .commentC {
-        display: block;
         float: left;
         font-size: 10px;
-        margin: 3px 15px 2px 0;
+        margin: 5px 10px 0 0;
         .comment-icon {
             float: left;
-            margin: 1px 5px 0 0;
+            margin: 3px 5px 0 0;
         }
     }
     
     .related-topics {
-        @include border-radius(3px);
-        height: 16px;
-        border: 1px solid transparent;
-        position: absolute;
-        top: 3px;
-        overflow: hidden;
-        padding: 3px;
-        margin: 0 0 0 96px;
-        z-index: 75;
-        
-        &.hover {
-            background: #FFF;
-            overflow: none;
-            border-color: #CCC;
-            height: auto;
-            z-index: 125;
+        margin: 0 0 0 85px;
+        .tag {
+          margin: 5px 10px 0 0;
         }
     }
 
     &.hover {
-        .connectionsC,
-        .scoreBox {
-            @include opacity(1);
-        }
+      @include single-box-shadow(#AAA, 1px, 2px, 2px);
+      background: #FCFCFC;
     }
 }
 
@@ -416,7 +402,7 @@ $scoreBox-width: 160px;
     padding: 5px 0 30px 0;
     .controlsC {
         position: absolute;
-        width: 120px;
+        width: 110px;
         height: 100%;
         right: 0px;
         top: 0px;
@@ -466,8 +452,8 @@ $scoreBox-width: 160px;
         margin: 0 $scoreBox-width + $teaser-padding * 2 + 2 0 $teaser-padding;
     }
     img,
-    .videoC {
-        margin:  0 $teaser-padding 0 0;
+    .video-embed {
+        margin:  5px $teaser-padding -3px 0;
     }
     .createdC {
         @include clearfix();
@@ -477,7 +463,6 @@ $scoreBox-width: 160px;
         padding-top: 2px;
         float: left;
     }
-    .oType { width: 55px; }
     .connectionsC {
         @include clearfix();
         position: absolute;
@@ -670,34 +655,34 @@ $scoreBox-width: 160px;
 }
 // Styling for node-type buttons, (feed filters, contribute, etc)
 #feed-filters {
-    .feed-display {
-        .opt, > div {
-            @include border-radius(2px);
-            background-color: #EFEFEF;
-            border: 1px solid #DDD;
-            color: #999;
-        }
-        .on.talk {
-            border-color: adjust-lightness($talk-color, 15);
-            background-color: adjust-lightness($talk-color, 38);
-            color: adjust-lightness($talk-color, -7);
-        }
-        .on.news {
-            border-color: adjust-lightness($news-color, 15);
-            background-color: adjust-lightness($news-color, 38);
-            color: adjust-lightness($news-color, -7);
-        }
-        .on.picture {
-            border-color: adjust-lightness($picture-color, 15);
-            background-color: adjust-lightness($picture-color, 38);
-            color: adjust-lightness($picture-color, -7);
-        }
-        .on.video {
-            border-color: adjust-lightness($video-color, 15);
-            background-color: adjust-lightness($video-color, 38);
-            color: adjust-lightness($video-color, -7);
-        }
+  .feed-display {
+    .opt, > div {
+        @include border-radius(2px);
+        background-color: #EFEFEF;
+        border: 1px solid #DDD;
+        color: #999;
     }
+    .on.talk {
+        border-color: adjust-lightness($talk-color, 15);
+        background-color: adjust-lightness($talk-color, 38);
+        color: adjust-lightness($talk-color, -7);
+    }
+    .on.news {
+        border-color: adjust-lightness($news-color, 15);
+        background-color: adjust-lightness($news-color, 38);
+        color: adjust-lightness($news-color, -7);
+    }
+    .on.picture {
+        border-color: adjust-lightness($picture-color, 15);
+        background-color: adjust-lightness($picture-color, 38);
+        color: adjust-lightness($picture-color, -7);
+    }
+    .on.video {
+        border-color: adjust-lightness($video-color, 15);
+        background-color: adjust-lightness($video-color, 38);
+        color: adjust-lightness($video-color, -7);
+    }
+  }
 }
 
 .contributeC {

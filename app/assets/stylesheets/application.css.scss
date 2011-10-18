@@ -26,6 +26,7 @@ html, body {
     z-index: 0;
     font-family: "Helvetica Neue", Tahoma, Arial, sans-serif;
     line-height: 1.125em;
+    min-width: $min-width;
 }
 
 h1,h2,h3,h4,h5,h6,p,div,span {
@@ -41,7 +42,10 @@ a {
     text-decoration: none;
 
     &:hover {
-        text-decoration: underline;
+      text-decoration: underline;
+    }
+    &:visited {
+      color: $link-color;
     }
 }
 
@@ -96,15 +100,15 @@ button {
 
 #contribute {
     @include green-button(2px, 16px);
-    padding: 4px 10px 5px 28px;
+    padding: 4px 10px 5px 30px;
     top: 6px;
     left: 240px;
     position: absolute;
     z-index: 210;
 
-    .plus-green-icon {
+    .plus-white-icon {
         position: absolute;
-        top: 8px; left: 8px;
+        top: 5px; left: 7px;
     }
 }
 
@@ -151,7 +155,11 @@ button {
   right: 0px;
 }
 
-#content { height: 100%; width: 100%; }
+#content {
+  height: 100%;
+  width: 100%;
+  min-width: $min-width;
+}
 #page {
     height: 100%;
     position: relative;
@@ -389,6 +397,7 @@ button {
 @import "talks";
 @import "pictures";
 @import "videos";
+@import "news";
 @import "list";
 @import "library";
 @import "utilities";

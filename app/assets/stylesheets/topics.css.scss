@@ -8,34 +8,9 @@
 
 // Topic tags.
 .tag.topic {
-    @include border-radius(2px);
-    border: 1px solid #8CC2DD;
-    background-color: #E7F2F8;
-    font-size: 11px;
-    position: relative;
-    color: #3992C1;
-    cursor: pointer;
-    padding: 2px 8px;
-    z-index: 100;
-
-    .drag-handleC {
-        position: absolute;
-        top: 50%;
-        margin-top: -7px;
-        right: 2px;
-        cursor: move;
-        display: none;
-    }
-    &:hover {
-        padding-right: 21px;
-        /*margin-left: -12px;*/
-        .drag-handleC {
-            display: block;
-        }
-        a {
-            text-decoration: none;
-        }
-    }
+  a {
+    color: #709721;
+  }
 }
 
 #topic-panel {

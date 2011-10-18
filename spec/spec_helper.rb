@@ -35,6 +35,10 @@ Spork.prefork do
 
     config.include Warden::Test::Helpers, :type => :request
 
+    config.before(:each) do
+      DatabaseCleaner.clean
+    end
+
     DatabaseCleaner.strategy = :truncation
 
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
@@ -47,5 +51,4 @@ end
 Spork.each_run do
   FactoryGirl.reload
   DatabaseCleaner.start
-  DatabaseCleaner.clean
 end

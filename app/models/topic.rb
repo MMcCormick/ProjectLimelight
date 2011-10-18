@@ -30,7 +30,7 @@ class Topic
   embeds_many :topic_type_snippets
 
   validates :user_id, :presence => true
-  validates :name, :presence => true, :length => { :minimum => 2, :maximum => 50 }
+  validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
   attr_accessible :name, :summary
 
   before_create :add_alias, :set_user_snippet

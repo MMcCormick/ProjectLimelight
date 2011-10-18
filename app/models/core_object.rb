@@ -187,8 +187,7 @@ class CoreObject
     self.content = @content_raw
   end
 
-  # Searches the content attribute for [@foo] mentions.
-  # For each found, check if user is in DB and add as UserMention to this object if found.
+  # Checks @content_raw for user mentions
   def set_user_mentions
     return unless @content_raw
     found_users = Array.new
@@ -207,9 +206,7 @@ class CoreObject
     end
   end
 
-  # Accepts a string of topics separated by commas
-  # For each found, check if topic is in DB. If valid and not in DB, create it.
-  # For each valid topic mention, add as TopicMention to this object.
+  # Checks @content_raw for topic mentions
   def set_topic_mentions
     return unless @content_raw
     if @content_raw

@@ -2,21 +2,21 @@ require 'spec_helper'
 
 describe Topic do
 
-  # TODO: now
-  it "should create + persist a new instance given valid attributes"
-
-  it "should require an email address" do
-    FactoryGirl.build(:user, :email => "").
-      should_not be_valid
+  it "should create + persist a new instance given valid attributes" do
+    FactoryGirl.create(:topic).should be_valid
   end
 
-  # TODO: now
-  it "should reject long names"
+  it "should reject long names" do
+    long_name = "blah " * 7
+    FactoryGirl.build(:topic, :name => long_name).should_not be_valid
+  end
 
-  # TODO: now
-  it "should reject short names"
+  it "should reject short names" do
+    FactoryGirl.build(:topic, :name => "a").should_not be_valid
+  end
 
-  # TODO: now
-  it "should add an alias to itself before creating"
-
+  it "should add an alias to itself before creating" do
+    topic = FactoryGirl.create(:topic, :name => "topic name")
+    topic.aliases.should include "topic-name"
+  end
 end

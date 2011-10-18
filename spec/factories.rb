@@ -16,7 +16,7 @@ FactoryGirl.define do
   factory :news do
     title "News Title"
     content "News Content"
-    content_raw "Talk Content"
+    content_raw "News Content"
     url "http://foobar.news"
     association :user
   end
@@ -24,7 +24,7 @@ FactoryGirl.define do
   factory :picture do
     title "Picture Title"
     content "Picture Content"
-    content_raw "Talk Content"
+    content_raw "Picture Content"
     url "http://picture.foo"
     association :user
   end
@@ -32,7 +32,7 @@ FactoryGirl.define do
   factory :video do
     title "Video Title"
     content "Video Content"
-    content_raw "Talk Content"
+    content_raw "Video Content"
     provider_name "Video Provider"
     provider_video_id "foobarid"
     url "http://video.foo"
@@ -42,5 +42,9 @@ FactoryGirl.define do
   factory :topic do
     sequence(:name) { |n| "topic#{n}" }
     association :user
+  end
+
+  factory :vote do
+    amount 1
   end
 end

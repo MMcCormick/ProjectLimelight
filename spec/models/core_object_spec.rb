@@ -10,48 +10,56 @@ describe CoreObject do
       FactoryGirl.build(:talk, :user_id => "").should_not be_valid
     end
 
-    #TODO: now
-    it "should set topic mentions" do
-      pending "should create a new topic if #[topic name] included in content_raw"
-      pending "should not create a new topic if #[id#name] included in content_raw"
-      pending "should create topic snippets for each #[topic name] included in content raw"
-      pending "should create topic snippets for each #[id#name] included in content raw"
-      pending "should not create duplicate topic snippets if a topic is mentioned twice"
+    describe "setting topic mentions" do
+      it "should create a new topic if #[topic name] included in content_raw" do
+        expect {
+          FactoryGirl.create(:talk, :content_raw => "this is #[foobar]")
+        }.to change(Topic, :count).by(1)
+        expect {
+          FactoryGirl.create(:talk, :content_raw => "this is #[poobar] #[doobar]")
+        }.to change(Topic, :count).by(2)
+      end
+      it "should not create a new topic if #[id#name] included in content_raw" do
+        topic = FactoryGirl.create(:topic, :name => "foo")
+        expect {
+          FactoryGirl.create(:talk, :content_raw => "this is #[#{topic.id}#foo]")
+        }.to_not change(Topic, :count)
+      end
+      it "should create topic snippets for each #[topic name] included in content raw" do
+        talk = FactoryGirl.create(:talk, :content_raw => "this is #[foobar] #[doobar]")
+        talk.topic_mentions.detect { |snippet| snippet.name == "foobar" }.should_not be_nil
+        talk.topic_mentions.detect { |snippet| snippet.name == "doobar" }.should_not be_nil
+        talk.topic_mentions.detect { |snippet| snippet.name == "zoobar" }.should be_nil
+      end
+      it "should create topic snippets for each #[id#name] included in content raw" do
+        topic = FactoryGirl.create(:topic, :name => "foo")
+        topic2 = FactoryGirl.create(:topic, :name => "doo")
+        talk = FactoryGirl.create(:talk, :content_raw => "this is #[#{topic.id}#foo] #[#{topic2.id}#doo]")
+        talk.topic_mentions.detect { |snippet| snippet.name == "foo" }.should_not be_nil
+        talk.topic_mentions.detect { |snippet| snippet.name == "doo" }.should_not be_nil
+        talk.topic_mentions.detect { |snippet| snippet.name == "zoobar" }.should be_nil
+      end
+      it "should not create duplicate topic snippets if a topic is mentioned twice" do
+        topic = FactoryGirl.create(:topic, :name => "foo")
+        talk = FactoryGirl.create(:talk, :content_raw => "this is #[#{topic.id}#foo] #[#{topic.id}#foo]")
+        talk.topic_mentions.count.should == 1
+      end
     end
 
-    #TODO: now
-    it "should set user mentions" do
-      pending "should create a user mentions for each @[id#username] included in content_raw"
-      pending "should not create a user mention if @[fake id#username] included in content raw"
+    describe "setting user mentions" do
+      it "should create a user mentions for each @[id#username] included in content_raw" do
+        user = FactoryGirl.create(:user, :username => "foouser")
+        user2 = FactoryGirl.create(:user, :username => "doouser")
+        talk = FactoryGirl.create(:talk, :content_raw => "this is @[#{user.id}#foouser] @[#{user2.id}#doouser]")
+        talk.user_mentions.detect { |snippet| snippet.username == "foouser" }.should_not be_nil
+        talk.user_mentions.detect { |snippet| snippet.username == "doouser" }.should_not be_nil
+        talk.user_mentions.detect { |snippet| snippet.username == "zoobar" }.should be_nil
+      end
+      it "should not create a user mention if @[fake id#username] included in content raw" do
+        talk = FactoryGirl.create(:talk, :content_raw => "this is @[132826132#foouser]")
+        talk.user_mentions.should be_empty
+      end
     end
-
-    # OLD
-    #it "should set topic mentions correctly based on string sent to set_topic_mentions" do
-    #  talk = FactoryGirl.create(:talk, :tagged_topics => "foo1, foo 2,   foo 3    ")
-    #  talk.topic_mentions[0].name.should == "foo1"
-    #  talk.topic_mentions[1].name.should == "foo 2"
-    #  talk.topic_mentions[2].name.should == "foo 3"
-    #end
-    #
-    #context "based on user" do
-    #  let(:user) { FactoryGirl.create(:user) }
-    #
-    #  it "should record user_snippet info correctly" do
-    #    talk = FactoryGirl.create(:talk, :user => user)
-    #    talk.user_snippet.id.should == user.id
-    #    talk.user_snippet.username.should == user.username
-    #    talk.user_snippet._public_id.should == user._public_id
-    #    talk.user_snippet.first_name.should == user.first_name
-    #  end
-    #
-    #  it "should set user mentions correctly based on content + users in db" do
-    #    talk = FactoryGirl.create(:talk, :content => "Foo [@#{user.username}]")
-    #    talk.user_mentions[0].username.should == user.username
-    #    talk.user_mentions[0].first_name.should == user.first_name
-    #    talk.user_mentions[0].last_name.should == user.last_name
-    #    talk.user_mentions[0].username.should == user.username
-    #  end
-    #end
   end
 
   describe "to_param" do
@@ -273,7 +281,7 @@ describe CoreObject do
   #TODO: feed
   describe "feed" do
     it "should take care of basically every piece of feed logic, fml" do
-
+      pending "later"
     end
   end
 end

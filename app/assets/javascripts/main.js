@@ -132,39 +132,6 @@ $(function() {
     resizeFeedTeasers();
   });
 
-  // Score tooltip for Grid View
-  $('.teaser.grid').livequery(function() {
-    $(this).qtip({
-      content: {
-        text: function(api) {
-          return $(this).find('.scoreBox').html();
-        }
-      },
-      position: {
-        my: 'left top',
-        at: 'top right',
-        viewport: $(window),
-        adjust: {
-          y: 10
-        }
-      },
-      show: {
-        delay: 500
-      },
-      hide: {
-        fixed: true,
-        delay: 500
-      },
-      style: {
-        classes: 'scoreQ ui-tooltip-shadow',
-        tip: {
-          corner: true,
-          offset: 5
-        }
-      }
-    });
-  })
-
   /*
    * PICTURES
    */

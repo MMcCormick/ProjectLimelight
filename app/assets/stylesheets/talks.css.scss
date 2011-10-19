@@ -15,8 +15,11 @@
     }
   }
   &.teaser.grid {
-    img {
-      margin: 3px 10px 0 0;
+    .content {
+      p {
+        clear: both;
+        margin: 0 5px;
+      }
     }
   }
   &.teaser.list {

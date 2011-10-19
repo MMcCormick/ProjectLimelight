@@ -10,12 +10,17 @@
 <% end %>
 
 <% picture = capture do %>
-  <% img = default_image_url(object, [75, 75]) %>
-  <%= image_tag img, :style => 'max-width: 75px;' if img %>
+  <% if style == :grid %>
+    <% img = default_image_url(object, [190, 150]) %>
+    <%= image_tag img, :style => 'max-width: 210px; max-height: 150px;' if img %>
+  <% else %>
+    <% img = default_image_url(object, [75, 75]) %>
+    <%= image_tag img, :style => 'max-width: 75px;' if img %>
+  <% end %>
 <% end %>
 
 <% content = capture do %>
-  <%= parse_mentions(markdown(object.content), object) %>
+  <%= parse_mentions(markdown(object.content), object) if style == :list %>
 <% end %>
 
 <% created_by = capture do %>

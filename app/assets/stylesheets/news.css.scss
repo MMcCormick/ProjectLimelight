@@ -15,8 +15,12 @@
     }
   }
   &.teaser.grid {
+    .time {
+      display: block;
+      float: none;
+    }
     img {
-      margin: 3px 10px 0 0;
+      margin: 3px 10px 0 5px;
     }
   }
   &.teaser.list {

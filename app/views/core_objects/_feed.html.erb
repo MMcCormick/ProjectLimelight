@@ -2,8 +2,8 @@
   <% if i >= 3 %>
     <div id="load-more" class="ac" data-m="get" data-url="<%= more_path %>">load more</div>
   <% else %>
-    <%= render :layout => 'core_objects/list_teaser', :locals => {:object => core_object} do %>
-      <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object %>
+    <%= render :layout => 'core_objects/grid_teaser', :locals => {:object => core_object} do %>
+      <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object, :style => :grid %>
     <% end %>
   <% end %>
 <% end %>

@@ -1,9 +1,13 @@
-<% @core_objects.each_with_index do |core_object, i| %>
-  <% if i >= 3 %>
-    <div id="load-more" class="ac" data-m="get" data-url="<%= more_path %>">load more</div>
-  <% else %>
-    <%= render :layout => 'core_objects/grid_teaser', :locals => {:object => core_object} do %>
-      <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object, :style => :grid %>
+<span id="core-feed" class="<%= session[:feed_filters][:layout] %>">
+  <% core_objects.each_with_index do |core_object, i| %>
+    <% if i < 3 %>
+      <%= render :layout => "core_objects/#{session[:feed_filters][:layout]}_teaser", :locals => {:object => core_object} do %>
+        <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object, :style => :grid %>
+      <% end %>
     <% end %>
   <% end %>
+</span>
+
+<% if core_objects.length >= 3 %>
+  <div id="load-more" class="ac" data-m="get" data-url="<%= more_path %>">load more</div>
 <% end %>

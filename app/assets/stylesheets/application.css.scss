@@ -207,7 +207,7 @@ button {
 
     .scrollTop {
         float: left;
-        margin: 8px 0 0 10px;
+        margin: 7px 0 0 10px;
         font-size: 8px;
         cursor: pointer;
         color: blue;
@@ -249,10 +249,11 @@ button {
     height: 100%;
     overflow: hidden;
     position: relative;
-    float: left;
     border: $sidebar_border_width solid #CCC;
     background: $sidebar_background-color;
-    margin: $sidebar-margin 0 0 $sidebar-margin;
+    position: absolute;
+    top: 42px + $sidebar-margin;
+    left: $sidebar-margin;
 
     .panel-close-left-icon {
         position: absolute; top: 10px; right: 10px;
@@ -261,8 +262,8 @@ button {
 
     &.floating {
         position: fixed;
-        top: 0px;
-        left: 0px;
+        top: $sidebar-margin;
+        left: $sidebar-margin;
     }
 
     .full {

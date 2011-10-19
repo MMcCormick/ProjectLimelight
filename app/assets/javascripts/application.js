@@ -22,7 +22,6 @@
 //= require mention
 //= require core
 //= require subscribers
-//= require page.controller
 //= require action.controller
 //= require form.controller
 //= require utilities

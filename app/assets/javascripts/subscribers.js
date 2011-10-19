@@ -104,7 +104,17 @@ $(function() {
 
   // When a new page of feed items is loaded
   amplify.subscribe("loaded_feed_page", function (data) {
-    $('#load-more').replaceWith(data.content)
+    $('#load-more').remove()
+    if (data.full_reload)
+    {
+      $('#core-feed').replaceWith(data.content);
+    }
+    else
+    {
+      var content = $(data.content)[0]
+      $('#core-feed').append($(content).html())
+      $('#core-feed').after($(data.content)[2]);
+    }
   });
 
   amplify.subscribe("feed_filter_toggle", function (data) {

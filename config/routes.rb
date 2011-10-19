@@ -13,7 +13,7 @@ ProjectLimelight::Application.routes.draw do
   resources :talks
 
   # Feeds
-  post 'feeds/update' => 'feeds#update', :as => :feed_update
+  put 'feeds/update' => 'feeds#update', :as => :feed_update
 
   # Following
   post   '/follows' => 'follows#create', :as => :create_follow

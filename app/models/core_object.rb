@@ -8,7 +8,7 @@ class CoreObject
   include Limelight::Voting
 
   # Denormilized:
-  # Notification.shared_object_snippet.name (for talk only, other objects use Title)
+  # Notification.shared_object_snippet.name (for talk only, other objects use Title) TODO: update this when notifications get implemented
   field :content
 
   field :status, :default => 'Active'

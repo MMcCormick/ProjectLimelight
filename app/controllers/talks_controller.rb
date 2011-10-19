@@ -3,10 +3,10 @@ class TalksController < ApplicationController
 
   def show
     @talk = Talk.find_by_encoded_id(params[:id])
-    @comments = Comment.threaded_with_field(@talk.id)
     unless @talk
       not_found("Talk not found")
     end
+    @comments = Comment.threaded_with_field(@talk.id)
   end
 
   def create

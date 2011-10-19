@@ -3,7 +3,7 @@ require 'spec_helper'
 describe TalksController do
   describe "GET show" do
     context "when talk is found" do
-      let(:talk) { mock('talk') }
+      let(:talk) { mock('talk').as_null_object }
       before(:each) do
         Talk.should_receive(:find_by_encoded_id).with('1').and_return(talk)
         get :show, :id => 1

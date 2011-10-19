@@ -16,6 +16,7 @@ class User
   # Notification.sender_snippet.username
   # Notification.receiver_snippets.username
   # Topic.user_snippet.username
+  # Comment.user_snippet.username
   field :username
 
   # Denormilized:
@@ -24,6 +25,7 @@ class User
   # Notification.sender_snippet.first_name
   # Notification.receiver_snippets.first_name
   # Topic.user_snippet.first_name
+  # Comment.user_snippet.first_name
   field :first_name
 
   # Denormilized:
@@ -32,6 +34,7 @@ class User
   # Notification.sender_snippet.last_name
   # Notification.receiver_snippets.last_name
   # Topic.user_snippet.last_name
+  # Comment.user_snippet.last_name
   field :last_name
 
   slug :username
@@ -264,9 +267,9 @@ class User
       CoreObject.where(:user_id => id).update_all(user_snippet_updates)
       CoreObject.where("user_mentions._id" => id).update_all(user_mention_updates)
       Topic.where(:user_id => id).update_all(user_snippet_updates)
+      Comment.where(:user_id => id).update_all(user_snippet_updates)
       Notification.where(:user_id => id).update_all(sender_snippet_updates)
       Notification.where("receiver_snippets._id" => id).update_all(receiver_snippet_updates)
-      #Notification.collection.update({"receiver_snippets._id" => id},{"$set" => receiver_snippet_updates}, )
     end
   end
 

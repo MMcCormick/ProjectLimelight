@@ -114,23 +114,74 @@ $(function() {
       if (!$('body').hasClass('shortcut-on')) {
         $('.teaser').removeClass('hover');
         $(this).addClass('hover');
+        if ($('#core-feed').width()-$(this).width()-$(this).position().left < 10)
+        {
+          $(this).addClass('left');
+        }
       }
     },
     mouseleave: function() {
       if (!$('body').hasClass('shortcut-on')) {
-        $('.teaser').removeClass('hover');
+        $('.teaser').removeClass('hover left');
       }
     }
   })
+
   $('body').mousemove(function() {
     $(this).removeClass('shortcut-on')
   })
 
-  // Resize grid teasers.
-  resizeFeedTeasers();
-  $(window).resize(function() {
-    resizeFeedTeasers();
-  });
+  $('#feed-filters .feed-sort .opt').live('click', function() {
+    if (!$(this).hasClass('on')) {
+      $('#feed-filters .feed-sort .opt').removeClass('on');
+      $(this).addClass('on');
+      updateFeedFilters();
+    }
+  })
+
+  $('#feed-filters .feed-display .opt').live('click', function() {
+    $(this).toggleClass('on');
+    if ($('#feed-filters .feed-display .opt.on').length == 0) {
+      $('#feed-filters .feed-display .opt').addClass('on');
+    }
+    updateFeedFilters();
+  })
+
+  $('#feed-filters .feed-display .opt').live('dblclick', function() {
+    $('#feed-filters .feed-display .opt').removeClass('on');
+    $(this).addClass('on');
+    updateFeedFilters();
+  })
+
+  $('#feed-filters .feed-layout .opt div').live('click', function() {
+    if (!$(this).hasClass('on')) {
+      $('#feed-filters .feed-layout .opt div').removeClass('on');
+      $(this).addClass('on');
+      updateFeedFilters();
+    }
+  })
+
+  function updateFeedFilters()
+  {
+    $('#feed-filters').stopTime().oneTime(500, 'reload_feed', function() {
+      var payload = {sort: {}, display: [], layout: ''}
+      payload['sort'] = $('#feed-filters .feed-sort .opt.on').data('d')
+      $('#feed-filters .feed-display .opt.on').each(function(i,val) {
+        payload['display'].push($(val).data('d'));
+      })
+      payload['layout'] = $('#feed-filters .feed-layout .opt div.on').data('d')
+      console.log($('#static-data').data('d'));
+      $.ajax({
+        url: $('#static-data').data('d').feedFiltersUpdate,
+        dataType: 'json',
+        data: payload,
+        type: 'PUT',
+        success: function(data) {
+          $('#feed-reload').click();
+        }
+      })
+    })
+  }
 
   /*
    * PICTURES
@@ -214,6 +265,15 @@ $(function() {
     }
   })
 
+  function feedLastInRow(elem)
+  {
+    if ($('#core-feed').width()-elem.width()-elem.position().left < 10)
+    {
+      return true
+    }
+    return false
+  }
+
   // On keyup
   $(document).keyup(function(e) {
 
@@ -230,36 +290,45 @@ $(function() {
       case ($code == $sc.up || $code == $sc.down || $code == $sc.left || $code == $sc.right):
         $('body').addClass('shortcut-on');
 
+        var target = $('.teaser.hover'),
+            hoverClass = 'hover';
+
         // If  teaser is hovered
-        if ($('.teaser.hover').length > 0) {
+        if (target.length > 0) {
           // If first element is hovered and left or up is pressed
           if (($code == $sc.up || $code == $sc.left) && $('.teaser:first').hasClass('hover')) {
             return false;
           }
 
           // Go to previous
-          if ($('.teaser.hover').hasClass('list') && ($code == $sc.up || $code == $sc.left) ||
-                  $('.teaser.hover').hasClass('grid') && ($code == $sc.left)) {
-            $('.teaser.hover').removeClass('hover').prev().addClass('hover');
+          if (target.hasClass('list') && ($code == $sc.up || $code == $sc.left) ||
+                  target.hasClass('grid') && ($code == $sc.left)) {
+            if (feedLastInRow(target.prev()))
+              hoverClass += ' left';
+
+            target.removeClass('hover').prev().addClass(hoverClass);
           }
 
           // Go to next
-          else if ($('.teaser.hover').hasClass('list') && ($code == $sc.down || $code == $sc.right) ||
-                  $('.teaser.hover').hasClass('grid') && ($code == $sc.right)) {
-            $('.teaser.hover').removeClass('hover').next().addClass('hover');
+          else if (target.hasClass('list') && ($code == $sc.down || $code == $sc.right) ||
+                  target.hasClass('grid') && ($code == $sc.right)) {
+            if (feedLastInRow(target.next()))
+              hoverClass += ' left';
+
+            target.removeClass('hover').next().addClass(hoverClass);
           }
 
           // Jump up a row (for Grid View)
-          else if ($('.teaser.hover').hasClass('grid') && ($code == $sc.up)) {
-            $('.teaser.hover').removeClass('hover').prevAll().eq(($('#static-data').data('numTeasers') - 1)).addClass('hover');
+          else if (target.hasClass('grid') && ($code == $sc.up)) {
+            target.removeClass('hover').prevAll().eq(($('#static-data').data('numTeasers') - 1)).addClass('hover');
             if ($('.teaser.hover').length == 0) {
               $newHover = true;
             }
           }
 
           // Jump down a row (for Grid View)
-          else if ($('.teaser.hover').hasClass('grid') && ($code == $sc.down)) {
-            $('.teaser.hover').removeClass('hover').nextAll().eq($('#static-data').data('numTeasers') - 1).addClass('hover');
+          else if (target.hasClass('grid') && ($code == $sc.down)) {
+            target.removeClass('hover').nextAll().eq($('#static-data').data('numTeasers') - 1).addClass('hover');
           }
         }
 

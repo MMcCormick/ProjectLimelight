@@ -12,8 +12,9 @@ class UsersController < ApplicationController
     })
     respond_to do |format|
       format.js {
-        html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
-        render json: { :event => "loaded_feed_page", :content => html } }
+        response = reload_feed(@core_objects, @more_path, page)
+        render json: response
+      }
       format.html # index.html.erb
     end
   end
@@ -83,8 +84,9 @@ class UsersController < ApplicationController
     })
     respond_to do |format|
       format.js {
-        html =  render_to_string :partial => "core_objects/feed", :locals => { :more_path => @more_path }
-        render json: { :event => "loaded_feed_page", :content => html } }
+        response = reload_feed(@core_objects, @more_path, page)
+        render json: response
+      }
       format.html # index.html.erb
     end
   end

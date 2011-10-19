@@ -23,6 +23,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Build a feed response
+  def reload_feed(core_objects, more_path, page)
+    html =  render_to_string :partial => "core_objects/feed", :locals => { :core_objects => core_objects, :more_path => more_path }
+    response = { :event => "loaded_feed_page", :content => html }
+    response[:full_reload] = (page == 1 ? true : false)
+    return response
+  end
+
   # Exception Throwers
 
   # Not Found (404)
@@ -68,7 +76,7 @@ class ApplicationController < ActionController::Base
       session[:feed_filters] =
               {
                 :display => ['Talk', 'News', 'Picture', 'Video'],
-                :sort => {:target => 'created_at', :order => 'DESC'},
+                :sort => {'target' => 'created_at', 'order' => 'DESC'},
                 :layout => 'list'
               }
     end

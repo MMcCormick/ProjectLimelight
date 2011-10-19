@@ -37,4 +37,15 @@ module ApplicationHelper
     @devise_mapping ||= Devise.mappings[:user]
   end
 
+  def static_data
+    data = {
+            :fetchEmbedUrl => embedly_fetch_path,
+            :myId => signed_in? ? current_user.id.to_s : 0,
+            :autocompelte => '/soul-data/search',
+            :userAutoBucket => signed_in? ? current_user.id.to_s : 0,
+            :feedFiltersUpdate => feed_update_url
+    }
+    Yajl::Encoder.encode(data)
+  end
+
 end

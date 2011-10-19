@@ -121,8 +121,6 @@
   // Resize/reset the entire page.
   resetPage = function(rightSidebar) {
     resizeLayout(rightSidebar);
-//        resetScrollPane($('.scroll'));
-    resizeFeedTeasers();
   }
 
   /*
@@ -221,28 +219,6 @@
   $(document).delegate('.qtip.jgrowl', 'mouseover mouseout', timer);
 
   // END GROWL
-
-  /*
-   * FEEDS
-   */
-
-  resizeFeedTeasers = function() {
-//    var $minWidth = 250,
-//            $maxWidth = 500,
-//            $feedWidth = $('.object-feed').width() - 1,
-//            $numTeasers = Math.floor($feedWidth / $minWidth);
-//
-//    if ($('.teaser.grid').length < $numTeasers) {
-//      $numTeasers = $('.teaser.grid').length;
-//    }
-//    var $newWidth = $feedWidth / $numTeasers;
-//
-//    $newWidth = $newWidth > $maxWidth ? $maxWidth : $newWidth;
-//
-//    // Stor
-//    $('#static-data').data('numTeasers', $numTeasers);
-//    $('.teaser.grid').outerWidth($newWidth);
-  }
 
   // Resize on page load
   resetPage(true);

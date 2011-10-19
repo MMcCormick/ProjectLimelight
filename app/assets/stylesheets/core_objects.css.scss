@@ -410,6 +410,9 @@ $teaser-padding: 10px;
   }
   .controlsC {
     display: none;
+    position: absolute;
+    top: 0px;
+    right: 0px;
   }
   .connectionsC {
       position: absolute;
@@ -420,8 +423,8 @@ $teaser-padding: 10px;
   .score {
     @include single-box-shadow(#666, 1px, 1px, 2px);
     position: absolute;
-    top: -8px;
-    left: 204px;
+    top: -4px;
+    left: -36px;
     font-size: 30px;
     color: #555;
     cursor: pointer;
@@ -435,10 +438,10 @@ $teaser-padding: 10px;
     right: 3px;
   }
   .up {
-    top: 38px;
+    top: 43px;
   }
   .down {
-    top: 65px;
+    top: 70px;
   }
   .favB,
   .unfavB,
@@ -458,7 +461,32 @@ $teaser-padding: 10px;
   }
   .coreShareB {
     top: 155px;
-    right: 7px;
+    right: 8px;
+  }
+  &.left {
+    .controlsC {
+      right: auto;
+      left: 0px;
+    }
+    .score {
+      right: -36px;
+      left: auto;
+    }
+    .up,
+    .down {
+      left: 3px;
+    }
+    .favB,
+    .unfavB,
+    .repostB,
+    .unrepostB,
+    .coreShareB {
+      position: absolute;
+      left: 3px;
+    }
+    .coreShareB {
+      left: 8px;
+    }
   }
   &.hover {
     z-index: 15;
@@ -490,6 +518,13 @@ $teaser-padding: 10px;
     .connectionsC {
       left: 0;
       max-height: 50px;
+    }
+    &.left {
+      .wrapper {
+        padding: $expand-height/2 0 $expand-height $expand-width;
+        right: -1px;
+        left: auto;
+      }
     }
   }
 }
@@ -657,17 +692,36 @@ $scoreBox-width: 160px;
         }
     }
 }
-
+#core-feed.grid {
+  display: inline-block;
+  margin-top: 12px;
+}
 #load-more {
-  @include link;
   text-align: center;
-  margin: 5px;
-  font-size: 12px;
+  padding: 10px 0;
+  margin: 0 0 20px;
+  font-size: 20px;
+  cursor: pointer;
+  border-top: 1px solid transparent;
+  border-bottom: 2px solid #ddd;
+  clear: both;
+  position: relative;
+  top: 10px;
+
+  &:hover {
+    background: #EFEFEF;
+    border-top-color: #DDD;
+  }
+  &.on {
+    background: #EFEFEF;
+    border-top-color: #DDD;
+    cursor: default;
+  }
 }
 
 #feed-filters {
     height: 30px;
-    padding: 4px 0 4px 10px;
+    padding: 3px 0 4px 10px;
 
     .feed-display,
     .feed-sort,
@@ -676,7 +730,7 @@ $scoreBox-width: 160px;
         float: left;
 
         h5 {
-            padding: 8px 0 0 0;
+            padding: 7px 0 0 0;
             color: #B0AEAE;
             cursor: default;
         }
@@ -687,7 +741,7 @@ $scoreBox-width: 160px;
         }
         ul {
             @include border-radius(4px);
-            margin: 3px 0 0 10px;
+            margin: 2px 0 0 10px;
             float: left;
         }
         .opt {
@@ -720,7 +774,7 @@ $scoreBox-width: 160px;
         li {
             @include border-radius(2px);
             border: 1px solid #DDD;
-            margin: 0 3px;
+            margin: 1px 3px;
             float: left;
         }
         .opt {
@@ -732,7 +786,7 @@ $scoreBox-width: 160px;
         width: 200px;
 
         .arrow-small {
-            position: absolute; top: 12px; right: 35px;
+            position: absolute; top: 11px; right: 28px;
             z-index: 10;
         }
 
@@ -740,7 +794,7 @@ $scoreBox-width: 160px;
             @include border-radius(2px);
             background-color: #EFEFEF;
             border: 1px solid #DDD;
-            position: absolute; top: 0px; left: 51px;
+            position: absolute; top: 0px; left: 59px;
             z-index: 5;
 
             .opt {

@@ -12,13 +12,10 @@ var resizeLayout = function(rightSidebarAdjust) {
   var footer = $('#footer').height();
   var h = $(window).height() - footer;
 
-  console.log(footer)
-  console.log($(window).height())
-
-  sidebar.css('height', h - 2 - parseInt(sidebar.css('margin-top').replace("px", "")) * 2);
+  sidebar.css('height', h - 7 - parseInt(sidebar.css('left').replace("px", "")) * 2);
 
   var w = $('body').width() - 4
-          - (sidebar.width() + parseInt(sidebar.css('margin-left').replace("px", "")));
+          - (sidebar.width() + parseInt(sidebar.css('left').replace("px", "")));
 
 
   if (rightSidebar.length > 0) {

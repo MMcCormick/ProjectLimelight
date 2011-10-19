@@ -56,29 +56,27 @@
         </div>
 
         <div id="page">
-          <div id="page-sb1" class="">
-            <div class="wrap">
-              <%= yield :page_sidebar1 %>
-            </div>
-          </div>
-          <div id="page-sb2" class="">
-            <div class="wrap">
-              <%= yield :page_sidebar2 %>
-            </div>
-          </div>
-          <div id="page-sb3" class="">
-            <div class="wrap">
-              <%= yield :page_sidebar3 %>
-            </div>
-          </div>
+          <!--<div id="page-sb1" class="">-->
+            <!--<div class="wrap">-->
+              <!--<%#= yield :page_sidebar1 %>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div id="page-sb2" class="">-->
+            <!--<div class="wrap">-->
+              <!--<%#= yield :page_sidebar2 %>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div id="page-sb3" class="">-->
+            <!--<div class="wrap">-->
+              <!--<%#= yield :page_sidebar3 %>-->
+            <!--</div>-->
+          <!--</div>-->
           <div id="page_content">
-            <div class="wrap">
-              <%= yield %>
-              <% if Rails.env.development? %>
-                <%= debug(params) %>
-                <div id="debug-upload-runtime">Upload Runtime: No runtime found</div>
-              <% end %>
-            </div>
+            <%= yield %>
+            <% if Rails.env.development? %>
+              <%= debug(params) %>
+              <div id="debug-upload-runtime">Upload Runtime: No runtime found</div>
+            <% end %>
           </div>
           <div id="page_cover"></div>
         </div>
@@ -98,7 +96,8 @@
     <%= render "shared/contribute", :id => 'top-contribute', :responding => nil %>
     <div id="form-submitting">Form submitting...</div>
     <div style="display: none">
-      <div id="static-data" data-d='{"oSearchUrl":"", "fetchEmbedUrl":"<%= embedly_fetch_path %>","myId":"<%= signed_in? ? current_user.id.to_s : 0 %>","autocomplete":"/soul-data/search","userAutoBucket":"<%= current_user.id.to_s if signed_in? %>"}'></div>
+      <div id="static-data" data-d='<%= static_data %>'></div>
+      <div id="feed-reload" data-url='<%= request.url %>' class='ac'></div>
       <%= render "core_object_shares/form" %>
 
       <div id="auth_box">

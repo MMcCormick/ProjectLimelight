@@ -39,6 +39,12 @@ FactoryGirl.define do
     association :user
   end
 
+  factory :comment do
+    content "Comment Content"
+    association :user
+    association :talk
+  end
+
   factory :topic do
     sequence(:name) { |n| "topic#{n}" }
     association :user

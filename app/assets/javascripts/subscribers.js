@@ -25,18 +25,15 @@ $(function() {
     var $target = $(data.target).parents('.scoreC:first')
     if (data.a > 0)
     {
-      console.log("a > 0")
       $target.find('.up').removeClass('voteB').addClass('unvoteB')
       $target.find('.down').removeClass('unvoteB').addClass('voteB')
     }
     else if (data.a == 0)
     {
-      console.log("a == 0")
       $target.find('.up, .down').removeClass('unvoteB').addClass('voteB')
     }
     else
     {
-      console.log("a < 0")
       $target.find('.up').removeClass('unvoteB').addClass('voteB')
       $target.find('.down').removeClass('voteB').addClass('unvoteB')
     }

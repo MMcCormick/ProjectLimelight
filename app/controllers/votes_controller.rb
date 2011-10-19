@@ -7,22 +7,27 @@ class VotesController < ApplicationController
   end
 
   def create
-    object = CoreObject.find(params[:id])
-    amount = params[:a].to_i
+    if ['Talk', 'News', 'Video', 'Picture', 'Comment'].include? params[:type]
+      object = Kernel.const_get(params[:type]).find(params[:id])
+      amount = params[:a].to_i
 
-    if object && [1,0,-1].include?(amount)
-      if object.user_id == current_user.id
-        response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
-        status = 401
+      if object && [1,0,-1].include?(amount)
+        if object.user_id == current_user.id
+          response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
+          status = 401
+        else
+          object.add_voter(current_user, amount)
+          current_user.save if object.save
+          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => amount})
+          status = 201
+        end
       else
-        object.add_voter(current_user, amount)
-        current_user.save if object.save
-        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => amount})
-        status = 201
+        response = build_ajax_response(:error, nil, 'Target object not found!', nil)
+        status = 404
       end
     else
-      response = build_ajax_response(:error, nil, 'Target object not found!', nil)
-      status = 404
+      response = build_ajax_response(:error, nil, 'Invalid object type')
+      status = 400
     end
 
     respond_to do |format|
@@ -31,20 +36,26 @@ class VotesController < ApplicationController
   end
 
   def destroy
-    object = CoreObject.find(params[:id])
-    if object
-      if object.user_id == current_user.id
-        response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
-        status = 401
+    if ['Talk', 'News', 'Video', 'Picture', 'Comment'].include? params[:type]
+      object = Kernel.const_get(params[:type]).find(params[:id])
+
+      if object
+        if object.user_id == current_user.id
+          response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
+          status = 401
+        else
+          object.remove_voter(current_user)
+          current_user.save if object.save
+          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => 0})
+          status = 200
+        end
       else
-        object.remove_voter(current_user)
-        current_user.save if object.save
-        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => 0})
-        status = 200
+        response = build_ajax_response(:error, nil, 'Target object not found!', nil)
+        status = 404
       end
     else
-      response = build_ajax_response(:error, nil, 'Target object not found!', nil)
-      status = 404
+      response = build_ajax_response(:error, nil, 'Invalid object type')
+      status = 400
     end
 
     respond_to do |format|

@@ -5,8 +5,6 @@ class User
   include Mongoid::Slug
   include Limelight::Images
 
-  after_update :update_denorms
-
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -74,6 +72,7 @@ class User
   validates :email, :uniqueness => { :case_sensitive => false }
 
   after_create :add_to_soulmate, :save_profile_image
+  after_update :update_denorms
   before_destroy :remove_from_soulmate
 
   # Return the users slug instead of their ID

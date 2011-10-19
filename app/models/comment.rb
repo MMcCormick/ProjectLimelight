@@ -1,11 +1,11 @@
 require "limelight"
 
-#TODO: depth limit, check comments_count on talk, testing
 class Comment
   include Mongoid::Document
   include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Limelight::Acl
+  include Limelight::Voting
 
   field :content
   field :parent_id
@@ -13,14 +13,17 @@ class Comment
   field :user_id
   field :depth, :default => 0
   field :path, :default => ""
+  field :votes_count, :default => 0
+
 
   belongs_to :talk
   belongs_to :user
 
   embeds_one :user_snippet, as: :user_assignable
+  embeds_many :votes, as: :votable
 
   validates :talk_id, :presence => true
-  validates :content, :length => { :minimum => 3, :maximum => 300 }
+  validates :content, :length => { :minimum => 3, :maximum => 150 }
   validates :depth, :numericality => { :only_integer => true, :less_than_or_equal_to => 5 }
 
   before_validation :set_path

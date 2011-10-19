@@ -155,4 +155,69 @@ module Limelight #:nodoc:
       end
     end
   end
+
+  # Include this module to enable voting on a document
+  # @example Add image handling.
+  #   require "limelight"
+  #   class Person
+  #     include Limelight::Voting
+  #   end
+  module Voting
+    extend ActiveSupport::Concern
+
+    included do
+      field :votes_count, :default => 0
+
+      embeds_many :votes, as: :votable
+    end
+
+    # Votes
+    def voter?(user_id, amount=nil)
+      if amount
+        vote = votes.where(:_id => user_id, :amount => amount).first
+      elsif
+        vote = votes.where(:_id => user_id).first
+      end
+      vote
+    end
+
+    def add_voter(user, amount)
+      vote = voter? user.id
+      if !vote
+        self.votes.create(:_id => user.id, :amount => amount)
+        self.votes_count += amount
+        if amount > 0
+          user.vote_pos_count += 1
+        else
+          user.vote_neg_count += 1
+        end
+      elsif vote.amount != amount
+        self.votes_count = votes_count - vote.amount + amount
+        vote.amount = amount
+        if amount > 0
+          user.vote_pos_count += 1
+          user.vote_neg_count -= 1
+        else
+          user.vote_pos_count -= 1
+          user.vote_neg_count += 1
+        end
+      end
+      user.recalculate_vote_ratio
+    end
+
+    def remove_voter(user)
+      vote = voter? user.id
+      if vote
+        if vote.amount > 0
+          user.vote_pos_count -= 1
+        else
+          user.vote_neg_count -= 1
+        end
+        user.recalculate_vote_ratio
+        self.votes_count -= vote.amount
+        vote.destroy
+      end
+    end
+  end
+
 end

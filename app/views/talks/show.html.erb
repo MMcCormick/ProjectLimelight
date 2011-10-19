@@ -22,4 +22,9 @@
 <%= render 'favorites/btn', :object => @talk %>
 <%= render 'reposts/btn', :object => @talk %>
 
+<%= render 'comments/thread', :comments => @comments, :talk => @talk %>
+<div style="display: none">
+  <%= render "comments/form", :talk => @talk, :reply => true %>
+</div>
+
 <!--{% render "LimelightCommentBundle:Thread:show" with {"root": object} %}-->

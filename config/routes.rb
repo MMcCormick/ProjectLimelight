@@ -44,7 +44,10 @@ ProjectLimelight::Application.routes.draw do
   put 't/:id' => 'topics#update', :as => :update_topic
 
   # Topic Types
-  resources :topic_types
+  resources :topic_types, :only => [:create, :destroy]
+
+  # Comments
+  resources :comments
 
   # Notifications
   get '/:id/notifications' => 'notifications#index', :as => :notifications

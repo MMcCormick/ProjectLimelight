@@ -27,10 +27,10 @@ $(function() {
    */
 
   // Show the comment reply box
-  $('.comment .reply_show').live('click', function() {
+  $('.comment .reply-show').live('click', function() {
     var $button = $(this);
+    $('.comment_reply:visible').remove();
     var $reply = $('.comment_reply').clone()
-            .find('.comment_reply_name_placeholder').text($button.data('d').name).end()
             .find('.comment_reply_cancel').click(
             function() {
               $reply.remove();
@@ -38,28 +38,28 @@ $(function() {
             .appendTo($button.parent().parent())
             .fadeIn(300)
             .find('textarea').focus().end();
-    // add the comment parent id to the form action url
-    $button.parent().parent().find('form').attr('action', $reply.parent().parent().find('form').attr('action') + '/' + $button.data('d').id);
+    // add the comment parent id to the hidden form
+    $button.parent().parent().find('form #comment_parent_id').attr('value', $button.data('d').id);
   });
 
   // Highlight comments on the same depth level
-  $('.comment').live({
-    mouseenter: function() {
-      $(this).stopTime('comment-hover-stop');
-      $(this).stopTime('comment-hover');
-      $(this).oneTime(500, "comment-hover", function() {
-        $('.comment').removeClass('hover-*');
-        $('.d-' + $(this).data('d').d + '.p-' + $(this).data('d').p).addClass('hover-' + $(this).data('d').c);
-      })
-    },
-    mouseleave: function() {
-      $(this).stopTime('comment-hover');
-      $(this).stopTime('comment-hover-stop');
-      $(this).oneTime(500, "comment-hover-stop", function() {
-        $('.d-' + $(this).data('d').d + '.p-' + $(this).data('d').p).removeClass('hover-' + $(this).data('d').c);
-      })
-    }
-  })
+//  $('.comment').live({
+//    mouseenter: function() {
+//      $(this).stopTime('comment-hover-stop');
+//      $(this).stopTime('comment-hover');
+//      $(this).oneTime(500, "comment-hover", function() {
+//        $('.comment').removeClass('hover-*');
+//        $('.d-' + $(this).data('d').d + '.p-' + $(this).data('d').p).addClass('hover-' + $(this).data('d').c);
+//      })
+//    },
+//    mouseleave: function() {
+//      $(this).stopTime('comment-hover');
+//      $(this).stopTime('comment-hover-stop');
+//      $(this).oneTime(500, "comment-hover-stop", function() {
+//        $('.d-' + $(this).data('d').d + '.p-' + $(this).data('d').p).removeClass('hover-' + $(this).data('d').c);
+//      })
+//    }
+//  })
 
   /*
    * User and Topic Hover Tabs - QTips

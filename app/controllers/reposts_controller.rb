@@ -1,6 +1,7 @@
 class RepostsController < ApplicationController
   before_filter :authenticate_user!
 
+  #TODO: don't allow users to repost their own
   def create
     object = CoreObject.find(params[:id])
     if object

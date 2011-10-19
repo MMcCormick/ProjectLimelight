@@ -11,25 +11,31 @@ $small-image-width: 30px;
 $scoreC-width: 50px;
 $indent: 20px;
 
-.comment_thread {
+.comment_form {
+    @include clearfix();
+    display: block;
+    width: 400px;
+    textarea {
+        height: 50px;
+        width: 380px;
+    }
+    .submit,
+    .comment_reply_cancel {
+        @include green-button(3px, 12px);
+        margin: 5px 0 0 15px;
+        float: right;
+    }
+    input {
+      float: left;
+    }
+    padding-bottom: 10px;
+}
+
+.comment-thread {
     margin: 0 20px;
     padding: 10px 0 0 0;
     border-top: 1px solid #CAE09D;
-    .comment_form {
-        @include clearfix();
-        display: block;
-        width: 400px;
-        textarea {
-            height: 50px;
-            width: 386px;
-        }
-        .submit,
-        .comment_reply_cancel {
-            @include green-button(3px, 12px);
-            margin: 5px 0 0 15px;
-            float: right;
-        }
-    }
+
     .comment_reply {
         margin: 5px 0 0 3px;
     }
@@ -48,6 +54,9 @@ $indent: 20px;
         border-bottom: 2px solid #EEE;
         padding: 2px $scoreC-width+20 5px $small-image-width+13;
 
+        .comment_form {
+            padding-bottom: 0px;
+        }
         .profileImage {
             position: absolute;
             top: 9px;
@@ -66,11 +75,11 @@ $indent: 20px;
             color: #777;
             margin: 5px 0 0 8px;
         }
-        .reply_show {
+        .reply-show {
             @include link();
             float: left;
             font-size: 10px;
-            margin: 5px 0 0 8px;
+            margin: 0px;
         }
 
         .createdC {

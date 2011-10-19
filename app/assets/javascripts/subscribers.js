@@ -120,15 +120,15 @@ $(function() {
    * COMMENTS
    */
 
-  amplify.subscribe("comment_created", function (data) {
-    if (data.parentId) {
-      $('#' + data.parentId).after(data.comment);
+  amplify.subscribe("comments_create", function (data) {
+    if (data.parent_id) {
+      $('#comment_' + data.parent_id).after(data.comment);
     }
     else {
       $('.comments').prepend(data.comment);
     }
     $('.comment .comment_reply').remove();
-    $('.comments').prev('h3').find('span').text(parseInt($('.comments').prev('h3').find('span').text()) + 1);
+    //$('.comments').prev('h3').find('span').text(parseInt($('.comments').prev('h3').find('span').text()) + 1);
   })
 
   /*

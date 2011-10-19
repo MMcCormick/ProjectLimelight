@@ -1,0 +1,23 @@
+<% reply_class = "comment_reply" if reply %>
+
+<%= form_for Comment.new, :html => { :class => "comment_form ajax #{reply_class}" } do |f| %>
+  <%= render 'shared/error_messages', :object => f.object %>
+  <div class="errors"></div>
+
+  <div class="field lClear required">
+    <%= f.label :content, "Post a comment!" %>
+    <%= f.text_area :content %>
+  </div>
+
+  <%= f.hidden_field :parent_id %>
+  <%= f.hidden_field :talk_id, {:value => talk.id} %>
+
+  <div class="actions">
+    <%= f.submit "Post Comment", :class => "submit" %>
+  </div>
+
+  <% if reply %>
+    <div class = "comment_reply_cancel">cancel</div>
+  <% end %>
+
+<% end %>

@@ -65,6 +65,7 @@ class User
   has_many :topics
   has_many :core_object_shares
   has_many :topic_types
+  has_many :comments
 
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login

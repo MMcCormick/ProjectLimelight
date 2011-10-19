@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/kenn/rpm_contrib.git
-  revision: 552c290245c4d9c5501902e4c99c750c6a1d43de
-  branch: mongo140compat
-  specs:
-    rpm_contrib (2.1.6.beta1)
-      newrelic_rpm (>= 3.1.1)
-      newrelic_rpm (>= 3.1.1)
-
-GIT
   remote: https://github.com/hone/resque.git
   revision: 19b422e7c1367cf6590ace9c44f7dd8c4fad8752
   branch: keepalive
@@ -127,14 +118,15 @@ GEM
       term-ansicolor (~> 1.0.5)
       thor (>= 0.13.6)
     formatador (0.2.1)
-    frontend-helpers (0.0.9.1)
+    frontend-helpers (0.1.0)
       haml-rails
       rails (~> 3.1.0)
       sass-rails
       sprockets
+      sqlite3
     fssm (0.2.7)
     growl (1.0.3)
-    guard (0.8.6)
+    guard (0.8.7)
       thor (~> 0.14.6)
     guard-rspec (0.5.0)
       guard (>= 0.8.4)
@@ -194,7 +186,6 @@ GEM
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.1.4)
-    newrelic_rpm (3.2.0)
     nokogiri (1.5.0)
     oauth (0.4.5)
     orm_adapter (0.0.5)
@@ -205,7 +196,7 @@ GEM
       ruby_parser (~> 2.0.5)
       slop (~> 2.1.0)
     querystring (0.1.0)
-    rack (1.3.4)
+    rack (1.3.5)
     rack-cache (1.1)
       rack (>= 0.4)
     rack-contrib (1.1.0)
@@ -224,6 +215,8 @@ GEM
       activesupport (= 3.1.1)
       bundler (~> 1.0)
       railties (= 3.1.1)
+    rails-dev-tweaks (0.5.1)
+      rails (~> 3.1.0)
     rails-footnotes (3.7.5)
       rails (>= 3.0.0)
     railties (3.1.1)
@@ -298,7 +291,7 @@ GEM
     sexp_processor (3.0.7)
     sinatra (1.2.7)
       rack (~> 1.1)
-      tilt (< 2.0, >= 1.2.2)
+      tilt (>= 1.2.2, < 2.0)
     slop (2.1.0)
     soulmate (0.0.5)
       json (~> 1.4.6)
@@ -315,6 +308,7 @@ GEM
       hike (~> 1.2)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    sqlite3 (1.3.4)
     stringex (1.3.0)
     term-ansicolor (1.0.7)
     thor (0.14.6)
@@ -322,17 +316,19 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    typhoeus (0.2.4)
-      mime-types
+    typhoeus (0.3.2)
       mime-types
     tzinfo (0.3.30)
-    uglifier (1.0.3)
+    uglifier (1.0.4)
       execjs (>= 0.3.0)
       multi_json (>= 1.0.2)
     unicorn (4.1.1)
       kgio (~> 2.4)
       rack
       raindrops (~> 0.6)
+    vanity (1.7.1)
+      redis (~> 2.0)
+      redis-namespace (~> 1.0.0)
     vegas (0.1.8)
       rack (>= 1.0.0)
     warden (1.0.6)
@@ -375,9 +371,9 @@ DEPENDENCIES
   mongoid-rspec
   mongoid_auto_inc
   mongoid_slug
-  newrelic_rpm
   pry
   rails (= 3.1.1)
+  rails-dev-tweaks
   rails-footnotes
   rb-fsevent
   redcarpet
@@ -385,7 +381,6 @@ DEPENDENCIES
   resque-loner
   resque-scheduler (= 2.0.0.e)
   rmagick
-  rpm_contrib!
   rspec-cells
   rspec-rails
   ruby-debug19
@@ -394,4 +389,5 @@ DEPENDENCIES
   spork (> 0.9.0.rc)
   uglifier
   unicorn
+  vanity
   yajl-ruby

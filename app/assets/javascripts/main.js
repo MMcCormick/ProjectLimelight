@@ -285,9 +285,11 @@ $(function() {
     var $code = e.which ? e.which : e.keyCode;
     var $newHover = false;
 
+    console.log($code)
+
     switch (true) {
       // Nav / Hover Controls
-      case ($code == $sc.up || $code == $sc.down || $code == $sc.left || $code == $sc.right):
+      case (!e.shiftKey && ($code == $sc.up || $code == $sc.down || $code == $sc.left || $code == $sc.right)):
         $('body').addClass('shortcut-on');
 
         var target = $('.teaser.hover'),
@@ -320,7 +322,7 @@ $(function() {
 
           // Jump up a row (for Grid View)
           else if (target.hasClass('grid') && ($code == $sc.up)) {
-            target.removeClass('hover').prevAll().eq(($('#static-data').data('numTeasers') - 1)).addClass('hover');
+            target.removeClass('hover').prevAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover');
             if ($('.teaser.hover').length == 0) {
               $newHover = true;
             }
@@ -328,7 +330,7 @@ $(function() {
 
           // Jump down a row (for Grid View)
           else if (target.hasClass('grid') && ($code == $sc.down)) {
-            target.removeClass('hover').nextAll().eq($('#static-data').data('numTeasers') - 1).addClass('hover');
+            target.removeClass('hover').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover');
           }
         }
 
@@ -337,9 +339,12 @@ $(function() {
         }
 
         // If the app needs to pick a new teaser to hover
-        if ($newHover == true) {
+        if ($newHover) {
           if ($('.teaser:first:onScreen').length > 0) {
             $('.teaser:first').addClass('hover')
+          }
+          else if ($('.teaser:onScreen:first').hasClass('grid')) {
+            $('.teaser:onScreen:first').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover')
           }
           else {
             $('.teaser:onScreen:first').next().addClass('hover');
@@ -347,47 +352,46 @@ $(function() {
         }
 
         // If the new hovered teaser is out of view, adjust viewport according to keystroke
-        if (!isScrolledIntoView($('.teaser.hover'), true)) {
-          var adjust = ($code == $sc.up || $code == $sc.left) ? '-=500' : '+=500';
-          $(window).scrollTo(adjust, 500);
+        if (!isScrolledIntoView($('.teaser.hover'), true, false, true)) {
+          var adjust = ($code == $sc.up || $code == $sc.left) ? '-=300' : '+=300';
+          $(window).scrollTo(adjust, 300);
         }
-
-        break;
+      break;
 
       // Score Up
-      case (e.ctrlKey && $code == $sc.up):
-        $('.teaser.hover').find('.thumbs-up-icon').click();
-        break;
+      case (e.shiftKey && $code == $sc.up):
+        $('.teaser.hover').find('.voteB.up').click();
+      break;
 
       // Score Down
-      case (e.ctrlKey && $code == $sc.down):
-        $('.teaser.hover').find('.thumbs-down-icon').click();
-        break;
+      case (e.shiftKey && $code == $sc.down):
+        $('.teaser.hover').find('.voteB.down').click();
+      break;
 
       // Favorite
       case ($code == $sc.fav):
-        $('.teaser.hover').find('.fav').click();
-        break;
+        $('.teaser.hover').find('.favB').click();
+      break;
 
       // Repost
       case ($code == $sc.repost):
-        $('.teaser.hover').find('.repost_B').click();
-        break;
+        $('.teaser.hover').find('.repostB').click();
+      break;
 
       // Share
-      case ($code == $sc.repost):
-        $('.teaser.hover').find('.share').click();
-        break;
+      case ($code == $sc.share):
+        $('.teaser.hover').find('.coreShareB').click();
+      break;
 
+      //TODO: implement - unsure of purpose
       // Talk
-      case ($code == $sc.repost):
-        $('.teaser.hover').find('.share').click();
-        break;
+      case ($code == $sc.talk):
+        //$('.teaser.hover').find('.share').click();
+      break;
 
-      // Talk
       case ($code == $sc.goTo):
-        $('.teaser.hover').find('.commentC').click();
-        break;
+        window.location = $('.teaser.hover').find('.commentC').attr('href')
+      break;
     }
   })
 })

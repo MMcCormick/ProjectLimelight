@@ -110,7 +110,8 @@ class CoreObject
       or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users]
       or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
 
-      page_length = 3
+      #page length also hard-coded in views/core_object
+      page_length = 15
       page_number = options[:page]? options[:page] : 1
       num_to_skip = page_length * (page_number - 1)
 

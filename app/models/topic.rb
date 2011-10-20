@@ -23,7 +23,7 @@ class Topic
   field :user_id
   field :followers_count, :default => 0
 
-  auto_increment :_public_id
+  auto_increment :public_id
 
   belongs_to :user
   embeds_one :user_snippet, as: :user_assignable
@@ -43,8 +43,12 @@ class Topic
     self.slug
   end
 
+  def encoded_id
+    public_id.to_i.to_s(36)
+  end
+
   def set_user_snippet
-    self.build_user_snippet({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.build_user_snippet({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
   end
 
   def add_alias
@@ -57,10 +61,6 @@ class Topic
     topic_type_snippets.map {|type| type.name}
   end
 
-  def public_id
-    self[_public_id].to_i.to_s(36)
-  end
-
   def add_to_soulmate
     Resque.enqueue(SmCreateTopic, id.to_s)
     end
@@ -71,7 +71,7 @@ class Topic
 
   class << self
     def find_by_encoded_id(id)
-      where(:_public_id => id.to_i(36)).first
+      where(:public_id => id.to_i(36)).first
     end
   end
 

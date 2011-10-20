@@ -18,14 +18,14 @@ class CoreObject
   field :reposts_count, :default => 0
   field :user_id
 
-  auto_increment :_public_id
+  auto_increment :public_id
 
   embeds_one :user_snippet, as: :user_assignable
   embeds_one :response_to
   embeds_many :user_mentions, as: :user_mentionable
   embeds_many :topic_mentions, as: :topic_mentionable
 
-  index :_public_id, unique: true
+  index :public_id, unique: true
 
   belongs_to :user
   has_many :core_object_shares
@@ -36,11 +36,15 @@ class CoreObject
   before_create :set_user_snippet, :set_mentions, :current_user_own
 
   def to_param
-    "#{self._public_id.to_i.to_s(36)}-#{name.parameterize}"
+    "#{encoded_id}-#{name.parameterize}"
   end
 
   def content_clean
     content.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([\w ]*)\]/, '\2')
+  end
+
+  def encoded_id
+    public_id.to_i.to_s(36)
   end
 
   # Favorites
@@ -85,13 +89,9 @@ class CoreObject
     end
   end
 
-  def public_id
-    self[_public_id].to_i.to_s(36)
-  end
-
   class << self
     def find_by_encoded_id(id)
-      where(:_public_id => id.to_i(36)).first
+      where(:public_id => id.to_i(36)).first
     end
 
     # @example Fetch the core_objects for a feed with the given criteria
@@ -130,7 +130,7 @@ class CoreObject
 
   # Set some denormilized user data
   def set_user_snippet
-    self.build_user_snippet({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.build_user_snippet({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
   end
 
   def set_mentions
@@ -154,7 +154,7 @@ class CoreObject
     users = User.where(:_id.in => found_users)
 
     users.each do |user|
-      self.user_mentions.build({id: user.id, _public_id: user._public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+      self.user_mentions.build({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
     end
   end
 
@@ -173,7 +173,7 @@ class CoreObject
       # Add the found topics as snippets
       mentions = Topic.where(:_id.in => found_topics)
       mentions.each do |topic|
-        payload = {id: topic.id, _public_id: topic._public_id, name: topic.name, slug: topic.slug }
+        payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
         self.topic_mentions.build(payload)
       end
 
@@ -207,7 +207,7 @@ class CoreObject
           end
         end
         if found_topic
-          payload = {id: found_topic.id, _public_id: found_topic._public_id, name: found_topic.name, slug: found_topic.slug }
+          payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug }
           self.topic_mentions.build(payload)
         end
       end

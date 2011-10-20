@@ -7,7 +7,7 @@
 
   <%= collection_select(:topic_type, :id, types, :id, :name, :prompt => true) %>
 
-  <%= f.hidden_field(:topic_id, {:value => topic._public_id}) %>
+  <%= f.hidden_field(:topic_id, {:value => topic.public_id}) %>
 
   <div class="actions">
     <%= f.submit "Add" %>

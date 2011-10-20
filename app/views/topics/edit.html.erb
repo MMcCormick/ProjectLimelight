@@ -7,7 +7,7 @@
   <% @topic.topic_type_snippets.each do |snippet| %>
     <li>
       <%= snippet.name %>
-      <a data-url="<%= topic_type_path %>" data-d='{ "type_id":"<%= snippet.id %>", "topic_id":"<%= @topic._public_id %>"}' data-m="delete" class="ac delete">X</a>
+      <a data-url="<%= topic_type_path %>" data-d='{ "type_id":"<%= snippet.id %>", "topic_id":"<%= @topic.public_id %>"}' data-m="delete" class="ac delete">X</a>
     </li>
   <% end %>
 </ul>

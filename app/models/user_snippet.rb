@@ -5,7 +5,7 @@ class UserSnippet
   field :username
   field :first_name
   field :last_name
-  field :_public_id
+  field :public_id
 
   embedded_in :user_assignable, polymorphic: true
 

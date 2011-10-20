@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe User do
+  #TODO: find_for_database_authentication
   
   it "should create + persist a new instance given valid attributes" do
     FactoryGirl.create(:user).should be_valid
@@ -356,6 +357,46 @@ describe User do
     end
   end
 
-  #TODO: find_for_database_authentication
-  #TODO: update_denorms (i can write this since i wrote the function, although i don't know what notifications will look like)
+  describe "update_denorms" do
+    let(:user) { FactoryGirl.create(:user) }
+
+    it "should update CoreObject.user_snippets when attributes are updated" do
+      talk = FactoryGirl.create(:talk, :user => user)
+      talk.user_snippet.username.should == user.username
+      user.update_attributes(:username => "jamie", :first_name => "james", :last_name => "michaels")
+      updated_talk = Talk.find(talk.id)
+      updated_talk.user_snippet.username.should == "jamie"
+      updated_talk.user_snippet.first_name.should == "james"
+      updated_talk.user_snippet.last_name.should == "michaels"
+    end
+    it "should update CoreObject.user_mentions when attributes are updated" do
+      talk = FactoryGirl.create(:talk, :content_raw => "mentioning @[#{user.id}##{user.username}]")
+      talk.user_mentions[0].username.should == user.username
+      user.update_attributes(:username => "jamie", :first_name => "james", :last_name => "michaels")
+      updated_talk = Talk.find(talk.id)
+      updated_talk.user_mentions[0].username.should == "jamie"
+      updated_talk.user_mentions[0].first_name.should == "james"
+      updated_talk.user_mentions[0].last_name.should == "michaels"
+    end
+    it "should update Topic.user_snippets when attributes are updated" do
+      topic = FactoryGirl.create(:topic, :user => user)
+      topic.user_snippet.username.should == user.username
+      user.update_attributes(:username => "jamie", :first_name => "james", :last_name => "michaels")
+      updated_topic = Topic.find(topic.id)
+      updated_topic.user_snippet.username.should == "jamie"
+      updated_topic.user_snippet.first_name.should == "james"
+      updated_topic.user_snippet.last_name.should == "michaels"
+    end
+    it "should update Comment.user_snippets when attributes are updated" do
+      comment = FactoryGirl.create(:comment, :user => user)
+      comment.user_snippet.username.should == user.username
+      user.update_attributes(:username => "jamie", :first_name => "james", :last_name => "michaels")
+      updated_comment = Comment.find(comment.id)
+      updated_comment.user_snippet.username.should == "jamie"
+      updated_comment.user_snippet.first_name.should == "james"
+      updated_comment.user_snippet.last_name.should == "michaels"
+    end
+
+    #TODO: notifications
+  end
 end

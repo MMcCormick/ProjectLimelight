@@ -1,4 +1,5 @@
 # Embeddable core object snippet that holds useful (denormalized) core object info
+# TODO: decide if this is necessary with the new notifications system
 class CoreObjectSnippet
   include Mongoid::Document
 

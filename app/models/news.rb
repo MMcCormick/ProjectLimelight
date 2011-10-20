@@ -7,7 +7,7 @@ class News < CoreObject
 
   # Denormilized:
   # CoreObject.response_to.name
-  # Notification.shared_object_snippet.name
+  # Notification.shared_object_snippet.name TODO: update this once notifications are implemented
   field :title
 
   validates :title, :length => { :minimum => 5, :maximum => 100 }

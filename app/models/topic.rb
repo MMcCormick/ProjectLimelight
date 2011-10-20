@@ -35,6 +35,7 @@ class Topic
 
   before_create :add_alias, :set_user_snippet
   after_create :add_to_soulmate
+  after_update :update_denorms
   before_destroy :remove_from_soulmate
 
   # Return the topic slug instead of its ID
@@ -71,6 +72,24 @@ class Topic
   class << self
     def find_by_encoded_id(id)
       where(:_public_id => id.to_i(36)).first
+    end
+  end
+
+  protected
+
+  #TODO: topic aliases
+  def update_denorms
+    topic_mention_updates = {}
+    if name_changed?
+      topic_mention_updates["topic_mentions.$.name"] = self.name
+    end
+    if slug_changed?
+      topic_mention_updates["topic_mentions.$.slug"] = self.slug
+      aliases.delete(slug_was)
+      aliases << slug
+    end
+    if !topic_mention_updates.empty?
+      CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
     end
   end
 end

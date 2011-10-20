@@ -1,6 +1,7 @@
 class CommentCell < Cell::Rails
 
   include Devise::Controllers::Helpers
+  helper UsersHelper
 
   def thread(talk_id, with_forms=false)
     @talk_id = talk_id

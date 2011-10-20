@@ -1,20 +1,22 @@
 <div class="comment d-<%= comment.depth.to_s %>" id="comment_<%= comment.id %>">
-  <div class="profileImage">
-    <%= image_tag user_default_picture_path(comment.user_snippet, :d => [50, 50]), :style => "max-width: 50px;" if comment.depth == 0 %>
-    <%= image_tag user_default_picture_path(comment.user_snippet, :d => [30, 30]), :style => "max-width: 30px;" if comment.depth != 0 %>
-  </div>
-  <div class="comment-body">
-    <%= comment.content %>
-  </div>
-  <% if comment.depth < 5 %>
-    <div class="reply">
-      <a href="javascript:void(0);" id="reply_<%= comment.id %>" class="reply-show" data-d='{"id":"<%= comment.id %>"}'>reply</a>
+  <div class="wrapper">
+    <div class="profileImage">
+      <%= image_tag user_default_picture_path(comment.user_snippet, :d => [50, 50]), :style => "max-width: 50px;" if comment.depth == 0 %>
+      <%= image_tag user_default_picture_path(comment.user_snippet, :d => [30, 30]), :style => "max-width: 30px;" if comment.depth != 0 %>
     </div>
-  <% end %>
-  <div class="createdC">
-    by <%= comment.user_snippet.username %> | <%= time_ago_in_words(comment.created_at) %> ago
+    <div class="createdC">
+      <%= user_link(comment.user_snippet) %> <%= time_ago_in_words(comment.created_at) %> ago
+    </div>
+    <p>
+      <%= comment.content %>
+    </p>
+    <% if comment.depth < 5 %>
+      <div class="reply">
+        <a href="javascript:void(0);" id="reply_<%= comment.id %>" class="reply-show" data-d='{"id":"<%= comment.id %>"}'>reply</a>
+      </div>
+    <% end %>
+    <%= render 'votes/btn', :object => comment, :current_user => current_user %>
+    <%# TODO: popularity %>
+    <div class="score"><%= comment.votes_count %></div>
   </div>
-  <%= render 'votes/btn', :object => comment, :current_user => current_user %>
-  <%# TODO: popularity %>
-  <div class="score"><%= comment.votes_count %></div>
 </div>

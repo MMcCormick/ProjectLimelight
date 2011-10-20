@@ -1,0 +1,14 @@
+<div class="comment-thread">
+  <% if @with_forms %>
+    <%= render "comments/form", :talk_id => @talk_id, :reply => false %>
+    <div class="hide">
+      <%= render "comments/form", :talk_id => @talk_id, :reply => true %>
+    </div>
+  <% end %>
+
+  <div class="comments">
+    <% @comments.each do |comment| %>
+      <%= render "comments/comment", :comment => comment, :current_user => @user %>
+    <% end %>
+  </div>
+</div>

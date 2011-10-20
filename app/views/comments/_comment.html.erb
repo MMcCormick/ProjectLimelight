@@ -14,7 +14,7 @@
   <div class="createdC">
     by <%= comment.user_snippet.username %> | <%= time_ago_in_words(comment.created_at) %> ago
   </div>
-  <%= render 'votes/btn', :object => comment %>
+  <%= render 'votes/btn', :object => comment, :current_user => current_user %>
   <%# TODO: popularity %>
   <div class="score"><%= comment.votes_count %></div>
 </div>

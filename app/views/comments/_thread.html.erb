@@ -1,9 +1,0 @@
-<div class="comment-thread">
-  <%= render "comments/form", :talk => talk, :reply => false %>
-
-  <div class="comments">
-    <% comments.each do |comment| %>
-      <%= render "comments/comment", :comment => comment %>
-    <% end %>
-  </div>
-</div>

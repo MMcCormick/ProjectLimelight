@@ -1,5 +1,7 @@
 ProjectLimelight::Application.routes.draw do
 
+  devise_for :admin_users, ActiveAdmin::Devise.config
+
   # Pictures
   resources :pictures
 
@@ -63,6 +65,9 @@ ProjectLimelight::Application.routes.draw do
 
   # Uploads
   match "/upload" => "uploads#create", :as => :upload_tmp
+
+  # Active admin
+  ActiveAdmin.routes(self)
 
   # Users
   devise_for :users

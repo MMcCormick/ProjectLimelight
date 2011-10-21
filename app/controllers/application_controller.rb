@@ -3,6 +3,12 @@ class ApplicationController < ActionController::Base
   before_filter :init, :set_feed_filters, :set_user_time_zone
   layout :layout
 
+  def authenticate_admin_user!
+    unless can? :manage, :all
+      redirect_to root_path
+    end
+  end
+
   # Handle authorization exceptions
   rescue_from CanCan::AccessDenied do |exception|
     if request.xhr?

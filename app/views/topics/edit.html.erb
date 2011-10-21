@@ -3,6 +3,7 @@
 
 <h4>Edit Topic Types</h4>
 
+<!--TODO: similar thing for topic connections below -->
 <ul class="sidebar-list">
   <% @topic.topic_type_snippets.each do |snippet| %>
     <li>
@@ -13,5 +14,9 @@
 </ul>
 
 <%= render_cell :topic_type, :new, @topic %>
+
+<h4>Edit Topic Connections</h4>
+
+<%= render_cell :topic, :add_connection, @topic %>
 
 <div class="edit topic-done-b">done</div>

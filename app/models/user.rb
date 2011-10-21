@@ -66,6 +66,7 @@ class User
   has_many :topics
   has_many :core_object_shares
   has_many :topic_types
+  has_many :topic_connections
   has_many :comments
 
   attr_accessor :login
@@ -241,6 +242,7 @@ class User
   end
 
   def update_denorms
+    #TODO: update soulmate
     user_snippet_updates = {}
     sender_snippet_updates = {}
     receiver_snippet_updates = {}

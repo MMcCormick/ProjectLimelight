@@ -10,11 +10,13 @@ class Topic
 
   # Denormilized:
   # CoreObject.topic_mentions.name
+  # TopicConnectionSnippet.topic_name
   field :name
 
   # Denormilized:
   # Topic.aliases
   # TopicMention.slug
+  # TopicConnectionSnippet.topic_slug
   slug :name
 
   field :summary
@@ -28,6 +30,7 @@ class Topic
   belongs_to :user
   embeds_one :user_snippet, as: :user_assignable
   embeds_many :topic_type_snippets
+  embeds_many :topic_connection_snippets
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
@@ -57,8 +60,8 @@ class Topic
     topic_type_snippets.map {|type| type.name}
   end
 
-  def public_id
-    self[_public_id].to_i.to_s(36)
+  def encoded_id
+    _public_id.to_i.to_s(36)
   end
 
   def add_to_soulmate
@@ -69,6 +72,25 @@ class Topic
     Resque.enqueue(SmDestroyTopic, id.to_s)
   end
 
+  def add_connection(connection, con_topic, user)
+    self.add_connection_helper(connection, con_topic, user)
+    if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
+      con_topic.add_connection_helper(opposite, self, user)
+    end
+  end
+
+  def add_connection_helper(connection, con_topic, user)
+    snippet = TopicConnectionSnippet.new()
+    snippet.id = connection.id
+    snippet.name = connection.name
+    snippet.pull_from = connection.pull_from
+    snippet.topic_id = con_topic.id
+    snippet.topic_name = con_topic.name
+    snippet.topic_slug = con_topic.slug
+    snippet.user_id = user.id
+    self.topic_connection_snippets << snippet
+  end
+
   class << self
     def find_by_encoded_id(id)
       where(:_public_id => id.to_i(36)).first
@@ -77,7 +99,9 @@ class Topic
 
   protected
 
+  #TODO: topic connection snippets
   #TODO: topic aliases
+  #TODO: update soulmate
   def update_denorms
     topic_mention_updates = {}
     if name_changed?

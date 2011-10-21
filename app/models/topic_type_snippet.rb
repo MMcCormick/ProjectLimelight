@@ -11,8 +11,20 @@ class TopicTypeSnippet
 
   attr_accessible :name
 
-  # Return the topic slug instead of its ID
-  def to_param
-    self.name.to_url
+  after_create :increment_topic_type_counter
+  after_destroy :decrement_topic_type_counter
+
+  protected
+
+  def decrement_topic_type_counter
+    type = TopicType.find(id)
+    type.topic_count -= 1
+    type.save
+  end
+
+  def increment_topic_type_counter
+    type = TopicType.find(id)
+    type.topic_count += 1
+    type.save
   end
 end

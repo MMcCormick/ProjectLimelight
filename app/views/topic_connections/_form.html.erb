@@ -1,0 +1,24 @@
+<%= form_for TopicConnection.new, :html => { :class => 'ajax group' } do |f| %>
+  <%= render 'shared/error_messages', :object => f.object %>
+  <div class="errors"></div>
+
+  <div class="field lClear bottom required">
+    <%= f.label :name, "Name of the connection" %>
+    <%= f.text_field :name %><br />
+  </div>
+
+  <div class="field">
+    <%= f.label :pull_from, "Pull from connected objects?" %>
+    <%= f.check_box :pull_from %>
+  </div>
+
+  <div class="field">
+    <%= f.label :reverse, "Opposite Connection" %>
+    <% options = options_from_collection_for_select(connections, :id, :name, :prompt => true) %>
+    <%= select_tag "topic_connection[opposite]", '<option value="one">self</option>'.html_safe+options, :prompt => "select opposite"  %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Create" %>
+  </div>
+<% end %>

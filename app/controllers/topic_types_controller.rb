@@ -21,7 +21,6 @@ class TopicTypesController < ApplicationController
       if topic.topic_type_snippets.where(:name => type.name).exists?
         response = { :event => 'edit_topic_type', :flash => { :type => :error, :message => 'The topic already has that type!' } }
       else
-        type.topic_count += 1
 
         if type && type.save
           snippet = TopicTypeSnippet.new(type.attributes)

@@ -37,3 +37,31 @@ jQuery ->
       show: {event: 'click'},
       hide: {event: 'unfocus'}
     })
+
+  # Topic autocomplete for topic connection form
+  $('#tc-auto').livequery ->
+    self = $(@)
+    self.autocomplete $('#static-data').data('d').autocomplete,
+    minChars: 2,
+    width: 300,
+    matchContains: true,
+    matchSubset: false,
+    autoFill: false,
+    selectFirst: false,
+    mustMatch: false,
+    searchKey: 'term',
+    max: 10,
+    bucket: false,
+    bucketType: ["topic"],
+    extraParams: {"types[]":["topic"]},
+    dataType: 'json',
+    delay: 150,
+    formatItem: (row, i, max) ->
+      return row.formattedItem;
+    formatMatch: (row, i, max) ->
+      return row.term;
+    formatResult: (row) ->
+      return row.term;
+
+    self.result (event, data, formatted) ->
+      $('#connection_topic_id').val(data.id)

@@ -46,6 +46,10 @@ ProjectLimelight::Application.routes.draw do
   # Topic Types
   resources :topic_types, :only => [:create, :destroy]
 
+  # Topic Connections
+  resources :topic_connections, :only => [:create, :new]
+  post 'topic_connections/add' => 'topic_connections#add', :as => :add_connection
+
   # Comments
   resources :comments
 

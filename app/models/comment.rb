@@ -6,6 +6,7 @@ class Comment
   include Mongoid::Timestamps
   include Limelight::Acl
   include Limelight::Voting
+  include Limelight::Mentions
 
   field :content
   field :parent_id
@@ -14,7 +15,6 @@ class Comment
   field :depth, :default => 0
   field :path, :default => ""
   field :votes_count, :default => 0
-
 
   belongs_to :talk
   belongs_to :user
@@ -29,6 +29,8 @@ class Comment
   before_validation :set_path
   before_create :set_user_snippet
   after_create :add_to_count
+
+  attr_accessible :content, :parent_id, :talk_id
 
   # Based on Newsmonger: https://github.com/banker/newsmonger
   # Return an array of comments, threaded, from highest to lowest votes.

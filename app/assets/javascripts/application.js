@@ -18,6 +18,7 @@
 //= require jquery.autocomplete
 //= require jquery.scroll
 //= require jquery.typing
+//= require jquery.label
 //= require plupload/plupload.full
 //= require mention
 //= require core

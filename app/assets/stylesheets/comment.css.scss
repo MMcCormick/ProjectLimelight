@@ -15,9 +15,14 @@ $indent: 20px;
     @include clearfix();
     display: block;
     width: 400px;
-    textarea {
+    .mention-box {
+      height: 65px;
+      width: 380px;
+      .under,
+      .mention {
         height: 50px;
         width: 380px;
+      }
     }
     .submit,
     .comment_reply_cancel {

@@ -30,8 +30,6 @@ $(function() {
         $('#form-submitting').fadeOut(300);
         form.find('input, textarea').removeAttr('disabled');
 
-        $('#contribute').colorbox.close();
-
         appUpdate(data);
 
         if (success) {

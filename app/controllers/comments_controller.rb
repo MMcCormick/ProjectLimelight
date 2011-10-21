@@ -3,7 +3,8 @@ class CommentsController < ApplicationController
 
   def create
     talk = Talk.find(params[:comment][:talk_id])
-    comment = talk.comments.new(params[:comment].merge(:user => current_user))
+    comment = talk.comments.new(params[:comment])
+    comment.user_id = current_user.id
 
     respond_to do |format|
       if comment.save

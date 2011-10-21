@@ -56,7 +56,7 @@ class User
   field :vote_neg_count, :default => 0
   field :vote_ratio, :type => Float, :default => 0
 
-  auto_increment :_public_id
+  auto_increment :public_id
 
   has_many :core_objects
   has_many :news

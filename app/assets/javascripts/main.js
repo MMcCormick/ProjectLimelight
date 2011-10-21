@@ -114,7 +114,7 @@ $(function() {
       if (!$('body').hasClass('shortcut-on')) {
         $('.teaser').removeClass('hover');
         $(this).addClass('hover');
-        if ($('#core-feed').width()-$(this).width()-$(this).position().left < 10)
+        if (feedLastInRow($(this)))
         {
           $(this).addClass('left');
         }
@@ -267,7 +267,7 @@ $(function() {
 
   function feedLastInRow(elem)
   {
-    if ($('#core-feed').width()-elem.width()-elem.position().left < 10)
+    if ($('body').width()-elem.width()-elem.offset().left < 65)
     {
       return true
     }

@@ -27,6 +27,7 @@ gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
 gem "airbrake" # Exception notification
+gem 'activeadmin'
 #TODO: the rpm_contrib is being pulled from git because of a bug. Check this pull request and use gem if merged. https://github.com/newrelic/rpm_contrib/pull/13
 #gem 'rpm_contrib', :git => 'git://github.com/kenn/rpm_contrib.git', :branch => 'mongo140compat' # extra instrumentation for the new relic rpm agent
 #gem 'newrelic_rpm' # performance / server monitoring

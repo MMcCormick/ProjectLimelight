@@ -31,15 +31,7 @@ jQuery ->
   $('.lClear > input, .lClear > textarea').livequery ->
     $(@).attr 'autocomplete', 'off'
 
-  $('.lClear > label').live 'click', (e) ->
-    $(@).hide().next().focus()
-
-  $('.lClear > input, .lClear > textarea').live 'focus', (e) ->
-    $(@).prev().hide()
-
-  $('.lClear > input, .lClear > textarea').live 'blur', (e) ->
-    if $.trim($(@).val()) == ''
-      $(@).prev().show()
+  $('.lClear label').inFieldLabels()
 
   # Automatic clearing of help text in inputs
   $('.iclear').live 'focus', (e) ->

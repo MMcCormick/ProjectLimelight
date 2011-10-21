@@ -4,7 +4,7 @@ class TopicMention
 
   field :name
   field :slug
-  field :_public_id
+  field :public_id
 
   embedded_in :topic_mentionable, polymorphic: true
 

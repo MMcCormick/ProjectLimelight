@@ -65,7 +65,7 @@ describe CoreObject do
   describe "to_param" do
     it "should return an encoded id followed by a name slug from to_param" do
       talk = FactoryGirl.create(:talk, :content_raw => "foo bar")
-      talk.to_param.should == talk._public_id.to_i.to_s(36) + "-foo-bar"
+      talk.to_param.should == talk.encoded_id + "-foo-bar"
     end
   end
 
@@ -73,7 +73,7 @@ describe CoreObject do
     it "should return the correct object when passed a valid encoded id" do
       pending "figure out why equal? doesn't return true even though they're the same object"
       talk = FactoryGirl.create(:talk)
-      Talk.find_by_encoded_id(talk._public_id.to_i.to_s(36)).should equal(talk)
+      Talk.find_by_encoded_id(talk.encoded_id).should equal(talk)
     end
   end
 

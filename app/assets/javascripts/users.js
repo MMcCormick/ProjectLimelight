@@ -43,7 +43,6 @@ $(function() {
     $('#page,#page_header').toggleClass('minimized-sidebar');
     $('#sidebar .full,#sidebar .minimized').toggle();
     resizeLayout();
-    resizeFeedTeasers();
   });
 
   // Autocomplete for Core Object Shares

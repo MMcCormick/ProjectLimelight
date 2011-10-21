@@ -10,6 +10,7 @@ jQuery ->
       target.slideUp(200)
     else
       target.slideDown(200)
+      target.find('#talk_content').focus()
 
 
   $('.contributeC .options .option').live 'click', (e) ->

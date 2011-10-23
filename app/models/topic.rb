@@ -85,10 +85,40 @@ class Topic
     snippet.name = connection.name
     snippet.pull_from = connection.pull_from
     snippet.topic_id = con_topic.id
-    snippet.topic_name = con_topic.name
-    snippet.topic_slug = con_topic.slug
     snippet.user_id = user.id
     self.topic_connection_snippets << snippet
+  end
+
+  def get_connections()
+    topic_ids = topic_connection_snippets.map { |snippet| snippet.topic_id }
+    #TODO: sort below by popularity
+    topics = Topic.where(:_id.in => topic_ids)
+    connections = {}
+
+    topics.each do |topic|
+      snippet = topic_connection_snippets.detect {|snippet| topic.id == snippet.topic_id }
+      connections[snippet.id] ||= {:name => snippet.name, :topics => []}
+      connections[snippet.id][:topics] << topic
+    end
+
+    return connections
+    #get topic ids from connections
+    #fetch topics from db into topics_array, sort by popularity
+    #make blank proccessed_connections hash {}
+    #for each topic in topics_array
+    #    found_connection = connections.detect{|connection| topic.id == connection.topic_id}
+    #    put this topic into proccessed_connections at key {found_connection_type}
+    #
+    #{
+    #  "product of" => [
+    #      topic, topic
+    #  ],
+    #  "produces" => [
+    #      topic, topic
+    #  ]
+    #}
+    #
+    #topic_ids = topic_connection_snippets.map {|connection| connection.topic_id }
   end
 
   class << self

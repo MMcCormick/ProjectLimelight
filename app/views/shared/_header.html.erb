@@ -7,7 +7,7 @@
     Contribute
   </span>
 
-  <% if current_user.role?('admin') %>
+  <% if signed_in? && current_user.role?('admin') %>
     <%= link_to 'Admin', admin_dashboard_path, :id => 'admin_link' %>
     <%= link_to 'Resque', '/resque', :id => 'resque_link' %>
   <% end %>

@@ -5,7 +5,7 @@
 <% end %>
 
 <% if !@following_topics.empty? %>
-  <ul class="user-list">
+  <ul class="alt-list">
     <% @following_topics.each do |following_topic| %>
       <%= render 'topics/teaser', :topic => following_topic %>
     <% end %>

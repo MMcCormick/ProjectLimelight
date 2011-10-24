@@ -16,18 +16,22 @@
     <h4>Topic Summary:</h4>
     <div class="summary"><%= @topic.summary %></div>
 
-    <ul class="topic-connections">
+    <div class="topic-connections">
       <% @connections.each do |con_id, connection| %>
         <h4><%= connection[:name] %>:</h4>
-        <% connection[:topics].each do |topic| %>
-          <li><%= topic_link topic %></li>
+        <% connection[:topics].each_with_index do |topic, i| %>
+          <% if i > 2 %>
+            ... <%= link_to "view all", (connected_topics_path @topic) %>
+            <% break %>
+          <% end %>
+          <%= topic_link topic %><%= ", " unless i == 2 || i == connection[:topics].length - 1 %>
         <% end %>
       <% end %>
-    </ul>
+    </div>
 
     <div class="footer">
       <% if can? :update, @topic %>
-        <div class="edit-topic-b ac edit" data-url="<%= edit_topic_path %>" data-m="get">edit</div>
+        <div class="edit-topic-b ac edit" data-url="<%= edit_topic_path %>" data-m="get">edit topic</div>
       <% end %>
     </div>
 

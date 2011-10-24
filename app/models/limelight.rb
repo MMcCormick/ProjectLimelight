@@ -258,6 +258,7 @@ module Limelight #:nodoc:
       end
     end
 
+    # TODO: deal with punctuation
     # Checks @content_raw for topic mentions
     def set_topic_mentions
       return unless @content_raw

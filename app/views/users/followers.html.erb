@@ -5,11 +5,11 @@
 <% end %>
 
 <% if !@followers.empty? %>
-  <ul class="user-list">
+  <ul class="alt-list">
     <% @followers.each do |follower| %>
       <%= render 'users/teaser', :user => follower %>
     <% end %>
   </ul>
 <% else %>
-  <div class="empty">This user is not following any topics!</div>
+  <div class="empty">This user has no followers!</div>
 <% end %>

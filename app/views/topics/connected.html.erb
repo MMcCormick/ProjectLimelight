@@ -1,0 +1,12 @@
+<% content_for :sidebar_right do %>
+  <%= render_cell(:topic, :sidebar_right, @topic, @connections) %>
+<% end %>
+
+<ul class="alt-list">
+  <% @connections.each do |con_id, connection| %>
+    <h4><%= connection[:name] %>:</h4>
+    <% connection[:topics].each do |topic| %>
+      <%= render 'topics/teaser', :topic => topic %>
+    <% end %>
+  <% end %>
+</ul>

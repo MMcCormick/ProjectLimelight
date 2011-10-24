@@ -245,3 +245,46 @@
     padding: 7px 0 8px 0;
   }
 }
+
+// An alternating list of users / topics / whatever, aka the following or followers pages
+$column-width: 30%;
+.alt-list {
+  padding: 0 10px;
+  max-width: 500px;
+  margin-top: -5px;
+  margin: auto;
+  .teaser {
+    @include list-teaser($column-width);
+    padding-left: 10px;
+    margin-bottom: 2px;
+    .followB,
+    .unfollowB {
+      @include opacity(.5);
+      margin: 0;
+      padding-top: 4px;
+      padding-bottom: 3px;
+      background: none;
+      color: grey;
+      float: left;
+      border: none;
+      &:hover {
+          @include opacity(1);
+      }
+
+    }
+  }
+}
+// So the labels float
+#page_header .row {
+  @include clearfix();
+  @include background-image(linear-gradient(#FFF, #EEE 25%, #DDD 75%, #CCC));
+  margin-top: 5px;
+  border: 1px solid #CCC;
+  border-bottom: none;
+  .label {
+    float: left;
+    width: $column-width;
+    margin: 0 5px;
+    border-right: 1px solid #CCC;
+  }
+}

@@ -1,4 +1,4 @@
 <li class="teaser user <%= cycle("odd", "") -%>">
   <div><%= user_link user %></div>
-  <%= render 'users/follow_btn', :target_user => user if current_user != user %>
+  <%= render 'follows/btn', :current_user => @current_user, :target => user %>
 </li>

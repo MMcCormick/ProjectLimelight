@@ -5,7 +5,7 @@
 <% end %>
 
 <% if !@following_users.empty? %>
-  <ul class="user-list">
+  <ul class="alt-list">
     <% @following_users.each do |following_user| %>
       <%= render 'users/teaser', :user => following_user %>
     <% end %>

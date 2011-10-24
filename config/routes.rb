@@ -41,6 +41,7 @@ ProjectLimelight::Application.routes.draw do
 
   # Topics
   resources :topics
+  get 't/:id/connected' => 'topics#connected', :as => :connected_topics
   get 't/:id' => 'topics#show', :as => :topic
   get 't/:id/hover' => 'topics#hover' , :as => :topic_hover
   put 't/:id' => 'topics#update', :as => :update_topic

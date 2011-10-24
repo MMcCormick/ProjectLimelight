@@ -1,4 +1,4 @@
 <li class="teaser <%= cycle("odd", "") -%>">
   <div><%= topic_link topic %></div>
-  <%= render 'topics/follow_btn', :target_topic => topic %>
+  <%= render 'follows/btn', :current_user => @current_user, :target => topic %>
 </li>

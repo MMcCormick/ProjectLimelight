@@ -3,7 +3,6 @@
     <div class="arrow-small"></div>
     <h5>SORT BY</h5>
     <ul class="btn">
-      <% foo = session[:feed_filters][:sort] %>
       <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'created_at' %>">
         <div data-d='{"target":"created_at", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'created_at' ? 'on' : 'hide' %>">Newest</div>
       </li>

@@ -404,6 +404,26 @@ button {
   color: #FFF;
 }
 
+#hints {
+  position: relative;
+  padding: 0px 0 0 15px;
+  margin: 0 0 0 10px;
+
+  .info-grey-icon {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+  }
+  .hint {
+    font-size: 12px;
+    color: #666;
+    cursor: default;
+  }
+  span {
+    color: $link-color;
+  }
+}
+
 @import "sprites";
 @import "mentions";
 @import "core_objects";

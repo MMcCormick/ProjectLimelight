@@ -63,6 +63,20 @@ module ApplicationHelper
     @devise_mapping ||= Devise.mappings[:user]
   end
 
+  # Generate a random hint
+  def generate_hint
+    hints = [
+      "You can use the arrow keys to navigate feeds.",
+      "Limelight loves shortcuts. Press shift+up or shift+down to vote on a highlighted post. <span id='shortcuts'>All Shortcuts.</span>",
+      "Mention a user in a post with @username or a topic with #topic name. Spaces allowed!",
+      "Post interesting stuff to up your popularity.",
+      "Got a big screen? Try the grid view to put that space to use! Just press the grid button on the top right."
+    ]
+
+    choice = rand(hints.length)
+    hints.length > choice ? hints[choice] : nil
+  end
+
   def static_data
     data = {
             :fetchEmbedUrl => embedly_fetch_path,

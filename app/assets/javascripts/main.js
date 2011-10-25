@@ -184,6 +184,31 @@ $(function() {
   }
 
   /*
+   * HINTS
+   */
+  $('#hints #shortcuts').livequery(function() {
+    $(this).qtip({
+      content: {
+        text: '<div>navigation: up, down, left, right</div>' +
+                '<div>go to post: enter</div>' +
+                '<div>vote up: shift+up</div>' +
+                '<div>vote down: shift+down</div>' +
+                '<div>favorite: shift+f</div>' +
+                '<div>repost: shift+r</div>' +
+                '<div>share: shift+s</div>'
+      },
+      style: {classes: 'ui-tooltip-shadow ui-tooltip-light', tip: true},
+      position: {
+        my: 'left middle',
+        at: 'right middle',
+        viewport: $(window)
+      },
+      show: {delay: 300},
+      hide: {delay: 150, fixed: true}
+    })
+  })
+
+  /*
    * PICTURES
    */
 

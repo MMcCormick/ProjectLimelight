@@ -52,6 +52,9 @@ form.core_object {
     textarea {
       font-size: 15px;
     }
+    input {
+      width: 500px;
+    }
     .mention-box {
       height: 170px;
       width: $form-width - ($tag-width + 10);
@@ -60,14 +63,34 @@ form.core_object {
         height: 160px;
       }
     }
-    .mention-display {
-      left: $form-width - $tag-width;
+  }
+  .mention-ooc {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-left: 1px solid #F3F3F3;
+    width: 164px;
+    height: 170px;
+
+    .auto {
+      label {
+        top: 8px;
+        left: 15px;
+        color: #666666;
+      }
+      input {
+        border-bottom: 1px solid #F3F3F3;
+        width: 146px;
+        padding: 6px 5px;
+        margin: 0 0 0 4px;
+      }
     }
   }
   .group {
     @include border-radius(2px);
     border: 1px solid #89ABC3;
     width: $form-width + 14;
+    position: relative;
     label {
       top: 7px;
       z-index: 10;

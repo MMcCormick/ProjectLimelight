@@ -34,6 +34,34 @@ jQuery ->
 
   $('.mention').mentionable()
 
+  $('.mention-ooc .auto input').autocomplete($('#static-data').data('d').autocomplete, {
+    minChars: 2,
+    width: 450,
+    matchContains: true,
+    matchSubset: false,
+    autoFill: false,
+    selectFirst: true,
+    mustMatch: false,
+    searchKey: 'term',
+    max: 10,
+    bucket: false,
+    bucketType: ["topic"],
+    extraParams: {"types[]":["topic"]},
+    dataType: 'json',
+    delay: 150,
+    allowNewTopic: true,
+    formatItem: (row, i, max) ->
+      return row.formattedItem
+    formatMatch: (row, i, max) ->
+      return row.term
+    formatResult: (row) ->
+      return row.term
+  }).result (event, data, formatted) ->
+    if (data.bucketType == 'user')
+      window.location = '/users/'+data.term
+    else if (data.bucketType == 'topic')
+      window.location = data.data.url
+
   # Automatically click the "load more" button if it is visible for more than .5 secs
   $(window).scroll ->
     if !$('#load-more').hasClass('on') && isScrolledIntoView($('#load-more'), true)

@@ -453,8 +453,10 @@
               {
                 buckets.push('topic')
                 buckets.push('topic')
-                tmpData2 = {'CREATE':[{'id':0,'term':acData.term,'bucket':'topic','showName':'create a new topic: <span class="term">'+acData.term+'</span>'}], 'TOPICS': acData.results['topic']}
-                data2 = {'CREATE':[], 'TOPICS': []}
+                buckets.push('topic')
+                var first = acData.results['topic'].splice(0,1)
+                tmpData2 = {'TOP HIT':first,'CREATE':[{'id':0,'term':acData.term,'bucket':'topic','showName':'create a new topic: <span class="term">'+acData.term+'</span>'}], 'MORE TOPICS': acData.results['topic']}
+                data2 = {'TOP HIT':[], 'CREATE':[], 'MORE TOPICS': []}
               }
               else
               {
@@ -466,7 +468,7 @@
 
             $.extend( tmpData, tmpData2 )
             $.extend( data, data2 )
-
+            console.log(tmpData2);
             var used_ids = [];
             var my_id = $('#static-data').data('d').myId
             var x = 0;

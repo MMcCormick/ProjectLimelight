@@ -61,16 +61,25 @@
   }
 }
 
-.auto-topic
-{
-  .name.with-type {
-    padding: 1px 0 14px 0;
+.ac_results {
+  .auto-topic
+  {
+    .name.with-type {
+      padding: 1px 0 14px 0;
+    }
+    .types {
+      position: absolute;
+      bottom: 0px;
+      left: 39px;
+      font-size: 11px;
+      font-style: italic;
+    }
   }
-  .types {
-    position: absolute;
-    bottom: 0px;
-    left: 39px;
-    font-size: 11px;
-    font-style: italic;
+  .ac_over {
+    .auto-topic {
+      .types {
+        color: #FFF;
+      }
+    }
   }
 }

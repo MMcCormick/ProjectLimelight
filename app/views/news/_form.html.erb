@@ -20,6 +20,7 @@
     <div class="field lClear" data-tip="News Story Summary">
       <%= f.label :content, "A short summary of the story..." %>
       <%= render "shared/mention_box", :f => f %>
+      <%= render "shared/mention_ooc", :f => f %>
     </div>
     <div class="field image" data-tip="New Story Image">
       <%= render 'shared/core_object_image', :f => f, :upload_container_id => 'news_uploadC', :upload_button_id => 'news_uploadB' %>

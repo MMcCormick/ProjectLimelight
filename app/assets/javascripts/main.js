@@ -127,6 +127,10 @@ $(function() {
     }
   })
 
+  $('.scrollTop').live('click', function() {
+    $(window).scrollTo('0', 300);
+  })
+
   $('body').mousemove(function() {
     $(this).removeClass('shortcut-on')
   })

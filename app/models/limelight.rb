@@ -278,23 +278,24 @@ module Limelight #:nodoc:
           self.topic_mentions.build(payload)
         end
 
-        # Explodes the string. Returns an array of arrays containting
+        # Explodes the string. Returns an array of arrays containing
         # [string, slugified string] without duplicates.
         new_topic_mentions = @content_raw.scan(/\#\[([a-zA-Z0-9,!\-_  ]*[^#])\]/).flatten(1).map do |topic|
+          # strip of disallowed characters
           cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
           @content_raw.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
           [cleaned, topic.to_url]
         end.uniq
 
-        # See if any of the topic slugs are already in the DB. Check through topic aliases!
-        topic_slugs = topic_mentions.map { |data| data[1] }
-        topics = Topic.where("aliases" => { '$in' => topic_slugs})
+        # See if any of the new topic slugs are already in the DB. Check through topic aliases! Only connect to topics without a type assigned.
+        topic_slugs = new_topic_mentions.map { |data| data[1] }
+        topics = Topic.where("aliases" => { '$in' => topic_slugs}, "topic_type_snippets" => {"$exists" => false}).to_a
 
         new_topic_mentions.each do |topic_mention|
           found_topic = false
           # Do we already have a DB topic for this mention?
           topics.each do |topic|
-            if topic.slug == topic_mention[1]
+            if topic.has_alias? topic_mention[1]
               found_topic = topic
             end
           end
@@ -303,13 +304,14 @@ module Limelight #:nodoc:
             found_topic = user.topics.build({name: topic_mention[0]})
             if found_topic.valid?
               found_topic.save
-              # add the new ID to the topic mention
-              @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
             else
               found_topic = false
             end
           end
           if found_topic
+            # add the new ID to the topic mention
+            @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
+
             payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug }
             self.topic_mentions.build(payload)
           end

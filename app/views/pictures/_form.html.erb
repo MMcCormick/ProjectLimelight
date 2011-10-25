@@ -13,6 +13,7 @@
     <div class="field lClear" data-tip="Picture Description">
       <%= f.label :content, "A short picture description..." %>
       <%= render "shared/mention_box", :f => f %>
+      <%= render "shared/mention_ooc", :f => f %>
     </div>
     <div class="field image" data-tip="The Picture">
       <%= render 'shared/core_object_image', :f => f %>

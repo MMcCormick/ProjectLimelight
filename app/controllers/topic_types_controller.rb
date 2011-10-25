@@ -21,13 +21,13 @@ class TopicTypesController < ApplicationController
       if topic.topic_type_snippets.where(:name => type.name).exists?
         response = { :event => 'edit_topic_type', :flash => { :type => :error, :message => 'The topic already has that type!' } }
       else
-
         if type && type.save
           snippet = TopicTypeSnippet.new(type.attributes)
           snippet.id = type.id
           snippet.user_id = current_user.id
           topic.topic_type_snippets << snippet
           topic.save
+          Resque.enqueue(SmCreateTopic, topic.id.to_s)
           response = { :event => 'edit_topic_type', :flash => { :type => :success, :message => 'Topic Type added!' } }
         else
           response = { :event => 'edit_topic_type', :flash => { :type => :error, :message => 'Topic Type could not be added.' } }

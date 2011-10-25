@@ -7,9 +7,8 @@
     <div class="field lClear required">
       <%= f.label :content, "What do you want to talk about?" %>
       <%= render "shared/mention_box", :f => f %>
-      <%= render "shared/mention_display" %>
+      <%= render "shared/mention_ooc", :f => f %>
     </div>
-
     <div class="actions">
       <%= f.submit "Post Talk" %>
     </div>

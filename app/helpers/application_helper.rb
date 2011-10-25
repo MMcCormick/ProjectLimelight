@@ -23,12 +23,12 @@ module ApplicationHelper
 
   def parse_mentions(text, object)
     # Loop through all of the topic mentions in the content
-    text.scan(/\#\[([0-9a-zA-Z]*)#([\w ]*)\]/).each do |topic|
+    text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_ ]*)\]/).each do |topic|
       # Loop through all of the topic mentions connected to this object
       # If we found a match, replace the mention with a link to the topic
       object.topic_mentions.each do |topic_mention|
         if topic_mention.id.to_s == topic[0]
-          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, topic_link(topic_mention))
+          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic_mention.name}](#{topic_path(topic_mention)})")
         end
       end
     end
@@ -39,7 +39,7 @@ module ApplicationHelper
       # If we found a match, replace the mention with a link to the user
       object.user_mentions.each do |user_mention|
         if user_mention.id.to_s == user[0]
-          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, user_link(user_mention))
+          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_path(user_mention)})")
         end
       end
     end
@@ -67,13 +67,15 @@ module ApplicationHelper
   def generate_hint
     hints = [
       "You can use the arrow keys to navigate feeds.",
-      "Limelight loves shortcuts. Press shift+up or shift+down to vote on a highlighted post. <span id='shortcuts'>All Shortcuts.</span>",
+      "Limelight <3 shortcuts. Press shift+up or shift+down to vote on a highlighted post. <span id='shortcuts'>See All Shortcuts.</span>",
       "Mention a user in a post with @username or a topic with #topic name. Spaces allowed!",
       "Post interesting stuff to up your popularity.",
-      "Got a big screen? Try the grid view to put that space to use! Just press the grid button on the top right."
+      "Got a big screen? Try the grid view and put that space to use! Just click the grid button on the top right.",
+      "You can double click a feed filter to turn all of the other filters off.",
+      "If there is only one filter on and you turn it off all of the filters will turn on."
     ]
 
-    choice = rand(hints.length)
+    choice = rand(hints.length+5)
     hints.length > choice ? hints[choice] : nil
   end
 

@@ -20,7 +20,7 @@
 <% end %>
 
 <% content = capture do %>
-  <%= parse_mentions(markdown(object.content), object) if style == :list %>
+  <%= markdown(parse_mentions(object.content, object)) if style == :list %>
 <% end %>
 
 <% created_by = capture do %>

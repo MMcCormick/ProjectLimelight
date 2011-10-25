@@ -265,7 +265,7 @@ module Limelight #:nodoc:
       if @content_raw
         found_topics = Array.new
         # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
-        @content_raw.scan(/\#\[([0-9a-zA-Z]*)#([\w ]*)\]/).map do |topic|
+        @content_raw.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_ ]*)\]/).map do |topic|
           unless found_topics.include? topic[0]
             found_topics << topic[0]
           end
@@ -280,8 +280,10 @@ module Limelight #:nodoc:
 
         # Explodes the string. Returns an array of arrays containting
         # [string, slugified string] without duplicates.
-        new_topic_mentions = @content_raw.scan(/\#\[([\w ]*[^#])\]/).flatten(1).map do |topic|
-          [topic.strip, topic.to_url]
+        new_topic_mentions = @content_raw.scan(/\#\[([a-zA-Z0-9,!\-_  ]*[^#])\]/).flatten(1).map do |topic|
+          cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
+          @content_raw.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
+          [cleaned, topic.to_url]
         end.uniq
 
         # See if any of the topic slugs are already in the DB. Check through topic aliases!

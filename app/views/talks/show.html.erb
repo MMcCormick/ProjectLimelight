@@ -16,7 +16,7 @@
 <% end %>
 
 <div class="objectContent">
-    <%= parse_mentions(markdown(@talk.content), @talk) %>
+    <%= markdown(parse_mentions(@talk.content, @talk)) %>
 </div>
 
 <%= render 'favorites/btn', :object => @talk %>

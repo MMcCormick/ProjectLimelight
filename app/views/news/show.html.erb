@@ -7,7 +7,7 @@
 
 <p>
   <b>Content:</b>
-  <%= parse_mentions(markdown(@news.content), @news) %>
+  <%= markdown(parse_mentions(@news.content, @news)) %>
 </p>
 
 <% img = default_image_url(@news, [100, 100]) %>

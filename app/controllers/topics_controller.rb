@@ -15,8 +15,10 @@ class TopicsController < ApplicationController
     @title = @topic.name
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topic_path @topic, :p => page + 1
+    topic_ids = @topic.pull_from_ids << @topic.id
+
     @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
-            :mentions_topics => [@topic.id],
+            :mentions_topics => topic_ids,
             :page => page
     })
 
@@ -26,7 +28,6 @@ class TopicsController < ApplicationController
         render json: response
       }
       format.html # index.html.erb
-      format.json { render json: @topic }
     end
   end
 

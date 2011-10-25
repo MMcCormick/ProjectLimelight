@@ -41,6 +41,7 @@ FactoryGirl.define do
 
   factory :comment do
     content "Comment Content"
+    depth 0
     association :user
     association :talk
   end

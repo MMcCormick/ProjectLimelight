@@ -265,6 +265,7 @@ $(function() {
     }
   })
 
+  // TODO: have this account for the right sidebar
   function feedLastInRow(elem)
   {
     if ($('body').width()-elem.width()-elem.offset().left < 65)

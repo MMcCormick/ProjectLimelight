@@ -91,7 +91,7 @@ class Topic
 
   # Gets connections, returning a hash of the following format
   # connections => {:connection_id => {:name => "Products", :topics => [topic1, topic2]}}
-  def get_connections()
+  def get_connections
     topic_ids = topic_connection_snippets.map { |snippet| snippet.topic_id }
     #TODO: sort below by popularity
     topics = Topic.where(:_id.in => topic_ids)
@@ -103,7 +103,18 @@ class Topic
       connections[snippet.id][:topics] << topic
     end
 
-    return connections
+    connections
+  end
+
+  def pull_from_ids
+    pull_from_ids = []
+    topic_connection_snippets.each do |snippet|
+      if snippet.pull_from?
+        pull_from_ids << snippet.topic_id
+      end
+    end
+
+    pull_from_ids
   end
 
   class << self

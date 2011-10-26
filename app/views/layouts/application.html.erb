@@ -13,7 +13,7 @@
     <!--[if lt IE 9]><%= stylesheet_link_tag "ie" %><![endif]-->
     <%= csrf_meta_tag %>
   </head>
-  <body id="<%= params[:controller].parameterize %>_c">
+  <body id="<%= params[:controller].parameterize %>-c">
     <div id="application">
       <%= render 'shared/header' %>
       <div id="content">
@@ -37,7 +37,7 @@
         </div>
 
         <div id="page">
-          <div id="page_content">
+          <div id="page_content" class="<%= params[:action].parameterize %>-c">
             <%= yield %>
             <% if Rails.env.development? %>
               <%= debug(params) %>
@@ -109,7 +109,6 @@
     <% end %>
 
     <%= javascript_include_tag "application" %>
-    <%= render "pictures/upload_js" %>
-    <%= render "news/upload_js" %>
+    <%= yield :js %>
   </body>
 </html>

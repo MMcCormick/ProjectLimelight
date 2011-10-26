@@ -236,7 +236,9 @@ button {
 #page_content {
     background: $page_content_background-color;
     color: $page_content_color;
-
+    > h1 {
+      margin: 0 0 5px 10px;
+    }
     .wrap {
         padding-bottom: 2px;
     }

@@ -1,25 +1,17 @@
 <%# Temporary, for testing user callbacks %>
-<%= form_for @user, :html => {:class => "ajax group"} do |f| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+<%= form_for user, :html => {:class => "ajax"} do |f| %>
+  <%= render 'shared/error_messages', :object => f.object %>
 
-      <ul>
-      <% @user.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <div class="errors"></div>
 
-  <div class="field">
-    <%= f.label :username, "Userame", :class => "bottom" %><br />
-    <%= f.text_field :username, :class => "bottom" %>
+  <div class="static">
+    <div class="name">Username:</div>
+    <div class="value"><%= user.username %></div>
   </div>
 
   <div class="field">
-    <%= f.label :first_name, "First Name", :class => "bottom" %><br />
-    <%= f.text_field :first_name, :class => "bottom" %>
+    <%= f.label :first_name, "First Name", :class => "" %><br />
+    <%= f.text_field :first_name, :class => "" %>
   </div>
 
   <div class="field">
@@ -28,6 +20,6 @@
   </div>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Update Settings', :class => 'submit' %>
   </div>
 <% end %>

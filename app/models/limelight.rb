@@ -183,13 +183,16 @@ module Limelight #:nodoc:
 
     def add_voter(user, amount)
       vote = voter? user.id
+      net = 0
       if !vote
         self.votes.create(:_id => user.id, :amount => amount)
         self.votes_count += amount
         if amount > 0
           user.vote_pos_count += 1
+          net = 1
         else
           user.vote_neg_count += 1
+          net = -1
         end
       elsif vote.amount != amount
         self.votes_count = votes_count - vote.amount + amount
@@ -197,26 +200,33 @@ module Limelight #:nodoc:
         if amount > 0
           user.vote_pos_count += 1
           user.vote_neg_count -= 1
+          net = 2
         else
           user.vote_pos_count -= 1
           user.vote_neg_count += 1
+          net = -2
         end
       end
       user.recalculate_vote_ratio
+      net
     end
 
     def remove_voter(user)
       vote = voter? user.id
+      net = 0
       if vote
         if vote.amount > 0
           user.vote_pos_count -= 1
+          net = -1
         else
           user.vote_neg_count -= 1
+          net = 1
         end
         user.recalculate_vote_ratio
         self.votes_count -= vote.amount
         vote.destroy
       end
+      net
     end
   end
 
@@ -344,6 +354,86 @@ module Limelight #:nodoc:
           self.topic_mentions.build(payload)
         end
       end
+    end
+  end
+
+  module Popularity
+    extend ActiveSupport::Concern
+
+    included do
+      field :pop_hour, :default => 0.0
+      field :pop_day, :default => 0.0
+      field :pop_week, :default => 0.0
+      field :pop_month, :default => 0.0
+      field :pop_total, :default => 0.0
+    end
+
+    def add_pop_vote(subtype, net, current_user)
+      if subtype == :add
+        case net
+          when 1
+            add_pop_action :v_up, :add, current_user
+          when 2
+            add_pop_action :v_down, :remove, current_user
+            add_pop_action :v_up, :add, current_user
+          when -1
+            add_pop_action :v_down, :add, current_user
+          when -2
+            add_pop_action :v_up, :remove, current_user
+            add_pop_action :v_down, :add, current_user
+        end
+      elsif subtype == :remove
+        case net
+          when 1
+            add_pop_action :v_down, :remove, current_user
+          when -1
+            add_pop_action :v_up, :remove, current_user
+        end
+      else
+        nil
+      end
+    end
+
+    def add_pop_action(type, subtype, current_user)
+      amount = 0
+
+      case type
+        when :v_up
+          amount = 2 if subtype == :add
+          amount = -2 if subtype == :remove
+        when :v_down
+          amount = -2 if subtype == :add
+          amount = 2 if subtype == :remove
+        else
+          return nil
+      end
+
+      action = current_user.popularity_actions.new(:type => type, :amount => amount, :subtype => subtype, :object_id => id)
+      action.popularity_action_snippets.new(:object_id => id, :object_type => self.class.name, :amount => amount)
+
+      topic_ids = self.topic_mentions.map { |mention| mention._id }
+      foo = "bar"
+      #topics = Topic.where(:id.in => topic_ids)
+      #topics.each do |topic|
+      #  action.snips << PopularityActionSnippet.new(:amount => amount, :object_id => topic.id, :object_type => :topic)
+      #end
+      action.save!
+
+      change_pop(amount)
+    end
+
+    def add_pop_follow
+      amount = 4
+    end
+
+    protected
+
+    def change_pop(amount)
+      self.pop_hour += amount
+      self.pop_day += amount
+      self.pop_week += amount
+      self.pop_month += amount
+      self.pop_total += amount
     end
   end
 

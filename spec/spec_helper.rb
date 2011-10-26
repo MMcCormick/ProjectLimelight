@@ -39,6 +39,7 @@ Spork.prefork do
       DatabaseCleaner.clean
     end
 
+    DatabaseCleaner.orm = :mongoid
     DatabaseCleaner.strategy = :truncation
 
     # If you're not using ActiveRecord, or you'd prefer not to run each of your

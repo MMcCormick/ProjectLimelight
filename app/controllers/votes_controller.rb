@@ -16,8 +16,10 @@ class VotesController < ApplicationController
           response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
           status = 401
         else
-          object.add_voter(current_user, amount)
-          current_user.save if object.save
+          net = object.add_voter(current_user, amount)
+          object.add_pop_vote(:add, net, current_user)
+          object.save
+          current_user.save
           response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => amount})
           status = 201
         end
@@ -44,7 +46,8 @@ class VotesController < ApplicationController
           response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
           status = 401
         else
-          object.remove_voter(current_user)
+          net = object.remove_voter(current_user)
+          object.add_pop_vote(:remove, net, current_user)
           current_user.save if object.save
           response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => 0})
           status = 200

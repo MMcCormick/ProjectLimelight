@@ -197,9 +197,9 @@ $(function() {
                 '<div>go to post: enter</div>' +
                 '<div>vote up: shift+up</div>' +
                 '<div>vote down: shift+down</div>' +
-                '<div>favorite: shift+f</div>' +
-                '<div>repost: shift+r</div>' +
-                '<div>share: shift+s</div>'
+                '<div>favorite: f</div>' +
+                '<div>repost: r</div>' +
+                '<div>share: s</div>'
       },
       style: {classes: 'ui-tooltip-shadow ui-tooltip-light', tip: true},
       position: {

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Comment, do
+describe Comment do
 
   it "should create + persist a new instance given valid attributes" do
     FactoryGirl.create(:comment).should be_valid

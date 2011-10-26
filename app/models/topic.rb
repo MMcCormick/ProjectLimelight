@@ -7,6 +7,7 @@ class Topic
   include Mongoid::Timestamps
   include Limelight::Acl
   include Limelight::Images
+  include Limelight::Popularity
 
   # Denormilized:
   # CoreObject.topic_mentions.name

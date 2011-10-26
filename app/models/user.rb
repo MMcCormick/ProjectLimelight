@@ -4,6 +4,7 @@ class User
   include Mongoid::Timestamps
   include Mongoid::Slug
   include Limelight::Images
+  include Limelight::Popularity
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
@@ -68,6 +69,7 @@ class User
   has_many :topic_types
   has_many :topic_connections
   has_many :comments
+  has_many :popularity_actions
 
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login
@@ -272,7 +274,6 @@ class User
     if !user_snippet_updates.empty?
       CoreObject.where(:user_id => id).update_all(user_snippet_updates)
       CoreObject.where("user_mentions._id" => id).update_all(user_mention_updates)
-      Topic.where(:user_id => id).update_all(user_snippet_updates)
       Comment.where(:user_id => id).update_all(user_snippet_updates)
       Notification.where(:user_id => id).update_all(sender_snippet_updates)
       Notification.where("receiver_snippets._id" => id).update_all(receiver_snippet_updates)

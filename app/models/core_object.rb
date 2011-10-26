@@ -7,6 +7,7 @@ class CoreObject
   include Limelight::Acl
   include Limelight::Voting
   include Limelight::Mentions
+  include Limelight::Popularity
 
   # Denormilized:
   # Notification.shared_object_snippet.name (for talk only, other objects use Title) TODO: update this when notifications get implemented

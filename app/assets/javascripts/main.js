@@ -104,6 +104,13 @@ $(function() {
     })
   })
 
+  // Static flashes
+  if ($('#flash_notice').length > 0)
+  {
+    createGrowl(false, $('#flash_notice').text(), '', 'green');
+  }
+
+
   /*
    * FEEDS
    */
@@ -270,7 +277,7 @@ $(function() {
     }
     else if (data.bucketType == 'topic')
     {
-      window.location = data.data.url
+      window.location = '/'+data.data.slug
     }
   });
 

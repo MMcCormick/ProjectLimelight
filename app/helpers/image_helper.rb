@@ -3,6 +3,7 @@ module ImageHelper
     # make sure dimensions are integers
     dimensions = dimensions.map(&:to_i)
     image = object.default_image
+    image = image.first if image.is_a? Array
     version = if image then image.find_version dimensions, style else nil end
 
     if version
@@ -20,7 +21,7 @@ module ImageHelper
         url = image.original.first.image_url
       end
     elsif object.instance_of? Topic
-      url = "/assets/topic_default_#{dimensions[0]}_#{dimensions[1].to_i}.gif"
+      url = "/assets/images/topic-default-#{dimensions[0]}-#{dimensions[1]}.gif"
     else
       return false
     end

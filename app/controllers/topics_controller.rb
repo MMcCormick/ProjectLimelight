@@ -1,5 +1,6 @@
 class TopicsController < ApplicationController
   authorize_resource :only => [:show, :edit, :update]
+  include ImageHelper
 
   def index
     @topics = Topic.all
@@ -35,7 +36,10 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by_slug(params[:id])
     respond_to do |format|
       html = render_to_string 'edit'
-      format.json { render json: { event: :topic_edit_show, content: html } }
+      format.json {
+        response = build_ajax_response(:ok, nil, nil, nil, {:content => html})
+        render json: response
+      }
     end
   end
 
@@ -50,6 +54,37 @@ class TopicsController < ApplicationController
         format.json { render json: @topic.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def default_picture
+    topic = Topic.find_by_slug(params[:id])
+    dimensions = params[:d]
+    style = params[:s]
+
+    url = default_image_url(topic, dimensions, style, true, true)
+
+    render :text => open(url, "rb").read, :stream => true
+  end
+
+  # Update a users default picture
+  def picture_update
+    topic = Topic.find_by_slug(params[:id])
+    authorize! :update, topic
+    if topic
+      image = topic.images.create(:user_id => current_user.id)
+      version = AssetImage.new(:isOriginal => true)
+      version.id = image.id
+      version.image.store!(params[:image_location])
+      image.versions << version
+      version.save
+      topic.set_default_image(image.id)
+
+      if topic.save
+        #expire_action :action => :default_picture, :id => current_user.encoded_id
+      end
+    end
+
+    render :json => {:status => 'ok'}
   end
 
   def connected

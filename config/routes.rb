@@ -39,13 +39,6 @@ ProjectLimelight::Application.routes.draw do
   # Embedly
   get 'embed' => 'embedly#show', :as => :embedly_fetch
 
-  # Topics
-  resources :topics
-  get 't/:id/connected' => 'topics#connected', :as => :connected_topics
-  get 't/:id' => 'topics#show', :as => :topic
-  get 't/:id/hover' => 'topics#hover' , :as => :topic_hover
-  put 't/:id' => 'topics#update', :as => :update_topic
-
   # Topic Types
   resources :topic_types, :only => [:create, :destroy]
 
@@ -87,6 +80,15 @@ ProjectLimelight::Application.routes.draw do
   end
   devise_for :users
   resources :users, :only => [:show, :edit, :update]
+
+  # Topics
+  resources :topics
+  get '/:id/connected' => 'topics#connected', :as => :connected_topics
+  get '/:id/hover' => 'topics#hover' , :as => :topic_hover
+  put "/:id/picture" => "topics#picture_update", :as => :topic_picture_update
+  get '/:id/picture' => 'topics#default_picture', :as => :topic_default_picture
+  get '/:id' => 'topics#show', :as => :topic
+  put '/:id' => 'topics#update', :as => :update_topic
 
   # Home
   root :to => "pages#home"

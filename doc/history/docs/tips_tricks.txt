@@ -1,0 +1,3 @@
+1. 
+when clearing the cache in the model (see profile class for example), one must use sfContext::getInstance()->getViewCacheManager(); but put a conditional on it to check if context exists (for tasks, fixtures, etc)
+sfContext::hasInstance()

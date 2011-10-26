@@ -1,0 +1,107 @@
+TEMPLATE
+  SF_CACHE_KEY FORMAT
+
+content   
+********
+feedNews
+  (item_id)
+feedLimelight
+  (item_id)
+
+user      
+********
+_userLink * 300 (component)
+  (user_id)
+  (user_id)_count
+  (user_id)_count_score
+  (user_id)_count_score_increase
+  * any combination ^^^
+
+news      
+********
+_showComments
+  comments_News_(news_id)-(user_id)
+
+limelight
+********
+
+***********************************
+
+
+ACTION
+  TEMPLATES THAT NEED TO BE CLEARED
+
+updateNewsScore
+  content / _feedItemNews
+  user    / _rightUserBox
+  news    / _showNewsStory  
+
+updateNewsTagScore
+  news    / _showNewsStory
+
+wiki
+
+
+************************************
+
+DIFFERENT DOCTRINE CACHES
+
+mainfeed_(limit)_(offset) * 30 // holds the items and their IDs for the main feed
+
+news story page
+  news_(title_slug) * 120                   // holds the basic news story info
+  news_stats_(news_id)_(user_id) * 3600     // holds user specific news story info
+  news_links_(news_id) * 3600               // holds news story links
+  news_tags_(news_id)                       // the news story tag list
+
+user account pages
+  user_(user_id) * 3600 // holds all user info inner joined with profile
+  user_(user_id)_minifeed_(limit)_(offset) * 300
+  user_(user_id)_followingfeed_(limit)_(offset) * 300
+  user_(user_id)_favorited_limelight_(order_by)_(limit)_(offset) * 3600 // holds user specific limelight favorites
+  user_(user_id)_favorited_news_(order_by)_(limit)_(offset) * 3600 // holds user specific news favorites
+  user_follow_(user1_id)_(user2_id) * 262080 // holds whether user1 is following user2, used in the follow tab
+  user_following_(user_id) * 300 // holds the ids of the users (user_id) is following
+  user_followers_(user_id) * 300 // holds the ids of the users who are following (user_id)
+  user_(user_id)_user_following * 3600 // holds the user ids of the users (user_id) user is following
+  user_(user_id)_limelight_following * 3600 // holds the limelights ids of the limelights (user_id) user is following
+  user_(user_id)_badges * 3600 // holds the user badge info
+  user_stats_(type)_(user_id)_(days) * 120 // holds all the user stats
+  user_revenue_(user_id) * 300 // holds the unclaimed points
+  
+
+limelight
+  limelight_(ll_id) * 3600 // holds BASIC ll info, mostly for limelight link
+  limelight_stats_(ll_id) * 120
+  limelight_specifications_(ll_id) * 3600 // holds limelight spec info
+  limelight_follow_(user_id)_(ll_id) * 262080  // holds if a user is following a specific limelight (for tabs)
+  user_following_(user_id) * 300 // holds the ids of the limelights (user_id) is following
+  limelight_feed_news_(ll_id)_(limit)_(offset) * 60 // holds the ids of news items for the limelight news feed
+  limelight_stub_stats_(ll_id) * 120 // holds the stub stats
+  limelight_stub_stats_wiki_(ll_id) * 120 // holds the wiki part of the stub stats   
+  limelight_stats_(ll_id) * 120 // holds the limelight stats	
+  limelight_stub_check(ll_id) * 120 // returns limelight id, and is_stub column
+  pros * 300 // holds the names of pros
+  cons * 300 // holds the names of cons
+  limelight_products_(ll_id)_(offset)_(limit) * 300 // holds the products associated with a company limelight
+  limelight_slices_(ll_id) * 300 // holds the names & ids of the slices of a limelight
+
+sidebars
+  topusers_(days) * 60
+  topmodusers_(days) * 60
+
+wiki
+  wiki_history_(group_id)_(page)_(user_id) * 86400
+  wiki_history_active_(group_id)_(user_id) * 86400 // holds the currently active wiki revision for a given wiki group
+
+tag
+  tag_list * 600 // holds the list of tags for the website
+
+specifications
+  specifications * 86400 // holds a list of specification names
+  limelight_specifications * 86400 // holds a list of specification specs
+  specification_(spec_id) * 3600
+
+sources
+  sources * 86400 // holds a list of sources
+  

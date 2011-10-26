@@ -1,0 +1,46 @@
+Global Criteria:
+
+	Node Type (combination)
+		Talk
+		News
+		Question
+		Pro/Con
+	
+	Sort By (single)
+		Popular
+		Newest
+		Controversial
+		Upcoming
+
+Object List Locations:
+
+	Homepage
+	- Global Criteria
+
+	Topic Page
+	- Global Criteria
+	- Input: 
+		Single Topic object.
+	- Get: Connected objects with connection type 'Node'.
+
+	User - Feed
+	- Global Criteria
+	- Input: Objects connected to user with connection type 'Follow'.
+	- Get: Connected objects with connection type 'Node' OR 'Created'.	
+
+	User - Contributions
+	- Global Criteria
+	- Input: Single User object.
+	- Get: All objects with connection type 'Created'.
+
+	List
+	- Global Criteria
+	- Input: Objects connected to list with connection type 'Follow'.
+        - Get: Connected objects with connection type 'Node' OR 'Created'.
+
+Total Requirements
+	$nodeTypes - Array of strings of node types.
+	$sortBy - String popular|newest|controversial|upcoming.
+	$objects - Array of object_ids that we will pull connections from.
+	$creatorsExclude - Array of object_ids for users whos content we want to exclude.
+	$connectionTypes - Array of strings indicating the connection types we want to include.

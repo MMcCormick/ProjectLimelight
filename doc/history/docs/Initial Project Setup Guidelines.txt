@@ -1,0 +1,39 @@
+This is a guide to setting up symfony and Limelight on a new vista development machine.
+Marc MacLeod
+12/1/08
+
+> Download and install
+  - IDE (choose one)
+    > Dreamweaver
+    > Netbeans (6.5 and up may have support for Symfony)
+    > Eclipse PDT + Symfoclipse + Clay + Aptana IDE Eclipse Plugin
+  - Tortoise SVN
+  - Bitvise Tunnelier (for ssh)
+  - For XAMPP
+    > Turn on mod_rewrite in xampp/apache/conf/httpd.conf file (uncomment LoadModule rewrite_module modules/mod_rewrite.so line)
+    > Right click My Computer->Properties->Advanced System Settings->Environment Variables->System Variables->Path->Edit and add ;C:\xampp\php;C:\xampp\mysql\bin to end of line.
+  - For WAMP
+    > Turn on mod_rewrite using the system tray icon in the apache modules section. Turn on php_xsl extension from system tray icon.
+    > Right click My Computer->Properties->Advanced System Settings->Environment Variables->System Variables->Path->Edit and add ;C:\wamp\php\php5.2.8;C:\wamp\mysql\mysql5.1.30\bin to end of line. (replace folder versions names with whatever version is included with the wamp install)
+
+> Checkout projects
+  - Make folder 'limelight' in (xampp or wamp)\www folder
+  - Right click folder -> SVN Checkout
+  - Checkout http://207.192.72.236:8080/limelightSVN
+  - Add log and cache folder to root project directory, and 'uploads' folder to web directory
+
+> Modify files
+  - Add user to database via phpmyadmin fitting criteria in config/databases.yml
+  - Copy pase lib/vendor/symfony/data/bin/symfony.bat into root limelight directory - restart command prompt
+  - In command prompt move to limelight folder, run command 'symfony doctrine-build-all-reload'
+
+> Setup virtual host
+  - Replace v-host file with provided v-host file (adapt file paths if nesessary)
+  - For wamp, make sure the line ‘Include conf/extra/httpd-vhosts.conf‘ is uncommented in httpd.conf
+  - Open C:\Windows\System32\drivers\etc\hosts file with word and elevated permissions
+    > Add 127.0.0.1	limelight to file
+
+** Restart apache and point browser to http://limelight/frontend_dev.php and you're set!
+
+
+

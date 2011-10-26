@@ -1,0 +1,199 @@
+THINGS TO KEEP IN MIND
+    Build in limiting actions by users score
+    Build in moderator actions based on privileges
+    Add locks to actions
+    Add log to keep track of moderator actions using doctrine event listeners
+
+MAIN FEED
+  - Create share script
+  * Refactor favorite buttons
+  * Update news quick stats
+  - Create limelights feed
+    - Add sort by review score
+  - update news score ui and logic to include +,- scoring
+  * Remove 'all' feed
+  * Add limit to # of stories on page, add 'more stories' button
+  - Add smart picks filter
+  - redesign filters menu
+
+BADGES
+  - brainstorm
+  * commentator
+  - critic
+  - handyman
+  - foresight
+  - golden pen
+  * limelight fave
+  * opinionated
+  * popular limelight
+  * spec-tacular
+  * very popular limelight
+  * wiki what
+  * news fave
+  * news tagger
+  * news linker
+  * popular news
+  * reporter
+  * very popular news
+  - $$$
+  * autobiographer
+  * janitor
+  * king
+  * loyalty
+  - lucky
+  * nerd
+  * popular
+  * self portrait
+  * sheep
+  - superstar
+  - supporter
+
+USER PAGE
+  - update user feeds
+    * news item
+    - comment item
+    - limelight item
+    - pro/con
+    - specification
+    - wiki
+    - tag?
+  - add stats to stats/badges page
+  - complete profile head
+  * add favorited page
+  * add change picture logic
+
+NEWS STORY PAGE
+  * update news score ui and logic to include +,- scoring
+  * Update thumbs up to reflect if use has already scored story
+  * Add favorite button
+  * Add tips
+  * Add tag add lock
+  * Update tag lock
+  * Add additional links (for stories covering the same thing on different websites) mechanism
+  * add information panel to additional links, flag option
+  * add flag option to tag tab panel
+
+COMMENTS
+  * fix comment system
+  * Add comment lock
+
+LIMELIGHTS
+  * redesign
+  * add summary to profile head, toggle summary/stats button
+  - add health meter/system
+  * refactor wiki system to decouple
+  - add wiki history area
+  - Add news feed
+  - update filter to match updated main filter
+  * Update wiki code and UI, add score minimums
+  - Add locks to wiki and UI
+  * Check validations on wiki and specs submissions
+  - Add tags sidebar
+  - Add competitors section to info page, vote up and down
+  - Add pros and cons to info page 
+    - add moderator lock functionality
+    - Update pro/con to suggest names via ajax	
+  * Add favorite button, own button, views
+    * refactor favorite button to point to content function, remove limelight specific one
+  - Add specs filter
+  - Update spec contribute to suggest names via ajax, allow NEW specs by score
+
+USER
+  * Add username hover information panel
+  * Add user level info to information panel (admin, mod, first 100 user, etc)
+  * Add permission checks/updates upon score change
+  * Add forgot password feature
+
+REVENUE SHARING
+  - add ui elements to user page
+  - create function to calculate weekly distribution
+  - create cash out threshold and mechanism (paypal?)
+
+SUBMISSIONS
+  - Create contribute splash page
+  - News story submission page
+  - Limelight suggestion page, limelight suggestion viewer
+
+WEBSITE SUGGEST
+  - add suggestion feed
+  - add link to get to suggestion area
+
+POWER FILTER
+  - add fixed location bottom bar, design
+  - create javascript animation for add/remove
+  - put in tag add/remove logic
+  - put in user add/remove logic
+  - put in limelight add/remove logic
+  - put in link source add/remove logic
+  - create the feed
+  - add power filter page, and link to page
+
+POWER SUGGESTION
+  - add limelight button/logic (probably on the same tab as the add to power filter button)
+  - add power suggestion page, and link to page
+
+MISC
+  - CLEAN UP CSS STRUCTURE (news page, etc)
+  - add new notification slide down flash notice
+  * update flagging to increase flag threshold based on items score
+  * Refactor actions, put login into models
+  - Implement search
+  - Integrate with 'Add this'(http://www.addthis.com/)
+  * refactor mod actions to content module
+  * Add live rankings page, rankings for site (use ajax polling to update dynamically)
+    - fix rankings
+  - Add sidebars
+    * Top Users
+    * Top Moderators
+    * User Actions
+    - Related News
+    - Top News
+    - Related Limelights
+    - Limelight ad (Add amazon ad support to limelight sidebar)
+    - News ad (Add amazon product cloud to news story sidebar)
+    - Related user
+  - Add contest system
+  - Write and test migrations
+  * Add/update icons for favorite, share, flag buttons etc
+  - Add meta data, SEO 
+  - Add site news/blog system
+  - Update registration with pictures etc
+  - update 'must be logged in' popup to be prettier, include random 'get access to' feature functionality
+  * Add indexes to database to improve performance
+  - Add tag filter, make tags clickable to this filter
+  - Don't allow moderator actions to be flagged
+  - Add revenue sharing system to micro feeds
+
+HELP
+  - Write help area
+
+TESTING
+  - Test cache throughout website (apc and symfony)
+  - Test app.yaml controls throughout website
+  - Test permissions and group controls
+  - Does everything work?
+  - Write unit tests/functional tests
+
+BUILD BACKEND
+
+DICK SUCKING CLASS WOOHOOOOOO!!!!!
+
+NOT A PRIORITY FOR FIRST RELEASE
+  * Badge system
+  - Add feedback system
+  - Add review system
+    - User reviews
+    - Pro reviews
+  - add favorite button to user reviews
+    - update user favorite area to include new tab
+  - Add 'sidebar component' adding, removing, and sorting - for logged in users
+  - Update scoring to allow exponential increases based on user score
+  - Add suggest limelight functionality to news story pages
+  - Add email options and updates throughout website
+  - Save filter choices in order to allow 'most popular filters' recommendations
+  - Allow logged in users to save their favorite filters and easily access them
+  - Add original content and filter to main feed?
+  - Firefox extension
+  - Permalinks, social blogging code (add limelight feeds to blogs etc)
+  - Add limelight bar
+  - add website feature suggestion submission page

@@ -1,0 +1,1 @@
+http://pureform.wordpress.com/2008/01/10/installing-memcache-on-windows-for-php/

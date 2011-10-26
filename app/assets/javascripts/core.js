@@ -46,7 +46,7 @@
     }
 
     // if there's an event, publish it!
-    if (data.event) {
+    if (data.event && data.status == 'ok') {
       console.log("event: "+data.event);
       amplify.publish(data.event, data);
     }
@@ -80,20 +80,28 @@
       dataType: 'json',
       data: params,
       success: function(data) {
+        $currentTarget.data('processing', false);
         appUpdate(data);
         if (success) {
           success(params, data);
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        // TODO: handle errors
-        if (jqXHR.status == 401)
-        {
+        var data = JSON.parse(jqXHR.responseText)
+        appUpdate(data);
 
+        if (jqXHR.status == 401 && $('#login').length > 0)
+        {
+          $('#login').click()
+          createGrowl(false, 'You need to be logged in to do that.', '', 'red');
         }
         else if (jqXHR.status == 500)
         {
+          createGrowl(false, 'Woops! There was an error. We\'ve been notified and will look into it ASAP.', '', 'red');
+        }
 
+        if (error) {
+          error(params, data);
         }
       }
     })

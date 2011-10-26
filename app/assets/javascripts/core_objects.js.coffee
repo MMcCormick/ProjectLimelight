@@ -57,10 +57,47 @@ jQuery ->
     formatResult: (row) ->
       return row.term
   }).result (event, data, formatted) ->
-    if (data.bucketType == 'user')
-      window.location = '/users/'+data.term
-    else if (data.bucketType == 'topic')
-      window.location = data.data.url
+    parent = $(@).parents('.mention-ooc:first')
+    mentions = parent.find('.mentions')
+    hidden_data = JSON.parse(parent.find('.hidden_data').val())
+
+    if data.id
+      id = data.id
+      type = 'existing'
+    else
+      id = data.term
+      type = 'new'
+
+    if mentions.find('.item[data-id="'+id+'"]').length > 0
+      createGrowl(false, 'You have already added that topic!', '', 'red')
+    else if mentions.find('.item').length >= 4
+      createGrowl(false, 'You can only mention 4 topics out of context!', '', 'red')
+    else
+      if data.data && data.data.image
+        image = data.data.image
+      else
+        image = '/assets/topic_default_25_25.gif'
+      mention = $("<div/>").addClass('item hide').attr('data-id', id).attr('data-type', type).html('
+        <img width="25px" src="'+image+'" />
+        <div class="name">'+data.term+'</div>
+        <div class="remove">[x]</div>
+      ').appendTo(mentions)
+      mention.fadeIn(200)
+
+      hidden_data[type].push(id)
+
+      $(@).val('').blur().focus()
+      parent.find('.hidden_data').val(JSON.stringify(hidden_data))
+
+  $('.mention-ooc .remove').live 'click', (e) ->
+    mention = $(@).parent()
+    hidden_data_field = $(@).parents('.mention-ooc:first').find('.hidden_data')
+    hidden_data = JSON.parse(hidden_data_field.val())
+    idx = hidden_data[mention.data('type')].indexOf(mention.data('id'));
+    if idx != -1
+      hidden_data[mention.data('type')].splice(idx,1)
+      hidden_data_field.val(JSON.stringify(hidden_data))
+    mention.remove()
 
   # Automatically click the "load more" button if it is visible for more than .5 secs
   $(window).scroll ->

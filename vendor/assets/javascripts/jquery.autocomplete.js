@@ -468,7 +468,7 @@
 
             $.extend( tmpData, tmpData2 )
             $.extend( data, data2 )
-            console.log(tmpData2);
+
             var used_ids = [];
             var my_id = $('#static-data').data('d').myId
             var x = 0;

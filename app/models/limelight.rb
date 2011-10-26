@@ -229,8 +229,8 @@ module Limelight #:nodoc:
 
       before_create :set_mentions
 
-      attr_accessible :content_raw
-      attr_accessor :content_raw
+      attr_accessible :content_raw, :ooc_mentions
+      attr_accessor :content_raw, :ooc_mentions
     end
 
     def set_mentions
@@ -258,10 +258,11 @@ module Limelight #:nodoc:
       end
     end
 
-    # TODO: deal with punctuation
     # Checks @content_raw for topic mentions
+    # Checks @ooc_mentions for out of context mentions
     def set_topic_mentions
-      return unless @content_raw
+      return unless @content_raw || @ooc_mentions
+
       if @content_raw
         found_topics = Array.new
         # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
@@ -271,12 +272,7 @@ module Limelight #:nodoc:
           end
         end
 
-        # Add the found topics as snippets
-        mentions = Topic.where(:_id.in => found_topics)
-        mentions.each do |topic|
-          payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
-          self.topic_mentions.build(payload)
-        end
+        save_topic_mentions(found_topics, false) if found_topics.length > 0
 
         # Explodes the string. Returns an array of arrays containing
         # [string, slugified string] without duplicates.
@@ -284,37 +280,68 @@ module Limelight #:nodoc:
           # strip of disallowed characters
           cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
           @content_raw.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
-          [cleaned, topic.to_url]
+          [cleaned, topic.to_url, false]
         end.uniq
 
-        # See if any of the new topic slugs are already in the DB. Check through topic aliases! Only connect to topics without a type assigned.
-        topic_slugs = new_topic_mentions.map { |data| data[1] }
-        topics = Topic.where("aliases" => { '$in' => topic_slugs}, "topic_type_snippets" => {"$exists" => false}).to_a
+        save_new_topic_mentions(new_topic_mentions)
+      end
 
-        new_topic_mentions.each do |topic_mention|
-          found_topic = false
-          # Do we already have a DB topic for this mention?
-          topics.each do |topic|
-            if topic.has_alias? topic_mention[1]
-              found_topic = topic
-            end
-          end
-          # If we did not find the topic, create it and save it if it is valid
-          if found_topic == false
-            found_topic = user.topics.build({name: topic_mention[0]})
-            if found_topic.valid?
-              found_topic.save
-            else
-              found_topic = false
-            end
-          end
-          if found_topic
-            # add the new ID to the topic mention
-            @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
+      @ooc_mentions = Yajl::Parser.parse(@ooc_mentions)
+      if @ooc_mentions
+        save_topic_mentions(@ooc_mentions['existing'], true) if @ooc_mentions['existing'].length > 0
 
-            payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug }
-            self.topic_mentions.build(payload)
+        if @ooc_mentions['new'].length > 0
+          new_mentions = @ooc_mentions['new'].map do |topic|
+            cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
+            [cleaned, topic.to_url, true]
           end
+
+          save_new_topic_mentions(new_mentions)
+        end
+      end
+    end
+
+    def save_topic_mentions(found_topics, ooc=false)
+      # Add the found topics as snippets
+      mentions = Topic.where(:_id.in => found_topics)
+      mentions.each do |topic|
+        existing = topic_mentions.detect{|mention| mention.id == topic.id}
+        unless existing
+          payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
+          self.topic_mentions.build(payload.merge!(:ooc => ooc))
+        end
+      end
+    end
+
+    def save_new_topic_mentions(new_topic_mentions)
+      # See if any of the new topic slugs are already in the DB. Check through topic aliases! Only connect to topics without a type assigned.
+      topic_slugs = new_topic_mentions.map {|data| data[1]}
+      topic_slugs.uniq!
+      topics = Topic.where("aliases" => { '$in' => topic_slugs}, "topic_type_snippets" => {"$exists" => false}).to_a
+
+      new_topic_mentions.each do |topic_mention|
+        found_topic = false
+        # Do we already have a DB topic for this mention?
+        topics.each do |topic|
+          if topic.has_alias? topic_mention[1]
+            found_topic = topic
+          end
+        end
+        # If we did not find the topic, create it and save it if it is valid
+        if found_topic == false
+          found_topic = user.topics.build({name: topic_mention[0]})
+          if found_topic.valid?
+            found_topic.save
+          else
+            found_topic = false
+          end
+        end
+        if found_topic
+          # add the new ID to the topic mention
+          @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
+
+          payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug, :ooc => topic_mention[2]}
+          self.topic_mentions.build(payload)
         end
       end
     end

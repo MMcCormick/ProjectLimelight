@@ -13,6 +13,7 @@ require 'embedly'
 require 'resque-loner'
 require 'chronic'
 require 'yajl'
+require 'pusher'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line

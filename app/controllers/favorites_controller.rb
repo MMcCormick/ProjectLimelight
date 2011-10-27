@@ -28,6 +28,7 @@ class FavoritesController < ApplicationController
       object.add_to_favorites(current_user)
       object.add_pop_action(:fav, :a, current_user)
       current_user.save if object.save
+      pusher_publish(object.id.to_s, 'popularity_change', {:amount => :change_this, :popularity => object.pop_total})
       response = build_ajax_response(:ok, nil, nil, nil, {:id => object.id.to_s, :target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB'], :popularity => object.pop_total})
       status = 201
     else
@@ -46,6 +47,7 @@ class FavoritesController < ApplicationController
       object.remove_from_favorites(current_user)
       object.add_pop_action(:fav, :r, current_user)
       current_user.save if object.save
+      pusher_publish(object.id.to_s, 'popularity_change', {:amount => :change_this, :popularity => object.pop_total})
       response = build_ajax_response(:ok, nil, nil, nil, {:id => object.id.to_s, :target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB'], :popularity => object.pop_total})
       status = 200
     else

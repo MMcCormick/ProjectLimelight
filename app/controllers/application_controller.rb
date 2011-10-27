@@ -70,6 +70,11 @@ class ApplicationController < ActionController::Base
     response
   end
 
+  # Publish a pubnub message
+  def pusher_publish(channel, event, message)
+    Pusher[channel].trigger(event, message)
+  end
+
   private
 
   # Used to display the page load time on each page

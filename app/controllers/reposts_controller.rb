@@ -8,6 +8,7 @@ class RepostsController < ApplicationController
       object.add_to_reposts(current_user)
       object.add_pop_action(:rp, :a, current_user)
       current_user.save if object.save
+      pusher_publish(object.id.to_s, 'popularity_change', {:amount => :change_this, :popularity => object.pop_total})
       response = build_ajax_response(:ok, nil, nil, nil, {:id => object.id.to_s, :target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
       status = 201
     else
@@ -26,6 +27,7 @@ class RepostsController < ApplicationController
       object.remove_from_reposts(current_user)
       object.add_pop_action(:rp, :r, current_user)
       current_user.save if object.save
+      pusher_publish(object.id.to_s, 'popularity_change', {:amount => :change_this, :popularity => object.pop_total})
       response = build_ajax_response(:ok, nil, nil, nil, {:id => object.id.to_s, :target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
       status = 200
     else

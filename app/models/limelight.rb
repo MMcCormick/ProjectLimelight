@@ -296,7 +296,7 @@ module Limelight #:nodoc:
         save_new_topic_mentions(new_topic_mentions)
       end
 
-      @ooc_mentions = Yajl::Parser.parse(@ooc_mentions)
+      @ooc_mentions = Yajl::Parser.parse(@ooc_mentions) if @ooc_mentions
       if @ooc_mentions
         save_topic_mentions(@ooc_mentions['existing'], true) if @ooc_mentions['existing'].length > 0
 
@@ -361,6 +361,19 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
+      POP_AMOUNTS = {
+        :v_up => 2.0,
+        :v_down => -2.0,
+        :rp => 4.0,
+        :fav => 3.0,
+        :flw => 10.0,
+
+        # Modifiers
+        :ooc => 0.5,
+        :ic => 0.7,
+        :user => 0.5
+      }
+
       field :pop_hour, :default => 0.0
       field :pop_day, :default => 0.0
       field :pop_week, :default => 0.0
@@ -369,25 +382,25 @@ module Limelight #:nodoc:
     end
 
     def add_pop_vote(subtype, net, current_user)
-      if subtype == :add
+      if subtype == :a
         case net
           when 1
-            add_pop_action :v_up, :add, current_user
+            add_pop_action :v_up, :a, current_user
           when 2
-            add_pop_action :v_down, :remove, current_user
-            add_pop_action :v_up, :add, current_user
+            add_pop_action :v_down, :r, current_user
+            add_pop_action :v_up, :a, current_user
           when -1
-            add_pop_action :v_down, :add, current_user
+            add_pop_action :v_down, :a, current_user
           when -2
-            add_pop_action :v_up, :remove, current_user
-            add_pop_action :v_down, :add, current_user
+            add_pop_action :v_up, :r, current_user
+            add_pop_action :v_down, :a, current_user
         end
-      elsif subtype == :remove
+      elsif subtype == :r
         case net
           when 1
-            add_pop_action :v_down, :remove, current_user
+            add_pop_action :v_down, :r, current_user
           when -1
-            add_pop_action :v_up, :remove, current_user
+            add_pop_action :v_up, :r, current_user
         end
       else
         nil
@@ -396,34 +409,48 @@ module Limelight #:nodoc:
 
     def add_pop_action(type, subtype, current_user)
       amount = 0
-
-      case type
-        when :v_up
-          amount = 2 if subtype == :add
-          amount = -2 if subtype == :remove
-        when :v_down
-          amount = -2 if subtype == :add
-          amount = 2 if subtype == :remove
-        else
-          return nil
+      if subtype == :a
+        amount = POP_AMOUNTS[type]
+      elsif subtype == :r
+        amount = POP_AMOUNTS[type] * -1
       end
 
-      action = current_user.popularity_actions.new(:type => type, :amount => amount, :subtype => subtype, :object_id => id)
-      action.popularity_action_snippets.new(:object_id => id, :object_type => self.class.name, :amount => amount)
+      amount = amount * current_user.clout
 
-      topic_ids = self.topic_mentions.map { |mention| mention._id }
-      foo = "bar"
-      #topics = Topic.where(:id.in => topic_ids)
-      #topics.each do |topic|
-      #  action.snips << PopularityActionSnippet.new(:amount => amount, :object_id => topic.id, :object_type => :topic)
-      #end
-      action.save!
+      if amount != 0
+        action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
+        action.pop_snippets.new(:amount => amount, :id => id, :object_type => self.class.name)
 
-      change_pop(amount)
-    end
+        ooc_amt = amount * POP_AMOUNTS[:ooc]
+        ic_amt = amount * POP_AMOUNTS[:ic]
+        user_amt = amount * POP_AMOUNTS[:user]
 
-    def add_pop_follow
-      amount = 4
+        unless ["User", "Topic"].include? self.class.name
+          ooc_ids, ic_ids = [], []
+
+          topic_mentions.each do |t_mention|
+            if t_mention.ooc
+              ooc_ids << t_mention.id
+              action.pop_snippets.new(:amount => ooc_amt, :id => t_mention.id, :object_type => "Topic")
+            else
+              ic_ids << t_mention.id
+              action.pop_snippets.new(:amount => ic_amt, :id => t_mention.id, :object_type => "Topic")
+            end
+          end
+          action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")
+
+          # Update the popularities on affected objects
+          Topic.collection.update({:_id => {"$in" => ooc_ids}}, {"$inc" => { :pop_hour => ooc_amt,
+              :pop_day => ooc_amt, :pop_week => ooc_amt, :pop_month => ooc_amt, :pop_total => ooc_amt }})
+          Topic.collection.update({:_id => {"$in" => ic_ids}}, {"$inc" => { :pop_hour => ic_amt,
+              :pop_day => ic_amt, :pop_week => ic_amt, :pop_month => ic_amt, :pop_total => ic_amt }})
+          User.collection.update({:_id => user_id}, {"$inc" => { :pop_hour => user_amt,
+              :pop_day => user_amt, :pop_week => user_amt, :pop_month => user_amt, :pop_total => user_amt }})
+        end
+
+        action.save!
+        change_pop(amount)
+      end
     end
 
     protected
@@ -436,5 +463,4 @@ module Limelight #:nodoc:
       self.pop_total += amount
     end
   end
-
 end

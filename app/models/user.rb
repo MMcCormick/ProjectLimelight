@@ -56,6 +56,7 @@ class User
   field :vote_pos_count, :default => 0
   field :vote_neg_count, :default => 0
   field :vote_ratio, :type => Float, :default => 0
+  field :clout, :default => 1
 
   auto_increment :public_id
 

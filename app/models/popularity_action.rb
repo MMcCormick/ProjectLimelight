@@ -2,12 +2,12 @@ class PopularityAction #lawsuit?
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :type
-  field :subtype
-  field :user_id
-  field :object_id
+  field :t, :as => :type
+  field :st, :as => :subtype
+  field :uid, :as => :user_id
+  field :oid, :as => :object_id
 
-  embeds_many :popularity_action_snippets
+  embeds_many :pop_snippets, :as => :pop_ac_snip
 
   belongs_to :user
 

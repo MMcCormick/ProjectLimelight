@@ -6,8 +6,9 @@ class RepostsController < ApplicationController
     object = CoreObject.find(params[:id])
     if object
       object.add_to_reposts(current_user)
+      object.add_pop_action(:rp, :a, current_user)
       current_user.save if object.save
-      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB']})
+      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
       status = 201
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)
@@ -23,8 +24,9 @@ class RepostsController < ApplicationController
     object = CoreObject.find(params[:id])
     if object
       object.remove_from_reposts(current_user)
+      object.add_pop_action(:rp, :r, current_user)
       current_user.save if object.save
-      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB']})
+      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
       status = 200
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)

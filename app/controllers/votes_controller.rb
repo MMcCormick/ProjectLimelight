@@ -17,10 +17,10 @@ class VotesController < ApplicationController
           status = 401
         else
           net = object.add_voter(current_user, amount)
-          object.add_pop_vote(:add, net, current_user)
+          object.add_pop_vote(:a, net, current_user) if net
           object.save
           current_user.save
-          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => amount})
+          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => amount, :popularity => object.pop_total })
           status = 201
         end
       else
@@ -47,9 +47,9 @@ class VotesController < ApplicationController
           status = 401
         else
           net = object.remove_voter(current_user)
-          object.add_pop_vote(:remove, net, current_user)
+          object.add_pop_vote(:r, net, current_user)
           current_user.save if object.save
-          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => 0})
+          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => 0, :popularity => object.pop_total})
           status = 200
         end
       else

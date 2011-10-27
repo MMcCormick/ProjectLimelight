@@ -7,6 +7,7 @@ class Comment
   include Limelight::Acl
   include Limelight::Voting
   include Limelight::Mentions
+  include Limelight::Popularity
 
   field :content
   field :parent_id

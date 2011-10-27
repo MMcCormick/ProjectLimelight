@@ -7,8 +7,9 @@ class FollowsController < ApplicationController
       if target
         current_user.follow_object(target)
         current_user.save
+        target.add_pop_action(:flw, :a, current_user)
         target.save
-        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
+        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB'], :popularity => target.pop_total})
         status = 201
       else
         response = build_ajax_response(:error, nil, 'Target not found!')
@@ -30,8 +31,9 @@ class FollowsController < ApplicationController
       if target
         current_user.unfollow_object(target)
         current_user.save
+        target.add_pop_action(:flw, :r, current_user)
         target.save
-        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
+        response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB'], :popularity => target.pop_total})
         status = 201
       else
         response = build_ajax_response(:error, nil, 'Target user not found!')

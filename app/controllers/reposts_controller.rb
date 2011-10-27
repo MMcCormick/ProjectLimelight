@@ -4,11 +4,11 @@ class RepostsController < ApplicationController
   #TODO: don't allow users to repost their own
   def create
     object = CoreObject.find(params[:id])
-    if object
+    if object && !reposted_by?(current_user.id)
       object.add_to_reposts(current_user)
       object.add_pop_action(:rp, :a, current_user)
       current_user.save if object.save
-      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
+      response = build_ajax_response(:ok, nil, nil, nil, {:id => object.id.to_s, :target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
       status = 201
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)
@@ -22,11 +22,11 @@ class RepostsController < ApplicationController
 
   def destroy
     object = CoreObject.find(params[:id])
-    if object
+    if object && reposted_by?(current_user.id)
       object.remove_from_reposts(current_user)
       object.add_pop_action(:rp, :r, current_user)
       current_user.save if object.save
-      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
+      response = build_ajax_response(:ok, nil, nil, nil, {:id => object.id.to_s, :target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
       status = 200
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)

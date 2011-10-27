@@ -473,7 +473,7 @@ $teaser-padding: 10px;
       z-index: 10;
       max-height: 23px;
   }
-  .score {
+  .pop {
     @include single-box-shadow(#666, 1px, 1px, 2px);
     position: absolute;
     top: -4px;
@@ -521,7 +521,7 @@ $teaser-padding: 10px;
       right: auto;
       left: 0px;
     }
-    .score {
+    .pop {
       right: -36px;
       left: auto;
     }
@@ -593,7 +593,7 @@ $scoreBox-width: 160px;
         height: 100%;
         right: 0px;
         top: 0px;
-        .score {
+        .pop {
           position: absolute;
           top: 10px;
           left: 10px;

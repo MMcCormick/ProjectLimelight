@@ -1,0 +1,27 @@
+<%# Temporary, for testing user callbacks %>
+<h1>Settings</h1>
+
+<div class="section">
+  <h3>Basic</h3>
+
+  <%= render 'form', :user => current_user %>
+</div>
+
+<div class="clear"></div>
+
+<div class="section">
+  <h3>Profile Image</h3>
+  <%= image_tag user_default_picture_path(current_user, :d => [150, 150]), :style => "max-width: 150px;", :class => 'profile-image' %>
+  <% content_for :js do %>
+    <%= render "users/image_upload_js" %>
+  <% end %>
+
+  <div class="upload" id="user_uploadB">Change Profile Image</div>
+  <div id="user_uploadB-progress"></div>
+</div>
+
+<div class="clear"></div>
+
+<div class="section">
+  <h3>Emails</h3>
+</div>

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :only => [:edit]
+  before_filter :authenticate_user!, :only => [:settings]
   include ImageHelper
 
   def show
@@ -19,20 +19,22 @@ class UsersController < ApplicationController
     end
   end
 
-  # Temporary, for checking callbacks
-  def edit
-    @user = User.find_by_slug(params[:id])
-  end
-
   def update
     @user = User.find_by_slug(params[:id])
+
+    if !signed_in? || @user.id != current_user.id
+      redirect_to root_path
+    end
+
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, notice: 'Topic was successfully updated.' }
-        format.json { head :ok }
+        format.html { redirect_to user_settings_path @user }
+        response = build_ajax_response(:ok, nil, "Settings updated!")
+        format.json { render json: response, status: :created }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.html { redirect_to user_settings_path @user }
+        response = build_ajax_response(:error, nil, "Settings could not be updated", @user.errors)
+        format.json { render json: response, status: :unprocessable_entity }
       end
     end
   end
@@ -47,9 +49,32 @@ class UsersController < ApplicationController
     render :text => open(url, "rb").read, :stream => true
   end
 
+  # Update a users default picture
+  def picture_update
+    image = current_user.images.create(:user_id => current_user.id)
+    version = AssetImage.new(:isOriginal => true)
+    version.id = image.id
+    version.image.store!(params[:image_location])
+    image.versions << version
+    version.save
+    current_user.set_default_image(image.id)
+
+    if current_user.save
+      #expire_action :action => :default_picture, :id => current_user.encoded_id
+    end
+
+    render :json => {:status => 'ok'}
+  end
+
   def hover
     @user = User.find_by_slug(params[:id])
     render :partial => 'hover_tab', :user => @user
+  end
+
+  def settings
+    unless signed_in?
+      redirect_to root_path
+    end
   end
 
   def following_users

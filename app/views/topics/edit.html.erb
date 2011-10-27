@@ -1,8 +1,13 @@
 <h4>Edit Topic Info</h4>
 <%= render 'form' %>
 
-<h4>Edit Topic Types</h4>
+<h4>Change Default Image</h4>
+<%= image_tag topic_default_picture_path(@topic, :d => [100, 100]), :style => "max-width: 100px;", :class => 'topic-image' %>
+<div class="upload" id="topic_uploadB">Change Image</div>
+<div id="topic_uploadB_progress"></div>
+<%= render "topics/image_upload_js" %>
 
+<h4>Edit Topic Types</h4>
 <!--TODO: similar thing for topic connections below -->
 <ul class="sidebar-list">
   <% @topic.topic_type_snippets.each do |snippet| %>
@@ -20,3 +25,5 @@
 <%= render_cell :topic, :add_connection, @topic %>
 
 <div class="edit topic-done-b">done</div>
+
+

@@ -77,7 +77,7 @@ $(function() {
    * TOPICS
    */
 
-  amplify.subscribe("topic_edit_show", function (data) {
+  amplify.subscribe("topics_edit", function (data) {
     $('#topic-edit').hide()
     $('#topic-panel .content').slideUp(300)
     $('#topic-edit').html(data.content)

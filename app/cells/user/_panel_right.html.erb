@@ -5,7 +5,7 @@
 
     <%= render 'follows/btn', :current_user => @current_user, :target => user %>
     
-    <!-- profile image 65x80 -->
+    <%= image_tag user_default_picture_path(@user, :d => [85, 65]), :style => "max-width: 85px;", :class => 'profile-image' %>
 
     <div class="right">
         <div class="stat followers">

@@ -6,6 +6,8 @@
 
     <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>
 
+    <%= image_tag topic_default_picture_path(@topic, :d => [85, 65]), :style => "max-width: 85px;", :class => 'profile-image' %>
+
     <h4>Topic Types:</h4>
     <ul class="topic-types">
       <% @topic.topic_type_snippets.each do |snippet| %>

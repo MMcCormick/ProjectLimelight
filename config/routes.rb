@@ -39,13 +39,6 @@ ProjectLimelight::Application.routes.draw do
   # Embedly
   get 'embed' => 'embedly#show', :as => :embedly_fetch
 
-  # Topics
-  resources :topics
-  get 't/:id/connected' => 'topics#connected', :as => :connected_topics
-  get 't/:id' => 'topics#show', :as => :topic
-  get 't/:id/hover' => 'topics#hover' , :as => :topic_hover
-  put 't/:id' => 'topics#update', :as => :update_topic
-
   # Topic Types
   resources :topic_types, :only => [:create, :destroy]
 
@@ -75,10 +68,9 @@ ProjectLimelight::Application.routes.draw do
   ActiveAdmin.routes(self)
 
   # Users
-  devise_for :users
-  # Edit and update are temporary to test callbacks on User model
-  resources :users, :only => [:show, :edit, :update]
   scope 'users' do
+    get '/settings' => 'users#settings', :as => :user_settings
+    put "/picture" => "users#picture_update", :as => :user_picture_update
     get ':id/following/users' => 'users#following_users', :as => :user_following_users
     get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
     get ':id/followers' => 'users#followers', :as => :user_followers
@@ -86,6 +78,17 @@ ProjectLimelight::Application.routes.draw do
     get ':id/hover' => 'users#hover' , :as => :user_hover
     get ':id/picture' => 'users#default_picture', :as => :user_default_picture
   end
+  devise_for :users
+  resources :users, :only => [:show, :edit, :update]
+
+  # Topics
+  resources :topics
+  get '/:id/connected' => 'topics#connected', :as => :connected_topics
+  get '/:id/hover' => 'topics#hover' , :as => :topic_hover
+  put "/:id/picture" => "topics#picture_update", :as => :topic_picture_update
+  get '/:id/picture' => 'topics#default_picture', :as => :topic_default_picture
+  get '/:id' => 'topics#show', :as => :topic
+  put '/:id' => 'topics#update', :as => :update_topic
 
   # Home
   root :to => "pages#home"

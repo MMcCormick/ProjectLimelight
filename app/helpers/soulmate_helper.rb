@@ -19,7 +19,7 @@ module SoulmateHelper
               'term' => topic.name,
               'score' => 0,
               'data' => {
-                      'url' => topic_path(topic)
+                      'slug' => topic.slug
               }
     }
 

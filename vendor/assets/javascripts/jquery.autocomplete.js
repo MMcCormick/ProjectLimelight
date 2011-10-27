@@ -518,13 +518,13 @@
         var image = '',
             types = '',
             name = '<span class="term">'+data.term+'</span>';
-        if (data.data && data.data.image)
+        if (data.data)
         {
-          image = '<img width="25" src="'+data.data.image+'" />';
+          image = '<img width="25" src="/'+data.data.slug+'/picture?d[]=25&d[]=25&s=square" />';
         }
         else
         {
-          image = '<img src="/assets/topic_default_25_25.gif" />';
+          image = '<img src="/assets/topic-default-25-25.gif" />';
         }
         if (data.data && data.data.types)
         {

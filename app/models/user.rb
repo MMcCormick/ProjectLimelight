@@ -78,7 +78,7 @@ class User
   validates :username, :presence => true, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 15 }
   validates :email, :uniqueness => { :case_sensitive => false }
 
-  after_create :add_to_soulmate, :save_profile_image
+  after_create :add_to_soulmate, :save_profile_image, :send_welcome_email
   after_update :update_denorms
   before_destroy :remove_from_soulmate
 
@@ -235,6 +235,10 @@ class User
 
   def remove_from_soulmate
     Resque.enqueue(SmDestroyUser, id.to_s)
+  end
+
+  def send_welcome_email
+    UserMailer.welcome_email(self).deliver
   end
 
   protected

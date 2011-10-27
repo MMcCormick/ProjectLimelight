@@ -1,10 +1,9 @@
 <div class="user-panel">
     <h2><%= @user.username %></h2>
     <div class="score" title="Your Score">0</div>
-    <a href="<%= edit_user_path @user %>">Edit</a>
     <div class="clear"></div>
     
-    <%= image_tag user_default_picture_path(@user, :d => [85, 65]), :style => "max-width: 85px;" %>
+    <%= image_tag user_default_picture_path(@user, :d => [85, 65]), :style => "max-width: 85px;", :class => 'profile-image' %>
 
     <div class="right">
         <div class="stat followers">
@@ -21,7 +20,7 @@
     <div class="clear"></div>
 
     <div class="links">
-        <a class="settings btn" href="#">
+        <a class="settings btn" href="<%= user_settings_path %>">
             <div class="icon settings-icon"></div>
             Settings
         </a>

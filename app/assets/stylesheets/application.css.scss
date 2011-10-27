@@ -81,6 +81,10 @@ button {
   border: none;
 }
 
+#flash_notice {
+  display: none;
+}
+
 #header {
     @include single-box-shadow(#AAA, 1px, 1px, 3px);
     background-color: #2061B6;
@@ -236,7 +240,9 @@ button {
 #page_content {
     background: $page_content_background-color;
     color: $page_content_color;
-
+    > h1 {
+      margin: 0 0 5px 10px;
+    }
     .wrap {
         padding-bottom: 2px;
     }

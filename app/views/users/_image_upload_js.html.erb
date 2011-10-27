@@ -1,0 +1,57 @@
+<script>
+  $(function() {
+    var user_image_uploader = new plupload.Uploader({
+      runtimes : "flash,browserplus,gears,silverlight,html5",
+      browse_button : 'user_uploadB',
+      max_file_size : '2mb',
+      url : "<%= upload_tmp_path %>",
+      container: 'user_uploadB',
+      flash_swf_url: "/assets/javascripts/plupload/plupload.flash.swf",
+      silverlight_xap_url: "/assets/javascripts/plupload/plupload.silverlight.xap",
+      multipart: true,
+      multipart_params: {
+        "authenticity_token" : '<%= form_authenticity_token %>'
+      }
+    });
+
+    user_image_uploader.bind('FilesAdded', function(up, files) {
+    });
+
+    user_image_uploader.bind('QueueChanged', function() {
+      console.log('File Added');
+      user_image_uploader.start();
+    })
+
+    user_image_uploader.bind('UploadProgress', function(up, file) {
+      if (file.percent == 100)
+      {
+        $('#user_uploadB-progress').html('100% uploaded... Finalizing...')
+      }
+      else {
+        $('#user_uploadB-progress').html(file.percent + "% uploaded...");
+      }
+    });
+
+    user_image_uploader.bind("FileUploaded", function(up, file, data) {
+      params = $.parseJSON(data.response);
+      $.ajax({
+        url: '<%= user_picture_update_path %>',
+        dataType: 'json',
+        type: 'put',
+        data: {image_location: params.image_path},
+        success: function(response) {
+          $('.profile-image').each(function(i,val) {
+            var img_src = $(val).attr('src');
+            var timestamp = new Date().getTime();
+            $(val).attr('src',img_src+'&'+timestamp);
+          });
+          $('#user_uploadB-progress').oneTime(2000, 'finalizing', function() {
+            $(this).html('');
+          })
+        }
+      })
+    })
+
+    user_image_uploader.init();
+  });
+</script>

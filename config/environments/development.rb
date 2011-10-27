@@ -41,7 +41,7 @@ ProjectLimelight::Application.configure do
           :port => 587,
           :authentication => :plain,
           :enable_starttls_auto => true,
-          :user_name => '',
-          :password => ''
+          :user_name => 'app1232528@heroku.com',
+          :password => 'tv3ngda9'
   }
 end

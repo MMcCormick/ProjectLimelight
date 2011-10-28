@@ -97,6 +97,4 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by_slug(params[:id])
     render :partial => 'hover_tab', :topic => @topic
   end
-
-
 end

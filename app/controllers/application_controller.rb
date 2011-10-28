@@ -70,7 +70,7 @@ class ApplicationController < ActionController::Base
     response
   end
 
-  # Publish a pubnub message
+  # Publish a pusher message
   def pusher_publish(channel, event, message)
     Pusher[channel].trigger(event, message)
   end

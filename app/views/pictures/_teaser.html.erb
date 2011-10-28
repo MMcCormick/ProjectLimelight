@@ -11,8 +11,8 @@
 
 <% picture = capture do %>
   <% if style == :grid %>
-    <% img = default_image_url(object, [190, 150]) %>
-    <%= image_tag img, :style => 'max-width: 210px; max-height: 150px;' if img %>
+    <% img = default_image_url(object, [200, 180], 'square') %>
+    <%= image_tag img, :style => 'max-width: 200px; max-height: 180px;' if img %>
   <% else %>
     <% img = default_image_url(object, [75, 75]) %>
     <%= image_tag img, :style => 'max-width: 75px;' if img %>

@@ -419,7 +419,7 @@ $teaser-padding: 10px;
   $width: 200px;
   $height: 220px;
   $expand-width: 40px;
-  $expand-height: 10px;
+  $expand-height: 25px;
   float: left;
   width: $width;
   min-height: $height;
@@ -447,7 +447,8 @@ $teaser-padding: 10px;
     }
     img,
     .video-embed {
-      margin: 3px 0 0 5px
+      @include border-radius(0px);
+      margin: 3px 0 0 0;
     }
     p {
       max-height: 145px;
@@ -472,6 +473,11 @@ $teaser-padding: 10px;
       bottom: 0;
       z-index: 10;
       max-height: 23px;
+      .oType,
+      .commentC,
+      .related-topics {
+        display: none;
+      }
   }
   .pop {
     @include single-box-shadow(#666, 1px, 1px, 2px);
@@ -543,15 +549,15 @@ $teaser-padding: 10px;
   }
   &.hover {
     z-index: 15;
-    overflow: visible;
+    /*overflow: visible;*/
     max-height: none;
     .wrapper {
       @include single-box-shadow(#999, 1px, 2px, 3px);
       max-height: none;
       position: absolute;
-      padding: $expand-height/2 $expand-width $expand-height 0;
+      padding: 5px $expand-width $expand-height 0;
       left: -1px;
-      top: ($expand-height * -1)/2 - 1;
+      top: -6px;
       background: #FFF;
       border: 1px solid #AAA;
       border-bottom: none;
@@ -571,10 +577,15 @@ $teaser-padding: 10px;
     .connectionsC {
       left: 0;
       max-height: 50px;
+      .oType,
+      .commentC,
+      .related-topics {
+        display: block;
+      }
     }
     &.left {
       .wrapper {
-        padding: $expand-height/2 0 $expand-height $expand-width;
+        padding: 5px 0 $expand-height $expand-width;
         right: -1px;
         left: auto;
       }

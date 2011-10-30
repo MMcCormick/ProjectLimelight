@@ -66,5 +66,4 @@ tmp/*
 /.idea
 
 # Uploaded files
-/public/uploads
 /dump.rdb

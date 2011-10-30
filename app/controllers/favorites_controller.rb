@@ -29,8 +29,7 @@ class FavoritesController < ApplicationController
         pop_change = object.add_pop_action(:fav, :a, current_user) if object.user_id != current_user.id
         object.save
         current_user.save
-        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB'],
-                                                            :popularity => object.pop_total, :pop_change => (pop_change ? pop_change : 0)})
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB']})
         status = 201
       else
         response = build_ajax_response(:error, nil, 'You have already favorited that!')
@@ -52,8 +51,7 @@ class FavoritesController < ApplicationController
       if object.remove_from_favorites(current_user)
         pop_change = object.add_pop_action(:fav, :r, current_user) if object.user_id != current_user.id
         current_user.save if object.save
-        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB'],
-                                                            :popularity => object.pop_total, :pop_change => (pop_change ? pop_change : 0)})
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB']})
         status = 200
       else
         response = build_ajax_response(:error, nil, 'You have already unfavorited that!')

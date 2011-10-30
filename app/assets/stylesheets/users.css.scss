@@ -117,79 +117,86 @@
 // The user panel, either left or right sidebar
 .user-panel {
     @include clearfix();
-    padding: 5px 5px 0 5px;
+    padding: 40px 5px 0 5px;
 
-    h2 {
-        float: left;
-        margin: 0 0 0 5px;
-        padding: 0;
+    .profile-image {
+      @include border-radius(2px);
+      position: absolute;
+      top: 6px;
+      left: 6px;
     }
-    .pop {
-        float: left;
-        font-size: 20px;
+    h3 {
+      max-width: 138px;
+      overflow: hidden;
+      position: absolute;
+      left: 42px;
+      top: 11px;
+    }
+    .stats {
+      position: relative;
+      height: 62px;
+      margin: 0;
+
+      .label {
+        position: absolute;
+        color: #999;
+        font-size: 9px;
+        cursor: default;
+
+        &.followers {
+          top: 0px;
+          left: 4px;
+          color: #666;
+        }
+        &.following {
+          top: 0px;
+          left: 79px;
+          color: #666;
+        }
+        &.users {
+          bottom: 0px;
+          left: 62px;
+        }
+        &.topics {
+          bottom: 0px;
+          left: 111px;
+        }
+      }
+      .btn {
+        @include border-radius(2px);
+        position: absolute;
+        top: 17px;
+        padding: 5px 0;
+        text-align: center;
+        width: 45px;
+        font-size: 12px;
+        background: #EFEFEF;
+        border: 1px solid #CCC;
+
+        &.users1 {
+          left: 0px;
+        }
+        &.users2 {
+          left: 50px;
+        }
+        &.topics2 {
+          left: 100px;
+        }
+      }
+      .pop {
+        font-size: 22px;
         cursor: default;
         color: #666;
-        font-weight: bold;
-        margin: 2px 0 0 10px;
-    }
-    .profileImage {
-        float: left;
-        margin: 7px 0 0 0;
-    }
-    > .right {
-        float: left;
-        padding: 10px 0 0 0;
-        width: 122px;
-        margin: 0 0 0 5px;
-    }
-    .stat {
-        color: #666;
-        margin: 0;
-        padding: 0 0 0 50px;
-        position: relative;
-
-        .label {
-            position: absolute;
-            top: 50%;
-            margin-top: -9px;
-            left: 2px;
-            font-size: 9px;
-            cursor: default;
-        }
-        a {
-            @include border-radius(2px);
-            position: relative;
-            padding: 1px 3px;
-            display: block;
-            color: #666;
-            font-size: 9px;
-            border:  1px solid transparent;
-        }
-        span {
-            font-weight: bold;
-            font-size: 11px;
-        }
-    }
-    .followers {
-        border-bottom: 1px solid #F3F3F3;
-        padding-bottom: 5px;
-
-        span {
-            padding: 0 5px 0 0;
-        }
-    }
-    .following {
-        border-top: 1px solid #DADADA;
-        padding-top: 3px;
-
-        .label { margin-top: -8px; }
-        .topics {
-            top: -1px;
-        }
+        position: absolute;
+        top: 23px;
+        right: -2px;
+        width: 53px;
+        text-align: center;
+      }
     }
     .links {
         @include clearfix();
-        margin: 7px 0 0 0;
+        margin: 5px 0 0 0;
         clear: both;
                 
         a {
@@ -255,8 +262,9 @@
         .badge { @include border-top-left-radius(3px); }
         .user-contributions { @include border-top-right-radius(3px); }
     }
-    .followB {
-        margin: 5px 55px;
+    .followB,
+    .unfollowB {
+        margin: 8px 0;
     }
 }
     

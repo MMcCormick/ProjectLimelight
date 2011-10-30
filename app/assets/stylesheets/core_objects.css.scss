@@ -417,7 +417,7 @@ $teaser-padding: 10px;
 // Grid Teaser
 .teaser.grid {
   $width: 202px;
-  $height: 224px;
+  $height: 225px;
   $expand-width: 40px;
   $expand-height: 25px;
   float: left;
@@ -439,9 +439,10 @@ $teaser-padding: 10px;
   }
   .content {
     padding: 2px 1px 2px 1px;
+    position: relative;
     .titleC {
       font-size: 15px;
-      margin: -2px 5px 0 5px;
+      margin: 2px 5px 0 5px;
       overflow: hidden;
       max-height: 16px;
       padding: 1px 0;
@@ -456,12 +457,8 @@ $teaser-padding: 10px;
       overflow: hidden;
     }
   }
-
-  .oType {
-
-  }
   .createdC {
-    margin: 0 0 0 5px;
+    margin: -2px 0 0 5px;
   }
   .controlsC {
     display: none;
@@ -479,6 +476,17 @@ $teaser-padding: 10px;
       .related-topics {
         display: none;
       }
+  }
+  .pop_change {
+    @include border-radius(2px);
+    position: absolute;
+    display: none;
+    font-size: 12px;
+    border: 1px solid #333;
+    right: 5px;
+    top: 44px;
+    padding: 0 3px;
+    background: #FFF;
   }
   .pop {
     @include single-box-shadow(#666, 1px, 1px, 2px);

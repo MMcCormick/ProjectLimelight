@@ -8,8 +8,7 @@ class RepostsController < ApplicationController
       if object.add_to_reposts(current_user)
         pop_change = object.add_pop_action(:rp, :a, current_user)
         current_user.save if object.save
-        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'],
-                                                            :popularity => object.pop_total, :pop_change => pop_change})
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB']})
         status = 201
       else
         response = build_ajax_response(:error, nil, 'You have already posted that!')
@@ -31,8 +30,7 @@ class RepostsController < ApplicationController
       if object.remove_from_reposts(current_user)
         pop_change = object.add_pop_action(:rp, :r, current_user)
         current_user.save if object.save
-        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'],
-                                                            :popularity => object.pop_total, :pop_chagne => pop_change})
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB']})
         status = 200
       else
         response = build_ajax_response(:error, nil, 'You have already undone that repost!')

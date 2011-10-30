@@ -9,8 +9,7 @@ class FollowsController < ApplicationController
           current_user.save
           pop_change = target.add_pop_action(:flw, :a, current_user)
           target.save
-          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB'],
-                                                               :popularity => target.pop_total, :pop_change => pop_change})
+          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
           status = 201
         else
           response = build_ajax_response(:error, nil, "You're already following that!")
@@ -38,8 +37,7 @@ class FollowsController < ApplicationController
           current_user.save
           pop_change = target.add_pop_action(:flw, :r, current_user)
           target.save
-          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB'],
-                                                               :popularity => target.pop_total, :pop_change => pop_change})
+          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
           status = 201
          else
           response = build_ajax_response(:error, nil, "You're not following that!")

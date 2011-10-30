@@ -1,23 +1,23 @@
-<div class="sbrC">
+<div class="sbrC user-subscribe" data-id="<%= @user.id.to_s %>">
   <%= render 'user/panel_right', :user => @user %>
 
   <a class="p sidebarB btn" href="<%= user_feed_path @user %>">
-      <div class="icon feed-icon"></div>
-      <%= @user.username %>'s Feed
+    <div class="icon feed-icon"></div>
+    <%= @user.username %>'s Feed
   </a>
 
   <a class="p sidebarB btn" href="<%= user_favorites_path @user %>">
-        <div class="icon feed-icon"></div>
-        <%= @user.username %>'s Favorites
-    </a>
+    <div class="icon user-favorites-icon"></div>
+    <%= @user.username %>'s Favorites
+  </a>
 
   <div class="sidebar-list">
-      <h5><%= @user.username %>'s Lists</h5>
-      <a class="list-view" href="#">View All</a>
+    <h5><%= @user.username %>'s Lists</h5>
+    <a class="list-view" href="#">View All</a>
 
-      <div class="clear"></div>
+    <div class="clear"></div>
 
-      {% render "LimelightBundle:LList:list" with {'userId': object.User.id}, {'standalone': true} %}
+    <!--{% render "LimelightBundle:LList:list" with {'userId': object.User.id}, {'standalone': true} %}-->
 
   </div>
 </div>

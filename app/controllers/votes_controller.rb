@@ -20,8 +20,7 @@ class VotesController < ApplicationController
           pop_change = object.add_pop_vote(:a, net, current_user) if net
           object.save!
           current_user.save
-          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => amount,
-                                                               :popularity => object.pop_total, :pop_change => (pop_change ? pop_change : 0) })
+          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s })
           status = 201
         end
       else
@@ -50,8 +49,7 @@ class VotesController < ApplicationController
           net = object.remove_voter(current_user)
           pop_change = object.add_pop_vote(:r, net, current_user)
           current_user.save if object.save
-          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s, :a => 0,
-                                                               :popularity => object.pop_total, :pop_change => pop_change })
+          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.v_'+object.id.to_s })
           status = 200
         end
       else

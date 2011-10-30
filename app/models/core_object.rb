@@ -56,6 +56,9 @@ class CoreObject
       self.favorites << user.id
       self.favorites_count += 1
       user.add_to_favorites(self)
+      true
+    else
+      false
     end
   end
 
@@ -64,6 +67,9 @@ class CoreObject
       self.favorites.delete(user.id)
       self.favorites_count -= 1
       user.remove_from_favorites(self)
+      true
+    else
+      false
     end
   end
 
@@ -73,10 +79,13 @@ class CoreObject
   end
 
   def add_to_reposts(user)
-    unless reposted_by? user.id
+    if (reposted_by? user.id) || (user_id == user.id)
+      false
+    else
       self.reposts << user.id
       self.reposts_count += 1
       user.reposts_count += 1
+      true
     end
   end
 
@@ -85,6 +94,9 @@ class CoreObject
       self.reposts.delete(user.id)
       self.reposts_count -= 1
       user.reposts_count -= 1
+      true
+    else
+      false
     end
   end
 

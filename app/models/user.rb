@@ -166,11 +166,14 @@ class User
   end
 
   def follow_user(user)
-    if !self.following_users.include?(user.id)
+    if (self.following_users.include?(user.id)) || (id == user.id)
+      false
+    else
       self.following_users << user.id
       self.following_users_count += 1
       user.followers_count += 1
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
+      true
     end
   end
 
@@ -180,6 +183,9 @@ class User
       self.following_users_count -= 1
       user.followers_count -= 1
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
+      true
+    else
+      false
     end
   end
 
@@ -192,6 +198,9 @@ class User
       self.following_topics << topic.id
       self.following_topics_count += 1
       topic.followers_count += 1
+      true
+    else
+      false
     end
   end
 
@@ -200,6 +209,9 @@ class User
       self.following_topics.delete(topic.id)
       self.following_topics_count -= 1
       topic.followers_count -= 1
+      true
+    else
+      false
     end
   end
 

@@ -168,7 +168,7 @@ describe CoreObject do
         it "should record the user, update count, and call user.add_to_favorites when passed a valid user" do
           user.should_receive(:add_to_favorites)
           expect {
-            talk.add_to_favorites(user)
+            talk.add_to_favorites(user).should be_true
           }.to change(talk, :favorites_count).by(1)
           talk.favorites.should include(user.id)
           talk.save
@@ -178,7 +178,7 @@ describe CoreObject do
         it "should do nothing" do
           user.should_not_receive(:remove_from_favorites)
           expect {
-            talk.remove_from_favorites(user)
+            talk.remove_from_favorites(user).should be_false
           }.to_not change(talk, :favorites_count)
           talk.favorites.should_not include(user.id)
         end
@@ -194,11 +194,11 @@ describe CoreObject do
         it "should do nothing" do
           user.should_not_receive(:add_to_favorites)
           expect {
-            talk.add_to_favorites(user)
+            talk.add_to_favorites(user).should be_false
           }.to_not change(talk, :favorites_count)
         end
         it "should keep the user recorded" do
-          talk.add_to_favorites(user)
+          talk.add_to_favorites(user).should be_false
           talk.favorites.should include(user.id)
         end
       end
@@ -206,7 +206,7 @@ describe CoreObject do
         it "should remove the user and update count" do
           user.should_receive(:remove_from_favorites)
           expect {
-            talk.remove_from_favorites(user)
+            talk.remove_from_favorites(user).should be_true
           }.to change(talk, :favorites_count).by(-1)
           talk.favorites.should_not include(user.id)
         end
@@ -224,12 +224,22 @@ describe CoreObject do
       talk.reposted_by?(user.id).should be_true
     end
 
+    it "should not allow a user to repost their own objects" do
+      talk2 = FactoryGirl.create(:talk, :user => user)
+      expect {
+        expect {
+          talk2.add_to_reposts(user).should be_false
+        }.to_not change(user, :reposts_count)
+      }.to_not change(talk, :reposts_count)
+      talk.reposts.should_not include(user.id)
+    end
+
     context "when the user has not already reposted the object" do
       describe "add_to_reposts" do
         it "should record the user and update counts when passed a valid user" do
           expect {
             expect {
-              talk.add_to_reposts(user)
+              talk.add_to_reposts(user).should be_true
             }.to change(user, :reposts_count).by(1)
           }.to change(talk, :reposts_count).by(1)
           talk.reposts.should include(user.id)
@@ -239,7 +249,7 @@ describe CoreObject do
         it "should do nothing" do
           expect {
             expect {
-              talk.remove_from_reposts(user)
+              talk.remove_from_reposts(user).should be_false
             }.to_not change(user, :reposts_count)
           }.to_not change(talk, :reposts_count)
           talk.reposts.should_not include(user.id)
@@ -256,12 +266,12 @@ describe CoreObject do
         it "should not change counts" do
           expect {
             expect {
-              talk.add_to_reposts(user)
+              talk.add_to_reposts(user).should be_false
             }.to_not change(user, :reposts_count)
           }.to_not change(talk, :reposts_count)
         end
         it "should keep the user recorded" do
-          talk.add_to_reposts(user)
+          talk.add_to_reposts(user).should be_false
           talk.reposts.should include(user.id)
         end
       end
@@ -269,7 +279,7 @@ describe CoreObject do
         it "should remove the user and update counts" do
           expect {
             expect {
-              talk.remove_from_reposts(user)
+              talk.remove_from_reposts(user).should be_true
             }.to change(user, :reposts_count).by(-1)
           }.to change(talk, :reposts_count).by(-1)
           talk.reposts.should_not include(user.id)

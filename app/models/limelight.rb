@@ -183,7 +183,7 @@ module Limelight #:nodoc:
 
     def add_voter(user, amount)
       vote = voter? user.id
-      net = 0
+      net = nil
       if !vote
         self.votes.create(:_id => user.id, :amount => amount)
         self.votes_count += amount
@@ -374,56 +374,61 @@ module Limelight #:nodoc:
         :user => 0.5
       }
 
-      field :pop_hour, :default => 0.0
-      field :pop_day, :default => 0.0
-      field :pop_week, :default => 0.0
-      field :pop_month, :default => 0.0
-      field :pop_total, :default => 0.0
+      field :ph, :default => 0.0
+      field :pd, :default => 0.0
+      field :pw, :default => 0.0
+      field :pm, :default => 0.0
+      field :pt, :default => 0.0
+
+      field :phc, :default => false
+      field :pdc, :default => false
+      field :pwc, :default => false
+      field :pmc, :default => false
     end
 
     def add_pop_vote(subtype, net, current_user)
+      amt = nil
       if subtype == :a
         case net
           when 1
-            add_pop_action :v_up, :a, current_user
+            amt = add_pop_action :v_up, :a, current_user
           when 2
-            add_pop_action :v_down, :r, current_user
-            add_pop_action :v_up, :a, current_user
+            amt = add_pop_action :v_down, :r, current_user
+            amt += add_pop_action :v_up, :a, current_user
           when -1
-            add_pop_action :v_down, :a, current_user
+            amt = add_pop_action :v_down, :a, current_user
           when -2
-            add_pop_action :v_up, :r, current_user
-            add_pop_action :v_down, :a, current_user
+            amt = add_pop_action :v_up, :r, current_user
+            amt += add_pop_action :v_down, :a, current_user
         end
       elsif subtype == :r
         case net
           when 1
-            add_pop_action :v_down, :r, current_user
+            amt = add_pop_action :v_down, :r, current_user
           when -1
-            add_pop_action :v_up, :r, current_user
+            amt = add_pop_action :v_up, :r, current_user
         end
-      else
-        nil
       end
+      amt
     end
 
     def add_pop_action(type, subtype, current_user)
-      amount = 0
+      amt = 0
       if subtype == :a
-        amount = POP_AMOUNTS[type]
+        amt = POP_AMOUNTS[type]
       elsif subtype == :r
-        amount = POP_AMOUNTS[type] * -1
+        amt = POP_AMOUNTS[type] * -1
       end
 
-      amount = amount * current_user.clout
+      amt = amt * current_user.clout
 
-      if amount != 0
+      if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
-        action.pop_snippets.new(:amount => amount, :id => id, :object_type => self.class.name)
+        action.pop_snippets.new(:amount => amt, :id => id, :object_type => self.class.name)
 
-        ooc_amt = amount * POP_AMOUNTS[:ooc]
-        ic_amt = amount * POP_AMOUNTS[:ic]
-        user_amt = amount * POP_AMOUNTS[:user]
+        ooc_amt = amt * POP_AMOUNTS[:ooc]
+        ic_amt = amt * POP_AMOUNTS[:ic]
+        user_amt = amt * POP_AMOUNTS[:user]
 
         unless ["User", "Topic"].include? self.class.name
           ooc_ids, ic_ids = [], []
@@ -439,28 +444,35 @@ module Limelight #:nodoc:
           end
           action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")
 
-          # Update the popularities on affected objects
-          Topic.collection.update({:_id => {"$in" => ooc_ids}}, {"$inc" => { :pop_hour => ooc_amt,
-              :pop_day => ooc_amt, :pop_week => ooc_amt, :pop_month => ooc_amt, :pop_total => ooc_amt }})
-          Topic.collection.update({:_id => {"$in" => ic_ids}}, {"$inc" => { :pop_hour => ic_amt,
-              :pop_day => ic_amt, :pop_week => ic_amt, :pop_month => ic_amt, :pop_total => ic_amt }})
-          User.collection.update({:_id => user_id}, {"$inc" => { :pop_hour => user_amt,
-              :pop_day => user_amt, :pop_week => user_amt, :pop_month => user_amt, :pop_total => user_amt }})
+          #TODO: figure out why this (or something else is creating long-named "pop_hour" fields on the db)
+          Update the popularities on affected objects
+          Topic.collection.update({:_id => {"$in" => ooc_ids}}, {"$inc" => { :ph => ooc_amt,
+              :pd => ooc_amt, :pw => ooc_amt, :pm => ooc_amt, :pt => ooc_amt }})
+          Topic.collection.update({:_id => {"$in" => ic_ids}}, {"$inc" => { :ph => ic_amt,
+              :pd => ic_amt, :pw => ic_amt, :pm => ic_amt, :pt => ic_amt }})
+          User.collection.update({:_id => user_id}, {"$inc" => { :ph => user_amt,
+              :pd => user_amt, :pw => user_amt, :pm => user_amt, :pt => user_amt }})
         end
 
         action.save!
-        change_pop(amount)
+        change_pop(amt)
+        amt
       end
     end
 
     protected
 
-    def change_pop(amount)
-      self.pop_hour += amount
-      self.pop_day += amount
-      self.pop_week += amount
-      self.pop_month += amount
-      self.pop_total += amount
+    def change_pop(amt)
+      self.ph += amt
+      self.pd += amt
+      self.pw += amt
+      self.pm += amt
+      self.pt += amt
+
+      self.phc = true
+      self.pdc = true
+      self.pwc = true
+      self.pmc = true
     end
   end
 end

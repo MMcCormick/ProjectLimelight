@@ -2,6 +2,9 @@ ProjectLimelight::Application.routes.draw do
 
   devise_for :admin_users, ActiveAdmin::Devise.config
 
+  # FOR TESTING MAP REDUCE
+  get '/mapreduce' => 'mapper#test', :as => :map_reduce
+
   # Pictures
   resources :pictures
 

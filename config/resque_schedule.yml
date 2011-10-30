@@ -4,3 +4,27 @@
 #  class: SendScoutData
 #  args:
 #  description: "This job calls the scout executable to send log data to scout."
+
+#recalculate_hourly:
+#  every: 30s
+#  class: RecalculatePopularity
+#  args: 'hour'
+#  description: "This job recalculates hourly scores"
+#
+#recalculate_daily:
+#  every: 1h
+#  class: RecalculatePopularity
+#  args: 'day'
+#  description: "This job recalculates daily scores"
+#
+#recalculate_weekly:
+#  every: 6h
+#  class: RecalculatePopularity
+#  args: 'week'
+#  description: "This job recalculates weekly scores"
+#
+#recalculate_monthly:
+#  every: 12h
+#  class: RecalculatePopularity
+#  args: 'month'
+#  description: "This job recalculates monthly scores"

@@ -1,15 +1,20 @@
 <div class="user-panel">
-    <%= image_tag user_default_picture_path(@user, :d => [30, 30], :s => 'square'), :style => "max-width: 85px;", :class => 'profile-image' %>
-    <h3><%= @user.username %></h3>
-    <div class="stats">
-        <div class="label followers">Followers</div>
-        <div class="label following">Following</div>
-        <div class="label users">Users</div>
-        <div class="label topics">Topics</div>
-        <a class="btn users1" href="<%= user_followers_path @user %>"><%= @user.followers_count.to_i %></a>
-        <a class="btn users2" href="<%= user_following_users_path @user %>"><%= @user.following_users_count.to_i %></a>
-        <a class="btn topics2" href="<%= user_following_topics_path @user %>"><%= @user.following_topics_count.to_i %></a>
-      <div class="pop" title="Your Popularity"><%= @user.pop_total.to_i %></div>
+    <h2><%= @user.username %></h2>
+    <div class="score" title="Your Score"><%= @user.pt.to_i %></div>
+    <div class="clear"></div>
+    
+    <%= image_tag user_default_picture_path(@user, :d => [85, 65]), :style => "max-width: 85px;", :class => 'profile-image' %>
+
+    <div class="right">
+        <div class="stat followers">
+            <div class="label">Followers</div>
+            <a class="btn" href="<%= user_followers_path @user %>"><span><%= @user.followers_count.to_i %> followers</span></a>
+        </div>
+        <div class="stat following">
+            <div class="label">Following</div>
+            <a class="btn" href="<%= user_following_users_path @user %>"><span><%= @user.following_users_count.to_i %></span> Users</a>
+            <a class="btn topics" href="<%= user_following_topics_path @user %>"><span><%= @user.following_topics_count.to_i %></span> Topics</a>
+        </div>
     </div>
 
     <div class="clear"></div>

@@ -1,4 +1,4 @@
-mongo:            mongod
+mongo:            sudo mongod
 redis:            redis-server /usr/local/etc/redis.conf
 scheduler:        bundle exec rake resque:scheduler
-worker:           bundle exec rake resque:work QUEUE=soulmate_user,soulmate_topic,images
+worker:           bundle exec rake resque:work QUEUE=popularity,soulmate_user,soulmate_topic,images

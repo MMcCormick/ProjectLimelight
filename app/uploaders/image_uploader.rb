@@ -43,7 +43,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
-     @name ||= "#{ActiveSupport::SecureRandom::hex(10)}.#{file.extension}" if original_filename.present?
+     @name ||= "#{Time.now.to_i}_#{ActiveSupport::SecureRandom::hex(4)}.#{file.extension}" if original_filename.present?
   end
 
   protected

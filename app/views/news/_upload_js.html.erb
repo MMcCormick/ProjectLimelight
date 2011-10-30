@@ -33,8 +33,8 @@
       params = $.parseJSON(data.response);
       console.log(params);
       $('#new_news .image-preview .default').hide();
-      $('#news_asset_image_image_cache').val(params.image_path);
-      $('#new_news .image-preview .upload').html('<img src="/uploads/tmp/'+params.image_location+'" />');
+      $('#news_asset_image_image_cache').val(params.image_location);
+      $('#new_news .image-preview .upload').html('<img src="'+params.image_location+'" />');
       var parent = $('#new_news')
       parent.find('.field.image .choices .upload').addClass('on').siblings().removeClass('on')
       parent.find('.image-preview .fetch').hide()

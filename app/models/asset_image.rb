@@ -14,4 +14,13 @@ class AssetImage < Asset
 
   validates :image, :presence => true
 
+  def save_image(location)
+    hash = ActiveSupport::SecureRandom::hex(8)+'.jpeg'
+    writeOut = open("/tmp/#{hash}", "wb")
+    writeOut.write(open(location).read)
+    writeOut.close
+
+    self.image.store!("/tmp/#{hash}")
+  end
+
 end

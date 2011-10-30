@@ -1,6 +1,6 @@
 <div class="user-panel">
     <h2><%= @user.username %></h2>
-    <div class="score" title="Your Score">0</div>
+    <div class="score" title="Your Score"><%= @user.pop_total.to_i %></div>
     <div class="clear"></div>
     
     <%= image_tag user_default_picture_path(@user, :d => [85, 65]), :style => "max-width: 85px;", :class => 'profile-image' %>
@@ -8,12 +8,12 @@
     <div class="right">
         <div class="stat followers">
             <div class="label">Followers</div>
-            <a class="btn" href="<%= user_followers_path @user %>"><span><%= @user.followers_count %> followers</span></a>
+            <a class="btn" href="<%= user_followers_path @user %>"><span><%= @user.followers_count.to_i %> followers</span></a>
         </div>
         <div class="stat following">
             <div class="label">Following</div>
-            <a class="btn" href="<%= user_following_users_path @user %>"><span><%= @user.following_users_count %></span> Users</a>
-            <a class="btn topics" href="<%= user_following_topics_path @user %>"><span><%= @user.following_topics_count %></span> Topics</a>
+            <a class="btn" href="<%= user_following_users_path @user %>"><span><%= @user.following_users_count.to_i %></span> Users</a>
+            <a class="btn topics" href="<%= user_following_topics_path @user %>"><span><%= @user.following_topics_count.to_i %></span> Topics</a>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
             Settings
         </a>
         <a class="user-notifications btn" href="<%= notifications_path @user %>">
-            <div class="icon"><%= @user.unread_notification_count %></div>
+            <div class="icon"><%= @user.unread_notification_count.to_i %></div>
             Notifications
         </a>
         <a class="badge btn" href="#">

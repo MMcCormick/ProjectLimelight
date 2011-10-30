@@ -2,10 +2,9 @@
   $(function() {
     var news_image_uploader = new plupload.Uploader({
       runtimes : "gears,html5,flash,silverlight",
-      browse_button : 'news_pupB',
+      browse_button : 'news_uploadB',
       max_file_size : '2mb',
       url : "<%= upload_tmp_path %>",
-      container: 'news_uploadC',
       flash_swf_url: "/assets/javascripts/plupload/plupload.flash.swf",
       silverlight_xap_url: "/assets/javascripts/plupload/plupload.silverlight.xap",
       multipart: true,

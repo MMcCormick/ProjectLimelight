@@ -1,11 +1,11 @@
 class UploadsController < ApplicationController
   def create
-    hash = "#{Digest::MD5.hexdigest(current_user.email.downcase)}-#{params[:file].original_filename}"
-    location = "#{Rails.root}/public/uploads/tmp/#{hash}"
-    writeOut = open(location, "wb")
-    writeOut.write(params[:file].read)
-    writeOut.close
+    name = "#{Digest::MD5.hexdigest(current_user.email.downcase)}-#{params[:file].original_filename}"
+    directory = "#{Rails.root}/public/uploads/tmp"
+    Dir.mkdir( directory, 755 )
+    path = File.join(directory, name)
+    File.open(path, "wb") { |f| f.write(params[:file].read) }
 
-    render :json => {:image_location => hash, :image_path => location}
+    render :json => {:image_location => name, :image_path => path}
   end
 end

@@ -22,7 +22,7 @@ $(function() {
   // Listens to votes being registered.
   amplify.subscribe("votes_create votes_destroy", function(data) {
     // This function makes the vote buttons turn on and off appropriately
-    var $target = $(data.target).parents('.scoreC:first')
+    var $target = $('.v_'+data.id).parents('.scoreC:first')
     if (data.a > 0)
     {
       $target.find('.up').removeClass('voteB').addClass('unvoteB')
@@ -37,12 +37,13 @@ $(function() {
       $target.find('.up').removeClass('unvoteB').addClass('voteB')
       $target.find('.down').removeClass('voteB').addClass('unvoteB')
     }
+
+    $('.p_'+data.id).text(parseInt(data.popularity));
   });
 
   // Listens for favorite toggles.
-  amplify.subscribe("favorite_toggle", function(data) {
-    // Update the objects scores
-    $('.fav_' + data.objectId).toggleClass('on');
+  amplify.subscribe("favorites_create,favorites_destroy", function(data) {
+    $('.p_'+data.id).text(parseInt(data.popularity));
   });
 
   // Listens for follow button events.
@@ -51,8 +52,8 @@ $(function() {
   });
 
   // Listens for follow button events.
-  amplify.subscribe("repost_toggle", function(data) {
-    actionCommon($('.rp_' + data.objectId), data);
+  amplify.subscribe("reposts_create,reposts_destroy", function(data) {
+    $('.p_'+data.id).text(parseInt(data.popularity));
   });
 
   // Listens for when the contribute button is clicked

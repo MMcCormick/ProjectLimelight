@@ -74,7 +74,7 @@ class TopicsController < ApplicationController
       image = topic.images.create(:user_id => current_user.id)
       version = AssetImage.new(:isOriginal => true)
       version.id = image.id
-      version.image.store!(params[:image_location])
+      version.save_image(params[:image_location])
       image.versions << version
       version.save
       topic.set_default_image(image.id)
@@ -97,6 +97,4 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by_slug(params[:id])
     render :partial => 'hover_tab', :topic => @topic
   end
-
-
 end

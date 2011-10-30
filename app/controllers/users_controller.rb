@@ -54,7 +54,7 @@ class UsersController < ApplicationController
     image = current_user.images.create(:user_id => current_user.id)
     version = AssetImage.new(:isOriginal => true)
     version.id = image.id
-    version.image.store!(params[:image_location])
+    version.save_image(params[:image_location])
     image.versions << version
     version.save
     current_user.set_default_image(image.id)

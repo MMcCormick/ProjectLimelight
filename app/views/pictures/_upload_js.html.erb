@@ -2,10 +2,9 @@
   $(function() {
     var picture_image_uploader = new plupload.Uploader({
       runtimes : "gears,html5,flash,silverlight",
-      browse_button : 'picture_pupB',
+      browse_button : 'picture_uploadB',
       max_file_size : '2mb',
       url : "<%= upload_tmp_path %>",
-      container: 'picture_uploadC',
       flash_swf_url: "/assets/javascripts/plupload/plupload.flash.swf",
       silverlight_xap_url: "/assets/javascripts/plupload/plupload.silverlight.xap",
       multipart: true,
@@ -34,8 +33,8 @@
       params = $.parseJSON(data.response);
       console.log(params);
       $('#new_picture .image-preview .default').hide();
-      $('#picture_asset_image_image_cache').val(params.image_path);
-      $('#new_picture .image-preview .upload').html('<img src="/uploads/tmp/'+params.image_location+'" />');
+      $('#picture_asset_image_image_cache').val(params.image_location);
+      $('#new_picture .image-preview .upload').html('<img src="'+params.image_location+'" />');
       var parent = $('#new_picture')
       parent.find('.field.image .choices .upload').addClass('on').siblings().removeClass('on')
       parent.find('.image-preview .fetch').hide()

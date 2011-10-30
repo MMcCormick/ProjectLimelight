@@ -38,7 +38,7 @@
         url: '<%= topic_picture_update_path %>',
         dataType: 'json',
         type: 'put',
-        data: {image_location: params.image_path},
+        data: {image_location: params.image_location},
         success: function(response) {
           $('.topic-image').each(function(i,val) {
             var img_src = $(val).attr('src');

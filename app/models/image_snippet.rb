@@ -18,7 +18,7 @@ class ImageSnippet
     version = AssetImage.new(params)
     version.id = id
     if params[:image_cache]
-      version.image.store! params[:image_cache]
+      version.save_image(params[:image_cache])
     end
     self.versions << version
   end

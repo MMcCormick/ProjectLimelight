@@ -445,13 +445,28 @@ module Limelight #:nodoc:
           action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")
 
           #TODO: figure out why this (or something else is creating long-named "pop_hour" fields on the db)
-          Update the popularities on affected objects
-          Topic.collection.update({:_id => {"$in" => ooc_ids}}, {"$inc" => { :ph => ooc_amt,
-              :pd => ooc_amt, :pw => ooc_amt, :pm => ooc_amt, :pt => ooc_amt }})
-          Topic.collection.update({:_id => {"$in" => ic_ids}}, {"$inc" => { :ph => ic_amt,
-              :pd => ic_amt, :pw => ic_amt, :pm => ic_amt, :pt => ic_amt }})
-          User.collection.update({:_id => user_id}, {"$inc" => { :ph => user_amt,
-              :pd => user_amt, :pw => user_amt, :pm => user_amt, :pt => user_amt }})
+          #Update the popularities on affected objects
+          Topic.collection.update(
+              {:_id => {"$in" => ooc_ids}},
+              {
+                  "$inc" => { :ph => ooc_amt, :pd => ooc_amt, :pw => ooc_amt, :pm => ooc_amt, :pt => ooc_amt },
+                  "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+              }
+          )
+          Topic.collection.update(
+              {:_id => {"$in" => ic_ids}},
+              {
+                  "$inc" => { :ph => ic_amt, :pd => ic_amt, :pw => ic_amt, :pm => ic_amt, :pt => ic_amt },
+                  "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+              }
+          )
+          User.collection.update(
+              {:_id => user_id},
+              {
+                  "$inc" => { :ph => user_amt, :pd => user_amt, :pw => user_amt, :pm => user_amt, :pt => user_amt },
+                  "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+              }
+          )
         end
 
         action.save!

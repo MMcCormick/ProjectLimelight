@@ -293,7 +293,7 @@ class User
     end
   end
 
-  def pusher_update
+  def pusher_publish
 
   end
 

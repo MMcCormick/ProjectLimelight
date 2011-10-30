@@ -416,7 +416,7 @@ $teaser-padding: 10px;
 
 // Grid Teaser
 .teaser.grid {
-  $width: 204px;
+  $width: 202px;
   $height: 224px;
   $expand-width: 40px;
   $expand-height: 25px;
@@ -427,7 +427,6 @@ $teaser-padding: 10px;
   border-right: 1px solid #EFEFEF;
   position: relative;
   z-index: 10;
-  overflow: hidden;
 
   .wrapper {
     position: absolute;
@@ -439,12 +438,13 @@ $teaser-padding: 10px;
     z-index: 10;
   }
   .content {
-    padding: 2px 2px 2px 2px;
+    padding: 2px 1px 2px 1px;
     .titleC {
       font-size: 15px;
-      margin: 0 5px 0 5px;
+      margin: -2px 5px 0 5px;
       overflow: hidden;
       max-height: 16px;
+      padding: 1px 0;
     }
     img,
     .video-embed {

@@ -4,13 +4,17 @@ class RepostsController < ApplicationController
   #TODO: don't allow users to repost their own
   def create
     object = CoreObject.find(params[:id])
-    if object && !reposted_by?(current_user.id)
-      object.add_to_reposts(current_user)
-      object.add_pop_action(:rp, :a, current_user)
-      current_user.save if object.save
-      pusher_publish(object.id.to_s, 'popularity_change', {:amount => :change_this, :popularity => object.pop_total})
-      response = build_ajax_response(:ok, nil, nil, nil, {:id => object.id.to_s, :target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
-      status = 201
+    if object
+      if object.add_to_reposts(current_user)
+        pop_change = object.add_pop_action(:rp, :a, current_user)
+        current_user.save if object.save
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'],
+                                                            :popularity => object.pop_total, :pop_change => pop_change})
+        status = 201
+      else
+        response = build_ajax_response(:error, nil, 'You have already posted that!')
+        status = 401
+      end
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)
       status = 404
@@ -23,13 +27,17 @@ class RepostsController < ApplicationController
 
   def destroy
     object = CoreObject.find(params[:id])
-    if object && reposted_by?(current_user.id)
-      object.remove_from_reposts(current_user)
-      object.add_pop_action(:rp, :r, current_user)
-      current_user.save if object.save
-      pusher_publish(object.id.to_s, 'popularity_change', {:amount => :change_this, :popularity => object.pop_total})
-      response = build_ajax_response(:ok, nil, nil, nil, {:id => object.id.to_s, :target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
-      status = 200
+    if object
+      if object.remove_from_reposts(current_user)
+        pop_change = object.add_pop_action(:rp, :r, current_user)
+        current_user.save if object.save
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'],
+                                                            :popularity => object.pop_total, :pop_chagne => pop_change})
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, 'You have already undone that repost!')
+        status = 401
+      end
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)
       status = 404

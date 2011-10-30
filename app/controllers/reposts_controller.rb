@@ -5,11 +5,16 @@ class RepostsController < ApplicationController
   def create
     object = CoreObject.find(params[:id])
     if object
-      object.add_to_reposts(current_user)
-      object.add_pop_action(:rp, :a, current_user)
-      current_user.save if object.save
-      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
-      status = 201
+      if object.add_to_reposts(current_user)
+        pop_change = object.add_pop_action(:rp, :a, current_user)
+        current_user.save if object.save
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'],
+                                                            :popularity => object.pop_total, :pop_change => pop_change})
+        status = 201
+      else
+        response = build_ajax_response(:error, nil, 'You have already posted that!')
+        status = 401
+      end
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)
       status = 404
@@ -23,11 +28,16 @@ class RepostsController < ApplicationController
   def destroy
     object = CoreObject.find(params[:id])
     if object
-      object.remove_from_reposts(current_user)
-      object.add_pop_action(:rp, :r, current_user)
-      current_user.save if object.save
-      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'], :popularity => object.pop_total})
-      status = 200
+      if object.remove_from_reposts(current_user)
+        pop_change = object.add_pop_action(:rp, :r, current_user)
+        current_user.save if object.save
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB'],
+                                                            :popularity => object.pop_total, :pop_chagne => pop_change})
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, 'You have already undone that repost!')
+        status = 401
+      end
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)
       status = 404

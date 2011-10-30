@@ -25,11 +25,17 @@ class FavoritesController < ApplicationController
   def create
     object = CoreObject.find(params[:id])
     if object
-      object.add_to_favorites(current_user)
-      object.add_pop_action(:fav, :a, current_user)
-      current_user.save if object.save
-      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB'], :popularity => object.pop_total})
-      status = 201
+      if object.add_to_favorites(current_user)
+        pop_change = object.add_pop_action(:fav, :a, current_user) if object.user_id != current_user.id
+        object.save
+        current_user.save
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB'],
+                                                            :popularity => object.pop_total, :pop_change => (pop_change ? pop_change : 0)})
+        status = 201
+      else
+        response = build_ajax_response(:error, nil, 'You have already favorited that!')
+        status = 401
+      end
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)
       status = 404
@@ -43,11 +49,16 @@ class FavoritesController < ApplicationController
   def destroy
     object = CoreObject.find(params[:id])
     if object
-      object.remove_from_favorites(current_user)
-      object.add_pop_action(:fav, :r, current_user)
-      current_user.save if object.save
-      response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB'], :popularity => object.pop_total})
-      status = 200
+      if object.remove_from_favorites(current_user)
+        pop_change = object.add_pop_action(:fav, :r, current_user) if object.user_id != current_user.id
+        current_user.save if object.save
+        response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB'],
+                                                            :popularity => object.pop_total, :pop_change => (pop_change ? pop_change : 0)})
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, 'You have already unfavorited that!')
+        status = 401
+      end
     else
       response = build_ajax_response(:error, nil, 'Target object not found!', nil)
       status = 404

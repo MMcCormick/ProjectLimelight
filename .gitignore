@@ -44,6 +44,7 @@ tmp/*
 /gems
 /rerun.txt
 /specifications
+/public/uploads/*
 /config/heroku.yml
 
 # scm revert files

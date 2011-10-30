@@ -416,8 +416,8 @@ $teaser-padding: 10px;
 
 // Grid Teaser
 .teaser.grid {
-  $width: 200px;
-  $height: 220px;
+  $width: 204px;
+  $height: 224px;
   $expand-width: 40px;
   $expand-height: 25px;
   float: left;
@@ -439,6 +439,7 @@ $teaser-padding: 10px;
     z-index: 10;
   }
   .content {
+    padding: 2px 2px 2px 2px;
     .titleC {
       font-size: 15px;
       margin: 0 5px 0 5px;

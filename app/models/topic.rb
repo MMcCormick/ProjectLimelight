@@ -54,6 +54,9 @@ class Topic
     self.aliases ||= []
     url = name.to_url
     self.aliases << url unless self.aliases.include?(url)
+    # TODO: decide about pluralization of topic aliases
+    #plurl = name.pluralize == name ? name.singularize.to_url : name.pluralize.to_url
+    #self.aliases << plurl unless self.aliases.include?(plurl)
   end
 
   def has_alias? name
@@ -93,8 +96,7 @@ class Topic
   # connections => {:connection_id => {:name => "Products", :topics => [topic1, topic2]}}
   def get_connections
     topic_ids = topic_connection_snippets.map { |snippet| snippet.topic_id }
-    #TODO: sort below by popularity
-    topics = Topic.where(:_id.in => topic_ids)
+    topics = Topic.where(:_id.in => topic_ids).desc(:pt)
     connections = {}
 
     topics.each do |topic|
@@ -125,7 +127,6 @@ class Topic
 
   protected
 
-  #TODO: topic connection snippets
   #TODO: topic aliases
   #TODO: update soulmate
   def update_denorms

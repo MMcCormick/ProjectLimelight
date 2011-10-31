@@ -10,7 +10,7 @@
       <a class="btn users1" href="<%= user_followers_path @user %>"><%= @user.followers_count.to_i %></a>
       <a class="btn users2" href="<%= user_following_users_path @user %>"><%= @user.following_users_count.to_i %></a>
       <a class="btn topics2" href="<%= user_following_topics_path @user %>"><%= @user.following_topics_count.to_i %></a>
-    <div class="pop" title="Your Popularity"><%= @user.pop_total.to_i %></div>
+    <div class="pop p_<%= @user.id %>" title="Your Popularity"><%= @user.pt.to_i %></div>
   </div>
 
   <div class="clear"></div>

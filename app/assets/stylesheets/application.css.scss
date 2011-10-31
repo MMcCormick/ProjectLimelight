@@ -282,8 +282,9 @@ button {
             margin:  5px 0 3px 14px;
             cursor: pointer;
         }
-        .profileImage {
-            margin:  5px 0 8px 3px;
+        .profile-image {
+          @include border-radius(2px);
+          margin:  5px 0 2px 5px;
         }
         .btn {
             @include border-radius(3px);
@@ -294,10 +295,16 @@ button {
             margin:  0 0 0 6px;
             float: left;
         }
+        .pop {
+            padding:  2px 0;
+            width: 40px;
+            color: #666;
+            text-align: center;
+            cursor: pointer;
+        }
         .notifications {
             padding:  2px 0;
             width: 26px;
-            font-weight: bold;
             color: #666;
             text-align: center;
         }

@@ -437,9 +437,11 @@ module Limelight #:nodoc:
             if t_mention.ooc
               ooc_ids << t_mention.id
               action.pop_snippets.new(:amount => ooc_amt, :id => t_mention.id, :object_type => "Topic")
+              Pusher[t_mention.id.to_s].trigger('popularity_changed', {:change => ooc_amt})
             else
               ic_ids << t_mention.id
               action.pop_snippets.new(:amount => ic_amt, :id => t_mention.id, :object_type => "Topic")
+              Pusher[t_mention.id.to_s].trigger('popularity_changed', {:change => ic_amt})
             end
           end
           action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")
@@ -467,6 +469,7 @@ module Limelight #:nodoc:
                   "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
               }
           )
+          Pusher[user_id.to_s+'_public'].trigger('popularity_changed', {:change => user_amt})
         end
 
         action.save!
@@ -488,6 +491,7 @@ module Limelight #:nodoc:
       self.pdc = true
       self.pwc = true
       self.pmc = true
+      Pusher[id.to_s].trigger('popularity_changed', {:change => amt})
     end
   end
 end

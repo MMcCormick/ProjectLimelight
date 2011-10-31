@@ -37,6 +37,17 @@ class ApplicationController < ActionController::Base
     return response
   end
 
+  # update the sidebar minimized or maximized
+  def sidebar
+    state = params[:state]
+    if [:mini, :full].include? state.to_sym
+      session[:sidebar] = state.to_sym
+    end
+
+    response = build_ajax_response(:ok, nil, nil)
+    render json: response, :status => 200
+  end
+
   # Exception Throwers
 
   # Not Found (404)
@@ -70,11 +81,6 @@ class ApplicationController < ActionController::Base
     response
   end
 
-  # Publish a pusher message
-  def pusher_publish(channel, event, message)
-    Pusher[channel].trigger(event, message)
-  end
-
   private
 
   # Used to display the page load time on each page
@@ -83,7 +89,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_feed_filters
-    if !session[:feed_filters]
+    session[:sidebar] = :full unless session[:sidebar]
+    unless session[:feed_filters]
       session[:feed_filters] =
               {
                 :display => ['Talk', 'News', 'Picture', 'Video'],

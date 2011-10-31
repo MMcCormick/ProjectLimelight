@@ -1,6 +1,6 @@
 <div id="sidebar" class="<%= 'user-subscribe' if signed_in? %>" data-id="<%= @user.id.to_s if signed_in? %>">
-  <div class="full">
-    <div class="panel-close-left-icon toggleSidebar" title="Minimize Sidebar"></div>
+  <div class="full <%= 'hide' unless session[:sidebar] == :full %>">
+    <div class="panel-close-left-icon ac" data-url="<%= sidebar_path(:state => :mini) %>" data-m="put" title="Minimize Sidebar"></div>
 
     <% if signed_in? %>
 
@@ -34,14 +34,14 @@
   </div>
 
   <% if signed_in? %>
-    <div class="minimized hide">
-      <div class="panel-open-left-icon toggleSidebar" title="Maximize Sidebar"></div>
+    <div class="minimized <%= 'hide' unless session[:sidebar] == :mini %>">
+      <div class="panel-open-left-icon ac" data-url="<%= sidebar_path(:state => :full) %>" data-m="put" title="Maximize Sidebar"></div>
 
-      <a href="#">
-        <!-- render 30px user profile image -->
-      </a>
+      <%= image_tag user_default_picture_path(@user, :d => [30, 30], :s => 'square'), :style => "max-width: 85px;", :class => 'profile-image' %>
 
-      <a class="notifications btn" title="Notifications" href="#">
+      <div class="pop p_<%= @user.id %>" title="Your Popularity"><%= @user.pt.to_i %></div>
+
+      <a class="notifications btn" title="Notifications" href="<%= notifications_path @user %>">
         <div class="icon">0</div>
       </a>
       <a class="btn" title="Settings" href="<%= user_settings_path @user %>">
@@ -50,13 +50,12 @@
       <a class="btn" title="Badges" href="#">
         <div class="icon badge-icon"></div>
       </a>
-      <a class="btn" title="Contributions" href="#">
+      <a class="btn" title="Contributions" href="<%= user_path @user %>">
         <div class="icon user-contributions-icon"></div>
       </a>
-      <a id="my-feed" title="My Feed" class="p btn" href="{{ path('object_show', {'slug': userObject.slug }) }}">
+      <a id="my-feed" title="My Feed" class="p btn" href="<%= user_feed_path @user %>">
         <div class="icon feed-icon"></div>
       </a>
-      <%= user_favorites_path @user %>
       <a id="my-favorites" title="My Favorites" class="p btn" href="<%= user_favorites_path @user %>">
         <div class="icon user-favorites-icon"></div>
       </a>

@@ -477,7 +477,7 @@ $teaser-padding: 10px;
         display: none;
       }
   }
-  .pop_change {
+  .pc {
     @include border-radius(2px);
     position: absolute;
     display: none;
@@ -657,6 +657,14 @@ $scoreBox-width: 160px;
     }
     .content {
         margin: 0 $scoreBox-width + $teaser-padding * 2 + 2 0 $teaser-padding;
+    }
+    .pc {
+      position: absolute;
+      display: none;
+      font-size: 12px;
+      right: 105px;
+      top: 10px;
+      padding: 0 3px;
     }
     img,
     .video-embed {

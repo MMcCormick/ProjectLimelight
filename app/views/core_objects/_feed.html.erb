@@ -2,7 +2,7 @@
   <% core_objects.each_with_index do |core_object, i| %>
     <% if i < 15 %>
       <%= render :layout => "core_objects/#{session[:feed_filters][:layout]}_teaser", :locals => {:object => core_object} do %>
-        <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object, :style => :grid %>
+        <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object, :style => session[:feed_filters][:layout].to_sym %>
       <% end %>
     <% end %>
   <% end %>

@@ -67,6 +67,9 @@ ProjectLimelight::Application.routes.draw do
   # Uploads
   match "/upload" => "uploads#create", :as => :upload_tmp
 
+  # Sidebar
+  put 'sidebar' => 'application#sidebar', :as => :sidebar
+
   # Active admin
   ActiveAdmin.routes(self)
 

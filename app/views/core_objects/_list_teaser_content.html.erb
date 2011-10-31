@@ -7,7 +7,7 @@
     <div class="time"><%= created_by if created_by %></div>
   </div>
 
-  <div class="pop_change"></div>
+  <div class="pc pc_<%= object.id.to_s %>">+5</div>
 
   <%= picture if defined? picture %>
 

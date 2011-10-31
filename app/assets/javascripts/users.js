@@ -38,13 +38,6 @@ $(function() {
     $('#login,#register').colorbox.resize();
   })
 
-  // Toggle the left sidebar
-  $('.toggleSidebar').live('click', function() {
-    $('#page,#page_header').toggleClass('minimized-sidebar');
-    $('#sidebar .full,#sidebar .minimized').toggle();
-    resizeLayout();
-  });
-
   // Autocomplete for Core Object Shares
   $('.core_object_share_receivers').livequery(function() {
     $(this).autocomplete($('#static-data').data('d').userAutoUrl, {

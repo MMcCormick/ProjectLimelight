@@ -37,12 +37,10 @@ $(function() {
       $target.find('.up').removeClass('unvoteB').addClass('voteB')
       $target.find('.down').removeClass('voteB').addClass('unvoteB')
     }
-
-    $('.p_'+data.id).text(parseInt(data.popularity));
   });
 
   // Listens for favorite toggles.
-  amplify.subscribe("favorites_create,favorites_destroy", function(data) {
+  amplify.subscribe("favorites_create favorites_destroy", function(data) {
     $('.p_'+data.id).text(parseInt(data.popularity));
   });
 
@@ -52,27 +50,22 @@ $(function() {
   });
 
   // Listens for follow button events.
-  amplify.subscribe("reposts_create,reposts_destroy", function(data) {
+  amplify.subscribe("reposts_create reposts_destroy", function(data) {
     $('.p_'+data.id).text(parseInt(data.popularity));
   });
 
-  // Listens for when the contribute button is clicked
-  amplify.subscribe("contribute_form", function(data) {
-    $.colorbox({title:"Give us some shit!", transition: "none", opacity: .5, html: data.form, scrolling: false });
-  });
-
+  /*
+   * GENERAL
+   */
+  amplify.subscribe("application_sidebar", function(data) {
+    $('#page,#page_header').toggleClass('minimized-sidebar');
+    $('#sidebar .full,#sidebar .minimized').toggle();
+    resizeLayout();
+  })
 
   /*
    * LISTS
    */
-
-  amplify.subscribe("list_created", function(data) {
-    $sidebar.find('ul.list').append('<li>' + data.object + '</li>');
-  });
-
-  amplify.subscribe("list_delete", function(data) {
-    deleteCommon(data);
-  });
 
   /*
    * TOPICS
@@ -95,10 +88,6 @@ $(function() {
    * TALK
    */
 
-  amplify.subscribe("talk_delete", function(data) {
-    deleteCommon(data);
-  });
-
   /*
    * FEEDS
    */
@@ -116,12 +105,6 @@ $(function() {
       $('#core-feed').append($(content).html())
       $('#core-feed').after($(data.content)[2]);
     }
-  });
-
-  amplify.subscribe("feed_filter_toggle", function (data) {
-  });
-
-  amplify.subscribe("feed_filter_change", function (data) {
   });
 
   /*
@@ -142,14 +125,6 @@ $(function() {
   /*
    * USER
    */
-
-  amplify.subscribe("user_confirmed", function (data) {
-    $('#login,#register').colorbox.close();
-  })
-
-  amplify.subscribe("register_error", function (data) {
-    $('#login,#register').colorbox.resize();
-  })
 
   /*
    * SHARING

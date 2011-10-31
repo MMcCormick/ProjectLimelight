@@ -25,7 +25,7 @@ class Comment
 
   validates :talk_id, :presence => true
   validates :content, :length => { :minimum => 3, :maximum => 150 }
-  validates :depth, :numericality => { :only_integer => true, :less_than_or_equal_to => 5 }
+  validates :depth, :numericality => { :less_than_or_equal_to => 5 }
 
   before_validation :set_path
   before_create :set_user_snippet

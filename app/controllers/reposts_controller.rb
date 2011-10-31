@@ -6,7 +6,7 @@ class RepostsController < ApplicationController
     object = CoreObject.find(params[:id])
     if object
       if object.add_to_reposts(current_user)
-        pop_change = object.add_pop_action(:rp, :a, current_user)
+        object.add_pop_action(:rp, :a, current_user)
         current_user.save if object.save
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB']})
         status = 201
@@ -28,7 +28,7 @@ class RepostsController < ApplicationController
     object = CoreObject.find(params[:id])
     if object
       if object.remove_from_reposts(current_user)
-        pop_change = object.add_pop_action(:rp, :r, current_user)
+        object.add_pop_action(:rp, :r, current_user)
         current_user.save if object.save
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.repost_'+object.id.to_s, :toggle_classes => ['repostB', 'unrepostB']})
         status = 200

@@ -26,7 +26,7 @@ class FavoritesController < ApplicationController
     object = CoreObject.find(params[:id])
     if object
       if object.add_to_favorites(current_user)
-        pop_change = object.add_pop_action(:fav, :a, current_user) if object.user_id != current_user.id
+        object.add_pop_action(:fav, :a, current_user) if object.user_id != current_user.id
         object.save
         current_user.save
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB']})
@@ -49,7 +49,7 @@ class FavoritesController < ApplicationController
     object = CoreObject.find(params[:id])
     if object
       if object.remove_from_favorites(current_user)
-        pop_change = object.add_pop_action(:fav, :r, current_user) if object.user_id != current_user.id
+        object.add_pop_action(:fav, :r, current_user) if object.user_id != current_user.id
         current_user.save if object.save
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.fav_'+object.id.to_s, :toggle_classes => ['favB', 'unfavB']})
         status = 200

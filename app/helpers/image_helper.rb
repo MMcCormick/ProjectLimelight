@@ -26,7 +26,7 @@ module ImageHelper
       return false
     end
 
-    if Rails.env.development? && absolute
+    if absolute
       url = Rails.public_path+url
     end
 

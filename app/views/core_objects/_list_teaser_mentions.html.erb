@@ -22,7 +22,7 @@
   <% if object.topic_mentions %>
     <div class="related-topics">
       <% object.topic_mentions.each do |topic| %>
-        <%= render 'topics/tag', :topic => topic %>
+        <%= render 'topics/tag', :topic => topic, :include_image => false %>
       <% end %>
     </div>
   <% end %>

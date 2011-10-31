@@ -19,14 +19,16 @@
 
     <div class="topic-connections">
       <% @connections.each do |con_id, connection| %>
-        <h4><%= connection[:name] %>:</h4>
-        <% connection[:topics].each_with_index do |topic, i| %>
-          <% if i > 2 %>
-            ... <%= link_to "view all", (connected_topics_path @topic) %>
-            <% break %>
+        <div class="connection">
+          <h5><%= connection[:name] %></h5>
+          <% connection[:topics].each_with_index do |topic, i| %>
+            <% if i > 1 %>
+              <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
+              <% break %>
+            <% end %>
+            <%= render 'topics/tag', :topic => topic, :include_image => true, :image_d => 30 %>
           <% end %>
-          <%= topic_link topic %><%= ", " unless i == 2 || i == connection[:topics].length - 1 %>
-        <% end %>
+        </div>
       <% end %>
     </div>
 

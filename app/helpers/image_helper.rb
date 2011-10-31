@@ -22,11 +22,14 @@ module ImageHelper
       end
     elsif object.instance_of? Topic
       url = "/assets/images/topic-default-#{dimensions[0]}-#{dimensions[1]}.gif"
+      unless Rails.env.development?
+        url = Rails.public_path+url
+      end
     else
       return false
     end
 
-    if absolute
+    if Rails.env.development? && absolute
       url = Rails.public_path+url
     end
 

@@ -272,7 +272,7 @@ form.core_object {
 
 .followB ,
 .unfollowB {
-    @include green-button(4px, 13px);
+    @include green-button(2px, 13px);
     margin: 5px 10px;
     padding: 5px 10px 3px 25px;
     display: block;
@@ -495,7 +495,7 @@ $teaser-padding: 10px;
     left: -36px;
     font-size: 30px;
     color: #555;
-    cursor: pointer;
+    cursor: default;
     border: 1px solid #AAA;
     background: #FFF;
     padding: 8px 10px;
@@ -1030,7 +1030,7 @@ $scoreBox-width: 160px;
     }
 
     .submit {
-        @include green-button(3px, 13px);
+        @include green-button(2px, 13px);
         padding:  3px 12px;
         display: block;
         float: left;

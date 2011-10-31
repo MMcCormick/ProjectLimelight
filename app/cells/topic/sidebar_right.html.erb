@@ -1,22 +1,20 @@
 <div id="topic-panel" class="sbrC">
   <div class="content">
     <h1><%= @topic.name %></h1>
-    <div><%= @topic.pt.to_i %></div>
-
-    <div><%= @topic.followers_count.to_i %> followers</div>
-
-    <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>
-
-    <%= image_tag topic_default_picture_path(@topic, :d => [85, 65]), :style => "max-width: 85px;", :class => 'profile-image' %>
-
-    <h4>Topic Types:</h4>
     <ul class="topic-types">
       <% @topic.topic_type_snippets.each do |snippet| %>
         <li><%= snippet.name %></li>
       <% end %>
     </ul>
 
-    <h4>Topic Summary:</h4>
+    <div class="pop p_<%= @topic.id %>" title="Your Popularity"><%= @topic.pt.to_i %></div>
+    <%= image_tag topic_default_picture_path(@topic, :d => [221, 120], :s => 'square'), :style => "max-width: 221px;", :class => 'profile-image' %>
+
+    <div class="stats">
+      <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>
+      <a class="btn followers" href="<%= topic_followers_path @topic %>"><%= @topic.followers_count.to_i %> followers</a>
+    </div>
+
     <div class="summary"><%= @topic.summary %></div>
 
     <div class="topic-connections">
@@ -32,12 +30,9 @@
       <% end %>
     </div>
 
-    <div class="footer">
-      <% if can? :update, @topic %>
-        <div class="edit-topic-b ac edit" data-url="<%= edit_topic_path %>" data-m="get">edit topic</div>
-      <% end %>
-    </div>
-
+    <% if can? :update, @topic %>
+      <div class="edit-topic-b ac edit" data-url="<%= edit_topic_path %>" data-m="get">edit topic</div>
+    <% end %>
   </div>
 
   <div id="topic-edit"></div>

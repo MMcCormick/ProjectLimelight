@@ -468,7 +468,7 @@ module Limelight #:nodoc:
               "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
             }
           )
-          Pusher[user_id.to_s+'_public'].trigger('popularity_changed', {:change => user_amt})
+          Pusher[user_id.to_s].trigger('popularity_changed', {:change => user_amt})
         end
 
         action.save!

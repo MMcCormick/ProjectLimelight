@@ -17,7 +17,7 @@ jQuery ->
 
   $('.user-subscribe').each (index, val) ->
     id = $(@).data('id')
-    channel = pusher.subscribe(id+'_public');
+    channel = pusher.subscribe(id);
     channel.bind 'popularity_changed', (data) ->
       $('.pt_'+id).text(parseInt($('.pt_'+id).text())+parseInt(data.change))
       $('.p_'+id).text(parseInt($('.pt_'+id).text()))

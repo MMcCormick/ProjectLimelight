@@ -362,15 +362,15 @@ module Limelight #:nodoc:
 
     included do
       POP_AMOUNTS = {
-        :v_up => 2.0,
-        :v_down => -2.0,
-        :rp => 4.0,
-        :fav => 3.0,
+        :v_up => 1.0,
+        :v_down => -1.0,
+        :rp => 3.0,
+        :fav => 2.0,
         :flw => 10.0,
 
         # Modifiers
-        :ooc => 0.5,
-        :ic => 0.7,
+        :ooc => 0.3,
+        :ic => 0.5,
         :user => 0.5
       }
 
@@ -413,6 +413,8 @@ module Limelight #:nodoc:
     end
 
     def add_pop_action(type, subtype, current_user)
+      num_mentions = topic_mentions.length
+
       amt = 0
       if subtype == :a
         amt = POP_AMOUNTS[type]
@@ -421,6 +423,7 @@ module Limelight #:nodoc:
       end
 
       amt = amt * current_user.clout
+      amt = 2 * amt / num_mentions if num_mentions > 2
 
       if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)

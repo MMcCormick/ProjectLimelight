@@ -18,7 +18,7 @@ class TopicCell < Cell::Rails
   end
 
   def trending
-    @topics = Topic.all.desc(:pw).limit(5)
+    @topics = Topic.all.desc(:pw).limit(40)
     render
   end
 

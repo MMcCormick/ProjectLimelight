@@ -87,6 +87,11 @@ class TopicsController < ApplicationController
     render :json => {:status => 'ok'}
   end
 
+  def followers
+    @topic = Topic.find_by_slug(params[:id])
+    @followers = User.where(:following_topics => @topic.id)
+  end
+
   def connected
     @topic = Topic.find_by_slug(params[:id])
     authorize! :read, @topic

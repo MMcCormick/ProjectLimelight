@@ -2,11 +2,18 @@
   <%= render_cell(:topic, :sidebar_right, @topic, @connections) %>
 <% end %>
 
-<ul class="alt-list">
+<div class="topic-con-full">
   <% @connections.each do |con_id, connection| %>
     <h4><%= connection[:name] %>:</h4>
-    <% connection[:topics].each do |topic| %>
-      <%= render 'topics/teaser', :topic => topic %>
-    <% end %>
+    <ul class="alt-list">
+      <li class="labels">
+        <div>Topic</div>
+        <div>Popularity</div>
+        <div>Followers</div>
+      </li>
+      <% connection[:topics].each do |topic| %>
+          <%= render 'topics/teaser', :topic => topic %>
+      <% end %>
+    </ul>
   <% end %>
-</ul>
+</div>

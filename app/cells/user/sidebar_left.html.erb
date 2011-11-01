@@ -61,5 +61,5 @@
       </a>
     </div>
   <% end %>
-  <div class="pt_<%= @user.id.to_s %> hide"><%= @user.pt %></div>
+  <div class="pt_<%= @user.id.to_s if signed_in? %> hide"><%= @user.pt if signed_in? %></div>
 </div>

@@ -59,7 +59,7 @@ ProjectLimelight::Application.routes.draw do
   post '/share/create' => 'core_object_shares#create', :as => :create_share
 
   # Resque admin
-  mount Resque::Server, :at => "/resque"
+  mount Resque::Server, :at => "resque"
 
   # Soulmate api
   mount Soulmate::Server, :at => "/soul-data"

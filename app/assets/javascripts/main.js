@@ -397,36 +397,36 @@ $(function() {
 
       // Score Up
       case (e.shiftKey && $code == $sc.up):
-        $('.teaser.hover').find('.voteB.up').click();
+        $('.teaser.hover').find('.voteB.up, .unvoteB.up').click();
       break;
 
       // Score Down
       case (e.shiftKey && $code == $sc.down):
-        $('.teaser.hover').find('.voteB.down').click();
+        $('.teaser.hover').find('.voteB.down, .unvoteB.down').click();
       break;
 
       // Favorite
-      case ($code == $sc.fav):
-        $('.teaser.hover').find('.favB').click();
+      case (e.shiftKey && $code == $sc.fav):
+        $('.teaser.hover').find('.favB, .unfavB').click();
       break;
 
       // Repost
-      case ($code == $sc.repost):
-        $('.teaser.hover').find('.repostB').click();
+      case (e.shiftKey && $code == $sc.repost):
+        $('.teaser.hover').find('.repostB, .unrepostB').click();
       break;
 
       // Share
-      case ($code == $sc.share):
-        $('.teaser.hover').find('.coreShareB').click();
+      case (e.shiftKey && $code == $sc.share):
+        $('.teaser.hover').find('.coreShareB, .coreShareB').click();
       break;
 
       //TODO: implement - unsure of purpose
       // Talk
-      case ($code == $sc.talk):
+      case (e.shiftKey && $code == $sc.talk):
         //$('.teaser.hover').find('.share').click();
       break;
 
-      case ($code == $sc.goTo):
+      case (e.shiftKey && $code == $sc.goTo):
         window.location = $('.teaser.hover').find('.commentC').attr('href')
       break;
     }

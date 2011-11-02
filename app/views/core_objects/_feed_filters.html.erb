@@ -1,16 +1,5 @@
 <div id="feed-filters">
-  <div class="feed-sort">
-    <div class="arrow-small"></div>
-    <h5>SORT BY</h5>
-    <ul class="btn">
-      <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'created_at' %>">
-        <div data-d='{"target":"created_at", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'created_at' ? 'on' : 'hide' %>">Newest</div>
-      </li>
-      <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'popularity' %>">
-        <div data-d='{"target":"popularity", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'popularity' ? 'on' : 'hide' %>">Popularity</div>
-      </li>
-    </ul>
-  </div>
+  <%= render :partial => "core_objects/feed_sort_main" %>
 
   <div class="feed-display">
     <h5>SHOW</h5>

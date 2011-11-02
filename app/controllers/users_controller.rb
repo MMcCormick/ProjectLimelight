@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_feed_path :p => page + 1
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :created_by_users => [@user.id],
             :page => page
     })
@@ -100,7 +100,7 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_feed_path :p => page + 1
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :created_by_users => @user.following_users,
             :reposted_by_users => @user.following_users,
             :mentions_topics => @user.following_topics,

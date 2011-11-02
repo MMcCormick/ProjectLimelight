@@ -18,7 +18,7 @@ class TopicsController < ApplicationController
     @more_path = topic_path @topic, :p => page + 1
     topic_ids = @topic.pull_from_ids << @topic.id
 
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :mentions_topics => topic_ids,
             :page => page
     })

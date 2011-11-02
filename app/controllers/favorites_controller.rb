@@ -9,7 +9,7 @@ class FavoritesController < ApplicationController
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_favorites_path :p => page + 1
 
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :includes_ids => @user.favorites,
             :page => page
     })

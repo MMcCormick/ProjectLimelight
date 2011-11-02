@@ -4,7 +4,7 @@ class PagesController < ApplicationController
     @title = 'Home'
     page = params[:p] ? params[:p].to_i : 1
     @more_path = root_path :p => page + 1
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], [:created_at, :desc], {:page => page})
+    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {:page => page})
 
     respond_to do |format|
       format.js {

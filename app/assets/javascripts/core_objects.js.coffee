@@ -99,6 +99,16 @@ jQuery ->
       hidden_data_field.val(JSON.stringify(hidden_data))
     mention.remove()
 
+  # Feed Sort Selection
+  $('.feed-sort-select.closed').live 'click', (e) ->
+    $(@).prepend($(@).find('.on').parent())
+    $(@).children().removeClass('hide')
+    $(@).removeClass('closed')
+
+  $('.feed-sort-select:not(.closed)').live 'click', (e) ->
+    $(@).find('.opt:not(.on)').parent().addClass('hide')
+    $(@).addClass('closed')
+
   # Automatically click the "load more" button if it is visible for more than .5 secs
   $(window).scroll ->
     if !$('#load-more').hasClass('on') && isScrolledIntoView($('#load-more'), true)

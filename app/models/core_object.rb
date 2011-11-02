@@ -111,7 +111,7 @@ class CoreObject
     #   CoreObject.feed
     #
     # @param [ display_types ] Array of CoreObject types to fetch for the feed
-    # @param [ order_by ] Array of format [field, direction] to sort the feed
+    # @param { order_by } Array of format { 'target' => 'field', 'order' => 'direction' } to sort the feed
     # @param { options } Options TODO: Fill out these options
     #
     # @return [ CoreObjects ]
@@ -135,7 +135,7 @@ class CoreObject
         core_objects = self.any_in("_type" => display_types).skip(num_to_skip).limit(page_length + 1)
       end
 
-      core_objects.order_by([order_by])
+      core_objects.order_by([order_by[:target], order_by[:order]])
     end
   end
 

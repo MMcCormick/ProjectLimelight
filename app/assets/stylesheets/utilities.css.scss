@@ -249,19 +249,21 @@
 // An alternating list of users / topics / whatever, aka the following or followers pages
 $column-width: 25%;
 .alt-list {
-  padding: 0 10px;
+  @include border-radius(3px);
+  padding: 0 0 4px;
   max-width: 500px;
   margin-top: -5px;
   margin: auto;
-
+  border: 2px solid #B0D751;
 
   .teaser, .labels {
-    padding-left: 10px;
-    margin-bottom: 2px;
   }
   .labels {
     @include clearfix();
     font-size: 13px;
+    background: #B0D751;
+    padding: 0 5px 2px 15px;
+    margin-bottom: 4px;
     >a, >div {
       display: block;
       float: left;
@@ -273,6 +275,9 @@ $column-width: 25%;
   }
   .teaser {
     @include list-teaser($column-width);
+    margin: 1px 5px;
+    padding-left: 10px;
+
     .score {
       cursor: default;
     }

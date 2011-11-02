@@ -184,11 +184,6 @@
   h4 {
     margin: 10px 0 5px 2px;
   }
-  .alt-list {
-    @include border-radius(3px);
-    padding: 0px;
-    border: 2px solid #CCC;
-  }
 }
 
 .ac_results {

@@ -6,6 +6,11 @@
 
 <% if !@following_users.empty? %>
   <ul class="alt-list">
+    <li class="labels">
+      <div>User</div>
+      <div>Popularity</div>
+      <div>Followers</div>
+    </li>
     <% @following_users.each do |following_user| %>
       <%= render 'users/teaser', :user => following_user %>
     <% end %>

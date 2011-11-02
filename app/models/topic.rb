@@ -18,13 +18,20 @@ class Topic
   # Topic.aliases
   # TopicMention.slug
   # TopicConnectionSnippet.topic_slug
-  slug :name
+  slug :name, :v do |doc|
+    if doc.topic_type_snippets.empty?
+      doc.name
+    else
+      doc.name + " " + doc.topic_type_snippets[0].name.to_url
+    end
+  end
 
   field :summary
   field :status, :default => 'Active'
   field :aliases
   field :user_id
   field :followers_count, :default => 0
+  field :v, :default => 1
 
   auto_increment :public_id
 
@@ -38,6 +45,7 @@ class Topic
 
   before_create :add_alias
   after_create :add_to_soulmate
+  before_update :update_alias
   after_update :update_denorms
   before_destroy :remove_from_soulmate
 
@@ -57,6 +65,13 @@ class Topic
     # TODO: decide about pluralization of topic aliases
     #plurl = name.pluralize == name ? name.singularize.to_url : name.pluralize.to_url
     #self.aliases << plurl unless self.aliases.include?(plurl)
+  end
+
+  def update_alias
+    if name_changed?
+      aliases.delete(name_was.to_url)
+      aliases << name.to_url
+    end
   end
 
   def has_alias? name
@@ -131,24 +146,17 @@ class Topic
   #TODO: update soulmate
   def update_denorms
     topic_mention_updates = {}
-    soulmate = false
     if name_changed?
       topic_mention_updates["topic_mentions.$.name"] = self.name
-      soulmate = true
     end
     if slug_changed?
       topic_mention_updates["topic_mentions.$.slug"] = self.slug
-      aliases.delete(slug_was)
-      aliases << slug
-      soulmate = true
-    end
-
-    if soulmate
-      Resque.enqueue(SmCreateTopic, id.to_s)
     end
 
     if !topic_mention_updates.empty?
       CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
+      Resque.enqueue(SmCreateTopic, id.to_s)
     end
+
   end
 end

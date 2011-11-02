@@ -6,7 +6,7 @@ module PopularityHelper
         pop_amount = doc["value"]["amount"]
       end
       object.set("p"+timeframe[0,1], pop_amount)
-      object["p"+timeframe[0,1]+"c"] = false
+      object["p"+timeframe[0,1]+"c"] = false if pop_amount == 0
       object.save!
     end
   end

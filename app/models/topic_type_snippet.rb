@@ -9,7 +9,7 @@ class TopicTypeSnippet
   validates :user_id, :presence => true
   validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
 
-  attr_accessible :name
+  attr_accessible :name, :user_id, :id
 
   after_create :increment_topic_type_counter
   after_destroy :decrement_topic_type_counter

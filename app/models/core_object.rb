@@ -12,6 +12,8 @@ class CoreObject
   # Denormilized:
   # Notification.shared_object_snippet.name (for talk only, other objects use Title) TODO: update this when notifications get implemented
   field :content
+  #TODO: bug: each core object type currently validates the length of content, but after creation content_raw is copied to content.
+  #TODO: since the topic and user mentions in raw content increase the length, validation may fail when the obj is saved again
 
   field :status, :default => 'Active'
   field :favorites, :default => []

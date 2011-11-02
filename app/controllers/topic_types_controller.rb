@@ -22,10 +22,8 @@ class TopicTypesController < ApplicationController
         response = { :event => 'edit_topic_type', :flash => { :type => :error, :message => 'The topic already has that type!' } }
       else
         if type && type.save
-          snippet = TopicTypeSnippet.new(type.attributes)
-          snippet.id = type.id
-          snippet.user_id = current_user.id
-          topic.topic_type_snippets << snippet
+          topic.topic_type_snippets << TopicTypeSnippet.new(:name => type.name, :id => type.id, :user_id => current_user.id)
+          topic.v += 1
           topic.save
           Resque.enqueue(SmCreateTopic, topic.id.to_s)
           response = { :event => 'edit_topic_type', :flash => { :type => :success, :message => 'Topic Type added!' } }
@@ -40,6 +38,8 @@ class TopicTypesController < ApplicationController
   def destroy
     if @topic_type
       @topic_type.destroy
+      @topic.v += 1
+      @topic.save
       response = { :flash => { :type => :success, :message => 'Topic Type removed!' } }
     else
       response = { :flash => { :type => :error, :message => 'Topic Type could not be removed' } }
@@ -51,7 +51,7 @@ class TopicTypesController < ApplicationController
   private
 
   def find_topic_type
-    topic = Topic.find_by_encoded_id(params[:topic_id])
-    @topic_type = topic.topic_type_snippets.find(params[:type_id])
+    @topic = Topic.find(params[:topic_id])
+    @topic_type = @topic.topic_type_snippets.find(params[:type_id])
   end
 end

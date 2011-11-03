@@ -108,6 +108,11 @@ jQuery ->
   $('.feed-sort-select:not(.closed)').live 'click', (e) ->
     $(@).find('.opt:not(.on)').parent().addClass('hide')
     $(@).addClass('closed')
+    options = []
+    $('.feed-sort-select .item').each (i,val) ->
+      options[$(val).data('sort')] = val
+    $(options).each (i,val) ->
+      $('.feed-sort-select').append(val)
 
   # Automatically click the "load more" button if it is visible for more than .5 secs
   $(window).scroll ->

@@ -1,24 +1,24 @@
 <div class="feed-sort">
-  <div class="arrow-small"></div>
   <h5>SORT BY</h5>
-  <ul class="btn feed-sort-select closed">
-    <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'created_at' %>">
+  <div class="btn feed-sort-select closed">
+    <div class="arrow-small"></div>
+    <div data-sort="0" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'created_at' %>">
       <div data-d='{"target":"created_at", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'created_at' ? 'on' : 'hide' %>">Newest</div>
-    </li>
-    <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pt' %>">
-      <div data-d='{"target":"pt", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pt' ? 'on' : 'hide' %>">Pop - All</div>
-    </li>
-    <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pm' %>">
-      <div data-d='{"target":"pm", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pm' ? 'on' : 'hide' %>">Pop - Month</div>
-    </li>
-    <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pw' %>">
-      <div data-d='{"target":"pw", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pw' ? 'on' : 'hide' %>">Pop - Week</div>
-    </li>
-    <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pd' %>">
-      <div data-d='{"target":"pd", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pd' ? 'on' : 'hide' %>">Pop - Day</div>
-    </li>
-    <li class="<%= 'hide' unless session[:feed_filters][:sort]['target'] == 'ph' %>">
+    </div>
+    <div data-sort="1" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'ph' %>">
       <div data-d='{"target":"ph", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'ph' ? 'on' : 'hide' %>">Pop - Hour</div>
-    </li>
-  </ul>
+    </div>
+    <div data-sort="2" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pd' %>">
+      <div data-d='{"target":"pd", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pd' ? 'on' : 'hide' %>">Pop - Day</div>
+    </div>
+    <div data-sort="3" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pw' %>">
+      <div data-d='{"target":"pw", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pw' ? 'on' : 'hide' %>">Pop - Week</div>
+    </div>
+    <div data-sort="4" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pm' %>">
+      <div data-d='{"target":"pm", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pm' ? 'on' : 'hide' %>">Pop - Month</div>
+    </div>
+    <div data-sort="5" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pt' %>">
+      <div data-d='{"target":"pt", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pt' ? 'on' : 'hide' %>">Pop - All</div>
+    </div>
+  </div>
 </div>

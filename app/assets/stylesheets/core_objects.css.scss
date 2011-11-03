@@ -826,7 +826,7 @@ $scoreBox-width: 160px;
             float: left;
         }
         .opt {
-            color: #CFCFCF;
+            color: #AAA;
             font-weight: bold;
             text-decoration: none;
             display: block;
@@ -867,22 +867,26 @@ $scoreBox-width: 160px;
         width: 200px;
 
         .arrow-small {
-            position: absolute; top: 11px; right: 28px;
+            position: absolute; top: 9px; right: 8px;
             z-index: 10;
+            cursor: pointer;
         }
 
-        ul {
+        .feed-sort-select {
             @include border-radius(2px);
             background-color: #EFEFEF;
             border: 1px solid #DDD;
             position: absolute; top: 0px; left: 59px;
             z-index: 5;
+            cursor: pointer;
+            margin: 2px 0 0 10px;
+            float: left;
 
             .opt {
                 width: 95px;
             }
-            .opt.on:hover {
-                cursor: default;
+            .opt:hover {
+                color: #444;
             }
         }
     }

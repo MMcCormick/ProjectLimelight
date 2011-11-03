@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
       session[:feed_filters] =
               {
                 :display => ['Talk', 'News', 'Picture', 'Video'],
-                :sort => {'target' => 'created_at', 'order' => 'DESC'},
+                :sort => {'target' => 'pd', 'order' => 'DESC'},
                 :layout => 'list'
               }
     end

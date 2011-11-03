@@ -9,10 +9,7 @@
       <%= f.label :url, "The URL where the news story can be found..." %>
       <%= f.url_field :url %>
     </div>
-    <div class="field lClear required bottom" data-tip="News Story Publisher">
-      <%= label_tag :publisher, "The organization/website that published the story..." %>
-      <%= text_field_tag :publisher %>
-    </div>
+    <%= hidden_field_tag :publisher %>
     <div class="field lClear required bottom important" data-tip="News Story Title">
       <%= f.label :title, "The story title..." %>
       <%= f.text_field :title %>

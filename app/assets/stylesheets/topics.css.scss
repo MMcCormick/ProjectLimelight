@@ -182,7 +182,12 @@
   margin: auto;
 
   h4 {
-    margin: 10px 0 5px 2px;
+    @include border-radius(2px);
+    display: inline-block;
+    margin: 10px 0 5px 0px;
+    padding: 2px 7px;
+    background: #B0D751;
+    color: white;
   }
 }
 

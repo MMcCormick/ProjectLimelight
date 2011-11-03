@@ -124,7 +124,7 @@ class CoreObject
       or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
 
       #page length also hard-coded in views/core_object
-      page_length = 15
+      page_length = options[:limit]? options[:limit] - 1 : 15
       page_number = options[:page]? options[:page] : 1
       num_to_skip = page_length * (page_number - 1)
 

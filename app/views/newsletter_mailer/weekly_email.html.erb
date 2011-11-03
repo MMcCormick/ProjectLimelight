@@ -1,0 +1,128 @@
+<!--#TODO: get this to affect all emails -->
+
+<%
+ if Rails.env.development?
+   base = 'http://localhost:3000'
+ elsif Rails.env.staging?
+   base = 'http://staging.projectlimelight.com'
+ else
+   base = 'http://www.projectlimelight.com'
+ end
+%>
+
+<!--$picture-color: #7BA821;-->
+<!--$news-color: #C52828;-->
+<!--$video-color: #51A2CC;-->
+<!--$talk-color: #D88E00;-->
+
+<p>Here are a few new posts we thought you might like. Enjoy!</p>
+
+<% if @pictures %>
+  <table cellpadding="0" style="font-size: 12px; border: 2px solid #7BA821; margin-bottom: 20px;">
+    <tr>
+      <td align="center" colspan="3" style="font-size: 16px; color: #7BA821; padding: 5px 5px 0;">
+        Pictures
+      </td>
+    </tr>
+    <tr>
+      <% @pictures.each do |picture| %>
+        <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
+          <%= picture.title %>
+        </td>
+      <% end %>
+    </tr>
+    <tr>
+      <% @pictures.each do |picture| %>
+        <td align="center" width="100" style="padding: 5px 10px">
+          <% img = default_image_url(picture, [100, 100], 'square') %>
+          <a target="_blank" href="<%= picture_url picture %>">
+            <%= image_tag base + img, :style => 'max-width: 100px; max-height: 100px;' if img %>
+          </a>
+          <span style="font-size: 10px;">
+            by <%= link_to picture.user_snippet.username, user_url(picture.user_snippet) %>, score: <%= sprintf "%.1f", picture.pt %>
+          </span>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+<% end %>
+
+<% if @news %>
+  <table cellpadding="0" style="font-size: 12px; border: 2px solid #C52828; margin-bottom: 20px;">
+    <tr>
+      <td align="center" colspan="3" style="font-size: 16px; color: #C52828; padding: 5px 5px 0;">
+        News
+      </td>
+    </tr>
+    <tr>
+      <% @news.each do |news| %>
+        <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
+          <%= news.title %>
+        </td>
+      <% end %>
+    </tr>
+    <tr>
+      <% @news.each do |news| %>
+        <td align="center" width="100" style="padding: 5px 10px">
+          <% img = default_image_url(news, [100, 100], 'square') %>
+          <% if img %>
+            <a target="_blank" href="<%= news_url news %>">
+              <%= image_tag base + img, :style => 'max-width: 100px; max-height: 100px;' if img %>
+            </a>
+          <% else %>
+            <%#TODO: make links absolute%>
+            <%= markdown(parse_mentions(news.content, news)) %>
+          <% end %>
+          <span style="font-size: 10px;">
+            by <%= link_to news.user_snippet.username, user_url(news.user_snippet) %>, score: <%= sprintf "%.1f", news.pt %>
+          </span>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+<% end %>
+
+<% if @videos %>
+  <table cellpadding="0" style="font-size: 12px; border: 2px solid #51A2CC; margin-bottom: 20px;">
+    <tr>
+      <td align="center" colspan="3" style="font-size: 16px; color: #51A2CC; padding: 5px 5px 0;">
+        Videos
+      </td>
+    </tr>
+    <tr>
+      <% @videos.each do |video| %>
+        <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
+          <%= video.title %>
+        </td>
+      <% end %>
+    </tr>
+    <tr>
+      <% @videos.each do |video| %>
+        <td align="center" width="100" style="padding: 5px 10px">
+          <%= markdown(parse_mentions(video.content, video)) %>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+<% end %>
+
+<% if @talks %>
+  <table cellpadding="0" style="font-size: 12px; border: 2px solid #D88E00; margin-bottom: 20px;">
+    <tr>
+      <td align="center" colspan="3" style="font-size: 16px; color: #D88E00; padding: 5px 5px 0;">
+        Talks
+      </td>
+    </tr>
+    <tr>
+      <% @talks.each do |talk| %>
+        <td width="100" style="padding: 5px 10px">
+          <%#TODO: make links absolute%>
+          <%= markdown(parse_mentions(talk.content, talk)) %>
+          <span style="font-size: 10px;">
+            by <%= link_to talk.user_snippet.username, user_url(talk.user_snippet) %>, score: <%= sprintf "%.1f", talk.pt %>
+          </span>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+<% end %>

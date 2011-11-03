@@ -413,8 +413,6 @@ module Limelight #:nodoc:
     end
 
     def add_pop_action(type, subtype, current_user)
-      num_mentions = topic_mentions.length
-
       amt = 0
       if subtype == :a
         amt = POP_AMOUNTS[type]
@@ -423,17 +421,20 @@ module Limelight #:nodoc:
       end
 
       amt = amt * current_user.clout
-      amt = 2 * amt / num_mentions if num_mentions > 2
+      unless ["User", "Topic"].include? self.class.name
+        amt = 2 * amt / topic_mentions.length if topic_mentions.length > 2
+      end
 
       if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
         action.pop_snippets.new(:amount => amt, :id => id, :object_type => self.class.name)
 
-        ooc_amt = amt * POP_AMOUNTS[:ooc]
-        ic_amt = amt * POP_AMOUNTS[:ic]
-        user_amt = amt * POP_AMOUNTS[:user]
-
         unless ["User", "Topic"].include? self.class.name
+
+          ooc_amt = amt * POP_AMOUNTS[:ooc]
+          ic_amt = amt * POP_AMOUNTS[:ic]
+          user_amt = amt * POP_AMOUNTS[:user]
+
           ooc_ids, ic_ids = [], []
 
           topic_mentions.each do |t_mention|

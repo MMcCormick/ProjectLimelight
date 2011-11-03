@@ -2,14 +2,18 @@ class MapperController < ApplicationController
   #TODO: remove this controller after pop is all set
 
   def test
-    users = User.all.asc(:pt)
-    num_users = User.count
-
-    users.each_with_index do |user, i|
-      user.clout = 2.5 * (i+1) / num_users + 0.5
-      user.save!
-    end
+    NewsletterMailer.weekly_email(current_user).deliver
   end
+
+  #def test
+  #  users = User.all.asc(:pt)
+  #  num_users = User.count
+  #
+  #  users.each_with_index do |user, i|
+  #    user.clout = 2.5 * (i+1) / num_users + 0.5
+  #    user.save!
+  #  end
+  #end
 
   #def test
   #  timeframe = "month"

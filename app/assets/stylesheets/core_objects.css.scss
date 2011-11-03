@@ -886,37 +886,43 @@ $scoreBox-width: 160px;
             }
         }
     }
-}
-// Styling for node-type buttons, (feed filters, contribute, etc)
-#feed-filters {
-  .feed-display {
-    .opt, > div {
-        @include border-radius(2px);
-        background-color: #EFEFEF;
-        border: 1px solid #DDD;
-        color: #999;
+
+    .scrollTop {
+        float: left;
+        margin: 7px 0 0 10px;
+        font-size: 8px;
+        cursor: pointer;
+        color: blue;
     }
-    .on.talk {
-        border-color: adjust-lightness($talk-color, 15);
-        background-color: adjust-lightness($talk-color, 38);
-        color: adjust-lightness($talk-color, -7);
+
+    .feed-display {
+        .opt, > div {
+            @include border-radius(2px);
+            background-color: #EFEFEF;
+            border: 1px solid #DDD;
+            color: #999;
+        }
+        .on.talk {
+            border-color: adjust-lightness($talk-color, 15);
+            background-color: adjust-lightness($talk-color, 38);
+            color: adjust-lightness($talk-color, -7);
+        }
+        .on.news {
+            border-color: adjust-lightness($news-color, 15);
+            background-color: adjust-lightness($news-color, 38);
+            color: adjust-lightness($news-color, -7);
+        }
+        .on.picture {
+            border-color: adjust-lightness($picture-color, 15);
+            background-color: adjust-lightness($picture-color, 38);
+            color: adjust-lightness($picture-color, -7);
+        }
+        .on.video {
+            border-color: adjust-lightness($video-color, 15);
+            background-color: adjust-lightness($video-color, 38);
+            color: adjust-lightness($video-color, -7);
+        }
     }
-    .on.news {
-        border-color: adjust-lightness($news-color, 15);
-        background-color: adjust-lightness($news-color, 38);
-        color: adjust-lightness($news-color, -7);
-    }
-    .on.picture {
-        border-color: adjust-lightness($picture-color, 15);
-        background-color: adjust-lightness($picture-color, 38);
-        color: adjust-lightness($picture-color, -7);
-    }
-    .on.video {
-        border-color: adjust-lightness($video-color, 15);
-        background-color: adjust-lightness($video-color, 38);
-        color: adjust-lightness($video-color, -7);
-    }
-  }
 }
 
 .contributeC {

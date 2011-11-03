@@ -7,7 +7,7 @@ jQuery ->
       pt = $('.pt_'+id)
       pt.text(parseFloat(pt.text())+data.change)
       $('.p_'+id).text(parseInt(pt.text()))
-      change = if data.change > 0 then '+'+data.change else data.change
+      change = if data.change > 0 then '+'+(Math.round(data.change*10) / 10) else Math.round(data.change*10) / 10
       $('.pc_'+id).text(change).fadeIn 200, ->
         $(@).oneTime 500, 'update_popularity', ->
           $(@).fadeOut(200).text('')
@@ -19,5 +19,5 @@ jQuery ->
     id = $(@).data('id')
     channel = pusher.subscribe(id);
     channel.bind 'popularity_changed', (data) ->
-      $('.pt_'+id).text(parseInt($('.pt_'+id).text())+parseInt(data.change))
-      $('.p_'+id).text(parseInt($('.pt_'+id).text()))
+      $('.pt_'+id).text(parseFloat($('.pt_'+id).text())+parseFloat(data.change))
+      $('.p_'+id).text(Math.round(parseFloat($('.pt_'+id).text())))

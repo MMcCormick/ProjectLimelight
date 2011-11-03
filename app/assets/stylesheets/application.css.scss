@@ -209,14 +209,6 @@ button {
         }
     }
 
-    .scrollTop {
-        float: left;
-        margin: 7px 0 0 10px;
-        font-size: 8px;
-        cursor: pointer;
-        color: blue;
-    }
-
     &.floating {
         position: fixed;
         top: 0px;

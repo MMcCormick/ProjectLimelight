@@ -321,6 +321,10 @@ $teaser-padding: 10px;
 .teaser {
     position: relative;
 
+    .wrapper {
+      border-bottom: 3px solid #CCC;
+    }
+
     .titleC {
         font-size: 18px;
         line-height: 1.08em;
@@ -366,24 +370,17 @@ $teaser-padding: 10px;
     .time { float: left; }
 
     .scoreBox {
-        /*@include opacity(.5);*/
+
     }
 
     .connectionsC {
-        /*@include opacity(.5);*/
-        font-size: 10px;
-        font-weight: bold;
-        border-bottom: 3px solid #CCC;
-        width: 100%;
-        .wrapper {
-            padding: 7px $teaser-padding 0 $teaser-padding;
-            position: relative;
-        }
-
-        .tag {
-            float: left;
-            margin: 0 5px 8px 0;
-        }
+      font-size: 10px;
+      font-weight: bold;
+      width: 100%;
+      .tag {
+          float: left;
+          margin: 0 5px 8px 0;
+      }
     }
 
     .oType {
@@ -419,7 +416,7 @@ $teaser-padding: 10px;
   $width: 202px;
   $height: 225px;
   $expand-width: 40px;
-  $expand-height: 25px;
+  $expand-height: 5px;
   float: left;
   width: $width;
   min-height: $height;
@@ -440,6 +437,7 @@ $teaser-padding: 10px;
   .content {
     padding: 2px 1px 2px 1px;
     position: relative;
+    height: 198px;
     .titleC {
       font-size: 15px;
       margin: 2px 5px 0 5px;
@@ -467,15 +465,19 @@ $teaser-padding: 10px;
     right: 0px;
   }
   .connectionsC {
-      position: absolute;
-      bottom: 0;
-      z-index: 10;
-      max-height: 23px;
-      .oType,
-      .commentC,
-      .related-topics {
-        display: none;
-      }
+    .oType,
+    .commentC,
+    .related-topics {
+      display: none;
+    }
+    .tag {
+      margin-top: 0px;
+    }
+  }
+  .related-topics {
+    @include clearfix();
+    clear: both;
+    margin: 0 10px;
   }
   .pc {
     @include border-radius(2px);
@@ -569,15 +571,18 @@ $teaser-padding: 10px;
       top: -6px;
       background: #FFF;
       border: 1px solid #AAA;
-      border-bottom: none;
+      border-bottom-width: 3px;
     }
     .titleC {
       max-height: none;
     }
     .content {
+      min-height: 198px;
+      height: auto;
       p {
         max-height: none;
         overflow: visible;
+        clear: both;
       }
     }
     .controlsC {
@@ -585,7 +590,6 @@ $teaser-padding: 10px;
     }
     .connectionsC {
       left: 0;
-      max-height: 50px;
       .oType,
       .commentC,
       .related-topics {
@@ -606,7 +610,7 @@ $teaser-padding: 10px;
 $scoreBox-width: 160px;
 .teaser.list {
     @include clearfix();
-    padding: 5px 0 30px 0;
+    padding: 5px 0 0 0;
     .controlsC {
         position: absolute;
         width: 110px;
@@ -680,9 +684,6 @@ $scoreBox-width: 160px;
     }
     .connectionsC {
         @include clearfix();
-        position: absolute;
-        bottom: 0px;
-        left: 0px;
     }
 }
 

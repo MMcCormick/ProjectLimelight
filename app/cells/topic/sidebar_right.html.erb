@@ -8,7 +8,7 @@
     </ul>
 
     <div class="pop p_<%= @topic.id %>" title="Your Popularity"><%= @topic.pt.to_i %></div>
-    <%= image_tag topic_default_picture_path(@topic, :d => [221, 120], :s => 'square'), :style => "max-width: 221px;", :class => 'profile-image' %>
+    <%= image_tag topic_default_picture_path(@topic, :d => [221, 200], :s => 'square'), :style => "max-width: 221px;", :class => 'profile-image' %>
 
     <div class="stats">
       <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>

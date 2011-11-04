@@ -4,9 +4,11 @@ module ImageHelper
     dimensions = dimensions.map(&:to_i)
     image = object.default_image
     image = image.first if image.is_a? Array
-    version = if image then image.find_version dimensions, style else nil end
+    version = if image && style != 'original' then image.find_version dimensions, style else nil end
 
-    if version
+    if style == 'original'
+      url = image.original.first.image_url
+    elsif version
       url = version.image_url
     elsif image
       if createNow

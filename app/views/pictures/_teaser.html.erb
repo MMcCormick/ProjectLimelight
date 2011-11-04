@@ -10,13 +10,18 @@
 <% end %>
 
 <% picture = capture do %>
-  <% if style == :grid %>
-    <% img = default_image_url(object, [200, 180], 'square') %>
-    <%= image_tag img, :style => 'max-width: 200px; max-height: 180px;' if img %>
-  <% else %>
-    <% img = default_image_url(object, [75, 75]) %>
-    <%= image_tag img, :style => 'max-width: 75px;' if img %>
-  <% end %>
+  <div class="img">
+    <div class='icon'>
+      <div class="full-black-icon"></div>
+    </div>
+    <% if style == :grid %>
+      <% img = default_image_url(object, [200, 180], 'square') %>
+      <%= image_tag img, :style => 'max-width: 200px; max-height: 180px;', 'data-original' => default_image_url(object, [], 'original') if img %>
+    <% else %>
+      <% img = default_image_url(object, [75, 75]) %>
+      <%= image_tag img, :style => 'max-width: 75px;', 'data-original' => default_image_url(object, [], 'original') if img %>
+    <% end %>
+  </div>
 <% end %>
 
 <% content = capture do %>

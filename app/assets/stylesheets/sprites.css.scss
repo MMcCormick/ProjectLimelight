@@ -156,6 +156,11 @@
     width: 16px;
     height: 16px;
 }
+.full-black-icon {
+  @include icon-sprite(full_black_12x12);
+  width: 12px;
+  height: 12px;
+}
 .feed-grid {
     @include icon-sprite(grid-off);
     width: 15px;

@@ -333,6 +333,31 @@ $teaser-padding: 10px;
         }
     }
 
+    .content {
+      .img {
+        position: relative;
+        .icon {
+          @include opacity(.5);
+          @include border-radius(3px);
+          display: none;
+          position: absolute;
+          top: 7px;
+          left: 2px;
+          background: #FFF;
+          padding: 3px;
+          &:hover {
+            @include opacity(1);
+            cursor: pointer;
+          }
+        }
+        &:hover {
+          .icon {
+            display: block;
+          }
+        }
+      }
+    }
+
     .tType {
         font-size: 12px;
         position: relative;
@@ -416,7 +441,7 @@ $teaser-padding: 10px;
 // Grid Teaser
 .teaser.grid {
   $width: 202px;
-  $height: 225px;
+  $height: 223px;
   $expand-width: 40px;
   $expand-height: 5px;
   float: left;
@@ -446,6 +471,11 @@ $teaser-padding: 10px;
       overflow: hidden;
       max-height: 16px;
       padding: 1px 0;
+    }
+    .img {
+      .icon {
+        top: 24px;
+      }
     }
     img,
     .video-embed {

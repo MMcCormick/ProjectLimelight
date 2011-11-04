@@ -1,5 +1,5 @@
 <div class="controlsC">
-  <div class="pop p_<%= object.id.to_s %>"><%= object.pt.to_i %></div>
+  <div class="pop p_<%= object.id.to_s %>"><div><%= object.pt.to_i %></div></div>
   <%= render 'votes/btn', :object => object %>
   <%= render 'favorites/btn', :object => object %>
   <%= render 'reposts/btn', :object => object %>

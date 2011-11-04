@@ -365,13 +365,15 @@ $teaser-padding: 10px;
             text-decoration: none;
         }
     }
-    
+
+    .pop {
+      div {
+        white-space: nowrap;
+      }
+    }
+
     .tag.user,
     .time { float: left; }
-
-    .scoreBox {
-
-    }
 
     .connectionsC {
       font-size: 10px;

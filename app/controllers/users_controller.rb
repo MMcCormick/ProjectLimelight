@@ -46,7 +46,13 @@ class UsersController < ApplicationController
 
     url = default_image_url(user, dimensions, style, true, true)
 
-    render :text => open(url, "rb").read
+    if params[:debug]
+      foo = url
+    else
+      foo = open(CGI::escape(url), "rb").read
+    end
+
+    render :text => foo
   end
 
   # Update a users default picture

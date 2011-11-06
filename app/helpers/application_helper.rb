@@ -23,7 +23,7 @@ module ApplicationHelper
 
   def parse_mentions(text, object)
     # Loop through all of the topic mentions in the content
-    text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_ ]*)\]/).each do |topic|
+    text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:' ]*)\]/).each do |topic|
       # Loop through all of the topic mentions connected to this object
       # If we found a match, replace the mention with a link to the topic
       object.topic_mentions.each do |topic_mention|

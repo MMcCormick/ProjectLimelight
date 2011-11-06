@@ -121,8 +121,7 @@
           tracker.setIdleTimeout(300000);
 
           <% if signed_in? %>
-              tracker.addVisitorProperty('username', '<%= current_user.username %>');
-              tracker.addVisitorProperty('name', '<%= current_user.fullname %>');
+              tracker.addVisitorProperty('name', '<%= current_user.username %>');
               tracker.addVisitorProperty('email', '<%= current_user.email %>');
           <% end %>
 

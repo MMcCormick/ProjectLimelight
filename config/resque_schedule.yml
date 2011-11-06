@@ -34,3 +34,9 @@ recalculate_clout:
   class: RecalculateClout
   args:
   description: "This job recalculates user clout"
+
+weekly_email:
+  every: 1w
+  class: WeeklyEmail
+  args:
+  description: "This job sends users a periodic content-you-might-like email"

@@ -1,5 +1,4 @@
 <!--#TODO: get this to affect all emails -->
-
 <%
  if Rails.env.development?
    base = 'http://localhost:3000'
@@ -10,10 +9,7 @@
  end
 %>
 
-<!--$picture-color: #7BA821;-->
-<!--$news-color: #C52828;-->
-<!--$video-color: #51A2CC;-->
-<!--$talk-color: #D88E00;-->
+<p>Hi <%= @user.first_name.blank? ? @user.username : @user.first_name %>,</p>
 
 <p>Here are a few new posts we thought you might like. Enjoy!</p>
 
@@ -27,7 +23,7 @@
     <tr>
       <% @pictures.each do |picture| %>
         <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
-          <%= picture.title %>
+          <%= link_to picture.title, picture_url(picture) %>
         </td>
       <% end %>
     </tr>
@@ -71,7 +67,7 @@
             </a>
           <% else %>
             <%#TODO: make links absolute%>
-            <%= markdown(parse_mentions(news.content, news)) %>
+            <%= markdown(parse_mentions(news.content, news, true)) %>
           <% end %>
           <span style="font-size: 10px;">
             by <%= link_to news.user_snippet.username, user_url(news.user_snippet) %>, score: <%= sprintf "%.1f", news.pt %>
@@ -99,7 +95,10 @@
     <tr>
       <% @videos.each do |video| %>
         <td align="center" width="100" style="padding: 5px 10px">
-          <%= markdown(parse_mentions(video.content, video)) %>
+          <%= markdown(parse_mentions(video.content, video, true)) %>
+          <span style="font-size: 10px;">
+            by <%= link_to video.user_snippet.username, user_url(video.user_snippet) %>, score: <%= sprintf "%.1f", video.pt %>
+          </span>
         </td>
       <% end %>
     </tr>
@@ -117,7 +116,7 @@
       <% @talks.each do |talk| %>
         <td width="100" style="padding: 5px 10px">
           <%#TODO: make links absolute%>
-          <%= markdown(parse_mentions(talk.content, talk)) %>
+          <%= markdown(parse_mentions(talk.content, talk, true)) %>
           <span style="font-size: 10px;">
             by <%= link_to talk.user_snippet.username, user_url(talk.user_snippet) %>, score: <%= sprintf "%.1f", talk.pt %>
           </span>

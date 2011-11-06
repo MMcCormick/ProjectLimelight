@@ -21,14 +21,18 @@ module ApplicationHelper
     Redcarpet.new(text, *options).to_html.html_safe
   end
 
-  def parse_mentions(text, object)
+  def parse_mentions(text, object, absolute=false)
     # Loop through all of the topic mentions in the content
     text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:' ]*)\]/).each do |topic|
       # Loop through all of the topic mentions connected to this object
       # If we found a match, replace the mention with a link to the topic
       object.topic_mentions.each do |topic_mention|
         if topic_mention.id.to_s == topic[0]
-          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic_mention.name}](#{topic_path(topic_mention)})")
+          if absolute
+            text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic_mention.name}](#{topic_url(topic_mention)})")
+          else
+            text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic_mention.name}](#{topic_path(topic_mention)})")
+          end
         end
       end
     end
@@ -39,7 +43,11 @@ module ApplicationHelper
       # If we found a match, replace the mention with a link to the user
       object.user_mentions.each do |user_mention|
         if user_mention.id.to_s == user[0]
-          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_path(user_mention)})")
+          if absolute
+            text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_url(user_mention)})")
+          else
+            text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_path(user_mention)})")
+          end
         end
       end
     end

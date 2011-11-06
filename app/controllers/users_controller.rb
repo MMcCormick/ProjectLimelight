@@ -49,7 +49,7 @@ class UsersController < ApplicationController
     if params[:debug]
       foo = url
     else
-      foo = open(CGI::escape(url), "rb").read
+      foo = open(url, "rb").read
     end
 
     render :text => foo

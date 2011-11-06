@@ -28,6 +28,6 @@ class RecalculatePopularity
   end
 
   def self.perform(timeframe)
-    new(timeframe)      
+    new(timeframe)
   end
 end

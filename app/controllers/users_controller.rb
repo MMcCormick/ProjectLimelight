@@ -46,7 +46,7 @@ class UsersController < ApplicationController
 
     url = default_image_url(user, dimensions, style, true, true)
 
-    render :text => open(url, "rb").read, :stream => true
+    render :text => url
   end
 
   # Update a users default picture

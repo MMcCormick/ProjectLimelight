@@ -46,13 +46,7 @@ class UsersController < ApplicationController
 
     url = default_image_url(user, dimensions, style, true, true)
 
-    if params[:debug]
-      foo = url
-    else
-      foo = open(url, "rb").read
-    end
-
-    render :text => foo
+    render :text => open(url, "rb").read
   end
 
   # Update a users default picture

@@ -11,7 +11,6 @@ gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
-#gem 'frontend-helpers'
 gem 'cells' # Components
 gem 'yajl-ruby' # json processing
 gem 'redcarpet' # Markdown

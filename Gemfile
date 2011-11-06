@@ -11,8 +11,8 @@ gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
-gem 'frontend-helpers'
-gem 'cells', '3.6.7' # Components
+#gem 'frontend-helpers'
+gem 'cells' # Components
 gem 'yajl-ruby' # json processing
 gem 'redcarpet' # Markdown
 gem 'fog' # Cloud support (amazon s3, etc)
@@ -20,7 +20,8 @@ gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'embedly'
 gem 'heroku'
-gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive', :require => 'resque/server'
+#gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive', :require => 'resque/server'
+gem 'resque', :require => 'resque/server'
 gem 'resque-scheduler', '2.0.0.e' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com

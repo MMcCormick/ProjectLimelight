@@ -3,6 +3,9 @@
   <%= render 'shared/error_messages', :object => f.object %>
 
   <div class="errors"></div>
+  <% if responding %>
+    <%= f.hidden_field :response_to_id, :value => responding.id.to_s %>
+  <% end %>
 
   <div class="group">
     <div class="field lClear required bottom" data-tip="News Story URL">

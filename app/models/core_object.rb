@@ -32,9 +32,10 @@ class CoreObject
   belongs_to :user
   has_many :core_object_shares
   validates :user_id, :status, :presence => true
-  attr_accessible :content
+  attr_accessible :content, :response_to_id
+  attr_accessor :response_to_id
 
-  before_create :set_user_snippet, :current_user_own
+  before_create :set_user_snippet, :current_user_own, :set_response_snippet
 
   def to_param
     "#{encoded_id}-#{name.parameterize}"
@@ -99,6 +100,20 @@ class CoreObject
       true
     else
       false
+    end
+  end
+
+  def set_response_snippet
+    unless !@response_to_id || @response_to_id.blank?
+      target = CoreObject.find(@response_to_id)
+      if target
+        self.response_to = ResponseTo.new(
+                :type => target._type,
+                :title => target.title,
+                :public_id => target.public_id
+        )
+        self.response_to.id = target.id
+      end
     end
   end
 

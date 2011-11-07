@@ -1,10 +1,10 @@
 <% title = capture do %>
   <%= user_link object.user_snippet %>
   <% if object.response_to %>
-    @
-    <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">
-      [connected title]
-      <span class="tType">Talk</span>
+    <span>@</span>
+    <a href="<%= core_object_response_url(object.response_to) %>" class="r">
+      <%= object.response_to.title %>
+      <div class="<%= object.response_to.type.parameterize %>-grey-icon icon"></div>
     </a>
   <% end %>
 <% end %>

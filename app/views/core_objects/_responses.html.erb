@@ -1,0 +1,11 @@
+<div id="response-divider">
+  <h3>Responses</h3>
+  <div id="add_response" data-target="#response-contribute">+ Add Response</div>
+  <%= render "shared/contribute", :id => 'response-contribute', :responding => object, :allowed => [:talk] %>
+</div>
+
+<%= render 'core_objects/feed_filters' %>
+
+<div id="responses">
+
+</div>

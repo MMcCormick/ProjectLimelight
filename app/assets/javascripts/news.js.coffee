@@ -13,7 +13,6 @@ jQuery ->
           for image in data.embedly.images
             target.append("<img src='"+image.url+"' />")
 
-          $('form.core_object .remote_image_url').val(target.find('img:first').attr('src'))
           target.find('img:not(:first)').hide()
 
         else

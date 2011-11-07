@@ -331,6 +331,20 @@ $teaser-padding: 10px;
         a {
           color: #2A3B9D;
         }
+        span {
+          color: #444;
+          cursor: default;
+          font-size: 15px;
+        }
+        .r {
+          position: relative;
+          padding: 0 0 0 18px;
+        }
+        .icon {
+          position: absolute;
+          top: 3px;
+          left: 0px;
+        }
     }
 
     .content {
@@ -356,12 +370,6 @@ $teaser-padding: 10px;
           }
         }
       }
-    }
-
-    .tType {
-        font-size: 12px;
-        position: relative;
-        top: -2px;
     }
 
     img {
@@ -693,6 +701,11 @@ $scoreBox-width: 160px;
     }
     .content {
         margin: 0 $scoreBox-width + $teaser-padding * 2 + 2 0 $teaser-padding;
+    }
+    .titleC {
+      .icon {
+        top: 6px;
+      }
     }
     .pc {
       position: absolute;
@@ -1026,7 +1039,9 @@ $scoreBox-width: 160px;
     font-style: italic;
     color: #333;
     font-size: 19px;
-    margin: 16px 0 0 10px;
+    margin: 14px 0 0 10px;
+    width: 500px;
+    line-height: 1.2em;
   }
   .forms {
     float: left;
@@ -1099,7 +1114,7 @@ $scoreBox-width: 160px;
     color: #444;
     position: absolute;
     left: 0;
-    top: -31px;
+    top: -29px;
     padding: 0 18px 0 10px;
     cursor: default;
   }
@@ -1119,7 +1134,7 @@ $scoreBox-width: 160px;
 }
 #response-contribute {
   position: absolute;
-  top: -50px;
+  top: -45px;
   left: 114px;
   z-index: 100;
   border-top: 2px solid #94C530;

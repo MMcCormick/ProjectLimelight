@@ -16,5 +16,7 @@ jQuery ->
     self = $(@)
     title = $(this).parents('.teaser:first').find('.titleC a').text()
     $.colorbox({title: title, html: ->
-      return "<img src='"+self.parents('.img:first').find('img').data('original')+"' />"
+      data = self.parents('.img:first').find('img').data('o')
+      return "<img src='"+data.url+"' width='"+data.w+"' height='"+data.h+"' />"
     });
+    $.colorbox.resize()

@@ -20,6 +20,14 @@ class AssetImage < Asset
     writeOut.write(open(location).read)
     writeOut.close
 
+    if isOriginal
+      img = Magick::Image::read("/tmp/#{hash}").first
+      if img
+        self.width = img.columns
+        self.height = img.rows
+      end
+    end
+
     self.image.store!("/tmp/#{hash}")
   end
 

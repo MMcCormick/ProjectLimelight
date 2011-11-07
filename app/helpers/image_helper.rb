@@ -7,7 +7,7 @@ module ImageHelper
     version = if image && style != 'original' then image.find_version dimensions, style else nil end
 
     if style == 'original'
-      url = image.original.first.image_url
+      return image.original.first
     elsif version
       url = version.image_url
     elsif image

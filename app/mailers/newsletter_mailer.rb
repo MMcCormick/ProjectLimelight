@@ -5,7 +5,7 @@ class NewsletterMailer < ActionMailer::Base
   default :from => "support@projectlimelight.com"
   layout 'email'
 
-  def weekly_email(user, pop_talks, pop_news, pop_vids, pop_pics)
+  def weekly_email(user, pop_talks, pop_news, pop_pics, pop_vids)
     @user = user
     talks = CoreObject.feed(['Talk'], {:target=>:pw, :order=>"desc"}, {
             :created_by_users => @user.following_users,

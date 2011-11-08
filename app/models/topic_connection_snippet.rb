@@ -2,6 +2,8 @@ class TopicConnectionSnippet
   include Mongoid::Document
 
   field :topic_id
+  field :topic_name
+  field :topic_slug
   field :name
   field :user_id
   field :pull_from, :type => Boolean
@@ -10,9 +12,7 @@ class TopicConnectionSnippet
 
   belongs_to :user
 
-  validates :topic_id, :presence => true
-  validates :name, :presence => true
-  validates :user_id, :presence => true
+  validates_presence_of :topic_id, :topic_name, :topic_slug, :name, :user_id
 
   attr_accessible :name, :pull_from, :opposite
 end

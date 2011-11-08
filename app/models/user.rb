@@ -67,7 +67,6 @@ class User
   has_many :pictures
   has_many :topics
   has_many :core_object_shares
-  has_many :topic_types
   has_many :topic_connections
   has_many :comments
   has_many :popularity_actions

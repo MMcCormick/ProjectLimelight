@@ -78,12 +78,6 @@ $(function() {
     $('#topic-edit').slideDown(300)
   })
 
-  // Topic types
-  amplify.subscribe("edit_topic_type", function (data) {
-    $currentTarget.clearForm();
-    $('.qtip').qtip('hide')
-  })
-
   /*
    * TALK
    */

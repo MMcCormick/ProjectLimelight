@@ -42,12 +42,10 @@ ProjectLimelight::Application.routes.draw do
   # Embedly
   get 'embed' => 'embedly#show', :as => :embedly_fetch
 
-  # Topic Types
-  resources :topic_types, :only => [:create, :destroy]
-
   # Topic Connections
   resources :topic_connections, :only => [:create, :new]
   post 'topic_connections/add' => 'topic_connections#add', :as => :add_connection
+  delete 'topic_connections/remove' => 'topic_connections#remove', :as => :remove_connection
 
   # Comments
   resources :comments

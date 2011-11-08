@@ -9,6 +9,9 @@ class Topic
   include Limelight::Images
   include Limelight::Popularity
 
+  TYPE_OF_ID = "4eb82a1caaf9060120000081"
+  EXAMPLE_ID = "4eb82a3daaf906012000008a"
+
   # Denormilized:
   # CoreObject.topic_mentions.name
   # TopicConnectionSnippet.topic_name
@@ -19,10 +22,10 @@ class Topic
   # TopicMention.slug
   # TopicConnectionSnippet.topic_slug
   slug :name, :v do |doc|
-    if doc.topic_type_snippets.empty?
+    if doc.get_types.empty?
       doc.name
     else
-      doc.name + " " + doc.topic_type_snippets[0].name.to_url
+      doc.name + " " + doc.get_types[0].topic_name.to_url
     end
   end
 
@@ -36,7 +39,6 @@ class Topic
   auto_increment :public_id
 
   belongs_to :user
-  embeds_many :topic_type_snippets
   embeds_many :topic_connection_snippets
 
   validates :user_id, :presence => true
@@ -78,10 +80,6 @@ class Topic
     aliases.include? name
   end
 
-  def types_array
-    topic_type_snippets.map {|type| type.name}
-  end
-
   def add_to_soulmate
     Resque.enqueue(SmCreateTopic, id.to_s)
   end
@@ -103,8 +101,28 @@ class Topic
     snippet.name = connection.name
     snippet.pull_from = connection.pull_from
     snippet.topic_id = con_topic.id
+    snippet.topic_name = con_topic.name
+    snippet.topic_slug = con_topic.slug
     snippet.user_id = user.id
     self.topic_connection_snippets << snippet
+    if connection.id.to_s == TYPE_OF_ID
+      self.v += 1
+    end
+  end
+
+  def remove_connection(connection, con_topic)
+    remove_connection_helper(connection, con_topic)
+    if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
+      con_topic.remove_connection_helper(opposite, self)
+    end
+  end
+
+  def remove_connection_helper(connection, con_topic)
+    foo = topic_connection_snippets.where(:topic_id => con_topic.id).find(connection.id)
+    foo.destroy if foo
+    if connection.id.to_s == TYPE_OF_ID
+      self.v += 1
+    end
   end
 
   # Gets connections, returning a hash of the following format
@@ -121,6 +139,14 @@ class Topic
     end
 
     connections
+  end
+
+  def get_types
+    topic_connection_snippets.select{ |snippet| snippet.id.to_s == TYPE_OF_ID }
+  end
+
+  def get_examples
+    topic_connection_snippets.select{ |snippet| snippet.id.to_s == EXAMPLE_ID }
   end
 
   def pull_from_ids
@@ -146,15 +172,32 @@ class Topic
   #TODO: update soulmate
   def update_denorms
     topic_mention_updates = {}
+    connection_snippet_updates = {}
     if name_changed?
       topic_mention_updates["topic_mentions.$.name"] = self.name
+      connection_snippet_updates["topic_connection_snippets.$.topic_name"] = self.name
     end
     if slug_changed?
       topic_mention_updates["topic_mentions.$.slug"] = self.slug
+      connection_snippet_updates["topic_connection_snippets.$.topic_slug"] = self.slug
     end
 
     if !topic_mention_updates.empty?
       CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
+      Topic.where("topic_connection_snippets.topic_id" => id).update_all(connection_snippet_updates)
+
+      # Updates v attribute of examples so they update their slugs
+      if example_ids = get_examples.map{|example| example.topic_id}
+        examples = Topic.where("_id" => { "$in" => example_ids })
+        examples.each do |example|
+          example.v += 1
+          example.save
+        end
+      end
+      #TODO: change above to be more effiecient? need to get affected topics to update their slug if necessary
+      #Topic.collection.update({"topic_connection_snippets.topic_id" => id},
+      #                        { "$set" => connection_snippet_updates,
+      #                          "$inc" => { "v" => 1 } }, false, true)
       Resque.enqueue(SmCreateTopic, id.to_s)
     end
 

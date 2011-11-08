@@ -2,7 +2,11 @@ class MapperController < ApplicationController
   #TODO: remove this controller after pop is all set
 
   def test
-    NewsletterMailer.weekly_email(current_user).deliver
+    pop_talks = Talk.all.desc(:pw).limit(3)
+    pop_news = News.all.desc(:pw).limit(3)
+    pop_pics = Picture.all.desc(:pw).limit(3)
+    pop_vids = Video.all.desc(:pw).limit(3)
+    NewsletterMailer.weekly_email(current_user, pop_talks, pop_news, pop_pics, pop_vids).deliver
   end
 
   #def test

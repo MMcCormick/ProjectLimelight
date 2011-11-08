@@ -75,7 +75,6 @@ describe User do
 
     it "should have topic + topic type attributes" do
       @user.should respond_to(:topics)
-      @user.should respond_to(:topic_types)
     end
   end
 

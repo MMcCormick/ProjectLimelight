@@ -13,7 +13,7 @@
 
 <p>Here are a few new posts we thought you might like. Enjoy!</p>
 
-<% if @pictures %>
+<% if !@pictures.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #7BA821; margin-bottom: 20px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #7BA821; padding: 5px 5px 0;">
@@ -23,7 +23,7 @@
     <tr>
       <% @pictures.each do |picture| %>
         <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
-          <%= link_to picture.title, picture_url(picture) %>
+          <%= link_to picture.title, picture_url(picture), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
@@ -35,7 +35,8 @@
             <%= image_tag base + img, :style => 'max-width: 100px; max-height: 100px;' if img %>
           </a>
           <span style="font-size: 10px;">
-            by <%= link_to picture.user_snippet.username, user_url(picture.user_snippet) %>, score: <%= sprintf "%.1f", picture.pt %>
+            by <%= link_to picture.user_snippet.username, user_url(picture.user_snippet), :style => "text-decoration: none;" %>
+            , score: <%= sprintf "%.1f", picture.pt %>
           </span>
         </td>
       <% end %>
@@ -43,7 +44,7 @@
   </table>
 <% end %>
 
-<% if @news %>
+<% if !@news.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #C52828; margin-bottom: 20px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #C52828; padding: 5px 5px 0;">
@@ -53,7 +54,7 @@
     <tr>
       <% @news.each do |news| %>
         <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
-          <%= news.title %>
+          <%= link_to news.title, news_url(news), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
@@ -70,7 +71,8 @@
             <%= markdown(parse_mentions(news.content, news, true)) %>
           <% end %>
           <span style="font-size: 10px;">
-            by <%= link_to news.user_snippet.username, user_url(news.user_snippet) %>, score: <%= sprintf "%.1f", news.pt %>
+            by <%= link_to news.user_snippet.username, user_url(news.user_snippet), :style => "text-decoration: none;" %>
+            , score: <%= sprintf "%.1f", news.pt %>
           </span>
         </td>
       <% end %>
@@ -78,7 +80,7 @@
   </table>
 <% end %>
 
-<% if @videos %>
+<% if !@videos.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #51A2CC; margin-bottom: 20px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #51A2CC; padding: 5px 5px 0;">
@@ -88,7 +90,7 @@
     <tr>
       <% @videos.each do |video| %>
         <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
-          <%= video.title %>
+          <%= link_to video.title, video_url(video), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
@@ -97,7 +99,8 @@
         <td align="center" width="100" style="padding: 5px 10px">
           <%= markdown(parse_mentions(video.content, video, true)) %>
           <span style="font-size: 10px;">
-            by <%= link_to video.user_snippet.username, user_url(video.user_snippet) %>, score: <%= sprintf "%.1f", video.pt %>
+            by <%= link_to video.user_snippet.username, user_url(video.user_snippet), :style => "text-decoration: none;" %>
+            , score: <%= sprintf "%.1f", video.pt %>
           </span>
         </td>
       <% end %>
@@ -105,8 +108,8 @@
   </table>
 <% end %>
 
-<% if @talks %>
-  <table cellpadding="0" style="font-size: 12px; border: 2px solid #D88E00; margin-bottom: 20px;">
+<% if !@talks.empty? %>
+  <table cellpadding="0" style="font-size: 12px; border: 2px solid #D88E00; margin-bottom: 10px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #D88E00; padding: 5px 5px 0;">
         Talks
@@ -118,10 +121,13 @@
           <%#TODO: make links absolute%>
           <%= markdown(parse_mentions(talk.content, talk, true)) %>
           <span style="font-size: 10px;">
-            by <%= link_to talk.user_snippet.username, user_url(talk.user_snippet) %>, score: <%= sprintf "%.1f", talk.pt %>
+            by <%= link_to talk.user_snippet.username, user_url(talk.user_snippet), :style => "text-decoration: none;" %>,
+            score: <%= sprintf "%.1f", talk.pt %>
           </span>
         </td>
       <% end %>
     </tr>
   </table>
 <% end %>
+
+<p>If you wish to change the frequency of these emails, please log in and click "Settings" on the left panel.</p>

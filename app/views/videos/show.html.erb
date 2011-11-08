@@ -15,5 +15,4 @@
 <%= render 'favorites/btn', :object => @video %>
 <%= render 'reposts/btn', :object => @video %>
 
-<%= link_to 'Edit', edit_video_path(@video) %> |
-<%= link_to 'Back', videos_path %>
+<%= render "core_objects/responses", :object => @video %>

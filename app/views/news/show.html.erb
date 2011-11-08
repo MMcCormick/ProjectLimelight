@@ -16,4 +16,4 @@
 <%= render 'favorites/btn', :object => @news %>
 <%= render 'reposts/btn', :object => @news %>
 
-<%= link_to 'Edit', edit_news_path(@news) %>
+<%= render "core_objects/responses", :object => @news %>

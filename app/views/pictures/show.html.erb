@@ -13,14 +13,4 @@
   <%= image_tag img, :style => 'max-width: 100px;' if img %>
 </div>
 
-<div id="response-divider">
-  <h3>Responses</h3>
-  <div id="add_response" data-target="#response-contribute">+ Add Response</div>
-  <%= render "shared/contribute", :id => 'response-contribute', :responding => @picture %>
-</div>
-
-<%= render 'core_objects/feed_filters' %>
-
-<div id="responses">
-
-</div>
+<%= render "core_objects/responses", :object => @picture %>

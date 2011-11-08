@@ -89,6 +89,16 @@ jQuery ->
       $(@).val('').blur().focus()
       parent.find('.hidden_data').val(JSON.stringify(hidden_data))
 
+  $('.mention-ooc .auto input').live 'keypress', (e) ->
+    if(window.event)
+      key = window.event.keyCode     #IE
+    else
+      key = e.which     #firefox
+
+    console.log key
+    if(key == 35 || key == 64)
+      return false
+
   $('.mention-ooc .remove').live 'click', (e) ->
     mention = $(@).parent()
     hidden_data_field = $(@).parents('.mention-ooc:first').find('.hidden_data')

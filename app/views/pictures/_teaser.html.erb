@@ -1,10 +1,10 @@
 <% title = capture do %>
   <%= link_to object.title, object %>
   <% if object.response_to %>
-    @
-    <a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">
-      [connected title]
-      <span class="tType">Picture</span>
+    <span>@</span>
+    <a href="<%= core_object_response_url(object.response_to) %>" class="r">
+      <%= object.response_to.title %>
+      <div class="<%= object.response_to.type.parameterize %>-grey-icon icon"></div>
     </a>
   <% end %>
 <% end %>
@@ -16,7 +16,8 @@
     </div>
     <% if style == :grid %>
       <% img = default_image_url(object, [200, 180], 'square') %>
-      <%= image_tag img, :style => 'max-width: 200px; max-height: 180px;', 'data-original' => default_image_url(object, [], 'original') if img %>
+      <% original = default_image_url(object, [], 'original') %>
+      <%= image_tag img, :style => 'max-width: 200px; max-height: 180px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     <% else %>
       <% img = default_image_url(object, [75, 75]) %>
       <%= image_tag img, :style => 'max-width: 75px;', 'data-original' => default_image_url(object, [], 'original') if img %>

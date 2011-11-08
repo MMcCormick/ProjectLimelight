@@ -328,7 +328,7 @@ module Limelight #:nodoc:
       topic_slugs = new_topic_mentions.map {|data| data[1]}
       topic_slugs.uniq!
       topics = Topic.where("aliases" => { '$in' => topic_slugs}).to_a
-      #TODO: need new version of logic for topic_type_snippets?
+      #TODO: need new version of logic for topic_type_snippets? see below vs above
       #topics = Topic.where("aliases" => { '$in' => topic_slugs}, "topic_type_snippets" => {"$exists" => false}).to_a
 
       new_topic_mentions.each do |topic_mention|

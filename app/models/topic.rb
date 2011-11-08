@@ -88,25 +88,34 @@ class Topic
     Resque.enqueue(SmDestroyTopic, id.to_s)
   end
 
+  def has_connection?(con_id, con_topic_id)
+    topic_connection_snippets.any?{ |snippet| snippet.topic_id == con_topic_id && snippet.id == con_id }
+  end
+
   def add_connection(connection, con_topic, user)
-    self.add_connection_helper(connection, con_topic, user)
     if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
       con_topic.add_connection_helper(opposite, self, user)
     end
+    self.add_connection_helper(connection, con_topic, user)
   end
 
   def add_connection_helper(connection, con_topic, user)
-    snippet = TopicConnectionSnippet.new()
-    snippet.id = connection.id
-    snippet.name = connection.name
-    snippet.pull_from = connection.pull_from
-    snippet.topic_id = con_topic.id
-    snippet.topic_name = con_topic.name
-    snippet.topic_slug = con_topic.slug
-    snippet.user_id = user.id
-    self.topic_connection_snippets << snippet
-    if connection.id.to_s == TYPE_OF_ID
-      self.v += 1
+    if self.has_connection?(connection.id, con_topic.id)
+      false
+    else
+      snippet = TopicConnectionSnippet.new()
+      snippet.id = connection.id
+      snippet.name = connection.name
+      snippet.pull_from = connection.pull_from
+      snippet.topic_id = con_topic.id
+      snippet.topic_name = con_topic.name
+      snippet.topic_slug = con_topic.slug
+      snippet.user_id = user.id
+      self.topic_connection_snippets << snippet
+      if connection.id.to_s == TYPE_OF_ID
+        self.v += 1
+      end
+      true
     end
   end
 
@@ -118,8 +127,10 @@ class Topic
   end
 
   def remove_connection_helper(connection, con_topic)
-    foo = topic_connection_snippets.where(:topic_id => con_topic.id).find(connection.id)
+    foo = topic_connection_snippets.where(:topic_id => con_topic.id, :_id => connection.id).first
     foo.destroy if foo
+    #index = topic_connection_snippets.index{ |snippet| snippet.topic_id == con_topic.id && snippet.id == connection.id }
+    #self.topic_connection_snippets.delete_at(index)
     if connection.id.to_s == TYPE_OF_ID
       self.v += 1
     end

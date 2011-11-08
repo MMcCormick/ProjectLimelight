@@ -21,7 +21,6 @@ class Comment
   belongs_to :user
 
   embeds_one :user_snippet, as: :user_assignable
-  embeds_many :votes, as: :votable
 
   validates :talk_id, :presence => true
   validates :content, :length => { :minimum => 3, :maximum => 150 }

@@ -29,14 +29,17 @@ class TopicConnectionsController < ApplicationController
       con_topic = Topic.find(params[:connection][:topic_id])
 
         if topic && con_topic && connection
-          #TODO: check if the topic already has that topic connected
-          topic.add_connection(connection, con_topic, current_user)
-          if topic.save && con_topic.save
-            response = build_ajax_response(:ok, nil, "Connection created!")
-            status = 201
+          if topic.add_connection(connection, con_topic, current_user)
+            if topic.save && con_topic.save
+              response = build_ajax_response(:ok, nil, "Connection created!")
+              status = 201
+            else
+              response = build_ajax_response(:error, nil, "Could not save connection", topic.errors)
+              status = 422
+            end
           else
-            response = build_ajax_response(:error, nil, "Could not save connection", topic.errors)
-            status = 422
+            response = build_ajax_response(:error, nil, "Topic already has that connection", topic.errors)
+            status = 400
           end
         else
           response = build_ajax_response(:error, nil, 'Object not found!')

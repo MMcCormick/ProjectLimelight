@@ -127,10 +127,8 @@ class Topic
   end
 
   def remove_connection_helper(connection, con_topic)
-    foo = topic_connection_snippets.where(:topic_id => con_topic.id, :_id => connection.id).first
-    foo.destroy if foo
-    #index = topic_connection_snippets.index{ |snippet| snippet.topic_id == con_topic.id && snippet.id == connection.id }
-    #self.topic_connection_snippets.delete_at(index)
+    Topic.collection.update({:_id => id}, {'$pull' => {'topic_connection_snippets' => {:topic_id => con_topic.id, :_id => connection.id}}})
+
     if connection.id.to_s == TYPE_OF_ID
       self.v += 1
     end

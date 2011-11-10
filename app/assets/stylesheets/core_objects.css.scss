@@ -372,6 +372,12 @@ $teaser-padding: 10px;
       }
     }
 
+    .respond {
+      @include link();
+      float: left;
+      margin: 5px 0 0 10px;
+    }
+
     img {
         @include border-radius(3px);
         clear: left;
@@ -651,6 +657,7 @@ $scoreBox-width: 160px;
 .teaser.list {
     @include clearfix();
     padding: 5px 0 0 0;
+    z-index: 10;
     .controlsC {
         position: absolute;
         width: 110px;
@@ -729,6 +736,12 @@ $scoreBox-width: 160px;
     }
     .connectionsC {
         @include clearfix();
+
+        .comment_form {
+          clear: left;
+          margin-left: -1px;
+          padding: 5px 5px 10px 0;
+        }
     }
 }
 
@@ -1140,5 +1153,9 @@ $scoreBox-width: 160px;
   border-top: 2px solid #94C530;
 }
 #responses {
-
+  .comment-thread {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #CCC;
+    padding-top: 0;
+  }
 }

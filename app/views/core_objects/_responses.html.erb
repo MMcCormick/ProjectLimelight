@@ -1,11 +1,8 @@
-<div id="response-divider">
-  <h3>Responses</h3>
-  <div id="add_response" data-target="#response-contribute">+ Add Response</div>
-  <%= render "shared/contribute", :id => 'response-contribute', :responding => object, :allowed => [:talk] %>
-</div>
-
-<%= render 'core_objects/feed_filters' %>
-
 <div id="responses">
-
+  <% responses.each do |core_object| %>
+    <%= render :layout => "core_objects/list_teaser", :locals => {:object => core_object} do %>
+      <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object, :style => :grid, :response => true %>
+    <% end %>
+    <%= render_cell :comment, :thread, core_object.id, false %>
+  <% end %>
 </div>

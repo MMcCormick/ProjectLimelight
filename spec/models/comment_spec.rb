@@ -26,6 +26,6 @@ describe Comment do
   it "should update associated talk's comments count after creation" do
     talk = FactoryGirl.create(:talk)
     FactoryGirl.create(:comment, :talk => talk)
-    talk.comments_count.should == 1
+    talk.response_count.should == 1
   end
 end

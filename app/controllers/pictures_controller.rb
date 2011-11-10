@@ -3,6 +3,7 @@ class PicturesController < ApplicationController
 
   def show
     @picture = Picture.find_by_encoded_id(params[:id])
+    @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'DESC'}, {:limit => 500, :response_to_id => @picture.id})
     unless @picture
       not_found("Picture not found")
     end

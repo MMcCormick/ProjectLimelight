@@ -13,7 +13,8 @@
 <% img = default_image_url(@news, [100, 100]) %>
 <%= image_tag img, :style => 'max-width: 100px;' if img %>
 
-<%= render 'favorites/btn', :object => @news %>
+<%= render 'favorites/btn', :object => @news, :user => current_user %>
 <%= render 'reposts/btn', :object => @news %>
 
-<%= render "core_objects/responses", :object => @news %>
+<%= render "core_objects/response_header", :object => @news %>
+<%= render "core_objects/responses", :responses => @responses %>

@@ -12,7 +12,8 @@
 
 <%= video_embed(@video, 480, 390) %>
 
-<%= render 'favorites/btn', :object => @video %>
+<%= render 'favorites/btn', :object => @video, :user => current_user %>
 <%= render 'reposts/btn', :object => @video %>
 
-<%= render "core_objects/responses", :object => @video %>
+<%= render "core_objects/response_header", :object => @video %>
+<%= render "core_objects/responses", :responses => @responses %>

@@ -84,7 +84,16 @@ class Comment
   end
 
   def add_to_count
-    talk.comments_count += 1
+    talk.response_count += 1
     talk.save
+
+    if (talk.response_to)
+      CoreObject.collection.update(
+        {:_id => talk.response_to.id},
+        {
+          "$inc" => { :response_count => 1 }
+        }
+      )
+    end
   end
 end

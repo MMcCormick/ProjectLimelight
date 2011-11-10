@@ -40,6 +40,8 @@ $(function() {
         $('#form-submitting').fadeOut(300);
         form.find('input, textarea').removeAttr('disabled');
 
+        appUpdate(data);
+
         // If they need to login
         if (jqXHR.status == 401)
         {

@@ -41,9 +41,7 @@ $indent: 20px;
 }
 
 .comment-thread {
-    margin: 0 20px;
-    padding: 10px 0 0 0;
-    border-top: 1px solid #CAE09D;
+    padding: 10px 0 0 20px;
 
     .comment_reply {
         padding: 15px 0 10px 10px;
@@ -58,10 +56,8 @@ $indent: 20px;
     .comment {
       $max-width: 800px;
         position: relative;
-        border-left: 2px solid #EEE;
+        border: 2px solid #EEE;
         margin-top: -3px;
-        border-top: 2px solid #EEE;
-        border-bottom: 2px solid #EEE;
 
         .wrapper {
           padding: 2px $scoreC-width+20 5px $small-image-width+13;
@@ -174,3 +170,4 @@ $indent: 20px;
         }
     }
 }
+

@@ -32,7 +32,8 @@ jQuery ->
           at: 'right center'
       })
 
-  $('.mention').mentionable()
+  $('.mention').livequery ->
+    $(@).mentionable()
 
   $('.mention-ooc .auto input').autocomplete($('#static-data').data('d').autocomplete, {
     minChars: 2,
@@ -142,3 +143,16 @@ jQuery ->
   # Automatically click if visible on page load
   if $('#load-more').length > 0 && isScrolledIntoView($('#load-more'), true)
     $('#load-more').click()
+
+  # Core object add response
+  $('.teaser.list .respond').live 'click', (e) ->
+    $button = $(@);
+    $('.comment_reply:visible').remove();
+    $reply = $('#response_form form').clone()
+              .find('.comment_reply_cancel').click (e) ->
+                $reply.remove()
+              .end()
+              .appendTo($button.parent())
+              .fadeIn(300)
+              .find('textarea').focus().end()
+    $button.parent().find('#comment_talk_id').attr('value', $button.data('d').id)

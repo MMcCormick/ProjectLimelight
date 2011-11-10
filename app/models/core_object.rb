@@ -21,6 +21,7 @@ class CoreObject
   field :reposts, :default => []
   field :reposts_count, :default => 0
   field :user_id
+  field :response_count, :default => 0
 
   auto_increment :public_id
 
@@ -36,6 +37,7 @@ class CoreObject
   attr_accessor :response_to_id
 
   before_create :set_user_snippet, :current_user_own, :set_response_snippet
+  after_create :update_response_count
 
   def to_param
     "#{encoded_id}-#{name.parameterize}"
@@ -117,6 +119,17 @@ class CoreObject
     end
   end
 
+  def update_response_count
+    if (response_to)
+      CoreObject.collection.update(
+        {:_id => response_to.id},
+        {
+          "$inc" => { :response_count => 1 }
+        }
+      )
+    end
+  end
+
   class << self
     def find_by_encoded_id(id)
       where(:public_id => id.to_i(36)).first
@@ -136,6 +149,7 @@ class CoreObject
       or_criteria << {:reposts.in => options[:reposted_by_users]} if options[:reposted_by_users]
       or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics]
       or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users]
+      or_criteria << {"response_to._id" => options[:response_to_id]} if options[:response_to_id]
       or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
 
       #page length also hard-coded in views/core_object

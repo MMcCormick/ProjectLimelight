@@ -27,7 +27,6 @@ gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
 gem "airbrake" # Exception notification
-gem 'activeadmin'
 gem 'rpm_contrib', '2.1.6' # extra instrumentation for the new relic rpm agent
 gem 'newrelic_rpm' # performance / server monitoring
 gem 'soulmate' # Redis based autocomplete storage

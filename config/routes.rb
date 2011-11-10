@@ -1,7 +1,5 @@
 ProjectLimelight::Application.routes.draw do
 
-  devise_for :admin_users, ActiveAdmin::Devise.config
-
   # FOR TESTING MAP REDUCE
   get '/mapreduce' => 'mapper#test', :as => :map_reduce
 
@@ -67,9 +65,6 @@ ProjectLimelight::Application.routes.draw do
 
   # Sidebar
   put 'sidebar' => 'application#sidebar', :as => :sidebar
-
-  # Active admin
-  ActiveAdmin.routes(self)
 
   # Users
   scope 'users' do

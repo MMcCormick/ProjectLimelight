@@ -88,18 +88,71 @@ class Topic
     Resque.enqueue(SmDestroyTopic, id.to_s)
   end
 
+  class << self
+    def find_by_encoded_id(id)
+      where(:public_id => id.to_i(36)).first
+    end
+  end
+
+  # Merge
+
+  def merge(aliased_topic)
+    self.aliases = aliases + aliased_topic.aliases
+
+    # Update topic mentions
+    objects = CoreObject.where("topic_mentions._id" => aliased_topic.id)
+    objects.each do |object|
+      object.content = object.content.gsub(aliased_topic.id.to_s, id.to_s)
+      object.save!
+    end
+
+    topic_mention_updates = {}
+    topic_mention_updates["topic_mentions.$.slug"] = slug
+    topic_mention_updates["topic_mentions.$._id"] = id
+    topic_mention_updates["topic_mentions.$.public_id"] = public_id
+    CoreObject.where("topic_mentions._id" => aliased_topic.id).update_all(topic_mention_updates)
+
+    # Move Connections
+    aliased_connection_snippets = aliased_topic.topic_connection_snippets.dup
+    topic_ids = aliased_connection_snippets.map { |snippet| snippet.topic_id }
+    topics = Topic.where(:_id.in => topic_ids)
+
+    aliased_connection_snippets.each do |snippet|
+      topic = topics.detect {|topic| topic.id == snippet.topic_id }
+      connection = TopicConnection.find(snippet.id)
+      aliased_topic.remove_connection(connection, topic)
+      add_connection(connection, topic, snippet.user_id)
+    end
+
+    # Following
+    followers = User.where(:following_topics => aliased_topic.id)
+    followers.each do |follower|
+      follower.unfollow_topic aliased_topic
+      follower.follow_topic self
+      follower.save
+    end
+
+    # TODO:
+    Resque.enqueue(SmCreateTopic, id.to_s)
+    Resque.enqueue(SmDestroyTopic, aliased_topic.id.to_s)
+  end
+
+  #
+  # Connections
+  #
+
   def has_connection?(con_id, con_topic_id)
     topic_connection_snippets.any?{ |snippet| snippet.topic_id == con_topic_id && snippet.id == con_id }
   end
 
-  def add_connection(connection, con_topic, user)
+  def add_connection(connection, con_topic, user_id)
     if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
-      con_topic.add_connection_helper(opposite, self, user)
+      con_topic.add_connection_helper(opposite, self, user_id)
     end
-    self.add_connection_helper(connection, con_topic, user)
+    self.add_connection_helper(connection, con_topic, user_id)
   end
 
-  def add_connection_helper(connection, con_topic, user)
+  def add_connection_helper(connection, con_topic, user_id)
     if self.has_connection?(connection.id, con_topic.id)
       false
     else
@@ -110,7 +163,7 @@ class Topic
       snippet.topic_id = con_topic.id
       snippet.topic_name = con_topic.name
       snippet.topic_slug = con_topic.slug
-      snippet.user_id = user.id
+      snippet.user_id = user_id
       self.topic_connection_snippets << snippet
       if connection.id.to_s == TYPE_OF_ID
         self.v += 1
@@ -142,9 +195,12 @@ class Topic
     connections = {}
 
     topics.each do |topic|
-      snippet = topic_connection_snippets.detect {|snippet| topic.id == snippet.topic_id }
-      connections[snippet.id] ||= {:name => snippet.name, :topics => []}
-      connections[snippet.id][:topics] << topic
+      topic_connection_snippets.each do |snippet|
+        if topic.id == snippet.topic_id
+          connections[snippet.id] ||= {:name => snippet.name, :topics => []}
+          connections[snippet.id][:topics] << topic
+        end
+      end
     end
 
     connections
@@ -158,21 +214,16 @@ class Topic
     topic_connection_snippets.select{ |snippet| snippet.id.to_s == EXAMPLE_ID }
   end
 
-  def pull_from_ids
-    pull_from_ids = []
+  # recursively gets topic ids to pull from in a hash of format {:topic_id => true}
+  def pull_from_ids(ids)
     topic_connection_snippets.each do |snippet|
-      if snippet.pull_from?
-        pull_from_ids << snippet.topic_id
+      if snippet.pull_from? && !ids.has_key?(snippet.topic_id)
+        ids[snippet.topic_id] = true
+        topic = Topic.find(snippet.topic_id)
+        ids = ids.merge(topic.pull_from_ids(ids)) if topic
       end
     end
-
-    pull_from_ids
-  end
-
-  class << self
-    def find_by_encoded_id(id)
-      where(:public_id => id.to_i(36)).first
-    end
+    ids
   end
 
   protected
@@ -183,7 +234,6 @@ class Topic
     topic_mention_updates = {}
     connection_snippet_updates = {}
     if name_changed?
-      topic_mention_updates["topic_mentions.$.name"] = self.name
       connection_snippet_updates["topic_connection_snippets.$.topic_name"] = self.name
     end
     if slug_changed?
@@ -191,7 +241,7 @@ class Topic
       connection_snippet_updates["topic_connection_snippets.$.topic_slug"] = self.slug
     end
 
-    if !topic_mention_updates.empty?
+    if !connection_snippet_updates.empty?
       CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
       Topic.where("topic_connection_snippets.topic_id" => id).update_all(connection_snippet_updates)
 

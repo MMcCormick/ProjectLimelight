@@ -1,0 +1,13 @@
+<form action="<%= merge_topic_path %>" id="merge-topic-form" method="POST" class="group ajax">
+
+  <div class="field lClear bottom required">
+    <%= label_tag "tm-auto", "Topic to merge into" %>
+    <%= text_field_tag "target_name", nil, :id => "tm-auto" %>
+  </div>
+
+  <%= hidden_field_tag "target_id", topic.id %>
+
+  <div class="actions">
+    <%= submit_tag "Merge" %>
+  </div>
+</form>

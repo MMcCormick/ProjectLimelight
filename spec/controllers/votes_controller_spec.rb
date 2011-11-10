@@ -46,14 +46,14 @@ describe VotesController do
           xhr :post, :create, :id => "fooid", :a => "1", :type => "Talk"
         end
         it "should save the current user and object" do
-          object.should_receive(:save).and_return(true)
-          controller.current_user.should_receive(:save)
+          object.should_receive(:save!).and_return(true)
+          controller.current_user.should_receive(:save!)
           xhr :post, :create, :id => "fooid", :type => "Talk"
         end
-        it "should respond with a json object, ok + with a target + toggle_classes" do
+        it "should respond with a json object, :ok with an :id and :amount" do
           xhr :post, :create, :id => "fooid", :type => "Talk"
           JSON.parse(response.body)['status'].should == "ok"
-          JSON.parse(response.body)['target'].should_not be_blank
+          JSON.parse(response.body)['id'].should_not be_blank
           JSON.parse(response.body)['a'].should_not be_blank
         end
         it "should respond with a 201" do
@@ -99,14 +99,14 @@ describe VotesController do
           xhr :delete, :destroy, :id => "fooid", :type => "Talk"
         end
         it "should save the current user and object" do
-          object.should_receive(:save).and_return(true)
-          controller.current_user.should_receive(:save)
+          object.should_receive(:save!).and_return(true)
+          controller.current_user.should_receive(:save!)
           xhr :delete, :destroy, :id => "fooid", :type => "Talk"
         end
-        it "should respond with a json object, ok + with a target + toggle_classes" do
+        it "should respond with a json object, :ok with an :id and :amount" do
           xhr :delete, :destroy, :id => "fooid", :type => "Talk"
           JSON.parse(response.body)['status'].should == "ok"
-          JSON.parse(response.body)['target'].should_not be_blank
+          JSON.parse(response.body)['id'].should_not be_blank
           JSON.parse(response.body)['a'].should_not be_blank
         end
         it "should respond with a 200" do

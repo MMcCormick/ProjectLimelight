@@ -29,7 +29,7 @@ class TopicConnectionsController < ApplicationController
       con_topic = Topic.find(params[:connection][:topic_id])
 
         if topic && con_topic && connection
-          if topic.add_connection(connection, con_topic, current_user)
+          if topic.add_connection(connection, con_topic, current_user.id)
             if topic.save && con_topic.save
               response = build_ajax_response(:ok, nil, "Connection created!")
               status = 201

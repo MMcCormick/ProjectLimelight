@@ -377,15 +377,6 @@ describe User do
       updated_talk.user_mentions[0].first_name.should == "james"
       updated_talk.user_mentions[0].last_name.should == "michaels"
     end
-    it "should update Topic.user_snippets when attributes are updated" do
-      topic = FactoryGirl.create(:topic, :user => user)
-      topic.user_snippet.username.should == user.username
-      user.update_attributes(:username => "jamie", :first_name => "james", :last_name => "michaels")
-      updated_topic = Topic.find(topic.id)
-      updated_topic.user_snippet.username.should == "jamie"
-      updated_topic.user_snippet.first_name.should == "james"
-      updated_topic.user_snippet.last_name.should == "michaels"
-    end
     it "should update Comment.user_snippets when attributes are updated" do
       comment = FactoryGirl.create(:comment, :user => user)
       comment.user_snippet.username.should == user.username

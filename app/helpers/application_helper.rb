@@ -29,9 +29,9 @@ module ApplicationHelper
       object.topic_mentions.each do |topic_mention|
         if topic_mention.id.to_s == topic[0]
           if absolute
-            text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic_mention.name}](#{topic_url(topic_mention)})")
+            text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic[1]}](#{topic_url(topic_mention)})")
           else
-            text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic_mention.name}](#{topic_path(topic_mention)})")
+            text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic[1]}](#{topic_path(topic_mention)})")
           end
         end
       end

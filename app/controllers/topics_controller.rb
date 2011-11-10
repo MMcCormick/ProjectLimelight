@@ -16,7 +16,7 @@ class TopicsController < ApplicationController
     @title = @topic.name
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topic_path @topic, :p => page + 1
-    topic_ids = @topic.pull_from_ids << @topic.id
+    topic_ids = @topic.pull_from_ids({}).keys << @topic.id
 
     @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :mentions_topics => topic_ids,
@@ -85,6 +85,29 @@ class TopicsController < ApplicationController
     end
 
     render :json => {:status => 'ok'}
+  end
+
+  def merge
+    topic = Topic.find(params[:target_id])
+    aliased_topic = Topic.find_by_slug(params[:id])
+
+    unless topic.id == aliased_topic.id
+      topic.merge(aliased_topic)
+
+      if topic.save
+        aliased_topic.destroy
+        response = build_ajax_response(:ok, topic_path(topic), "Topics merged!")
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+        status = 422
+      end
+    else
+      response = build_ajax_response(:error, nil, "You cannot merge a topic with itself!")
+      status = 400
+    end
+
+    render json: response, :status => status
   end
 
   def followers

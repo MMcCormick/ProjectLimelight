@@ -30,10 +30,16 @@ describe FollowsController do
 
       context "when target is found" do
         let(:target) { mock('target').as_null_object }
-        before(:each) { Topic.should_receive(:find).with("fooid").and_return(target) }
+        before(:each) do
+          Topic.should_receive(:find).with("fooid").and_return(target)
+          controller.current_user.should_receive(:follow_object).with(target).and_return(true)
+        end
 
         it "should call follow_object on the current user with target as arg" do
-          controller.current_user.should_receive(:follow_object).with(target)
+          xhr :post, :create, :id => "fooid", :type => "Topic"
+        end
+        it "should call add_pop_action on the target" do
+          target.should_receive(:add_pop_action)
           xhr :post, :create, :id => "fooid", :type => "Topic"
         end
         it "should save the current user and target" do
@@ -84,10 +90,12 @@ describe FollowsController do
 
       context "when target is found" do
         let(:target) { mock('target').as_null_object }
-        before(:each) { Topic.should_receive(:find).with("fooid").and_return(target) }
+        before(:each) do
+          Topic.should_receive(:find).with("fooid").and_return(target)
+          controller.current_user.should_receive(:unfollow_object).with(target).and_return(true)
+        end
 
         it "should call unfollow_object on the current user with target as arg" do
-          controller.current_user.should_receive(:unfollow_object).with(target)
           xhr :delete, :destroy, :id => "fooid", :type => "Topic"
         end
         it "should save the current user and target" do

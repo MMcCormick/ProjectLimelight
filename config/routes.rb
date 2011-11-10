@@ -87,6 +87,7 @@ ProjectLimelight::Application.routes.draw do
   put "/:id/picture" => "topics#picture_update", :as => :topic_picture_update
   get '/:id/picture' => 'topics#default_picture', :as => :topic_default_picture
   get ':id/followers' => 'topics#followers', :as => :topic_followers
+  post ':id/merge' => 'topics#merge', :as => :merge_topic
   get '/:id' => 'topics#show', :as => :topic
   put '/:id' => 'topics#update', :as => :update_topic
 

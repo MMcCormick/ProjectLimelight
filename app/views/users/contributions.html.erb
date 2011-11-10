@@ -1,9 +1,0 @@
-<% content_for :sidebar_right do %>
-  <%= render_cell(:user, :sidebar_right, @user) %>
-<% end %>
-
-<% content_for :page_header do %>
-  <%= render 'core_objects/feed_filters' %>
-<% end %>
-
-<%= render "core_objects/feed", :core_objects => @core_objects, :more_path => @more_path %>

@@ -1,3 +1,8 @@
+<% content_for :page_header do %>
+  <h1><%= @user.username %>'s favorites</h1>
+  <%= render 'core_objects/feed_filters' %>
+<% end %>
+
 <% if current_user != @user %>
   <% content_for :sidebar_right do %>
     <%= render_cell(:user, :sidebar_right, @user) %>

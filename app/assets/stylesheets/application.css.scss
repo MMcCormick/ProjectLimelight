@@ -21,7 +21,7 @@ html, body {
     margin: 0; padding: 0;
     width: 100%; height: 100%;
     border: 0;
-    background-color: #FFF;
+    background: image-url("bg_textured.jpg") repeat;
     position: relative;
     z-index: 0;
     font-family: "Helvetica Neue", Tahoma, Arial, sans-serif;
@@ -190,23 +190,14 @@ button {
         @include border-radius(4px);
         margin:  0 5px 5px 5px;
         border: 1px solid transparent;
-        background: #FFF;
     }
 
-    .titleC {
-        @include clearfix();
-        margin: 6px 0px 0 10px;
-        h1 {
-            float: left;
-        }
-        .time {
-            float: left;
-            margin: 2px 0px 0px 15px;
-        }
-        .tag {
-            float: left;
-            margin: 0 0 0 10px;
-        }
+    h1 {
+      text-align: center;
+      margin: 0 0 2px;
+      padding: 6px 0 8px 0;
+      text-align: center;
+      border-bottom: double #CCC;
     }
 
     &.floating {
@@ -217,6 +208,7 @@ button {
         .wrap {
             @include single-box-shadow(#DDD, 0px, 2px, 5px);
             border: 1px solid #CCC;
+            background: #FFF;
         }
     }
 }
@@ -230,7 +222,6 @@ button {
     overflow-y: auto;
 }
 #page_content {
-    background: $page_content_background-color;
     color: $page_content_color;
     > h1 {
       margin: 0 0 5px 10px;
@@ -243,6 +234,7 @@ button {
     }
 }
 #sidebar {
+    @include single-box-shadow(#CCC, 1px, 1px, 2px);
     @include border-radius(4px);
     height: 100%;
     overflow: hidden;

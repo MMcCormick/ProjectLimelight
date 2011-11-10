@@ -319,11 +319,11 @@ form.core_object {
 // Object Teasers
 $teaser-padding: 10px;
 .teaser {
+    @include border-radius(2px);
+    @include single-box-shadow(#DDD, 1px, 1px, 2px);
     position: relative;
-
-    .wrapper {
-      border-bottom: 3px solid #CCC;
-    }
+    border: 1px solid #CCC;
+    background: #FFF;
 
     .titleC {
         font-size: 18px;
@@ -446,26 +446,21 @@ $teaser-padding: 10px;
           margin: 5px 10px 0 0;
         }
     }
-
-    &.hover {
-      @include single-box-shadow(#AAA, 1px, 2px, 2px);
-      background: #FCFCFC;
-    }
 }
 
 // Grid Teaser
 .teaser.grid {
-  $width: 202px;
-  $height: 223px;
+  $width: 200px;
+  $height: 221px;
   $expand-width: 40px;
   $expand-height: 5px;
   float: left;
   width: $width;
   min-height: $height;
   max-height: $height;
-  border-right: 1px solid #EFEFEF;
   position: relative;
   z-index: 10;
+  margin: 5px;
 
   .wrapper {
     position: absolute;
@@ -477,7 +472,7 @@ $teaser-padding: 10px;
     z-index: 10;
   }
   .content {
-    padding: 2px 1px 2px 1px;
+    padding: 2px 0px 0px 0px;
     position: relative;
     height: 198px;
     .titleC {
@@ -658,6 +653,7 @@ $scoreBox-width: 160px;
 .teaser.list {
     @include clearfix();
     padding: 5px 0 0 0;
+    margin: 5px;
     z-index: 10;
     .controlsC {
         position: absolute;
@@ -833,9 +829,12 @@ $scoreBox-width: 160px;
         }
     }
 }
-#core-feed.grid {
-  display: inline-block;
-  margin-top: 12px;
+#core-feed {
+  padding: 0 5px;
+  &.grid {
+    display: inline-block;
+    margin-top: 12px;
+  }
 }
 #load-more {
   text-align: center;
@@ -872,7 +871,7 @@ $scoreBox-width: 160px;
 
         h5 {
             padding: 7px 0 0 0;
-            color: #B0AEAE;
+            color: #888;
             cursor: default;
         }
 
@@ -1116,7 +1115,6 @@ $scoreBox-width: 160px;
 }
 
 #core_object_show {
-  border-bottom: 3px solid #CCC;
   padding: 0 5px 30px 0;
   margin: 0 0 15px 0;
 }
@@ -1124,7 +1122,6 @@ $scoreBox-width: 160px;
 #response-divider {
   position: relative;
   h3 {
-    background: #FFF;
     color: #444;
     position: absolute;
     left: 0;
@@ -1134,7 +1131,6 @@ $scoreBox-width: 160px;
   }
 }
 #add_response {
-  background: #FFF;
   position: absolute;
   color: #444;
   left: 50;
@@ -1156,7 +1152,7 @@ $scoreBox-width: 160px;
 #responses {
   .comment-thread {
     padding-bottom: 15px;
-    border-bottom: 1px solid #CCC;
     padding-top: 0;
+    margin-top: -6px;
   }
 }

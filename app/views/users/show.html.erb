@@ -1,3 +1,7 @@
+<% content_for :page_header do %>
+  <h1><%= @user.username %>'s contributions</h1>
+<% end %>
+
 <% if current_user != @user %>
   <% content_for :sidebar_right do %>
     <%= render_cell(:user, :sidebar_right, @user) %>
@@ -7,7 +11,5 @@
 <% content_for :page_header do %>
   <%= render 'core_objects/feed_filters' %>
 <% end %>
-
-<%= @user.username %>
 
 <%= render "core_objects/feed", :core_objects => @core_objects, :more_path => @more_path %>

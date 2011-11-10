@@ -22,10 +22,8 @@ var resizeLayout = function(rightSidebarAdjust) {
     rightSidebar.css('height', h - 2 - parseInt(rightSidebar.css('margin-top').replace("px", "")) * 2);
 
     if (rightSidebarAdjust) {
-      w -= 16 + rightSidebar.width() + parseInt(rightSidebar.css('margin-right').replace("px", ""));
+      w -= 10 + rightSidebar.width() + parseInt(rightSidebar.css('margin-right').replace("px", ""));
     }
-
-    w += 14;
   }
 
   pageHeader.css({width: w + 2});

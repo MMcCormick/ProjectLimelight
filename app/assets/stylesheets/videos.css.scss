@@ -9,6 +9,7 @@
 .video {
     &.teaser.hover {
         .oType { color: $video-color }
+        border-color: $video-color;
         .wrapper
         {
             border-color: $video-color;

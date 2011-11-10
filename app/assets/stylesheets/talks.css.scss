@@ -9,6 +9,7 @@
 .talk {
   &.teaser.hover {
     .oType { color: $talk-color }
+    border-color: $talk-color;
     .wrapper
     {
       border-color: $talk-color;

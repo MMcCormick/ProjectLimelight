@@ -9,6 +9,7 @@
 .picture {
     &.teaser.hover {
         .oType { color: $picture-color }
+        border-color: $picture-color;
         .wrapper
         {
             border-color: $picture-color;

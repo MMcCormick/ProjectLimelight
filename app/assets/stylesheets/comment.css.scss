@@ -56,8 +56,10 @@ $indent: 20px;
     .comment {
       $max-width: 800px;
         position: relative;
-        border: 2px solid #EEE;
-        margin-top: -3px;
+        border: 1px solid #CCC;
+        margin-top: -1px;
+        margin-right: 5px;
+        background: #FFF;
 
         .wrapper {
           padding: 2px $scoreC-width+20 5px $small-image-width+13;
@@ -118,8 +120,6 @@ $indent: 20px;
         }
         &.d-0 {
             margin-left: 0px;
-            border-bottom-width: 3px;
-            border-top-width: 3px;
             .wrapper {
               padding: 2px $scoreC-width+20 5px $big-image-width+14;
             }

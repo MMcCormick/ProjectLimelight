@@ -9,6 +9,7 @@
 .news {
   &.teaser.hover {
     .oType { color: $news-color }
+    border-color: $news-color;
     .wrapper
     {
       border-color: $news-color;

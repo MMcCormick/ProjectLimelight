@@ -1,6 +1,6 @@
 <% title = capture do %>
   <%= user_link object.user_snippet %>
-  <% if object.response_to %>
+  <% if object.response_to && !response %>
     <span>@</span>
     <a href="<%= core_object_response_url(object.response_to) %>" class="r">
       <%= object.response_to.title %>
@@ -19,6 +19,6 @@
 
 <%= render 'core_objects/list_teaser_content', :object => object, :title => title, :content => content, :created_by => created_by %>
 
-<%= render 'core_objects/list_teaser_mentions', :object => object %>
+<%= render 'core_objects/list_teaser_mentions', :object => object, :response => response %>
 
 <%= render 'core_objects/list_teaser_action_box', :object => object %>

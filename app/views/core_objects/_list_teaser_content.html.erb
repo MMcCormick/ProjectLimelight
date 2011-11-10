@@ -3,11 +3,9 @@
     <%= title if title %>
   </h2>
 
-  <div class="createdC">
-    <div class="time"><%= created_by if created_by %></div>
-  </div>
+  <div class="createdC"><%= created_by if created_by %></div>
 
-  <div class="pc pc_<%= object.id.to_s %>">+5</div>
+  <div class="pc pc_<%= object.id.to_s %>"></div>
 
   <%= picture if defined? picture %>
 

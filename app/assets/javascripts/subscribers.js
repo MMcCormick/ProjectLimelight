@@ -110,10 +110,9 @@ $(function() {
       $('#comment_' + data.parent_id).after(data.comment);
     }
     else {
-      $('.comments').prepend(data.comment);
+      $('.c_'+data.talk_id).show().prepend(data.comment);
     }
-    $('.comment .comment_reply').remove();
-    //$('.comments').prev('h3').find('span').text(parseInt($('.comments').prev('h3').find('span').text()) + 1);
+    $('.comment_form:visible').remove();
   })
 
   /*

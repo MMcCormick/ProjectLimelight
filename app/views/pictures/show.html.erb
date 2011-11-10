@@ -13,4 +13,5 @@
   <%= image_tag img, :style => 'max-width: 100px;' if img %>
 </div>
 
-<%= render "core_objects/responses", :object => @picture %>
+<%= render "core_objects/response_header", :object => @picture %>
+<%= render "core_objects/responses", :responses => @responses %>

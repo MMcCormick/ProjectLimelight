@@ -1,27 +1,12 @@
 <% content_for :page_header do %>
-  <!--{% if object.connectedFrom[0] is defined %}-->
-  <!--<div class="titleC">-->
-      <!--<h1>-->
-          <!--<a href="{{ path('object_show', {'slug': object.createdBy.slug }) }}" class="p">-->
-              <!--{{ object.createdBy.User.username }}-->
-          <!--</a>-->
-          <!--@-->
-          <!--<a href="{{ path('object_show', {'slug': object.connectedFrom[0].connectedTo.slug }) }}" class="p">-->
-              <!--{{ object.connectedFrom[0].connectedTo.title }}-->
-              <!--<span class="tType">({{ object.connectedFrom[0].connectedTo.nodeType|lower }})</span>-->
-          <!--</a>-->
-      <!--</h1>-->
-  <!--</div>-->
-  <!--{% endif %}-->
+
 <% end %>
 
 <div class="objectContent">
   <%= markdown(parse_mentions(@talk.content, @talk)) %>
 </div>
 
-<%= render 'favorites/btn', :object => @talk %>
-<%= render 'reposts/btn', :object => @talk %>
+<%= render 'favorites/btn', :object => @talk, :user => current_user %>
+<%= render 'reposts/btn', :object => @talk, :user => current_user %>
 
 <%= render_cell :comment, :thread, @talk.id, true %>
-
-<!--{% render "LimelightCommentBundle:Thread:show" with {"root": object} %}-->

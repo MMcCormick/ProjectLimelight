@@ -417,6 +417,7 @@ $teaser-padding: 10px;
     .connectionsC {
       font-size: 10px;
       font-weight: bold;
+      clear: left;
       width: 100%;
       .tag {
           float: left;
@@ -488,7 +489,7 @@ $teaser-padding: 10px;
     }
     .img {
       .icon {
-        top: 24px;
+        top: 6px;
       }
     }
     img,

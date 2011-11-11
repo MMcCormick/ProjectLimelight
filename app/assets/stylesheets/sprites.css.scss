@@ -167,6 +167,12 @@
     height: 15px;
     &.on { @include icon-sprite(grid-on); }
 }
+.feed-column {
+    @include icon-sprite(column-off);
+    width: 16px;
+    height: 14px;
+    &.on { @include icon-sprite(column-on); }
+}
 .feed-list {
     @include icon-sprite(list-off);
     width: 15px;

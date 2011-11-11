@@ -1,0 +1,37 @@
+<div class="teaser list <%= object._type.downcase %>" data-id="<%= object.id %>">
+  <div class="content">
+    <%= render 'core_objects/feed_teaser_title', :title => user_link(object.user_snippet), :object => nil %>
+    <div class="createdC">
+      <%= time_ago_in_words(object.created_at, false) %> ago
+    </div>
+
+    <%= markdown(parse_mentions(object.content, object)) %>
+  </div>
+
+  <div class="connectionsC">
+    <% unless response == true %>
+      <div class="oType"><div class="talk-grey-icon" title="talk"></div></div>
+
+      <a href="<%= url_for object %>" class="commentC p">
+        <div class="comment-icon"></div>
+        <%= object.response_count.to_i %>
+      </a>
+    <% end %>
+
+    <% if response == true %>
+      <div class="respond" data-d='{"id":"<%= object.id.to_s %>"}'>add reply</div>
+    <% end %>
+
+    <% if object.topic_mentions %>
+      <div class="mentions">
+        <% object.topic_mentions.each do |topic| %>
+          <%= render 'topics/tag', :topic => topic, :include_image => false %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render 'core_objects/feed_teaser_actions', :object => object %>
+  <div class="pc pc_<%= object.id.to_s %>"></div>
+  <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
+</div>

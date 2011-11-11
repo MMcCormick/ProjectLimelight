@@ -1,12 +1,10 @@
-<span id="core-feed" class="<%= session[:feed_filters][:layout] %>">
+<div id="core-feed" class="<%= session[:feed_filters][:layout] %>">
   <% core_objects.each_with_index do |core_object, i| %>
     <% if i < 15 %>
-      <%= render :layout => "core_objects/#{session[:feed_filters][:layout]}_teaser", :locals => {:object => core_object} do %>
-        <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object, :style => session[:feed_filters][:layout].to_sym, :response => false %>
-      <% end %>
+      <%= render "#{core_object._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => core_object, :style => session[:feed_filters][:layout].to_sym, :response => false %>
     <% end %>
   <% end %>
-</span>
+</div>
 
 <% if core_objects.count(true) >= 15 %>
   <div id="load-more" class="ac" data-m="get" data-url="<%= more_path %>">load more</div>

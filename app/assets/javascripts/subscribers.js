@@ -61,6 +61,7 @@ $(function() {
     $('#page,#page_header').toggleClass('minimized-sidebar');
     $('#sidebar .full,#sidebar .minimized').toggle();
     resizeLayout();
+    rearrange_feed_columns();
   })
 
   /*
@@ -99,6 +100,7 @@ $(function() {
       $('#core-feed').append($(content).html())
       $('#core-feed').after($(data.content)[2]);
     }
+    rearrange_feed_columns();
   });
 
   /*

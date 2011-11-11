@@ -61,6 +61,53 @@ function isScrolledIntoView(elem, bufferOn, checkAll, entireElem) {
   return inView;
 }
 
+// Arrange Column format in feeds
+function rearrange_feed_columns()
+{
+  var feed_min_column = 99999999;
+  var teaser_width = $('.teaser.column').width();
+  var feed_columns_num = Math.floor(($('#page_content').width() - 5) / (teaser_width + 16));
+  var feed_columns = []
+  for(var i=0; i<feed_columns_num; i++) {
+    feed_columns.push({total_height: 0, teasers:[]})
+  }
+
+  $('.teaser.column').each(function(i,val) {
+    var chosen_column = 0;
+    for(var i=0; i<feed_columns.length; i++) {
+      if (feed_columns[i].total_height < feed_min_column)
+      {
+        chosen_column = i;
+        feed_min_column = feed_columns[i].total_height;
+      }
+    }
+
+    feed_columns[chosen_column].total_height += $(val).height();
+    feed_columns[chosen_column].teasers.push ($(val));
+    feed_min_column = 999999999;
+  })
+
+  var max_column_height = 0;
+
+  for(var i=0; i<feed_columns.length; i++) {
+    var column_height = 0;
+    for(var i2=0; i2<feed_columns[i].teasers.length; i2++) {
+      console.log(feed_columns[i].teasers[i2])
+      $(feed_columns[i].teasers[i2]).css({
+        'position': 'absolute',
+        'top': column_height,
+        'left': teaser_width*i+16*(i+1)
+      });
+      $(feed_columns[i].teasers[i2]).show();
+      column_height += $(feed_columns[i].teasers[i2]).height() + 16
+    }
+    if (column_height > max_column_height) {
+      max_column_height = column_height
+    }
+  }
+  $('#core-feed').css('height', max_column_height)
+}
+
 function handleScroll() {
   if (isScrolledIntoView($('#header'), false, false)) {
     $('#sidebar,#page_header,#sidebar-right,#ajax-loading').removeClass('floating');

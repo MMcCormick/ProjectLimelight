@@ -106,15 +106,19 @@ module Limelight #:nodoc:
 
     def add_image_version(image_id, dimensions, style)
       image = self.images.find(image_id)
+
       if image && image.original
         original = image.original.first.image.file
         new_image = Image.from_blob(original.read).first
 
+        width = dimensions[0] == 0 ? 999999 : dimensions[0]
+        height = dimensions[1] == 0 ? 999999 : dimensions[1]
+
         case style
           when 'square'
-            new_image = new_image.resize_to_fill(dimensions[0], dimensions[1])
+            new_image = new_image.resize_to_fill(width, height)
           else
-            new_image = new_image.resize_to_fit(dimensions[0], dimensions[1])
+            new_image = new_image.resize_to_fit(width, height)
         end
 
         upload_type = original.class.name

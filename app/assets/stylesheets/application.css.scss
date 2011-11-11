@@ -174,7 +174,7 @@ button {
         margin-left: $sidebar-minimized-width+($sidebar_border_width*2)+$sidebar-margin;
     }
 }
-#page_cover { height: 100%; width: 100%; background: #FFF; left: 0; top: 0; position: absolute; display: none; }
+
 #page_header {
     position: absolute;
     margin-left: $sidebar_width+($sidebar_border_width*2)+$sidebar-margin;
@@ -188,7 +188,7 @@ button {
 
     .wrap {
         @include border-radius(4px);
-        margin:  0 5px 5px 5px;
+        margin:  0 5px 5px 10px;
         border: 1px solid transparent;
     }
 
@@ -223,6 +223,7 @@ button {
 }
 #page_content {
     color: $page_content_color;
+    position: relative;
     > h1 {
       margin: 0 0 5px 10px;
     }
@@ -404,7 +405,7 @@ button {
 #hints {
   position: relative;
   padding: 0px 0 0 15px;
-  margin: 0 0 0 10px;
+  margin: 0 0 0 20px;
 
   .info-grey-icon {
     position: absolute;

@@ -1,0 +1,41 @@
+<div class="teaser column <%= object._type.downcase %>" data-id="<%= object.id %>">
+  <div class="content">
+    <%= markdown(parse_mentions(object.content, object)) %>
+  </div>
+
+  <div class="connectionsC">
+    <div class="s">
+      <div class="talk-grey-icon oType" title="talk"></div>
+      <%= render 'core_objects/feed_teaser_created', :object => object %>
+    </div>
+
+    <% if object && object.response_to %>
+      <div class="response s">
+        <span>@</span>
+        <a href="<%= core_object_response_url(object.response_to) %>" class="r">
+          <%= object.response_to.title %>
+          <div class="<%= object.response_to.type.parameterize %>-grey-icon icon"></div>
+        </a>
+      </div>
+    <% end %>
+
+    <div class="s">
+      <a href="<%= url_for object %>" class="commentC p">
+        <%= object.response_count.to_i %> comments
+      </a>
+    </div>
+
+    <% if object.topic_mentions.length > 0 %>
+      <div class="mentions s">
+        <div class="head">mentions</div>
+        <% object.topic_mentions.each do |topic| %>
+          <%= render 'topics/tag', :topic => topic, :include_image => false %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render 'core_objects/feed_teaser_actions', :object => object %>
+  <div class="pc pc_<%= object.id.to_s %>"></div>
+  <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
+</div>

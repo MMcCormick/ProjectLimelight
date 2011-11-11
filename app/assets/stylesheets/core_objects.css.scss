@@ -320,7 +320,7 @@ form.core_object {
 $teaser-padding: 10px;
 .teaser {
     @include border-radius(2px);
-    @include single-box-shadow(#DDD, 1px, 1px, 2px);
+    @include single-box-shadow(#BBB, 1px, 1px, 2px);
     position: relative;
     border: 1px solid #CCC;
     background: #FFF;
@@ -440,7 +440,7 @@ $teaser-padding: 10px;
         }
     }
     
-    .related-topics {
+    .mentions {
         margin: 0 0 0 85px;
         .tag {
           margin: 5px 10px 0 0;
@@ -509,14 +509,14 @@ $teaser-padding: 10px;
   .connectionsC {
     .oType,
     .commentC,
-    .related-topics {
+    .mentions {
       display: none;
     }
     .tag {
       margin-top: 0px;
     }
   }
-  .related-topics {
+  .mentions {
     @include clearfix();
     clear: both;
     margin: 0 10px;
@@ -634,7 +634,7 @@ $teaser-padding: 10px;
       left: 0;
       .oType,
       .commentC,
-      .related-topics {
+      .mentions {
         display: block;
       }
     }
@@ -644,6 +644,151 @@ $teaser-padding: 10px;
         right: -1px;
         left: auto;
       }
+    }
+  }
+}
+
+// Grid Teaser
+.teaser.column {
+  $width: 235px;
+  width: $width;
+  position: relative;
+  z-index: 10;
+  display: none;
+  .titleC {
+    margin: 6px 10px 0 10px;
+    padding: 0 3px 5px 3px;
+    border-bottom: double #DDD;
+    font-size: 14px;
+  }
+  .content {
+    padding: 7px 10px 10px 10px;
+    p {
+      font-size: 12px;
+      margin: 5px 0 0 0;
+    }
+  }
+  .img {
+    .icon {
+      top: 3px;
+    }
+  }
+  img {
+    @include border-radius(0px);
+    float: none;
+  }
+  .oType {
+    margin: 3px 5px 0 0;
+  }
+  .commentC {
+    margin: 0;
+    font-weight: normal;
+    font-size: 11px;
+  }
+  .tag {
+    margin: 0px 10px 0 0;
+  }
+  .connectionsC {
+    margin: 0;
+    background: #EBEEE2;
+    font-size: 11px;
+    .s {
+      @include clearfix();
+      display: block;
+      padding: 3px 10px;
+      overflow: none;
+      border-bottom: 1px solid #DCDFD4;
+      border-top: 1px solid #F3F6EA;
+    }
+    .mentions {
+      @include clearfix();
+      position: relative;
+      margin: 0px;
+      padding: 2px 0 3px 65px;
+      .head {
+        position: absolute;
+        font-size: 11px;
+        color: #666;
+        cursor: default;
+        position: absolute;
+        top: 2px;
+        left: 10px;
+        font-weight: normal;
+      }
+    }
+  }
+  .response {
+    color: #666;
+    .r {
+      position: relative;
+      padding: 0 0 0 17px;
+    }
+    .icon {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+    a {
+      font-weight: normal;
+    }
+  }
+  .video-embed {
+    float: none;
+  }
+  .createdC {
+    color: #666;
+    font-size: 11px;
+    font-weight: normal;
+  }
+  .controlsC {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
+    width: 100%;
+    .pop {
+      @include single-box-shadow(#666, 1px, 1px, 2px);
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      font-size: 20px;
+      color: #555;
+      cursor: default;
+      border: 1px solid #AAA;
+      background: #FFF;
+      padding: 5px 10px;
+    }
+    .voteB.up {
+      position: absolute;
+      right: 130px;
+      top: 6px;
+    }
+    .voteB.down {
+      position: absolute;
+      right: 105px;
+      top: 12px;
+    }
+    .favB {
+      position: absolute;
+      top: 7px;
+      right: 60px;
+    }
+    .repostB {
+      position: absolute;
+      top: 7px;
+      right: 30px;
+    }
+    .coreShareB {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+    }
+  }
+  &.hover {
+    padding-top: 25px;
+    margin-top: -25px;
+    .controlsC {
+      display: block;
     }
   }
 }
@@ -831,6 +976,8 @@ $scoreBox-width: 160px;
 }
 #core-feed {
   padding: 0 5px;
+  margin: 10px 0;
+  position: relative;
   &.grid {
     display: inline-block;
     margin-top: 12px;

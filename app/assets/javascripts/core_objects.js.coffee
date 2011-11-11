@@ -1,9 +1,5 @@
 jQuery ->
 
-#  /*
-#   * GENERAL OBJECTS
-#   */
-
   $('#contribute, #add_response').live 'click', (e) ->
     target = $($(@).data('target'))
     if target.is(':visible')
@@ -156,3 +152,14 @@ jQuery ->
               .fadeIn(300)
               .find('textarea').focus().end()
     $button.parent().find('#comment_talk_id').attr('value', $button.data('d').id)
+
+  if ($('.teaser.column').length > 0)
+    rearrange_feed_columns()
+
+  $('.teaser.column').livequery ->
+#    console.log 'test'
+
+  $(window).resize ->
+    $(window).stopTime('resize-column-feed')
+    $(window).oneTime 500, "resize-column-feed", ->
+      rearrange_feed_columns()

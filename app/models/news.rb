@@ -11,7 +11,7 @@ class News < CoreObject
   field :title
 
   validates :title, :length => { :minimum => 5, :maximum => 100 }
-  validates :content, :length => { :minimum => 5, :maximum => 400 }
+  validates :content, :length => { :maximum => 400 }
   #validates_presence_of :url
   validates_format_of :url, :with => URI::regexp(%w(http https))
 

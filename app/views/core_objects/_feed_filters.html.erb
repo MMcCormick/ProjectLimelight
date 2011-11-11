@@ -24,13 +24,18 @@
     <h5>VIEW</h5>
     <ul>
       <li class="btn">
-        <div class="opt" title="Organize the feed into a list of items">
+        <div class="opt" title="Organize the feed into a list of posts">
           <div data-d='list' class="feed-list <%= session[:feed_filters][:layout] == 'list' ? 'on' : '' %>"></div>
         </div>
       </li>
       <li class="btn">
-        <div class="opt" title="Organize the feed into a grid of items">
+        <div class="opt" title="Organize the feed into a grid of posts">
           <div data-d='grid' class="feed-grid <%= session[:feed_filters][:layout] == 'grid' ? 'on' : '' %>"></div>
+        </div>
+      </li>
+      <li class="btn">
+        <div class="opt" title="Organize the feed into columns of posts">
+          <div data-d='column' class="feed-column <%= session[:feed_filters][:layout] == 'column' ? 'on' : '' %>"></div>
         </div>
       </li>
     </ul>

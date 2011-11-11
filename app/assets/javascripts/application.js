@@ -23,7 +23,6 @@
 //= require pusher
 //= require mention
 //= require core
-//= require subscribers
 //= require action.controller
 //= require form.controller
 //= require utilities
@@ -35,4 +34,5 @@
 //= require core_objects
 //= require main
 //= require topics
+//= require subscribers
 // require_tree .

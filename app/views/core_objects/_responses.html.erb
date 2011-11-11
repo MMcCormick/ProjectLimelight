@@ -1,8 +1,6 @@
 <div id="responses">
   <% responses.each do |core_object| %>
-    <%= render :layout => "core_objects/list_teaser", :locals => {:object => core_object} do %>
-      <%= render core_object._type.pluralize.underscore + '/teaser', :object => core_object, :style => :grid, :response => true %>
-    <% end %>
+    <%= render "#{core_object._type.pluralize.underscore}/teaser_list", :object => core_object, :style => :list, :response => true %>
     <%= render_cell :comment, :thread, core_object.id, false %>
   <% end %>
 </div>

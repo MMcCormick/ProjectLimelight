@@ -43,25 +43,6 @@ $(function() {
     $button.parents('.comment:first').find('#comment_talk_id').attr('value', $button.parents('.comment-thread:first').data('d').talk_id);
   });
 
-  // Highlight comments on the same depth level
-//  $('.comment').live({
-//    mouseenter: function() {
-//      $(this).stopTime('comment-hover-stop');
-//      $(this).stopTime('comment-hover');
-//      $(this).oneTime(500, "comment-hover", function() {
-//        $('.comment').removeClass('hover-*');
-//        $('.d-' + $(this).data('d').d + '.p-' + $(this).data('d').p).addClass('hover-' + $(this).data('d').c);
-//      })
-//    },
-//    mouseleave: function() {
-//      $(this).stopTime('comment-hover');
-//      $(this).stopTime('comment-hover-stop');
-//      $(this).oneTime(500, "comment-hover-stop", function() {
-//        $('.d-' + $(this).data('d').d + '.p-' + $(this).data('d').p).removeClass('hover-' + $(this).data('d').c);
-//      })
-//    }
-//  })
-
   /*
    * User and Topic Hover Tabs - QTips
    */

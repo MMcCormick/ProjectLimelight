@@ -40,6 +40,7 @@ $(function() {
         $('#form-submitting').fadeOut(300);
         form.find('input, textarea').removeAttr('disabled');
 
+        data = $.parseJSON(jqXHR.responseText)
         appUpdate(data);
 
         // If they need to login
@@ -54,8 +55,7 @@ $(function() {
         {
           var $error_field = form.find('.errors');
           $error_field.show();
-          errors = $.parseJSON(jqXHR.responseText)
-          $.each(errors, function(target_field, field_errors) {
+          $.each(data.errors, function(target_field, field_errors) {
             $.each(field_errors, function(i, error) {
               $error_field.append('<div class="error">'+target_field+' '+error+'</div>');
             })

@@ -11,7 +11,7 @@ class Video < CoreObject
   # Notification.shared_object_snippet.name
   field :title
 
-  validates :title, :length => { :minimum => 5, :maximum => 50 }, :presence => true
+  validates :title, :length => { :minimum => 5, :maximum => 75 }, :presence => true
   validates_format_of :url, :with => URI::regexp(%w(http https))
   validates :provider_name, :presence => true
   validates :provider_video_id, :presence => true

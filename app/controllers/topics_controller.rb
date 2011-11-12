@@ -61,8 +61,8 @@ class TopicsController < ApplicationController
     dimensions = params[:d]
     style = params[:s]
 
-    url = default_image_url(topic, dimensions, style, true, true)
-    img = open(Rails.env.development? ? Rails.public_path+url.image_url : url.image_url)
+    url = default_image_url(topic, dimensions, style, true, false)
+    img = open(Rails.env.development? ? Rails.public_path+url : url)
 
     if img
       send_data(

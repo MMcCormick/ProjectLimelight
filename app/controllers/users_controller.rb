@@ -45,8 +45,18 @@ class UsersController < ApplicationController
     style = params[:s]
 
     url = default_image_url(user, dimensions, style, true, true)
-
-    render :text => open(url, "rb").read
+    img = open(url)
+    file_name = Pathname.new(File.expand_path(File.dirname(img))).basename
+    if img
+      send_data(
+        img.read,
+        :type => 'image/jpeg',
+        :filename => file_name,
+        :disposition => 'inline'
+      )
+    else
+      render :file => "#{RAILS_ROOT}/public/404.html", :status => 404
+    end
   end
 
   # Update a users default picture

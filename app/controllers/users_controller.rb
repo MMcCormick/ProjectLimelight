@@ -45,13 +45,11 @@ class UsersController < ApplicationController
     style = params[:s]
 
     url = default_image_url(user, dimensions, style, true, true)
-    img = open(url)
-    file_name = Pathname.new(File.expand_path(File.dirname(img))).basename
+    img = open(Rails.env.development? ? Rails.public_path+url.image_url : url.image_url)
+
     if img
       send_data(
         img.read,
-        :type => 'image/jpeg',
-        :filename => file_name,
         :disposition => 'inline'
       )
     else

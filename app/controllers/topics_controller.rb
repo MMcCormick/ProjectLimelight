@@ -62,8 +62,16 @@ class TopicsController < ApplicationController
     style = params[:s]
 
     url = default_image_url(topic, dimensions, style, true, true)
+    img = open(Rails.env.development? ? Rails.public_path+url.image_url : url.image_url)
 
-    render :text => open(url, "rb").read, :stream => true
+    if img
+      send_data(
+        img.read,
+        :disposition => 'inline'
+      )
+    else
+      render :file => "#{RAILS_ROOT}/public/404.html", :status => 404
+    end
   end
 
   # Update a users default picture

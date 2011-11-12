@@ -1,5 +1,5 @@
 module ImageHelper
-  def default_image_url(object, dimensions, style='default', createNow=false, absolute=false, returnObject=false)
+  def default_image_url(object, dimensions, style='default', createNow=false, returnObject=false)
     # make sure dimensions are integers
     dimensions = dimensions.map(&:to_i)
     image = object.default_image
@@ -24,15 +24,8 @@ module ImageHelper
       end
     elsif object.instance_of? Topic
       url = "/assets/images/topic-default-#{dimensions[0]}-#{dimensions[1]}.gif"
-      unless Rails.env.development?
-        url = Rails.public_path+url
-      end
     else
       return false
-    end
-
-    if Rails.env.development? && absolute && !returnObject
-      url = Rails.public_path+url
     end
 
     url

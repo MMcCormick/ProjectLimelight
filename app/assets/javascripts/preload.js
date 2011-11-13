@@ -92,7 +92,6 @@ function rearrange_feed_columns()
   for(var i=0; i<feed_columns.length; i++) {
     var column_height = 0;
     for(var i2=0; i2<feed_columns[i].teasers.length; i2++) {
-      console.log(feed_columns[i].teasers[i2])
       $(feed_columns[i].teasers[i2]).css({
         'position': 'absolute',
         'top': column_height,

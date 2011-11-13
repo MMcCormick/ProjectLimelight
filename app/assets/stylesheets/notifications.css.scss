@@ -6,12 +6,16 @@
         Purpose of the stylesheet follows.
 */
 
-.notification-list {
-  width: 600px;
-  margin: auto;
-  padding: 0 10px;
-  margin-top: -5px;
-  .teaser {
-    @include list-teaser('none');
+#notifications-c {
+  .index-c {
+    margin: 10px;
+    h4 {
+      margin: 0 0 0 5px;
+      color: #666;
+    }
+    .notification {
+      padding: 10px 5px;
+      border-bottom: 1px solid #DDD;
+    }
   }
 }

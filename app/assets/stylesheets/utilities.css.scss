@@ -14,6 +14,8 @@
 
 .hide { display: none; }
 .clear { clear: both; }
+.clear-left { clear: left; }
+.clear-right { clear: right; }
 
 #ajax-loading {
     @include border-radius(2px);

@@ -45,7 +45,7 @@ class Topic
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
   attr_accessible :name, :summary
 
-  before_create :add_alias
+  before_create :init_alias
   after_create :add_to_soulmate
   before_update :update_alias
   after_update :update_denorms
@@ -60,13 +60,21 @@ class Topic
     public_id.to_i.to_s(36)
   end
 
-  def add_alias
+  def init_alias
     self.aliases ||= []
     url = name.to_url
     self.aliases << url unless self.aliases.include?(url)
     # TODO: decide about pluralization of topic aliases
     #plurl = name.pluralize == name ? name.singularize.to_url : name.pluralize.to_url
     #self.aliases << plurl unless self.aliases.include?(plurl)
+  end
+
+  def add_alias new_alias
+    if has_alias? new_alias
+      false
+    else
+      self.aliases = aliases << new_alias
+    end
   end
 
   def update_alias

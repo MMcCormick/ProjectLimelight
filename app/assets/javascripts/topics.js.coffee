@@ -1,10 +1,4 @@
 jQuery ->
-
-  $('.topic-done-b').live 'click', (e) ->
-    $('#topic-panel .content').show()
-    $('#topic-edit').hide()
-
-
   # Creates a qtip with a form to add types to a topic when an .addTypeB is clicked
   $('.addTypeB').livequery ->
     self = $(@)
@@ -66,6 +60,7 @@ jQuery ->
     self.result (event, data, formatted) ->
       $('#connection_topic_id').val(data.id)
 
+  # TODO: can we combine this and the above? the self.result part is the only difference
   # Topic autocomplete for topic merge form
   $('#tm-auto').livequery ->
     self = $(@)

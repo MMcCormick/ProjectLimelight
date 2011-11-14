@@ -1,5 +1,5 @@
 class TopicsController < ApplicationController
-  authorize_resource :only => [:show, :edit, :update]
+  authorize_resource :only => [:show, :edit, :update, :merge, :add_alias]
   include ImageHelper
 
   def index
@@ -34,13 +34,6 @@ class TopicsController < ApplicationController
 
   def edit
     @topic = Topic.find_by_slug(params[:id])
-    respond_to do |format|
-      html = render_to_string 'edit'
-      format.json {
-        response = build_ajax_response(:ok, nil, nil, nil, {:content => html})
-        render json: response
-      }
-    end
   end
 
   def update
@@ -112,6 +105,25 @@ class TopicsController < ApplicationController
       end
     else
       response = build_ajax_response(:error, nil, "You cannot merge a topic with itself!")
+      status = 400
+    end
+
+    render json: response, :status => status
+  end
+
+  def add_alias
+    topic = Topic.find_by_slug(params[:id])
+
+    if topic.add_alias(params[:new_alias])
+      if topic.save
+        response = build_ajax_response(:ok, nil, "Alias added!")
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+        status = 422
+      end
+    else
+      response = build_ajax_response(:error, nil, "The topic already has that alias!")
       status = 400
     end
 

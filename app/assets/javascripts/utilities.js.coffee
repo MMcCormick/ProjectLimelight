@@ -89,3 +89,20 @@ jQuery ->
     (top >= viewport_top && top < viewport_bottom) ||
     (bottom > viewport_top && bottom <= viewport_bottom) ||
     (height > viewport_height && top <= viewport_top && bottom >= viewport_bottom)
+
+  `
+  // Extend jQuery to allow selectors on data attributes
+  // Data is added to an element (nothing amazing here):
+  // $('a#someLink').data('ABC', '123');
+  // Element is selected by querying data as if it were an attribute!!!
+  // $('a[ABC=123]');
+  var _dataFn = $.fn.data;
+  $.fn.data = function(key, val){
+      if (typeof val !== 'undefined'){
+          $.expr.attrHandle[key] = function(elem){
+              return $(elem).attr(key) || $(elem).data(key);
+          };
+      }
+      return _dataFn.apply(this, arguments);
+  };
+  `

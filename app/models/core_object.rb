@@ -39,7 +39,7 @@ class CoreObject
   after_create :update_response_count
 
   def to_param
-    "#{encoded_id}-#{name.parameterize[0..40]}"
+    "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
   end
 
   def content_clean

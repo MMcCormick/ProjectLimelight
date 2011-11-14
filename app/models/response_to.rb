@@ -12,7 +12,7 @@ class ResponseTo
   attr_accessible :title, :type, :public_id
 
   def to_param
-    "#{encoded_id}-#{title.parameterize}"
+    "#{encoded_id}-#{title.parameterize[0..40].chomp('-')}"
   end
 
   def encoded_id

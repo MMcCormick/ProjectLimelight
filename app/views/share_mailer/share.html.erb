@@ -8,6 +8,6 @@
  end
 %>
 
-<p><%= user_link(@from_user, nil, base) %> shared <%= user_link(@object_user, (@object_user.id == @from_user.id ? 'their' : @object_user.username+"'s'"), base) %> <%= @shared.class.name.downcase %>, <%= "<a href='#{base+core_object_url(@shared, @shared.class.name)}'>#{@shared.name}</a>".html_safe %>, with you on Limelight.</p>
+<p><%= user_link(@from_user, nil, base) %> shared a <%= @shared.class.name.downcase %> <%= @object_user.id == @from_user.id ? 'they' : user_link(@object_user, nil, base) %> posted, <%= "<a href='#{base+core_object_url(@shared, @shared.class.name)}'>#{@shared.name}</a>".html_safe %>, with you on Limelight.</p>
 
 <p>If you wish to change the frequency of these emails, please log in and click "Settings" on the left panel.</p>

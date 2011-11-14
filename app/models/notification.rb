@@ -72,7 +72,7 @@ class Notification
       when :mention
         'mentioned you... foo'
       when :reply
-        'replied to your post'
+        "replied to your #{object.type} #{object.name}"
       when :share
         'shared foo'
       else
@@ -134,7 +134,7 @@ class Notification
         if object
           notification.object = CoreObjectSnippet.new(
                   :name => object.name,
-                  :type => object.type,
+                  :type => object.class.name.demodulize,
                   :public_id => object.public_id
           )
           notification.object.id = object.id
@@ -163,6 +163,9 @@ class Notification
       end
 
       if mark_unread || (notification.notify && !trigger_notified)
+        if notification.read = true
+          new_notification = true
+        end
         notification.read = false
         notification.emailed = false
       end

@@ -14,16 +14,13 @@ class PicturesController < ApplicationController
     @picture.save_original_image
     @picture.save_images
 
-    respond_to do |format|
-      if @picture.save
-        format.html { redirect_to @picture }
-        response = build_ajax_response(:ok, picture_path(@picture), "Picture was successfully created")
-        format.json { render json: response, status: :created }
-      else
-        format.html { render action: "new" }
-        response = build_ajax_response(:error, nil, "Picture could not be created", @picture.errors)
-        format.json { render json: response, status: :unprocessable_entity }
-      end
+    if @picture.save
+      @picture.send_mention_notifications
+      response = build_ajax_response(:ok, picture_path(@picture), "Picture was successfully created")
+      render json: response, status: :created
+    else
+      response = build_ajax_response(:error, nil, "Picture could not be created", @picture.errors)
+      render json: response, status: :unprocessable_entity
     end
   end
 

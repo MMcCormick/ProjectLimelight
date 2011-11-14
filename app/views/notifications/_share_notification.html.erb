@@ -1,0 +1,5 @@
+<div class="notification share <%= is_first %> <%= 'unread' unless notification.read %>">
+  <div class="share-grey-icon-12 icon"></div>
+  <%= triggered_users_text_list(notification.triggered_by) %>
+  <%= action_text(notification) %>
+</div>

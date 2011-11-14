@@ -10,12 +10,24 @@
   .index-c {
     margin: 10px;
     h4 {
-      margin: 0 0 0 5px;
+      margin: 15px 0 5px 5px;
       color: #666;
     }
     .notification {
-      padding: 10px 5px;
-      border-bottom: 1px solid #DDD;
+      padding: 10px 5px 10px 26px;
+      position: relative;
+      border-top: 1px solid #DDD;
+      .icon {
+        position: absolute;
+        top: 13px;
+        left: 5px;
+      }
+      &.first {
+        border-top: none;
+      }
+      &.unread {
+        background: #FEEBEB;
+      }
     }
   }
 }

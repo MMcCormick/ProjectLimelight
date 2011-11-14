@@ -10,7 +10,7 @@ class CoreObjectSnippet
   embedded_in :core_object_assignable, polymorphic: true
 
   def to_param
-    "#{encoded_id}-#{truncate(name.parameterize[0..40])}"
+    "#{encoded_id}-#{name.parameterize[0..40]}"
   end
 
   def encoded_id

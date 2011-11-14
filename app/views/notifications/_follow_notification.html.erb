@@ -1,4 +1,5 @@
-<div class="notification follow">
+<div class="notification follow <%= is_first %> <%= 'unread' unless notification.read %>">
+  <div class="user-grey-icon icon"></div>
   <%= triggered_users_text_list(notification.triggered_by) %>
-  <%= notification.action_text %>
+  <%= action_text(notification) %>
 </div>

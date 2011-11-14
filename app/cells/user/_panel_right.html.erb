@@ -15,14 +15,24 @@
 
   <div class="clear"></div>
 
+  <a class="sidebarB btn" href="<%= user_feed_path @user %>">
+    <div class="icon feed-icon"></div>
+    <%= @user.username %>'s Feed
+  </a>
+
+  <a class="sidebarB btn" href="<%= user_path @user %>">
+      <div class="icon user-contributions-icon"></div>
+      <%= @user.username %>'s Contributions
+  </a>
+
   <div class="links">
       <a class="badge btn" href="#">
           <div class="icon badge-icon"></div>
           Badges
       </a>
-      <a class="user-contributions btn" href="<%= user_path @user %>">
-          <div class="icon user-contributions-icon"></div>
-          Contributions
+      <a class="user-favorites btn" href="<%= user_favorites_path @user %>">
+        <div class="icon user-favorites-icon"></div>
+        Favorites
       </a>
   </div>
 </div>

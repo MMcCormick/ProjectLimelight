@@ -14,16 +14,13 @@ class NewsController < ApplicationController
     @news.save_original_image
     @news.save_images
 
-    respond_to do |format|
-      if @news.save
-        format.html { redirect_to @news }
-        response = build_ajax_response(:ok, news_path(@news), "News was successfully created")
-        format.json { render json: response, status: :created }
-      else
-        format.html { render action: "new" }
-        response = build_ajax_response(:error, nil, "News could not be created", @news.errors)
-        format.json { render json: response, status: :unprocessable_entity }
-      end
+    if @news.save
+      @news.send_mention_notifications
+      response = build_ajax_response(:ok, news_path(@news), "News was successfully created")
+      render json: response, status: :created
+    else
+      response = build_ajax_response(:error, nil, "News could not be created", @news.errors)
+      render json: response, status: :unprocessable_entity
     end
   end
 

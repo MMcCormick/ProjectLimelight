@@ -32,40 +32,64 @@ class Comment
 
   attr_accessible :content, :parent_id, :talk_id
 
-  # Based on Newsmonger: https://github.com/banker/newsmonger
-  # Return an array of comments, threaded, from highest to lowest votes.
-  # Sorts by votes descending by default, but could use any other field.
-  # If you want to build out an internal balanced score, pass that field in,
-  # and be sure to index it on the database.
-  def self.threaded_with_field(talk_id, field_name='created_at')
-    comments = Comment.where(:talk_id => talk_id).asc(:path).desc(field_name)
-    results, map = [], {}
-    comments.each do |comment|
-      if comment.parent_id.blank?
-        results << comment
-      else
-        comment.path =~ /:([\d|\w]+)$/
-        if parent = $1
-          map[parent] ||= []
-          map[parent] << comment
-        end
+  def send_notifications(current_user)
+    parent = nil
+    if depth == 0
+      Notification.add(talk.user, :reply, true, current_user, nil, nil, true, talk, talk.user, nil)
+    else
+      parent = Comment.find(parent_id)
+      Notification.add(parent.user, :reply, true, current_user, nil, nil, true, talk, talk.user, parent)
+    end
+
+    if depth == 0
+      siblings = Comment.where(:talk_id => talk_id)
+    else
+      siblings = Comment.where(:parent_id => parent_id)
+    end
+
+    siblings.each do |sibling|
+      unless (depth == 0 && talk.user_id == sibling.user_id) || (parent && parent.user_id == sibling.user_id)
+        Notification.add(sibling.user, :also, true, current_user, nil, nil, true, talk, talk.user, parent)
       end
     end
-    assemble(results, map)
   end
 
-  # Used by Comment#threaded_with_field to assemble the results.
-  def self.assemble(results, map)
-    list = []
-    results.each do |result|
-      if map[result.id.to_s]
-        list << result
-        list += assemble(map[result.id.to_s], map)
-      else
-        list << result
+  class << self
+    # Based on Newsmonger: https://github.com/banker/newsmonger
+    # Return an array of comments, threaded, from highest to lowest votes.
+    # Sorts by votes descending by default, but could use any other field.
+    # If you want to build out an internal balanced score, pass that field in,
+    # and be sure to index it on the database.
+    def threaded_with_field(talk_id, field_name='created_at')
+      comments = Comment.where(:talk_id => talk_id).asc(:path).desc(field_name)
+      results, map = [], {}
+      comments.each do |comment|
+        if comment.parent_id.blank?
+          results << comment
+        else
+          comment.path =~ /:([\d|\w]+)$/
+          if parent = $1
+            map[parent] ||= []
+            map[parent] << comment
+          end
+        end
       end
+      assemble(results, map)
     end
-    list
+
+    # Used by Comment#threaded_with_field to assemble the results.
+    def assemble(results, map)
+      list = []
+      results.each do |result|
+        if map[result.id.to_s]
+          list << result
+          list += assemble(map[result.id.to_s], map)
+        else
+          list << result
+        end
+      end
+      list
+    end
   end
 
   private

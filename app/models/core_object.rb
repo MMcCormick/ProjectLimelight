@@ -31,7 +31,6 @@ class CoreObject
   index :public_id, unique: true
 
   belongs_to :user
-  has_many :core_object_shares
   validates :user_id, :status, :presence => true
   attr_accessible :content, :response_to_id
   attr_accessor :response_to_id

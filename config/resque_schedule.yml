@@ -36,13 +36,13 @@ recalculate_clout:
   description: "This job recalculates user clout"
 
 weekly_email:
-  every: 1w
+  cron: "0 15 * * fri"
   class: WeeklyEmail
   args:
   description: "This job sends users a periodic content-you-might-like email"
 
 daily_notifications:
-  cron: "0 9 * * *"
+  cron: "0 14 * * *"
   class: SendUserNotification
   args:
   description: "This job sends users a daily email with their new notifications"

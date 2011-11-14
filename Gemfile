@@ -19,7 +19,6 @@ gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'embedly'
 gem 'heroku'
-#gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive', :require => 'resque/server'
 gem 'resque', :require => 'resque/server'
 gem 'resque-scheduler', '2.0.0.e' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs

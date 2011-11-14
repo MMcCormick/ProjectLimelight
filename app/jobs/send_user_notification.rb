@@ -8,6 +8,7 @@ class SendUserNotification
               :user_id => user.id,
               :active => true,
               :read => false,
+              :notify => true,
               :emailed => false)
 
       if notifications && notifications.length > 0

@@ -125,7 +125,7 @@ $(function() {
    * SHARING
    */
 
-  amplify.subscribe("core_object_share_finished", function (data) {
+  amplify.subscribe("core_object_shares_create", function (data) {
     $('.qtip').qtip('hide')
     $currentTarget.clearForm();
   })

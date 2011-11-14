@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default :from => "support@projectlimelight.com"
+  default :from => "Limelight <support@projectlimelight.com>"
   layout 'email'
 
   def welcome_email(user)

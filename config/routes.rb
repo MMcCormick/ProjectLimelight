@@ -1,7 +1,7 @@
 ProjectLimelight::Application.routes.draw do
 
-  # FOR TESTING MAP REDUCE
-  get '/mapreduce' => 'mapper#test', :as => :map_reduce
+  # Testing
+  get 'testing' => 'testing#test', :as => :test
 
   # Pictures
   resources :pictures

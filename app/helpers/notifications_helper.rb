@@ -15,7 +15,7 @@ module NotificationsHelper
 
   def action_text(notification)
     count = notification.triggered_by.length
-    case notification.type
+    case notification.type.to_sym
       when :follow
         count > 1 ? 'are following you' : 'is following you'
       when :also # also signifies that someone has also responded to something your responded to
@@ -32,7 +32,7 @@ module NotificationsHelper
       when :share
         "shared #{notification.object.type.downcase} <a href='#{core_object_url(notification.object)}'>#{notification.object.name}</a>".html_safe
       else
-        "did something weird..."
+        "did something weird... this is a mistake and the Limelight team has been notified to fix it!"
     end
   end
 

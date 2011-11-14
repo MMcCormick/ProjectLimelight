@@ -2,7 +2,7 @@ class NewsletterMailer < ActionMailer::Base
   add_template_helper(ApplicationHelper)
   add_template_helper(ImageHelper)
 
-  default :from => "support@projectlimelight.com"
+  default :from => "Limelight <support@projectlimelight.com>"
   layout 'email'
 
   def weekly_email(user, pop_talks, pop_news, pop_pics, pop_vids)

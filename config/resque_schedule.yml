@@ -40,3 +40,9 @@ weekly_email:
   class: WeeklyEmail
   args:
   description: "This job sends users a periodic content-you-might-like email"
+
+daily_notifications:
+  cron: "0 9 * * *"
+  class: SendUserNotification
+  args:
+  description: "This job sends users a daily email with their new notifications"

@@ -27,6 +27,7 @@ class Notification
 
   def add_triggered_by(triggered_by_user)
     found = triggered_by.detect {|u| u.id == triggered_by_user.id}
+    self.set_emailed.delete(triggered_by_user.id)
     unless found
       self.triggered_by.create(
               :_id => triggered_by_user.id,

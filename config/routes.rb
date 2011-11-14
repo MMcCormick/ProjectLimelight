@@ -40,11 +40,6 @@ ProjectLimelight::Application.routes.draw do
   # Embedly
   get 'embed' => 'embedly#show', :as => :embedly_fetch
 
-  # Topic Connections
-  resources :topic_connections, :only => [:create, :new]
-  post 'topic_connections/add' => 'topic_connections#add', :as => :add_connection
-  delete 'topic_connections/remove' => 'topic_connections#remove', :as => :remove_connection
-
   # Comments
   resources :comments
 
@@ -81,15 +76,22 @@ ProjectLimelight::Application.routes.draw do
   resources :users, :only => [:show, :edit, :update]
 
   # Topics
-  resources :topics
+  resources :topics, :excpet => [:edit]
+  get '/:id/edit' => 'topics#edit', :as => :edit_topic
   get '/:id/connected' => 'topics#connected', :as => :connected_topics
   get '/:id/hover' => 'topics#hover' , :as => :topic_hover
   put "/:id/picture" => "topics#picture_update", :as => :topic_picture_update
   get '/:id/picture' => 'topics#default_picture', :as => :topic_default_picture
   get ':id/followers' => 'topics#followers', :as => :topic_followers
   post ':id/merge' => 'topics#merge', :as => :merge_topic
+  post ':id/add_alias' => 'topics#add_alias', :as => :add_topic_alias
   get '/:id' => 'topics#show', :as => :topic
   put '/:id' => 'topics#update', :as => :update_topic
+
+  # Topic Connections
+  resources :topic_connections, :only => [:create, :new]
+  post 'topic_connections/add' => 'topic_connections#add', :as => :add_connection
+  delete 'topic_connections/remove' => 'topic_connections#remove', :as => :remove_connection
 
   # Home
   root :to => "pages#home"

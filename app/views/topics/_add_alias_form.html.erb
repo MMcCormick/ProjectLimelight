@@ -1,0 +1,11 @@
+<form action="<%= add_topic_alias_path %>" id="add-alias-form" method="POST" class="ajax">
+
+  <div class="lClear required">
+    <%= label_tag "new-alias", "New alias" %>
+    <%= text_field_tag "new_alias", nil, :id => "new-alias" %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag "Add", :class => "submit" %>
+  </div>
+</form>

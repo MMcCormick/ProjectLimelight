@@ -1,18 +1,41 @@
-<h4>Edit Topic Info</h4>
-<%= render 'form' %>
+<% content_for :sidebar_right do %>
+  <%= render_cell(:topic, :sidebar_right, @topic) %>
+<% end %>
 
-<h4>Merge Into a Topic</h4>
-<%= render "topics/merge_form", :topic => @topic %>
+<div class="section">
+  <h3>Edit Topic Info</h3>
+  <%= render 'form' %>
+</div>
 
-<h4>Change Default Image</h4>
-<%= image_tag topic_default_picture_path(@topic, :d => [100, 100]), :style => "max-width: 100px;", :class => 'topic-image' %>
-<div class="upload" id="topic_uploadB">Change Image</div>
-<div id="topic_uploadB_progress"></div>
-<%= render "topics/image_upload_js" %>
+<div class="clear-left"></div>
 
-<h4>Edit Topic Connections</h4>
-<%= render_cell :topic, :add_connection, @topic %>
+<div class="section">
+  <h3>Change Default Image</h3>
+  <%= image_tag topic_default_picture_path(@topic, :d => [100, 100]), :style => "max-width: 100px;", :class => 'topic-image' %>
+  <div class="upload" id="topic_uploadB">Change Image</div>
+  <div id="topic_uploadB_progress"></div>
+  <% content_for :js do %>
+    <%= render "topics/image_upload_js" %>
+  <% end %>
+</div>
 
-<div class="edit topic-done-b">done</div>
+<div class="clear-left"></div>
 
+<div class="section">
+  <h3>Edit Topic Connections</h3>
+  <%= render_cell :topic, :add_connection, @topic %>
+</div>
 
+<div class="clear-left"></div>
+
+<div class="section">
+  <h3>Add an Alias</h3>
+  <%= render "topics/add_alias_form", :topic => @topic %>
+</div>
+
+<div class="clear-left"></div>
+
+<div class="section">
+  <h3>Merge Into a Topic</h3>
+  <%= render "topics/merge_form", :topic => @topic %>
+</div>

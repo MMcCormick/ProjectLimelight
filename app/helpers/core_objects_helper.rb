@@ -1,7 +1,8 @@
 module CoreObjectsHelper
 
-  def core_object_url(object)
-    case object.type
+  def core_object_url(object, type=nil)
+    type = object.type unless type
+    case type
       when 'Talk'
         talk_path object
       when 'Picture'

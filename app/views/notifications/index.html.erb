@@ -11,7 +11,7 @@
       <% is_first = 'first' %>
       <h4><%= pretty_time(notification.updated_at) %></h4>
     <% end %>
-    <%= render "notifications/#{notification.type.to_s.underscore}_notification", :notification => notification, :is_first => is_first %>
+    <%= render "notifications/#{notification.type.to_s.underscore}_notification", :notification => notification, :is_first => is_first, :base => '' %>
   <% end %>
 <% else %>
   <div class="empty">You have no notifications!</div>

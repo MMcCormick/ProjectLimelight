@@ -1,0 +1,23 @@
+<%
+ if Rails.env.development?
+   base = 'http://localhost:3000'
+ elsif Rails.env.staging?
+   base = 'http://staging.projectlimelight.com'
+ else
+   base = 'http://www.projectlimelight.com'
+ end
+%>
+
+<p>Hi <%= @user.first_name.blank? ? @user.username : @user.first_name %>, you have some new notifications:</p>
+
+<% @notifications.each_with_index do |notification,i| %>
+  <% is_first = nil %>
+  <% if i == 0 %>
+    <% is_first = true %>
+  <% end %>
+  <div style="padding: 10px 5px; <%= 'border-top: 1px solid #EFEFEF;' unless is_first %>">
+    <%= render "notifications/#{notification.type.to_s.underscore}_notification", :notification => notification, :is_first => nil, :base => base %>
+  </div>
+<% end %>
+
+<p>If you wish to change the frequency of these emails, please log in and click "Settings" on the left panel.</p>

@@ -97,8 +97,10 @@ function rearrange_feed_columns()
         'top': column_height,
         'left': teaser_width*i+16*(i+1)
       });
+      $(feed_columns[i].teasers[i2]).data('column', i);
+      $(feed_columns[i].teasers[i2]).data('number', i2);
       $(feed_columns[i].teasers[i2]).show();
-      column_height += $(feed_columns[i].teasers[i2]).height() + 16
+      column_height += $(feed_columns[i].teasers[i2]).height() + 16;
     }
     if (column_height > max_column_height) {
       max_column_height = column_height

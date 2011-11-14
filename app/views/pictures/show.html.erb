@@ -6,7 +6,7 @@
 
   <p>
     <b>Title:</b>
-    <%= @picture.content %>
+    <%= markdown(parse_mentions(@picture.content, @picture)) %>
   </p>
 
   <% img = default_image_url(@picture, [100, 100]) %>

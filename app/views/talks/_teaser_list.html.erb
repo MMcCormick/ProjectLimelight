@@ -1,6 +1,6 @@
 <div class="teaser list <%= object._type.downcase %>" data-id="<%= object.id %>">
   <div class="content">
-    <%= render 'core_objects/feed_teaser_title', :title => user_link(object.user_snippet), :object => nil %>
+    <%= render 'core_objects/feed_teaser_title', :title => user_link(object.user_snippet), :object => object %>
     <div class="createdC">
       <%= time_ago_in_words(object.created_at, false) %> ago
     </div>

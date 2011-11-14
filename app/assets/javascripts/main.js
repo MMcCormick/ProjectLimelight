@@ -312,44 +312,87 @@ $(function() {
         $('body').addClass('shortcut-on');
 
         var target = $('.teaser.hover'),
-            hoverClass = 'hover';
+        hoverClass = 'hover';
 
         // If  teaser is hovered
         if (target.length > 0) {
-          // If first element is hovered and left or up is pressed
-          if (($code == $sc.up || $code == $sc.left) && $('.teaser:first').hasClass('hover')) {
-            return false;
-          }
+          // Column view
+          if (target.hasClass('column')) {
+            var column_num;
 
-          // Go to previous
-          if (target.hasClass('list') && ($code == $sc.up || $code == $sc.left) ||
-                  target.hasClass('grid') && ($code == $sc.left)) {
-            if (feedLastInRow(target.prev()))
-              hoverClass += ' left';
+            // Left or Right
+            if ($code == $sc.left || $code == $sc.right) {
+              var numcols = $('#core-feed').data('numcols');
+              var current_offset = target.position().top;
+              if ($code == $sc.left) {
+                column_num = (target.data('column') - 1);
+                if (column_num == -1) { column_num = numcols - 1 }
+              }
+              else {
+                column_num = (target.data('column') + 1) % numcols
+              }
 
-            target.removeClass('hover').prev().addClass(hoverClass);
-          }
-
-          // Go to next
-          else if (target.hasClass('list') && ($code == $sc.down || $code == $sc.right) ||
-                  target.hasClass('grid') && ($code == $sc.right)) {
-            if (feedLastInRow(target.next()))
-              hoverClass += ' left';
-
-            target.removeClass('hover').next().addClass(hoverClass);
-          }
-
-          // Jump up a row (for Grid View)
-          else if (target.hasClass('grid') && ($code == $sc.up)) {
-            target.removeClass('hover').prevAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover');
-            if ($('.teaser.hover').length == 0) {
-              $newHover = true;
+              $('.teaser.column.[data-column="'+column_num+'"]').each(function(index, teaser) {
+                if ($(this).position().top + $(this).height() > current_offset) {
+                  target.removeClass('hover');
+                  $(this).addClass('hover');
+                  return false;
+                }
+              });
+              // if no teaser was found in the correct column, select the last teaser of the column
+              if ($('.teaser.hover').length == 0) {
+                $('.teaser.column.[data-column="'+column_num+'"]').last().addClass('hover');
+              }
+            }
+            // Up
+            else if ($code == $sc.up) {
+              column_num = target.data('column');
+              if (target.prevAll('.teaser.column.[data-column="'+column_num+'"]').length > 0) {
+                target.removeClass('hover').prevAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass('hover')
+              }
+            }
+            // Down
+            else if ($code == $sc.down) {
+              column_num = target.data('column');
+              if (target.nextAll('.teaser.column.[data-column="'+column_num+'"]').length > 0) {
+                target.removeClass('hover').nextAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass('hover')
+              }
             }
           }
 
-          // Jump down a row (for Grid View)
-          else if (target.hasClass('grid') && ($code == $sc.down)) {
-            target.removeClass('hover').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover');
+          // Grid + List view
+          else {
+            // If first element is hovered and left or up is pressed
+            if (($code == $sc.up || $code == $sc.left) && $('.teaser:first').hasClass('hover')) {
+              return false;
+            }
+            // Go to previous
+            if (target.hasClass('list') && ($code == $sc.up || $code == $sc.left) ||
+                    target.hasClass('grid') && ($code == $sc.left)) {
+              if (feedLastInRow(target.prev()))
+                hoverClass += ' left';
+
+              target.removeClass('hover').prev().addClass(hoverClass);
+            }
+            // Go to next
+            else if (target.hasClass('list') && ($code == $sc.down || $code == $sc.right) ||
+                    target.hasClass('grid') && ($code == $sc.right)) {
+              if (feedLastInRow(target.next()))
+                hoverClass += ' left';
+
+              target.removeClass('hover').next().addClass(hoverClass);
+            }
+            // Jump up a row (for Grid View)
+            else if (target.hasClass('grid') && ($code == $sc.up)) {
+              target.removeClass('hover').prevAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover');
+              if ($('.teaser.hover').length == 0) {
+                $newHover = true;
+              }
+            }
+            // Jump down a row (for Grid View)
+            else if (target.hasClass('grid') && ($code == $sc.down)) {
+              target.removeClass('hover').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover');
+            }
           }
         }
 
@@ -373,7 +416,7 @@ $(function() {
         // If the new hovered teaser is out of view, adjust viewport according to keystroke
         if (!isScrolledIntoView($('.teaser.hover'), true, false, true)) {
           var adjust = ($code == $sc.up || $code == $sc.left) ? '-=300' : '+=300';
-          $(window).scrollTo(adjust, 300);
+          $(window).scrollTo($('.teaser.hover'), 300, {offset: -100});
         }
       break;
 

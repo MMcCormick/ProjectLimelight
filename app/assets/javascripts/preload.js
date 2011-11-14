@@ -97,7 +97,7 @@ function rearrange_feed_columns()
         'top': column_height,
         'left': teaser_width*i+16*(i+1)
       });
-      $(feed_columns[i].teasers[i2]).addClass('c-'+i);
+      $(feed_columns[i].teasers[i2]).attr('data-column', i).data('column', i);
       $(feed_columns[i].teasers[i2]).show();
       column_height += $(feed_columns[i].teasers[i2]).height() + 16;
     }
@@ -105,7 +105,7 @@ function rearrange_feed_columns()
       max_column_height = column_height
     }
   }
-  $('#core-feed').css('height', max_column_height)
+  $('#core-feed').css('height', max_column_height).data('numcols', feed_columns_num)
 }
 
 function handleScroll() {

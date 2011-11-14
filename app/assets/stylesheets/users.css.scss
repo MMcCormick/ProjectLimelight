@@ -117,7 +117,7 @@
 // The user panel, either left or right sidebar
 .user-panel {
     @include clearfix();
-    padding: 40px 5px 0 5px;
+    padding: 40px 0 0 0;
 
     .profile-image {
       @include border-radius(2px);
@@ -136,6 +136,7 @@
       position: relative;
       height: 62px;
       margin: 0;
+      margin: 0 5px;
 
       .label {
         position: absolute;
@@ -196,7 +197,7 @@
     }
     .links {
         @include clearfix();
-        margin: 5px 0 0 0;
+        margin: 5px 5px 0 5px;
         clear: both;
                 
         a {
@@ -218,19 +219,20 @@
             width: 50px;
         }
         .user-notifications,
-        .user-contributions {
+        .user-favorites {
             width: 80px;
             left: -1px;
         }
         .badge,
-        .user-contributions {
+        .user-favorites {
             top: -1px;
+            @include border-bottom-left-radius(2px);
         }
         .settings {
-            @include border-top-left-radius(3px);
+            @include border-top-left-radius(2px);
         }
         .user-notifications {
-            @include border-top-right-radius(3px);
+            @include border-top-right-radius(2px);
             .icon {
                 font-weight: bold;
                 font-size: 14px;
@@ -239,12 +241,9 @@
                 text-align: center;
                 width: 20px;
             }
-        }
-        .badge {
-            @include border-bottom-left-radius(3px);
-        }
-        .user-contributions {
-            @include border-bottom-right-radius(3px);
+            &.on {
+              color: red;
+            }
         }
     }
 }
@@ -259,19 +258,19 @@
             top: 0px !important;
         }
         // In addition to radii applied above in .user-panel
-        .badge { @include border-top-left-radius(3px); }
-        .user-contributions { @include border-top-right-radius(3px); }
+        .badge { @include border-top-left-radius(2px); }
+        .user-contributions { @include border-top-right-radius(2px); }
     }
     .followB,
     .unfollowB {
-        margin: 8px 0;
+        margin: 8px 0 8px 6px;
     }
 }
     
 
 // Wide buttons for either sidebar
 .sidebarB {
-    @include border-radius(3px);
+    @include border-radius(2px);
     background-color: #FCF9F9;
     border: 1px solid #CCC;
     margin: 3px 7px 3px 5px;

@@ -1,4 +1,4 @@
-<div class="comment-thread c_<%= @talk_id %> <%= 'hide' if @comments.length == 0 %>" data-d='{"talk_id":"<%= @talk_id %>"}'>
+<div class="comment-thread c_<%= @talk_id %> <%= 'hide' if @comments.length == 0 && !@with_forms %>" data-d='{"talk_id":"<%= @talk_id %>"}'>
 
   <% if @with_forms %>
     <%= render "comments/form", :talk_id => @talk_id, :reply => false %>

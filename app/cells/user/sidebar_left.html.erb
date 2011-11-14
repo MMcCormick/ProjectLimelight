@@ -6,23 +6,11 @@
 
       <%= render('user/panel_left', :user => @user) %>
 
-      <a id="my-feed" class="p sidebarB btn" href="<%= user_feed_path @user %>">
-        <div class="icon feed-icon"></div>
-        My Feed
-      </a>
-      <a id="my-favorites" class="p sidebarB btn" href="<%= user_favorites_path @user %>">
-        <div class="icon user-favorites-icon"></div>
-        My Favorites
-      </a>
-
       <div class="sidebar-list">
         <h5>My Lists</h5>
         <a class="list-view" href="#">View All</a>
 
-
         <div class="clear"></div>
-
-        <!-- render pinned lists -->
 
         <a class="list-createB" href="{{ path('list_new') }}">Add A List!</a>
       </div>

@@ -2,7 +2,7 @@
   <%= title %>
   <% if object && object.response_to %>
     <span>@</span>
-    <a href="<%= core_object_response_url(object.response_to) %>" class="r">
+    <a href="<%= core_object_url(object.response_to) %>" class="r">
       <%= object.response_to.title %>
       <div class="<%= object.response_to.type.parameterize %>-grey-icon icon"></div>
     </a>

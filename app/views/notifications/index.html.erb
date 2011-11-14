@@ -1,9 +1,18 @@
+<% content_for :page_header do %>
+  <h1>notifications</h1>
+<% end %>
+
 <% if !@notifications.empty? %>
-  <ul class="notification-list">
-    <% @notifications.each do |notification| %>
-      <%= render notification._type.pluralize.underscore + '/teaser', :notification => notification %>
+  <% current_time = nil %>
+  <% @notifications.each_with_index do |notification,i| %>
+    <% is_first = nil %>
+    <% if pretty_time(notification.updated_at) != current_time %>
+      <% current_time = pretty_time(notification.updated_at) %>
+      <% is_first = 'first' %>
+      <h4><%= pretty_time(notification.updated_at) %></h4>
     <% end %>
-  </ul>
+    <%= render "notifications/#{notification.type.to_s.underscore}_notification", :notification => notification, :is_first => is_first %>
+  <% end %>
 <% else %>
   <div class="empty">You have no notifications!</div>
 <% end %>

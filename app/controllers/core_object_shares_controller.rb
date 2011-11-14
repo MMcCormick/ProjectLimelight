@@ -1,39 +1,34 @@
 class CoreObjectSharesController < ApplicationController
-  authorize_resource
 
   def create
-    #TODO: move appropriate parts of this to the core_object_share model
     receiver_slugs = params[:core_object_share][:receiver_slugs].split(%r{,\s*}).map! { |elem| elem.strip }
     receiver_slugs.delete(current_user.slug)
     receivers = User.where(:slug.in => receiver_slugs)
     object = CoreObject.find(params[:core_object_share][:core_object_id])
 
     if receivers.empty?
-      response = { :event => 'core_object_share_finished',
-                   :flash => { :type => :error, :message => 'That user could not be found!' } }
+      response = build_ajax_response(:error, talk_path(@talk), "That user could not be found!")
+      status = :unprocessable_entity
     elsif !object
-      response = { :event => 'core_object_share_finished',
-                   :flash => { :type => :error, :message => 'The item could not be shared' } }
+      response = build_ajax_response(:error, talk_path(@talk), "The post could not be shared")
+      status = :unprocessable_entity
     else
-      # Searches for a core object share from the current user of the same object
-      core_object_share = CoreObjectShare.where(:user_id => current_user.id, :core_object_id => BSON::ObjectId(object.id.to_s)).first
-      # If none is found, make a new share and set appropriate vars
-      if core_object_share.nil?
-        core_object_share = current_user.core_object_shares.build(params[:core_object_share])
-        core_object_share.set_sender_snippet(current_user)
-        core_object_share.set_shared_object_snippet(object)
-        core_object_share.grant_owner(current_user.id)
+      receivers.each do |receiver|
+        unless receiver.id == current_user.id || receiver.id == object.user_id
+          notification = Notification.where(:user_id => receiver.id, :type => :share, 'object._id' => object.id, 'triggered_by._id' => current_user.id).first
+          unless notification
+            object.add_pop_action(:share, :a, current_user) if object.user_id != current_user.id
+            Notification.add(receiver, :share, true, current_user, nil, nil, true, object, object.user)
+          end
+        end
       end
-      # Update the receivers
-      core_object_share.set_receiver_snippets(receivers)
-      core_object_share.save!
-      response = { :event => 'core_object_share_finished',
-                   :flash => { :type => :success, :message => 'Share successful!' } }
+      object.save!
 
-
+      response = build_ajax_response(:ok, nil, "#{object.class.name.downcase} successfully shared with #{receivers.length} user#{'s' if receivers.length > 1}!")
+      status = :created
     end
 
-    render json: response
+    render json: response, status: status
   end
 
 end

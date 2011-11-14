@@ -66,7 +66,6 @@ class User
   has_many :talks
   has_many :pictures
   has_many :topics
-  has_many :core_object_shares
   has_many :topic_connections
   has_many :comments
   has_many :popularity_actions
@@ -287,8 +286,8 @@ class User
       CoreObject.where(:user_id => id).update_all(user_snippet_updates)
       CoreObject.where("user_mentions._id" => id).update_all(user_mention_updates)
       Comment.where(:user_id => id).update_all(user_snippet_updates)
-      Notification.where(:user_id => id).update_all(sender_snippet_updates)
-      Notification.where("receiver_snippets._id" => id).update_all(receiver_snippet_updates)
+      #Notification.where(:user_id => id).update_all(sender_snippet_updates)
+      #Notification.where("receiver_snippets._id" => id).update_all(receiver_snippet_updates)
     end
   end
 

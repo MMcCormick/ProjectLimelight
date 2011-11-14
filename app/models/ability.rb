@@ -8,7 +8,7 @@ class Ability
     else
       can :read, :all
 
-      [News, Picture, Talk, Video, Topic, CoreObjectShare].each do |resource|
+      [News, Picture, Talk, Video, Topic].each do |resource|
         can :create, resource if user.persisted?
       end
 

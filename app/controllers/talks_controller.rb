@@ -12,16 +12,17 @@ class TalksController < ApplicationController
   def create
     @talk = current_user.talks.build(params[:talk])
 
-    respond_to do |format|
-      if @talk.save
-        format.html { redirect_to @talk }
-        response = build_ajax_response(:ok, talk_path(@talk), "Talk was successfully created")
-        format.json { render json: response, status: :created }
-      else
-        format.html { render action: "new" }
-        response = build_ajax_response(:error, nil, "Talk could not be created", @talk.errors)
-        format.json { render json: response, status: :unprocessable_entity }
+    if @talk.save
+      if @talk.response_to
+        object = CoreObject.find(@talk.response_to.id)
+        Notification.add(object.user, :reply, true, current_user, nil, nil, true, object, object.user, nil)
       end
+      @talk.send_mention_notifications
+      response = build_ajax_response(:ok, talk_path(@talk), "Talk was successfully created")
+      render json: response, status: :created
+    else
+      response = build_ajax_response(:error, nil, "Talk could not be created", @talk.errors)
+      render json: response, status: :unprocessable_entity
     end
   end
 

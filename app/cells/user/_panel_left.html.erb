@@ -16,22 +16,32 @@
 
   <div class="clear"></div>
 
+  <a id="my-feed" class="sidebarB btn" href="<%= user_feed_path @user %>">
+    <div class="icon feed-icon"></div>
+    My Feed
+  </a>
+
+  <a class="sidebarB btn" href="<%= user_path @user %>">
+    <div class="icon user-contributions-icon"></div>
+    Contributions
+  </a>
+
   <div class="links">
     <a class="settings btn" href="<%= user_settings_path %>">
       <div class="icon settings-icon"></div>
       Settings
     </a>
-    <a class="user-notifications btn" href="<%= notifications_path @user %>">
+    <a class="user-notifications btn <%= 'on' if @user.unread_notification_count > 0 %>" href="<%= notifications_path @user %>">
       <div class="icon"><%= @user.unread_notification_count.to_i %></div>
-      Notifications
+      Notification<%= 's' unless @user.unread_notification_count == 1 %>
     </a>
     <a class="badge btn" href="#">
       <div class="icon badge-icon"></div>
       Badges
     </a>
-    <a class="user-contributions btn" href="<%= user_path @user %>">
-      <div class="icon user-contributions-icon"></div>
-      Contributions
+    <a id="my-favorites" class="user-favorites btn" href="<%= user_favorites_path @user %>">
+      <div class="icon user-favorites-icon"></div>
+      My Favorites
     </a>
   </div>
 

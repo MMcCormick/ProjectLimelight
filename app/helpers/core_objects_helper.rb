@@ -1,13 +1,15 @@
 module CoreObjectsHelper
 
-  def core_object_response_url(response)
-    case response.type
+  def core_object_url(object)
+    case object.type
+      when 'Talk'
+        talk_path object
       when 'Picture'
-        picture_path response
+        picture_path object
       when 'News'
-        news_path response
+        news_path object
       when 'Video'
-        video_path response
+        video_path object
     end
   end
 

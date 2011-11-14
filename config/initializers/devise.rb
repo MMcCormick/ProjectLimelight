@@ -5,9 +5,11 @@ Devise.setup do |config|
     manager.failure_app = CustomFailure
   end
 
+  config.assets.initialize_on_precompile = false
+
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in DeviseMailer.
-  config.mailer_sender = "please-change-me-at-config-initializers-devise@example.com"
+  config.mailer_sender = "Limelight <support@projectlimelight.com>"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"

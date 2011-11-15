@@ -41,7 +41,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       if @topic.update_attributes(params[:topic])
         format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
-        format.json { head :ok }
+        format.json { render json: build_ajax_response(:ok, topic_path(@topic), 'Topic was successfully updated.'), :status => :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @topic.errors, status: :unprocessable_entity }

@@ -322,21 +322,30 @@ $(function() {
 
             // Left or Right
             if ($code == $sc.left || $code == $sc.right) {
-              var numcols = $('#core-feed').data('numcols');
-              var current_offset = target.position().top;
+              numcols = $('#core-feed').data('numcols');
+              current_offset = target.position().top;
+
               if ($code == $sc.left) {
                 column_num = (target.data('column') - 1);
                 if (column_num == -1) { column_num = numcols - 1 }
               }
-              else {
-                column_num = (target.data('column') + 1) % numcols
-              }
+              else { column_num = (target.data('column') + 1) % numcols }
 
+              best_dif = 5000;
+              var best_obj;
               $('.teaser.column.[data-column="'+column_num+'"]').each(function(index, teaser) {
                 if ($(this).position().top + $(this).height() > current_offset) {
-                  target.removeClass('hover');
-                  $(this).addClass('hover');
-                  return false;
+                  middle_dif = Math.abs(current_offset + (target.height() / 2) - ($(this).position().top + ($(this).height() / 2)));
+                  console.log("middle_dif: "+middle_dif);
+                  if (middle_dif < best_dif) {
+                    target.removeClass('hover');
+                    best_dif = middle_dif;
+                    best_obj = $(this);
+                  }
+                  else {
+                    best_obj.addClass('hover');
+                    return false;
+                  }
                 }
               });
               // if no teaser was found in the correct column, select the last teaser of the column

@@ -65,6 +65,15 @@ class ApplicationController < ActionController::Base
     render :file => "public/404.html", :status => 404
   end
 
+  # Redirect after sign in / sign up
+  def after_sign_in_path_for(resource)
+    user_feed_path current_user
+  end
+  def after_sign_up_path_for(resource)
+    user_feed_path current_user
+  end
+
+
   # Used to test error messages as they would be shown in production
   #protected
   #

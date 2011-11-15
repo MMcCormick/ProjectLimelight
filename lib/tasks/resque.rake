@@ -9,6 +9,14 @@ task "resque:setup" => :environment do
   # you probably already have this somewhere
   #Resque.redis = 'localhost:6379'
 
+  # If you want to be able to dynamically change the schedule,
+  # uncomment this line.  A dynamic schedule can be updated via the
+  # Resque::Scheduler.set_schedule (and remove_schedule) methods.
+  # When dynamic is set to true, the scheduler process looks for
+  # schedule changes and applies them on the fly.
+  # Note: This feature is only available in >=2.0.0.
+  #Resque::Scheduler.dynamic = true
+
   # The schedule doesn't need to be stored in a YAML, it just needs to
   # be a hash.  YAML is usually the easiest.
   Resque.schedule = YAML.load_file("#{Rails.root}/config/resque_schedule.yml")
@@ -19,14 +27,6 @@ task "resque:setup" => :environment do
   # project, it's usually easier to just include you job classes here.
   # So, someting like this:
   #require 'jobs'
-
-  # If you want to be able to dynamically change the schedule,
-  # uncomment this line.  A dynamic schedule can be updated via the
-  # Resque::Scheduler.set_schedule (and remove_schedule) methods.
-  # When dynamic is set to true, the scheduler process looks for
-  # schedule changes and applies them on the fly.
-  # Note: This feature is only available in >=2.0.0.
-  #Resque::Scheduler.dynamic = true
 
   ENV['QUEUE'] = 'popularity,soulmate_user,soulmate_topic,images,notifications,slow'
 end

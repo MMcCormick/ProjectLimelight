@@ -162,7 +162,7 @@ jQuery ->
     $(window).oneTime 500, "resize-column-feed", ->
       rearrange_feed_columns()
 
-  $('.teaser.column').livequery ->
+  $('.teaser.column,.teaser.grid').livequery ->
     self = $(@)
     $(@).qtip({
       content: {

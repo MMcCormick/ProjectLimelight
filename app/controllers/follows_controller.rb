@@ -6,7 +6,9 @@ class FollowsController < ApplicationController
       target = Kernel.const_get(params[:type]).find(params[:id])
       if target && target.id
         if current_user.follow_object(target)
-          Notification.add(target, :follow, true, current_user)
+          if params[:type] == 'User'
+            Notification.add(target, :follow, true, current_user)
+          end
           current_user.save
           target.add_pop_action(:flw, :a, current_user)
           target.save
@@ -36,7 +38,9 @@ class FollowsController < ApplicationController
       if target
         if current_user.unfollow_object(target)
           current_user.save
-          Notification.remove(target, :follow, current_user)
+          if params[:type] == 'User'
+            Notification.remove(target, :follow, current_user)
+          end
           target.add_pop_action(:flw, :r, current_user)
           target.save
           response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})

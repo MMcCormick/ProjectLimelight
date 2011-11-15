@@ -8,21 +8,18 @@
     </div>
 
     <div class="connectionsC">
-      <% unless response == true %>
+      <div class="s">
         <div class="oType"><div class="news-grey-icon" title="news"></div></div>
 
         <a href="<%= url_for object %>" class="commentC p">
           <div class="comment-icon"></div>
           <%= object.response_count.to_i %>
         </a>
-      <% end %>
+      </div>
 
-      <% if response == true %>
-        <div class="respond" data-d='{"id":"<%= object.id.to_s %>"}'>add reply</div>
-      <% end %>
-
-      <% if object.topic_mentions %>
-        <div class="mentions">
+      <% if object.topic_mentions.length > 0 %>
+        <div class="mentions s">
+          <div class="head">mentions</div>
           <% object.topic_mentions.each do |topic| %>
             <%= render 'topics/tag', :topic => topic, :include_image => false %>
           <% end %>

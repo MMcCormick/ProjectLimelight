@@ -415,13 +415,33 @@ $teaser-padding: 10px;
     .time { float: left; }
 
     .connectionsC {
-      font-size: 10px;
-      font-weight: bold;
+      margin: 0;
+      background: #EBEEE2;
       clear: left;
-      width: 100%;
-      .tag {
-          float: left;
-          margin: 0 5px 8px 0;
+      font-size: 11px;
+      .s {
+        @include clearfix();
+        display: block;
+        padding: 3px 10px;
+        overflow: none;
+        border-bottom: 1px solid #DCDFD4;
+        border-top: 1px solid #F3F6EA;
+      }
+      .mentions {
+        @include clearfix();
+        position: relative;
+        margin: 0px;
+        padding: 2px 0 3px 65px;
+        .head {
+          position: absolute;
+          font-size: 11px;
+          color: #666;
+          cursor: default;
+          position: absolute;
+          top: 2px;
+          left: 10px;
+          font-weight: normal;
+        }
       }
     }
 
@@ -648,9 +668,55 @@ $teaser-padding: 10px;
   }
 }
 
+.fab {
+  .controlsC {
+    position: relative;
+    height: 148px;
+
+    .pop {
+      font-size: 24px;
+      color: #555;
+      cursor: default;
+      padding: 5px 0;
+      text-align: center;
+      width: 100%;
+    }
+    .voteB.up {
+      position: absolute;
+      left: 50%;
+      margin-left: -15px;
+      top: 30px;
+    }
+    .voteB.down {
+      position: absolute;
+      left: 50%;
+      margin-left: -15px;
+      top: 55px;
+    }
+    .favB {
+      position: absolute;
+      left: 50%;
+      margin-left: -15px;
+      top: 80px;
+    }
+    .repostB {
+      position: absolute;
+      left: 50%;
+      margin-left: -15px;
+      top: 105px;
+    }
+    .coreShareB {
+      position: absolute;
+      left: 50%;
+      margin-left: -8px;
+      top: 130px;
+    }
+  }
+}
+
 // Grid Teaser
 .teaser.column {
-  $width: 235px;
+  $width: 230px;
   width: $width;
   position: relative;
   z-index: 10;
@@ -688,35 +754,6 @@ $teaser-padding: 10px;
   .tag {
     margin: 0px 10px 0 0;
   }
-  .connectionsC {
-    margin: 0;
-    background: #EBEEE2;
-    font-size: 11px;
-    .s {
-      @include clearfix();
-      display: block;
-      padding: 3px 10px;
-      overflow: none;
-      border-bottom: 1px solid #DCDFD4;
-      border-top: 1px solid #F3F6EA;
-    }
-    .mentions {
-      @include clearfix();
-      position: relative;
-      margin: 0px;
-      padding: 2px 0 3px 65px;
-      .head {
-        position: absolute;
-        font-size: 11px;
-        color: #666;
-        cursor: default;
-        position: absolute;
-        top: 2px;
-        left: 10px;
-        font-weight: normal;
-      }
-    }
-  }
   .response {
     color: #666;
     .r {
@@ -741,55 +778,7 @@ $teaser-padding: 10px;
     font-weight: normal;
   }
   .controlsC {
-    position: absolute;
-    top: 0px;
-    left: 0px;
     display: none;
-    width: 100%;
-    .pop {
-      @include single-box-shadow(#666, 1px, 1px, 2px);
-      position: absolute;
-      top: -6px;
-      left: -6px;
-      font-size: 20px;
-      color: #555;
-      cursor: default;
-      border: 1px solid #AAA;
-      background: #FFF;
-      padding: 5px 10px;
-    }
-    .voteB.up {
-      position: absolute;
-      right: 130px;
-      top: 6px;
-    }
-    .voteB.down {
-      position: absolute;
-      right: 105px;
-      top: 12px;
-    }
-    .favB {
-      position: absolute;
-      top: 7px;
-      right: 60px;
-    }
-    .repostB {
-      position: absolute;
-      top: 7px;
-      right: 30px;
-    }
-    .coreShareB {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-    }
-  }
-  &.hover {
-    padding-top: 25px;
-    margin-top: -25px;
-    .controlsC {
-      display: block;
-    }
   }
 }
 

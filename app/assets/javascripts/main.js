@@ -304,8 +304,6 @@ $(function() {
     var $code = e.which ? e.which : e.keyCode;
     var $newHover = false;
 
-    console.log($code)
-
     switch (true) {
       // Nav / Hover Controls
       case (!e.shiftKey && ($code == $sc.up || $code == $sc.down || $code == $sc.left || $code == $sc.right)):
@@ -315,6 +313,7 @@ $(function() {
         hoverClass = 'hover';
 
         // If  teaser is hovered
+        $('.teaser.column').qtip('hide')
         if (target.length > 0) {
           // Column view
           if (target.hasClass('column')) {
@@ -335,27 +334,27 @@ $(function() {
               $('.teaser.column.[data-column="'+column_num+'"]').each(function(index, teaser) {
                 if ($(this).position().top + $(this).height() > current_offset) {
                   target.removeClass('hover');
-                  $(this).addClass('hover');
+                  $(this).addClass('hover').qtip('show');
                   return false;
                 }
               });
               // if no teaser was found in the correct column, select the last teaser of the column
               if ($('.teaser.hover').length == 0) {
-                $('.teaser.column.[data-column="'+column_num+'"]').last().addClass('hover');
+                $('.teaser.column.[data-column="'+column_num+'"]').last().addClass('hover').qtip('show');
               }
             }
             // Up
             else if ($code == $sc.up) {
               column_num = target.data('column');
               if (target.prevAll('.teaser.column.[data-column="'+column_num+'"]').length > 0) {
-                target.removeClass('hover').prevAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass('hover')
+                target.removeClass('hover').prevAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass('hover').qtip('show');
               }
             }
             // Down
             else if ($code == $sc.down) {
               column_num = target.data('column');
               if (target.nextAll('.teaser.column.[data-column="'+column_num+'"]').length > 0) {
-                target.removeClass('hover').nextAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass('hover')
+                target.removeClass('hover').nextAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass('hover').qtip('show');
               }
             }
           }
@@ -395,7 +394,6 @@ $(function() {
             }
           }
         }
-
         else {
           $newHover = true;
         }
@@ -403,13 +401,13 @@ $(function() {
         // If the app needs to pick a new teaser to hover
         if ($newHover) {
           if ($('.teaser:first:onScreen').length > 0) {
-            $('.teaser:first').addClass('hover')
+            $('.teaser:first').addClass('hover').qtip('show');
           }
           else if ($('.teaser:onScreen:first').hasClass('grid')) {
-            $('.teaser:onScreen:first').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover')
+            $('.teaser:onScreen:first').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover').qtip('show');
           }
           else {
-            $('.teaser:onScreen:first').next().addClass('hover');
+            $('.teaser:onScreen:first').next().addClass('hover').qtip('show');;
           }
         }
 

@@ -16,10 +16,11 @@
   .ui-tooltip-content { font-size: 17px; padding: 7px; line-height: 1.2em; }
 }
 
-.scoreQ .ui-tooltip-content,
-.scoreQ .ui-tooltip-tip {
-    background-color: #F2F8E4;
-    border-color: #CAE09D;
+.fab { // feed action box
+  border: 1px solid #999;
+  .ui-tooltip-tip {
+    border: 1px solid #999;
+  }
 }
 
 .ui-tooltip,
@@ -27,25 +28,5 @@
 {
   font-size: 13px;
   line-height: 1.125em;
-}
-
-/*
- * jScrollPane
- */
-
-.jspVerticalBar {
-    background: transparent;
-    width: 4px;
-}
-.jspHorizontalBar {
-    background: transparent;
-    height: 4px;
-}
-.jspTrack {
-    background: transparent;
-}
-
-.jspDrag {
-    @include opacity(.50);
-    background: #76A11D;
+  z-index: 40 !important;
 }

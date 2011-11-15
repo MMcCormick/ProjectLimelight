@@ -87,6 +87,19 @@ $(function() {
    * FEEDS
    */
 
+  // Loads a newly created object into the beginning of the feed
+  // TODO: clear forms
+  amplify.subscribe("talks_create", function (data) {
+    if (data.response) {
+      $('#responses').prepend(data.teaser);
+      $('#add_response').click();
+    }
+    else {
+      $('#core-feed').prepend(data.teaser);
+      $('#contribute').click();
+    }
+  });
+
   // When a new page of feed items is loaded
   amplify.subscribe("loaded_feed_page", function (data) {
     $('#load-more').remove()

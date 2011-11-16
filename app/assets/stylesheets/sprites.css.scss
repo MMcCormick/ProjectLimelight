@@ -199,9 +199,18 @@
     height: 15px;
     &.on { @include icon-sprite(list-on); }
 }
-
 .info-grey-icon {
     @include icon-sprite(info_grey_8x16);
     width: 8px;
     height: 16px;
+}
+.google-l-icon {
+    @include icon-sprite(google);
+    width: 80px;
+    height: 26px;
+}
+.facebook-l-icon {
+    @include icon-sprite(facebook);
+    width: 80px;
+    height: 26px;
 }

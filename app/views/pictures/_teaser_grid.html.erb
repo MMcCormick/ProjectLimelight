@@ -5,28 +5,25 @@
       <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
       <%= render 'core_objects/feed_teaser_created', :object => object %>
 
-      <% img = default_image_url(object, [200, 180], 'square') %>
+      <% img = default_image_url(object, [200, 175], 'square') %>
       <% original = default_image_url(object, [], 'original') %>
-      <% image = image_tag img, :style => 'max-width: 200px; max-height: 180px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+      <% image = image_tag img, :style => 'max-width: 200px; max-height: 175px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
       <%= render 'core_objects/feed_teaser_image', :image => image %>
     </div>
 
     <div class="connectionsC">
-      <% unless response == true %>
+      <div class="s">
         <div class="oType"><div class="picture-grey-icon" title="picture"></div></div>
 
         <a href="<%= url_for object %>" class="commentC p">
           <div class="comment-icon"></div>
           <%= object.response_count.to_i %>
         </a>
-      <% end %>
+      </div>
 
-      <% if response == true %>
-        <div class="respond" data-d='{"id":"<%= object.id.to_s %>"}'>add reply</div>
-      <% end %>
-
-      <% if object.topic_mentions %>
-        <div class="mentions">
+      <% if object.topic_mentions.length > 0 %>
+        <div class="s mentions">
+          <div class="head">mentions</div>
           <% object.topic_mentions.each do |topic| %>
             <%= render 'topics/tag', :topic => topic, :include_image => false %>
           <% end %>

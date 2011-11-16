@@ -1,24 +1,23 @@
-<h2>Sign in</h2>
-
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
   <%= devise_error_messages! %>
 
-  <div class="line">
-    <%= f.label :login %>
+  <div class="lClear">
+    <%= f.label :login, 'Email or Username' %>
     <%= f.text_field :login %>
   </div>
 
-  <div class="line">
-    <%= f.label :password %>
-    <%= f.password_field :password %>
+  <div class="lClear">
+    <label for="login_password">Password</label>
+    <%= f.password_field :password, :id => 'login_password', :autocomplete => :off %>
   </div>
 
-  <% if devise_mapping.rememberable? -%>
-    <div class="line">
+  <%# if devise_mapping.rememberable? %>
+  <% if nil %>
+    <div class="lClear">
       <%= f.label :remember_me %>
       <%= f.check_box :remember_me %>
     </div>
-  <% end -%>
+  <% end %>
 
-  <%= f.submit "Sign in" %>
+  <%= f.submit "Log In", :class => 'submit' %>
 <% end %>

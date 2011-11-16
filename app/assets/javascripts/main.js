@@ -1,20 +1,6 @@
 $(function() {
 
   /*
-   * LOGIN/REGISTRATION
-   */
-
-  $('#login,#register').colorbox({title:"Woops, you need to login to do that!", transition: "none", opacity: .5, inline: true, href: "#auth_box"});
-
-  $('#register').live('click', function() {
-    $('.auth-register').click();
-  });
-
-  $('#login').live('click', function() {
-    $('.auth-login').click();
-  });
-
-  /*
    * LISTS
    */
 
@@ -28,6 +14,10 @@ $(function() {
 
   // Show the comment reply box
   $('.comment .reply-show').live('click', function() {
+    if (!$logged)
+      $('#register').click();
+      return false;
+
     var $button = $(this);
     $('.comment_reply:visible').remove();
     var $reply = $('.comment_reply').clone()
@@ -304,8 +294,6 @@ $(function() {
     var $code = e.which ? e.which : e.keyCode;
     var $newHover = false;
 
-    console.log($code)
-
     switch (true) {
       // Nav / Hover Controls
       case (!e.shiftKey && ($code == $sc.up || $code == $sc.down || $code == $sc.left || $code == $sc.right)):
@@ -313,6 +301,7 @@ $(function() {
 
         var target = $('.teaser.hover'),
         hoverClass = 'hover';
+        $('.teaser.grid,.teaser.column').qtip('hide')
 
         // If  teaser is hovered
         if (target.length > 0) {
@@ -336,35 +325,35 @@ $(function() {
               $('.teaser.column.[data-column="'+column_num+'"]').each(function(index, teaser) {
                 if ($(this).position().top + $(this).height() > current_offset) {
                   middle_dif = Math.abs(current_offset + (target.height() / 2) - ($(this).position().top + ($(this).height() / 2)));
-                  console.log("middle_dif: "+middle_dif);
+
                   if (middle_dif < best_dif) {
-                    target.removeClass('hover');
+                    target.removeClass(hoverClass);
                     best_dif = middle_dif;
                     best_obj = $(this);
                   }
                   else {
-                    best_obj.addClass('hover');
+                    best_obj.addClass(hoverClass).qtip('show');
                     return false;
                   }
                 }
               });
               // if no teaser was found in the correct column, select the last teaser of the column
               if ($('.teaser.hover').length == 0) {
-                $('.teaser.column.[data-column="'+column_num+'"]').last().addClass('hover');
+                $('.teaser.column.[data-column="'+column_num+'"]').last().addClass(hoverClass).qtip('show');
               }
             }
             // Up
             else if ($code == $sc.up) {
               column_num = target.data('column');
               if (target.prevAll('.teaser.column.[data-column="'+column_num+'"]').length > 0) {
-                target.removeClass('hover').prevAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass('hover')
+                target.removeClass(hoverClass).prevAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass(hoverClass).qtip('show')
               }
             }
             // Down
             else if ($code == $sc.down) {
               column_num = target.data('column');
               if (target.nextAll('.teaser.column.[data-column="'+column_num+'"]').length > 0) {
-                target.removeClass('hover').nextAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass('hover')
+                target.removeClass(hoverClass).nextAll('.teaser.column.[data-column="'+column_num+'"]').first().addClass(hoverClass).qtip('show')
               }
             }
           }
@@ -372,7 +361,8 @@ $(function() {
           // Grid + List view
           else {
             // If first element is hovered and left or up is pressed
-            if (($code == $sc.up || $code == $sc.left) && $('.teaser:first').hasClass('hover')) {
+            if (($code == $sc.up || $code == $sc.left) && $('.teaser:first').hasClass(hoverClass)) {
+              $('.teaser:first').qtip('show');
               return false;
             }
             // Go to previous
@@ -381,7 +371,7 @@ $(function() {
               if (feedLastInRow(target.prev()))
                 hoverClass += ' left';
 
-              target.removeClass('hover').prev().addClass(hoverClass);
+              target.removeClass(hoverClass).prev().addClass(hoverClass).qtip('show');
             }
             // Go to next
             else if (target.hasClass('list') && ($code == $sc.down || $code == $sc.right) ||
@@ -389,18 +379,18 @@ $(function() {
               if (feedLastInRow(target.next()))
                 hoverClass += ' left';
 
-              target.removeClass('hover').next().addClass(hoverClass);
+              target.removeClass(hoverClass).next().addClass(hoverClass).qtip('show');
             }
             // Jump up a row (for Grid View)
             else if (target.hasClass('grid') && ($code == $sc.up)) {
-              target.removeClass('hover').prevAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover');
+              target.removeClass(hoverClass).prevAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass(hoverClass).qtip('show');
               if ($('.teaser.hover').length == 0) {
                 $newHover = true;
               }
             }
             // Jump down a row (for Grid View)
             else if (target.hasClass('grid') && ($code == $sc.down)) {
-              target.removeClass('hover').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover');
+              target.removeClass(hoverClass).nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass(hoverClass).qtip('show');
             }
           }
         }
@@ -412,19 +402,18 @@ $(function() {
         // If the app needs to pick a new teaser to hover
         if ($newHover) {
           if ($('.teaser:first:onScreen').length > 0) {
-            $('.teaser:first').addClass('hover')
+            $('.teaser:first').addClass(hoverClass).qtip('show')
           }
           else if ($('.teaser:onScreen:first').hasClass('grid')) {
-            $('.teaser:onScreen:first').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass('hover')
+            $('.teaser:onScreen:first').nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass(hoverClass).qtip('show')
           }
           else {
-            $('.teaser:onScreen:first').next().addClass('hover');
+            $('.teaser:onScreen:first').next().addClass(hoverClass).qtip('show');
           }
         }
 
         // If the new hovered teaser is out of view, adjust viewport according to keystroke
         if (!isScrolledIntoView($('.teaser.hover'), true, false, true)) {
-          var adjust = ($code == $sc.up || $code == $sc.left) ? '-=300' : '+=300';
           $(window).scrollTo($('.teaser.hover'), 300, {offset: -100});
         }
       break;

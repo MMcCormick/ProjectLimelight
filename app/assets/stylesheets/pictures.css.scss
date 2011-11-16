@@ -28,7 +28,11 @@
             }
         }
     }
-    
+    &.teaser.column {
+      p {
+        margin-top: 5px;
+      }
+    }
     &.objectContent {
         text-align: center;
     }

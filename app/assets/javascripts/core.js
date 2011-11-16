@@ -20,6 +20,7 @@
   $sidebarRight = $('#sidebar-right'),
   $sidebarRightContent = $('#sidebar-right .wrap'),
   $footer = $('#footer'),
+  $logged = $('#static-data').data('d').myId != 0,
   pageClicked = false,// Keeps track of wether a page link has been clicked.
   $currentTarget = null; // The current clicked element.
 

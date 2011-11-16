@@ -253,23 +253,18 @@ $column-width: 25%;
 .alt-list {
   @include border-radius(3px);
   padding: 0 0 4px;
-  max-width: 500px;
-  margin-top: -5px;
-  margin: auto;
-  border: 2px solid #B0D751;
+  max-width: 800px;
 
-  .teaser, .labels {
-  }
   .labels {
     @include clearfix();
-    font-size: 13px;
-    background: #B0D751;
+    font-size: 16px;
     padding: 0 5px 2px 15px;
     margin-bottom: 4px;
-    >a, >div {
+    > a,
+    > div {
       display: block;
       float: left;
-      width: $column-width;
+      width: $column-width - 1;
       margin: 0 2px;
       padding: 2px 0 4px 0;
       cursor: default;
@@ -277,8 +272,9 @@ $column-width: 25%;
   }
   .teaser {
     @include list-teaser($column-width);
-    margin: 1px 5px;
+    margin: 0 10px;
     padding-left: 10px;
+    border: none;
 
     .score {
       cursor: default;
@@ -286,17 +282,6 @@ $column-width: 25%;
     }
     .followB,
     .unfollowB {
-      @include opacity(.5);
-      margin: 0;
-      padding-top: 4px;
-      padding-bottom: 3px;
-      background: none;
-      color: grey;
-      float: left;
-      border: none;
-      &:hover {
-          @include opacity(1);
-      }
 
     }
   }

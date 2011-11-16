@@ -1,28 +1,28 @@
 <div id="<%= id %>" class="contributeC">
   <div class="options">
     <% if !defined?(allowed) || allowed.include?(:talk) %>
-      <div class="option talk on" data-target="#new_talk">
+      <div class="option talk on" data-target=".new_talk">
         Talk
         <div class="icon arrow-g-r-2424"></div>
         <div class="icon arrow-r-2424"></div>
       </div>
     <% end %>
     <% if !defined?(allowed) || allowed.include?(:picture) %>
-      <div class="option picture" data-target="#new_picture">
+      <div class="option picture" data-target=".new_picture">
         Picture
         <div class="icon arrow-g-r-2424"></div>
         <div class="icon arrow-r-2424"></div>
       </div>
     <% end %>
     <% if !defined?(allowed) || allowed.include?(:video) %>
-      <div class="option video" data-target="#new_video">
+      <div class="option video" data-target=".new_video">
         Video
         <div class="icon arrow-g-r-2424"></div>
         <div class="icon arrow-r-2424"></div>
       </div>
     <% end %>
     <% if !defined?(allowed) || allowed.include?(:news) %>
-      <div class="option news" data-target="#new_news">
+      <div class="option news" data-target=".new_news">
         News
         <div class="icon arrow-g-r-2424"></div>
         <div class="icon arrow-r-2424"></div>

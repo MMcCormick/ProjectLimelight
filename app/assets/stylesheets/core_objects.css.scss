@@ -319,8 +319,6 @@ form.core_object {
 // Object Teasers
 $teaser-padding: 10px;
 .teaser {
-    @include border-radius(2px);
-    @include single-box-shadow(#BBB, 1px, 1px, 2px);
     position: relative;
     border: 1px solid #CCC;
     background: #FFF;

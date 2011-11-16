@@ -1,6 +1,6 @@
 <li class="teaser user <%= cycle("odd", "") -%>">
   <div><%= user_link user %></div>
-  <div class="score"><%= sprintf "%.1f", user.pt %></div>
+  <div class="score"><%= user.pt.to_i %></div>
   <div><%= link_to user.followers_count, user_followers_path(user) %></div>
   <%= render 'follows/btn', :current_user => @current_user, :target => user %>
 </li>

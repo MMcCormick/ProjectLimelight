@@ -55,11 +55,11 @@ jQuery ->
     if !$.trim(self.val())
       self.addClass('active').val(self.data('default')).selectRange(0, 0)
 
-  # user must login
-  $('.auth').live 'click', (e) ->
-    $('#register').click()
-    e.preventDefault()
-    return false
+  # future features
+  $('.future').livequery ->
+    $(@).css({ opacity: 0.25 }).attr('title', 'This feature will be available soon!');
+
+
 
   # Add a border/drop shadow to buttons on hover
   $('.btn').live

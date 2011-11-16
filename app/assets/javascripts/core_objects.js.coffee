@@ -15,7 +15,7 @@ jQuery ->
 
   $('.contributeC .options .option').live 'click', (e) ->
     $(@).parents('.contributeC:first').find('div.form').hide()
-    $($(@).data('target')).parents('.form').show()
+    $(@).parents('.contributeC:first').find($(@).data('target')).parents('.form').show()
     $(@).addClass('on').siblings().removeClass('on')
 
   # Help tooltips on core object submission forms

@@ -1,14 +1,11 @@
 <div class="sbrC user-subscribe" data-id="<%= @user.id.to_s %>">
   <%= render 'user/panel_right', :user => @user %>
 
-  <div class="sidebar-list">
+  <div class="sidebar-list future">
     <h5><%= @user.username %>'s Lists</h5>
     <a class="list-view" href="#">View All</a>
 
     <div class="clear"></div>
-
-    <!--{% render "LimelightBundle:LList:list" with {'userId': object.User.id}, {'standalone': true} %}-->
-
   </div>
   <div class="pt_<%= @user.id.to_s %> hide"><%= @user.pt %></div>
 </div>

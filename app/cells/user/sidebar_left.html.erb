@@ -6,7 +6,7 @@
 
       <%= render('user/panel_left', :user => @user) %>
 
-      <div class="sidebar-list">
+      <div class="sidebar-list future">
         <h5>My Lists</h5>
         <a class="list-view" href="#">View All</a>
 
@@ -35,7 +35,7 @@
       <a class="btn" title="Settings" href="<%= user_settings_path @user %>">
         <div class="icon settings-icon"></div>
       </a>
-      <a class="btn" title="Badges" href="#">
+      <a class="btn future" title="Badges" href="#">
         <div class="icon badge-icon"></div>
       </a>
       <a class="btn" title="Contributions" href="<%= user_path @user %>">

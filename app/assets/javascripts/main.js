@@ -1,20 +1,6 @@
 $(function() {
 
   /*
-   * LOGIN/REGISTRATION
-   */
-
-  $('#login,#register').colorbox({title:"Woops, you need to login to do that!", transition: "none", opacity: .5, inline: true, href: "#auth_box"});
-
-  $('#register').live('click', function() {
-    $('.auth-register').click();
-  });
-
-  $('#login').live('click', function() {
-    $('.auth-login').click();
-  });
-
-  /*
    * LISTS
    */
 
@@ -28,6 +14,10 @@ $(function() {
 
   // Show the comment reply box
   $('.comment .reply-show').live('click', function() {
+    if (!$logged)
+      $('#register').click();
+      return false;
+
     var $button = $(this);
     $('.comment_reply:visible').remove();
     var $reply = $('.comment_reply').clone()

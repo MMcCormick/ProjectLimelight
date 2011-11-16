@@ -30,3 +30,16 @@
   line-height: 1.125em;
   z-index: 40 !important;
 }
+
+/*
+ * colorbox
+ */
+
+#cboxClose {
+  text-indent: -25px;
+}
+#cboxLoadedContent {
+  padding: 0;
+  border: 1px solid #000;
+  background: #FFF;
+}

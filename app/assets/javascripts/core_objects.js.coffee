@@ -1,6 +1,10 @@
 jQuery ->
 
   $('#contribute, #add_response').live 'click', (e) ->
+    if !$logged
+      $('#register').click()
+      return false
+
     target = $($(@).data('target'))
     if target.is(':visible')
       target.slideUp(200)
@@ -142,6 +146,10 @@ jQuery ->
 
   # Core object add response
   $('.teaser.list .respond').live 'click', (e) ->
+    if !$logged
+      $('#register').click()
+      return false
+
     $button = $(@);
     $('.comment_reply:visible').remove();
     $reply = $('#response_form form').clone()

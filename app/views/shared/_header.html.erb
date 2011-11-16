@@ -2,7 +2,7 @@
   <% top_image = image_tag "top-logo4.png", :alt => "Project Limelight" %>
   <%= link_to top_image, :root, :class => "p logo" %>
 
-  <span id="contribute" data-target="#top-contribute">
+  <span id="contribute" data-target="#top-contribute" class="<%= 'auth' unless signed_in? %>">
     <div class="plus-white-icon"></div>
     Contribute
   </span>

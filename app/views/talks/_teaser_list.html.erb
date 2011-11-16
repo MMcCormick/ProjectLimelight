@@ -19,7 +19,7 @@
     <% end %>
 
     <% if response == true %>
-      <div class="respond" data-d='{"id":"<%= object.id.to_s %>"}'>add reply</div>
+      <div class="respond <%= 'auth' unless signed_in? %>" data-d='{"id":"<%= object.id.to_s %>"}'>add reply</div>
     <% end %>
 
     <% if object.topic_mentions %>

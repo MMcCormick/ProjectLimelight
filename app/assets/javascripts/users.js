@@ -1,41 +1,32 @@
 $(function() {
 
-  /*
-   * LOGIN/REGISTRATION
-   */
-
-  $('#login,#register').colorbox({title:"Woops, you need to login to do that!", transition: "none", opacity: .5, inline: true, href: "#auth_box"});
+  $('#login,#register').colorbox({
+    title:false,
+    transition: "elastic",
+    speed: 200,
+    opacity: .85,
+    inline: true,
+    fixed: true,
+    href: "#auth_box"
+  });
 
   $('#register').live('click', function() {
-    $('.auth-register').click();
+    $('#auth-login .switch').click()
   })
 
   $('#login').live('click', function() {
-    $('.auth-login').click();
+    $('#auth-register .switch').click()
   })
-
-  // Post-registration Pages
-  // Top Nav (1, 2, 3)
-  $('#confirm .nav > div').live('click', function() {
-    $(this).addClass('on').siblings().removeClass('on');
-    $('#confirm .confirmPage').hide();
-    $($(this).data('target')).show();
-  })
-  // Bottom Nav (Next, Last)
-  $('#confirm .bottomNav > div').live('click', function() {
-    $($(this).data('target')).click();
-  })
-
-  /*
-   * USERS
-   */
 
   // Toggle login and register in the authentication box
-  $('#auth_box .form-toggle').live('click', function() {
-    $('#auth-login, #auth-register').hide();
-    $($(this).data('target')).show();
-    $(this).addClass('on').siblings('.form-toggle').removeClass('on');
+  $('#auth_box .switch').live('click', function() {
+    $(this).parent().hide().siblings().show();
     $('#login,#register').colorbox.resize();
+  })
+
+  // Show the splash page to new users
+  $('#show_splash').livequery(function() {
+    $('#register').click();
   })
 
   // Autocomplete for Core Object Shares

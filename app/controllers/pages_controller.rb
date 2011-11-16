@@ -15,4 +15,23 @@ class PagesController < ApplicationController
     end
   end
 
+  def about
+
+  end
+
+  def contact
+
+  end
+
+  def privacy
+
+  end
+
+  def terms
+
+  end
+
+  def help
+
+  end
 end

@@ -235,75 +235,90 @@ button {
     }
 }
 #sidebar {
-    @include single-box-shadow(#CCC, 1px, 1px, 2px);
-    @include border-radius(4px);
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-    border: $sidebar_border_width solid #CCC;
-    background: $sidebar_background-color;
-    position: absolute;
-    top: 42px + $sidebar-margin;
+  @include single-box-shadow(#CCC, 1px, 1px, 2px);
+  @include border-radius(4px);
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  border: $sidebar_border_width solid #CCC;
+  background: $sidebar_background-color;
+  position: absolute;
+  top: 42px + $sidebar-margin;
+  left: $sidebar-margin;
+  padding-bottom: 20px;
+
+  .panel-close-left-icon {
+    position: absolute; top: 10px; right: 10px;
+    cursor: pointer;
+  }
+
+  &.floating {
+    position: fixed;
+    top: $sidebar-margin;
     left: $sidebar-margin;
+  }
 
-    .panel-close-left-icon {
-        position: absolute; top: 10px; right: 10px;
-        cursor: pointer;
-    }
+  .full {
+    width: $sidebar_width;
+  }
+  .minimized {
+    width: $sidebar-minimized-width;
 
-    &.floating {
-        position: fixed;
-        top: $sidebar-margin;
-        left: $sidebar-margin;
+    .panel-open-left-icon {
+      margin:  5px 0 3px 14px;
+      cursor: pointer;
     }
-
-    .full {
-        width: $sidebar_width;
+    .profile-image {
+      @include border-radius(2px);
+      margin:  5px 0 2px 5px;
     }
-    .minimized {
-        width: $sidebar-minimized-width;
-
-        .panel-open-left-icon {
-            margin:  5px 0 3px 14px;
-            cursor: pointer;
-        }
-        .profile-image {
-          @include border-radius(2px);
-          margin:  5px 0 2px 5px;
-        }
-        .btn {
-            @include border-radius(3px);
-            border:  1px solid transparent;
-            display: block;
-            clear: both;
-            padding: 5px;
-            margin:  0 0 0 6px;
-            float: left;
-        }
-        .pop {
-            padding:  2px 0;
-            width: 40px;
-            color: #666;
-            text-align: center;
-            cursor: pointer;
-        }
-        .notifications {
-            padding:  2px 0;
-            width: 26px;
-            color: #666;
-            text-align: center;
-        }
+    .btn {
+      @include border-radius(3px);
+      border:  1px solid transparent;
+      display: block;
+      clear: both;
+      padding: 5px;
+      margin:  0 0 0 6px;
+      float: left;
     }
-    .empty {
-        margin: 8px 20px 0 10px;
-        font-size: 12px;
+    .pop {
+      padding:  2px 0;
+      width: 40px;
+      color: #666;
+      text-align: center;
+      cursor: pointer;
     }
-    .sidenote {
-        position: absolute;
-        bottom: 50px;
-        left: 10px;
-        font-size: 12px;
+    .notifications {
+      padding:  2px 0;
+      width: 26px;
+      color: #666;
+      text-align: center;
     }
+  }
+  .empty {
+    margin: 8px 20px 0 10px;
+    font-size: 12px;
+  }
+  #static-links {
+    position: fixed;
+    width: $sidebar_width - 10;
+    bottom: $footer-height + 16;
+    left: $sidebar-margin + 5;
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+    span {
+      position: relative;
+      top: -3px;
+    }
+  }
+  .sidenote {
+    position: fixed;
+    width: $sidebar_width - 10;
+    bottom: $footer-height + 36;
+    left: $sidebar-margin + 8;
+    font-size: 12px;
+  }
 }
 #sidebar-right {
     float: right;
@@ -436,3 +451,4 @@ button {
 @import "utilities";
 @import "comment";
 @import "notifications";
+@import "pages";

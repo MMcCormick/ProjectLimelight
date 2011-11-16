@@ -163,7 +163,11 @@ class CoreObject
         core_objects = self.any_in("_type" => display_types).skip(num_to_skip).limit(page_length + 1)
       end
 
-      core_objects.order_by([order_by[:target], order_by[:order]])
+      if order_by[:target] != 'created_at'
+        core_objects.order_by([order_by[:target], order_by[:order], [:created_at, :desc]])
+      else
+        core_objects.order_by([order_by[:target], order_by[:order]])
+      end
     end
   end
 

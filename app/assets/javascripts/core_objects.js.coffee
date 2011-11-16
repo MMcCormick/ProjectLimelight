@@ -1,6 +1,10 @@
 jQuery ->
 
   $('#contribute, #add_response').live 'click', (e) ->
+    if !$logged
+      $('#register').click()
+      return false
+
     target = $($(@).data('target'))
     if target.is(':visible')
       target.slideUp(200)
@@ -142,6 +146,10 @@ jQuery ->
 
   # Core object add response
   $('.teaser.list .respond').live 'click', (e) ->
+    if !$logged
+      $('#register').click()
+      return false
+
     $button = $(@);
     $('.comment_reply:visible').remove();
     $reply = $('#response_form form').clone()
@@ -156,10 +164,39 @@ jQuery ->
   if ($('.teaser.column').length > 0)
     rearrange_feed_columns()
 
-  $('.teaser.column').livequery ->
-#    console.log 'test'
-
+  # re-calculate column view on window resize
   $(window).resize ->
     $(window).stopTime('resize-column-feed')
     $(window).oneTime 500, "resize-column-feed", ->
       rearrange_feed_columns()
+
+  $('.teaser.column,.teaser.grid').livequery ->
+    self = $(@)
+    $(@).qtip({
+      content: {
+        text: self.find('.controlsC')
+      }
+      events: {
+        show: (event, api) ->
+          $('.teaser.column').qtip('hide')
+      }
+      position: {
+        my: 'left top'
+        at: 'right top'
+        adjust: {
+           y: 8
+        }
+        viewport: $(window)
+      }
+      style: {
+        classes: 'ui-tooltip-light ui-tooltip-shadow fab' # fab = feed action box :)
+        tip: {
+           mimic: 'center'
+           offset: 8
+           width: 8
+           height: 8
+        }
+      }
+      show: {delay: 500}
+      hide: {delay: 200, fixed: true}
+    });

@@ -104,7 +104,7 @@ class ApplicationController < ActionController::Base
               {
                 :display => ['Talk', 'News', 'Picture', 'Video'],
                 :sort => {'target' => 'pd', 'order' => 'DESC'},
-                :layout => 'list'
+                :layout => 'column'
               }
     end
   end

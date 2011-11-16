@@ -87,6 +87,14 @@ module ApplicationHelper
     hints.length > choice ? hints[choice] : nil
   end
 
+  # show the splash page to new users
+  def new_user_splash
+    unless signed_in? || cookies[:shown_splash] == 'true'
+      cookies.permanent[:shown_splash] = true
+      "<div id='show_splash'></div>".html_safe
+    end
+  end
+
   def static_data
     data = {
             :fetchEmbedUrl => embedly_fetch_path,

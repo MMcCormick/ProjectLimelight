@@ -1,9 +1,9 @@
 <div class="teaser column <%= object._type.downcase %>" data-id="<%= object.id %>">
   <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
   <div class="content">
-    <% img = default_image_url(object, [215, 0], '', false, true) %>
+    <% img = default_image_url(object, [210, 0], '', false, true) %>
     <% original = default_image_url(object, [], 'original') %>
-    <% image = image_tag img.image_url, :style => 'width: 215px; height: '+img.height.to_s+'px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+    <% image = image_tag img.image_url, :style => 'width: 210px; height: '+img.height.to_s+'px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     <%= render 'core_objects/feed_teaser_image', :image => image %>
 
     <%= markdown(parse_mentions(object.content, object)) %>

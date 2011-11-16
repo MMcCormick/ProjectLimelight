@@ -12,18 +12,12 @@
   </div>
 
   <div class="connectionsC">
-    <% unless response == true %>
-      <div class="oType"><div class="news-grey-icon" title="news"></div></div>
+    <div class="oType"><div class="news-grey-icon" title="news"></div></div>
 
-      <a href="<%= url_for object %>" class="commentC p">
-        <div class="comment-icon"></div>
-        <%= object.response_count.to_i %>
-      </a>
-    <% end %>
-
-    <% if response == true %>
-      <div class="respond" data-d='{"id":"<%= object.id.to_s %>"}'>add reply</div>
-    <% end %>
+    <a href="<%= url_for object %>" class="commentC p">
+      <div class="comment-icon"></div>
+      <%= object.response_count.to_i %>
+    </a>
 
     <% if object.topic_mentions %>
       <div class="mentions">

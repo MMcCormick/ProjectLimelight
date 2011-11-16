@@ -55,6 +55,12 @@ jQuery ->
     if !$.trim(self.val())
       self.addClass('active').val(self.data('default')).selectRange(0, 0)
 
+  # user must login
+  $('.auth').live 'click', (e) ->
+    $('#register').click()
+    e.preventDefault()
+    return false
+
   # Add a border/drop shadow to buttons on hover
   $('.btn').live
     mouseenter:

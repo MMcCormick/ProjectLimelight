@@ -17,14 +17,15 @@ class TalksController < ApplicationController
         view = 'list'
         object = CoreObject.find(@talk.response_to.id)
         Notification.add(object.user, :reply, true, current_user, nil, nil, true, object, object.user, nil)
+        teaser = render_to_string :partial => "talks/teaser_#{view}", :locals => { :object => @talk }
+        extras = { :teaser => teaser, :response => true }
       else
         view = session[:feed_filters][:layout]
+        extras = { :type => "Talk", :path => talk_path(@talk), :response => false }
       end
 
       @talk.send_mention_notifications
-      teaser = render_to_string :partial => "talks/teaser_#{view}", :locals => { :object => @talk }
-      response = build_ajax_response(:ok, nil, "Talk was successfully created", nil, :teaser => teaser, :response => !!@talk.response_to )
-      render json: response, status: :created
+      render json: build_ajax_response(:ok, nil, nil, nil, extras), status: :created
     else
       response = build_ajax_response(:error, nil, "Talk could not be created", @talk.errors)
       render json: response, status: :unprocessable_entity

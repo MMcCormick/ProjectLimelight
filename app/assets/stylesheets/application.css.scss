@@ -422,6 +422,7 @@ button {
   }
 }
 
+@import "library";
 @import "sprites";
 @import "mentions";
 @import "core_objects";
@@ -432,7 +433,6 @@ button {
 @import "videos";
 @import "news";
 @import "list";
-@import "library";
 @import "utilities";
 @import "comment";
 @import "notifications";

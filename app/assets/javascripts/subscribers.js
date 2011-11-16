@@ -87,16 +87,42 @@ $(function() {
    * FEEDS
    */
 
-  // Loads a newly created object into the beginning of the feed
-  // TODO: clear forms
-  amplify.subscribe("talks_create", function (data) {
-    if (data.response) {
-      $('#responses').prepend(data.teaser);
-      $('#add_response').click();
-    }
-    else {
-      $('#core-feed').prepend(data.teaser);
-      $('#contribute').click();
+  // Clears forms, adds responses to response area
+  amplify.subscribe("talks_create news_create pictures_create videos_create", function (data) {
+    if(data.status == "ok") {
+      if (data.response) {
+        $('#add_response').click();
+        $('#responses').prepend(data.teaser);
+        contribute = $('#response-contribute')
+      }
+      else {
+        $('#contribute').click();
+        contribute = $('#top-contribute');
+
+        $('#my-contributions').qtip({
+          content: {
+            text: 'Your '+data.type+' was successfully created.<br/>'+
+                  '<a href="'+data.path+'">Click here to view it</a>'+
+                  '<br/> or see all in "Contributions"'
+          },
+          style: {classes: 'object-created-tip ui-tooltip-shadow ui-tooltip-light ui-tooltip-green', tip: true},
+          position: {
+            my: 'left top',
+            at: 'right middle',
+            viewport: $(window)
+          },
+          hide: {delay: 300, inactive: 5000},
+          events: {
+            hide: function(event, api) {
+              $('#my-contributions').qtip('destroy');
+            }
+           }
+        });
+        $('#my-contributions').qtip('show')
+      }
+      // Clear forms on appropriate window
+      contribute.find('.lClear input, .lClear textarea, .iClear input').val("").focus().blur();
+      contribute.find('.image-preview .images img').remove();
     }
   });
 

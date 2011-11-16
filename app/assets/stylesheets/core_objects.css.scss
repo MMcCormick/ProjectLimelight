@@ -6,6 +6,14 @@
         Handles anything that deals with manipulating objects in general.
 */
 
+// QTip for successful object creation
+.object-created-tip {
+  background-color: #D2EC9F;
+  border-color: #A5D93D;
+  color: #658A1B;
+  font-size: 14px;
+}
+
 // QTip for sharing a core object with friends
 .coreShareTip {
   .ui-tooltip-content {

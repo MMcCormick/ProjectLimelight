@@ -1,0 +1,33 @@
+<div id="auth_box">
+  <div class="top">
+    <%= image_tag 'splash_top.gif' %>
+  </div>
+  <div class="bottom">
+    <div class="left future">
+      <div class="head">Use your existing social account.</div>
+      <div class="option one">
+        <div class="log">log in with</div>
+        <div class="google-l-icon"></div>
+      </div>
+      <div class="option two">
+        <div class="log">log in with</div>
+        <div class="facebook-l-icon"></div>
+      </div>
+      <div class="foot1">We do not share your information.</div>
+      <div class="foot2">We do not post to your profile without your permission.</div>
+    </div>
+    <div class="right">
+      <div id="auth-login" class="hide">
+        <div class="head">... or log in directly with Limelight below.</div>
+        <%= render "users/sessions/new" %>
+        <div class="switch">I don't have a Limelight account.</div>
+      </div>
+      <div id="auth-register" class="hide">
+        <div class="head">... or join directly with Limelight below.</div>
+        <%= render "users/registrations/new" %>
+        <div class="switch">I already have a Limelight account.</div>
+      </div>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>

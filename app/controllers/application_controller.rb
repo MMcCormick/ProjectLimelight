@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :init, :set_feed_filters, :set_user_time_zone
+  before_filter :init, :set_session, :set_user_time_zone
   layout :layout
 
   def authenticate_admin_user!
@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
     @start_time = Time.now
   end
 
-  def set_feed_filters
+  def set_session
     session[:sidebar] = :full unless session[:sidebar]
     unless session[:feed_filters]
       session[:feed_filters] =
@@ -106,6 +106,9 @@ class ApplicationController < ActionController::Base
                 :sort => {'target' => 'pd', 'order' => 'DESC'},
                 :layout => 'column'
               }
+    end
+    unless session[:tutorial]
+      session[:tutorial] = :off
     end
   end
 

@@ -1,0 +1,43 @@
+<% if session[:tutorial] == :on %>
+  <div class="hf" id='hf-fol'>
+    <div class="num">1</div>
+    <div class="c">
+      <div>Following</div>
+      <ul>
+        <li>Follow users and topics on Limelight that you find interesting.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hf" id='hf-pop'>
+    <div class="num">2</div>
+    <div class="c">
+      <div>Popularity</div>
+      <ul>
+        <li class="b">Get popularity by posting interesting content.</li>
+        <li class="b">Popularity affects your user clout - the amount you influence other popularities on Limelight.</li>
+        <li>As your popularity rises you gain access to new features on Limelight.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hf" id="hf-mf">
+    <div class="num">3</div>
+    <div class="c">
+      <div>Your feed includes the following:</div>
+      <ul>
+        <li class="b">Posts contributed by users you are following.</li>
+        <li class="b">Posts reposted by users you are following.</li>
+        <li>Posts mentioning users or topics you are following.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hf" id="hf-contrib">
+    <div class="num">4</div>
+    <div class="c">
+      <div>Contributions</div>
+      <ul>
+        <li class="b">This is a feed including every post you have contributed to Limelight.</li>
+        <li>You can view other users contributions on their contributions page.</li>
+      </ul>
+    </div>
+  </div>
+<% end %>

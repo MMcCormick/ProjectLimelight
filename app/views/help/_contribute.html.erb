@@ -1,0 +1,38 @@
+<% if session[:tutorial] == :on %>
+  <div class="hf" id='hf-ptype'>
+    <div class="num">1</div>
+    <div class="c">
+      <div>Post Type</div>
+      <ul>
+        <li class="b">Limelight breaks posts into types.</li>
+        <li>This allows for more flexibility and organization across Limelight.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hf" id='hf-mention'>
+    <div class="num">2</div>
+    <div class="c">
+      <div>Mentions</div>
+      <ul>
+        <li class="b">Mention relevant topics inline by pressing the # key and typing the topic name (spaces encouraged, no more #longasstopicnamewithoutspaces crap).</li>
+        <li class="b">
+          A dropdown of suggestions will appear as you type.
+          Often there are multiple types for a topic (cats the animal and cats the musical).
+          Try to choose the correct one!
+        </li>
+        <li class='b'>Mentioning relevant topics is important - your post will appear in more feeds.</li>
+        <li>Mention users inline with the @ symbol.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hf" id="hf-ooc">
+    <div class="num">3</div>
+    <div class="c">
+      <div>Out of Context Mentions</div>
+      <ul>
+        <li class="b">Use out of context mentions to mention relevant topics that don't fit naturally into what you are trying to say.</li>
+        <li>If a relevant topic doesn't fit into the context don't tack them on at the end (cough.. twitter)!</li>
+      </ul>
+    </div>
+  </div>
+<% end %>

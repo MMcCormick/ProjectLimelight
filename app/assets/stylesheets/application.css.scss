@@ -40,6 +40,7 @@ h1 {
 a {
     color: $link-color;
     text-decoration: none;
+    border: none;
 
     &:hover {
       text-decoration: none;
@@ -238,7 +239,6 @@ button {
   @include single-box-shadow(#CCC, 1px, 1px, 2px);
   @include border-radius(4px);
   height: 100%;
-  overflow: hidden;
   position: relative;
   border: $sidebar_border_width solid #CCC;
   background: $sidebar_background-color;
@@ -301,13 +301,14 @@ button {
   }
   #static-links {
     position: fixed;
-    width: $sidebar_width - 10;
+    width: 185px;
     bottom: $footer-height + 16;
-    left: $sidebar-margin + 5;
+    left: 16px;
     text-align: center;
     font-size: 11px;
-    color: #666;
-    span {
+    color: $link-color;
+    cursor: pointer;
+    .dot {
       position: relative;
       top: -3px;
     }
@@ -440,6 +441,7 @@ button {
 @import "library";
 @import "sprites";
 @import "mentions";
+@import "help";
 @import "core_objects";
 @import "users";
 @import "topics";

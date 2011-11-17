@@ -16,6 +16,9 @@ $(function() {
 
   $('#login').live('click', function() {
     $('#auth-register .switch').click()
+    $(this).oneTime(200, 'login-focus', function() {
+      $('#user_login').focus();
+    })
   })
 
   // Toggle login and register in the authentication box

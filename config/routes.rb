@@ -40,6 +40,10 @@ ProjectLimelight::Application.routes.draw do
   # Embedly
   get 'embed' => 'embedly#show', :as => :embedly_fetch
 
+  # Tutorials
+  put 'help/tutorials/on' => 'help#tutorial_on', :as => :tutorial_on
+  put 'help/tutorials/off' => 'help#tutorial_off', :as => :tutorial_off
+
   # Comments
   resources :comments
 

@@ -20,11 +20,12 @@
       <div class="sidenote">*batteries not included</div>
     <% end %>
     <div id="static-links">
-      <%= link_to "About", :about_path %> <span>.</span>
-      <%= link_to "Contact", :contact_path %> <span>.</span>
-      <%= link_to "Privacy", :privacy_path %> <span>.</span>
-      <%= link_to "Terms", :terms_path %> <span>.</span>
-      <%= link_to "Help", :help_path %>
+      <%= link_to "About", :about_path %> <span class='dot'>.</span>
+      <%= link_to "Contact", :contact_path %> <span class='dot'>.</span>
+      <%= link_to "Privacy", :privacy_path %> <span class='dot'>.</span>
+      <%= link_to "Terms", :terms_path %> <span class='dot'>.</span>
+      <%= link_to "Help", :help_path %> <span class='dot'>.</span>
+      <span class="tutorial-start ac" data-url="<%= tutorial_on_path %>" data-m='put'>Tutorials</span>
     </div>
   </div>
 
@@ -57,4 +58,7 @@
     </div>
   <% end %>
   <div class="pt_<%= @user.id.to_s if signed_in? %> hide"><%= @user.pt if signed_in? %></div>
+
+  <%= render 'help/user_panel' %>
+
 </div>

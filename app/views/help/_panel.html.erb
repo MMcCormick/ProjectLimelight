@@ -1,0 +1,35 @@
+<% if session[:tutorial] == :on %>
+  <div id='hp'>
+    <div class="master ">
+      <div class="head">Limelight Tutorials</div>
+      <div class="sub">Choose a tutorial from below to get started</div>
+      <div class="tutorials">
+        <div id='hp-up'>User Panel</div>
+        <!--<div id='hp-topics'>Topics</div>-->
+        <div id='hp-contrib'>Contributing</div>
+      </div>
+    </div>
+    <div class="up hide">
+      <div class="head">User Panel - Limelight Tutorials</div>
+      <div class="sub">Mouse over any of the items below</div>
+      <div class="tutorials">
+        <div data-t='#hf-fol'>1. Following</div>
+        <div data-t='#hf-pop'>2. Popularity</div>
+        <div data-t='#hf-mf'>3. My Feed</div>
+        <div data-t='#hf-contrib'>4. Contributions</div>
+      </div>
+      <div class="more">More Tutorials /</div>
+    </div>
+    <div class="contrib hide">
+      <div class="head">Contribute - Limelight Tutorials</div>
+      <div class="sub">Mouse over any of the items below</div>
+      <div class="tutorials">
+        <div data-t='#hf-ptype'>1. Post Types</div>
+        <div data-t='#hf-mention'>2. Mentions</div>
+        <div data-t='#hf-ooc'>3. Out of Context Mentions</div>
+      </div>
+      <div class="more">More Tutorials /</div>
+    </div>
+    <div class="close ac" data-url='<%= tutorial_off_path %>' data-m='put'>Close Tutorials</div>
+  </div>
+<% end %>

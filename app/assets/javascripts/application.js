@@ -20,6 +20,7 @@
 //= require jquery.typing
 //= require jquery.label
 //= require plupload/plupload.full
+//= require help
 //= require pusher
 //= require mention
 //= require core

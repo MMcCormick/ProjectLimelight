@@ -1,0 +1,133 @@
+.hf { // help float (the little floating buttons)
+  @include single-box-shadow(#666, 1px, 1px, 2px);
+  @include border-radius(2px);
+  position: absolute;
+  background: #81AD28;
+  z-index: 170;
+  color: #FFF;
+  padding: 0 6px;
+  cursor: default;
+  min-height: 29px;
+  min-width: 15px;
+  display: none;
+  .num {
+    font-size: 26px;
+    position: absolute;
+    top: 5px;
+    left: 7px;
+  }
+  .c {
+    font-size: 14px;
+    display: none;
+    > div {
+      font-size: 16px;
+      margin: 6px 0 0 5px;
+    }
+  }
+  li {
+    font-size: 12px;
+    width: 275px;
+    padding: 5px;
+    &.b {
+      border-bottom: 1px solid #FFF;
+    }
+  }
+  &.on {
+    padding-left: 30px;
+    z-index: 180;
+    .num {
+
+    }
+    .c {
+      display: block;
+    }
+  }
+}
+
+#hp { // help panel (the main nav panel)
+  @include opacity(.9);
+  @include border-radius(3px);
+  border: 6px solid #C5F078;
+  background: #81AD28;
+  padding: 10px 10px 0 10px;
+  position: fixed;
+  bottom: 60px;
+  width: 700px;
+  left: 50%;
+  margin-left: -303px;
+  z-index: 100;
+  color: #FFF;
+
+  &:hover {
+    @include opacity(1);
+  }
+  .head {
+    font-size: 24px;
+    padding: 2px 0 0 5px;
+    cursor: default;
+  }
+  .sub {
+    font-size: 18px;
+    margin: 8px 0 0 0;
+    padding: 0 0 8px 5px;
+    border-bottom: 1px solid #FFF;
+    cursor: default;
+  }
+  .tutorials {
+    @include clearfix();
+
+    > div {
+      font-size: 14px;
+      float: left;
+      cursor: pointer;
+      padding: 4px 8px 6px 8px;
+      &:hover {
+        background: #FFF;
+        color: #444;
+      }
+    }
+  }
+  .more,
+  .close {
+    position: absolute;
+    bottom: 6px;
+    font-size: 14px;
+    font-style: italic;
+    cursor: pointer;
+  }
+  .more {
+    right: 108px;
+  }
+  .close {
+    right: 13px;
+  }
+}
+
+#hf-pop { // user popularity
+  top: 27px;
+  left: 180px;
+}
+#hf-fol { // user following
+  top: 12px;
+  left: 90px;
+}
+#hf-mf { // user my feed
+  top: 98px;
+  left: 101px;
+}
+#hf-contrib { // user panel contributions
+  top: 128px;
+  left: 140px;
+}
+#hf-ptype { // contribute post type
+  top: 120px;
+  left: -15px;
+}
+#hf-mention { // contribute mention
+  top: 70px;
+  left: 160px;
+}
+#hf-ooc { // contribute out of context mention
+  left: 520px;
+  top: 4px;
+}

@@ -66,11 +66,11 @@ jQuery ->
     mouseenter:
       ->
         $('.btn').removeClass 'hover'
-        $(@).addClass('hover', 1000)
+        $(@).addClass('hover')
 
     mouseleave:
       ->
-        $(@).removeClass('hover', 500)
+        $(@).removeClass('hover')
 
   # Disables text selection (highlighting, etc)
   $('.noSelect').bind 'selectstart, click', (e) ->

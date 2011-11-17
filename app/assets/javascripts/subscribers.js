@@ -69,6 +69,16 @@ $(function() {
    */
 
   /*
+   * HELP
+   */
+
+  amplify.subscribe('help_tutorial_off', function (data) {
+    $('#hp:visible,.hf:visible').hide('scale', {}, 200)
+    if ($('#top-contribute:visible').length == 1)
+      $('#contribute').click()
+  })
+
+  /*
    * TOPICS
    */
 

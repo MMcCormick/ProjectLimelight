@@ -5,7 +5,7 @@
       <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
       <%= render 'core_objects/feed_teaser_created', :object => object %>
 
-      <%= video_embed(object, 200, 175) %>
+      <%= video_embed(object.sources[0], 200, 175) %>
     </div>
 
     <div class="connectionsC">

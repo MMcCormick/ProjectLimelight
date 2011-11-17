@@ -19,6 +19,13 @@
       <div class="empty">Log in to receive your very own sidebar!*</div>
       <div class="sidenote">*batteries not included</div>
     <% end %>
+    <div id="static-links">
+      <%= link_to "About", :about_path %> <span>.</span>
+      <%= link_to "Contact", :contact_path %> <span>.</span>
+      <%= link_to "Privacy", :privacy_path %> <span>.</span>
+      <%= link_to "Terms", :terms_path %> <span>.</span>
+      <%= link_to "Help", :help_path %>
+    </div>
   </div>
 
   <% if signed_in? %>

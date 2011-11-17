@@ -1,8 +1,7 @@
 <div class="teaser column <%= object._type.downcase %>" data-id="<%= object.id %>">
   <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
   <div class="content">
-    <%= video_embed(object, 215, 175) %>
-    <%= markdown(parse_mentions(object.content, object)) %>
+    <%= video_embed(object, 210, 180) %>
   </div>
 
   <div class="connectionsC">

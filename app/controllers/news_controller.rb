@@ -16,7 +16,8 @@ class NewsController < ApplicationController
 
     if @news.save
       @news.send_mention_notifications
-      response = build_ajax_response(:ok, news_path(@news), "News was successfully created")
+      extras = { :type => "News", :path => news_path(@news), :response => !!@news.response_to }
+      response = build_ajax_response(:ok, nil, nil, nil, extras)
       render json: response, status: :created
     else
       response = build_ajax_response(:error, nil, "News could not be created", @news.errors)

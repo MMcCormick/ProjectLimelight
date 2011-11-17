@@ -16,7 +16,8 @@ class PicturesController < ApplicationController
 
     if @picture.save
       @picture.send_mention_notifications
-      response = build_ajax_response(:ok, picture_path(@picture), "Picture was successfully created")
+      extras = { :type => "Picture", :path => picture_path(@picture), :response => !!@picture.response_to }
+      response = build_ajax_response(:ok, nil, nil, nil, extras)
       render json: response, status: :created
     else
       response = build_ajax_response(:error, nil, "Picture could not be created", @picture.errors)

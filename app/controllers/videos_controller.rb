@@ -14,7 +14,8 @@ class VideosController < ApplicationController
 
     if @video.save
       @video.send_mention_notifications
-      response = build_ajax_response(:ok, video_path(@video), "Video was successfully created")
+      extras = { :type => "Video", :path => video_path(@video), :response => !!@video.response_to }
+      response = build_ajax_response(:ok, nil, nil, nil, extras)
       render json: response, status: :created
     else
       response = build_ajax_response(:error, nil, "Video could not be created", @video.errors)

@@ -12,7 +12,7 @@ var resizeLayout = function(rightSidebarAdjust) {
   var footer = $('#footer').height();
   var h = $(window).height() - footer;
 
-  sidebar.css('height', h - 7 - parseInt(sidebar.css('left').replace("px", "")) * 2);
+  sidebar.css('height', h - 7 - parseInt(sidebar.css('left').replace("px", "")) * 2 - parseInt(sidebar.css('padding-bottom').replace("px", "")));
 
   var w = $('body').width() - 4
           - (sidebar.width() + parseInt(sidebar.css('left').replace("px", "")));

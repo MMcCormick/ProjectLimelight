@@ -93,8 +93,13 @@ ProjectLimelight::Application.routes.draw do
   post 'topic_connections/add' => 'topic_connections#add', :as => :add_connection
   delete 'topic_connections/remove' => 'topic_connections#remove', :as => :remove_connection
 
-  # Home
+  # Pages
   root :to => "pages#home"
+  get "/pages/about" => 'pages#about', :as => :about_path
+  get "/pages/contact" => 'pages#contact', :as => :contact_path
+  get "/pages/privacy" => 'pages#privacy', :as => :privacy_path
+  get "/pages/terms" => 'pages#terms', :as => :terms_path
+  get "/pages/help" => 'pages#help', :as => :help_path
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,23 @@
+#pages-c {
+  .about-c,
+  .contact-c,
+  .privacy-c,
+  .terms-c,
+  .help-c {
+    margin: auto;
+    max-width: 700px;
+    font-size: 12px;
+
+    p {
+      margin-bottom: 10px;
+    }
+
+  }
+
+  .privacy-c,
+  .terms-c {
+    p span {
+      font-weight: bold;
+    }
+  }
+}

@@ -1,20 +1,43 @@
-<p id="notice"><%= notice %></p>
+<div class="object-show">
+  <h1><%= @news.title %></h1>
 
-<p>
-  <b>Title:</b>
-  <%= @news.title %>
-</p>
+  <div class="createdC">
+    <%= time_ago_in_words(@news.created_at, false) %> ago by
+    <%= user_link @news.user_snippet %>
+  </div>
 
-<p>
-  <b>Content:</b>
-  <%= markdown(parse_mentions(@news.content, @news)) %>
-</p>
+  <div class="sources">
+    <% @news.sources.each do |source| %>
+      <a href="<%= source.url %>" target="_blank" rel="nofollow"><%= source.name %></a>
+    <% end %>
+  </div>
 
-<% img = default_image_url(@news, [100, 100]) %>
-<%= image_tag img, :style => 'max-width: 100px;' if img %>
+  <div class="content">
+    <%= markdown(parse_mentions(@news.content, @news)) %>
+  </div>
 
-<%= render 'favorites/btn', :object => @news, :user => current_user %>
-<%= render 'reposts/btn', :object => @news %>
+  <% if @news.topic_mentions.length > 0 %>
+    <div class="mentions">
+      <div class="head">mentions</div>
+      <% @news.topic_mentions.each do |topic| %>
+        <%= render 'topics/tag', :topic => topic, :include_image => false %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="left">
+    <% img = default_image_url(@news, [110, 80], '', false, true) %>
+    <% original = default_image_url(@news, [], 'original') if img %>
+    <% if img %>
+      <div class="img expand">
+        <div class='icon'><div class="full-black-icon"></div></div>
+        <%= image_tag img.image_url, :style => 'max-width: 110px; max-height: 80px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+      </div>
+    <% end %>
+
+    <%= render 'core_objects/feed_teaser_actions', :object => @news %>
+  </div>
+</div>
 
 <%= render "core_objects/response_header", :object => @news %>
 <%= render "core_objects/responses", :responses => @responses %>

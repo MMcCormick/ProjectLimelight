@@ -1,9 +1,7 @@
 class News < CoreObject
   include Limelight::Images
 
-  attr_accessible :url, :title
-
-  field :url
+  attr_accessible :title
 
   # Denormilized:
   # CoreObject.response_to.name
@@ -12,8 +10,6 @@ class News < CoreObject
 
   validates :title, :length => { :minimum => 5, :maximum => 100 }
   validates :content, :length => { :maximum => 400 }
-  #validates_presence_of :url
-  validates_format_of :url, :with => URI::regexp(%w(http https))
 
   def name
     self.title

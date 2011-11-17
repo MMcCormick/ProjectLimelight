@@ -1,19 +1,36 @@
-<p id="notice"><%= notice %></p>
+<div class="object-show">
+  <h1><%= @video.title %></h1>
 
-<p>
-  <b>Url:</b>
-  <%= @video.url %>
-</p>
+  <div class="createdC">
+    <%= time_ago_in_words(@video.created_at, false) %> ago by
+    <%= user_link @video.user_snippet %>
+  </div>
 
-<p>
-  <b>Title:</b>
-  <%= @video.title %>
-</p>
+  <div class="sources">
+    <% @video.sources.each do |source| %>
+      <a href="<%= source.url %>" target="_blank" rel="nofollow"><%= source.name %></a>
+    <% end %>
+  </div>
 
-<%= video_embed(@video, 480, 390) %>
+  <div class="content">
+    <%= markdown(parse_mentions(@video.content, @video)) %>
+  </div>
 
-<%= render 'favorites/btn', :object => @video, :user => current_user %>
-<%= render 'reposts/btn', :object => @video %>
+  <%= video_embed(@video.sources[0], 150, 150) %>
+
+  <% if @video.topic_mentions.length > 0 %>
+    <div class="mentions">
+      <div class="head">mentions</div>
+      <% @video.topic_mentions.each do |topic| %>
+        <%= render 'topics/tag', :topic => topic, :include_image => false %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="left">
+    <%= render 'core_objects/feed_teaser_actions', :object => @video %>
+  </div>
+</div>
 
 <%= render "core_objects/response_header", :object => @video %>
 <%= render "core_objects/responses", :responses => @responses %>

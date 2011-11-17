@@ -8,7 +8,8 @@
     <% original = default_image_url(object, [], 'original') %>
     <% image = image_tag img, :style => 'max-width: 75px; max-height: 75px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     <%= render 'core_objects/feed_teaser_image', :image => image %>
-    <%= markdown(parse_mentions(object.content, object)) %>
+    <% source = "[#{object.sources[0].name} - ](#{object.sources[0].url})" %>
+    <%= markdown(source + parse_mentions(object.content, object)) %>
   </div>
 
   <div class="connectionsC">

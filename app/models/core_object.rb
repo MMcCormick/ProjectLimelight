@@ -27,15 +27,16 @@ class CoreObject
 
   embeds_one :user_snippet, as: :user_assignable
   embeds_one :response_to
+  embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
 
   index :public_id, unique: true
 
   belongs_to :user
   validates :user_id, :status, :presence => true
-  attr_accessible :content, :response_to_id
-  attr_accessor :response_to_id
+  attr_accessible :content, :response_to_id, :source_name, :source_url, :source_video_id
+  attr_accessor :response_to_id, :source_name, :source_url, :source_video_id
 
-  before_create :set_user_snippet, :current_user_own, :set_response_snippet
+  before_create :set_user_snippet, :current_user_own, :set_response_snippet, :set_source_snippet
   after_create :update_response_count
 
   def to_param
@@ -48,6 +49,22 @@ class CoreObject
 
   def encoded_id
     public_id.to_i.to_s(36)
+  end
+
+  def set_source_snippet
+    if @source_name || @source_url || @source_video_id
+      source = SourceSnippet.new
+      unless @source_name.blank?
+        source.name = @source_name
+      end
+      unless @source_url.blank?
+        source.url = @source_url
+      end
+      unless @source_video_id.blank?
+        source.video_id = @source_video_id
+      end
+      self.sources << source
+    end
   end
 
   # Favorites

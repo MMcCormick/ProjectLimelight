@@ -9,8 +9,8 @@
 
   <div class="group">
     <div class="field lClear required bottom" data-tip="Video URL">
-      <%= f.label :url, "The URL where the video can be found..." %>
-      <%= f.url_field :url %>
+      <%= f.label :source_url, "The URL where the video can be found..." %>
+      <%= f.url_field :source_url %>
     </div>
     <div class="field lClear required bottom important" data-tip="Video Title">
       <%= f.label :title, "The title for the video, your hook..." %>
@@ -27,8 +27,8 @@
     </div>
   </div>
 
-  <%= f.hidden_field :provider_name %>
-  <%= f.hidden_field :provider_video_id %>
+  <%= f.hidden_field :source_name %>
+  <%= f.hidden_field :source_video_id %>
 
   <div class="preview">
     <h4>Preview</h4>

@@ -1,16 +1,40 @@
-<div id="core_object_show">
-  <p>
-    <b>Title:</b>
-    <%= @picture.title %>
-  </p>
+<div class="object-show">
+  <h1><%= @picture.title %></h1>
 
-  <p>
-    <b>Title:</b>
+  <div class="createdC">
+    <%= time_ago_in_words(@picture.created_at, false) %> ago by
+    <%= user_link @picture.user_snippet %>
+  </div>
+
+  <div class="sources">
+
+  </div>
+
+  <div class="content">
     <%= markdown(parse_mentions(@picture.content, @picture)) %>
-  </p>
+  </div>
 
-  <% img = default_image_url(@picture, [100, 100]) %>
-  <%= image_tag img, :style => 'max-width: 100px;' if img %>
+  <% img = default_image_url(@picture, [500, 150], '', false, true) %>
+  <% original = default_image_url(@picture, [], 'original') if img %>
+  <% if img %>
+    <div class="img expand">
+      <div class='icon'><div class="full-black-icon"></div></div>
+      <%= image_tag img.image_url, :style => 'max-width: 500px; max-height: 150px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+    </div>
+  <% end %>
+
+  <% if @picture.topic_mentions.length > 0 %>
+    <div class="mentions">
+      <div class="head">mentions</div>
+      <% @picture.topic_mentions.each do |topic| %>
+        <%= render 'topics/tag', :topic => topic, :include_image => false %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="left">
+    <%= render 'core_objects/feed_teaser_actions', :object => @picture %>
+  </div>
 </div>
 
 <%= render "core_objects/response_header", :object => @picture %>

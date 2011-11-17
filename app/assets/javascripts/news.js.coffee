@@ -2,11 +2,12 @@ jQuery ->
 
   # TODO: Refactor this into it's own object, clean it up.
   fetchImages = (pullFrom) ->
+    targetForm = pullFrom.parents('form.core_object:first')
     $.get(
       $('#static-data').data('d').fetchEmbedUrl
       url: pullFrom.val()
       (data) ->
-        target = $('form.core_object .image-preview .images');
+        target = targetForm.find('.image-preview .images');
         if data.embedly.images.length > 0
           target.html('').siblings('.default').hide();
 
@@ -17,7 +18,10 @@ jQuery ->
 
         else
           target.siblings('.default').show()
-          $('form.core_object .remote_image_url').val('')
+          targetForm.find('.remote_image_url').val('')
+
+        if (targetForm.find('.fetch.on').length > 0)
+          targetForm.find('.remote_image_url').val(target.find('img:first').attr('src'))
 
       'json'
     )
@@ -75,7 +79,7 @@ jQuery ->
     found.show()
 
   # News submission form, handle fetching data from supplied URL
-  $('#news_url').live 'blur', (e) ->
+  $('#news_source_url').live 'blur', (e) ->
     self = $(@)
     if $.trim(self.val()) == ''
       return
@@ -88,7 +92,7 @@ jQuery ->
         fetchImages($('#new_news .image_fetch_url'))
         $('#news_content').focus().val(data.embedly.description)
         $('#news_title').focus().val(data.embedly.title)
-        $('#publisher').focus().val(data.embedly.provider_name)
+        $('#news_source_name').focus().val(data.embedly.provider_name)
 
       'json'
     )

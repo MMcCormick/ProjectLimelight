@@ -5,7 +5,7 @@ isUrl = (s) ->
 jQuery ->
 
   # Video submission form, handle fetching data from supplied URL
-  $('#video_url').live 'blur', (e) ->
+  $('#video_source_url').live 'blur', (e) ->
     self = $(@)
     if $.trim(self.val()) == ''
       return
@@ -47,11 +47,11 @@ jQuery ->
             # TODO: Handle this...
             foo = 'bar'
 
-        $('#video_url').val(data.embedly.url)
+        $('#video_source_url').val(data.embedly.url)
         $('#video_content').focus().val(data.embedly.description)
         $('#video_title').focus().val(data.embedly.title)
-        $('#video_provider_name').val(data.embedly.provider_name)
-        $('#video_provider_video_id').val(video_id)
+        $('#video_source_name').val(data.embedly.provider_name)
+        $('#video_source_video_id').val(video_id)
 
       'json'
     )

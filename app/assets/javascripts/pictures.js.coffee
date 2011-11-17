@@ -12,9 +12,9 @@ jQuery ->
       $(@).addClass 'on'
       $('#picture_pupB').click()
 
-  $('.teaser .full-black-icon').live 'click', (e) ->
+  $('.img .full-black-icon').live 'click', (e) ->
     self = $(@)
-    title = $(this).parents('.teaser:first').find('.titleC a').text()
+    title = if $(this).parents('.teaser:first').length > 0 then $(this).parents('.teaser:first').find('.titleC a').text() else ''
     $.colorbox({title: title, html: ->
       data = self.parents('.img:first').find('img').data('o')
       return "<img src='"+data.url+"' width='"+data.w+"' height='"+data.h+"' />"

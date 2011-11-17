@@ -17,7 +17,9 @@ class ImageSnippet
     params.merge!( {:isOriginal => isOriginal} )
     version = AssetImage.new(params)
     version.id = id
-    if !params[:image_cache].blank?
+    if !params[:remote_image_url].blank?
+      version.save_image(params[:remote_image_url])
+    elsif !params[:image_cache].blank?
       version.save_image(params[:image_cache])
     end
     self.versions << version

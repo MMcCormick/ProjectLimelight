@@ -345,31 +345,6 @@ $teaser-padding: 10px;
         }
     }
 
-    .content {
-      .img {
-        position: relative;
-        .icon {
-          @include opacity(.5);
-          @include border-radius(3px);
-          display: none;
-          position: absolute;
-          top: 7px;
-          left: 2px;
-          background: #FFF;
-          padding: 3px;
-          &:hover {
-            @include opacity(1);
-            cursor: pointer;
-          }
-        }
-        &:hover {
-          .icon {
-            display: block;
-          }
-        }
-      }
-    }
-
     .respond {
       @include link();
       float: left;
@@ -550,11 +525,7 @@ $teaser-padding: 10px;
     padding: 1px 0px 0px 0px;
     position: relative;
     height: 198px;
-    .img {
-      .icon {
-        top: 6px;
-      }
-    }
+
     img,
     .video-embed {
       @include border-radius(0px);
@@ -813,6 +784,29 @@ $scoreBox-width: 160px;
     .tag {
       float: left;
       margin: 0 10px 0 0;
+    }
+  }
+}
+
+.img.expand {
+  position: relative;
+  .icon {
+    @include opacity(.5);
+    @include border-radius(3px);
+    display: none;
+    position: absolute;
+    top: 7px;
+    left: 2px;
+    background: #FFF;
+    padding: 3px;
+    &:hover {
+      @include opacity(1);
+      cursor: pointer;
+    }
+  }
+  &:hover {
+    .icon {
+      display: block;
     }
   }
 }
@@ -1121,9 +1115,117 @@ $scoreBox-width: 160px;
     .add { margin: 2px 0 0 5px;}
 }
 
-#core_object_show {
-  padding: 0 5px 30px 0;
-  margin: 0 0 15px 0;
+.object-show {
+  position: relative;
+  padding: 0 10px 40px 150px;
+  min-height: 150px;
+  .left {
+    @include border-radius(2px);
+    position: absolute;
+    top: 0;
+    left: 8px;
+    background: #fff;
+    width: 130px;
+    border: 1px solid #CCC;
+    img {
+      margin: 5px 0 0 10px;
+    }
+  }
+  h1 {
+    font-size: 20px;
+  }
+  .createdC {
+    font-size: 12px;
+    color: #999;
+    margin: 2px 0 0 0;
+  }
+  .sources {
+    margin: 5px 0 0 0;
+    a {
+      @include border-radius(2px);
+      font-size: 12px;
+      padding: 2px 6px;
+      border: 1px solid #CCC;
+      background: #FFF;
+      margin: 0 10px 0 0;
+      &:hover {
+        background: #999;
+        color: #FFF;
+      }
+    }
+  }
+  .content {
+    font-size: 13px;
+    margin: 10px 0 0 0;
+  }
+  .mentions {
+    margin: 10px 0 10px 0;
+    padding: 0 0 0 60px;
+    position: relative;
+    .head {
+      font-size: 12px;
+      cursor: default;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      color: #666;
+    }
+    .tag {
+      float: left;
+      font-size: 12px;
+    }
+  }
+  .controlsC {
+    position: relative;
+    height: 65px;
+
+    .pop {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      color: #555;
+      cursor: default;
+    }
+    .scoreC {
+      .up {
+        position: absolute;
+        top: 11px;
+        left: 60px;
+      }
+      .down {
+        position: absolute;
+        top: 17px;
+        left: 90px;
+      }
+    }
+    .favB,
+    .unfavB {
+      position: absolute;
+      top: 40px;
+      left: 30px;
+    }
+    .repostB,
+    .unrepostB {
+      position: absolute;
+      top: 40px;
+      left: 60px;
+    }
+    .coreShareB {
+      position: absolute;
+      top: 38px;
+      left: 95px;
+    }
+  }
+  .video-embed {
+    float: none !important;
+    margin: 10px 0 0 0;
+  }
+
+  &.talk {
+    min-height: 30px;
+    margin: 0 0 0 12px;
+  }
 }
 
 #response-divider {

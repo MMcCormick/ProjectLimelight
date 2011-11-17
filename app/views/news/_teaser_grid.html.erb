@@ -4,7 +4,7 @@
     <div class="content">
       <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
       <%= render 'core_objects/feed_teaser_created', :object => object %>
-      <% source = "[#{object.sources[0].name} - ](#{object.sources[0].url})" %>
+      <% source = "<a href='#{object.sources[0].url}' target='_blank' rel='nofollow'>#{object.sources[0].name}</a> - " %>
       <%= markdown(source + parse_mentions(object.content, object)) %>
       <div class="clear"></div>
     </div>

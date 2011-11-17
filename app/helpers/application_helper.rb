@@ -17,7 +17,7 @@ module ApplicationHelper
 
   # Parse text via markdown
   def markdown(text)
-    options = [:hard_wrap, :filter_html, :autolink, :no_intraemphasis, :strikethrough]
+    options = [:hard_wrap, :autolink, :no_intraemphasis, :strikethrough]
     Redcarpet.new(text, *options).to_html.html_safe
   end
 

@@ -5,7 +5,7 @@
     <% original = default_image_url(object, [], 'original') if img %>
     <% image = image_tag img.image_url, :style => 'max-width: 75px; height: '+img.height.to_s+'px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     <%= render 'core_objects/feed_teaser_image', :image => image %>
-    <% source = "[#{object.sources[0].name} - ](#{object.sources[0].url})" %>
+    <% source = "<a href='#{object.sources[0].url}' target='_blank' rel='nofollow'>#{object.sources[0].name}</a> - " %>
     <%= markdown(source + parse_mentions(object.content, object)) %>
     <div class="clear"></div>
   </div>

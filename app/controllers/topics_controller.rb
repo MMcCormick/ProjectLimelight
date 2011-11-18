@@ -51,10 +51,8 @@ class TopicsController < ApplicationController
 
   def default_picture
     topic = Topic.find_by_slug(params[:id])
-    dimensions = params[:d]
-    style = params[:s]
 
-    url = default_image_url(topic, dimensions, style, true, false)
+    url = default_image_url(topic, params[:w], params[:h], params[:m], true, false)
     if stale?(:etag => url)
       img = open(Rails.env.development? ? Rails.public_path+url : url)
 

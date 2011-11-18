@@ -31,9 +31,9 @@ class Topic
   end
 
   field :summary
-  field :fb_img, :default => false
-  field :fb_id
-  field :fb_mid
+  field :fb_img, :default => false # use the freebase image?
+  field :fb_id # freebase id
+  field :fb_mid # freebase mid
   field :status, :default => 'Active'
   field :aliases
   field :user_id

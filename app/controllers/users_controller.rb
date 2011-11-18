@@ -41,10 +41,8 @@ class UsersController < ApplicationController
 
   def default_picture
     user = User.find_by_slug(params[:id])
-    dimensions = params[:d]
-    style = params[:s]
 
-    url = default_image_url(user, dimensions, style, true)
+    url = default_image_url(user, params[:w], params[:h], params[:m], true)
     if stale?(:etag => url)
       img = open(Rails.env.development? ? Rails.public_path+url : url)
 

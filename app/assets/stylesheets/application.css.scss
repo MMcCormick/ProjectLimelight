@@ -316,8 +316,8 @@ button {
   .sidenote {
     position: fixed;
     width: $sidebar_width - 10;
-    bottom: $footer-height + 36;
-    left: $sidebar-margin + 8;
+    bottom: 90px;
+    left: 23px;
     font-size: 12px;
   }
 }

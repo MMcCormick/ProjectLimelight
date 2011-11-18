@@ -331,9 +331,10 @@ $teaser-padding: 10px;
     border: 1px solid #CCC;
     background: #FFF;
     a {
-      color: #555;
+      color: #444;
       &:hover {
         color: #000;
+        text-decoration: underline;
       }
     }
     p {

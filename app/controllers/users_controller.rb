@@ -61,13 +61,8 @@ class UsersController < ApplicationController
 
   # Update a users default picture
   def picture_update
-    image = current_user.images.create(:user_id => current_user.id)
-    version = AssetImage.new(:isOriginal => true)
-    version.id = image.id
-    version.save_image(params[:image_location])
-    image.versions << version
-    version.save
-    current_user.set_default_image(image.id)
+    image = current_user.add_image(current_user.id, params[:image_location])
+    current_user.set_default_image(image.id) if image
 
     render :json => {:status => 'ok'}
   end

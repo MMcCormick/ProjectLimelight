@@ -104,6 +104,16 @@ module Limelight #:nodoc:
       end
     end
 
+    def add_image(user_id, image_location)
+      image = self.images.create(:user_id => user_id)
+      version = AssetImage.new(:isOriginal => true)
+      version.id = image.id
+      version.save_image(image_location)
+      image.versions << version
+      version.save
+      image
+    end
+
     def add_image_version(image_id, dimensions, style)
       image = self.images.find(image_id)
 

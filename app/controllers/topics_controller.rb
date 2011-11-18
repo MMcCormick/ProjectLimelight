@@ -74,13 +74,8 @@ class TopicsController < ApplicationController
     topic = Topic.find_by_slug(params[:id])
     authorize! :update, topic
     if topic
-      image = topic.images.create(:user_id => current_user.id)
-      version = AssetImage.new(:isOriginal => true)
-      version.id = image.id
-      version.save_image(params[:image_location])
-      image.versions << version
-      version.save
-      topic.set_default_image(image.id)
+      image = topic.add_image(current_user.id, params[:image_location])
+      topic.set_default_image(image.id) if image
 
       if topic.save
         #expire_action :action => :default_picture, :id => current_user.encoded_id
@@ -130,6 +125,53 @@ class TopicsController < ApplicationController
     end
 
     render json: response, :status => status
+  end
+
+  def freebase_lookup
+    resource = Ken::Topic.get(params[:freebase_id])
+
+    if resource
+      locals = { :topic_id => params[:id] }
+      locals[:ids] = Ken.session.mqlread({ :id => params[:freebase_id], :mid => nil })
+      locals[:description] = resource.description
+      locals[:aliases] = resource.aliases
+      locals[:image_url] = "https://usercontent.googleapis.com/freebase/v1/image#{resource.id}?maxheight=1024&maxwidth=1024"
+      form = render_to_string :partial => "topics/freebase_form", :locals => locals
+      response = build_ajax_response(:ok, nil, "Topic found!", nil, :form => form)
+      status = 200
+    else
+      response = build_ajax_response(:error, nil, "Could not find this topic on freebase")
+      status = 500
+    end
+    render json: response, status: status
+  end
+
+  def freebase_update
+    topic = Topic.find_by_slug(params[:id])
+    topic.fb_id = params[:freebase_id]
+    topic.fb_mid = params[:freebase_mid]
+
+    if params[:use_image] && params[:image]
+      topic.fb_img = true
+    end
+    if params[:use_summary] && params[:summary]
+      topic.summary = params[:summary]
+    end
+    if params[:use_aliases] && params[:aliases]
+      aliases = params[:aliases].split(", ")
+      aliases.each do |new_alias|
+        topic.add_alias(new_alias)
+      end
+    end
+
+    if topic.save
+      response = build_ajax_response(:ok, nil, "Topic updated!")
+      status = 200
+    else
+      response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+      status = 422
+    end
+    render json: response, status: status
   end
 
   def followers

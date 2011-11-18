@@ -198,6 +198,18 @@
         float: left;
         width: auto;
       }
+      #freebase-update-form {
+        .image-preview {
+          max-height: 150px;
+          max-width: 150px;
+          margin: 5px;
+        }
+        .use-check {
+          input, label {
+            width: auto;
+          }
+        }
+      }
       #user_uploadB-progress {
         float: left;
         color: #666;

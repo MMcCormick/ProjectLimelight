@@ -15,6 +15,8 @@ require 'resque-loner'
 require 'chronic'
 require 'yajl'
 require 'pusher'
+require 'ken' # Freebase API for Ruby
+
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line

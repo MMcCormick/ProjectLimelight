@@ -59,7 +59,10 @@ jQuery ->
   $('.future').livequery ->
     $(@).css({ opacity: 0.25 }).attr('title', 'This feature will be available soon!');
 
-
+  $('.auth').live 'click', (e) ->
+    e.preventDefault()
+    $('#register').click()
+    return false
 
   # Add a border/drop shadow to buttons on hover
   $('.btn').live

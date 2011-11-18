@@ -25,7 +25,7 @@
       <%= link_to "Privacy", :privacy_path %> <span class='dot'>.</span>
       <%= link_to "Terms", :terms_path %> <span class='dot'>.</span>
       <%= link_to "Help", :help_path %> <span class='dot'>.</span>
-      <span class="tutorial-start ac" data-url="<%= tutorial_on_path %>" data-m='put'>Tutorials</span>
+      <span class="tutorial-start <%= signed_in? ? 'ac' : 'auth' %>" data-url="<%= tutorial_on_path %>" data-m='put'>Tutorials</span>
     </div>
   </div>
 

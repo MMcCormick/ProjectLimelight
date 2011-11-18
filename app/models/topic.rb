@@ -10,7 +10,8 @@ class Topic
   include Limelight::Popularity
 
   TYPE_OF_ID = "4eb82a1caaf9060120000081"
-  EXAMPLE_ID = "4eb82a3daaf906012000008a"
+  EXAMPLE_ID = "4eb82a3daaf906012000008a" # this is the opposite of type_of connection
+  LIMELIGHT_ID = '4ec69d9fcddc7f9fe80000b8'
 
   # Denormilized:
   # CoreObject.topic_mentions.name
@@ -46,7 +47,7 @@ class Topic
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
-  attr_accessible :name, :summary
+  attr_accessible :name, :summary, :aliases
 
   before_create :init_alias
   after_create :add_to_soulmate

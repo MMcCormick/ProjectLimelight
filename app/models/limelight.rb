@@ -378,7 +378,7 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      POP_AMOUNTS = {
+      pop_amounts = {
         :v_up => 1.0,
         :v_down => -1.0,
         :rp => 3.0,

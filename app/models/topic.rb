@@ -10,8 +10,8 @@ class Topic
   include Limelight::Popularity
 
   TYPE_OF_ID = "4eb82a1caaf9060120000081"
+  EXAMPLE_ID = "4eb82a3daaf906012000008a" # this is the opposite of type_of connection
   LIMELIGHT_ID = '4ec69d9fcddc7f9fe80000b8'
-  EXAMPLE_ID = "4eb82a3daaf906012000008a"
 
   # Denormilized:
   # CoreObject.topic_mentions.name

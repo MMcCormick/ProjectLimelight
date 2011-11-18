@@ -26,6 +26,22 @@ else
   puts 'Type of connection already in DB'
 end
 
+puts 'Creating example of connection'
+connection2 = TopicConnection.find('4eb82a3daaf906012000008a')
+unless connection2
+  connection2 = TopicConnection.new(
+          :name => 'Examples',
+          :pull_from => true,
+          :opposite => connection.id
+  )
+  connection2.user_id = 0
+  connection2.id = '4eb82a3daaf906012000008a'
+  connection2.save!
+  puts 'Example of connection created'
+else
+  puts 'Example of connection already in DB'
+end
+
 puts 'Creating limelight topic'
 topic = Topic.find('4ec69d9fcddc7f9fe80000b8')
 unless topic

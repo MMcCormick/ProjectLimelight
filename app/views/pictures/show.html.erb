@@ -14,8 +14,8 @@
     <%= markdown(parse_mentions(@picture.content, @picture)) %>
   </div>
 
-  <% img = default_image_url(@picture, [500, 150], '', false, true) %>
-  <% original = default_image_url(@picture, [], 'original') if img %>
+  <% img = default_image_url(@picture, 500, 150, :fit, false, true) %>
+  <% original = default_image_url(@picture, 0, 0, :original) if img %>
   <% if img %>
     <div class="img expand">
       <div class='icon'><div class="full-black-icon"></div></div>

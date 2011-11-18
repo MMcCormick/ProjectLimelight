@@ -1,6 +1,6 @@
 <div class="tag topic <%= 'with-image' if include_image == true %>">
   <% if include_image == true %>
-    <%= image_tag topic_default_picture_path(topic, :d => [image_d, image_d], :s => 'square'), :style => "max-width: 30px;" %>
+    <%= image_tag topic_default_picture(topic, image_d, image_d, :fillcropmid), :style => "max-width: 30px;" %>
   <% end %>
   <%= topic_link topic %>
 </div>

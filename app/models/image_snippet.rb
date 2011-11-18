@@ -25,8 +25,8 @@ class ImageSnippet
     self.versions << version
   end
 
-  def find_version dimensions, style
-    versions.where(:resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :style => style).first
+  def find_version dimensions, mode
+    versions.where(:resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :mode => mode).first
   end
 
   def original

@@ -30,7 +30,7 @@
     <tr>
       <% @pictures.each do |picture| %>
         <td align="center" width="100" style="padding: 5px 10px">
-          <% img = default_image_url(picture, [100, 100], 'square') %>
+          <% img = default_image_url(picture, 100, 100, :fillcropmid) %>
           <a target="_blank" href="<%= picture_url picture %>">
             <%= image_tag base + img, :style => 'max-width: 100px; max-height: 100px;' if img %>
           </a>
@@ -61,7 +61,7 @@
     <tr>
       <% @news.each do |news| %>
         <td align="center" width="100" style="padding: 5px 10px">
-          <% img = default_image_url(news, [100, 100], 'square') %>
+          <% img = default_image_url(news, 100, 100, :fillcropmid) %>
           <% if img %>
             <a target="_blank" href="<%= news_url news %>">
               <%= image_tag base + img, :style => 'max-width: 100px; max-height: 100px;' if img %>

@@ -114,7 +114,7 @@ module Limelight #:nodoc:
       image
     end
 
-    def add_image_version(image_id, dimensions, style)
+    def add_image_version(image_id, dimensions, mode)
       image = self.images.find(image_id)
 
       if image && image.original
@@ -124,9 +124,11 @@ module Limelight #:nodoc:
         width = dimensions[0] == 0 ? 999999 : dimensions[0]
         height = dimensions[1] == 0 ? 999999 : dimensions[1]
 
-        case style
-          when 'square'
+        case mode
+          when :fillcropmid
             new_image = new_image.resize_to_fill(width, height)
+          when :fit
+            new_image = new_image.resize_to_fit(width, height)
           else
             new_image = new_image.resize_to_fit(width, height)
         end
@@ -141,7 +143,7 @@ module Limelight #:nodoc:
 
         tmp_location = "/tmp/d#{dimensions[0]}x#{dimensions[1]}_#{filename}"
         new_image.write tmp_location
-        version = AssetImage.new(:isOriginal => false, :resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :style => style, :width => new_image.columns, :height => new_image.rows)
+        version = AssetImage.new(:isOriginal => false, :resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :mode => mode, :width => new_image.columns, :height => new_image.rows)
         version.id = image.id
         version.image.store!(File.open(tmp_location))
         image.versions << version

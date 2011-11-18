@@ -12,7 +12,7 @@
 
 <div class="section">
   <h3>Profile Image</h3>
-  <%= image_tag user_default_picture_path(current_user, :d => [150, 150]), :style => "max-width: 150px;", :class => 'profile-image' %>
+  <%= image_tag user_default_picture_path(current_user, :w => 150, :h => 150, :m => :fit), :style => "max-width: 150px;", :class => 'profile-image' %>
   <% content_for :js do %>
     <%= render "users/image_upload_js" %>
   <% end %>

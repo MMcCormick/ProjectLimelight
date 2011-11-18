@@ -2,8 +2,8 @@
 <div class="comment d-<%= comment.depth.to_s %>" id="comment_<%= comment.id %>">
   <div class="wrapper">
     <div class="profileImage">
-      <%= image_tag user_default_picture_path(comment.user_snippet, :d => [50, 50]), :style => "max-width: 50px;" if comment.depth == 0 %>
-      <%= image_tag user_default_picture_path(comment.user_snippet, :d => [30, 30]), :style => "max-width: 30px;" if comment.depth != 0 %>
+      <%= image_tag user_default_picture_path(comment.user_snippet, :w => 50, :h => 50, :m => :fillcropmid), :style => "max-width: 50px;" if comment.depth == 0 %>
+      <%= image_tag user_default_picture_path(comment.user_snippet, :w => 30, :h => 30, :m => :fillcropmid), :style => "max-width: 30px;" if comment.depth != 0 %>
     </div>
     <div class="createdC">
       <%= user_link(comment.user_snippet) %> <%= time_ago_in_words(comment.created_at) %> ago

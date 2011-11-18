@@ -981,7 +981,7 @@ $scoreBox-width: 160px;
         .opt, > div {
             @include border-radius(2px);
             border: 1px solid #AAA;
-            color: #999;
+            color: #444;
         }
         .on.talk {
             border-color: adjust-lightness($talk-color, 15);

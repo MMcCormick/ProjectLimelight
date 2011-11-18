@@ -1,4 +1,18 @@
 jQuery ->
+
+  # Freebase
+  $("#freebase-ac")
+  .suggest()
+  .bind "fb-select", (e, data) ->
+    $.get(
+      $('#freebase-ac').data('url')
+      freebase_id: data.id
+      (data) ->
+        $('#freebase-form-c').html(data.form)
+
+      'json'
+    )
+
   # Creates a qtip with a form to add types to a topic when an .addTypeB is clicked
   $('.addTypeB').livequery ->
     self = $(@)

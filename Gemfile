@@ -32,6 +32,7 @@ gem 'soulmate' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'vanity' # a/b testing
 gem 'pusher' # pusher publish/subscribe
+gem 'ken' # Freebase API for Ruby
 
 group :assets do
   gem 'compass', '0.12.alpha.0'

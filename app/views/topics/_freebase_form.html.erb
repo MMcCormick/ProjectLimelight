@@ -1,0 +1,34 @@
+<form action="<%= freebase_update_path topic_id %>" id="freebase-update-form" method="POST" class="ajax">
+
+  <div class="use-check">
+    <%= check_box_tag "use_image" %>
+    <%= label_tag "use_image", "Use Image?" %>
+  </div>
+  <div class="field">
+    <img class="image-preview" src="<%= image_url %>">
+    <%= hidden_field_tag "image", image_url %>
+  </div>
+
+  <div class="use-check">
+    <%= check_box_tag "use_summary" %>
+    <%= label_tag "use_summary", "Use Summary?" %>
+  </div>
+  <div class="field">
+    <%= text_area_tag "summary", description, :id => "summary" %>
+  </div>
+
+  <div class="use-check">
+    <%= check_box_tag "use_aliases" %>
+    <%= label_tag "use_aliases", "Use Aliases?" %>
+  </div>
+  <div class="field">
+    <%= text_field_tag "aliases", aliases.join(", "), :id => "aliases" %>
+  </div>
+
+  <%= hidden_field_tag "freebase_id", ids["id"] %>
+  <%= hidden_field_tag "freebase_mid", ids["mid"] %>
+
+  <div class="actions">
+    <%= submit_tag "Update", :class => "submit" %>
+  </div>
+</form>

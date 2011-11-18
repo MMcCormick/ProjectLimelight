@@ -342,6 +342,7 @@ $(function() {
                 $('.teaser.column.[data-column="'+column_num+'"]').last().addClass(hoverClass).qtip('show');
               }
             }
+
             // Up
             else if ($code == $sc.up) {
               column_num = target.data('column');
@@ -360,6 +361,8 @@ $(function() {
 
           // Grid + List view
           else {
+            extra = parseInt($('.teaser.grid').css('margin-left').replace("px", "")) * 2 + parseInt($('.teaser.grid').css('border-left-width').replace("px", "")) * 2;
+
             // If first element is hovered and left or up is pressed
             if (($code == $sc.up || $code == $sc.left) && $('.teaser:first').hasClass(hoverClass)) {
               $('.teaser:first').qtip('show');
@@ -381,16 +384,19 @@ $(function() {
 
               target.removeClass(hoverClass).next().addClass(hoverClass).qtip('show');
             }
+
             // Jump up a row (for Grid View)
             else if (target.hasClass('grid') && ($code == $sc.up)) {
-              target.removeClass(hoverClass).prevAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass(hoverClass).qtip('show');
+              target.removeClass(hoverClass).prevAll().eq(($('#core-feed').width()) / ($('.teaser.grid').width() + extra) - 1).addClass(hoverClass).qtip('show');
               if ($('.teaser.hover').length == 0) {
                 $newHover = true;
               }
             }
             // Jump down a row (for Grid View)
             else if (target.hasClass('grid') && ($code == $sc.down)) {
-              target.removeClass(hoverClass).nextAll().eq($('#core-feed').width() / $('.teaser.grid').width() - 1).addClass(hoverClass).qtip('show');
+              console.log($('#core-feed').width());
+              console.log($('.teaser.grid').width());
+              target.removeClass(hoverClass).nextAll().eq(($('#core-feed').width()) / ($('.teaser.grid').width() + extra) - 1).addClass(hoverClass).qtip('show');
             }
           }
         }

@@ -45,15 +45,17 @@ class UsersController < ApplicationController
     style = params[:s]
 
     url = default_image_url(user, dimensions, style, true)
-    img = open(Rails.env.development? ? Rails.public_path+url : url)
+    if stale?(:etag => url)
+      img = open(Rails.env.development? ? Rails.public_path+url : url)
 
-    if img
-      send_data(
-        img.read,
-        :disposition => 'inline'
-      )
-    else
-      render :nothing => true, :status => 404
+      if img
+        send_data(
+          img.read,
+          :disposition => 'inline'
+        )
+      else
+        render :nothing => true, :status => 404
+      end
     end
   end
 
@@ -61,10 +63,6 @@ class UsersController < ApplicationController
   def picture_update
     image = current_user.add_image(current_user.id, params[:image_location])
     current_user.set_default_image(image.id) if image
-
-    if current_user.save
-      #expire_action :action => :default_picture, :id => current_user.encoded_id
-    end
 
     render :json => {:status => 'ok'}
   end

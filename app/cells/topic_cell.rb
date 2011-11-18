@@ -4,6 +4,10 @@ class TopicCell < Cell::Rails
   include CanCan::ControllerAdditions
   helper TopicsHelper
 
+  cache :sidebar_right do |cell,topic|
+    topic.id.to_s
+  end
+
   def sidebar_right(topic, connections=nil)
     @current_user = current_user
     @topic = topic

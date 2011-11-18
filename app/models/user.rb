@@ -77,7 +77,7 @@ class User
   validates :email, :uniqueness => { :case_sensitive => false }
 
   after_create :add_to_soulmate, :save_profile_image, :send_welcome_email
-  after_update :update_denorms
+  after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
   # Return the users slug instead of their ID
@@ -289,6 +289,11 @@ class User
       #Notification.where(:user_id => id).update_all(sender_snippet_updates)
       #Notification.where("receiver_snippets._id" => id).update_all(receiver_snippet_updates)
     end
+  end
+
+  def expire_caches
+    ActionController::Base.new.expire_cell_state UserCell, :sidebar_left, id.to_s
+    ActionController::Base.new.expire_cell_state UserCell, :sidebar_right, id.to_s
   end
 
 end

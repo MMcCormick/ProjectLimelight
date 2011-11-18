@@ -330,13 +330,21 @@ $teaser-padding: 10px;
     position: relative;
     border: 1px solid #CCC;
     background: #FFF;
-
+    a {
+      color: #555;
+      &:hover {
+        color: #000;
+      }
+    }
+    p {
+      color: #524D4D;
+      .s { // the source link
+        text-decoration: underline;
+      }
+    }
     .titleC {
         font-size: 18px;
         line-height: 1.08em;
-        a {
-          color: #2A3B9D;
-        }
         span {
           color: #444;
           cursor: default;
@@ -922,7 +930,7 @@ $scoreBox-width: 160px;
         }
         li {
             @include border-radius(2px);
-            border: 1px solid #DDD;
+            border: 1px solid #AAA;
             margin: 1px 3px;
             float: left;
         }
@@ -942,14 +950,15 @@ $scoreBox-width: 160px;
 
         .feed-sort-select {
             @include border-radius(2px);
-            background-color: #EFEFEF;
-            border: 1px solid #DDD;
+            border: 1px solid #AAA;
             position: absolute; top: 0px; left: 59px;
             z-index: 5;
             cursor: pointer;
             margin: 2px 0 0 10px;
             float: left;
-
+            &.hover {
+              background: #FFF;
+            }
             .opt {
                 width: 95px;
             }
@@ -970,8 +979,7 @@ $scoreBox-width: 160px;
     .feed-display {
         .opt, > div {
             @include border-radius(2px);
-            background-color: #EFEFEF;
-            border: 1px solid #DDD;
+            border: 1px solid #AAA;
             color: #999;
         }
         .on.talk {

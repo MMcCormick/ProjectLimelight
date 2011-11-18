@@ -1,11 +1,13 @@
 <div id="core-feed" class="<%= session[:feed_filters][:layout] %>">
   <% core_objects.each_with_index do |core_object, i| %>
-    <% if i < 15 %>
-      <%= render "#{core_object._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => core_object, :style => session[:feed_filters][:layout].to_sym, :response => false %>
+    <% if i < 30 %>
+      <%# cache("teaser-#{core_object.id.to_s}-#{session[:feed_filters][:layout]}") do %>
+        <%= render "#{core_object._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => core_object, :style => session[:feed_filters][:layout].to_sym, :response => false %>
+      <%# end %>
     <% end %>
   <% end %>
 </div>
 
-<% if core_objects.count(true) >= 15 %>
+<% if core_objects.count(true) >= 30 %>
   <div id="load-more" class="ac" data-m="get" data-url="<%= more_path %>">load more</div>
 <% end %>

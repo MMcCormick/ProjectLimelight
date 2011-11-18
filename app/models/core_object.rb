@@ -38,6 +38,7 @@ class CoreObject
 
   before_create :set_user_snippet, :current_user_own, :set_response_snippet, :set_source_snippet
   after_create :update_response_count
+  after_update :expire_caches
 
   def to_param
     "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
@@ -64,6 +65,12 @@ class CoreObject
         source.video_id = @source_video_id
       end
       self.sources << source
+    end
+  end
+
+  def expire_caches
+    ['list', 'grid', 'column'].each do |view|
+      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}")
     end
   end
 
@@ -169,7 +176,7 @@ class CoreObject
       or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
 
       #page length also hard-coded in views/core_object
-      page_length = options[:limit]? options[:limit] - 1 : 15
+      page_length = options[:limit]? options[:limit] - 1 : 30
       page_number = options[:page]? options[:page] : 1
       num_to_skip = page_length * (page_number - 1)
 

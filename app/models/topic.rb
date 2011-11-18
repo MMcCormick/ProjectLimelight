@@ -51,7 +51,7 @@ class Topic
   before_create :init_alias
   after_create :add_to_soulmate
   before_update :update_alias
-  after_update :update_denorms
+  after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
   # Return the topic slug instead of its ID
@@ -270,6 +270,9 @@ class Topic
       #                          "$inc" => { "v" => 1 } }, false, true)
       Resque.enqueue(SmCreateTopic, id.to_s)
     end
+  end
 
+  def expire_caches
+    ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, id.to_s
   end
 end

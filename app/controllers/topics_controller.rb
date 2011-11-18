@@ -55,15 +55,17 @@ class TopicsController < ApplicationController
     style = params[:s]
 
     url = default_image_url(topic, dimensions, style, true, false)
-    img = open(Rails.env.development? ? Rails.public_path+url : url)
+    if stale?(:etag => url)
+      img = open(Rails.env.development? ? Rails.public_path+url : url)
 
-    if img
-      send_data(
-        img.read,
-        :disposition => 'inline'
-      )
-    else
-      render :nothing => true, :status => 404
+      if img
+        send_data(
+          img.read,
+          :disposition => 'inline'
+        )
+      else
+        render :nothing => true, :status => 404
+      end
     end
   end
 

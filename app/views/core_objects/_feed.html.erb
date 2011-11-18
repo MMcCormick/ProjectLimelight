@@ -1,9 +1,9 @@
 <div id="core-feed" class="<%= session[:feed_filters][:layout] %>">
   <% core_objects.each_with_index do |core_object, i| %>
     <% if i < 30 %>
-      <% cache("teaser-#{core_object.id.to_s}-#{session[:feed_filters][:layout]}") do %>
+      <%# cache("teaser-#{core_object.id.to_s}-#{session[:feed_filters][:layout]}") do %>
         <%= render "#{core_object._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => core_object, :style => session[:feed_filters][:layout].to_sym, :response => false %>
-      <% end %>
+      <%# end %>
     <% end %>
   <% end %>
 </div>

@@ -3,7 +3,7 @@ class UserCell < Cell::Rails
   include Devise::Controllers::Helpers
   helper ImageHelper
   cache :sidebar_left do |cell,user|
-    user.id.to_s
+    user ? user.id.to_s : 0
   end
   cache :sidebar_right do |cell,user|
     user.id.to_s

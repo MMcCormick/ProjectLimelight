@@ -378,7 +378,7 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      pop_amounts = {
+      @@pop_amounts = {
         :v_up => 1.0,
         :v_down => -1.0,
         :rp => 3.0,
@@ -433,9 +433,9 @@ module Limelight #:nodoc:
     def add_pop_action(type, subtype, current_user)
       amt = 0
       if subtype == :a
-        amt = POP_AMOUNTS[type]
+        amt = @@pop_amounts[type]
       elsif subtype == :r
-        amt = POP_AMOUNTS[type] * -1
+        amt = @@pop_amounts[type] * -1
       end
 
       amt = amt * current_user.clout
@@ -449,9 +449,9 @@ module Limelight #:nodoc:
 
         unless ["User", "Topic"].include? self.class.name
 
-          ooc_amt = amt * POP_AMOUNTS[:ooc]
-          ic_amt = amt * POP_AMOUNTS[:ic]
-          user_amt = amt * POP_AMOUNTS[:user]
+          ooc_amt = amt * @@pop_amounts[:ooc]
+          ic_amt = amt * @@pop_amounts[:ic]
+          user_amt = amt * @@pop_amounts[:user]
 
           ooc_ids, ic_ids = [], []
 

@@ -1,5 +1,5 @@
 <% content_for :sidebar_right do %>
-  <%= render_cell(:topic, :sidebar_right, @topic) %>
+  <%= render_cell(:topic, :sidebar_right, current_user, @topic) %>
 <% end %>
 
 <% content_for :head do %>
@@ -30,7 +30,7 @@
 
 <div class="section">
   <h3>Change Default Image</h3>
-  <%= image_tag topic_default_picture(@topic, 100, 100, :fit), :style => "max-width: 100px;", :class => 'topic-image' %>
+  <%= image_tag topic_default_picture(@topic, 100, 100, :fit), :style => "max-width: 100px;", :class => 'topic-image', :alt => "" %>
   <div class="upload" id="topic_uploadB">Change Image</div>
   <div id="topic_uploadB_progress"></div>
   <% content_for :js do %>

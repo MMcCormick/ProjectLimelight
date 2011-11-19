@@ -43,7 +43,7 @@ class UsersController < ApplicationController
     user = User.find_by_slug(params[:id])
 
     url = default_image_url(user, params[:w], params[:h], params[:m], true)
-    if stale?(:etag => url)
+    #if stale?(:etag => url)
       img = open(Rails.env.development? ? Rails.public_path+url : url)
 
       if img
@@ -54,13 +54,14 @@ class UsersController < ApplicationController
       else
         render :nothing => true, :status => 404
       end
-    end
+    #end
   end
 
   # Update a users default picture
   def picture_update
     image = current_user.add_image(current_user.id, params[:image_location])
     current_user.set_default_image(image.id) if image
+    current_user.save
 
     render :json => {:status => 'ok'}
   end

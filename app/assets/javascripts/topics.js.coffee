@@ -52,7 +52,7 @@ jQuery ->
     self = $(@)
     self.autocomplete $('#static-data').data('d').autocomplete,
     minChars: 2,
-    width: 300,
+    width: 450,
     matchContains: true,
     matchSubset: false,
     autoFill: false,
@@ -65,6 +65,7 @@ jQuery ->
     extraParams: {"types[]":["topic"]},
     dataType: 'json',
     delay: 150,
+    allowNewTopic: true,
     formatItem: (row, i, max) ->
       return row.formattedItem;
     formatMatch: (row, i, max) ->

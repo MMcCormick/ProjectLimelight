@@ -9,9 +9,10 @@ class Topic
   include Limelight::Images
   include Limelight::Popularity
 
-  TYPE_OF_ID = "4eb82a1caaf9060120000081"
-  EXAMPLE_ID = "4eb82a3daaf906012000008a" # this is the opposite of type_of connection
-  LIMELIGHT_ID = '4ec69d9fcddc7f9fe80000b8'
+  @type_of_id = "4eb82a1caaf9060120000081"
+  @instances_id = "4eb82a3daaf906012000008a" # this is the opposite of type_of connection
+  @limelight_id = '4ec69d9fcddc7f9fe80000b8'
+  class << self; attr_accessor :type_of_id, :instances_id, :limelight_id end
 
   # Denormilized:
   # CoreObject.topic_mentions.name
@@ -177,7 +178,7 @@ class Topic
       snippet.topic_slug = con_topic.slug
       snippet.user_id = user_id
       self.topic_connection_snippets << snippet
-      if connection.id.to_s == TYPE_OF_ID
+      if connection.id.to_s == @type_of_id
         self.v += 1
       end
       true
@@ -192,9 +193,12 @@ class Topic
   end
 
   def remove_connection_helper(connection, con_topic)
+    # Update the collection directly since deletion from the array was not persisting to DB
     Topic.collection.update({:_id => id}, {'$pull' => {'topic_connection_snippets' => {:topic_id => con_topic.id, :_id => connection.id}}})
+    # Also delete from the current record so that the slug gets updated correctly
+    topic_connection_snippets.delete_if { |snippet| snippet.topic_id == con_topic.id && snippet.id == connection.id }
 
-    if connection.id.to_s == TYPE_OF_ID
+    if connection.id.to_s == @type_of_id
       self.v += 1
     end
   end
@@ -219,11 +223,11 @@ class Topic
   end
 
   def get_types
-    topic_connection_snippets.select{ |snippet| snippet.id.to_s == TYPE_OF_ID }
+    topic_connection_snippets.select{ |snippet| snippet.id.to_s == @type_of_id }
   end
 
-  def get_examples
-    topic_connection_snippets.select{ |snippet| snippet.id.to_s == EXAMPLE_ID }
+  def get_instances
+    topic_connection_snippets.select{ |snippet| snippet.id.to_s == @instances_id }
   end
 
   # recursively gets topic ids to pull from in a hash of format {:topic_id => true}
@@ -257,12 +261,12 @@ class Topic
       CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
       Topic.where("topic_connection_snippets.topic_id" => id).update_all(connection_snippet_updates)
 
-      # Updates v attribute of examples so they update their slugs
-      if example_ids = get_examples.map{|example| example.topic_id}
-        examples = Topic.where("_id" => { "$in" => example_ids })
-        examples.each do |example|
-          example.v += 1
-          example.save
+      # Updates v attribute of instances so they update their slugs
+      if instance_ids = get_instances.map{|instance| instance.topic_id}
+        instances = Topic.where("_id" => { "$in" => instance_ids })
+        instances.each do |instance|
+          instance.v += 1
+          instance.save
         end
       end
       #TODO: change above to be more effiecient? need to get affected topics to update their slug if necessary

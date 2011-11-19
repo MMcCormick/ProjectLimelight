@@ -354,9 +354,8 @@ module Limelight #:nodoc:
       # See if any of the new topic slugs are already in the DB. Check through topic aliases! Only connect to topics without a type assigned.
       topic_slugs = new_topic_mentions.map {|data| data[1]}
       topic_slugs.uniq!
-      topics = Topic.where("aliases" => { '$in' => topic_slugs}).to_a
-      #TODO: need new version of logic for topic_type_snippets? see below vs above
-      #topics = Topic.where("aliases" => { '$in' => topic_slugs}, "topic_type_snippets" => {"$exists" => false}).to_a
+      # topics with matching aliases that are NOT already typed
+      topics = Topic.where("aliases" => { '$in' => topic_slugs}, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).to_a
 
       new_topic_mentions.each do |topic_mention|
         found_topic = false

@@ -26,25 +26,37 @@ class TopicConnectionsController < ApplicationController
       status = 401
     else
       connection = TopicConnection.find(params[:connection][:con_id])
-      con_topic = Topic.find(params[:connection][:topic_id])
+      if params[:connection][:topic_id] == "0"
+        name = params[:connection][:topic_name]
+        # Checks if there is an untyped topic with an alias equal to the name
+        alias_topic = Topic.where("aliases" => name, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).first
+        if alias_topic
+          con_topic = alias_topic
+        else
+          con_topic = current_user.topics.create({name: name})
+        end
+      else
+        con_topic = Topic.find(params[:connection][:topic_id])
+      end
 
-        if topic && con_topic && connection
-          if topic.add_connection(connection, con_topic, current_user.id)
-            if topic.save && con_topic.save
-              response = build_ajax_response(:ok, nil, "Connection created!")
-              status = 201
-            else
-              response = build_ajax_response(:error, nil, "Could not save connection", topic.errors)
-              status = 422
-            end
+      if topic && con_topic && connection
+        if topic.add_connection(connection, con_topic, current_user.id)
+          changed = topic.v_changed?
+          if topic.save && con_topic.save
+            response = build_ajax_response(:ok, changed ? edit_topic_path(topic) : nil, "Connection created!")
+            status = 201
           else
-            response = build_ajax_response(:error, nil, "Topic already has that connection", topic.errors)
-            status = 400
+            response = build_ajax_response(:error, nil, "Could not save connection", topic.errors)
+            status = 422
           end
         else
-          response = build_ajax_response(:error, nil, 'Object not found!')
-          status = 404
+          response = build_ajax_response(:error, nil, "Topic already has that connection", topic.errors)
+          status = 400
         end
+      else
+        response = build_ajax_response(:error, nil, 'Object not found!')
+        status = 404
+      end
     end
 
     render json: response, :status => status
@@ -61,8 +73,9 @@ class TopicConnectionsController < ApplicationController
 
         if topic && con_topic && connection
           topic.remove_connection(connection, con_topic)
+          changed = topic.v_changed?
           if topic.save && con_topic.save
-            response = build_ajax_response(:ok, nil, "Connection removed!")
+            response = build_ajax_response(:ok, changed ? edit_topic_path(topic) : nil, "Connection removed!")
             status = 201
           else
             response = build_ajax_response(:error, nil, "Could not remove connection", topic.errors)

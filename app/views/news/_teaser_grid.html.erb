@@ -1,9 +1,17 @@
+<% cache("teaser-#{object.id.to_s}-grid-top") do %>
+
 <div class="teaser grid <%= object._type.downcase %>" data-id="<%= object.id %>">
   <div class="wrapper">
 
     <div class="content">
       <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
+
+<% end # cache %>
+
       <%= render 'core_objects/feed_teaser_created', :object => object %>
+
+<% cache("teaser-#{object.id.to_s}-grid-bottom") do %>
+
       <% source = object.sources.length > 0 ? "<a href='#{object.sources[0].url}' target='_blank' rel='nofollow' class='s'>#{object.sources[0].name}</a> - " : '' %>
       <%= markdown(source + parse_mentions(object.content, object)) %>
       <div class="clear"></div>
@@ -29,8 +37,10 @@
       <% end %>
     </div>
 
+<% end # cache %>
+
     <%= render 'core_objects/feed_teaser_actions', :object => object %>
     <div class="pc pc_<%= object.id.to_s %>"></div>
+    <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
   </div>
-  <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
 </div>

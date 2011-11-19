@@ -1,7 +1,9 @@
+<% cache("teaser-#{object.id.to_s}-column") do %>
+
 <div class="teaser column <%= object._type.downcase %>" data-id="<%= object.id %>">
   <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
   <div class="content">
-    <% img = default_image_url(object, 75, 75, :fit, false, true) %>
+    <% img = default_image_url(object, 75, 75, 'fit', false, true) %>
     <% original = default_image_url(object, 0, 0, :original) if img %>
     <% image = image_tag img.image_url, :style => 'max-width: 75px; height: '+img.height.to_s+'px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     <%= render 'core_objects/feed_teaser_image', :image => image if img %>
@@ -11,10 +13,6 @@
   </div>
 
   <div class="connectionsC">
-    <div class="s">
-      <div class="news-grey-icon oType" title="news"></div>
-      <%= render 'core_objects/feed_teaser_created', :object => object %>
-    </div>
     <div class="s">
       <a href="<%= url_for object %>" class="commentC p">
         <%= object.response_count.to_i %> comments
@@ -29,6 +27,13 @@
         <% end %>
       </div>
     <% end %>
+
+<% end # cache %>
+
+    <div class="s w">
+      <div class="news-grey-icon oType" title="news"></div>
+      <%= render 'core_objects/feed_teaser_created', :object => object %>
+    </div>
   </div>
 
   <%= render 'core_objects/feed_teaser_actions', :object => object %>

@@ -1,10 +1,17 @@
+<% cache("teaser-#{object.id.to_s}-grid-top") do %>
+
 <div class="teaser grid <%= object._type.downcase %>" data-id="<%= object.id %>">
   <div class="wrapper">
     <div class="content">
       <%= render 'core_objects/feed_teaser_title', :title => user_link(object.user_snippet), :object => object %>
+
+<% end %>
+
       <div class="createdC">
         <%= time_ago_in_words(object.created_at, false) %> ago
       </div>
+
+<% cache("teaser-#{object.id.to_s}-grid-bottom") do %>
 
       <%= markdown(parse_mentions(object.content, object)) %>
     </div>
@@ -12,7 +19,6 @@
     <div class="connectionsC">
       <div class="s">
         <div class="oType"><div class="talk-grey-icon" title="talk"></div></div>
-
         <a href="<%= url_for object %>" class="commentC p">
           <div class="comment-icon"></div>
           <%= object.response_count.to_i %>
@@ -28,6 +34,8 @@
         </div>
       <% end %>
     </div>
+
+<% end # cache %>
 
     <%= render 'core_objects/feed_teaser_actions', :object => object %>
     <div class="pc pc_<%= object.id.to_s %>"></div>

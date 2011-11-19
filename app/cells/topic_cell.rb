@@ -4,6 +4,8 @@ class TopicCell < Cell::Rails
   include CanCan::ControllerAdditions
   helper TopicsHelper
 
+  cache :trending, :expires_in => 5.minutes
+
   cache :sidebar_right do |cell,current_user,topic|
     key = topic.id.to_s
     if current_user && current_user.is_following?(topic)

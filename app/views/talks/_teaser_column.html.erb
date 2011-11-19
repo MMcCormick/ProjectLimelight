@@ -1,14 +1,11 @@
+<% cache("teaser-#{object.id.to_s}-column") do %>
+
 <div class="teaser column <%= object._type.downcase %>" data-id="<%= object.id %>">
   <div class="content">
     <%= markdown(parse_mentions(object.content, object)) %>
   </div>
 
   <div class="connectionsC">
-    <div class="s">
-      <div class="talk-grey-icon oType" title="talk"></div>
-      <%= render 'core_objects/feed_teaser_created', :object => object %>
-    </div>
-
     <% if object && object.response_to %>
       <div class="response s">
         <span>@</span>
@@ -33,6 +30,13 @@
         <% end %>
       </div>
     <% end %>
+
+<% end # cache %>
+
+    <div class="s w">
+      <div class="talk-grey-icon oType" title="talk"></div>
+      <%= render 'core_objects/feed_teaser_created', :object => object %>
+    </div>
   </div>
 
   <%= render 'core_objects/feed_teaser_actions', :object => object %>

@@ -14,13 +14,14 @@ $(function() {
 
   // Show the comment reply box
   $('.comment .reply-show').live('click', function() {
-    if (!$logged)
+    if (!$logged) {
       $('#register').click();
       return false;
+    }
 
     var $button = $(this);
     $('.comment_reply:visible').remove();
-    var $reply = $('.comment_reply').clone()
+    var $reply = $('#response_form form').clone()
             .find('.comment_reply_cancel').click(
             function() {
               $reply.remove();

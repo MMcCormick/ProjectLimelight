@@ -245,7 +245,7 @@ $(function() {
   }).result(function(event, data, formatted) {
     if (data.bucketType == 'user')
     {
-      window.location = '/users/'+data.term
+      window.location = '/users/'+data.term.toLowerCase()
     }
     else if (data.bucketType == 'topic')
     {

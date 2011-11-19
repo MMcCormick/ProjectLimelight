@@ -275,5 +275,8 @@ class Topic
 
   def expire_caches
     ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, id.to_s
+    ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, "#{id.to_s}-following"
+    ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, "#{id.to_s}-manage"
+    ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, "#{id.to_s}-following-manage"
   end
 end

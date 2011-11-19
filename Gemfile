@@ -2,7 +2,7 @@ require 'rbconfig'
 HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.1'
+gem 'rails', '3.1.2'
 gem 'unicorn'
 #gem 'thin'
 gem 'execjs'
@@ -37,7 +37,7 @@ gem 'ken' # Freebase API for Ruby
 
 group :assets do
   gem 'compass', '0.12.alpha.0'
-  gem 'sass-rails', "3.1.4"
+  gem 'sass-rails'
   gem 'coffee-rails', "3.1.1"
   gem 'uglifier'
 end

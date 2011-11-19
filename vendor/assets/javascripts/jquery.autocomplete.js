@@ -510,7 +510,7 @@
     {
       if (data.bucketType == 'user')
       {
-        image = '<img style="max-width: 25px" src="/users/'+data.term+'/picture?d[]=25&d[]=25&s=square" />';
+        image = '<img style="max-width: 25px" src="/users/'+data.term.toLowerCase()+'/picture?w=25&h=25&m=fillcropmid" />';
         return '<div class="auto-user">'+image+'<div class="name term">'+data.term+'</div></div>';
       }
       else if (data.bucketType == 'topic')
@@ -520,7 +520,7 @@
             name = '<span class="term">'+data.term+'</span>';
         if (data.data)
         {
-          image = '<img width="25" src="/'+data.data.slug+'/picture?d[]=25&d[]=25&s=square" />';
+          image = '<img width="25" src="/'+data.data.slug+'/picture?w=25&h=25&m=fillcropmid" />';
         }
         else
         {

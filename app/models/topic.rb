@@ -178,7 +178,7 @@ class Topic
       snippet.topic_slug = con_topic.slug
       snippet.user_id = user_id
       self.topic_connection_snippets << snippet
-      if connection.id.to_s == @type_of_id
+      if connection.id.to_s == Topic.type_of_id
         self.v += 1
       end
       true
@@ -198,7 +198,7 @@ class Topic
     # Also delete from the current record so that the slug gets updated correctly
     topic_connection_snippets.delete_if { |snippet| snippet.topic_id == con_topic.id && snippet.id == connection.id }
 
-    if connection.id.to_s == @type_of_id
+    if connection.id.to_s == Topic.type_of_id
       self.v += 1
     end
   end
@@ -223,7 +223,7 @@ class Topic
   end
 
   def get_types
-    topic_connection_snippets.select{ |snippet| snippet.id.to_s == @type_of_id }
+    topic_connection_snippets.select{ |snippet| snippet.id.to_s == Topic.type_of_id }
   end
 
   def get_instances

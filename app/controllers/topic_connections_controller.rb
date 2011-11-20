@@ -26,6 +26,7 @@ class TopicConnectionsController < ApplicationController
       status = 401
     else
       connection = TopicConnection.find(params[:connection][:con_id])
+
       if params[:connection][:topic_id] == "0"
         name = params[:connection][:topic_name]
         # Checks if there is an untyped topic with an alias equal to the name
@@ -41,6 +42,10 @@ class TopicConnectionsController < ApplicationController
 
       if topic && con_topic && connection
         if topic.add_connection(connection, con_topic, current_user.id)
+          if params[:freebase_id] && con_topic.fb_id.blank?
+            con_topic.fb_id = params[:freebase_id]
+            con_topic.fb_mid = params[:freebase_mid]
+          end
           changed = topic.v_changed?
           if topic.save && con_topic.save
             response = build_ajax_response(:ok, changed ? edit_topic_path(topic) : nil, "Connection created!")

@@ -1,18 +1,24 @@
 jQuery ->
 
   # Freebase
-  if ($("#freebase-ac").length > 0)
+  freebaseLookup = (id) ->
+    $.get(
+      $('#freebase-ac').data('url')
+      freebase_id: id
+      (data) ->
+        $('#freebase-form-c').html(data.form)
+
+      'json'
+    )
+
+  $("#freebase-ac").livequery ->
     $("#freebase-ac")
     .suggest()
     .bind "fb-select", (e, data) ->
-      $.get(
-        $('#freebase-ac').data('url')
-        freebase_id: data.id
-        (data) ->
-          $('#freebase-form-c').html(data.form)
+       freebaseLookup(data.id)
 
-        'json'
-      )
+  $('#freebase-lookup-id').livequery ->
+    freebaseLookup($(@).data('id'))
 
   # Creates a qtip with a form to add types to a topic when an .addTypeB is clicked
   $('.addTypeB').livequery ->
@@ -48,7 +54,7 @@ jQuery ->
     })
 
   # Topic autocomplete for topic connection form
-  $('#tc-auto').livequery ->
+  $('.tc-auto').livequery ->
     self = $(@)
     self.autocomplete $('#static-data').data('d').autocomplete,
     minChars: 2,
@@ -74,7 +80,7 @@ jQuery ->
       return row.term;
 
     self.result (event, data, formatted) ->
-      $('#connection_topic_id').val(data.id)
+      self.parent().siblings('#connection_topic_id').val(data.id)
 
   # TODO: can we combine this and the above? the self.result part is the only difference
   # Topic autocomplete for topic merge form

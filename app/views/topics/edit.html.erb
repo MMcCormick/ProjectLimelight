@@ -16,6 +16,9 @@
     <%= text_field_tag "freebase", @topic.name, :id => "freebase-ac", "data-url" => freebase_lookup_path(@topic) %>
   </div>
 
+  <% if @topic.fb_id %>
+    <div id="freebase-lookup-id" data-id="<%= @topic.fb_id %>"></div>
+  <% end %>
   <div id="freebase-form-c"></div>
 </div>
 

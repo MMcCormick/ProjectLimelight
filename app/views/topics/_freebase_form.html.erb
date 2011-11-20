@@ -1,4 +1,4 @@
-<form action="<%= freebase_update_path topic_id %>" id="freebase-update-form" method="POST" class="ajax">
+<form action="<%= freebase_update_path topic_slug %>" id="freebase-update-form" method="POST" class="ajax">
 
   <div class="use-check">
     <%= check_box_tag "use_image" %>
@@ -32,3 +32,11 @@
     <%= submit_tag "Update", :class => "submit" %>
   </div>
 </form>
+
+<div class="clear-left"></div>
+
+<%= label_tag nil, "Types" %>
+<% types.each do |type| %>
+  <div class="clear-left"></div>
+  <%= render :partial => "topic_connections/add_form", :locals => {:type => type, :topic_id => topic_id} %>
+<% end %>

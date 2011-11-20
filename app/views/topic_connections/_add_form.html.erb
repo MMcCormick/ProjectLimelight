@@ -1,16 +1,30 @@
 <form action="<%= add_connection_path %>" id="add-connection-form" method="POST" class="ajax">
 
-  <div class="field">
-    <%= collection_select(:connection, :con_id, connection_types, :id, :name, :prompt => "Connection Type") %>
-  </div>
+  <!--If type is defined, it's a freebase "type of" connection-->
+  <% from_freebase = defined?(type) %>
 
-  <div class="lClear required">
-    <%= label_tag "tc-auto", "Connected topic" %>
-    <%= text_field_tag "connection[topic_name]", nil, :id => "tc-auto" %>
+  <% if from_freebase %>
+    <%= hidden_field_tag "connection[con_id]", Topic.type_of_id %>
+  <% else %>
+    <div class="field">
+      <%= collection_select(:connection, :con_id, connection_types, :id, :name, :prompt => "Connection Type") %>
+    </div>
+  <% end %>
+
+  <div class="field required">
+    <% if !from_freebase %>
+      <%= label_tag "tc-auto", "Connected topic" %><br/>
+    <% end %>
+    <%= text_field_tag "connection[topic_name]", (from_freebase ? type[:name] : nil), :id => "tc-auto", :class => "tc-auto" %>
   </div>
 
   <%= hidden_field_tag "connection[topic_id]", "" %>
-  <%= hidden_field_tag "topic_id", topic.id %>
+  <%= hidden_field_tag "topic_id", topic_id %>
+
+  <% if from_freebase %>
+    <%= hidden_field_tag "freebase_id", type["id"] %>
+    <%= hidden_field_tag "freebase_mid", type["mid"] %>
+  <% end %>
 
   <div class="actions">
     <%= submit_tag "Add", :class => "submit" %>

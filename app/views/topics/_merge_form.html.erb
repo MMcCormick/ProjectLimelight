@@ -8,6 +8,6 @@
   <%= hidden_field_tag "target_id", topic.id %>
 
   <div class="actions">
-    <%= submit_tag "Merge", :class => "submit" %>
+    <%= submit_tag "Merge", :class => "submit", :confirm => "Are you sure you want to merge these topics? This cannot be undone" %>
   </div>
 </form>

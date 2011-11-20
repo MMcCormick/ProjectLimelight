@@ -34,6 +34,7 @@ class TopicsController < ApplicationController
 
   def edit
     @topic = Topic.find_by_slug(params[:id])
+    authorize! :edit, @topic
   end
 
   def update
@@ -127,12 +128,17 @@ class TopicsController < ApplicationController
 
   def freebase_lookup
     resource = Ken::Topic.get(params[:freebase_id])
+    topic = Topic.find_by_slug(params[:id])
 
     if resource
-      locals = { :topic_id => params[:id] }
+      locals = { :topic_id => topic.id, :topic_slug => params[:id] }
       locals[:ids] = Ken.session.mqlread({ :id => params[:freebase_id], :mid => nil })
       locals[:description] = resource.description
-      locals[:aliases] = resource.aliases
+      locals[:aliases] = resource.aliases + [resource.text]
+      locals[:types] = []
+      resource.types.each do |type|
+        locals[:types] << {:name => type.name}.merge(Ken.session.mqlread({ :id => type.id, :mid => nil }))
+      end
       locals[:image_url] = "https://usercontent.googleapis.com/freebase/v1/image#{resource.id}?maxheight=1024&maxwidth=1024"
       form = render_to_string :partial => "topics/freebase_form", :locals => locals
       response = build_ajax_response(:ok, nil, "Topic found!", nil, :form => form)
@@ -158,7 +164,7 @@ class TopicsController < ApplicationController
     if params[:use_aliases] && params[:aliases]
       aliases = params[:aliases].split(", ")
       aliases.each do |new_alias|
-        topic.add_alias(new_alias)
+        topic.add_alias(new_alias.to_url)
       end
     end
 

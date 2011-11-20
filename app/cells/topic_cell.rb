@@ -11,7 +11,7 @@ class TopicCell < Cell::Rails
     if current_user && current_user.is_following?(topic)
       key += '-following'
     end
-    if current_user && can?(:update, topic)
+    if current_user && (current_user.role?('admin') || topic.permission?(current_user.id, :update))
       key += '-manage'
     end
     key

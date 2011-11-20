@@ -1,20 +1,26 @@
+<% cache("teaser-#{object.id.to_s}-grid-top") do %>
+
 <div class="teaser grid <%= object._type.downcase %>" data-id="<%= object.id %>">
   <div class="wrapper">
 
     <div class="content">
       <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
+
+<% end #cache %>
+
       <%= render 'core_objects/feed_teaser_created', :object => object %>
 
-      <% img = default_image_url(object, 200, 175, :fillcropmid) %>
+<% cache("teaser-#{object.id.to_s}-grid-bottom") do %>
+
+      <% img = default_image_url(object, 200, 175, 'fillcropmid') %>
       <% original = default_image_url(object, 0, 0, :original) %>
       <% image = image_tag img, :style => 'max-width: 200px; max-height: 175px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
       <%= render 'core_objects/feed_teaser_image', :image => image %>
     </div>
 
     <div class="connectionsC">
-      <div class="s">
+      <div class="s w">
         <div class="oType"><div class="picture-grey-icon" title="picture"></div></div>
-
         <a href="<%= url_for object %>" class="commentC p">
           <div class="comment-icon"></div>
           <%= object.response_count.to_i %>
@@ -31,8 +37,10 @@
       <% end %>
     </div>
 
+<% end # cache %>
+
     <%= render 'core_objects/feed_teaser_actions', :object => object %>
     <div class="pc pc_<%= object.id.to_s %>"></div>
+    <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
   </div>
-  <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
 </div>

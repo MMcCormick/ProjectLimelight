@@ -6,20 +6,20 @@
  * Control the main content resizing
  */
 var resizeLayout = function(rightSidebarAdjust) {
+  var header = $('#header');
   var pageHeader = $('#page_header');
   var sidebar = $('#sidebar');
   var rightSidebar = $('#sidebar-right .sbrC');
-  var footer = $('#footer').height();
-  var h = $(window).height() - footer;
+  var footer = $('#footer');
+  var h = $(window).height() - footer.height();
 
   sidebar.css('height', h - 7 - parseInt(sidebar.css('left').replace("px", "")) * 2 - parseInt(sidebar.css('padding-bottom').replace("px", "")));
 
   var w = $('body').width() - 4
           - (sidebar.width() + parseInt(sidebar.css('left').replace("px", "")));
 
-
   if (rightSidebar.length > 0) {
-    rightSidebar.css('height', h - 2 - parseInt(rightSidebar.css('margin-top').replace("px", "")) * 2);
+    rightSidebar.css('min-height', $(window).height()-21);
 
     if (rightSidebarAdjust) {
       w -= 10 + rightSidebar.width() + parseInt(rightSidebar.css('margin-right').replace("px", ""));
@@ -29,8 +29,6 @@ var resizeLayout = function(rightSidebarAdjust) {
   pageHeader.css({width: w + 2});
 
   $('#page').css({'padding-top': pageHeader.height() + 10, width: w + 2});
-
-  $('#page-sb1 .wrap, #page-sb2 .wrap, #page-sb3 .wrap').css('height', h - pageHeader.height());
 };
 
 // Check if something is visible on the screen
@@ -110,11 +108,11 @@ function rearrange_feed_columns()
 
 function handleScroll() {
   if (isScrolledIntoView($('#header'), false, false)) {
-    $('#sidebar,#page_header,#sidebar-right,#ajax-loading').removeClass('floating');
+    $('#sidebar,#page_header,#ajax-loading').removeClass('floating');
     $('#page').css('margin-right', 0);
   }
   else {
-    $('#sidebar,#page_header,#sidebar-right,#ajax-loading').addClass('floating');
+    $('#sidebar,#page_header,#ajax-loading').addClass('floating');
     if ($('#sidebar-right .sbrC').length > 0) {
       $('#page').css('margin-right', 2 + $('#sidebar-right .sbrC').width() + parseInt($('#sidebar-right .sbrC').css('margin-right').replace("px", "")));
     }

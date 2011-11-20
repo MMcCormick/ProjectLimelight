@@ -1,10 +1,11 @@
+<% cache("teaser-#{object.id.to_s}-list") do %>
+
 <div class="teaser list <%= object._type.downcase %>" data-id="<%= object.id %>">
 
   <div class="content">
     <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
-    <%= render 'core_objects/feed_teaser_created', :object => object %>
 
-    <% img = default_image_url(object, 75, 75, :fillcropmid) %>
+    <% img = default_image_url(object, 75, 75, 'fillcropmid') %>
     <% original = default_image_url(object, 0, 0, :original) %>
     <% image = image_tag img, :style => 'max-width: 75px; max-height: 75px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     <%= render 'core_objects/feed_teaser_image', :image => image %>
@@ -27,6 +28,9 @@
     <% end %>
   </div>
 
+<% end # cache %>
+
+  <%= render 'core_objects/feed_teaser_created', :object => object %>
   <%= render 'core_objects/feed_teaser_actions', :object => object %>
   <div class="pc pc_<%= object.id.to_s %>"></div>
   <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>

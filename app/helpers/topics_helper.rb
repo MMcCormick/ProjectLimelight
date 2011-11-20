@@ -4,7 +4,7 @@ module TopicsHelper
     render 'topics/link', :topic => topic, :name => name
   end
 
-  def topic_default_picture(topic, width, height, mode = :fit)
+  def topic_default_picture(topic, width, height, mode = 'fit')
     if topic.fb_img == true
       "https://usercontent.googleapis.com/freebase/v1/image#{topic.fb_id}?maxwidth=#{width}&maxheight=#{height}&mode=#{mode}"
     else

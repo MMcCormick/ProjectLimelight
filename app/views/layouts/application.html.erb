@@ -33,7 +33,11 @@
   </head>
   <body id="<%= params[:controller].parameterize %>-c">
     <div id="application">
-      <%= render 'shared/header' %>
+
+      <% cache("header#{'-logged' if signed_in?}#{'-admin' if signed_in? && current_user.role?('admin')}") do %>
+        <%= render 'shared/header' %>
+      <% end %>
+
       <div id="content">
         <%= render_cell :user, :sidebar_left, current_user %>
 

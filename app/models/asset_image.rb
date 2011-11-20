@@ -4,7 +4,7 @@ class AssetImage < Asset
 
   field :isOriginal
   field :resizedTo
-  field :mode, :default => :fit
+  field :mode, :default => 'fit'
   field :width
   field :height
 

@@ -47,8 +47,7 @@ $(function() {
         // If they need to login
         if (jqXHR.status == 401)
         {
-          $('#login').click()
-          $('#user_email').focus()
+          $('#register').click()
           $('.qtip.ui-tooltip').qtip('hide')
         }
         // If there was a form error

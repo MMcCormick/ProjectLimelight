@@ -125,9 +125,9 @@ module Limelight #:nodoc:
         height = dimensions[1] == 0 ? 999999 : dimensions[1]
 
         case mode
-          when :fillcropmid
+          when 'fillcropmid'
             new_image = new_image.resize_to_fill(width, height)
-          when :fit
+          when 'fit'
             new_image = new_image.resize_to_fit(width, height)
           else
             new_image = new_image.resize_to_fit(width, height)

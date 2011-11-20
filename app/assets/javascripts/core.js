@@ -93,7 +93,7 @@
 
         if (jqXHR.status == 401 && $('#login').length > 0)
         {
-          $('#login').click()
+          $('#register').click()
           createGrowl(false, 'You need to be logged in to do that.', '', 'red');
         }
         else if (jqXHR.status == 500)

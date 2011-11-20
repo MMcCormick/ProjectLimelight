@@ -1,9 +1,9 @@
+<% cache("teaser-#{object.id.to_s}-list") do %>
+
 <div class="teaser list <%= object._type.downcase %>" data-id="<%= object.id %>">
 
   <div class="content">
     <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
-    <%= render 'core_objects/feed_teaser_created', :object => object %>
-
     <%= video_embed(object.sources[0], 150, 120) %>
   </div>
 
@@ -24,6 +24,9 @@
     <% end %>
   </div>
 
+<% end %>
+
+  <%= render 'core_objects/feed_teaser_created', :object => object %>
   <%= render 'core_objects/feed_teaser_actions', :object => object %>
   <div class="pc pc_<%= object.id.to_s %>"></div>
   <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>

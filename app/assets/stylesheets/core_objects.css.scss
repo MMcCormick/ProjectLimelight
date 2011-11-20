@@ -349,7 +349,7 @@ $teaser-padding: 10px;
         span {
           color: #444;
           cursor: default;
-          font-size: 15px;
+          font-size: 12px;
         }
         .r {
           position: relative;
@@ -357,7 +357,7 @@ $teaser-padding: 10px;
         }
         .icon {
           position: absolute;
-          top: 3px;
+          top: 1px;
           left: 0px;
         }
     }
@@ -409,6 +409,7 @@ $teaser-padding: 10px;
       background: #EBEEE2;
       clear: left;
       font-size: 11px;
+      position: relative;
       .s {
         @include clearfix();
         display: block;
@@ -439,7 +440,7 @@ $teaser-padding: 10px;
       float: left;
       margin: 8px 10px 0 10px;
     }
-    
+
     .commentC {
         float: left;
         font-size: 10px;
@@ -449,7 +450,7 @@ $teaser-padding: 10px;
             margin: 3px 5px 0 0;
         }
     }
-    
+
     .mentions {
         margin: 0 0 0 85px;
         .tag {
@@ -535,7 +536,7 @@ $teaser-padding: 10px;
     margin: 4px 5px 0 5px;
     padding: 0 2px 5px 2px;
     border-bottom: double #DDD;
-    font-size: 14px;
+    font-size: 12px;
     white-space: nowrap;
   }
   .content {
@@ -554,7 +555,7 @@ $teaser-padding: 10px;
     }
   }
   .createdC {
-    margin: -2px 0 0 7px;
+    margin: 0 0 0 7px;
   }
   .controlsC {
     display: none;
@@ -674,6 +675,15 @@ $teaser-padding: 10px;
   .video-embed {
     float: none;
   }
+  .connectionsC {
+    padding-top: 26px;
+  }
+  .w {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 210px;
+  }
   .createdC {
     color: #666;
     font-size: 11px;
@@ -753,13 +763,16 @@ $scoreBox-width: 160px;
   }
   .content {
     @include clearfix();
-    margin: 0 ($scoreBox-width + $teaser-padding * 2 + 2) 5px $teaser-padding;
+    margin: 0 140px 5px $teaser-padding;
   }
   .titleC {
     .icon {
       top: 6px;
     }
-    font-size: 16px;
+    font-size: 15px;
+    margin: 0 0 20px 0;
+    overflow: hidden;
+    white-space: nowrap;
   }
   .pc {
     position: absolute;
@@ -774,8 +787,9 @@ $scoreBox-width: 160px;
     margin:  0 $teaser-padding 0 0;
   }
   .createdC {
-    @include clearfix();
-    margin: -3px 0 3px 1px;
+    position: absolute;
+    top: 19px;
+    left: 9px;
   }
   .bodyC {
     font-size: 14px;
@@ -801,6 +815,12 @@ $scoreBox-width: 160px;
     .tag {
       float: left;
       margin: 0 10px 0 0;
+    }
+  }
+  .r {
+    font-size: 15px;
+    .icon {
+      top: 3px;
     }
   }
 }
@@ -829,7 +849,7 @@ $scoreBox-width: 160px;
 }
 
 // Right Object Sidebar
-.sbrC { 
+.sbrC {
   .scoreBox {
     margin: 20px 0px 20px 35px;
   }
@@ -915,7 +935,7 @@ $scoreBox-width: 160px;
             color: #444;
         }
     }
-    
+
     .feed-display {
         li {
             margin: 0 3px;

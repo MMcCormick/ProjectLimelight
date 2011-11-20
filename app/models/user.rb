@@ -76,13 +76,21 @@ class User
   validates :username, :presence => true, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 15 }
   validates :email, :uniqueness => { :case_sensitive => false }
 
-  after_create :add_to_soulmate, :save_profile_image, :send_welcome_email
+  after_create :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
   # Return the users slug instead of their ID
   def to_param
     self.slug
+  end
+
+  def follow_limelight_topic
+    limelight = Topic.find(Topic.limelight_id)
+    if limelight
+      self.follow_topic(limelight)
+      self.save
+    end
   end
 
   # Pull image from Gravatar

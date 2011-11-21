@@ -42,6 +42,17 @@
       display: block;
     }
   }
+  &.left {
+    padding-left: 7px;
+    padding-right: 7px;
+    .num {
+      left: auto;
+      right: 7px;
+    }
+    &.on {
+      margin-left: -270px;
+    }
+  }
 }
 
 #hp { // help panel (the main nav panel)
@@ -130,4 +141,40 @@
 #hf-ooc { // contribute out of context mention
   left: 520px;
   top: 4px;
+}
+#hf-types { // topic types
+  left: -30px;
+  top: 16px;
+}
+#hf-popularity { // topic popularity
+  left: -30px;
+  top: 58px;
+}
+#hf-follow { // topic following
+  left: -30px;
+  top: 285px;
+}
+#hf-aliases { // topic aliases
+  left: -30px;
+  top: 345px;
+}
+#hf-connections { // topic connections
+  left: -30px;
+  top: 410px;
+}
+#hf-sort { // feed sorting
+  left: 19px;
+  top: -27px;
+}
+#hf-filter { // feed filters
+  left: 218px;
+  top: -27px;
+}
+#hf-view { // feed views
+  right: 134px;
+  top: -27px;
+}
+#hf-interact { // feed interact
+  left: 19px;
+  top: 50px;
 }

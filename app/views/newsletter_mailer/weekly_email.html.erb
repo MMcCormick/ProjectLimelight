@@ -9,13 +9,13 @@
  end
 %>
 
-<div style="margin-left: 85px;">
-  <%= image_tag base + image_path('logo_black.gif'), :style => 'max-width: 259px; max-height: 61px;' %>
-</div>
+<div style="margin-left: 87px;"><a href="<%= base %>">
+  <%= image_tag base + image_path('logo_black.gif'), :style => 'max-width: 259px; max-height: 61px;', :alt => "" %>
+</a></div>
 
 <p>Hi <%= @user.first_name.blank? ? @user.username : @user.first_name %>,</p>
 
-<p>Here are a few new posts we thought you might like. Enjoy!</p>
+<p style="max-width: 432px;">Here are a few new posts we thought you might like. Enjoy!</p>
 
 <% if !@pictures.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #7BA821; margin-bottom: 20px;">
@@ -132,4 +132,4 @@
   </table>
 <% end %>
 
-<p>If you wish to change the frequency of these emails, please log in and click "Settings" on the left panel.</p>
+<p style="max-width: 432px;">If you wish to change the frequency of these emails, please log in and click "Settings" on the left panel.</p>

@@ -8,6 +8,10 @@
  end
 %>
 
+<div align="center"><a href="<%= base %>">
+  <%= image_tag base + image_path('logo_black.gif'), :style => 'max-width: 259px; max-height: 61px;', :alt => "" %>
+</a></div>
+
 <p><%= user_link(@from_user, nil, base) %> shared a <%= @shared.class.name.downcase %> <%= @object_user.id == @from_user.id ? 'they' : user_link(@object_user, nil, base) %> posted, <%= "<a href='#{base+core_object_url(@shared, @shared.class.name)}'>#{@shared.name}</a>".html_safe %>, with you on Limelight.</p>
 
 <p>If you wish to change the frequency of these emails, please log in and click "Settings" on the left panel.</p>

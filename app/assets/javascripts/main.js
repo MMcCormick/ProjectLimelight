@@ -174,12 +174,12 @@ $(function() {
     $(this).qtip({
       content: {
         text: '<div>navigation: up, down, left, right</div>' +
-                '<div>go to post: enter</div>' +
-                '<div>vote up: shift+up</div>' +
-                '<div>vote down: shift+down</div>' +
-                '<div>favorite: f</div>' +
-                '<div>repost: r</div>' +
-                '<div>share: s</div>'
+                '<div>go to post: shift + enter</div>' +
+                '<div>vote up: shift + up</div>' +
+                '<div>vote down: shift + down</div>' +
+                '<div>favorite: shift + f</div>' +
+                '<div>repost: shift + r</div>' +
+                '<div>share: shift + s</div>'
       },
       style: {classes: 'ui-tooltip-shadow ui-tooltip-light', tip: true},
       position: {
@@ -277,11 +277,7 @@ $(function() {
   // TODO: have this account for the right sidebar
   function feedLastInRow(elem)
   {
-    if ($('body').width()-elem.width()-elem.offset().left < 65)
-    {
-      return true
-    }
-    return false
+    return ($('body').width()-elem.width()-elem.offset().left < 65)
   }
 
   // On keyup
@@ -362,8 +358,6 @@ $(function() {
 
           // Grid + List view
           else {
-            extra = parseInt($('.teaser.grid').css('margin-left').replace("px", "")) * 2 + parseInt($('.teaser.grid').css('border-left-width').replace("px", "")) * 2;
-
             // If first element is hovered and left or up is pressed
             if (($code == $sc.up || $code == $sc.left) && $('.teaser:first').hasClass(hoverClass)) {
               $('.teaser:first').qtip('show');
@@ -388,6 +382,7 @@ $(function() {
 
             // Jump up a row (for Grid View)
             else if (target.hasClass('grid') && ($code == $sc.up)) {
+              extra = parseInt($('.teaser.grid').css('margin-left').replace("px", "")) * 2 + parseInt($('.teaser.grid').css('border-left-width').replace("px", "")) * 2;
               target.removeClass(hoverClass).prevAll().eq(($('#core-feed').width()) / ($('.teaser.grid').width() + extra) - 1).addClass(hoverClass).qtip('show');
               if ($('.teaser.hover').length == 0) {
                 $newHover = true;
@@ -395,6 +390,7 @@ $(function() {
             }
             // Jump down a row (for Grid View)
             else if (target.hasClass('grid') && ($code == $sc.down)) {
+              extra = parseInt($('.teaser.grid').css('margin-left').replace("px", "")) * 2 + parseInt($('.teaser.grid').css('border-left-width').replace("px", "")) * 2;
               target.removeClass(hoverClass).nextAll().eq(($('#core-feed').width()) / ($('.teaser.grid').width() + extra) - 1).addClass(hoverClass).qtip('show');
             }
           }
@@ -425,27 +421,27 @@ $(function() {
 
       // Score Up
       case (e.shiftKey && $code == $sc.up):
-        $('.teaser.hover').find('.voteB.up, .unvoteB.up').click();
+        $('.teaser.hover, .ui-tooltip-content:visible').find('.voteB.up, .unvoteB.up').click();
       break;
 
       // Score Down
       case (e.shiftKey && $code == $sc.down):
-        $('.teaser.hover').find('.voteB.down, .unvoteB.down').click();
+        $('.teaser.hover, .ui-tooltip-content:visible').find('.voteB.down, .unvoteB.down').click();
       break;
 
       // Favorite
       case (e.shiftKey && $code == $sc.fav):
-        $('.teaser.hover').find('.favB, .unfavB').click();
+        $('.teaser.hover, .ui-tooltip-content:visible').find('.favB, .unfavB').click();
       break;
 
       // Repost
       case (e.shiftKey && $code == $sc.repost):
-        $('.teaser.hover').find('.repostB, .unrepostB').click();
+        $('.teaser.hover, .ui-tooltip-content:visible').find('.repostB, .unrepostB').click();
       break;
 
       // Share
       case (e.shiftKey && $code == $sc.share):
-        $('.teaser.hover').find('.coreShareB, .coreShareB').click();
+        $('.teaser.hover, .ui-tooltip-content:visible').find('.coreShareB, .coreShareB').click();
       break;
 
       //TODO: implement - unsure of purpose

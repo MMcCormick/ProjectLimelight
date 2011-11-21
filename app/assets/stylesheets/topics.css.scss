@@ -132,8 +132,20 @@
     float: left;
     margin: 5px 10px 0 0;
   }
+  .also {
+    margin: 8px 0 0 0;
+    div {
+      font-size: 11px;
+    }
+  }
   .summary {
     font-size: 12px;
+  }
+  h5 {
+    border-bottom: 1px solid #F6F6F6;
+    padding: 5px 0 1px 0;
+    color: #777;
+    margin: 0 0 5px 0;
   }
   .topic-connections {
     .connection {
@@ -145,17 +157,9 @@
         right: 5px;
         font-size: 12px;
       }
-      h5 {
-        border-bottom: 1px solid #F6F6F6;
-        padding: 5px 0 1px 0;
-        color: #777;
-        margin: 0 0 5px 0;
-      }
       .tag {
         margin: 3px 0 0 0;
-      }
-      .delete {
-        float: right;
+        font-size: 12px;
       }
     }
   }

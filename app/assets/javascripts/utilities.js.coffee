@@ -79,6 +79,13 @@ jQuery ->
   $('.noSelect').bind 'selectstart, click', (e) ->
     false
 
+  # show more buttons (for showing extra text)
+  $('.show-more .more').live 'click', (e) ->
+    if ($(@).hasClass('on'))
+      $(@).text('... show more').removeClass('on').siblings('.extra').hide()
+    else
+      $(@).text('hide more').addClass('on').siblings('.extra').show()
+
   #  onScreen jQuery plugin v0.2.1
   #  (c) 2011 Ben Pickles
   #

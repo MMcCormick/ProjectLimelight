@@ -24,22 +24,33 @@
       <a class="btn followers" href="<%= topic_followers_path @topic %>"><%= @topic.followers_count.to_i %> followers</a>
     </div>
 
-    <div class="summary">
-      <%= show_more(@topic.summary, 100) %>
-    </div>
+    <% unless @topic.summary.blank? %>
+      <div class="summary">
+        <%= show_more(@topic.summary, 100) %>
+      </div>
+    <% end %>
+
+    <% if @topic.aliases.length > 1 %>
+      <div class="also">
+        <h5>Also Known As</h5>
+        <div><%= @topic.also_known_as %></div>
+      </div>
+    <% end %>
 
     <div class="topic-connections">
       <% @connections.each do |con_id, connection| %>
-        <div class="connection">
-          <h5><%= connection[:name] %></h5>
-          <% connection[:data].each_with_index do |data, i| %>
-            <% if i > 1 %>
-              <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
-              <% break %>
+        <% if con_id.to_s != Topic.type_of_id %>
+          <div class="connection">
+            <h5><%= connection[:name] %></h5>
+            <% connection[:data].each_with_index do |data, i| %>
+              <% if i > 1   %>
+                <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
+                <% break %>
+              <% end %>
+              <%= render 'topics/tag', :topic => data[:topic], :include_image => false %>
             <% end %>
-            <%= render 'topics/tag', :topic => data[:topic], :include_image => true, :image_d => 30 %>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       <% end %>
     </div>
   </div>

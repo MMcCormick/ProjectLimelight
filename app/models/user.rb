@@ -62,6 +62,10 @@ class User
   field :vote_ratio, :type => Float, :default => 0
   field :clout, :default => 1
 
+  field :shares_email, :default => true
+  field :notify_email, :default => true
+  field :weekly_email, :default => true
+
   auto_increment :public_id
 
   has_many :core_objects
@@ -73,8 +77,6 @@ class User
   has_many :topic_connections
   has_many :comments
   has_many :popularity_actions
-
-  embeds_one :settings
 
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login

@@ -20,7 +20,7 @@ class PagesController < ApplicationController
   end
 
   def contact
-
+    @feedback_topic = Topic.find(Topic.limelight_feedback_id)
   end
 
   def privacy

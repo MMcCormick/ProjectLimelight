@@ -35,3 +35,13 @@ jQuery ->
 
     $('#hp .contrib').find('.tutorials > div').each (i,val) ->
       $($(val).data('t')).show('scale', {}, 150)
+
+  $('#hp-topic').live 'click', (e) ->
+    $('#hp .master').hide()
+    $('#hp .topic').show()
+
+    if ($('#top-contribute:visible').length == 0)
+      $('#contribute').click()
+
+    $('#hp .contrib').find('.tutorials > div').each (i,val) ->
+      $($(val).data('t')).show('scale', {}, 150)

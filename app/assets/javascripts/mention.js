@@ -66,7 +66,8 @@ var settings = [
     highlight     : 'user-mention',
     allowNew      : false,
     bucket        : $('#static-data').data('d').userAutoBucket,
-    bucketType    : 'user'
+    bucketType    : 'user',
+    bucketName    : 'USERS'
   },
   {
     type          : 'topic',
@@ -76,9 +77,10 @@ var settings = [
     selectFirst   : true,
     mustMatch     : false,
     highlight     : 'topic-mention',
-    allowNew      : false,
+    allowNew      : true,
     bucket        : 'topic',
-    bucketType    : 'topic'
+    bucketType    : 'topic',
+    bucketName    : 'TOPICS'
   }
 ]
 
@@ -330,10 +332,11 @@ var fields = [];
         mustMatch: settings[this.mode].mustMatch,
         searchKey: 'term',
         max: 10,
-        bucket: settings[this.mode].bucket,
-        bucketType: [settings[this.mode].bucketType],
-        extraParams: extraParams,
-        allowNewTopic: true,
+        buckets: [[settings[this.mode].bucket, settings[this.mode].bucket, settings[this.mode].bucketName]],
+        extraParams: {"types":[settings[this.mode].bucket]},
+        allowNew: settings[this.mode].allowNew,
+        allowNewName: settings[this.mode].bucketType,
+        allowNewType: settings[this.mode].bucketType,
         dataType: 'json',
         delay: 150,
         formatItem: function(row, i, max) {

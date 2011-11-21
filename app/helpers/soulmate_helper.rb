@@ -24,14 +24,15 @@ module SoulmateHelper
     }
 
     if topic.aliases.length > 0
-      nugget['aliases'] = topic.aliases
+      nugget['aliases'] ||= Array.new
+      topic.aliases.each do |data|
+        nugget['aliases'] << data.name
+      end
     end
 
-    if topic.get_types.length > 0
-      nugget['data']['types'] = Array.new
-      topic.get_types.each do |type|
-        nugget['data']['types'] << type.topic_name
-      end
+    topic.get_types.each do |type|
+      nugget['data']['types'] ||= Array.new
+      nugget['data']['types'] << type.topic_name
     end
 
     nugget

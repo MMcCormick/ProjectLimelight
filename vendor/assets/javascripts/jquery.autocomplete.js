@@ -423,51 +423,30 @@
           success: function(acData) {
             // Used for soulmate redis store
             // APPLICATION SPECIFIC
-            var buckets = [],
+            var buckets=[],
                 tmpData={},
-                tmpData2={},
-                data={},
-                data2={};
+                data={};
 
-            if ($.inArray('user', options.bucketType) != -1)
+            if (options.buckets.length > 0)
             {
-              if (options.bucket)
+              if (options.allowNew)
               {
-                buckets.push('user')
-                buckets.push('user')
-                tmpData = {'FOLLOWING': acData.results[options.bucket], 'OTHER USERS':acData.results['user']}
-                data = {'FOLLOWING':[], 'OTHER USERS':[]}
-              }
-              else
-              {
-                buckets.push('user')
-                tmpData = {'USERS':acData.results['user']}
-                data = {'USERS':[]}
+                buckets.push(options.allowNewType);
+                var first = acData.results[options.allowNewType].splice(0,1)
+                tmpData['TOP HIT'] = first;
+                data['TOP HIT'] = [];
+
+                buckets.push(options.allowNewType);
+                tmpData['CREATE'] = [{'id':0,'term':acData.term,'showName':'create a new '+options.allowNewName+': <span class="term">'+acData.term+'</span>'}];
+                data['CREATE'] = [];
               }
 
+              $(options.buckets).each(function(i,val) {
+                buckets.push(val[0]);
+                tmpData[val[2]] = acData.results[val[1]];
+                data[val[2]] = [];
+              })
             }
-
-            if ($.inArray('topic', options.bucketType) != -1)
-            {
-              if (options.allowNewTopic)
-              {
-                buckets.push('topic')
-                buckets.push('topic')
-                buckets.push('topic')
-                var first = acData.results['topic'].splice(0,1)
-                tmpData2 = {'TOP HIT':first,'CREATE':[{'id':0,'term':acData.term,'bucket':'topic','showName':'create a new topic: <span class="term">'+acData.term+'</span>'}], 'MORE TOPICS': acData.results['topic']}
-                data2 = {'TOP HIT':[], 'CREATE':[], 'MORE TOPICS': []}
-              }
-              else
-              {
-                buckets.push('topic')
-                tmpData2 = {'TOPICS':acData.results['topic']}
-                data2 = {'TOPICS':[]}
-              }
-            }
-
-            $.extend( tmpData, tmpData2 )
-            $.extend( data, data2 )
 
             var used_ids = [];
             var my_id = $('#static-data').data('d').myId
@@ -481,12 +460,36 @@
                 {
                   used_ids.push(val.id);
                   val.bucketType = buckets[x];
+                  val.show = val.term;
+
+                  // use an alias if there is an appropriate one
+                  if (val['aliases'] && val.term.indexOf(acData.term) != 0)
+                  {
+                    for (var i3=0; i3<val['aliases'].length; i3++)
+                    {
+                      if (val['aliases'][i3] != val.term && val['aliases'][i3].indexOf(acData.term) == 0)
+                      {
+                        val.show = val['aliases'][i3] + ' (' + val.term + ')';
+                        val.term = val['aliases'][i3];
+                        break;
+                      }
+                    }
+                  }
+
                   val.formattedItem = formatItem(val);
                   data[i].push(val);
                 }
               })
               x++;
             })
+
+            if (!options.allowNew && used_ids.length == 0)
+            {
+              buckets.push('none');
+              var val = {'id':0,'term':'','bucketType': 'none'}
+              val.formattedItem = formatItem(val);
+              data['NOPE'] = [val];
+            }
 
             var parsed = options.parse && options.parse(data) || parse(data);
             cache.add(term, parsed);
@@ -510,22 +513,12 @@
     {
       if (data.bucketType == 'user')
       {
-        image = '<img style="max-width: 25px" src="/users/'+data.term.toLowerCase()+'/picture?w=25&h=25&m=fillcropmid" />';
-        return '<div class="auto-user">'+image+'<div class="name term">'+data.term+'</div></div>';
+        return '<div class="auto-user"><div class="name term">'+data.term+'</div></div>';
       }
       else if (data.bucketType == 'topic')
       {
-        var image = '',
-            types = '',
-            name = '<span class="term">'+data.term+'</span>';
-        if (data.data)
-        {
-          image = '<img width="25" src="/'+data.data.slug+'/picture?w=25&h=25&m=fillcropmid" />';
-        }
-        else
-        {
-          image = '<img src="/assets/topic-default-25-25.gif" />';
-        }
+        var types = '',
+            name = '<span class="term">'+data.show+'</span>';
         if (data.data && data.data.types)
         {
           types = '<div class="types">'+data.data.types.join(', ')+'</div>';
@@ -534,7 +527,11 @@
         {
           name = data.showName;
         }
-        return '<div class="auto-topic">'+image+'<div class="name'+(types != '' ? ' with-type' : '')+'">'+name+'</div>'+types+'</div>';
+        return '<div class="auto-topic"><div class="name'+(types != '' ? ' with-type' : '')+'">'+name+'</div>'+types+'</div>';
+      }
+      else if (data.bucketType == 'none')
+      {
+        return '<div class="auto"><div class="name">no matches found</div></div>';
       }
     }
 
@@ -602,10 +599,11 @@
     scroll: true,
     scrollHeight: 180,
     scrollJumpPosition: true,
-    bucket: false,
-    bucketType: '',
+    buckets: [],
     searchKey: 'name',
-    allowNewTopic: false
+    allowNew: false,
+    allowNewName: '',
+    allowNewType: ''
   };
 
   $.Autocompleter.Cache = function(options) {

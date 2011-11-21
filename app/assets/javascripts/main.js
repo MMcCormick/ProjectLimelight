@@ -229,11 +229,11 @@ $(function() {
     mustMatch: false,
     searchKey: 'term',
     max: 10,
-    bucket: false,
-    bucketType: ["topic", "user"],
-    extraParams: {"types[]":["topic", "user"]},
+    buckets: [['topic', 'topic', 'TOPICS'],['user', 'user', 'USERS']],
+    extraParams: {"types":['topic', 'user']},
+    allowNew: false,
     dataType: 'json',
-    delay: 150,
+    delay: 100,
     formatItem: function(row, i, max) {
       return row.formattedItem;
     },

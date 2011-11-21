@@ -30,7 +30,7 @@ class TopicConnectionsController < ApplicationController
       if params[:connection][:topic_id] == "0"
         name = params[:connection][:topic_name]
         # Checks if there is an untyped topic with an alias equal to the name
-        alias_topic = Topic.where("aliases" => name, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).first
+        alias_topic = Topic.where("aliases.slug" => name.to_url, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).first
         if alias_topic
           con_topic = alias_topic
         else

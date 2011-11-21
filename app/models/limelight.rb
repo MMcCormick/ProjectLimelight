@@ -355,7 +355,7 @@ module Limelight #:nodoc:
       topic_slugs = new_topic_mentions.map {|data| data[1]}
       topic_slugs.uniq!
       # topics with matching aliases that are NOT already typed
-      topics = Topic.where("aliases" => { '$in' => topic_slugs}, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).to_a
+      topics = Topic.where("aliases.slug" => { '$in' => topic_slugs}, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).to_a
 
       new_topic_mentions.each do |topic_mention|
         found_topic = false

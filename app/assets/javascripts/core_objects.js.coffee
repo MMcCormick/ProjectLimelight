@@ -45,12 +45,13 @@ jQuery ->
     mustMatch: false,
     searchKey: 'term',
     max: 10,
-    bucket: false,
-    bucketType: ["topic"],
-    extraParams: {"types[]":["topic"]},
+    buckets: [['topic', 'topic', 'TOPICS']],
+    extraParams: {"types":['topic']},
+    allowNew: true,
+    allowNewName: 'topic',
+    allowNewType: 'topic',
     dataType: 'json',
-    delay: 150,
-    allowNewTopic: true,
+    delay: 100,
     formatItem: (row, i, max) ->
       return row.formattedItem
     formatMatch: (row, i, max) ->

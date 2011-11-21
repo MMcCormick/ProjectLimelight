@@ -36,7 +36,6 @@ class Topic
   field :fb_id # freebase id
   field :fb_mid # freebase mid
   field :status, :default => 'Active'
-  field :aliases
   field :user_id
   field :followers_count, :default => 0
   field :v, :default => 1
@@ -45,6 +44,7 @@ class Topic
 
   belongs_to :user
   embeds_many :topic_connection_snippets
+  embeds_many :aliases, :as => :has_alias, :class_name => 'TopicAlias'
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
@@ -67,8 +67,7 @@ class Topic
 
   def init_alias
     self.aliases ||= []
-    url = name.to_url
-    self.aliases << url unless self.aliases.include?(url)
+    add_alias(name) unless has_alias?(name)
     # TODO: decide about pluralization of topic aliases
     #plurl = name.pluralize == name ? name.singularize.to_url : name.pluralize.to_url
     #self.aliases << plurl unless self.aliases.include?(plurl)
@@ -78,19 +77,19 @@ class Topic
     if has_alias? new_alias
       false
     else
-      self.aliases = aliases << new_alias
+      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url)
+      Resque.enqueue(SmCreateTopic, id.to_s)
     end
   end
 
   def update_alias
     if name_changed?
-      aliases.delete(name_was.to_url)
-      aliases << name.to_url
+      add_alias(name)
     end
   end
 
   def has_alias? name
-    aliases.include? name
+    aliases.detect {|data| data.slug == name.to_url}
   end
 
   def add_to_soulmate

@@ -77,6 +77,12 @@ class UsersController < ApplicationController
     end
   end
 
+  def update_settings
+    current_user.update_settings(params)
+
+
+  end
+
   def following_users
     @user = User.find_by_slug(params[:id])
     @following_users = User.where(:_id.in => @user.following_users)

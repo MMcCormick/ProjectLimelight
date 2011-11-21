@@ -70,6 +70,8 @@ class User
   has_many :comments
   has_many :popularity_actions
 
+  embeds_one :settings
+
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login
 
@@ -113,6 +115,12 @@ class User
 
   def recalculate_vote_ratio
     self.vote_ratio = vote_neg_count > 0 ? vote_pos_count/vote_neg_count : vote_pos_count
+  end
+
+  def update_settings(params)
+    settings.shares_email = !!params[:shares_email]
+    settings.notify_email = !!params[:notify_email]
+    settings.weekly_email = !!params[:weekly_email]
   end
 
   ###

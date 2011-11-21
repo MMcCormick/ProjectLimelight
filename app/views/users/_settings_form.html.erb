@@ -1,0 +1,33 @@
+<form action="<%= update_settings_path %>" id="freebase-update-form" method="PUT" class="ajax">
+
+  <div class="field check-label">
+    <% if user.settings.shares_email %>
+      <%= check_box_tag "shares_email", "1", true %>
+    <% else %>
+      <%= check_box_tag "shares_email", "0", false %>
+    <% end %>
+    <%= label_tag "shares_email", "Email me when someone shares something with me directly" %>
+  </div>
+
+  <div class="field check-label">
+    <% if user.settings.notify_email %>
+      <%= check_box_tag "notify_email", "1", true %>
+    <% else %>
+      <%= check_box_tag "notify_email", "0", false %>
+    <% end %>
+    <%= label_tag "use_summary", "Email me daily with any new notifications" %>
+  </div>
+
+  <div class="field check-label">
+    <% if user.settings.weekly_email %>
+      <%= check_box_tag "weekly_email", "1", true %>
+    <% else %>
+      <%= check_box_tag "weekly_email", "0", false %>
+    <% end %>
+    <%= label_tag "use_summary", "Email me weekly with sweet recommendations on topics I like" %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag "Update", :class => "submit" %>
+  </div>
+</form>

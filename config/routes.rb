@@ -68,7 +68,8 @@ ProjectLimelight::Application.routes.draw do
   # Users
   scope 'users' do
     get '/settings' => 'users#settings', :as => :user_settings
-    put "/picture" => "users#picture_update", :as => :user_picture_update
+    put '/picture' => "users#picture_update", :as => :user_picture_update
+    put '/update_settings' => 'users#update_settings', :as => :update_settings
     get ':id/following/users' => 'users#following_users', :as => :user_following_users
     get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
     get ':id/followers' => 'users#followers', :as => :user_followers

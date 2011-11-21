@@ -123,12 +123,6 @@ class User
     self.vote_ratio = vote_neg_count > 0 ? vote_pos_count/vote_neg_count : vote_pos_count
   end
 
-  def update_settings(params)
-    settings.shares_email = !!params[:shares_email]
-    settings.notify_email = !!params[:notify_email]
-    settings.weekly_email = !!params[:weekly_email]
-  end
-
   ###
   # ROLES
   ###
@@ -255,6 +249,10 @@ class User
       self.favorites.delete(object.id)
       self.favorites_count -= 1
     end
+  end
+
+  def first_or_username
+    if first_name then first_name else username end
   end
 
   def fullname

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :only => [:settings]
+  before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings]
   include ImageHelper
 
   def show
@@ -78,9 +78,18 @@ class UsersController < ApplicationController
   end
 
   def update_settings
-    current_user.update_settings(params)
+    current_user.shares_email = !!params[:shares_email]
+    current_user.notify_email = !!params[:notify_email]
+    current_user.weekly_email = !!params[:weekly_email]
 
-
+    if current_user.save
+      response = build_ajax_response(:ok, nil, "Email Settings updated")
+      status = 200
+    else
+      response = build_ajax_response(:error, nil, "Email Settings could not be updated", current_user.errors)
+      status = :unprocessable_entity
+    end
+    render json: response, :status => status
   end
 
   def following_users

@@ -41,6 +41,6 @@ class NewsletterMailer < ActionMailer::Base
     @pictures = pictures.length > 0 ? pictures : pop_pics
     @videos = videos.length > 0 ? videos : pop_vids
 
-    mail(:to => "#{user.fullname} <#{user.email}>", :subject => "#{user.username}, here are your weekly recommendations from Limelight")
+    mail(:to => "#{user.fullname} <#{user.email}>", :subject => "#{user.first_or_username}, here are your weekly recommendations from Limelight")
   end
 end

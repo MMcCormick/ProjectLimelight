@@ -8,6 +8,6 @@ class NotificationMailer < ActionMailer::Base
   def new_notifications(user, notifications)
     @user = user
     @notifications = notifications
-    mail(:to => "#{user.fullname} <#{user.email}>", :subject => "#{user.username}, you've got new notifications")
+    mail(:to => "#{user.fullname} <#{user.email}>", :subject => "#{user.first_or_username}, you've got new notifications")
   end
 end

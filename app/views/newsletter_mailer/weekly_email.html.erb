@@ -13,7 +13,7 @@
   <%= image_tag base + image_path('logo_black.gif'), :style => 'max-width: 259px; max-height: 61px;', :alt => "" %>
 </a></div>
 
-<p>Hi <%= @user.first_name.blank? ? @user.username : @user.first_name %>,</p>
+<p>Hi <%= @user.first_or_username %>,</p>
 
 <p style="max-width: 432px;">Here are a few new posts we thought you might like. Enjoy!</p>
 

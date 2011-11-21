@@ -448,6 +448,14 @@
           float: left;
         }
       }
+      .check-label {
+        input, label {
+          width: auto;
+        }
+        label {
+          font-weight: normal;
+        }
+      }
       label {
         font-weight: bold;
         padding: 15px 0 2px 8px;

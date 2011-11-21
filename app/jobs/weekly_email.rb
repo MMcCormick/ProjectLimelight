@@ -10,7 +10,7 @@ class WeeklyEmail
     pop_pics = Picture.all.desc(:pw).limit(3)
     pop_vids = Video.all.desc(:pw).limit(3)
     users.each do |user|
-      NewsletterMailer.weekly_email(user, pop_talks, pop_news, pop_pics, pop_vids).deliver
+      NewsletterMailer.weekly_email(user, pop_talks, pop_news, pop_pics, pop_vids).deliver if user.weekly_email
     end
   end
 end

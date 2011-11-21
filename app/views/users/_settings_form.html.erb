@@ -1,7 +1,7 @@
 <form action="<%= update_settings_path %>" id="freebase-update-form" method="PUT" class="ajax">
 
   <div class="field check-label">
-    <% if user.settings.shares_email %>
+    <% if user.shares_email %>
       <%= check_box_tag "shares_email", "1", true %>
     <% else %>
       <%= check_box_tag "shares_email", "0", false %>
@@ -10,7 +10,7 @@
   </div>
 
   <div class="field check-label">
-    <% if user.settings.notify_email %>
+    <% if user.notify_email %>
       <%= check_box_tag "notify_email", "1", true %>
     <% else %>
       <%= check_box_tag "notify_email", "0", false %>
@@ -19,7 +19,7 @@
   </div>
 
   <div class="field check-label">
-    <% if user.settings.weekly_email %>
+    <% if user.weekly_email %>
       <%= check_box_tag "weekly_email", "1", true %>
     <% else %>
       <%= check_box_tag "weekly_email", "0", false %>

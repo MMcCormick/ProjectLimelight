@@ -73,9 +73,8 @@ class Topic
   def init_alias
     self.aliases ||= []
     add_alias(name) unless has_alias?(name)
-    # TODO: decide about pluralization of topic aliases
-    #plurl = name.pluralize == name ? name.singularize.to_url : name.pluralize.to_url
-    #self.aliases << plurl unless self.aliases.include?(plurl)
+    plurl = name.pluralize == name ? name.singularize.to_url : name.pluralize.to_url
+    add_alias(plurl) unless has_alias?(plurl)
   end
 
   def add_alias new_alias

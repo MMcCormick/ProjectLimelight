@@ -132,6 +132,15 @@
     float: left;
     margin: 5px 10px 0 0;
   }
+  .also {
+    margin: 8px 0 0 0;
+    .head {
+      font-size: 14px;
+    }
+    div {
+      font-size: 11px;
+    }
+  }
   .summary {
     font-size: 12px;
   }

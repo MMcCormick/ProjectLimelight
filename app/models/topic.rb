@@ -105,6 +105,16 @@ class Topic
     Resque.enqueue(SmDestroyTopic, id.to_s)
   end
 
+  def also_known_as
+    also_known_as = Array.new
+    aliases.each do |also|
+      if also.slug != name.to_url && also.slug != name.pluralize.to_url
+        also_known_as << also.name
+      end
+    end
+    also_known_as.join(', ')
+  end
+
   class << self
     def find_by_encoded_id(id)
       where(:public_id => id.to_i(36)).first

@@ -1,0 +1,10 @@
+<form action="<%= lock_topic_slug_path topic %>" id="lock-topic-slug-form" method="PUT" class="ajax">
+
+  <div class="required">
+    <%= text_field_tag "slug", topic.slug %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag "Lock Slug", :class => "submit", :confirm => "Are you sure you want to lock this topic's slug?" %>
+  </div>
+</form>

@@ -91,6 +91,7 @@ ProjectLimelight::Application.routes.draw do
   post ':id/add_alias' => 'topics#add_alias', :as => :add_topic_alias
   get '/:id/freebase_lookup' => 'topics#freebase_lookup', :as => :freebase_lookup
   post ':id/freebase_update' => 'topics#freebase_update', :as => :freebase_update
+  put '/:id/lock_slug' => 'topics#lock_slug', :as => :lock_topic_slug
   get '/:id' => 'topics#show', :as => :topic
   put '/:id' => 'topics#update', :as => :update_topic
 
@@ -98,6 +99,7 @@ ProjectLimelight::Application.routes.draw do
   resources :topic_connections, :only => [:create, :new]
   post 'topic_connections/add' => 'topic_connections#add', :as => :add_connection
   delete 'topic_connections/remove' => 'topic_connections#remove', :as => :remove_connection
+  put 'topic_connections/toggle_primary' => 'topic_connections#toggle_primary', :as => :toggle_primary
 
   # Pages
   root :to => "pages#home"

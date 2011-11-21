@@ -24,10 +24,14 @@ class Topic
   # TopicMention.slug
   # TopicConnectionSnippet.topic_slug
   slug :name, :v do |doc|
-    if doc.get_types.empty?
-      doc.name
+    if doc.slug_locked
+      doc.slug
     else
-      doc.name + " " + doc.get_types[0].topic_name.to_url
+      if doc.get_primary_types.empty?
+        doc.name
+      else
+        doc.name + " " + doc.get_primary_types[0].topic_name.to_url
+      end
     end
   end
 
@@ -36,6 +40,7 @@ class Topic
   field :fb_id # freebase id
   field :fb_mid # freebase mid
   field :status, :default => 'Active'
+  field :slug_locked
   field :aliases
   field :user_id
   field :followers_count, :default => 0
@@ -158,14 +163,14 @@ class Topic
     topic_connection_snippets.any?{ |snippet| snippet.topic_id == con_topic_id && snippet.id == con_id }
   end
 
-  def add_connection(connection, con_topic, user_id)
+  def add_connection(connection, con_topic, user_id, primary=false)
     if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
-      con_topic.add_connection_helper(opposite, self, user_id)
+      con_topic.add_connection_helper(opposite, self, user_id, primary)
     end
-    self.add_connection_helper(connection, con_topic, user_id)
+    self.add_connection_helper(connection, con_topic, user_id, primary)
   end
 
-  def add_connection_helper(connection, con_topic, user_id)
+  def add_connection_helper(connection, con_topic, user_id, primary)
     if self.has_connection?(connection.id, con_topic.id)
       false
     else
@@ -177,10 +182,11 @@ class Topic
       snippet.topic_name = con_topic.name
       snippet.topic_slug = con_topic.slug
       snippet.user_id = user_id
-      self.topic_connection_snippets << snippet
-      if connection.id.to_s == Topic.type_of_id
+      if connection.id.to_s == Topic.type_of_id && (primary || get_primary_types.empty?)
+        snippet.primary = true
         self.v += 1
       end
+      self.topic_connection_snippets << snippet
       true
     end
   end
@@ -213,8 +219,8 @@ class Topic
     topics.each do |topic|
       topic_connection_snippets.each do |snippet|
         if topic.id == snippet.topic_id
-          connections[snippet.id] ||= {:name => snippet.name, :topics => []}
-          connections[snippet.id][:topics] << topic
+          connections[snippet.id] ||= {:name => snippet.name, :data => []}
+          connections[snippet.id][:data] << {:snippet => snippet, :topic => topic}
         end
       end
     end
@@ -223,11 +229,15 @@ class Topic
   end
 
   def get_types
-    topic_connection_snippets.select{ |snippet| snippet.id.to_s == Topic.type_of_id }
+    topic_connection_snippets.select { |snippet| snippet.id.to_s == Topic.type_of_id }
+  end
+
+  def get_primary_types
+    topic_connection_snippets.select { |snippet| (snippet.id.to_s == Topic.type_of_id) && snippet.primary }
   end
 
   def get_instances
-    topic_connection_snippets.select{ |snippet| snippet.id.to_s == @instances_id }
+    topic_connection_snippets.select { |snippet| snippet.id.to_s == @instances_id }
   end
 
   # recursively gets topic ids to pull from in a hash of format {:topic_id => true}

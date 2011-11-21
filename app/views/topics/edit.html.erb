@@ -1,5 +1,5 @@
 <% content_for :sidebar_right do %>
-  <%= render_cell(:topic, :sidebar_right, current_user, @topic) %>
+  <%= render_cell(:topic, :sidebar_right, current_user, @topic, @connections) %>
 <% end %>
 
 <% content_for :head do %>
@@ -21,14 +21,12 @@
   <% end %>
   <div id="freebase-form-c"></div>
 </div>
-
 <div class="clear-left"></div>
 
 <div class="section">
   <h3>Edit Topic Info</h3>
   <%= render 'form' %>
 </div>
-
 <div class="clear-left"></div>
 
 <div class="section">
@@ -40,21 +38,46 @@
     <%= render "topics/image_upload_js" %>
   <% end %>
 </div>
-
 <div class="clear-left"></div>
 
 <div class="section">
   <h3>Edit Topic Connections</h3>
   <%= render_cell :topic, :add_connection, @topic %>
-</div>
 
+  <div class="clear-left"></div>
+  <div class="topic-connections">
+    <% @connections.each do |con_id, connection| %>
+      <div class="connection">
+        <h5><%= connection[:name] %></h5>
+        <% connection[:data].each do |data| %>
+          <div class="con-topic">
+            <%= render 'topics/tag', :topic => data[:topic], :include_image => true, :image_d => 30 %>
+
+            <% if con_id.to_s == Topic.type_of_id %>
+              <%= render 'topic_connections/toggle_primary_btn', :snippet => data[:snippet], :topic_id => @topic.id %>
+            <% end %>
+
+            <a data-url="<%= remove_connection_path %>" data-d='{ "con_id":"<%= con_id %>", "topic_id":"<%= @topic.id %>", "con_topic_id":"<%= data[:topic].id %>" }'
+               data-m="delete" class="ac delete">X</a>
+          </div>
+          <div class="clear-left"></div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
 <div class="clear-left"></div>
 
 <div class="section">
   <h3>Add an Alias</h3>
   <%= render "topics/add_alias_form", :topic => @topic %>
 </div>
+<div class="clear-left"></div>
 
+<div class="section">
+  <h3>Lock Topic Slug</h3>
+  <%= render "topics/lock_slug_form", :topic => @topic %>
+</div>
 <div class="clear-left"></div>
 
 <div class="section">

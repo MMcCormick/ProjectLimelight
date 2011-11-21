@@ -1,6 +1,6 @@
 <form action="<%= freebase_update_path topic_slug %>" id="freebase-update-form" method="POST" class="ajax">
 
-  <div class="use-check">
+  <div class="check-label">
     <%= check_box_tag "use_image" %>
     <%= label_tag "use_image", "Use Image?" %>
   </div>
@@ -9,7 +9,7 @@
     <%= hidden_field_tag "image", image_url %>
   </div>
 
-  <div class="use-check">
+  <div class="check-label">
     <%= check_box_tag "use_summary" %>
     <%= label_tag "use_summary", "Use Summary?" %>
   </div>
@@ -17,7 +17,7 @@
     <%= text_area_tag "summary", description, :id => "summary" %>
   </div>
 
-  <div class="use-check">
+  <div class="check-label">
     <%= check_box_tag "use_aliases" %>
     <%= label_tag "use_aliases", "Use Aliases?" %>
   </div>

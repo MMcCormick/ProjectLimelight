@@ -299,7 +299,8 @@ form.core_object {
 .followB,
 .favB,
 .repostB,
-.voteB {
+.voteB,
+.primaryB {
   .triggered {
     display: none;
   }
@@ -307,7 +308,8 @@ form.core_object {
 .unfollowB,
 .unfavB,
 .unrepostB,
-.unvoteB {
+.unvoteB,
+.unprimaryB {
   .default {
     display: none;
   }

@@ -6,6 +6,7 @@ class TopicConnectionSnippet
   field :topic_slug
   field :name
   field :user_id
+  field :primary
   field :pull_from, :type => Boolean
 
   embedded_in :topic

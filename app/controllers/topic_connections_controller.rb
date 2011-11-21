@@ -25,6 +25,7 @@ class TopicConnectionsController < ApplicationController
       response = build_ajax_response(:error, nil, 'You are not allowed to edit this topic!')
       status = 401
     else
+      original_slug = topic.slug
       connection = TopicConnection.find(params[:connection][:con_id])
 
       if params[:connection][:topic_id] == "0"
@@ -41,14 +42,13 @@ class TopicConnectionsController < ApplicationController
       end
 
       if topic && con_topic && connection
-        if topic.add_connection(connection, con_topic, current_user.id)
+        if topic.add_connection(connection, con_topic, current_user.id, !!params[:connection][:primary])
           if params[:freebase_id] && con_topic.fb_id.blank?
             con_topic.fb_id = params[:freebase_id]
             con_topic.fb_mid = params[:freebase_mid]
           end
-          changed = topic.v_changed?
           if topic.save && con_topic.save
-            response = build_ajax_response(:ok, changed ? edit_topic_path(topic) : nil, "Connection created!")
+            response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Connection created!")
             status = 201
           else
             response = build_ajax_response(:error, nil, "Could not save connection", topic.errors)
@@ -73,14 +73,14 @@ class TopicConnectionsController < ApplicationController
       response = build_ajax_response(:error, nil, 'You are not allowed to edit this topic!')
       status = 401
     else
+      original_slug = topic.slug
       connection = TopicConnection.find(params[:con_id])
       con_topic = Topic.find(params[:con_topic_id])
 
         if topic && con_topic && connection
           topic.remove_connection(connection, con_topic)
-          changed = topic.v_changed?
           if topic.save && con_topic.save
-            response = build_ajax_response(:ok, changed ? edit_topic_path(topic) : nil, "Connection removed!")
+            response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Connection removed!")
             status = 201
           else
             response = build_ajax_response(:error, nil, "Could not remove connection", topic.errors)
@@ -90,6 +90,29 @@ class TopicConnectionsController < ApplicationController
           response = build_ajax_response(:error, nil, 'Object not found!')
           status = 404
         end
+    end
+
+    render json: response, :status => status
+  end
+
+  def toggle_primary
+    topic = Topic.find(params[:topic_id])
+    original_slug = topic.slug
+    snip = topic.get_types.detect { |snippet| snippet.topic_id.to_s == params[:con_topic_id] }
+    if snip
+      snip.primary = !snip.primary
+      topic.v += 1
+      if topic.save
+        response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, nil, nil,
+                                       {:target => ".fav_"+params[:con_topic_id], :toggle_classes => ['primaryB', 'unprimaryB']})
+        status = 201
+      else
+        response = build_ajax_response(:error, nil, "Could not save topic", topic.errors)
+        status = 422
+      end
+    else
+      response = build_ajax_response(:error, nil, 'Connection not found!')
+      status = 404
     end
 
     render json: response, :status => status

@@ -9,6 +9,10 @@
  end
 %>
 
+<div style="margin-left: 85px;">
+  <%= image_tag base + image_path('logo_black.gif'), :style => 'max-width: 259px; max-height: 61px;' %>
+</div>
+
 <p>Hi <%= @user.first_name.blank? ? @user.username : @user.first_name %>,</p>
 
 <p>Here are a few new posts we thought you might like. Enjoy!</p>
@@ -22,17 +26,17 @@
     </tr>
     <tr>
       <% @pictures.each do |picture| %>
-        <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
+        <td align="center" width="120" style="padding: 5px 5px 0; overflow: hidden;">
           <%= link_to picture.title, picture_url(picture), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
     <tr>
       <% @pictures.each do |picture| %>
-        <td align="center" width="100" style="padding: 5px 10px">
-          <% img = default_image_url(picture, 100, 100, 'fillcropmid') %>
+        <td width="120" style="padding: 5px 10px">
+          <% img = default_image_url(picture, 120, 120, 'fillcropmid') %>
           <a target="_blank" href="<%= picture_url picture %>">
-            <%= image_tag base + img, :style => 'max-width: 100px; max-height: 100px;' if img %>
+            <%= image_tag base + img, :style => 'max-width: 120px; max-height: 120px;' if img %>
           </a>
           <span style="font-size: 10px;">
             by <%= link_to picture.user_snippet.username, user_url(picture.user_snippet), :style => "text-decoration: none;" %>
@@ -53,21 +57,20 @@
     </tr>
     <tr>
       <% @news.each do |news| %>
-        <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
+        <td align="center" width="120" style="padding: 5px 5px 0; overflow: hidden;">
           <%= link_to news.title, news_url(news), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
     <tr>
       <% @news.each do |news| %>
-        <td align="center" width="100" style="padding: 5px 10px">
-          <% img = default_image_url(news, 100, 100, 'fillcropmid') %>
+        <td width="120" style="padding: 5px 10px">
+          <% img = default_image_url(news, 120, 120, 'fillcropmid') %>
           <% if img %>
             <a target="_blank" href="<%= news_url news %>">
-              <%= image_tag base + img, :style => 'max-width: 100px; max-height: 100px;' if img %>
+              <%= image_tag base + img, :style => 'max-width: 120px; max-height: 120px;' if img %>
             </a>
           <% else %>
-            <%#TODO: make links absolute%>
             <%= markdown(parse_mentions(news.content, news, true)) %>
           <% end %>
           <span style="font-size: 10px;">
@@ -89,14 +92,14 @@
     </tr>
     <tr>
       <% @videos.each do |video| %>
-        <td align="center" width="100" style="padding: 5px 5px 0; overflow: hidden;">
+        <td align="center" width="120" style="padding: 5px 5px 0; overflow: hidden;">
           <%= link_to video.title, video_url(video), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
     <tr>
       <% @videos.each do |video| %>
-        <td align="center" width="100" style="padding: 5px 10px">
+        <td width="120" style="padding: 5px 10px">
           <%= markdown(parse_mentions(video.content, video, true)) %>
           <span style="font-size: 10px;">
             by <%= link_to video.user_snippet.username, user_url(video.user_snippet), :style => "text-decoration: none;" %>
@@ -117,8 +120,7 @@
     </tr>
     <tr>
       <% @talks.each do |talk| %>
-        <td width="100" style="padding: 5px 10px">
-          <%#TODO: make links absolute%>
+        <td width="120" style="padding: 5px 10px">
           <%= markdown(parse_mentions(talk.content, talk, true)) %>
           <span style="font-size: 10px;">
             by <%= link_to talk.user_snippet.username, user_url(talk.user_snippet), :style => "text-decoration: none;" %>,

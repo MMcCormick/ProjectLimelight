@@ -12,7 +12,8 @@ class Topic
   @type_of_id = "4eb82a1caaf9060120000081"
   @instances_id = "4eb82a3daaf906012000008a" # this is the opposite of type_of connection
   @limelight_id = '4ec69d9fcddc7f9fe80000b8'
-  class << self; attr_accessor :type_of_id, :instances_id, :limelight_id end
+  @limelight_feedback_id = '4ecab6c1cddc7fd77f000106'
+  class << self; attr_accessor :type_of_id, :instances_id, :limelight_id, :limelight_feedback_id end
 
   # Denormilized:
   # CoreObject.topic_mentions.name

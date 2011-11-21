@@ -393,6 +393,7 @@
     ;
 
     function request(term, success, failure) {
+      var original = term;
       if (!options.matchCase)
         term = term.toLowerCase();
       var data = cache.load(term);
@@ -437,7 +438,7 @@
                 data['TOP HIT'] = [];
 
                 buckets.push(options.allowNewType);
-                tmpData['CREATE'] = [{'id':0,'term':acData.term,'showName':'create a new '+options.allowNewName+': <span class="term">'+acData.term+'</span>'}];
+                tmpData['CREATE'] = [{'id':0,'term':original,'showName':'create a new '+options.allowNewName+': <span class="term">'+original+'</span>'}];
                 data['CREATE'] = [];
               }
 
@@ -463,11 +464,11 @@
                   val.show = val.term;
 
                   // use an alias if there is an appropriate one
-                  if (val['aliases'] && val.term.indexOf(acData.term) != 0)
+                  if (val['aliases'] && val.term.toLowerCase().indexOf(acData.term.toLowerCase()) != 0)
                   {
                     for (var i3=0; i3<val['aliases'].length; i3++)
                     {
-                      if (val['aliases'][i3] != val.term && val['aliases'][i3].indexOf(acData.term) == 0)
+                      if (val['aliases'][i3].toLowerCase() != val.term.toLowerCase() && val['aliases'][i3].toLowerCase().indexOf(acData.term.toLowerCase()) == 0)
                       {
                         val.show = val['aliases'][i3] + ' (' + val.term + ')';
                         val.term = val['aliases'][i3];
@@ -571,7 +572,7 @@
     loadingClass: "ac_loading",
     minChars: 1,
     delay: 400,
-    matchCase: false,
+    matchCase: true,
     matchSubset: true,
     matchContains: false,
     cacheLength: 10,

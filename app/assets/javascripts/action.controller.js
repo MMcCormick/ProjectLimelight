@@ -52,7 +52,7 @@ $(function() {
     // Only toggle classes if data.toggle_classes is provided
     // (ex: voting does not provide toggle classes because updating the buttons is handled by a subscriber)
     if (data.status == 'ok' && data.toggle_classes) {
-      var target = $(data.target);
+      var target = data.target ? $(data.target) : $currentTarget;
       $.each(data.toggle_classes, function(i, val) {
         target.toggleClass(val);
       })

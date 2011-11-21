@@ -15,12 +15,8 @@
         <div>Popularity</div>
         <div>Followers</div>
       </li>
-      <% connection[:topics].each do |topic| %>
-          <%= render 'topics/teaser', :topic => topic %>
-          <% if can? :edit, topic %>
-            <a data-url="<%= remove_connection_path %>" data-d='{ "con_id":"<%= con_id %>", "topic_id":"<%= @topic.id %>", "con_topic_id":"<%= topic.id %>" }'
-               data-m="delete" class="ac delete">X</a>
-          <% end %>
+      <% connection[:data].each do |data| %>
+        <%= render 'topics/teaser', :topic => data[:topic] %>
       <% end %>
     </ul>
   <% end %>

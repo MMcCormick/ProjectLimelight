@@ -158,7 +158,7 @@
       }
       label {
         font-weight: bold;
-        padding: 15px 0 2px 8px;
+        padding: 0 0 2px 8px;
         font-size: 13px;
       }
       .field {
@@ -185,6 +185,14 @@
         font-size: 13px;
         width: 266px;
       }
+      .check-label {
+        input, label {
+          width: auto;
+        }
+        label {
+          font-weight: normal;
+        }
+      }
       .submit {
         @include green-button(2px, 12px);
         padding: 2px 6px;
@@ -204,16 +212,16 @@
         float: left;
         width: auto;
       }
+      .con-topic {
+        .tag {
+          float: left;
+        }
+      }
       #freebase-update-form {
         .image-preview {
           max-height: 150px;
           max-width: 150px;
           margin: 5px;
-        }
-        .use-check {
-          input, label {
-            width: auto;
-          }
         }
       }
       #user_uploadB-progress {

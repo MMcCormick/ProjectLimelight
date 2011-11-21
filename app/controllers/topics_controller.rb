@@ -35,6 +35,7 @@ class TopicsController < ApplicationController
   def edit
     @topic = Topic.find_by_slug(params[:id])
     authorize! :edit, @topic
+    @connections = @topic.get_connections
   end
 
   def update
@@ -48,6 +49,25 @@ class TopicsController < ApplicationController
         format.json { render json: @topic.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def lock_slug
+    topic = Topic.find_by_slug(params[:id])
+    authorize! :update, topic
+
+    original_slug = topic.slug
+    topic.slug = params[:slug]
+    topic.slug_locked = true
+    topic.v += 1
+
+    if topic.save
+      response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Slug locked!")
+      status = 200
+    else
+      response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+      status = 422
+    end
+    render json: response, :status => status
   end
 
   def default_picture

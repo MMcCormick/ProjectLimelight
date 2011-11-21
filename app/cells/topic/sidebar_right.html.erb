@@ -21,17 +21,12 @@
       <% @connections.each do |con_id, connection| %>
         <div class="connection">
           <h5><%= connection[:name] %></h5>
-          <% connection[:topics].each_with_index do |topic, i| %>
+          <% connection[:data].each_with_index do |data, i| %>
             <% if i > 1 %>
               <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
               <% break %>
             <% end %>
-            <%= render 'topics/tag', :topic => topic, :include_image => true, :image_d => 30 %>
-
-            <% if can? :edit, topic %>
-              <a data-url="<%= remove_connection_path %>" data-d='{ "con_id":"<%= con_id %>", "topic_id":"<%= @topic.id %>", "con_topic_id":"<%= topic.id %>" }'
-                 data-m="delete" class="ac delete">X</a>
-            <% end %>
+            <%= render 'topics/tag', :topic => data[:topic], :include_image => true, :image_d => 30 %>
           <% end %>
         </div>
       <% end %>

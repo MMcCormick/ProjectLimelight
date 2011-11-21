@@ -8,6 +8,10 @@
  end
 %>
 
+<div align="center"><a href="<%= base %>">
+  <%= image_tag base + image_path('logo_black.gif'), :style => 'max-width: 259px; max-height: 61px;', :alt => "" %>
+</a></div>
+
 <p>Hi <%= @user.first_name.blank? ? @user.username : @user.first_name %>, you have some new notifications:</p>
 
 <% @notifications.each_with_index do |notification,i| %>

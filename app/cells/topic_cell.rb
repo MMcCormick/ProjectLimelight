@@ -2,6 +2,7 @@ class TopicCell < Cell::Rails
 
   include Devise::Controllers::Helpers
   include CanCan::ControllerAdditions
+  helper ApplicationHelper
   helper TopicsHelper
 
   cache :trending, :expires_in => 5.minutes

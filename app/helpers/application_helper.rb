@@ -55,6 +55,14 @@ module ApplicationHelper
     text.html_safe
   end
 
+  def show_more(text, length)
+    if text.length > length
+      "<div class='show-more'>#{text[0..length]}... <span class='extra hide'>#{text[length..text.length]}</span><span class='more'>show more</span></div>".html_safe
+    else
+      text
+    end
+  end
+
   # Devise helper
   # https://github.com/plataformatec/devise/wiki/How-To:-Display-a-custom-sign_in-form-anywhere-in-your-app
   def resource_name

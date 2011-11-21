@@ -142,6 +142,14 @@
     }
 }
 
+// Show more buttons (like on topic summaries when the summary is too long)
+.show-more {
+  .more {
+    @include link();
+    font-size: 11px;
+  }
+}
+
 // Autocomplete results
 .ac_results {
   z-index: 15000;

@@ -16,7 +16,6 @@ $(function() {
    */
   var formSubmit = function(form, success, error) {
 
-    console.log(form.serializeArray());
     $.ajax({
       type: form.attr('method'),
       url: form.attr('action'),

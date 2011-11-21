@@ -332,7 +332,7 @@ var fields = [];
         mustMatch: settings[this.mode].mustMatch,
         searchKey: 'term',
         max: 10,
-        buckets: [[settings[this.mode].bucket, settings[this.mode].bucket, settings[this.mode].bucketName]],
+        buckets: [[settings[this.mode].bucketType, settings[this.mode].bucket, settings[this.mode].bucketName]],
         extraParams: {"types":[settings[this.mode].bucket]},
         allowNew: settings[this.mode].allowNew,
         allowNewName: settings[this.mode].bucketType,

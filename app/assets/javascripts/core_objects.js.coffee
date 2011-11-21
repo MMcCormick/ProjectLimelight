@@ -97,7 +97,6 @@ jQuery ->
     else
       key = e.which     #firefox
 
-    console.log key
     if(key == 35 || key == 64)
       return false
 

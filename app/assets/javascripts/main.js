@@ -154,7 +154,7 @@ $(function() {
         payload['display'].push($(val).data('d'));
       })
       payload['layout'] = $('#feed-filters .feed-layout .opt div.on').data('d')
-      console.log($('#static-data').data('d'));
+
       $.ajax({
         url: $('#static-data').data('d').feedFiltersUpdate,
         dataType: 'json',
@@ -395,8 +395,6 @@ $(function() {
             }
             // Jump down a row (for Grid View)
             else if (target.hasClass('grid') && ($code == $sc.down)) {
-              console.log($('#core-feed').width());
-              console.log($('.teaser.grid').width());
               target.removeClass(hoverClass).nextAll().eq(($('#core-feed').width()) / ($('.teaser.grid').width() + extra) - 1).addClass(hoverClass).qtip('show');
             }
           }

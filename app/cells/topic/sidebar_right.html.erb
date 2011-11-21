@@ -24,14 +24,16 @@
       <a class="btn followers" href="<%= topic_followers_path @topic %>"><%= @topic.followers_count.to_i %> followers</a>
     </div>
 
-    <div class="summary">
-      <%= show_more(@topic.summary, 100) %>
-    </div>
+    <% unless @topic.summary.blank? %>
+      <div class="summary">
+        <%= show_more(@topic.summary, 100) %>
+      </div>
+    <% end %>
 
     <% if @topic.aliases.length > 1 %>
       <div class="also">
-        <div class="head">Also Known As</div>
-        <div class="content"><%= @topic.also_known_as %></div>
+        <h5>Also Known As</h5>
+        <div><%= @topic.also_known_as %></div>
       </div>
     <% end %>
 

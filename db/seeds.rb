@@ -10,50 +10,108 @@
 #puts 'EMPTY THE MONGODB DATABASE'
 #Mongoid.master.collections.reject { |c| c.name =~ /^system/}.each(&:drop)
 
+puts 'Creating marc'
+marc = User.find(User.marc_id)
+unless marc
+  marc = User.new(
+          :username => 'marc',
+          :first_name => 'Marc',
+          :last_name => 'MacLeod',
+          :email => 'marbemac@gmail.com',
+          :password => '87yot4',
+          :password_confirmation => '87yot4'
+  )
+  marc.grant_role('admin')
+  marc.id = User.marc_id
+  marc.save!
+  puts 'marc created'
+else
+  puts 'marc already in DB'
+end
+
+puts 'Creating matt'
+matt = User.find(User.matt_id)
+unless matt
+  matt = User.new(
+          :username => 'matt',
+          :first_name => 'Matt',
+          :last_name => 'McCormick',
+          :email => 'matt.c.mccormick@gmail.com',
+          :password => '87yot4',
+          :password_confirmation => '87yot4'
+  )
+  matt.grant_role('admin')
+  matt.id = User.matt_id
+  matt.save!
+  puts 'matt created'
+else
+  puts 'matt already in DB'
+end
+
 puts 'Creating type of connection'
-connection = TopicConnection.find('4eb82a1caaf9060120000081')
+connection = TopicConnection.find(Topic.type_of_id)
 unless connection
   connection = TopicConnection.new(
           :name => 'Type Of',
           :pull_from => true,
           :opposite => ''
   )
-  connection.user_id = 0
-  connection.id = '4eb82a1caaf9060120000081'
+  connection.user_id = marc.id
+  connection.id = Topic.type_of_id
   connection.save!
   puts 'Type of connection created'
 else
   puts 'Type of connection already in DB'
 end
 
-puts 'Creating example of connection'
-connection2 = TopicConnection.find('4eb82a3daaf906012000008a')
+puts 'Creating instance of connection'
+connection2 = TopicConnection.find(Topic.instances_id)
 unless connection2
   connection2 = TopicConnection.new(
-          :name => 'Examples',
+          :name => 'Instances',
           :pull_from => true,
           :opposite => connection.id
   )
-  connection2.user_id = 0
-  connection2.id = '4eb82a3daaf906012000008a'
+  connection2.user_id = marc.id
+  connection2.id = Topic.instances_id
   connection2.save!
-  puts 'Example of connection created'
+  puts 'Instances connection created'
 else
-  puts 'Example of connection already in DB'
+  puts 'Instances connection already in DB'
 end
 
 puts 'Creating limelight topic'
-topic = Topic.find('4ec69d9fcddc7f9fe80000b8')
+topic = Topic.find(Topic.limelight_id)
 unless topic
   topic = Topic.new(
           :name => 'Limelight',
-          :aliases => ['Project Limelight', 'projectlimelight', 'limelight project', 'limelightproject'],
           :summary => ''
   )
-  topic.id = '4ec69d9fcddc7f9fe80000b8'
-  topic.user_id = 0
+  ['limelight', 'Project Limelight', 'projectlimelight', 'limelight project', 'limelightproject'].each do |name|
+    topic.add_alias name
+  end
+  topic.id = Topic.limelight_id
+  topic.user_id = marc.id
   topic.save!
   puts 'Limelight topic created'
 else
   puts 'Limelight topic already in DB'
+end
+
+puts 'Creating limelight feedback topic'
+topic = Topic.find(Topic.limelight_feedback_id)
+unless topic
+  topic = Topic.new(
+          :name => 'Limelight Feedback',
+          :summary => ''
+  )
+  ['Limelight Feedback', 'limelightfeedback', 'project limelight feedback'].each do |name|
+    topic.add_alias name
+  end
+  topic.id = Topic.limelight_feedback_id
+  topic.user_id = marc.id
+  topic.save!
+  puts 'Limelight feedback topic created'
+else
+  puts 'Limelight feedback topic already in DB'
 end

@@ -978,8 +978,12 @@ $scoreBox-width: 160px;
             z-index: 5;
             cursor: pointer;
             margin: 2px 0 0 10px;
+            background: #FFF;
             float: left;
-            &.hover {
+            &.closed {
+              background: transparent;
+            }
+            &:hover {
               background: #FFF;
             }
             .opt {

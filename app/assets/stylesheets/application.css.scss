@@ -326,9 +326,7 @@ button {
     float: right;
     height: 100%;
     position: relative;
-    z-index: 50;
-    overflow-y: auto;
-    overflow-x: hidden;
+    z-index: 170;
 
     .sbrC {
         @include border-radius(4px);
@@ -376,7 +374,7 @@ button {
     background-color: #2061B6;
     @include background-image(linear-gradient(#124895, #1B59AE 25%,#2664B2 75%, #1B59AE));
     position: fixed; left: 0px; bottom: 0px; height: $footer_height;  width: 100%;
-    z-index: 100;
+    z-index: 190;
     color: #AAE929;
     font-weight: bold;
     font-size: 11px;

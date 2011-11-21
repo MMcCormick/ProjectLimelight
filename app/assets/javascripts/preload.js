@@ -19,7 +19,7 @@ var resizeLayout = function(rightSidebarAdjust) {
           - (sidebar.width() + parseInt(sidebar.css('left').replace("px", "")));
 
   if (rightSidebar.length > 0) {
-    rightSidebar.css('min-height', $(window).height()-21);
+    rightSidebar.css('min-height', $(window).height()+60);
 
     if (rightSidebarAdjust) {
       w -= 20 + rightSidebar.width() + parseInt(rightSidebar.css('margin-right').replace("px", ""));

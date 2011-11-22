@@ -1,10 +1,12 @@
-<button class="btn-tog <%= !signed_in? || !current_user.is_following?(target) ? 'followB' : 'unfollowB' %> fol_<%= target.id %>">
-  <div class="default" data-url="<%= create_follow_path %>" data-d='{"id":"<%= target.id %>", "type":"<%= target.class.name %>"}' data-m="post">
-    <div class="plus-white-s-icon icon"></div>
-    Follow
-  </div>
-  <div class="triggered" data-url="<%= destroy_follow_path %>" data-d='{"id":"<%= target.id %>", "type":"<%= target.class.name %>"}' data-m="delete">
-    <div class="minus-white-s-icon icon"></div>
-    Unfollow
-  </div>
-</button>
+<% unless signed_in? && current_user.id == target.id %>
+  <button class="btn-tog <%= !signed_in? || !current_user.is_following?(target) ? 'followB' : 'unfollowB' %> fol_<%= target.id %>">
+    <div class="default" data-url="<%= create_follow_path %>" data-d='{"id":"<%= target.id %>", "type":"<%= target.class.name %>"}' data-m="post">
+      <div class="plus-white-s-icon icon"></div>
+      Follow
+    </div>
+    <div class="triggered" data-url="<%= destroy_follow_path %>" data-d='{"id":"<%= target.id %>", "type":"<%= target.class.name %>"}' data-m="delete">
+      <div class="minus-white-s-icon icon"></div>
+      Unfollow
+    </div>
+  </button>
+<% end %>

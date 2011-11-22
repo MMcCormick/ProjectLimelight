@@ -156,12 +156,17 @@ $(function() {
   function updateFeedFilters()
   {
     $('#feed-filters').stopTime().oneTime(500, 'reload_feed', function() {
+
       var payload = {sort: {}, display: [], layout: ''}
       payload['sort'] = $('#feed-filters .feed-sort .opt.on').data('d')
       $('#feed-filters .feed-display .opt.on').each(function(i,val) {
         payload['display'].push($(val).data('d'));
       })
       payload['layout'] = $('#feed-filters .feed-layout .opt div.on').data('d')
+
+      $('#core-feed .overlay').oneTime(500, 'show_overlay', function() {
+        $(this).fadeIn(200);
+      });
 
       $.ajax({
         url: $('#static-data').data('d').feedFiltersUpdate,

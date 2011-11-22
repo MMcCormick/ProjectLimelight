@@ -4,6 +4,10 @@
       <%= render "#{core_object._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => core_object, :style => session[:feed_filters][:layout].to_sym, :response => false %>
     <% end %>
   <% end %>
+  <div class="clear"></div>
+  <div class="overlay">
+    <div>reloading feed...</div>
+  </div>
 </div>
 
 <% if core_objects.count(true) >= 30 %>

@@ -62,6 +62,12 @@ function isScrolledIntoView(elem, bufferOn, checkAll, entireElem) {
 // Arrange Column format in feeds
 function rearrange_feed_columns()
 {
+  if ($('.teaser.column').length == 0)
+  {
+    $('#core-feed').css('height', 'auto');
+    return;
+  }
+
   var feed_min_column = 99999999;
   var teaser_width = $('.teaser.column').width();
   var feed_columns_num = Math.floor(($('#page_content').width() - 5) / (teaser_width + 14));

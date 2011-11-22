@@ -17,14 +17,14 @@
       <div class="foot2">We do not post to your profile without your permission.</div>
     </div>
     <div class="right">
-      <div id="auth-login" class="hide">
+      <div id="auth-login" class="<%= 'hide' unless show == :login %>">
         <div class="head">... or log in directly with Limelight below.</div>
-        <%= render "users/sessions/form" %>
+        <%= render "users/sessions/new" %>
         <div class="switch">I don't have a Limelight account.</div>
       </div>
-      <div id="auth-register" class="hide">
+      <div id="auth-register" class="<%= 'hide' unless show == :register %>">
         <div class="head">... or join directly with Limelight below.</div>
-        <%= render "users/registrations/form" %>
+        <%= render "users/registrations/new" %>
         <div class="switch">I already have a Limelight account.</div>
       </div>
     </div>

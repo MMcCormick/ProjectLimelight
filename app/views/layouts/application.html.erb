@@ -49,11 +49,9 @@
 
         <div id="page_header" class="<%= 'minimized-sidebar' if session[:sidebar] == :mini %>">
           <div class="wrap">
-            <section class="round">
-              <%- flash.each do |name, msg| -%>
-                <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
-              <%- end -%>
-            </section>
+            <%- flash.each do |name, msg| -%>
+              <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+            <%- end -%>
             <%= yield :page_header %>
           </div>
         </div>
@@ -86,7 +84,7 @@
       <div id="static-data" data-d='<%= static_data %>'></div>
       <div id="feed-reload" data-url='<%= request.url %>' class='ac'></div>
       <%= render "core_object_shares/form" %>
-      <%= render 'users/auth_box' %>
+      <%= render 'users/auth_box', :show => nil %>
     </div>
 
     <%= new_user_splash %>

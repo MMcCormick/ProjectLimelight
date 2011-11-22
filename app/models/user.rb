@@ -81,7 +81,10 @@ class User
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login
 
-  validates :username, :presence => true, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 15 }
+  validates :username, :uniqueness => { :case_sensitive => false },
+            :length => { :minimum => 3, :maximum => 15, :message => 'must be between 3 and 15 characters.' },
+            :format => { :with => /\A[a-zA-Z_0-9]+\z/, :message => "can only contain letters, numbers, and underscores." },
+            :format => { :with => /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/, :message => "must start with a letter and end with a letter or number." }
   validates :email, :uniqueness => { :case_sensitive => false }
 
   after_create :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email

@@ -112,6 +112,10 @@ function handleScroll() {
     $('#page').css('margin-right', 0);
   }
   else {
+    if ($.trim($("#page_header .wrap").text()) == '')
+    {
+      $("#page_header").hide();
+    }
     $('#sidebar,#page_header,#ajax-loading').addClass('floating');
     if ($('#sidebar-right .sbrC').length > 0) {
       $('#page').css('margin-right', 2 + $('#sidebar-right .sbrC').width() + parseInt($('#sidebar-right .sbrC').css('margin-right').replace("px", "")));

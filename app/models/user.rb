@@ -91,6 +91,14 @@ class User
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
+  index :slug
+  index :following_users
+  index :ph
+  index :pd
+  index :pw
+  index :pm
+  index :pt
+
   # Return the users slug instead of their ID
   def to_param
     self.slug

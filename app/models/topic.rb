@@ -62,6 +62,14 @@ class Topic
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
+  index [[ :slug, Mongo::ASCENDING ]]
+  index "aliases.slug"
+  index :ph
+  index :pd
+  index :pw
+  index :pm
+  index :pt
+
   # Return the topic slug instead of its ID
   def to_param
     self.slug

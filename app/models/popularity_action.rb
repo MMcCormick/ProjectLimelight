@@ -9,6 +9,8 @@ class PopularityAction #lawsuit?
 
   embeds_many :pop_snippets, :as => :pop_ac_snip
 
+  index [[ :created_at, Mongo::DESCENDING ]]
+
   belongs_to :user
 
   validates_presence_of :type, :user_id, :object_id

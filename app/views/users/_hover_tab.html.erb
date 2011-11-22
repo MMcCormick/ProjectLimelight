@@ -1,4 +1,12 @@
-<div class="name"><%= @user.username %></div>
-<%= render 'follows/btn', :target => @user %>
-<div class="followersCount">Followers: <%= @user.followers_count %></div>
-<div class="followersCount">Following: <%= @user.following_users_count %></div>
+<div class='hover-tab user-hover'>
+  <div class="pop" title='Popularity'><%= @user.pt.to_i %></div>
+  <div class="head">
+    <%= image_tag user_default_picture_path(@user, :w => 60, :h => 60, :m => 'fillcropmid'), :style => "max-width: 60px; max-height: 60px;", :alt => "" %>
+    <%= link_to @user.username, @user %>
+    <div class="fol">
+      <%= render 'follows/btn', :target => @user %>
+      <div class="folC"><%= @user.followers_count %> followers</div>
+    </div>
+  </div>
+  <div class="summary"><%= truncate(@user.bio, :length => 150, :ommision => '...') %></div>
+</div>

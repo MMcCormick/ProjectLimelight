@@ -149,6 +149,11 @@ $(function() {
       $('#core-feed').append($(content).html())
       $('#core-feed').after($(data.content)[2]);
     }
+
+    $('#core-feed .overlay').stopTime('show_overlay', function() {
+      $(this).hide();
+    })
+
     rearrange_feed_columns();
   });
 

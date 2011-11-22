@@ -325,21 +325,25 @@
 
 // For the right sidebar only
 .sbrC {
-    .sidebarB { background-color: #E4E4E4; }
-    .links {
-        margin-bottom: 1px;
-        a {
-            background-color: #E4E4E4;
-            top: 0px !important;
-        }
-        // In addition to radii applied above in .user-panel
-        .badge { @include border-top-left-radius(2px); }
-        .user-contributions { @include border-top-right-radius(2px); }
+  .sidebarB { background-color: #E4E4E4; }
+  .links {
+    margin-bottom: 1px;
+    a {
+      background-color: #E4E4E4;
+      top: 0px !important;
     }
-    .followB,
-    .unfollowB {
-        margin: 8px 0 8px 6px;
-    }
+    // In addition to radii applied above in .user-panel
+    .badge { @include border-top-left-radius(2px); }
+    .user-contributions { @include border-top-right-radius(2px); }
+  }
+  .followB,
+  .unfollowB {
+    margin: 8px 0 8px 6px;
+  }
+  .bio {
+    margin: 10px 5px 0 5px;
+    font-size: 12px;
+  }
 }
     
 
@@ -467,9 +471,12 @@
         padding: 15px 0 2px 8px;
         font-size: 13px;
       }
-      input {
+      input, textarea {
         width: 250px;
         margin: 0 0 0 5px;
+      }
+      textarea {
+        height: 100px;
       }
       .submit {
         @include green-button(2px, 12px);

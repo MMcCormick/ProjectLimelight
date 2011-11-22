@@ -61,6 +61,7 @@ class User
   field :vote_neg_count, :default => 0
   field :vote_ratio, :type => Float, :default => 0
   field :clout, :default => 1
+  field :bio
 
   field :shares_email, :default => true
   field :notify_email, :default => true
@@ -79,10 +80,11 @@ class User
   has_many :popularity_actions
 
   attr_accessor :login
-  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login
+  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio
 
   validates :username, :presence => true, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 15 }
   validates :email, :uniqueness => { :case_sensitive => false }
+  validates :bio, :length => { :maximum => 150 }
 
   after_create :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email
   after_update :update_denorms, :expire_caches

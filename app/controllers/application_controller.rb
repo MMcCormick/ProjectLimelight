@@ -11,14 +11,10 @@ class ApplicationController < ActionController::Base
 
   # Handle authorization exceptions
   rescue_from CanCan::AccessDenied do |exception|
-    if request.xhr?
-      if signed_in?
-        render json: {:status => :error, :message => "You don't have permission to #{exception.action} #{exception.subject.class.to_s.pluralize}"}, :status => 403
-      else
-        render json: {:status => :error, :message => "You must be logged in to do that!"}, :status => 401
-      end
+    if signed_in?
+      permission_denied(exception)
     else
-      permission_denied
+      render_forbidden(exception)
     end
   end
 
@@ -34,7 +30,7 @@ class ApplicationController < ActionController::Base
     html =  render_to_string :partial => "core_objects/feed", :locals => { :core_objects => core_objects, :more_path => more_path }
     response = { :status => :ok, :event => "loaded_feed_page", :content => html }
     response[:full_reload] = (page == 1 ? true : false)
-    return response
+    response
   end
 
   # update the sidebar minimized or maximized
@@ -55,8 +51,20 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError.new(message)
   end
   # Permission denied (401)
-  def permission_denied
-    render :file => "public/401.html", :status => :unauthorized
+  def permission_denied(exception)
+    if request.xhr?
+      render json: {:status => :error, :message => "You don't have permission to #{exception.action} #{exception.subject.class.to_s.pluralize}"}, :status => 403
+    else
+      render :file => "public/401.html", :status => :unauthorized
+    end
+  end
+  def render_forbidden(exception)
+    if request.xhr?
+      render json: {:status => :error, :message => "You must be logged in to do that!"}, :status => 401
+    else
+      session[:post_auth_path] = request.env['PATH_INFO']
+      redirect_to new_user_session_path
+    end
   end
 
   # Exception Handlers

@@ -77,6 +77,7 @@ ProjectLimelight::Application.routes.draw do
     get ':id/hover' => 'users#hover' , :as => :user_hover
     get ':id/picture' => 'users#default_picture', :as => :user_default_picture
   end
+  devise_for :user, :path => '', :path_names => { :sign_in => "login", :sign_out => "logout", :sign_up => "register" }
   devise_for :users
   resources :users, :only => [:show, :edit, :update]
 

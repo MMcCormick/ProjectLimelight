@@ -19,15 +19,18 @@
     <div class="right">
       <div id="auth-login" class="hide">
         <div class="head">... or log in directly with Limelight below.</div>
-        <%= render "users/sessions/new" %>
+        <%= render "users/sessions/form" %>
         <div class="switch">I don't have a Limelight account.</div>
       </div>
       <div id="auth-register" class="hide">
         <div class="head">... or join directly with Limelight below.</div>
-        <%= render "users/registrations/new" %>
+        <%= render "users/registrations/form" %>
         <div class="switch">I already have a Limelight account.</div>
       </div>
     </div>
     <div class="clear"></div>
+    <div class="sig">
+      Limelight was passionately created by <a href="/users/marc" target="_blank">Marc</a> & <a href="/users/matt" target="_blank">Matt</a>
+    </div>
   </div>
 </div>

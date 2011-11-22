@@ -1,6 +1,6 @@
 class CustomFailure < Devise::FailureApp
   def redirect_url
-    root_path(:subdomain => 'secure')
+    new_user_session_path
   end
 
   # You need to override respond to eliminate recall

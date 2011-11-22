@@ -1,4 +1,5 @@
 class UserMailer < ActionMailer::Base
+  helper UsersHelper
   default :from => "Limelight <support@projectlimelight.com>"
   layout 'email'
 

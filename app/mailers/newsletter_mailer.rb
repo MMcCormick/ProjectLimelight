@@ -1,7 +1,7 @@
 class NewsletterMailer < ActionMailer::Base
-  add_template_helper(ApplicationHelper)
-  add_template_helper(ImageHelper)
-
+  helper ApplicationHelper
+  helper ImageHelper
+  helper UsersHelper
   default :from => "Limelight <support@projectlimelight.com>"
   layout 'email'
 

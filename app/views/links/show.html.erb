@@ -1,33 +1,33 @@
 <div class="object-show">
-  <h1><%= @news.title %></h1>
+  <h1><%= @link.title %></h1>
 
   <div class="createdC">
-    <%= time_ago_in_words(@news.created_at, false) %> ago by
-    <%= user_link @news.user_snippet %>
+    <%= time_ago_in_words(@link.created_at, false) %> ago by
+    <%= user_link @link.user_snippet %>
   </div>
 
   <div class="sources">
-    <% @news.sources.each do |source| %>
+    <% @link.sources.each do |source| %>
       <a href="<%= source.url %>" target="_blank" rel="nofollow"><%= source.name %></a>
     <% end %>
   </div>
 
   <div class="content">
-    <%= markdown(parse_mentions(@news.content, @news)) %>
+    <%= markdown(parse_mentions(@link.content, @link)) %>
   </div>
 
-  <% if @news.topic_mentions.length > 0 %>
+  <% if @link.topic_mentions.length > 0 %>
     <div class="mentions">
       <div class="head">mentions</div>
-      <% @news.topic_mentions.each do |topic| %>
+      <% @link.topic_mentions.each do |topic| %>
         <%= render 'topics/tag', :topic => topic, :include_image => false %>
       <% end %>
     </div>
   <% end %>
 
   <div class="left">
-    <% img = default_image_url(@news, 110, 80, 'fit', false, true) %>
-    <% original = default_image_url(@news, 0, 0, :original) if img %>
+    <% img = default_image_url(@link, 110, 80, 'fit', false, true) %>
+    <% original = default_image_url(@link, 0, 0, :original) if img %>
     <% if img %>
       <div class="img expand">
         <div class='icon'><div class="full-black-icon"></div></div>
@@ -35,9 +35,9 @@
       </div>
     <% end %>
 
-    <%= render 'core_objects/feed_teaser_actions', :object => @news %>
+    <%= render 'core_objects/feed_teaser_actions', :object => @link %>
   </div>
 </div>
 
-<%= render "core_objects/response_header", :object => @news %>
+<%= render "core_objects/response_header", :object => @link %>
 <%= render "core_objects/responses", :responses => @responses %>

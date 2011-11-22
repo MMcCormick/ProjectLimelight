@@ -9,8 +9,6 @@ class CoreObject
   include Limelight::Mentions
   include Limelight::Popularity
 
-  # Denormilized:
-  # Notification.shared_object_snippet.name (for talk only, other objects use Title) TODO: update this when notifications get implemented
   field :content
   #TODO: bug: each core object type currently validates the length of content, but after creation content_raw is copied to content.
   #TODO: since the topic and user mentions in raw content increase the length, validation may fail when the obj is saved again
@@ -29,16 +27,30 @@ class CoreObject
   embeds_one :response_to
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
 
-  index :public_id, unique: true
-
   belongs_to :user
   validates :user_id, :status, :presence => true
   attr_accessible :content, :response_to_id, :source_name, :source_url, :source_video_id
   attr_accessor :response_to_id, :source_name, :source_url, :source_video_id
 
-  before_create :set_user_snippet, :current_user_own, :set_response_snippet, :set_source_snippet
+  before_validation :set_source_snippet
+  before_create :set_user_snippet, :current_user_own, :set_response_snippet
   after_create :update_response_count
   after_update :expire_caches
+
+  # hot damn lots of indexes. can we do this better?
+  index :user_id
+  index :reposts
+  index :favorites
+  index :public_id, unique: true
+  index :created_at
+  index :ph
+  index :pd
+  index :pw
+  index :pm
+  index :pt
+  index "topic_mentions._id"
+  index "user_mentions._id"
+  index "response_to._id"
 
   def to_param
     "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
@@ -64,6 +76,13 @@ class CoreObject
       unless @source_video_id.blank?
         source.video_id = @source_video_id
       end
+      add_source(source)
+    end
+  end
+
+  def add_source(source)
+    found = sources.detect{|existing| existing.name.to_url == source.name.to_url}
+    unless found
       self.sources << source
     end
   end
@@ -73,6 +92,16 @@ class CoreObject
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}")
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top")
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom")
+    end
+  end
+
+  # if required, checks that the given post URL is valid
+  def has_valid_url
+    if sources.length == 0
+      errors.add(:url, "is required")
+    end
+    if sources.length > 0 && (sources[0].url.length < 3 || sources[0].url.length > 200)
+      errors.add(:url, "must be between 3 and 200 characters long")
     end
   end
 
@@ -170,12 +199,12 @@ class CoreObject
     # @return [ CoreObjects ]
     def feed(display_types, order_by, options)
       or_criteria = []
+      or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
       or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users]
       or_criteria << {:reposts.in => options[:reposted_by_users]} if options[:reposted_by_users]
       or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics]
       or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users]
       or_criteria << {"response_to._id" => options[:response_to_id]} if options[:response_to_id]
-      or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
 
       #page length also hard-coded in views/core_object
       page_length = options[:limit]? options[:limit] - 1 : 30

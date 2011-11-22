@@ -68,7 +68,7 @@ describe User do
 
     it "should have core object attributes" do
       @user.should respond_to(:core_objects)
-      @user.should respond_to(:news)
+      @user.should respond_to(:links)
       @user.should respond_to(:videos)
       @user.should respond_to(:talks)
     end

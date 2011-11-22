@@ -13,11 +13,11 @@ FactoryGirl.define do
     association :user
   end
 
-  factory :news do
-    title "News Title"
-    content "News Content"
-    content_raw "News Content"
-    url "http://foobar.news"
+  factory :link do
+    title "Link Title"
+    content "Link Content"
+    content_raw "Link Content"
+    url "http://foobar.links"
     association :user
   end
 

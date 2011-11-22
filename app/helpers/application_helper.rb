@@ -21,6 +21,16 @@ module ApplicationHelper
     Redcarpet.new(text, *options).to_html.html_safe
   end
 
+  def output_errors(errors)
+    error_string = ''
+    errors.each do |field_name, error|
+      error_string += "<div class='error'>#{field_name} #{error}</div>"
+    end
+    unless error_string.blank?
+      "<div class='errors'>#{error_string}</div>".html_safe
+    end
+  end
+
   def parse_mentions(text, object, absolute=false)
     # Loop through all of the topic mentions in the content
     text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:' ]*)\]/).each do |topic|

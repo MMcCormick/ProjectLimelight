@@ -7,4 +7,4 @@ en:
       all: "Not authorized to %{action} %{subject}."
       user: "Not allowed to manage other user accounts."
     update:
-      news: "You're not allowed to update this news story."
+      link: "You're not allowed to update this link story."

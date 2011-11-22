@@ -110,7 +110,7 @@ class ApplicationController < ActionController::Base
     unless session[:feed_filters]
       session[:feed_filters] =
               {
-                :display => ['Talk', 'News', 'Picture', 'Video'],
+                :display => ['Talk', 'Link', 'Picture', 'Video'],
                 :sort => {'target' => 'pd', 'order' => 'DESC'},
                 :layout => 'column'
               }

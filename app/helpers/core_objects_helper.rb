@@ -7,8 +7,8 @@ module CoreObjectsHelper
         talk_path object
       when 'Picture'
         picture_path object
-      when 'News'
-        news_path object
+      when 'Link'
+        link_path object
       when 'Video'
         video_path object
     end

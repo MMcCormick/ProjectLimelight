@@ -7,6 +7,7 @@ class Video < CoreObject
   # Notification.shared_object_snippet.name
   field :title
 
+  validate :has_valid_url
   validates :title, :length => { :minimum => 5, :maximum => 75 }, :presence => true
 
   def name

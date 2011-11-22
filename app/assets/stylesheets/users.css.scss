@@ -138,6 +138,12 @@
       font-size: 11px;
       margin: 13px 0 -9px 0;
       color: #555;
+      cursor: default;
+    }
+    .errors {
+      display: block;
+      margin: 0 0 10px 0;
+      width: 282px;
     }
 }
 
@@ -504,5 +510,14 @@
         font-size: 13px;
       }
     }
+  }
+}
+
+#devise-sessions-c,
+#devise-registrations-c {
+  #auth_box {
+    @include single-box-shadow(#999, 1px, 1px, 2px);
+    margin: 10px auto;
+    border: 1px solid #333;
   }
 }

@@ -70,7 +70,7 @@ class User
   auto_increment :public_id
 
   has_many :core_objects
-  has_many :news
+  has_many :links
   has_many :videos
   has_many :talks
   has_many :pictures
@@ -82,13 +82,24 @@ class User
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio
 
-  validates :username, :presence => true, :uniqueness => { :case_sensitive => false }, :length => { :minimum => 3, :maximum => 15 }
+  validates :username, :uniqueness => { :case_sensitive => false },
+            :length => { :minimum => 3, :maximum => 15, :message => 'must be between 3 and 15 characters.' },
+            :format => { :with => /\A[a-zA-Z_0-9]+\z/, :message => "can only contain letters, numbers, and underscores." },
+            :format => { :with => /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/, :message => "must start with a letter and end with a letter or number." }
   validates :email, :uniqueness => { :case_sensitive => false }
   validates :bio, :length => { :maximum => 150 }
 
   after_create :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
+
+  index :slug
+  index :following_users
+  index :ph
+  index :pd
+  index :pw
+  index :pm
+  index :pt
 
   # Return the users slug instead of their ID
   def to_param

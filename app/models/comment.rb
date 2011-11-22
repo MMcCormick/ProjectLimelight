@@ -32,6 +32,14 @@ class Comment
 
   attr_accessible :content, :parent_id, :talk_id
 
+  index(
+    [
+      [ :talk_id, Mongo::ASCENDING ],
+      [ :path, Mongo::ASCENDING ],
+      [ :created_at, Mongo::DESCENDING ]
+    ]
+  )
+
   def send_notifications(current_user)
     parent = nil
     if depth == 0

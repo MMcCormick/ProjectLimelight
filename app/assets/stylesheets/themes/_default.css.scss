@@ -6,7 +6,7 @@
         Default theme variables.
 */
 
-$link-color: #2A3B9D;
+$url-color: #2A3B9D;
 
 $sidebar_background-color: #E4E4E4;
 $sidebar_border_width: 1px;
@@ -28,12 +28,12 @@ $page_content_color: #000;
 $footer_height: 34px;
 
 $picture-color: #7BA821;
-$news-color: #C52828;
+$link-color: #C52828;
 $video-color: #51A2CC;
 $talk-color: #D88E00;
 
 @mixin link {
-    color: $link-color;
+    color: $url-color;
     cursor: pointer;
     &:hover {
         text-decoration: underline;

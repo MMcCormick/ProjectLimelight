@@ -12,7 +12,7 @@ Badges
   King (1-4) (1, 10, 50, 200)
     Gain followers
   Reporter (1-4) (1, 10, 50, 200)
-    Submit a news story that reaches a score of at least 5
+    Submit a link story that reaches a score of at least 5
   Tagger (1-2) (1, 10)
     Add a relevant tag to an item
   Loyalty (1-4) (5, 15, 30, 60)
@@ -63,8 +63,8 @@ Revenue Sharing
 
 
 Score modifiers
-  News stories, up down
-  News stories, favorited - 2 points
+  Link stories, up down
+  Link stories, favorited - 2 points
   Comments, up down
   Follower gained - 2 points
   Badge, as designated
@@ -80,7 +80,7 @@ Score modifiers
     
 Minimum Scores
   5 points
-    - submit news story
+    - submit link story
     - comment
     - submit limelight review
   15 points
@@ -147,13 +147,13 @@ To Do
     * submission page, and view page
   - Limelight page
     * header design, with own/use and favorite buttons, unown/use unfavorite
-    * nav with info, news, reviews
+    * nav with info, link, reviews
 
 
 Limelight health stats
   - Current wiki length ( > 30 = 10%, > 100 = 30%)
   - Pros/cons (1% per added pro/con up to 10%)
-  - News stories (5% per added news story in last month up to 25%)
+  - Link stories (5% per added link story in last month up to 25%)
   - Reviews (if applicable, 5% per review up to 25%, else automatic 25%)
   - Specs (1% per added up to 10%)    
 

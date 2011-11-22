@@ -47,16 +47,16 @@ jQuery ->
       parent.find('.remote_image_url').val(parent.find('.image-preview .images img:visible').attr('src'))
 
   # When a user clicks on the upload image element, click the hidden file input to show the choose image dialogue
-  $('#news_uploadB').live 'click', (e) ->
+  $('#link_uploadB').live 'click', (e) ->
     parent = $('#new_picture')
     if ($(@).hasClass('on'))
       $(@).removeClass('on')
-      $('#news_asset_image_image_cache').val('')
+      $('#link_asset_image_image_cache').val('')
       parent.find('.image-preview .default').show()
       parent.find('.image-preview .upload').hide()
     else
       $(@).addClass 'on'
-      $('#news_pupB').click()
+      $('#link_pupB').click()
 
   $('form.core_object .image-preview .fetch .left').live 'click', (e) ->
     target = $(@).siblings('.images').find('img:visible').hide()
@@ -78,8 +78,8 @@ jQuery ->
     $(@).parents('form.core_object').find('.remote_image_url').val(found.attr('src'))
     found.show()
 
-  # News submission form, handle fetching data from supplied URL
-  $('#news_source_url').live 'blur', (e) ->
+  # Link submission form, handle fetching data from supplied URL
+  $('#link_source_url').live 'blur', (e) ->
     self = $(@)
     if $.trim(self.val()) == ''
       return
@@ -88,11 +88,11 @@ jQuery ->
       $('#static-data').data('d').fetchEmbedUrl
       url: self.val()
       (data) ->
-        $('#news_url, #new_news .image_fetch_url').val(data.embedly.url)
-        fetchImages($('#new_news .image_fetch_url'))
-        $('#news_content').focus().val(data.embedly.description)
-        $('#news_title').focus().val(data.embedly.title)
-        $('#news_source_name').focus().val(data.embedly.provider_name)
+        $('#link_url, #new_link .image_fetch_url').val(data.embedly.url)
+        fetchImages($('#new_link .image_fetch_url'))
+        $('#link_content').focus().val(data.embedly.description)
+        $('#link_title').focus().val(data.embedly.title)
+        $('#link_source_name').focus().val(data.embedly.provider_name)
 
       'json'
     )

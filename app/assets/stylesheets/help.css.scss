@@ -28,6 +28,7 @@
     font-size: 12px;
     width: 275px;
     padding: 5px;
+    position: relative;
     &.b {
       border-bottom: 1px solid #FFF;
     }
@@ -52,6 +53,15 @@
     &.on {
       margin-left: -270px;
     }
+  }
+  .icon {
+    @include border-radius(2px);
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    margin-top: -10px;
+    padding: 3px;
+    background-color: #FFF;
   }
 }
 
@@ -115,12 +125,12 @@
 }
 
 #hf-pop { // user popularity
-  top: 27px;
-  left: 180px;
+  top: 56px;
+  left: 202px;
 }
 #hf-fol { // user following
-  top: 12px;
-  left: 90px;
+  top: 32px;
+  left: 135px;
 }
 #hf-mf { // user my feed
   top: 98px;
@@ -177,4 +187,7 @@
 #hf-interact { // feed interact
   left: 19px;
   top: 50px;
+  li {
+    padding-left: 35px;
+  }
 }

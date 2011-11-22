@@ -16,7 +16,8 @@ class PagesController < ApplicationController
   end
 
   def about
-
+    @marc = User.find(User.marc_id)
+    @matt = User.find(User.matt_id)
   end
 
   def contact
@@ -32,6 +33,6 @@ class PagesController < ApplicationController
   end
 
   def help
-
+    @feedback_topic = Topic.find(Topic.limelight_feedback_id)
   end
 end

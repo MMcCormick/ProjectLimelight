@@ -1,9 +1,32 @@
+<%
+ if Rails.env.development?
+   base = 'http://localhost:3000'
+ elsif Rails.env.staging?
+   base = 'http://staging.projectlimelight.com'
+ else
+   base = 'http://www.projectlimelight.com'
+ end
+%>
+
 <p>Hey There!</p>
 
 <p>
-  Welcome to Limelight! You probably already know a bit about the site, but here are a few quick tips to get you started.
+  Welcome to Limelight, you're awesome!
 </p>
 
 <p>
-  Limelight is a social site where posts are shared around topics. Every type of post can be tagged with the topics it's about. This allows you to share, find, rate and discuss content relevant to you simply by following the topics and users that interest you. If you want to find out more about how it all works, just log in to Limelight and click Tutorials on the bottom left!
+  Limelight is a new way to discuss the topics you care about.
+  Basically it's the coolest thing since Myspace.
+  You follow the topics and users you're interested in,
+  and we show you content we think you'll like.
+  But wait, that's just the tip of the iceberg!
+  There are lots of ways to share, rate, organize, discuss,
+  and generally lose yourself in Limelight.
+  If you want to find out more about how it all works, log in and click Tutorials on the bottom left.
+</p>
+<p>
+  Honestly, we could talk about Limelight all day, but it'd be much better for you to just play around with the site.
+</p>
+<p>
+  ...Or we can literally talk about Limelight all day: hit us up <%= user_link @marc, "@marc", base %> and <%= user_link @matt, "@matt", base %>.
 </p>

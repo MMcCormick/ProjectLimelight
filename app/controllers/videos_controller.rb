@@ -1,5 +1,5 @@
 class VideosController < ApplicationController
-  authorize_resource
+  before_filter :authenticate_user!, :only => [:create]
 
   def show
     @video = Video.find_by_encoded_id(params[:id])

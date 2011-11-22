@@ -1,5 +1,4 @@
 class TopicsController < ApplicationController
-  authorize_resource :only => [:show, :edit, :update, :merge, :add_alias]
   include ImageHelper
 
   def index
@@ -13,6 +12,7 @@ class TopicsController < ApplicationController
 
   def show
     @topic = Topic.find_by_slug(params[:id])
+    authorize! :read, @topic
     @title = @topic.name
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topic_path @topic, :p => page + 1
@@ -40,6 +40,7 @@ class TopicsController < ApplicationController
 
   def update
     @topic = Topic.find_by_slug(params[:id])
+    authorize! :update, @topic
     respond_to do |format|
       if @topic.update_attributes(params[:topic])
         format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
@@ -106,6 +107,7 @@ class TopicsController < ApplicationController
 
   def merge
     topic = Topic.find(params[:target_id])
+    authorize! :update, topic
     aliased_topic = Topic.find_by_slug(params[:id])
 
     unless topic.id == aliased_topic.id
@@ -129,6 +131,7 @@ class TopicsController < ApplicationController
 
   def add_alias
     topic = Topic.find_by_slug(params[:id])
+    authorize! :update, topic
 
     if topic.add_alias(params[:new_alias])
       if topic.save
@@ -149,6 +152,7 @@ class TopicsController < ApplicationController
   def freebase_lookup
     resource = Ken::Topic.get(params[:freebase_id])
     topic = Topic.find_by_slug(params[:id])
+    authorize! :update, topic
 
     if resource
       locals = { :topic_id => topic.id, :topic_slug => params[:id] }
@@ -172,6 +176,7 @@ class TopicsController < ApplicationController
 
   def freebase_update
     topic = Topic.find_by_slug(params[:id])
+    authorize! :update, topic
     topic.fb_id = params[:freebase_id]
     topic.fb_mid = params[:freebase_mid]
 
@@ -200,6 +205,7 @@ class TopicsController < ApplicationController
 
   def followers
     @topic = Topic.find_by_slug(params[:id])
+    authorize! :read, @topic
     @followers = User.where(:following_topics => @topic.id)
   end
 
@@ -211,6 +217,7 @@ class TopicsController < ApplicationController
 
   def hover
     @topic = Topic.find_by_slug(params[:id])
+    authorize! :read, @topic
     render :partial => 'hover_tab', :topic => @topic
   end
 end

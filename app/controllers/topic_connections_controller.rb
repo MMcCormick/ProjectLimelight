@@ -1,15 +1,18 @@
 class TopicConnectionsController < ApplicationController
-  authorize_resource
-
   def create
-    connection = current_user.topic_connections.build(params[:topic_connection])
-
-    if connection.save
-      response = build_ajax_response(:ok, nil, 'Topic connection created!')
-      status = 201
+    unless current_user.role?('admin')
+      response = build_ajax_response(:error, nil, 'You are not allowed to edit this topic!')
+      status = 401
     else
-      response = build_ajax_response(:error, nil, 'Topic could not be created!', connection.errors)
-      status = 422
+      connection = current_user.topic_connections.build(params[:topic_connection])
+
+      if connection.save
+        response = build_ajax_response(:ok, nil, 'Topic connection created!')
+        status = 201
+      else
+        response = build_ajax_response(:error, nil, 'Topic could not be created!', connection.errors)
+        status = 422
+      end
     end
 
     render json: response, :status => status
@@ -21,47 +24,44 @@ class TopicConnectionsController < ApplicationController
 
   def add
     topic = Topic.find(params[:topic_id])
-    if cannot? :edit, topic
-      response = build_ajax_response(:error, nil, 'You are not allowed to edit this topic!')
-      status = 401
+    authorize! :update, topic
+
+    original_slug = topic.slug
+    connection = TopicConnection.find(params[:connection][:con_id])
+
+    if params[:connection][:topic_id] == "0"
+      name = params[:connection][:topic_name]
+      # Checks if there is an untyped topic with an alias equal to the name
+      alias_topic = Topic.where("aliases.slug" => name.to_url, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).first
+      if alias_topic
+        con_topic = alias_topic
+      else
+        con_topic = current_user.topics.create({name: name})
+      end
     else
-      original_slug = topic.slug
-      connection = TopicConnection.find(params[:connection][:con_id])
+      con_topic = Topic.find(params[:connection][:topic_id])
+    end
 
-      if params[:connection][:topic_id] == "0"
-        name = params[:connection][:topic_name]
-        # Checks if there is an untyped topic with an alias equal to the name
-        alias_topic = Topic.where("aliases.slug" => name.to_url, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).first
-        if alias_topic
-          con_topic = alias_topic
+    if topic && con_topic && connection
+      if topic.add_connection(connection, con_topic, current_user.id, !!params[:connection][:primary])
+        if params[:freebase_id] && con_topic.fb_id.blank?
+          con_topic.fb_id = params[:freebase_id]
+          con_topic.fb_mid = params[:freebase_mid]
+        end
+        if topic.save && con_topic.save
+          response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Connection created!")
+          status = 201
         else
-          con_topic = current_user.topics.create({name: name})
+          response = build_ajax_response(:error, nil, "Could not save connection", topic.errors)
+          status = 422
         end
       else
-        con_topic = Topic.find(params[:connection][:topic_id])
+        response = build_ajax_response(:error, nil, "Topic already has that connection", topic.errors)
+        status = 400
       end
-
-      if topic && con_topic && connection
-        if topic.add_connection(connection, con_topic, current_user.id, !!params[:connection][:primary])
-          if params[:freebase_id] && con_topic.fb_id.blank?
-            con_topic.fb_id = params[:freebase_id]
-            con_topic.fb_mid = params[:freebase_mid]
-          end
-          if topic.save && con_topic.save
-            response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Connection created!")
-            status = 201
-          else
-            response = build_ajax_response(:error, nil, "Could not save connection", topic.errors)
-            status = 422
-          end
-        else
-          response = build_ajax_response(:error, nil, "Topic already has that connection", topic.errors)
-          status = 400
-        end
-      else
-        response = build_ajax_response(:error, nil, 'Object not found!')
-        status = 404
-      end
+    else
+      response = build_ajax_response(:error, nil, 'Object not found!')
+      status = 404
     end
 
     render json: response, :status => status
@@ -69,27 +69,23 @@ class TopicConnectionsController < ApplicationController
 
   def remove
     topic = Topic.find(params[:topic_id])
-    if cannot? :edit, topic
-      response = build_ajax_response(:error, nil, 'You are not allowed to edit this topic!')
-      status = 401
-    else
-      original_slug = topic.slug
-      connection = TopicConnection.find(params[:con_id])
-      con_topic = Topic.find(params[:con_topic_id])
+    authorize! :update, topic
+    original_slug = topic.slug
+    connection = TopicConnection.find(params[:con_id])
+    con_topic = Topic.find(params[:con_topic_id])
 
-        if topic && con_topic && connection
-          topic.remove_connection(connection, con_topic)
-          if topic.save && con_topic.save
-            response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Connection removed!")
-            status = 201
-          else
-            response = build_ajax_response(:error, nil, "Could not remove connection", topic.errors)
-            status = 422
-          end
-        else
-          response = build_ajax_response(:error, nil, 'Object not found!')
-          status = 404
-        end
+    if topic && con_topic && connection
+      topic.remove_connection(connection, con_topic)
+      if topic.save && con_topic.save
+        response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Connection removed!")
+        status = 201
+      else
+        response = build_ajax_response(:error, nil, "Could not remove connection", topic.errors)
+        status = 422
+      end
+    else
+      response = build_ajax_response(:error, nil, 'Object not found!')
+      status = 404
     end
 
     render json: response, :status => status
@@ -97,6 +93,7 @@ class TopicConnectionsController < ApplicationController
 
   def toggle_primary
     topic = Topic.find(params[:topic_id])
+    authorize! :update, topic
     original_slug = topic.slug
     snip = topic.get_types.detect { |snippet| snippet.topic_id.to_s == params[:con_topic_id] }
     if snip

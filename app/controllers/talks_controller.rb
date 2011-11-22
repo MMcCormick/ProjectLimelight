@@ -1,5 +1,5 @@
 class TalksController < ApplicationController
-  authorize_resource
+  before_filter :authenticate_user!, :only => [:create]
 
   def show
     @talk = Talk.find_by_encoded_id(params[:id])

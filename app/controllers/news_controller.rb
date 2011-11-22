@@ -1,8 +1,9 @@
 class NewsController < ApplicationController
-  authorize_resource
+  before_filter :authenticate_user!, :only => [:create]
 
   def show
     @news = News.find_by_encoded_id(params[:id])
+
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @news.id})
     unless @news
       not_found("Talk not found")

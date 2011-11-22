@@ -1,5 +1,5 @@
 class PicturesController < ApplicationController
-  authorize_resource
+  before_filter :authenticate_user!, :only => [:create]
 
   def show
     @picture = Picture.find_by_encoded_id(params[:id])

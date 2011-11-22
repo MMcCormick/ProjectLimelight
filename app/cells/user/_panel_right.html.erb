@@ -21,18 +21,22 @@
   </a>
 
   <a class="sidebarB btn" href="<%= user_path @user %>">
-      <div class="icon user-contributions-icon"></div>
-      <%= @user.username %>'s Contributions
+    <div class="icon user-contributions-icon"></div>
+    <%= @user.username %>'s Contributions
   </a>
 
   <div class="links">
-      <a class="badge btn future" href="#">
-          <div class="icon badge-icon"></div>
-          Badges
-      </a>
-      <a class="user-favorites btn" href="<%= user_favorites_path @user %>">
-        <div class="icon user-favorites-icon"></div>
-        Favorites
-      </a>
+    <a class="badge btn future" href="#">
+      <div class="icon badge-icon"></div>
+      Badges
+    </a>
+    <a class="user-favorites btn" href="<%= user_favorites_path @user %>">
+      <div class="icon user-favorites-icon"></div>
+      Favorites
+    </a>
   </div>
+
+  <% unless @user.bio.blank? %>
+    <div class="bio"><%= @user.bio %></div>
+  <% end %>
 </div>

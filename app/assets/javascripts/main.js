@@ -65,10 +65,18 @@ $(function() {
             }
           }
         },
-        style: {classes: 'userHover ui-tooltip-shadow ui-tooltip-light', tip: true},
+        style: {
+          classes: 'ui-tooltip-shadow ui-tooltip-light',
+          tip: {
+           mimic: 'center',
+           offset: 8,
+           width: 8,
+           height: 8,
+          }
+        },
         position: {
-          my: 'left middle',
-          at: 'right middle',
+          my: 'top left',
+          at: 'bottom left',
           viewport: $(window)
         },
         show: {delay: 1000},

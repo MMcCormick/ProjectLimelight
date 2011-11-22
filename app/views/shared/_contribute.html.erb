@@ -21,9 +21,9 @@
         <div class="icon arrow-r-2424"></div>
       </div>
     <% end %>
-    <% if !defined?(allowed) || allowed.include?(:news) %>
-      <div class="option news" data-target=".new_news">
-        News
+    <% if !defined?(allowed) || allowed.include?(:links) %>
+      <div class="option link" data-target=".new_link">
+        Link
         <div class="icon arrow-g-r-2424"></div>
         <div class="icon arrow-r-2424"></div>
       </div>
@@ -50,9 +50,9 @@
         <%= render "videos/form", :video => Video.new, :responding => responding %>
       </div>
     <% end %>
-    <% if !defined?(allowed) || allowed.include?(:news) %>
+    <% if !defined?(allowed) || allowed.include?(:links) %>
       <div class="form hide">
-        <%= render "news/form", :news => News.new, :responding => responding %>
+        <%= render "links/form", :link => Link.new, :responding => responding %>
       </div>
     <% end %>
   </div>

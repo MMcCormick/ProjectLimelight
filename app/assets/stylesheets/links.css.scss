@@ -6,13 +6,13 @@
         Purpose of the stylesheet follows.
 */
 
-.news {
+.link {
   &.teaser.hover {
-    .oType { color: $news-color }
-    border-color: $news-color;
+    .oType { color: $link-color }
+    border-color: $link-color;
     .wrapper
     {
-      border-color: $news-color;
+      border-color: $link-color;
     }
   }
   &.teaser.grid {

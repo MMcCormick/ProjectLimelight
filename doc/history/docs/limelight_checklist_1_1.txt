@@ -7,10 +7,10 @@ THINGS TO KEEP IN MIND
 MAIN FEED
   - Create share script
   * Refactor favorite buttons
-  * Update news quick stats
+  * Update link quick stats
   - Create limelights feed
     - Add sort by review score
-  - update news score ui and logic to include +,- scoring
+  - update link score ui and logic to include +,- scoring
   * Remove 'all' feed
   * Add limit to # of stories on page, add 'more stories' button
   - Add smart picks filter
@@ -29,12 +29,12 @@ BADGES
   * spec-tacular
   * very popular limelight
   * wiki what
-  * news fave
-  * news tagger
-  * news linker
-  * popular news
+  * link fave
+  * link tagger
+  * link linker
+  * popular link
   * reporter
-  * very popular news
+  * very popular link
   - $$$
   * autobiographer
   * janitor
@@ -50,7 +50,7 @@ BADGES
 
 USER PAGE
   - update user feeds
-    * news item
+    * link item
     - comment item
     - limelight item
     - pro/con
@@ -63,7 +63,7 @@ USER PAGE
   * add change picture logic
 
 NEWS STORY PAGE
-  * update news score ui and logic to include +,- scoring
+  * update link score ui and logic to include +,- scoring
   * Update thumbs up to reflect if use has already scored story
   * Add favorite button
   * Add tips
@@ -83,7 +83,7 @@ LIMELIGHTS
   - add health meter/system
   * refactor wiki system to decouple
   - add wiki history area
-  - Add news feed
+  - Add link feed
   - update filter to match updated main filter
   * Update wiki code and UI, add score minimums
   - Add locks to wiki and UI
@@ -111,7 +111,7 @@ REVENUE SHARING
 
 SUBMISSIONS
   - Create contribute splash page
-  - News story submission page
+  - Link story submission page
   - Limelight suggestion page, limelight suggestion viewer
 
 WEBSITE SUGGEST
@@ -133,7 +133,7 @@ POWER SUGGESTION
   - add power suggestion page, and link to page
 
 MISC
-  - CLEAN UP CSS STRUCTURE (news page, etc)
+  - CLEAN UP CSS STRUCTURE (link page, etc)
   - add new notification slide down flash notice
   * update flagging to increase flag threshold based on items score
   * Refactor actions, put login into models
@@ -146,17 +146,17 @@ MISC
     * Top Users
     * Top Moderators
     * User Actions
-    - Related News
-    - Top News
+    - Related Link
+    - Top Link
     - Related Limelights
     - Limelight ad (Add amazon ad support to limelight sidebar)
-    - News ad (Add amazon product cloud to news story sidebar)
+    - Link ad (Add amazon product cloud to link story sidebar)
     - Related user
   - Add contest system
   - Write and test migrations
   * Add/update icons for favorite, share, flag buttons etc
   - Add meta data, SEO 
-  - Add site news/blog system
+  - Add site link/blog system
   - Update registration with pictures etc
   - update 'must be logged in' popup to be prettier, include random 'get access to' feature functionality
   * Add indexes to database to improve performance
@@ -188,7 +188,7 @@ NOT A PRIORITY FOR FIRST RELEASE
     - update user favorite area to include new tab
   - Add 'sidebar component' adding, removing, and sorting - for logged in users
   - Update scoring to allow exponential increases based on user score
-  - Add suggest limelight functionality to news story pages
+  - Add suggest limelight functionality to link story pages
   - Add email options and updates throughout website
   - Save filter choices in order to allow 'most popular filters' recommendations
   - Allow logged in users to save their favorite filters and easily access them

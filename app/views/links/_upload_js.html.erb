@@ -1,8 +1,8 @@
 <script>
   $(function() {
-    var news_image_uploader = new plupload.Uploader({
+    var link_image_uploader = new plupload.Uploader({
       runtimes : "gears,html5,flash,silverlight",
-      browse_button : 'news_uploadB',
+      browse_button : 'link_uploadB',
       max_file_size : '2mb',
       url : "<%= upload_tmp_path %>",
       flash_swf_url: "/assets/javascripts/plupload/plupload.flash.swf",
@@ -13,29 +13,29 @@
       }
     });
 
-    news_image_uploader.bind('Init', function(up, params) {
+    link_image_uploader.bind('Init', function(up, params) {
       $('#debug-upload-runtime').html("<div>Current runtime: " + params.runtime + "</div>");
     });
 
-    news_image_uploader.bind('FilesAdded', function(up, files) {
+    link_image_uploader.bind('FilesAdded', function(up, files) {
     });
 
-    news_image_uploader.bind('QueueChanged', function() {
+    link_image_uploader.bind('QueueChanged', function() {
       console.log('File Added');
-      news_image_uploader.start();
+      link_image_uploader.start();
     })
 
-    news_image_uploader.bind('UploadProgress', function(up, file) {
+    link_image_uploader.bind('UploadProgress', function(up, file) {
       console.log(file.percent + "%");
     });
 
-    news_image_uploader.bind("FileUploaded", function(up, file, data) {
+    link_image_uploader.bind("FileUploaded", function(up, file, data) {
       params = $.parseJSON(data.response);
       console.log(params);
-      $('#new_news .image-preview .default').hide();
-      $('#news_asset_image_image_cache').val(params.image_location);
-      $('#new_news .image-preview .upload').html('<img src="'+params.image_location+'" />');
-      var parent = $('#new_news')
+      $('#new_link .image-preview .default').hide();
+      $('#link_asset_image_image_cache').val(params.image_location);
+      $('#new_link .image-preview .upload').html('<img src="'+params.image_location+'" />');
+      var parent = $('#new_link')
       parent.find('.field.image .choices .upload').addClass('on').siblings().removeClass('on')
       parent.find('.image-preview .fetch').hide()
       parent.find('.image-preview .upload').show()
@@ -43,6 +43,6 @@
       parent.find('.remote_image_url').val('')
     })
 
-    news_image_uploader.init();
+    link_image_uploader.init();
   });
 </script>

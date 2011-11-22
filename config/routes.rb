@@ -9,8 +9,8 @@ ProjectLimelight::Application.routes.draw do
   # Videos
   resources :videos
 
-  # News
-  resources :news
+  # Link
+  resources :links
 
   # Talk
   resources :talks

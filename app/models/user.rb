@@ -69,7 +69,7 @@ class User
   auto_increment :public_id
 
   has_many :core_objects
-  has_many :news
+  has_many :links
   has_many :videos
   has_many :talks
   has_many :pictures

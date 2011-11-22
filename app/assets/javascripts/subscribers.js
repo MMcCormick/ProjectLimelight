@@ -98,7 +98,7 @@ $(function() {
    */
 
   // Clears forms, adds responses to response area
-  amplify.subscribe("talks_create news_create pictures_create videos_create", function (data) {
+  amplify.subscribe("talks_create links_create pictures_create videos_create", function (data) {
     if(data.status == "ok") {
       if (data.response) {
         $('#add_response').click();

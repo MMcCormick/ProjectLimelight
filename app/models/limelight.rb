@@ -163,7 +163,7 @@ module Limelight #:nodoc:
 
     def save_original_image
       if valid? && @asset_image && (!@asset_image[:remote_image_url].blank? || !@asset_image[:image_cache].blank?)
-        # Create/attach the news image
+        # Create/attach the links image
         image_snippet = ImageSnippet.new
         image_snippet.user_id = user.id
         image_snippet.add_uploaded_version(@asset_image, true)

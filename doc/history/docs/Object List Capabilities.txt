@@ -2,7 +2,7 @@ Global Criteria:
 
 	Node Type (combination)
 		Talk
-		News
+		Link
 		Question
 		Pro/Con
 	

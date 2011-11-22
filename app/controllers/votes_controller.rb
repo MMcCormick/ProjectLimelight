@@ -7,7 +7,7 @@ class VotesController < ApplicationController
   end
 
   def create
-    if ['Talk', 'News', 'Video', 'Picture', 'Comment'].include? params[:type]
+    if ['Talk', 'Link', 'Video', 'Picture', 'Comment'].include? params[:type]
       object = Kernel.const_get(params[:type]).find(params[:id])
       amount = params[:a].to_i
 
@@ -38,7 +38,7 @@ class VotesController < ApplicationController
   end
 
   def destroy
-    if ['Talk', 'News', 'Video', 'Picture', 'Comment'].include? params[:type]
+    if ['Talk', 'Link', 'Video', 'Picture', 'Comment'].include? params[:type]
       object = Kernel.const_get(params[:type]).find(params[:id])
 
       if object

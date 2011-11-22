@@ -32,7 +32,8 @@ class CoreObject
   attr_accessible :content, :response_to_id, :source_name, :source_url, :source_video_id
   attr_accessor :response_to_id, :source_name, :source_url, :source_video_id
 
-  before_create :set_user_snippet, :current_user_own, :set_response_snippet, :set_source_snippet
+  before_validation :set_source_snippet
+  before_create :set_user_snippet, :current_user_own, :set_response_snippet
   after_create :update_response_count
   after_update :expire_caches
 
@@ -75,6 +76,13 @@ class CoreObject
       unless @source_video_id.blank?
         source.video_id = @source_video_id
       end
+      add_source(source)
+    end
+  end
+
+  def add_source(source)
+    found = sources.detect{|existing| existing.name.to_url == source.name.to_url}
+    unless found
       self.sources << source
     end
   end
@@ -84,6 +92,16 @@ class CoreObject
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}")
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top")
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom")
+    end
+  end
+
+  # if required, checks that the given post URL is valid
+  def has_valid_url
+    if sources.length == 0
+      errors.add(:url, "is required")
+    end
+    if sources.length > 0 && (sources[0].url.length < 3 || sources[0].url.length > 200)
+      errors.add(:url, "must be between 3 and 200 characters long")
     end
   end
 

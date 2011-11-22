@@ -48,34 +48,34 @@
   </table>
 <% end %>
 
-<% if !@news.empty? %>
+<% if !@link.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #C52828; margin-bottom: 20px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #C52828; padding: 5px 5px 0;">
-        News
+        Link
       </td>
     </tr>
     <tr>
-      <% @news.each do |news| %>
+      <% @link.each do |link| %>
         <td align="center" width="120" style="padding: 5px 5px 0; overflow: hidden;">
-          <%= link_to news.title, news_url(news), :style => "text-decoration: none;" %>
+          <%= link_to link.title, link_url(link), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
     <tr>
-      <% @news.each do |news| %>
+      <% @link.each do |link| %>
         <td width="120" style="padding: 5px 10px">
-          <% img = default_image_url(news, 120, 120, 'fillcropmid') %>
+          <% img = default_image_url(link, 120, 120, 'fillcropmid') %>
           <% if img %>
-            <a target="_blank" href="<%= news_url news %>">
+            <a target="_blank" href="<%= link_url link %>">
               <%= image_tag base + img, :style => 'max-width: 120px; max-height: 120px;' if img %>
             </a>
           <% else %>
-            <%= markdown(parse_mentions(news.content, news, true)) %>
+            <%= markdown(parse_mentions(link.content, link, true)) %>
           <% end %>
           <span style="font-size: 10px;">
-            by <%= link_to news.user_snippet.username, user_url(news.user_snippet), :style => "text-decoration: none;" %>
-            , score: <%= sprintf "%.1f", news.pt %>
+            by <%= link_to link.user_snippet.username, user_url(link.user_snippet), :style => "text-decoration: none;" %>
+            , score: <%= sprintf "%.1f", link.pt %>
           </span>
         </td>
       <% end %>

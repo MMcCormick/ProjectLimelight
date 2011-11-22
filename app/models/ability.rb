@@ -8,12 +8,12 @@ class Ability
     else
       can :read, :all
 
-      [News, Picture, Talk, Video, Topic].each do |resource|
+      [Link, Picture, Talk, Video, Topic].each do |resource|
         can :create, resource if user.persisted?
       end
 
       # Uses the limelight ACL system
-      [News, Picture, Talk, Video, Topic].each do |resource|
+      [Link, Picture, Talk, Video, Topic].each do |resource|
         [:edit, :update, :destroy].each do |permission|
           can permission.to_sym, resource do |target|
             target.try(:permission?, user.id, permission)

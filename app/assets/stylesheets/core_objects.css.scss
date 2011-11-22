@@ -1014,10 +1014,10 @@ $scoreBox-width: 160px;
             background-color: adjust-lightness($talk-color, 38);
             color: adjust-lightness($talk-color, -7);
         }
-        .on.news {
-            border-color: adjust-lightness($news-color, 15);
-            background-color: adjust-lightness($news-color, 38);
-            color: adjust-lightness($news-color, -7);
+        .on.link {
+            border-color: adjust-lightness($link-color, 15);
+            background-color: adjust-lightness($link-color, 38);
+            color: adjust-lightness($link-color, -7);
         }
         .on.picture {
             border-color: adjust-lightness($picture-color, 15);
@@ -1087,8 +1087,8 @@ $scoreBox-width: 160px;
       &.video.on {
         color: $video-color;
       }
-      &.news.on {
-        color: $news-color;
+      &.link.on {
+        color: $link-color;
       }
     }
   }

@@ -30,7 +30,7 @@
 //= require social
 //= require users
 //= require videos
-//= require news
+//= require links
 //= require pictures
 //= require core_objects
 //= require main

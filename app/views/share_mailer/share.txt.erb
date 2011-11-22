@@ -1,0 +1,15 @@
+<%
+ if Rails.env.development?
+   base = 'http://localhost:3000'
+ elsif Rails.env.staging?
+   base = 'http://staging.projectlimelight.com'
+ else
+   base = 'http://www.projectlimelight.com'
+ end
+%>
+
+<%= @from_user.username %> shared a <%= @shared.class.name.downcase %> with you on Limelight.
+
+<%= @shared.name %> - <%= base+core_object_url(@shared, @shared.class.name) %> by <%= @object_user.id == @from_user.id ? @from_user.username : @object_user.username %>
+
+If you wish to change the frequency of these emails, please log in and click "Settings" on the left panel.

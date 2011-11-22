@@ -1,7 +1,18 @@
+<%
+ #TODO: This sucks.
+ if Rails.env.development?
+   base = 'http://localhost:3000'
+ elsif Rails.env.staging?
+   base = 'http://staging.projectlimelight.com'
+ else
+   base = 'http://www.projectlimelight.com'
+ end
+%>
+
 <%= yield %>
 
 <div>
   Sincerely,<br />
-  Marc and Matt<br />
+  <a href="<%= base %>/users/marc" target="_blank">Marc</a> and <a href="<%= base %>/users/matt" target="_blank">Matt</a><br />
   -The Limelight Team
 </div>

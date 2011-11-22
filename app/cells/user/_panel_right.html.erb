@@ -2,6 +2,11 @@
   <%= image_tag user_default_picture_path(@user, :w => 30, :h => 30, :m => 'fillcropmid'), :style => "max-width: 85px;", :class => 'profile-image', :alt => "" %>
   <h3><%= @user.username %></h3>
   <%= render 'follows/btn', :current_user => @current_user, :target => user %>
+
+  <% unless @user.bio.blank? %>
+    <div class="bio"><%= @user.bio %></div>
+  <% end %>
+
   <div class="stats">
       <div class="label followers">Followers</div>
       <div class="label following">Following</div>
@@ -35,8 +40,4 @@
       Favorites
     </a>
   </div>
-
-  <% unless @user.bio.blank? %>
-    <div class="bio"><%= @user.bio %></div>
-  <% end %>
 </div>

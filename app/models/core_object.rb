@@ -237,4 +237,8 @@ class CoreObject
     grant_owner(user.id)
   end
 
+  def update_denorms
+    #TODO: implement when we allow editing of core objects
+  end
+
 end

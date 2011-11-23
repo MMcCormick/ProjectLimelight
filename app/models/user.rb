@@ -18,27 +18,24 @@ class User
   # Denormilized:
   # CoreObject.user_snippet.username
   # CoreObject.user_mentions.username
-  # Notification.sender_snippet.username
-  # Notification.receiver_snippets.username
-  # Topic.user_snippet.username
+  # Notification.object_user.username
+  # Notification.triggered_by.username
   # Comment.user_snippet.username
   field :username
 
   # Denormilized:
   # CoreObject.user_snippet.first_name
   # CoreObject.user_mentions.first_name
-  # Notification.sender_snippet.first_name
-  # Notification.receiver_snippets.first_name
-  # Topic.user_snippet.first_name
+  # Notification.object_user.first_name
+  # Notification.triggered_by.first_name
   # Comment.user_snippet.first_name
   field :first_name
 
   # Denormilized:
   # CoreObject.user_snippet.last_name
   # CoreObject.user_mentions.last_name
-  # Notification.sender_snippet.last_name
-  # Notification.receiver_snippets.last_name
-  # Topic.user_snippet.last_name
+  # Notification.object_user.last_name
+  # Notification.triggered_by.last_name
   # Comment.user_snippet.last_name
   field :last_name
 
@@ -294,33 +291,33 @@ class User
   def update_denorms
     #TODO: update soulmate
     user_snippet_updates = {}
-    sender_snippet_updates = {}
-    receiver_snippet_updates = {}
+    object_user_updates = {}
+    triggered_by_updates = {}
     user_mention_updates = {}
     if username_changed?
       user_snippet_updates["user_snippet.username"] = self.username
       user_mention_updates["user_mentions.$.username"] = self.username
-      sender_snippet_updates["sender_snippet.username"] = self.username
-      receiver_snippet_updates["receiver_snippets.$.username"] = self.username
+      object_user_updates["object_user.username"] = self.username
+      triggered_by_updates["triggered_by.$.username"] = self.username
     end
     if first_name_changed?
       user_snippet_updates["user_snippet.first_name"] = self.first_name
       user_mention_updates["user_mentions.$.first_name"] = self.first_name
-      sender_snippet_updates["sender_snippet.first_name"] = self.first_name
-      receiver_snippet_updates["receiver_snippets.$.first_name"] = self.first_name
+      object_user_updates["object_user.first_name"] = self.first_name
+      triggered_by_updates["triggered_by.$.first_name"] = self.first_name
     end
     if last_name_changed?
       user_snippet_updates["user_snippet.last_name"] = self.last_name
       user_mention_updates["user_mentions.$.last_name"] = self.last_name
-      sender_snippet_updates["sender_snippet.last_name"] = self.last_name
-      receiver_snippet_updates["receiver_snippets.$.last_name"] = self.last_name
+      object_user_updates["object_user.last_name"] = self.last_name
+      triggered_by_updates["triggered_by.$.last_name"] = self.last_name
     end
     if !user_snippet_updates.empty?
       CoreObject.where(:user_id => id).update_all(user_snippet_updates)
       CoreObject.where("user_mentions._id" => id).update_all(user_mention_updates)
       Comment.where(:user_id => id).update_all(user_snippet_updates)
-      #Notification.where(:user_id => id).update_all(sender_snippet_updates)
-      #Notification.where("receiver_snippets._id" => id).update_all(receiver_snippet_updates)
+      Notification.where("object_user._id" => id).update_all(object_user_updates)
+      Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
     end
   end
 

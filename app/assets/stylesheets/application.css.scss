@@ -178,7 +178,7 @@ button {
     position: relative;
     margin-left: $sidebar_width+($sidebar_border_width*2)+$sidebar-margin;
     padding-top: 45px;
-    padding-bottom: 30px;
+    padding-bottom: 75px;
 
     &.minimized-sidebar {
         margin-left: $sidebar-minimized-width+($sidebar_border_width*2)+$sidebar-margin;

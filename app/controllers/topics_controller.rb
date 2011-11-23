@@ -189,7 +189,7 @@ class TopicsController < ApplicationController
     if params[:use_aliases] && params[:aliases]
       aliases = params[:aliases].split(", ")
       aliases.each do |new_alias|
-        topic.add_alias(new_alias.to_url)
+        topic.add_alias(new_alias)
       end
     end
 

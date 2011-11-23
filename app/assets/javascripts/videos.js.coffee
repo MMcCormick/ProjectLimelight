@@ -48,7 +48,7 @@ jQuery ->
             foo = 'bar'
 
         $('#video_source_url').val(data.embedly.url)
-        $('#video_content').focus().val(data.embedly.description)
+#        $('#video_content').focus().val(data.embedly.description)
         $('#video_title').focus().val(data.embedly.title)
         $('#video_source_name').val(data.embedly.provider_name)
         $('#video_source_video_id').val(video_id)

@@ -67,7 +67,7 @@ module ApplicationHelper
 
   def show_more(text, length)
     if text.length > length
-      "<div class='show-more'>#{text[0..length]} <span class='extra hide'>#{text[length..text.length]}</span><span class='more'>... show more</span></div>".html_safe
+      "<div class='show-more'>#{text[0..length]}<span class='extra hide'>#{text[length..text.length]}</span><span class='more'>... show more</span></div>".html_safe
     else
       text
     end

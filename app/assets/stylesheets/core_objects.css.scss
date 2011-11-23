@@ -285,6 +285,10 @@ form.core_object {
     padding: 5px 10px 3px 25px;
     display: block;
 
+    > div {
+      position: relative;
+    }
+
     .plus-white-s-icon {
         position: absolute;
         top: 0px; left: -17px;

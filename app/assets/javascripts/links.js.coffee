@@ -90,7 +90,7 @@ jQuery ->
       (data) ->
         $('#link_url, #new_link .image_fetch_url').val(data.embedly.url)
         fetchImages($('#new_link .image_fetch_url'))
-        $('#link_content').focus().val(data.embedly.description)
+#        $('#link_content').focus().val(data.embedly.description)
         $('#link_title').focus().val(data.embedly.title)
         $('#link_source_name').focus().val(data.embedly.provider_name)
 

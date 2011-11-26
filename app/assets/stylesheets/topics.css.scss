@@ -35,7 +35,6 @@
   h1 {
     font-size: 20px;
     font-weight: normal;
-    line-height: 1.1em;
   }
   .topic-types {
     @include clearfix();
@@ -71,7 +70,7 @@
     left: -2px;
     border: 1px solid #888;
     background: #FFF;
-    padding: 8px 10px;
+    padding: 2px 10px;
   }
   .edit-topic-b {
     @include opacity(.85);
@@ -103,7 +102,7 @@
   }
   .btn {
     @include border-radius(2px);
-    padding: 1px 10px;
+    padding: 3px 10px;
     margin: 5px 0 0 0;
     font-size: 12px;
     background: #F9F9F9;

@@ -226,21 +226,21 @@
         cursor: default;
 
         &.followers {
-          top: 0px;
+          top: 4px;
           left: 4px;
           color: #666;
         }
         &.following {
-          top: 0px;
+          top: 4px;
           left: 79px;
           color: #666;
         }
         &.users {
-          bottom: 0px;
+          bottom: 6px;
           left: 62px;
         }
         &.topics {
-          bottom: 0px;
+          bottom: 6px;
           left: 111px;
         }
       }
@@ -270,7 +270,7 @@
         cursor: default;
         color: #666;
         position: absolute;
-        top: 23px;
+        top: 17px;
         right: -2px;
         width: 53px;
         text-align: center;
@@ -332,6 +332,9 @@
 // For the right sidebar only
 .sbrC {
   .sidebarB { background-color: #E4E4E4; }
+  .btn {
+    color: #444;
+  }
   .links {
     margin-bottom: 1px;
     a {

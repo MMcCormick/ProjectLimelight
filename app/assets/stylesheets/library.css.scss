@@ -13,7 +13,7 @@
 .jgrowl {
   @include single-box-shadow(#333, 1px, 1px, 5px);
   .ui-tooltip-title { font-size: 18px; }
-  .ui-tooltip-content { font-size: 17px; padding: 7px; line-height: 1.2em; }
+  .ui-tooltip-content { font-size: 17px; padding: 7px; line-height: 1.28; }
 }
 
 .fab { // feed action box
@@ -27,7 +27,7 @@
 .qtip
 {
   font-size: 13px;
-  line-height: 1.125em;
+  line-height: 1.28;
   z-index: 40 !important;
 }
 

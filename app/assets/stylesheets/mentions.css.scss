@@ -9,10 +9,10 @@
     width: 100%;
     height: 100%;
     padding: 5px !important;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif !important;
+    font-family: "lucida grande", Tahoma, Verdana, Arial, sans-serif;
     font-size: 13px !important;
     white-space: pre-wrap !important;
-    line-height: 1.6em;
+    //line-height: 1.6em;
     margin: 0;
     border: 1px solid transparent;
   }
@@ -31,7 +31,7 @@
     color: transparent;
     font-style: normal;
     font-weight: normal;
-    line-height: 1.61em;
+    //line-height: 1.61em;
   }
   .under b.user-mention {
     background: #8BCFF2;

@@ -7,7 +7,7 @@
     <%= f.hidden_field :response_to_id, :value => responding.id.to_s %>
   <% end %>
   <div class="group">
-    <div class="field lClear required">
+    <div class="field required lClear">
       <%= f.label :content, "What do you want to talk about?" %>
       <%= render "shared/mention_box", :f => f %>
       <%= render "shared/mention_ooc", :f => f %>

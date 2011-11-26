@@ -4,9 +4,7 @@
 // It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
 // the compiled file.
 //
-//= require jquery1.6.4
 //= require jquery_ujs
-//= require modernizr
 //= require json2
 //= require jquery.livequery
 //= require preload

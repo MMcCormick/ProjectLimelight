@@ -43,7 +43,7 @@ form.core_object {
 
   }
   .help {
-    font-size: 12px;
+    font-size: 11px;
     font-style: italic;
     margin: 5px 0;
     span {
@@ -82,8 +82,8 @@ form.core_object {
 
     .auto {
       label {
-        top: 7px;
-        left: 13px;
+        top: 8px;
+        left: 9px;
         color: #666666;
       }
       input {
@@ -118,7 +118,7 @@ form.core_object {
         float: left;
         font-size: 10px;
         color: red;
-        margin: 0 0 0 5px;
+        margin: 3px 0 0 5px;
         cursor: pointer;
       }
     }
@@ -151,7 +151,6 @@ form.core_object {
         padding: 7px 0;
         width: 160px;
         text-align: center;
-        margin-top: -1px;
       }
       input.disabled {
         @include opacity(.65);
@@ -168,7 +167,7 @@ form.core_object {
     width: 160px;
     padding: 0;
     text-align: left;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     .upload,
     .fetch {
@@ -189,7 +188,7 @@ form.core_object {
   .image-preview {
     border-left: 1px solid #DDD;
     width: 352px;
-    min-height: 15px;
+    min-height: 8px;
     float: left;
     padding: 40px 40px 15px 40px;
     width: 270px;
@@ -199,7 +198,7 @@ form.core_object {
     margin: 0 0 0 -1px;
 
     .default {
-      font-size: 14px;
+      font-size: 12px;
       font-style: italic;
       cursor: default;
       margin: -13px 0 0 0;
@@ -351,7 +350,6 @@ $teaser-padding: 10px;
     }
     .titleC {
         font-size: 18px;
-        line-height: 1.08em;
         span {
           color: #444;
           cursor: default;
@@ -453,7 +451,7 @@ $teaser-padding: 10px;
         margin: 5px 10px 0 0;
         .comment-icon {
             float: left;
-            margin: 3px 5px 0 0;
+            margin: 0px 5px 0 0;
         }
     }
 
@@ -468,13 +466,13 @@ $teaser-padding: 10px;
 .fab {
   .controlsC {
     position: relative;
-    height: 148px;
+    height: 153px;
 
     .pop {
       font-size: 24px;
       color: #555;
       cursor: default;
-      padding: 5px 0;
+      padding: 0;
       text-align: center;
       width: 100%;
     }
@@ -483,13 +481,13 @@ $teaser-padding: 10px;
         position: absolute;
         left: 50%;
         margin-left: -14px;
-        top: 30px;
+        top: 35px;
       }
       .down {
         position: absolute;
         left: 50%;
         margin-left: -14px;
-        top: 55px;
+        top: 60px;
       }
     }
     .favB,
@@ -497,20 +495,20 @@ $teaser-padding: 10px;
       position: absolute;
       left: 50%;
       margin-left: -14px;
-      top: 80px;
+      top: 85px;
     }
     .repostB,
     .unrepostB {
       position: absolute;
       left: 50%;
       margin-left: -14px;
-      top: 105px;
+      top: 110px;
     }
     .coreShareB {
       position: absolute;
       left: 50%;
       margin-left: -7px;
-      top: 130px;
+      top: 135px;
     }
   }
 }
@@ -561,13 +559,13 @@ $teaser-padding: 10px;
     }
   }
   .createdC {
-    margin: 0 0 0 7px;
+    margin: 2px 0 3px 7px;
   }
   .controlsC {
     display: none;
   }
   .oType {
-    margin: 3px 10px 0 0;
+    margin: 0 10px 0 0;
   }
   .commentC {
     margin: 0;
@@ -653,7 +651,7 @@ $teaser-padding: 10px;
     float: none;
   }
   .oType {
-    margin: 3px 5px 0 0;
+    margin: 1px 5px 0 0;
   }
   .commentC {
     margin: 0;
@@ -682,13 +680,14 @@ $teaser-padding: 10px;
     float: none;
   }
   .connectionsC {
-    padding-top: 26px;
+    padding-top: 22px;
   }
   .w {
     position: absolute;
     top: 0px;
     left: 0px;
     width: 210px;
+    height: 14px;
   }
   .createdC {
     color: #666;
@@ -720,6 +719,10 @@ $scoreBox-width: 160px;
   padding: 4px 0 0 0;
   margin: 5px;
   z-index: 10;
+  p {
+    margin: 0;
+    padding: 4px 0;
+  }
   .controlsC {
     position: absolute;
     width: 110px;
@@ -728,9 +731,9 @@ $scoreBox-width: 160px;
     top: 0px;
     .pop {
       position: absolute;
-      top: 10px;
-      right: 82px;
-      font-size: 30px;
+      top: 4px;
+      right: 83px;
+      font-size: 26px;
       color: #555;
       cursor: default;
     }
@@ -776,7 +779,7 @@ $scoreBox-width: 160px;
       top: 6px;
     }
     font-size: 15px;
-    margin: 0 0 20px 0;
+    margin: 0 0 10px 0;
     overflow: hidden;
     white-space: nowrap;
   }
@@ -794,7 +797,7 @@ $scoreBox-width: 160px;
   }
   .createdC {
     position: absolute;
-    top: 19px;
+    top: 22px;
     left: 9px;
   }
   .bodyC {
@@ -804,23 +807,23 @@ $scoreBox-width: 160px;
   }
   .connectionsC {
     @include clearfix();
-
+    height: 18px;
     .comment_form {
       clear: left;
       padding: 5px 5px 10px 10px;
     }
   }
   .oType {
-    margin: 4px 10px 0;
+    margin: 3px 10px 0;
   }
   .commentC {
-    margin: 2px 10px 0 0;
+    margin: 3px 10px 0 0;
   }
   .mentions {
-    padding: 2px 0 2px 5px;
+    padding: 2px 0 0 5px;
     .tag {
       float: left;
-      margin: 0 10px 0 0;
+      margin: 0 10px 3px 0;
     }
   }
   .r {
@@ -933,7 +936,7 @@ $scoreBox-width: 160px;
         float: left;
 
         h5 {
-            padding: 7px 0 0 0;
+            padding: 9px 0 0 0;
             color: #888;
             cursor: default;
         }
@@ -952,7 +955,7 @@ $scoreBox-width: 160px;
             font-weight: bold;
             text-decoration: none;
             display: block;
-            padding: 3px 8px;
+            padding: 5px 8px;
             font-size: 12px;
             cursor: pointer;
         }
@@ -982,6 +985,7 @@ $scoreBox-width: 160px;
         }
         .opt {
             padding: 4px 5px;
+            height: 15px;
         }
     }
 
@@ -997,7 +1001,7 @@ $scoreBox-width: 160px;
         .feed-sort-select {
             @include border-radius(2px);
             border: 1px solid #AAA;
-            position: absolute; top: 0px; left: 59px;
+            position: absolute; top: 0px; left: 50px;
             z-index: 5;
             cursor: pointer;
             margin: 2px 0 0 10px;
@@ -1020,7 +1024,7 @@ $scoreBox-width: 160px;
 
     .scrollTop {
         float: left;
-        margin: 7px 0 0 10px;
+        margin: 11px 0 0 10px;
         font-size: 8px;
         cursor: pointer;
         color: blue;
@@ -1061,7 +1065,7 @@ $scoreBox-width: 160px;
 
   position: absolute;
   top: 0px;
-  left: 225px;
+  left: 230px;
   z-index: 200;
   background: #FEFEFE;
   border: 2px solid #94C530;
@@ -1072,7 +1076,7 @@ $scoreBox-width: 160px;
   .icon {
     display: none;
     position: absolute;
-    top: 7px;
+    top: 10px;
     right: 20px;
   }
   .options {
@@ -1121,7 +1125,6 @@ $scoreBox-width: 160px;
     font-size: 19px;
     margin: 14px 0 0 10px;
     width: 500px;
-    line-height: 1.2em;
   }
   .forms {
     float: left;

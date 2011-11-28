@@ -1,8 +1,7 @@
 <form action="<%= add_topic_alias_path %>" id="add-alias-form" method="POST" class="ajax">
 
   <div class="lClear required">
-    <%= label_tag "new-alias", "New alias" %>
-    <%= text_field_tag "new_alias", nil, :id => "new-alias" %>
+    <%= text_area_tag "new_aliases", topic.also_known_as, :id => "new-aliases" %>
   </div>
 
   <div class="actions">

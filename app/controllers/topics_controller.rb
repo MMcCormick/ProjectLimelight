@@ -133,7 +133,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by_slug(params[:id])
     authorize! :update, topic
 
-    if topic.add_alias(params[:new_alias])
+    if topic.update_aliases(params[:new_aliases])
       if topic.save
         response = build_ajax_response(:ok, nil, "Alias added!")
         status = 200

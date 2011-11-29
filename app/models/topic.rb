@@ -58,7 +58,7 @@ class Topic
 
   before_create :init_alias
   after_create :add_to_soulmate
-  before_update :update_alias
+  before_update :update_name_alias
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
@@ -79,6 +79,10 @@ class Topic
     public_id.to_i.to_s(36)
   end
 
+  #
+  # Aliases
+  #
+
   def init_alias
     self.aliases ||= []
     add_alias(name) unless has_alias?(name)
@@ -95,7 +99,17 @@ class Topic
     end
   end
 
-  def update_alias
+  def update_aliases new_aliases
+    new_aliases = new_aliases.split(', ')
+    aliases.each do |also|
+      also.destroy if (also.slug != name.to_url && also.slug != name.pluralize.to_url)
+    end
+    new_aliases.each do |new_alias|
+      add_alias(new_alias)
+    end
+  end
+
+  def update_name_alias
     if name_changed?
       add_alias(name)
     end
@@ -103,14 +117,6 @@ class Topic
 
   def has_alias? name
     aliases.detect {|data| data.slug == name.to_url}
-  end
-
-  def add_to_soulmate
-    Resque.enqueue(SmCreateTopic, id.to_s)
-  end
-
-  def remove_from_soulmate
-    Resque.enqueue(SmDestroyTopic, id.to_s)
   end
 
   def also_known_as
@@ -129,7 +135,21 @@ class Topic
     end
   end
 
+  #
+  # SoulMate
+  #
+
+  def add_to_soulmate
+    Resque.enqueue(SmCreateTopic, id.to_s)
+  end
+
+  def remove_from_soulmate
+    Resque.enqueue(SmDestroyTopic, id.to_s)
+  end
+
+  #
   # Merge
+  #
 
   def merge(aliased_topic)
     self.aliases = aliases + aliased_topic.aliases
@@ -271,8 +291,7 @@ class Topic
 
   protected
 
-  #TODO: topic aliases
-  #TODO: update soulmate
+  #TODO: check that soulmate gets updated if this topic is a type for another topic
   def update_denorms
     topic_mention_updates = {}
     connection_snippet_updates = {}

@@ -36,14 +36,15 @@ module ApplicationHelper
     text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:' ]*)\]/).each do |topic|
       # Loop through all of the topic mentions connected to this object
       # If we found a match, replace the mention with a link to the topic
-      object.topic_mentions.each do |topic_mention|
-        if topic_mention.id.to_s == topic[0]
-          if absolute
-            text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic[1]}](#{topic_url(topic_mention)})")
-          else
-            text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic[1]}](#{topic_path(topic_mention)})")
-          end
+      topic_mention = object.topic_mentions.detect{|m| m.id.to_s == topic[0]}
+      if topic_mention
+        if absolute
+          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic[1]}](#{topic_url(topic_mention)})")
+        else
+          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic[1]}](#{topic_path(topic_mention)})")
         end
+      else
+        text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, topic[1])
       end
     end
 
@@ -51,14 +52,15 @@ module ApplicationHelper
     text.scan(/\#([0-9a-zA-Z]*)/).each do |topic|
       # Loop through all of the topic mentions connected to this object
       # If we found a match, replace the mention with a link to the topic
-      object.topic_mentions.each do |topic_mention|
-        if topic_mention.short_name == topic[0]
-          if absolute
-            text.gsub!(/\##{topic[0]}/, "[##{topic[0]}](#{topic_url(topic_mention)})")
-          else
-            text.gsub!(/\##{topic[0]}/, "[##{topic[0]}](#{topic_path(topic_mention)})")
-          end
+      topic_mention = object.topic_mentions.detect{|m| m.short_name == topic[0]}
+      if topic_mention
+        if absolute
+          text.gsub!(/\##{topic[0]}/, "[##{topic[0]}](#{topic_url(topic_mention)})")
+        else
+          text.gsub!(/\##{topic[0]}/, "[##{topic[0]}](#{topic_path(topic_mention)})")
         end
+      else
+        text.gsub!(/\##{topic[0]}/, topic[0])
       end
     end
 
@@ -66,15 +68,25 @@ module ApplicationHelper
     text.scan(/\@\[([0-9a-zA-Z]*)#([\w ]*)\]/).each do |user|
       # Loop through all of the user mentions connected to this object
       # If we found a match, replace the mention with a link to the user
-      object.user_mentions.each do |user_mention|
-        if user_mention.id.to_s == user[0]
-          if absolute
-            text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_url(user_mention)})")
-          else
-            text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_path(user_mention)})")
-          end
+      user_mention = object.user_mentions.detect{|m| m.id.to_s = user[0]}
+      if user_mention
+        if absolute
+          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_url(user_mention)})")
+        else
+          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_path(user_mention)})")
         end
+      else
+        text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, user_mention.username)
       end
+    end
+
+    # Replace any messed up mentions
+    text.gsub!(/\#\[([a-zA-Z0-9,!\-_:' ]*)\]/) do |found|
+      found
+    end
+    # Replace any messed up short names
+    text.gsub!(/\#([a-zA-Z0-9]*)/) do |found|
+      found
     end
 
     text.html_safe

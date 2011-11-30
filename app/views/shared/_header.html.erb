@@ -19,7 +19,8 @@
     <%= link_to "Sign Up", new_user_registration_path, :id => "register" %>
   <% end %>
 
-  <div id="search" class="<%= "logged" if signed_in? %>">
-    <input type="text" value="Search" class="iclear b"/>
+  <div id="search" class="<%= "logged" if signed_in? %> lClear">
+    <label for="top_search">Search users or topics...</label>
+    <input type="text" id="top_search" autocomplete='off' />
   </div>
 </div>

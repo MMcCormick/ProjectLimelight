@@ -134,14 +134,20 @@ button {
     border-right: 1px solid #08192E;
     position: absolute;
     top: 4px;
-    right: 180px;
+    right: 163px;
+    label {
+      top: 8px;
+      font-size: 13px;
+      font-style: normal;
+      color: #444;
+    }
     input {
         @include border-radius(2px);
         background-color: #EFEFEF;
         border: none;
         border-top: 1px solid #163967;
         border-bottom: 1px solid #4075BC;
-        font-size: 16px;
+        font-size: 15px;
         padding: 5px 8px;
         height: 20px;
         color: #333;
@@ -157,12 +163,14 @@ button {
 #login,
 #logout,
 #register {
-    font-size: 16px;
-    color: #FFF;
-    border-left: 1px solid #4A8BDD;
-    padding: 6px 20px 7px 20px;
-    position: absolute;
-    top: 4px;
+  font-size: 16px;
+  color: #FFF;
+  border-left: 1px solid #4A8BDD;
+  padding: 6px 0;
+  position: absolute;
+  top: 4px;
+  width: 80px;
+  text-align: center;
 }
 
 #register {

@@ -102,7 +102,7 @@ class Topic
   def update_aliases new_aliases
     new_aliases = new_aliases.split(', ')
     aliases.each do |also|
-      also.destroy if (also.slug != name.to_url && also.slug != name.pluralize.to_url)
+      also.destroy if (also.slug != name.to_url && also.slug != name.pluralize.to_url && also.slug != name.singularize.to_url)
     end
     new_aliases.each do |new_alias|
       add_alias(new_alias)
@@ -122,11 +122,11 @@ class Topic
   def also_known_as
     also_known_as = Array.new
     aliases.each do |also|
-      if also.slug != name.to_url && also.slug != name.pluralize.to_url
+      if also.slug != name.to_url && also.slug != name.pluralize.to_url && also.slug != name.singularize.to_url
         also_known_as << also.name
       end
     end
-    also_known_as.join(', ')
+    also_known_as
   end
 
   class << self

@@ -52,31 +52,28 @@ jQuery ->
   $('.lClear label').livequery ->
     $(@).labelOver('over-apply')
 
-  # Automatic clearing of help text in inputs
-  $('.iclear').live 'focus', (e) ->
-    self = $(@)
-    if !self.hasClass('cleared') && !self.data('default') || self.val() == self.data('default')
-      self.addClass('active').data('default', self.val()).selectRange(0, 0)
-
-  $('.iclear').live 'blur', (e) ->
-    self = $(@)
-    if !$.trim(self.val()) || self.val() == self.data('default')
-      self.removeClass('active cleared').val(self.data('default'))
-
-  $('.iclear').live 'keydown', (e) ->
-    self = $(@)
-    if self.val() == self.data('default')
-      self.removeClass('active').val('')
-
-  $('.iclear').live 'keyup', (e) ->
-    self = $(@)
-    if !$.trim(self.val())
-      self.addClass('active').val(self.data('default')).selectRange(0, 0)
+  # generic tips
+  $('.tip').livequery ->
+    $(@).each ->
+      $self = $(@)
+      $self.qtip
+        style:
+          classes: 'ui-tooltip-shadow ui-tooltip-light'
+        position:
+          my: 'middle left'
+          at: 'middle right'
+          viewport: $(window)
+        show:
+          delay: 200
+        hide:
+          delay: 200
+          fixed: true
 
   # future features
   $('.future').livequery ->
     $(@).css({ opacity: 0.25 }).attr('title', 'This feature will be available soon!');
 
+  # authenticate prompt
   $('.auth').live 'click', (e) ->
     e.preventDefault()
     $('#register').click()

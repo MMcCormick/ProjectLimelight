@@ -1,10 +1,10 @@
 <form action="<%= add_topic_alias_path %>" id="add-alias-form" method="POST" class="ajax">
 
   <div class="lClear required">
-    <%= text_area_tag "new_aliases", topic.also_known_as, :id => "new-aliases" %>
+    <%= text_area_tag "new_aliases", topic.also_known_as.join(', '), :id => "new-aliases" %>
   </div>
 
   <div class="actions">
-    <%= submit_tag "Add", :class => "submit" %>
+    <%= submit_tag "Update", :class => "submit" %>
   </div>
 </form>

@@ -1,17 +1,3 @@
-/*
- * jQuery Autocomplete plugin 1.2.2
- *
- * Copyright (c) 2009 Jörn Zaefferer
- *
- * Dual licensed under the MIT and GPL licenses:
- *   http://www.opensource.org/licenses/mit-license.php
- *   http://www.gnu.org/licenses/gpl.html
- *
- * With small modifications by Alfonso Gómez-Arzola.
- * See changelog for details.
- *
- */
-
 ;
 (function($) {
 
@@ -519,7 +505,7 @@
       else if (data.bucketType == 'topic')
       {
         var types = '',
-            name = '<span class="term">'+data.show+'</span>';
+            name = '<span class="term">'+data.show+(data.data && data.data['short_name'] ? '*' : '')+'</span>';
         if (data.data && data.data.types)
         {
           types = '<div class="types">'+data.data.types.join(', ')+'</div>';

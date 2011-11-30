@@ -52,6 +52,17 @@
       }
     }
   }
+  .sn {
+    margin: 0 0 5px 0;
+    position: relative;
+    float: left;
+    .tip {
+      position: absolute;
+      top: -1px;
+      right: -13px;
+      font-size: 14px;
+    }
+  }
   .image {
     position: relative;
     min-height: 100px;
@@ -109,6 +120,7 @@
     border: 1px solid #CCC;
     float: left;
     display: block;
+    height: 15px;
 
     &.followers {
       right: 0px;

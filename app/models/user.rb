@@ -108,6 +108,7 @@ class User
     if limelight
       self.follow_topic(limelight)
       self.save
+      limelight.save
     end
   end
 

@@ -1,6 +1,8 @@
 class TopicsController < ApplicationController
   include ImageHelper
 
+  caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
+
   def index
     @topics = Topic.all
 
@@ -75,17 +77,15 @@ class TopicsController < ApplicationController
     topic = Topic.find_by_slug(params[:id])
 
     url = default_image_url(topic, params[:w], params[:h], params[:m], true, false)
-    if stale?(:etag => url)
-      img = open(Rails.env.development? ? Rails.public_path+url : url)
+    img = open(Rails.env.development? ? Rails.public_path+url : url)
 
-      if img
-        send_data(
-          img.read,
-          :disposition => 'inline'
-        )
-      else
-        render :nothing => true, :status => 404
-      end
+    if img
+      send_data(
+        img.read,
+        :disposition => 'inline'
+      )
+    else
+      render :nothing => true, :status => 404
     end
   end
 
@@ -96,9 +96,14 @@ class TopicsController < ApplicationController
     if topic
       image = topic.add_image(current_user.id, params[:image_location])
       topic.set_default_image(image.id) if image
+      topic.fb_img = false
 
       if topic.save
-        #expire_action :action => :default_picture, :id => current_user.encoded_id
+        topic.available_dimensions.each do |dimension|
+          topic.available_modes.each do |mode|
+            expire_fragment("#{topic.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
+          end
+        end
       end
     end
 

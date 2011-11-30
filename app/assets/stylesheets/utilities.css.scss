@@ -35,6 +35,12 @@
     }
 }
 
+.tip {
+  color: orange;
+  font-weight: bold;
+  cursor: default;
+}
+
 #form-submitting {
     @include opacity(.8);
     @include border-radius(2px);

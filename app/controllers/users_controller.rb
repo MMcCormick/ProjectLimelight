@@ -2,6 +2,8 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings]
   include ImageHelper
 
+  caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
+
   def show
     @user = User.find_by_slug(params[:id])
     page = params[:p] ? params[:p].to_i : 1
@@ -43,25 +45,29 @@ class UsersController < ApplicationController
     user = User.find_by_slug(params[:id])
 
     url = default_image_url(user, params[:w], params[:h], params[:m], true)
-    #if stale?(:etag => url)
-      img = open(Rails.env.development? ? Rails.public_path+url : url)
+    img = open(Rails.env.development? ? Rails.public_path+url : url)
 
-      if img
-        send_data(
-          img.read,
-          :disposition => 'inline'
-        )
-      else
-        render :nothing => true, :status => 404
-      end
-    #end
+    if img
+      send_data(
+        img.read,
+        :disposition => 'inline'
+      )
+    else
+      render :nothing => true, :status => 404
+    end
   end
 
   # Update a users default picture
   def picture_update
     image = current_user.add_image(current_user.id, params[:image_location])
     current_user.set_default_image(image.id) if image
-    current_user.save
+    if current_user.save
+      current_user.available_dimensions.each do |dimension|
+        current_user.available_modes.each do |mode|
+          expire_fragment("#{current_user.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
+        end
+      end
+    end
 
     render :json => {:status => 'ok'}
   end

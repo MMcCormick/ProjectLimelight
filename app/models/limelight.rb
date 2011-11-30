@@ -104,6 +104,14 @@ module Limelight #:nodoc:
       end
     end
 
+    def available_dimensions
+      [[30,30],[50,50],[60,60],[100,100],[150,150],[200,0]]
+    end
+
+    def available_modes
+      ['fillcropmid', 'fit']
+    end
+
     def add_image(user_id, image_location)
       image = self.images.create(:user_id => user_id)
       version = AssetImage.new(:isOriginal => true)
@@ -301,7 +309,27 @@ module Limelight #:nodoc:
       return unless @content_raw || @ooc_mentions
 
       if @content_raw
+
+        short_names = Array.new
+
+        # Searches for short names in format #ShortName
+        @content_raw.scan(/\#([a-zA-Z0-9]*)/).map do |short_name|
+          unless short_names.include? short_name
+            short_names << short_name[0]
+          end
+        end
+        # Add short name mentions
+        mentions = Topic.where(:short_name => {'$in' => short_names}).to_a
+        mentions.each do |topic|
+          existing = topic_mentions.detect{|mention| mention.id == topic.id}
+          unless existing
+            payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
+            self.topic_mentions.build(payload)
+          end
+        end
+
         found_topics = Array.new
+
         # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
         @content_raw.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:' ]*)\]/).map do |topic|
           unless found_topics.include? topic[0]

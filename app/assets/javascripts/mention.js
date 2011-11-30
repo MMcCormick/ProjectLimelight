@@ -114,118 +114,125 @@ var fields = [];
     var mentionField = new field(input, autocomplete, under, hidden);
 
     input.bind('keypress',
-            function(e) { // Handle keypresses within mentionField fields that need to fire before keyup()
-              var keyCode = catchKey(e);
-              // Intercept enter key and tab keys
-              if ((keyCode == 13 || keyCode == 9) && mentionField.state >= 0) {
-                if (e.preventDefault) {
-                  e.preventDefault();
-                } else {
-                  e.cancelBubble = true;
-                  e.returnValue = false;
-                }
+    function(e) { // Handle keypresses within mentionField fields that need to fire before keyup()
+      var keyCode = catchKey(e);
 
-                active = mentionField.autocompleteLoaded && $('.ac_results .ac_over').length > 0 ? $('.ac_results .ac_over') : false;
-                if (active) {
-                  active.click();
-                } else if (settings[mentionField.mode].allowNew) {
-                  mentionField.addMention(mentionField.state - settings[mentionField.mode].trigger.length, mentionField.caret, null, mentionField.type, null);
-                }
+      // Intercept enter key, tab, and pound keys
+      if ((keyCode == 13 || keyCode == 9 || (keyCode == 35 || keyCode == 16 || (e.shiftKey && e.keyCode == 51))) && mentionField.state >= 0) {
+        if (e.preventDefault) {
+          e.preventDefault();
+        } else {
+          e.cancelBubble = true;
+          e.returnValue = false;
+        }
 
-                mentionField.input.focus().setCursorPosition(mentionField.caret);
-              }
-            }).bind('keydown',
-            function(e) { // Handle keypresses within mentionField fields that need to fire before keyup() but don't fire on keypress()
-              // Intercept arrow keys
-              var keyCode = catchKey(e);
-              if ((keyCode == 38 || keyCode == 40) && mentionField.autocompleteLoaded) {
-                mentionField.autocomplete.trigger(e)
-                if (e.preventDefault) {
-                  e.preventDefault();
-                } else {
-                  e.cancelBubble = true;
-                  e.returnValue = false;
-                }
-              } else if ($(this).val() == mentionField.value && $(this).getSelection().start != mentionField.caret) {
-                // Detect caret movement (left/right arrow or mouse click movement)
-                mentionField.unload();
-              }
-            }).bind('click keyup', function(e) { // Handle keypresses within mentionField fields
-              index = $(this).data('index');
+        if (keyCode == 35 || keyCode == 16 || (e.shiftKey && e.keyCode == 51))
+        {
+          mentionField.useShortName = true;
+        }
 
-              // Update caret position
-              mentionField.caret = $(this).getSelection().start;
+        active = mentionField.autocompleteLoaded && $('.ac_results .ac_over').length > 0 ? $('.ac_results .ac_over') : false;
+        if (active) {
+          active.click();
+        } else if (settings[mentionField.mode].allowNew) {
+          mentionField.addMention(mentionField.state - settings[mentionField.mode].trigger.length, mentionField.caret, null, mentionField.type, null);
+        }
 
-              // Detect insertion/deletion & move mentionFields if necessary
-              var delta = $(this).val().length - mentionField.value.length;
-              var remove = [];
-              $.each(mentionField.mentions, function(i, mention) {
-                if(delta >= 0) {
-                  // Insertion
-                  if(mention.pos >= mentionField.caret-delta) {
-                    mention.pos += delta;
-                  }
-                } else {
-                  // Deletion
-                  if(mention.pos >= mentionField.caret && mention.pos < mentionField.caret-delta) {
-                    remove.push(i);
-                  } else if(mention.pos < mentionField.caret && mention.pos+mention.length() > mentionField.caret) {
-                    // Revert to editing state; re-add trigger; update caret;
-                    remove.push(i);
-                    mentionField.input.val(mentionField.input.val().substr(0, mention.pos)+settings[mention.mode].trigger+mentionField.input.val().substr(mention.pos));
-                    mentionField.caret += settings[mention.mode].trigger.length;
-                    delta += settings[mention.mode].trigger.length;
-                    mentionField.input.setCursorPosition(mentionField.caret);
-                    mentionField.state = mention.pos+settings[mention.mode].trigger.length;
-                    mentionField.mode = mention.mode;
-                  } else if(mention.pos >= mentionField.caret-delta) {
-                    mention.pos += delta;
-                  }
-                }
-              });
-              var sub = 0;
-              var memory = mentionField.mentions;
-              $.each(remove.sort(), function(irr, rdex) {
-                mentionField.removeMention(rdex - sub);
-                memory = mentionField.mentions;
-                sub++;
-              });
-              mentionField.mentions = memory;
+        mentionField.input.focus().setCursorPosition(mentionField.caret);
+      }
+    }).bind('keydown',
+    function(e) { // Handle keypresses within mentionField fields that need to fire before keyup() but don't fire on keypress()
+      // Intercept arrow keys
+      var keyCode = catchKey(e);
 
-              // Update value
-              mentionField.value = $(this).val();
+      if ((keyCode == 38 || keyCode == 40) && mentionField.autocompleteLoaded) {
+        mentionField.autocomplete.trigger(e)
+        if (e.preventDefault) {
+          e.preventDefault();
+        } else {
+          e.cancelBubble = true;
+          e.returnValue = false;
+        }
+      } else if ($(this).val() == mentionField.value && $(this).getSelection().start != mentionField.caret) {
+        // Detect caret movement (left/right arrow or mouse click movement)
+        mentionField.unload();
+      }
+    }).bind('click keyup', function(e) { // Handle keypresses within mentionField fields
+      index = $(this).data('index');
 
-              // Check for the trigger string
-              $.each(settings, function(i, s) {
-                if (mentionField.value.substr(mentionField.caret - s.trigger.length, s.trigger.length) == s.trigger) {
-                  mentionField.state = mentionField.caret;
-                  mentionField.mode = i;
-                  return false;
-                }
-              });
+      // Update caret position
+      mentionField.caret = $(this).getSelection().start;
 
-              // Check for deleting the trigger string
-              if (mentionField.caret < mentionField.state) {
-                mentionField.unload();
-              }
+      // Detect insertion/deletion & move mentionFields if necessary
+      var delta = $(this).val().length - mentionField.value.length;
+      var remove = [];
+      $.each(mentionField.mentions, function(i, mention) {
+        if(delta >= 0) {
+          // Insertion
+          if(mention.pos >= mentionField.caret-delta) {
+            mention.pos += delta;
+          }
+        } else {
+          // Deletion
+          if(mention.pos >= mentionField.caret && mention.pos < mentionField.caret-delta) {
+            remove.push(i);
+          } else if(mention.pos < mentionField.caret && mention.pos+mention.length() > mentionField.caret) {
+            // Revert to editing state; re-add trigger; update caret;
+            remove.push(i);
+            mentionField.input.val(mentionField.input.val().substr(0, mention.pos)+settings[mention.mode].trigger+mentionField.input.val().substr(mention.pos));
+            mentionField.caret += settings[mention.mode].trigger.length;
+            delta += settings[mention.mode].trigger.length;
+            mentionField.input.setCursorPosition(mentionField.caret);
+            mentionField.state = mention.pos+settings[mention.mode].trigger.length;
+            mentionField.mode = mention.mode;
+          } else if(mention.pos >= mentionField.caret-delta) {
+            mention.pos += delta;
+          }
+        }
+      });
+      var sub = 0;
+      var memory = mentionField.mentions;
+      $.each(remove.sort(), function(irr, rdex) {
+        mentionField.removeMention(rdex - sub);
+        memory = mentionField.mentions;
+        sub++;
+      });
+      mentionField.mentions = memory;
 
-              var type = mentionField.type;
-              // Get mentionField
-              if (mentionField.state >= 0) {
-                mentionField.type = $(this).val().substr(mentionField.state, mentionField.caret - mentionField.state);
-              }
+      // Update value
+      mentionField.value = $(this).val();
 
-              // Autocomplete
-              if (type != mentionField.type && mentionField.type.length > 0 && mentionField.state >= 0) {
-                if (!mentionField.autocompleteLoaded) {
-                  mentionField.load_autocomplete()
-                }
-                mentionField.autocomplete.searchFor(mentionField.type);
-              }
+      // Check for the trigger string
+      $.each(settings, function(i, s) {
+        if (mentionField.value.substr(mentionField.caret - s.trigger.length, s.trigger.length) == s.trigger) {
+          mentionField.state = mentionField.caret;
+          mentionField.mode = i;
+          return false;
+        }
+      });
 
-              // Update highlighting
-              mentionField.highlight();
-            });
+      // Check for deleting the trigger string
+      if (mentionField.caret < mentionField.state) {
+        mentionField.unload();
+      }
+
+      var type = mentionField.type;
+      // Get mentionField
+      if (mentionField.state >= 0) {
+        mentionField.type = $(this).val().substr(mentionField.state, mentionField.caret - mentionField.state);
+      }
+
+      // Autocomplete
+      if (type != mentionField.type && mentionField.type.length > 0 && mentionField.state >= 0) {
+        if (!mentionField.autocompleteLoaded) {
+          mentionField.load_autocomplete()
+        }
+        mentionField.autocomplete.searchFor(mentionField.type);
+      }
+
+      // Update highlighting
+      mentionField.highlight();
+    });
 
   }
 
@@ -248,12 +255,13 @@ var fields = [];
   };
 
   // Represents a mention
-  function mention(pos, id, text, data, mode) {
+  function mention(pos, id, text, data, mode, short_name) {
     this.pos = pos;
     this.id = id;
     this.text = text;
     this.data = data;
     this.mode = mode;
+    this.short_name = short_name;
     this.length = function() {
       return this.text.length;
     }
@@ -274,14 +282,31 @@ var fields = [];
     this.data = data;
     this.callbacks = {};
     this.value = input.val();
+    this.useShortName = false;
 
     // Adds a mention to this field (and tidy up after)
     this.addMention = function(start, end, id, text, data) {
+      short_name = false;
+      if (this.useShortName)
+      {
+        if (data['data']['short_name'])
+        {
+          short_name = data['data']['short_name'];
+          text = '#'+short_name;
+          this.value = short_name;
+        }
+        else
+        {
+          return false;
+        }
+      }
+
       this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
       var delta = this.value.length - this.input.val().length;
 
       this.input.val(this.value);
-      this.mentions.push(new mention(start, id, text, data, this.mode));
+
+      this.mentions.push(new mention(start, id, text, data, this.mode, short_name));
 
       $.each(this.mentions, function(i, mention) {
         if (mention.pos > start) {
@@ -289,16 +314,16 @@ var fields = [];
         }
       });
 
-      // Move the caret
-      var caret = start + text.length;
-      this.input.focus().setCursorPosition(caret);
-      this.caret = caret;
-
       // Unload autocompleter
       this.unload();
 
       // Update highlighting
       this.highlight();
+
+      // Move the caret
+      var caret = start + text.length;
+      this.input.focus().setCursorPosition(caret);
+      this.caret = caret;
 
       this.input.trigger('mentionAdded', data);
     }
@@ -312,15 +337,6 @@ var fields = [];
     // Loads autocompleter
     this.load_autocomplete = function() {
       var mention = this
-
-      if(settings[this.mode].bucketType == 'user')
-      {
-        var extraParams = {"types[]":[settings[this.mode].bucket, "user"]}
-      }
-      else
-      {
-        var extraParams = {"types[]":"topic"}
-      }
 
       this.autocomplete.autocomplete(settings[this.mode].autocomplete, {
         minChars: 2,
@@ -384,11 +400,18 @@ var fields = [];
       var s = this.state;
       var m = this.mode;
       $.each(this.mentions, function(i, mention) {
-        var sub = html.length;
-        html = html.substr(0, mention.pos + add) + '<b class="' + settings[mention.mode].highlight + '">' + mention.text + '</b>' + html.substr(mention.pos + add + mention.length());
-        add += html.length - sub;
-        if (mention.pos <= s) {
-          addstate += html.length - sub;
+        if (mention.short_name)
+        {
+          html = '#' + html;
+        }
+        else
+        {
+          var sub = html.length;
+          html = html.substr(0, mention.pos + add) + '<b class="' + settings[mention.mode].highlight + '">' + mention.text + '</b>' + html.substr(mention.pos + add + mention.length());
+          add += html.length - sub;
+          if (mention.pos <= s) {
+            addstate += html.length - sub;
+          }
         }
       });
       if (this.state >= 0) {
@@ -407,7 +430,14 @@ var fields = [];
       var add = 0;
       $.each(this.mentions, function(i, mention) {
         var sub = html.length;
-        html = html.substr(0, mention.pos + add) + settings[mention.mode].trigger + '[' + (mention.id == null ? '' : mention.id + '#') + mention.text + ']' + html.substr(mention.pos + add + mention.length());
+        if (mention.short_name)
+        {
+          html = html.substr(0, mention.pos + add) + settings[mention.mode].trigger + mention.short_name + html.substr(mention.pos + add + mention.length());
+        }
+        else
+        {
+          html = html.substr(0, mention.pos + add) + settings[mention.mode].trigger + '[' + (mention.id == null ? '' : mention.id + '#') + mention.text + ']' + html.substr(mention.pos + add + mention.length());
+        }
         add += html.length - sub;
       });
       this.data.val(html);

@@ -10,6 +10,9 @@
         <% end %>
       </div>
     <% end %>
+    <% if @topic.short_name %>
+      <div class='sn'><%= "##{@topic.short_name}" %></div>
+    <% end %>
     <div class="fol">
       <%= render 'follows/btn', :target => @topic %>
       <div class="folC"><%= @topic.followers_count %> followers</div>

@@ -37,6 +37,7 @@ class Topic
   end
 
   field :summary
+  field :short_name
   field :fb_img, :default => false # use the freebase image?
   field :fb_id # freebase id
   field :fb_mid # freebase mid
@@ -54,7 +55,7 @@ class Topic
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
-  attr_accessible :name, :summary, :aliases
+  attr_accessible :name, :summary, :aliases, :short_name
 
   before_create :init_alias
   after_create :add_to_soulmate
@@ -64,6 +65,7 @@ class Topic
 
   index [[ :slug, Mongo::ASCENDING ]]
   index "aliases.slug"
+  index :short_name
   index :ph
   index :pd
   index :pw
@@ -86,7 +88,7 @@ class Topic
   def init_alias
     self.aliases ||= []
     add_alias(name) unless has_alias?(name)
-    plurl = name.pluralize == name ? name.singularize.to_url : name.pluralize.to_url
+    plurl = name.pluralize == name ? name.singularize : name.pluralize
     add_alias(plurl) unless has_alias?(plurl)
   end
 
@@ -100,9 +102,9 @@ class Topic
   end
 
   def update_aliases new_aliases
-    new_aliases = new_aliases.split(', ')
+    new_aliases = new_aliases.split(', ') unless new_aliases.is_a? Array
     aliases.each do |also|
-      also.destroy if (also.slug != name.to_url && also.slug != name.pluralize.to_url && also.slug != name.singularize.to_url)
+      also.destroy if (also.slug != name.to_url && also.slug != name.pluralize.to_url && also.slug != name.singularize.to_url && also.slug != short_name)
     end
     new_aliases.each do |new_alias|
       add_alias(new_alias)
@@ -110,6 +112,10 @@ class Topic
   end
 
   def update_name_alias
+    if short_name_changed?
+      update_aliases(also_known_as)
+      add_alias(short_name)
+    end
     if name_changed?
       add_alias(name)
     end
@@ -122,7 +128,7 @@ class Topic
   def also_known_as
     also_known_as = Array.new
     aliases.each do |also|
-      if also.slug != name.to_url && also.slug != name.pluralize.to_url && also.slug != name.singularize.to_url
+      if also.slug != name.to_url && also.slug != name.pluralize.to_url && also.slug != name.singularize.to_url && also.slug != short_name
         also_known_as << also.name
       end
     end
@@ -293,22 +299,39 @@ class Topic
 
   #TODO: check that soulmate gets updated if this topic is a type for another topic
   def update_denorms
+    soulmate = nil
     topic_mention_updates = {}
     connection_snippet_updates = {}
     if name_changed?
+      soulmate = true
       connection_snippet_updates["topic_connection_snippets.$.topic_name"] = self.name
     end
     if slug_changed?
+      soulmate = true
       topic_mention_updates["topic_mentions.$.slug"] = self.slug
       connection_snippet_updates["topic_connection_snippets.$.topic_slug"] = self.slug
     end
+    if short_name_changed?
+      soulmate = true
+      objects = CoreObject.where('topic_mentions.id' => id)
+      objects.each do |object|
+        object.name.gsub!(/\##{short_name_was}/, "##{short_name}")
+        object.content.gsub!(/\##{short_name_was}/, "##{short_name}")
+        existing = object.topic_mentions.detect{|mention| mention.id == id}
+        if existing
+          existing.short_name = short_name
+        end
+        object.save
+      end
+    end
 
-    if !connection_snippet_updates.empty?
+    unless connection_snippet_updates.empty?
       CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
       Topic.where("topic_connection_snippets.topic_id" => id).update_all(connection_snippet_updates)
 
       # Updates v attribute of instances so they update their slugs
-      if instance_ids = get_instances.map{|instance| instance.topic_id}
+      instance_ids = get_instances.map{|instance| instance.topic_id}
+      if instance_ids
         instances = Topic.where("_id" => { "$in" => instance_ids })
         instances.each do |instance|
           instance.v += 1
@@ -319,14 +342,26 @@ class Topic
       #Topic.collection.update({"topic_connection_snippets.topic_id" => id},
       #                        { "$set" => connection_snippet_updates,
       #                          "$inc" => { "v" => 1 } }, false, true)
+    end
+
+    if soulmate
       Resque.enqueue(SmCreateTopic, id.to_s)
     end
   end
 
   def expire_caches
-    ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, id.to_s
-    ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, "#{id.to_s}-following"
-    ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, "#{id.to_s}-manage"
-    ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, "#{id.to_s}-following-manage"
+    # topic right sidebar
+    ['', '-following', '-manage', '-following-manage'].each do |key|
+      ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, id.to_s+key
+    end
+
+    # if name/slug changed clear any cached thing with links to this topic
+    if name_changed? || slug_changed?
+      objects = CoreObject.where('topic_mentions.id' => id)
+      objects.each do |object|
+        object.expire_caches
+      end
+      ActionController::Base.new.expire_cell_state TopicCell, :trending
+    end
   end
 end

@@ -47,6 +47,21 @@ module ApplicationHelper
       end
     end
 
+    # Loop through all of the topic short names in the content
+    text.scan(/\#([0-9a-zA-Z]*)/).each do |topic|
+      # Loop through all of the topic mentions connected to this object
+      # If we found a match, replace the mention with a link to the topic
+      object.topic_mentions.each do |topic_mention|
+        if topic_mention.short_name == topic[0]
+          if absolute
+            text.gsub!(/\##{topic[0]}/, "[##{topic[0]}](#{topic_url(topic_mention)})")
+          else
+            text.gsub!(/\##{topic[0]}/, "[##{topic[0]}](#{topic_path(topic_mention)})")
+          end
+        end
+      end
+    end
+
     # Loop through all of the user mentions in the content
     text.scan(/\@\[([0-9a-zA-Z]*)#([\w ]*)\]/).each do |user|
       # Loop through all of the user mentions connected to this object

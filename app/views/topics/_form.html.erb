@@ -12,12 +12,20 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :name, "Name" %><br />
+    <%= f.label :name, "Name" %>
+    <br />
     <%= f.text_field :name %>
   </div>
 
   <div class="field">
-    <%= f.label :summary, "Summary" %><br />
+    <%= f.label :short_name, "Short Name" %>
+    <br />
+    <%= f.text_field :short_name %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :summary, "Summary" %>
+    <br />
     <%= f.text_area :summary %>
   </div>
 

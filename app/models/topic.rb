@@ -94,6 +94,8 @@ class Topic
   end
 
   def add_alias new_alias
+    return unless new_alias && !new_alias.blank?
+
     unless has_alias? new_alias
       self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url)
       Resque.enqueue(SmCreateTopic, id.to_s)
@@ -101,6 +103,7 @@ class Topic
   end
 
   def remove_alias old_alias
+    return unless old_alias && !old_alias.blank?
     new_aliases = []
     aliases.each do |a|
       if a.slug != old_alias.to_url

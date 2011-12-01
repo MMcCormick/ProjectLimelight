@@ -87,25 +87,34 @@ class Topic
 
   def init_alias
     self.aliases ||= []
-    add_alias(name) unless has_alias?(name)
+    add_alias(name)
     plurl = name.pluralize == name ? name.singularize : name.pluralize
-    add_alias(plurl) unless has_alias?(plurl)
+    add_alias(plurl)
+    add_alias(short_name) unless !short_name || short_name.blank?
   end
 
   def add_alias new_alias
-    if has_alias? new_alias
-      false
-    else
+    unless has_alias? new_alias
       self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url)
       Resque.enqueue(SmCreateTopic, id.to_s)
     end
   end
 
-  def update_aliases new_aliases
-    new_aliases = new_aliases.split(', ') unless new_aliases.is_a? Array
-    aliases.each do |also|
-      also.destroy if (also.slug != name.to_url && also.slug != name.pluralize.to_url && also.slug != name.singularize.to_url && also.slug != short_name)
+  def remove_alias old_alias
+    new_aliases = []
+    aliases.each do |a|
+      if a.slug != old_alias.to_url
+        new_aliases << a
+      end
     end
+    self.aliases = new_aliases
+  end
+
+  def update_aliases new_aliases
+    self.aliases = []
+    init_alias
+
+    new_aliases = new_aliases.split(', ') unless new_aliases.is_a? Array
     new_aliases.each do |new_alias|
       add_alias(new_alias)
     end
@@ -114,10 +123,14 @@ class Topic
   def update_name_alias
     if short_name_changed?
       update_aliases(also_known_as)
+      remove_alias(short_name_was)
       add_alias(short_name)
     end
     if name_changed?
-      add_alias(name)
+      remove_alias(name_was.pluralize)
+      remove_alias(name_was.singularize)
+      add_alias(name.pluralize)
+      add_alias(name.singularize)
     end
   end
 
@@ -356,8 +369,8 @@ class Topic
     end
 
     # if name/slug changed clear any cached thing with links to this topic
-    if name_changed? || slug_changed?
-      objects = CoreObject.where('topic_mentions.id' => id)
+    if name_changed? || slug_changed? || short_name_changed?
+      objects = CoreObject.where('topic_mentions._id' => id)
       objects.each do |object|
         object.expire_caches
       end

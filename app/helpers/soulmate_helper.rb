@@ -37,7 +37,7 @@ module SoulmateHelper
       end
     end
 
-    if topic.short_name
+    if topic.short_name && !topic.short_name.blank?
       nugget['data']['short_name'] = topic.short_name
     end
 

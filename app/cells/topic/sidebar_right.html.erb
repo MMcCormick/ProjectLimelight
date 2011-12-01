@@ -11,7 +11,7 @@
       <% end %>
     </ul>
 
-    <% if @topic.short_name %>
+    <% if @topic.short_name && !@topic.short_name.blank? %>
       <div class='sn'>
         <%= "##{@topic.short_name}" %>
         <span class='tip' title='Short names are an alternative way (often shorter) to mention a topic in a post. Just type #<%= @topic.short_name %> to mention this topic in a post. They function similar to twitter hash tags.'>?</span>

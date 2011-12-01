@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings]
   include ImageHelper
 
-  #caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
+  caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
 
   def show
     @user = User.find_by_slug(params[:id])
@@ -47,13 +47,14 @@ class UsersController < ApplicationController
     url = default_image_url(user, params[:w], params[:h], params[:m], true)
     img = open(Rails.env.development? ? Rails.public_path+url : url)
 
+    response.headers['Cache-Control'] = 'no-cache'
+
     if img
-      #send_data(
-      #  img.read,
-      #  :type => 'image/png',
-      #  :disposition => 'inline'
-      #)
-      render :text => img.read
+      send_data(
+        img.read,
+        :type => 'image/png',
+        :disposition => 'inline'
+      )
     else
       render :nothing => true, :status => 404
     end

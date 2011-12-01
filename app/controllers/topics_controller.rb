@@ -79,6 +79,8 @@ class TopicsController < ApplicationController
     url = default_image_url(topic, params[:w], params[:h], params[:m], true, false)
     img = open(Rails.env.development? ? Rails.public_path+url : url)
 
+    response.headers['Cache-Control'] = 'no-cache'
+
     if img
       send_data(
         img.read,

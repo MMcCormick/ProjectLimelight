@@ -84,7 +84,7 @@ module ApplicationHelper
     text.gsub!(/\#\[([a-zA-Z0-9,!\-_:' ]*)\]/, "\\1")
 
     # Replace any messed up short names
-    text.gsub!(/\#([a-zA-Z0-9]*)/, "\\1")
+    #text.gsub!(/\#([a-zA-Z0-9]*)/, "\\1")
 
     text.html_safe
   end

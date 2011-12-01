@@ -50,6 +50,7 @@ class UsersController < ApplicationController
     if img
       send_data(
         img.read,
+        :type => 'image/png',
         :disposition => 'inline'
       )
     else

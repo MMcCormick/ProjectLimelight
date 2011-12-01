@@ -80,10 +80,7 @@ class TopicsController < ApplicationController
     img = open(Rails.env.development? ? Rails.public_path+url : url)
 
     if img
-      send_data(
-        img.read,
-        :disposition => 'inline'
-      )
+      render :text => img.read
     else
       render :nothing => true, :status => 404
     end

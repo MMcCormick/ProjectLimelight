@@ -270,10 +270,10 @@ module Limelight #:nodoc:
     def title_clean
       clean = ''
       if @title_raw.blank? && title
-        clean = title.gsub(/[\#\@]\[([0-9a-zA-Z]*)#(.*)\]/, '\2')
+        clean = title.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
       elsif !@title_raw.blank?
         # old mentions
-        clean = @title_raw.gsub(/[\#\@]\[([0-9a-zA-Z]*)#(.*)\]/, '\2')
+        clean = @title_raw.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
         # new mentions
         clean = clean.gsub(/[\#]\[([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/, '\2')
       end
@@ -283,10 +283,10 @@ module Limelight #:nodoc:
     def content_clean
       clean = ''
       if @content_raw.blank? && content
-        clean = content.gsub(/[\#\@]\[([0-9a-zA-Z]*)#(.*)\]/, '\2')
+        clean = content.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
       elsif !@content_raw.blank?
         # old mentions
-        clean = @content_raw.gsub(/[\#\@]\[([0-9a-zA-Z]*)#(.*)\]/, '\2')
+        clean = @content_raw.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
         # new mentions
         clean = clean.gsub(/[\#]\[([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/, '\2')
       end

@@ -81,7 +81,7 @@ module ApplicationHelper
     end
 
     # Replace any messed up mentions DOES NOT WORK RIGHT NOW
-    #text.gsub!(/\[(.*)\]/, "\\1")
+    #text.gsub!(/\[([^\]]*)\]/, "\\1")
 
     # Replace any messed up short names
     #text.gsub!(/\#([a-zA-Z0-9]*)/, "\\1")

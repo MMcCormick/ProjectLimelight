@@ -97,7 +97,7 @@ jQuery ->
           clone.find('.remote_image_url').val(target.find('img:first').attr('src'))
 
           if data.embedly.images.length > 1
-            clone.find('.switcher').show()
+            clone.find('.switcher').removeClass('hide')
 
           if (pullFrom.attr('id') == 'picture_fetch')
             clone.find('#picture_source_url').val(data.embedly.url)

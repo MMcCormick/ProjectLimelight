@@ -105,8 +105,8 @@ class CoreObject
   end
 
   def title_length
-    if title_clean.length > 100
-      errors.add(:title, "must be less than 100 characters long")
+    if title_clean.length > 125
+      errors.add(:title, "must be less than 125 characters long")
     end
   end
 

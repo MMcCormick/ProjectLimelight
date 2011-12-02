@@ -7,5 +7,6 @@ class ImageProcessor
     target = Kernel.const_get(target_model).find(target_id)
     target.add_image_version image_id, dimensions, mode
     target.save
+    target.expire_caches
   end
 end

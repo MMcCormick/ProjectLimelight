@@ -12,6 +12,7 @@
 
 .jgrowl {
   @include single-box-shadow(#333, 1px, 1px, 5px);
+  position: fixed;
   .ui-tooltip-title { font-size: 18px; }
   .ui-tooltip-content { font-size: 17px; padding: 7px; line-height: 1.28; }
 }

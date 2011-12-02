@@ -28,7 +28,7 @@ $(function() {
             }).end()
             .appendTo($button.parent().parent())
             .fadeIn(300)
-            .find('textarea').focus().end();
+            .find('textarea').end();
     // add the comment parent id to the hidden form
     $button.parents('.comment:first').find('#comment_parent_id').attr('value', $button.data('d').id);
     $button.parents('.comment:first').find('#comment_talk_id').attr('value', $button.parents('.comment-thread:first').data('d').talk_id);

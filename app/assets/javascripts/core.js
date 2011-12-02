@@ -145,7 +145,7 @@
     $(document.body).qtip({
       // Any content config you want here really.... go wild!
       content: {
-        text: content,
+        text: content
         //        title: {
         //           text: title,
         //           button: true
@@ -154,7 +154,7 @@
       position: {
         my: 'bottom left', // Not really important...
         at: 'bottom' + ' left', // If target is window use 'top right' instead of 'bottom right'
-        target: target.length ? target : $(document.body), // Use our target declared above
+        target: target.length ? target : $(window), // Use our target declared above
         adjust: { y: (target.length ? -1 * ($('.qtip.jgrowl:visible').height() + 15) : -50), x: (target.length ? 0 : $('#sidebar').width() + 20) } // Add some vertical spacing
       },
       show: {

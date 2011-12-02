@@ -21,7 +21,6 @@ jQuery ->
       target.slideUp(200)
     else
       target.slideDown(200)
-      target.find('#talk_content').focus()
 
   # handle option choices on contribute form (clicking add picture/video/link)
   $('.contributeC .options .option').live 'click', (e) ->

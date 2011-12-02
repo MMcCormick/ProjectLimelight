@@ -176,7 +176,7 @@ class CoreObject
       if target
         self.response_to = ResponseTo.new(
                 :type => target._type,
-                :title => target.title,
+                :title => target.title_clean,
                 :public_id => target.public_id
         )
         self.response_to.id = target.id

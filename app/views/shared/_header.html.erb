@@ -1,4 +1,4 @@
-<%# cache("header#{'-logged' if signed_in?}#{'-admin' if signed_in? && current_user.role?('admin')}") do %>
+<% cache("header#{'-logged' if signed_in?}#{'-admin' if signed_in? && current_user.role?('admin')}") do %>
   <div id="header">
     <% top_image = image_tag "top-logo.png", :alt => "Limelight" %>
     <%= link_to top_image, :root, :class => "p logo" %>
@@ -24,4 +24,4 @@
       <input type="text" id="top_search" autocomplete='off' />
     </div>
   </div>
-<%# end %>
+<% end %>

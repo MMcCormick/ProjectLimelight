@@ -3,7 +3,7 @@
 <div class="teaser list <%= object._type.downcase %>" data-id="<%= object.id %>">
 
   <div class="content">
-    <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
+    <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title_clean, object), :object => object %>
     <%= video_embed(object.sources[0], 150, 120) %>
   </div>
 

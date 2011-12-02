@@ -42,7 +42,6 @@ jQuery ->
         else if $self.hasClass 'link'
           parentForm.find('.url.link').fadeIn 100
 
-
   # handle option cancel on contribute form
   $('.contributeC .options .option .cancel').live 'click', (e) ->
     $self = $(@).parent()
@@ -87,7 +86,6 @@ jQuery ->
             childForm = parentForm.find('.new_link')
 
           clone = childForm.find('.shared').clone()
-          parentForm.find('.main_content').prepend(clone)
           target = clone.find('.preview .images')
           target.html('')
 
@@ -111,6 +109,7 @@ jQuery ->
             clone.find('#link_source_name').val(data.embedly.provider_name)
             setContributeToLink(parentForm)
 
+          parentForm.find('.main_content').prepend(clone)
           clone.fadeIn 150
           pullFrom.val('').blur().parent().fadeOut 150
 

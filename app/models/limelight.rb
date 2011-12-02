@@ -267,6 +267,32 @@ module Limelight #:nodoc:
       attr_accessor :title_raw, :content_raw, :ooc_mentions
     end
 
+    def title_clean
+      clean = ''
+      if @title_raw.blank? && title
+        clean = title.gsub(/[\#\@]\[([0-9a-zA-Z]*)#(.*)\]/, '\2')
+      elsif !@title_raw.blank?
+        # old mentions
+        clean = @title_raw.gsub(/[\#\@]\[([0-9a-zA-Z]*)#(.*)\]/, '\2')
+        # new mentions
+        clean = clean.gsub(/[\#]\[([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/, '\2')
+      end
+      clean
+    end
+
+    def content_clean
+      clean = ''
+      if @content_raw.blank? && content
+        clean = content.gsub(/[\#\@]\[([0-9a-zA-Z]*)#(.*)\]/, '\2')
+      elsif !@content_raw.blank?
+        # old mentions
+        clean = @content_raw.gsub(/[\#\@]\[([0-9a-zA-Z]*)#(.*)\]/, '\2')
+        # new mentions
+        clean = clean.gsub(/[\#]\[([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/, '\2')
+      end
+      clean
+    end
+
     def send_mention_notifications
       sent = []
       self.user_mentions.each do |mentioned_user|
@@ -281,7 +307,8 @@ module Limelight #:nodoc:
     def set_mentions
       set_user_mentions
       set_topic_mentions
-      self.content = @content_raw
+      self.title = @title_raw && !@title_raw.blank? ? @title_raw : title
+      self.content = @content_raw && !@content_raw.blank? ? @content_raw : content
     end
 
     # Checks @content_raw for user mentions
@@ -306,50 +333,10 @@ module Limelight #:nodoc:
     # Checks @content_raw for topic mentions
     # Checks @ooc_mentions for out of context mentions
     def set_topic_mentions
-      return unless @content_raw || @ooc_mentions
+      return unless @title_raw || @content_raw || @ooc_mentions
 
-      if @content_raw
-
-        # Search for regular topic mentions
-        found_topics = Array.new
-        # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
-        @content_raw.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/).map do |topic|
-          unless found_topics.include? topic[0]
-            found_topics << topic[0]
-          end
-        end
-        save_topic_mentions(found_topics, false) if found_topics.length > 0
-
-        # Search for topic short name mentions
-        short_names = Array.new
-        # Searches for short names in format #ShortName
-        @content_raw.scan(/\#([a-zA-Z0-9]*)/).map do |short_name|
-          unless short_names.include? short_name
-            short_names << short_name[0]
-          end
-        end
-        # Add short name mentions
-        mentions = Topic.where(:short_name => {'$in' => short_names}).to_a
-        mentions.each do |topic|
-          existing = topic_mentions.detect{|mention| mention.id == topic.id}
-          unless existing
-            payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
-            self.topic_mentions.build(payload)
-          end
-        end
-
-        # Search for new topic mentions
-        # Explodes the string. Returns an array of arrays containing
-        # [string, slugified string] without duplicates.
-        new_topic_mentions = @content_raw.scan(/\#\[([a-zA-Z0-9,!\-_:'&\?\$ ]*[^#])\]/).flatten(1).map do |topic|
-          # strip of disallowed characters
-          cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
-          @content_raw.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
-          [cleaned, topic.to_url, false]
-        end.uniq
-        save_new_topic_mentions(new_topic_mentions)
-
-      end
+      parse_mentions(@title_raw) if @title_raw
+      parse_mentions(@content_raw) if @content_raw
 
       @ooc_mentions = Yajl::Parser.parse(@ooc_mentions) if @ooc_mentions
       if @ooc_mentions
@@ -364,6 +351,47 @@ module Limelight #:nodoc:
           save_new_topic_mentions(new_mentions)
         end
       end
+    end
+
+    def parse_mentions(text)
+      # Search for regular topic mentions
+      found_topics = Array.new
+      # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
+      text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/).map do |topic|
+        unless found_topics.include? topic[0]
+          found_topics << topic[0]
+        end
+      end
+      save_topic_mentions(found_topics, false) if found_topics.length > 0
+
+      # Search for topic short name mentions
+      short_names = Array.new
+      # Searches for short names in format #ShortName
+      text.scan(/\#([a-zA-Z0-9]*)/).map do |short_name|
+        unless short_names.include? short_name
+          short_names << short_name[0]
+        end
+      end
+      # Add short name mentions
+      mentions = Topic.where(:short_name => {'$in' => short_names}).to_a
+      mentions.each do |topic|
+        existing = topic_mentions.detect{|mention| mention.id == topic.id}
+        unless existing
+          payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
+          self.topic_mentions.build(payload)
+        end
+      end
+
+      # Search for new topic mentions
+      # Explodes the string. Returns an array of arrays containing
+      # [string, slugified string] without duplicates.
+      new_topic_mentions = text.scan(/\#\[([a-zA-Z0-9,!\-_:'&\?\$ ]*[^#])\]/).flatten(1).map do |topic|
+        # strip of disallowed characters
+        cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
+        text.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
+        [cleaned, topic.to_url, false]
+      end.uniq
+      save_new_topic_mentions(new_topic_mentions)
     end
 
     def save_topic_mentions(found_topics, ooc=false)
@@ -404,6 +432,7 @@ module Limelight #:nodoc:
         end
         if found_topic
           # add the new ID to the topic mention
+          @title_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
           @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
 
           payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug, :ooc => topic_mention[2]}

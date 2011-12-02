@@ -9,9 +9,14 @@ class CoreObject
   include Limelight::Mentions
   include Limelight::Popularity
 
-  field :content
+  # Denormilized:
+  # CoreObject.response_to.name
+  # Notification.shared_object_snippet.name TODO: update this once notifications are implemented
   #TODO: bug: each core object type currently validates the length of content, but after creation content_raw is copied to content.
   #TODO: since the topic and user mentions in raw content increase the length, validation may fail when the obj is saved again
+  field :title
+
+  field :content
 
   field :status, :default => 'Active'
   field :favorites, :default => []
@@ -28,8 +33,11 @@ class CoreObject
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
 
   belongs_to :user
+
   validates :user_id, :status, :presence => true
-  attr_accessible :content, :response_to_id, :source_name, :source_url, :source_video_id
+  validate :title_length, :content_length
+
+  attr_accessible :title, :content, :response_to_id, :source_name, :source_url, :source_video_id
   attr_accessor :response_to_id, :source_name, :source_url, :source_video_id
 
   before_validation :set_source_snippet
@@ -56,10 +64,6 @@ class CoreObject
     "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
   end
 
-  def content_clean
-    content.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([\w ]*)\]/, '\2')
-  end
-
   def encoded_id
     public_id.to_i.to_s(36)
   end
@@ -67,15 +71,9 @@ class CoreObject
   def set_source_snippet
     if @source_name || @source_url || @source_video_id
       source = SourceSnippet.new
-      unless @source_name.blank?
-        source.name = @source_name
-      end
-      unless @source_url.blank?
-        source.url = @source_url
-      end
-      unless @source_video_id.blank?
-        source.video_id = @source_video_id
-      end
+      source.name = @source_name unless @source_name.blank?
+      source.url = @source_url unless @source_url.blank?
+      source.video_id = @source_video_id unless @source_video_id.blank?
       add_source(source)
     end
   end
@@ -103,6 +101,18 @@ class CoreObject
     end
     if sources.length > 0 && (sources[0].url.length < 3 || sources[0].url.length > 200)
       errors.add(:url, "must be between 3 and 200 characters long")
+    end
+  end
+
+  def title_length
+    if title_clean.length > 100
+      errors.add(:title, "must be less than 100 characters long")
+    end
+  end
+
+  def content_length
+    if content_clean.length > 200
+      errors.add(:content, "must be less than 200 characters long")
     end
   end
 

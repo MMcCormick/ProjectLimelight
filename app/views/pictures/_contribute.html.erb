@@ -4,10 +4,10 @@
       <div class="images"></div>
     </div>
     <div class="info">
-      <div class="title required lClear">
+      <div class="title required lClear mention-box">
         <%= f.label :title, "Picture title..." %>
-        <%= f.text_area :title, :class => 'content', :spellcheck => false, :autocomplete => :off %>
-        <%#= f.hidden_field :title_raw, :class => 'data', :autocomplete => :off %>
+        <%= f.text_area :title, :class => 'mention', :spellcheck => false, :autocomplete => :off %>
+        <%= f.hidden_field :title_raw, :class => 'data', :autocomplete => :off %>
       </div>
       <div class="switcher hide">
         <div class="left"><</div>

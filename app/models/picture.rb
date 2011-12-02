@@ -1,17 +1,10 @@
 class Picture < CoreObject
   include Limelight::Images
 
-  attr_accessible :url, :title
-
-  # Denormilized:
-  # CoreObject.response_to.name
-  # Notification.shared_object_snippet.name
-  field :title
-
-  validates :title, :length => { :minimum => 5, :maximum => 75 }
+  validates :title, :presence => true
 
   def name
-    self.title
+    title_clean
   end
 
 end

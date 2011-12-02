@@ -161,17 +161,6 @@
   .forms {
     width: 525px;
   }
-  .main_content {
-    margin: 0 8px;
-    border-top: 1px solid #AAA;
-    position: relative;
-    padding: 0 150px 0 0;
-    overflow: hidden;
-
-    label {
-      top: 6px;
-    }
-  }
   .shared {
     @include clearfix();
     border-bottom: 1px dashed #aaaaaa;
@@ -197,26 +186,27 @@
     }
     .info {
       float: left;
-
     }
     &.with-preview {
       .info {
         width: 228px;
-        textarea {
+        .under,
+        .mention {
           width: 205px;
         }
       }
     }
     .title {
+      min-height: 65px;
       label {
         top: 2px;
         left: 0;
       }
-      textarea {
+      .mention,
+      .under {
         padding: 0 4px 0 0 !important;
-        height: 50px;
+        height: 65px;
         font-size: 13px;
-        font-weight: bold;
         width: 347px;
         border: none;
         margin: 0;
@@ -265,16 +255,28 @@
       cursor: pointer;
     }
   }
-  .mention-box {
-    height: 100px;
+  .main_content {
+    margin: 0 8px;
+    border-top: 1px solid #AAA;
+    position: relative;
+    padding: 0 150px 0 0;
+    overflow: hidden;
 
-    .under,
-    .mention {
-      height: 86px;
-      padding: 6px 3px !important;
-      width: 351px;
+    label {
+      top: 6px;
+    }
+    .talk_content {
+      height: 100px;
+
+      .under,
+      .mention {
+        height: 86px;
+        padding: 6px 3px !important;
+        width: 351px;
+      }
     }
   }
+
   .mention-ooc {
     position: absolute;
     width: 150px;

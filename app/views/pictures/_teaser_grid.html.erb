@@ -4,7 +4,7 @@
   <div class="wrapper">
 
     <div class="content">
-      <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title, object), :object => object %>
+      <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title_clean, object), :object => object %>
 
 <% end #cache %>
 

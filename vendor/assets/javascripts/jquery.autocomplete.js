@@ -1,61 +1,61 @@
 ;
-(function($) {
+(function ($) {
 
   $.fn.extend({
-    autocomplete: function(urlOrData, options) {
+    autocomplete:function (urlOrData, options) {
       var isUrl = typeof urlOrData == "string";
       options = $.extend({}, $.Autocompleter.defaults, {
-        url: isUrl ? urlOrData : null,
-        data: isUrl ? null : urlOrData,
-        delay: isUrl ? $.Autocompleter.defaults.delay : 10,
-        max: options && !options.scroll ? 10 : 150
+        url:isUrl ? urlOrData : null,
+        data:isUrl ? null : urlOrData,
+        delay:isUrl ? $.Autocompleter.defaults.delay : 10,
+        max:options && !options.scroll ? 10 : 150
       }, options);
 
       // if highlight is set to false, replace it with a do-nothing function
-      options.highlight = options.highlight || function(value) {
+      options.highlight = options.highlight || function (value) {
         return value;
       };
 
       // if the formatMatch option is not specified, then use formatItem for backwards compatibility
       options.formatMatch = options.formatMatch || options.formatItem;
 
-      return this.each(function() {
+      return this.each(function () {
         new $.Autocompleter(this, options);
       });
     },
-    result: function(handler) {
+    result:function (handler) {
       return this.bind("result", handler);
     },
-    search: function(handler) {
+    search:function (handler) {
       return this.trigger("search", [handler]);
     },
-    searchFor: function(value) {
+    searchFor:function (value) {
       return this.trigger("searchFor", value);
     },
-    flushCache: function() {
+    flushCache:function () {
       return this.trigger("flushCache");
     },
-    setOptions: function(options) {
+    setOptions:function (options) {
       return this.trigger("setOptions", [options]);
     },
-    unautocomplete: function() {
+    unautocomplete:function () {
       return this.trigger("unautocomplete");
     }
   });
 
-  $.Autocompleter = function(input, options) {
+  $.Autocompleter = function (input, options) {
 
     var KEY = {
-      UP: 38,
-      DOWN: 40,
-      DEL: 46,
-      TAB: 9,
-      RETURN: 13,
-      ESC: 27,
-      COMMA: 188,
-      PAGEUP: 33,
-      PAGEDOWN: 34,
-      BACKSPACE: 8
+      UP:38,
+      DOWN:40,
+      DEL:46,
+      TAB:9,
+      RETURN:13,
+      ESC:27,
+      COMMA:188,
+      PAGEUP:33,
+      PAGEDOWN:34,
+      BACKSPACE:8
     };
 
     var globalFailure = null;
@@ -72,14 +72,14 @@
     var hasFocus = 0;
     var lastKeyPressCode;
     var config = {
-      mouseDownOnSelect: false
+      mouseDownOnSelect:false
     };
     var select = $.Autocompleter.Select(options, input, selectCurrent, config);
 
     var blockSubmit;
 
     // prevent form submit in opera when selecting with return key
-    $.browser.opera && $(input.form).bind("submit.autocomplete", function() {
+    $.browser.opera && $(input.form).bind("submit.autocomplete", function () {
       if (blockSubmit) {
         blockSubmit = false;
         return false;
@@ -88,7 +88,7 @@
 
     // only opera doesn't trigger keydown multiple times while pressed, others don't work with keypress at all
     $input.bind(($.browser.opera ? "keypress change" : "keydown change") + ".autocomplete",
-            function(event) {
+            function (event) {
               // a keypress means the input has focus
               // avoids issue where input had focus before the autocomplete was applied
               hasFocus = 1;
@@ -154,18 +154,18 @@
                   break;
               }
             }).focus(
-            function() {
+            function () {
               // track whether the field has focus, we shouldn't process any
               // results if the field no longer has focus
               hasFocus++;
             }).blur(
-            function() {
+            function () {
               hasFocus = 0;
               if (!config.mouseDownOnSelect) {
                 hideResults();
               }
             }).click(
-            function() {
+            function () {
               // show select when clicking in a focused field
               // but if clickFire is true, don't require field
               // to be focused to begin with; just show select
@@ -179,7 +179,7 @@
                 }
               }
             }).bind("search",
-            function() {
+            function () {
               // TODO why not just specifying both arguments?
               var fn = (arguments.length > 1) ? arguments[1] : null;
 
@@ -197,23 +197,24 @@
                 else $input.trigger("result", result && [result.data, result.value]);
               }
 
-              $.each(trimWords($input.val()), function(i, value) {
+              $.each(trimWords($input.val()), function (i, value) {
                 request(value, findValueCallback, findValueCallback);
               });
-            }).bind("searchFor", function() {
+            }).bind("searchFor",
+            function () {
               hasFocus = true;
               $input.val(arguments[1]);
               setTimeout(onChange, options.delay);
             }).bind("flushCache",
-            function() {
+            function () {
               cache.flush();
             }).bind("setOptions",
-            function() {
+            function () {
               $.extend(true, options, arguments[1]);
               // if we've updated the data, repopulate
               if ("data" in arguments[1])
                 cache.populate();
-            }).bind("unautocomplete", function() {
+            }).bind("unautocomplete", function () {
               select.unbind();
               $input.unbind();
               $(input.form).unbind(".autocomplete");
@@ -233,7 +234,7 @@
           var seperator = options.multipleSeparator.length;
           var cursorAt = $(input).selection().start;
           var wordAt, progress = 0;
-          $.each(words, function(i, word) {
+          $.each(words, function (i, word) {
             progress += word.length;
             if (cursorAt <= progress) {
               wordAt = i;
@@ -287,7 +288,7 @@
         return [""];
       if (!options.multiple)
         return [$.trim(value)];
-      return $.map(value.split(options.multipleSeparator), function(word) {
+      return $.map(value.split(options.multipleSeparator), function (word) {
         return $.trim(value).length ? $.trim(word) : null;
       });
     }
@@ -358,10 +359,8 @@
 
     function receiveData(q, data) {
       var length = 0;
-      for (bucket in data)
-      {
-        if (data[bucket].length)
-        {
+      for (bucket in data) {
+        if (data[bucket].length) {
           length = 1
         }
       }
@@ -390,45 +389,45 @@
       } else if ((typeof options.url == "string") && (options.url.length > 0)) {
 
         var extraParams = {
-          timestamp: +new Date()
+          timestamp:+new Date()
         };
-        $.each(options.extraParams, function(key, param) {
+        $.each(options.extraParams, function (key, param) {
           extraParams[key] = typeof param == "function" ? param() : param;
         });
 
         $.ajax({
           // try to leverage ajaxQueue plugin to abort previous requests
-          mode: "abort",
+          mode:"abort",
           // limit abortion to this input
-          port: "autocomplete" + input.name,
-          dataType: options.dataType,
-          url: options.url,
-          data: $.extend({
-            term: lastWord(term),
-            limit: options.max
+          port:"autocomplete" + input.name,
+          dataType:options.dataType,
+          url:options.url,
+          data:$.extend({
+            term:lastWord(term),
+            limit:options.max
           }, extraParams),
-          success: function(acData) {
+          success:function (acData) {
             // Used for soulmate redis store
             // APPLICATION SPECIFIC
-            var buckets=[],
-                tmpData={},
-                data={};
+            var buckets = [],
+                    tmpData = {},
+                    data = {};
 
-            if (options.buckets.length > 0)
-            {
-              if (options.allowNew)
-              {
+            if (options.buckets.length > 0) {
+              if (options.allowNew) {
                 buckets.push(options.allowNewType);
-                var first = acData.results[options.allowNewType].splice(0,1)
+                var first = acData.results[options.allowNewType].splice(0, 1)
                 tmpData['TOP HIT'] = first;
                 data['TOP HIT'] = [];
 
                 buckets.push(options.allowNewType);
-                tmpData['CREATE'] = [{'id':0,'term':original,'showName':'create a new '+options.allowNewName+': <span class="term">'+original+'</span>'}];
+                tmpData['CREATE'] = [
+                  {'id':0, 'term':original, 'showName':'create a new ' + options.allowNewName + ': <span class="term">' + original + '</span>'}
+                ];
                 data['CREATE'] = [];
               }
 
-              $(options.buckets).each(function(i,val) {
+              $(options.buckets).each(function (i, val) {
                 buckets.push(val[0]);
                 tmpData[val[2]] = acData.results[val[1]];
                 data[val[2]] = [];
@@ -439,23 +438,18 @@
             var my_id = $('#static-data').data('d').myId
             var x = 0;
 
-            $.each( tmpData, function(i, bucket)
-            {
-              $.each(tmpData[i], function(i2, val) {
+            $.each(tmpData, function (i, bucket) {
+              $.each(tmpData[i], function (i2, val) {
                 // If we have not used this id yet
-                if ($.inArray(val.id, used_ids) == -1 && val.id != my_id)
-                {
+                if ($.inArray(val.id, used_ids) == -1 && val.id != my_id) {
                   used_ids.push(val.id);
                   val.bucketType = buckets[x];
                   val.show = val.term;
 
                   // use an alias if there is an appropriate one
-                  if (val['aliases'] && val.term.toLowerCase().indexOf(acData.term.toLowerCase()) != 0)
-                  {
-                    for (var i3=0; i3<val['aliases'].length; i3++)
-                    {
-                      if (val['aliases'][i3].toLowerCase() != val.term.toLowerCase() && val['aliases'][i3].toLowerCase().indexOf(acData.term.toLowerCase()) == 0)
-                      {
+                  if (val['aliases'] && val.term.toLowerCase().indexOf(acData.term.toLowerCase()) != 0) {
+                    for (var i3 = 0; i3 < val['aliases'].length; i3++) {
+                      if (val['aliases'][i3].toLowerCase() != val.term.toLowerCase() && val['aliases'][i3].toLowerCase().indexOf(acData.term.toLowerCase()) == 0) {
                         val.show = val['aliases'][i3] + ' (' + val.term + ')';
                         val.term = val['aliases'][i3];
                         break;
@@ -470,10 +464,9 @@
               x++;
             })
 
-            if (!options.allowNew && used_ids.length == 0)
-            {
+            if (!options.allowNew && used_ids.length == 0) {
               buckets.push('none');
-              var val = {'id':0,'term':'','bucketType': 'none'}
+              var val = {'id':0, 'term':'', 'bucketType':'none'}
               val.formattedItem = formatItem(val);
               data['NOPE'] = [val];
             }
@@ -496,44 +489,37 @@
     }
 
     // APPLICATION SPECIFIC
-    function formatItem(data)
-    {
-      if (data.bucketType == 'user')
-      {
-        return '<div class="auto-user"><div class="name term">'+data.term+'</div></div>';
+    function formatItem(data) {
+      if (data.bucketType == 'user') {
+        return '<div class="auto-user"><div class="name term">' + data.term + '</div></div>';
       }
-      else if (data.bucketType == 'topic')
-      {
+      else if (data.bucketType == 'topic') {
         var types = '',
-            name = '<span class="term">'+data.show+(data.data && data.data['short_name'] ? '*' : '')+'</span>';
-        if (data.data && data.data.types)
-        {
-          types = '<div class="types">'+data.data.types.join(', ')+'</div>';
+                name = '<span class="term">' + data.show + (data.data && data.data['short_name'] ? '*' : '') + '</span>';
+        if (data.data && data.data.types) {
+          types = '<div class="types">' + data.data.types.join(', ') + '</div>';
         }
-        if (data.showName)
-        {
+        if (data.showName) {
           name = data.showName;
         }
-        return '<div class="auto-topic"><div class="name'+(types != '' ? ' with-type' : '')+'">'+name+'</div>'+types+'</div>';
+        return '<div class="auto-topic"><div class="name' + (types != '' ? ' with-type' : '') + '">' + name + '</div>' + types + '</div>';
       }
-      else if (data.bucketType == 'none')
-      {
+      else if (data.bucketType == 'none') {
         return '<div class="auto"><div class="name">no matches found</div></div>';
       }
     }
 
     function parse(data) {
       parsed = {}
-      for (bucket in data)
-      {
+      for (bucket in data) {
         parsed[bucket] = []
-        $.each(data[bucket], function() {
+        $.each(data[bucket], function () {
           var row = this;
           if (row) {
             parsed[bucket].push({
-              data: row,
-              value: row,
-              result: options.formatResult && options.formatResult(row) || row
+              data:row,
+              value:row,
+              result:options.formatResult && options.formatResult(row) || row
             });
           }
         })
@@ -553,47 +539,47 @@
   };
 
   $.Autocompleter.defaults = {
-    inputClass: "ac_input",
-    resultsClass: "ac_results",
-    loadingClass: "ac_loading",
-    minChars: 1,
-    delay: 400,
-    matchCase: true,
-    matchSubset: true,
-    matchContains: false,
-    cacheLength: 10,
-    max: 100,
-    mustMatch: false,
-    extraParams: {},
-    selectFirst: true,
-    formatItem: function(row) {
+    inputClass:"ac_input",
+    resultsClass:"ac_results",
+    loadingClass:"ac_loading",
+    minChars:1,
+    delay:400,
+    matchCase:true,
+    matchSubset:true,
+    matchContains:false,
+    cacheLength:10,
+    max:100,
+    mustMatch:false,
+    extraParams:{},
+    selectFirst:true,
+    formatItem:function (row) {
       return row[0];
     },
-    formatMatch: null,
-    autoFill: false,
-    width: 0,
-    multiple: false,
-    multipleSeparator: ", ",
-    inputFocus: true,
-    clickFire: false,
-    highlight: function(value, term) {
+    formatMatch:null,
+    autoFill:false,
+    width:0,
+    multiple:false,
+    multipleSeparator:", ",
+    inputFocus:true,
+    clickFire:false,
+    highlight:function (value, term) {
       term = term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1")
       target = $(value);
       target.find('.term').html(target.find('.term').text().replace(new RegExp("(" + term.split(' ').join('|') + ")", "gi"), "<strong>$1</strong>"));
 
       return target[0];
     },
-    scroll: true,
-    scrollHeight: 180,
-    scrollJumpPosition: true,
-    buckets: [],
-    searchKey: 'name',
-    allowNew: false,
-    allowNewName: '',
-    allowNewType: ''
+    scroll:true,
+    scrollHeight:180,
+    scrollJumpPosition:true,
+    buckets:[],
+    searchKey:'name',
+    allowNew:false,
+    allowNewName:'',
+    allowNewType:''
   };
 
-  $.Autocompleter.Cache = function(options) {
+  $.Autocompleter.Cache = function (options) {
 
     var data = {};
     var length = 0;
@@ -650,9 +636,9 @@
 
         // if the match is a string
         var row = {
-          value: value,
-          data: rawValue,
-          result: options.formatResult && options.formatResult(rawValue) || value
+          value:value,
+          data:rawValue,
+          result:options.formatResult && options.formatResult(rawValue) || value
         };
 
         // push the current match into the set list
@@ -666,7 +652,7 @@
       ;
 
       // add the data items to the cache
-      $.each(stMatchSets, function(i, value) {
+      $.each(stMatchSets, function (i, value) {
         // increase the cache size
         options.cacheLength++;
         // add to the cache
@@ -683,10 +669,10 @@
     }
 
     return {
-      flush: flush,
-      add: add,
-      populate: populate,
-      load: function(q) {
+      flush:flush,
+      add:add,
+      populate:populate,
+      load:function (q) {
         if (!options.cacheLength || !length)
           return null;
         /*
@@ -702,7 +688,7 @@
             // this prevents duplicates
             if (k.length > 0) {
               var c = data[k];
-              $.each(c, function(i, x) {
+              $.each(c, function (i, x) {
                 // if we've got a match, add it to the array
                 if (matchSubset(x.value, q)) {
                   csub.push(x);
@@ -721,7 +707,7 @@
             var c = data[q.substr(0, i)];
             if (c) {
               var csub = [];
-              $.each(c, function(i, x) {
+              $.each(c, function (i, x) {
                 if (matchSubset(x.value, q)) {
                   csub[csub.length] = x;
                 }
@@ -737,7 +723,7 @@
 
   $.Autocompleter.Select = function (options, input, select, config) {
     var CLASSES = {
-      ACTIVE: "ac_over"
+      ACTIVE:"ac_over"
     };
 
     var listItems,
@@ -757,7 +743,7 @@
               .addClass(options.resultsClass)
               .css("position", "absolute")
               .appendTo(document.body)
-              .hover(function(event) {
+              .hover(function (event) {
                 // Browsers except FF do not fire mouseup event on scrollbars, resulting in mouseDownOnSelect remaining true, and results list not always hiding.
                 if ($(this).is(":visible")) {
                   input.focus();
@@ -766,23 +752,23 @@
               });
 
       list = $("<ul/>").appendTo(element).mouseover(
-              function(event) {
+              function (event) {
                 if (target(event).nodeName && target(event).nodeName.toUpperCase() == 'LI') {
                   active = $("li", list).removeClass(CLASSES.ACTIVE).index(target(event));
                   $(target(event)).addClass(CLASSES.ACTIVE);
                   $('.sublist-head').removeClass(CLASSES.ACTIVE);
                 }
               }).click(
-              function(event) {
+              function (event) {
                 $(target(event)).addClass(CLASSES.ACTIVE);
                 select();
                 if (options.inputFocus)
                   input.focus();
                 return false;
               }).mousedown(
-              function() {
+              function () {
                 config.mouseDownOnSelect = true;
-              }).mouseup(function() {
+              }).mouseup(function () {
                 config.mouseDownOnSelect = false;
               });
 
@@ -808,7 +794,7 @@
       var activeItem = listItems.slice(active, active + 1).addClass(CLASSES.ACTIVE);
       if (options.scroll) {
         var offset = 0;
-        listItems.slice(0, active).each(function() {
+        listItems.slice(0, active).each(function () {
           offset += this.offsetHeight;
         });
         if ((offset + activeItem[0].offsetHeight - list.scrollTop()) > list[0].clientHeight) {
@@ -841,8 +827,7 @@
 
     function fillList() {
       list.empty();
-      for (bucket in data)
-      {
+      for (bucket in data) {
         if (data[bucket].length == 0)
           continue;
 
@@ -874,60 +859,60 @@
     }
 
     return {
-      display: function(d, q) {
+      display:function (d, q) {
         init();
         data = d;
         term = q;
         fillList();
       },
-      next: function() {
+      next:function () {
         moveSelect(1);
       },
-      prev: function() {
+      prev:function () {
         moveSelect(-1);
       },
-      pageUp: function() {
+      pageUp:function () {
         if (active != 0 && active - 8 < 0) {
           moveSelect(-active);
         } else {
           moveSelect(-8);
         }
       },
-      pageDown: function() {
+      pageDown:function () {
         if (active != listItems.size() - 1 && active + 8 > listItems.size()) {
           moveSelect(listItems.size() - 1 - active);
         } else {
           moveSelect(8);
         }
       },
-      hide: function() {
+      hide:function () {
         element && element.hide();
         listItems && listItems.removeClass(CLASSES.ACTIVE);
         active = -1;
       },
-      visible : function() {
+      visible:function () {
         return element && element.is(":visible");
       },
-      current: function() {
+      current:function () {
         return this.visible() && (listItems.filter("." + CLASSES.ACTIVE)[0] || options.selectFirst && listItems[0]);
       },
-      show: function() {
+      show:function () {
         var offset = $(input).offset();
         element.css({
-          width: typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
-          top: offset.top + input.offsetHeight,
-          left: offset.left
+          width:typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
+          top:offset.top + input.offsetHeight,
+          left:offset.left
         }).show();
         if (options.scroll) {
           list.scrollTop(0);
           list.css({
-            maxHeight: options.scrollHeight,
-            overflow: 'auto'
+            maxHeight:options.scrollHeight,
+            overflow:'auto'
           });
 
           if ($.browser.msie && typeof document.body.style.maxHeight === "undefined") {
             var listHeight = 0;
-            listItems.each(function() {
+            listItems.each(function () {
               listHeight += this.offsetHeight;
             });
             var scrollbarsVisible = listHeight > options.scrollHeight;
@@ -940,22 +925,22 @@
 
         }
       },
-      selected: function() {
+      selected:function () {
         var selected = listItems && listItems.filter("." + CLASSES.ACTIVE).removeClass(CLASSES.ACTIVE);
         return selected && selected.length && $.data(selected[0], "ac_data");
       },
-      emptyList: function () {
+      emptyList:function () {
         list && list.empty();
       },
-      unbind: function() {
+      unbind:function () {
         element && element.remove();
       }
     };
   };
 
-  $.fn.selection = function(start, end) {
+  $.fn.selection = function (start, end) {
     if (start !== undefined) {
-      return this.each(function() {
+      return this.each(function () {
         if (this.createTextRange) {
           var selRange = this.createTextRange();
           if (end === undefined || start == end) {
@@ -986,13 +971,13 @@
       field.value = orig;
       this.selection(caretAt, caretAt + textLength);
       return {
-        start: caretAt,
-        end: caretAt + textLength
+        start:caretAt,
+        end:caretAt + textLength
       }
     } else if (field.selectionStart !== undefined) {
       return {
-        start: field.selectionStart,
-        end: field.selectionEnd
+        start:field.selectionStart,
+        end:field.selectionEnd
       }
     }
   };

@@ -1,4 +1,4 @@
-<% cache("teaser-#{object.id.to_s}-list") do %>
+<% cache("teaser-#{object.id.to_s}-list#{'-response' if response == true}") do %>
 
 <div class="teaser list talk" data-id="<%= object.id %>">
   <div class="content">

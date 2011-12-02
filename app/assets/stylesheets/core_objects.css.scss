@@ -52,7 +52,7 @@
     font-style: italic;
     color: #333;
     font-size: 19px;
-    margin: 14px 0 0 10px;
+    margin: 5px 0 5px 14px;
     width: 500px;
   }
   .errors {
@@ -892,7 +892,7 @@ $scoreBox-width: 160px;
   }
   .connectionsC {
     @include clearfix();
-    height: 18px;
+    min-height: 18px;
     .comment_form {
       clear: left;
       padding: 5px 5px 10px 10px;
@@ -1322,13 +1322,13 @@ $scoreBox-width: 160px;
   padding: 0 20px 0 0px;
   cursor: pointer;
   color: $picture-color;
-  z-index: 101;
+  z-index: 100;
 }
 #response-contribute {
   position: absolute;
   top: -45px;
   left: 114px;
-  z-index: 100;
+  z-index: 101;
   border-top: 2px solid #94C530;
 }
 #responses {

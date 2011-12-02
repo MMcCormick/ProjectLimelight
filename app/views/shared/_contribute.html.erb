@@ -4,55 +4,59 @@
       Responding to <%= responding.class.to_s %>: <%= responding.name %>
     </div>
   <% end %>
-  <div class="options">
-    <% if !defined?(allowed) || allowed.include?(:picture) %>
-      <div class="option picture" data-target=".new_picture">
-        Add Picture
-        <div class="icon picture-grey-icon"></div>
-        <div class="cancel">cancel picture</div>
+
+  <% if !defined?(allowed) || allowed.length > 0 %>
+    <div class="options">
+      <% if !defined?(allowed) || allowed.include?(:picture) %>
+        <div class="option picture" data-target=".new_picture">
+          Add Picture
+          <div class="icon picture-grey-icon"></div>
+          <div class="cancel">cancel picture</div>
+        </div>
+      <% end %>
+      <% if !defined?(allowed) || allowed.include?(:video) %>
+        <div class="option video" data-target=".new_video">
+          Add Video
+          <div class="icon video-grey-icon"></div>
+          <div class="cancel">cancel video</div>
+        </div>
+      <% end %>
+      <% if !defined?(allowed) || allowed.include?(:links) %>
+        <div class="option link" data-target=".new_link">
+          Add Link
+          <div class="icon link-grey-icon"></div>
+          <div class="cancel">cancel link</div>
+        </div>
+      <% end %>
+      <div class="clear"></div>
+      <div class="picture_options hide">
+        <div class="first">
+          Fetch from URL
+        </div>
+        <div id="picture_uploadB">
+          Upload from Computer
+        </div>
       </div>
-    <% end %>
-    <% if !defined?(allowed) || allowed.include?(:video) %>
-      <div class="option video" data-target=".new_video">
-        Add Video
-        <div class="icon video-grey-icon"></div>
-        <div class="cancel">cancel video</div>
+      <div class="url picture hide lClear">
+        <label for="picture_fetch">Picture URL</label>
+        <input type="text" id="picture_fetch" />
+        <div class="fetch">fetch</div>
+        <div class="dot">.</div>
+        <div class="cancel">cancel</div>
       </div>
-    <% end %>
-    <% if !defined?(allowed) || allowed.include?(:links) %>
-      <div class="option link" data-target=".new_link">
-        Add Link
-        <div class="icon link-grey-icon"></div>
-        <div class="cancel">cancel link</div>
+      <div class="url video hide lClear">
+        <label for="video_fetch">Video URL</label>
+        <input type="text" id="video_fetch" />
+        <div class="fetch">fetch</div>
       </div>
-    <% end %>
-    <div class="clear"></div>
-    <div class="picture_options hide">
-      <div class="first">
-        Fetch from URL
-      </div>
-      <div id="picture_uploadB">
-        Upload from Computer
+      <div class="url link hide lClear">
+        <label for="link_fetch">Link URL</label>
+        <input type="text" id="link_fetch" />
+        <div class="fetch">fetch</div>
       </div>
     </div>
-    <div class="url picture hide lClear">
-      <label for="picture_fetch">Picture URL</label>
-      <input type="text" id="picture_fetch" />
-      <div class="fetch">fetch</div>
-      <div class="dot">.</div>
-      <div class="cancel">cancel</div>
-    </div>
-    <div class="url video hide lClear">
-      <label for="video_fetch">Video URL</label>
-      <input type="text" id="video_fetch" />
-      <div class="fetch">fetch</div>
-    </div>
-    <div class="url link hide lClear">
-      <label for="link_fetch">Link URL</label>
-      <input type="text" id="link_fetch" />
-      <div class="fetch">fetch</div>
-    </div>
-  </div>
+  <% end %>
+
   <div class="forms">
     <%= render "talks/form", :talk => Talk.new, :responding => responding %>
 

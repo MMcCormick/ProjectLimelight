@@ -368,17 +368,19 @@ module Limelight #:nodoc:
       short_names = Array.new
       # Searches for short names in format #ShortName
       text.scan(/\#([a-zA-Z0-9]*)/).map do |short_name|
-        unless short_names.include? short_name
+        unless short_names.include?(short_name) || short_name[0].blank?
           short_names << short_name[0]
         end
       end
       # Add short name mentions
-      mentions = Topic.where(:short_name => {'$in' => short_names}).to_a
-      mentions.each do |topic|
-        existing = topic_mentions.detect{|mention| mention.id == topic.id}
-        unless existing
-          payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
-          self.topic_mentions.build(payload)
+      if short_names && short_names.length > 0
+        mentions = Topic.where(:short_name => {'$in' => short_names}).to_a
+        mentions.each do |topic|
+          existing = topic_mentions.detect{|mention| mention.id == topic.id}
+          unless existing
+            payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
+            self.topic_mentions.build(payload)
+          end
         end
       end
 

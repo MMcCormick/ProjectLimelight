@@ -47,7 +47,7 @@ jQuery ->
   # handle option cancel on contribute form
   $('.contributeC .options .option .cancel').live 'click', (e) ->
     $self = $(@).parent()
-    $('.contributeC .picture_options,.contributeC .url.picture').fadeOut 150
+    $('.contributeC .picture_options,.contributeC .url.picture,.contributeC .url.video,.contributeC .url.link').fadeOut 150
 
     $('.contributeC .main_content .shared').fadeOut 400, ->
       $(@).remove()

@@ -745,9 +745,9 @@
               .appendTo(document.body)
               .hover(function (event) {
                 // Browsers except FF do not fire mouseup event on scrollbars, resulting in mouseDownOnSelect remaining true, and results list not always hiding.
-                if ($(this).is(":visible")) {
-                  input.focus();
-                }
+//                if ($(this).is(":visible")) {
+//                  input.focus();
+//                }
                 config.mouseDownOnSelect = false;
               });
 

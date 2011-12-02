@@ -267,7 +267,9 @@
     }
     .talk_content {
       height: 100px;
-
+      .mention-box {
+        height: 100px;
+      }
       .under,
       .mention {
         height: 86px;

@@ -118,16 +118,11 @@ button {
 
 #contribute {
     @include green-button(2px, 16px);
-    padding: 4px 10px 5px 30px;
+    padding: 4px 10px 5px 10px;
     top: 5px;
     left: 240px;
     position: absolute;
     z-index: 210;
-
-    .plus-white-icon {
-        position: absolute;
-        top: 5px; left: 7px;
-    }
 }
 
 #search {

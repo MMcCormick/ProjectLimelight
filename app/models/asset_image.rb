@@ -31,4 +31,26 @@ class AssetImage < Asset
     self.image.store!("/tmp/#{hash}")
   end
 
+  # return width based on max dimension provided
+  def calculate_width(max)
+    if width == 0 || height == 0
+      max
+    elsif width > height
+      max
+    else
+      max*(width/height)
+    end
+  end
+
+  # return height based on max dimension provided
+  def calculate_height(max)
+    if width == 0 || height == 0
+      max
+    elsif width > height
+      max*(height/width)
+    else
+      max
+    end
+  end
+
 end

@@ -81,7 +81,7 @@ class CoreObject
   end
 
   def add_source(source)
-    found = sources.detect{|existing| existing.name.to_url == source.name.to_url}
+    found = sources.detect{|existing| existing.name && existing.name.to_url == source.name.to_url}
     unless found
       self.sources << source
     end

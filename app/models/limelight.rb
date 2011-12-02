@@ -263,8 +263,8 @@ module Limelight #:nodoc:
 
       before_create :set_mentions
 
-      attr_accessible :content_raw, :ooc_mentions
-      attr_accessor :content_raw, :ooc_mentions
+      attr_accessible :title_raw, :content_raw, :ooc_mentions
+      attr_accessor :title_raw, :content_raw, :ooc_mentions
     end
 
     def send_mention_notifications

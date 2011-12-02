@@ -1,60 +1,72 @@
 <div id="<%= id %>" class="contributeC">
+  <% if responding %>
+    <div class="responding">
+      Responding to <%= responding.class.to_s %>: <%= responding.name %>
+    </div>
+  <% end %>
   <div class="options">
-    <% if !defined?(allowed) || allowed.include?(:talk) %>
-      <div class="option talk on" data-target=".new_talk">
-        Talk
-        <div class="icon arrow-g-r-2424"></div>
-        <div class="icon arrow-r-2424"></div>
-      </div>
-    <% end %>
     <% if !defined?(allowed) || allowed.include?(:picture) %>
       <div class="option picture" data-target=".new_picture">
-        Picture
-        <div class="icon arrow-g-r-2424"></div>
-        <div class="icon arrow-r-2424"></div>
+        Add Picture
+        <div class="icon picture-grey-icon"></div>
+        <div class="cancel">cancel picture</div>
       </div>
     <% end %>
     <% if !defined?(allowed) || allowed.include?(:video) %>
       <div class="option video" data-target=".new_video">
-        Video
-        <div class="icon arrow-g-r-2424"></div>
-        <div class="icon arrow-r-2424"></div>
+        Add Video
+        <div class="icon video-grey-icon"></div>
+        <div class="cancel">cancel video</div>
       </div>
     <% end %>
     <% if !defined?(allowed) || allowed.include?(:links) %>
       <div class="option link" data-target=".new_link">
-        Link
-        <div class="icon arrow-g-r-2424"></div>
-        <div class="icon arrow-r-2424"></div>
+        Add Link
+        <div class="icon link-grey-icon"></div>
+        <div class="cancel">cancel link</div>
       </div>
     <% end %>
+    <div class="clear"></div>
+    <div class="picture_options hide">
+      <div class="first">
+        Fetch from URL
+      </div>
+      <div id="picture_uploadB">
+        Upload from Computer
+      </div>
+    </div>
+    <div class="url picture hide lClear">
+      <label for="picture_fetch">Picture URL</label>
+      <input type="text" id="picture_fetch" />
+      <div class="fetch">fetch</div>
+      <div class="dot">.</div>
+      <div class="cancel">cancel</div>
+    </div>
+    <div class="url video hide lClear">
+      <label for="video_fetch">Video URL</label>
+      <input type="text" id="video_fetch" />
+      <div class="fetch">fetch</div>
+    </div>
+    <div class="url link hide lClear">
+      <label for="link_fetch">Link URL</label>
+      <input type="text" id="link_fetch" />
+      <div class="fetch">fetch</div>
+    </div>
   </div>
   <div class="forms">
-    <% if responding %>
-      <div class="responding">
-        Responding to <%= responding.class.to_s %>: <%= responding.name %>
-      </div>
-    <% end %>
-    <% if !defined?(allowed) || allowed.include?(:talk) %>
-      <div class="form">
-        <%= render "talks/form", :talk => Talk.new, :responding => responding %>
-      </div>
-    <% end %>
-    <% if !defined?(allowed) || allowed.include?(:picture) %>
-      <div class="form hide">
-        <%= render "pictures/form", :picture => Picture.new, :responding => responding %>
-      </div>
-    <% end %>
-    <% if !defined?(allowed) || allowed.include?(:video) %>
-      <div class="form hide">
-        <%= render "videos/form", :video => Video.new, :responding => responding %>
-      </div>
-    <% end %>
-    <% if !defined?(allowed) || allowed.include?(:links) %>
-      <div class="form hide">
-        <%= render "links/form", :link => Link.new, :responding => responding %>
-      </div>
-    <% end %>
+    <%= render "talks/form", :talk => Talk.new, :responding => responding %>
+
+    <div class="hide">
+      <% if !defined?(allowed) || allowed.include?(:picture) %>
+        <%= render "pictures/contribute", :picture => Picture.new %>
+      <% end %>
+      <% if !defined?(allowed) || allowed.include?(:video) %>
+        <%= render "videos/contribute", :video => Video.new %>
+      <% end %>
+      <% if !defined?(allowed) || allowed.include?(:links) %>
+        <%= render "links/contribute", :link => Link.new %>
+      <% end %>
+    </div>
   </div>
 
   <%= render 'help/contribute' unless responding %>

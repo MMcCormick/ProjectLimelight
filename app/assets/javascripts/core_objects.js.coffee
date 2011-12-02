@@ -1,5 +1,16 @@
 jQuery ->
 
+  ####
+  # CONTRIBUTE FORM
+  ####
+
+  resetContribute = (targetForm) ->
+    talkForm = targetForm.find('#new_talk')
+    talkForm.attr('action', talkForm.data('old-action'))
+    talkForm.find('#talk_content').attr('name', 'talk[content]').parents('.lClear:first').addClass('required').find('label').text('What do you want to talk about?')
+    talkForm.find('#talk_content_raw').attr('name', 'talk[content_raw]')
+    talkForm.find('#talk_ooc_mentions').attr('name', 'talk[ooc_mentions]')
+
   $('#contribute, #add_response').live 'click', (e) ->
     if !$logged
       $('#register').click()
@@ -12,29 +23,173 @@ jQuery ->
       target.slideDown(200)
       target.find('#talk_content').focus()
 
-
+  # handle option choices on contribute form (clicking add picture/video/link)
   $('.contributeC .options .option').live 'click', (e) ->
-    $(@).parents('.contributeC:first').find('div.form').hide()
-    $(@).parents('.contributeC:first').find($(@).data('target')).parents('.form').show()
-    $(@).addClass('on').siblings().removeClass('on')
+    $self = $(@)
+    parentForm = $self.parents('.contributeC:first')
 
-  # Help tooltips on core object submission forms
-  $('form.core_object .field').livequery ->
+    if ($self.hasClass('on'))
+      return
+
+    $self.siblings('.option').fadeOut 100, ->
+      fade = if $self.hasClass 'picture' then 1 else 150
+      $self.addClass 'on', fade, ->
+        $self.find('.cancel').fadeIn(100)
+
+        if $self.hasClass 'picture'
+          parentForm.find('.picture_options').fadeIn 100
+        else if $self.hasClass 'video'
+          parentForm.find('.url.video').fadeIn 100
+        else if $self.hasClass 'link'
+          parentForm.find('.url.link').fadeIn 100
+
+
+  # handle option cancel on contribute form
+  $('.contributeC .options .option .cancel').live 'click', (e) ->
+    $self = $(@).parent()
+    $('.contributeC .picture_options,.contributeC .url.picture').fadeOut 150
+
+    $('.contributeC .main_content .shared').fadeOut 400, ->
+      $(@).remove()
+      resetContribute($self.parents('.contributeC:first'))
+
+    $self.find('.cancel').fadeOut 150, ->
+      $self.removeClass 'on', 150, ->
+        $self.siblings('.option').fadeIn(100)
+
+  setContributeToPicture = (targetForm) ->
+    talkForm = targetForm.find('#new_talk')
+    talkForm.data('old-action', talkForm.attr('action'))
+    talkForm.attr('action', targetForm.find('#new_picture').attr('action'))
+    talkForm.find('#talk_content').attr('name', 'picture[content]').parents('.lClear:first').removeClass('required').find('label').text('Say something about this picture...')
+    talkForm.find('#talk_content_raw').attr('name', 'picture[content_raw]')
+    talkForm.find('#talk_ooc_mentions').attr('name', 'picture[ooc_mentions]')
+
+  setContributeToLink = (targetForm) ->
+    talkForm = targetForm.find('#new_talk')
+    talkForm.data('old-action', talkForm.attr('action'))
+    talkForm.attr('action', targetForm.find('#new_link').attr('action'))
+    talkForm.find('#talk_content').attr('name', 'link[content]').parents('.lClear:first').removeClass('required').find('label').text('Say something about this link...')
+    talkForm.find('#talk_content_raw').attr('name', 'link[content_raw]')
+    talkForm.find('#talk_ooc_mentions').attr('name', 'link[ooc_mentions]')
+
+  # fetch images from a url. used in contribute form for picture and link submissions.
+  fetchImages = (pullFrom) ->
+    $.get(
+      $('#static-data').data('d').fetchEmbedUrl
+      url: pullFrom.val()
+      (data) ->
+        if data.embedly.images.length > 0
+          parentForm = pullFrom.parents('.contributeC:first')
+
+          if (pullFrom.attr('id') == 'picture_fetch')
+            childForm = parentForm.find('.new_picture')
+          else
+            childForm = parentForm.find('.new_link')
+
+          clone = childForm.find('.shared').clone()
+          parentForm.find('.main_content').prepend(clone)
+          target = clone.find('.preview .images')
+          target.html('')
+
+          for image in data.embedly.images
+            target.append("<img src='"+image.url+"' />")
+
+          target.find('img:not(:first)').hide()
+
+          clone.find('.remote_image_url').val(target.find('img:first').attr('src'))
+
+          if data.embedly.images.length > 1
+            clone.find('.switcher').show()
+
+          if (pullFrom.attr('id') == 'picture_fetch')
+            clone.find('#picture_source_url').val(data.embedly.url)
+            clone.find('#picture_source_name').val(data.embedly.provider_name)
+            setContributeToPicture(parentForm)
+          else
+            clone.find('#link_title').focus().val(data.embedly.title)
+            clone.find('#link_source_url').val(data.embedly.url)
+            clone.find('#link_source_name').val(data.embedly.provider_name)
+            setContributeToLink(parentForm)
+
+          clone.fadeIn 150
+          pullFrom.val('').blur().parent().fadeOut 150
+
+        else if (pullFrom.attr('id') == 'picture_fetch')
+          createGrowl(false, 'There was an error fetching the images from that URL. Please try again later or let us know if it continues to happen!', '', 'red')
+
+      'json'
+    )
+
+  # update after the user uploads their own image
+  $('.contribute_picture_image_data').live 'click', ->
+    params = $(@).data('params')
+    parentForm = $(@).parents('.contributeC:first')
+    pictureForm = parentForm.find('.new_picture')
+    clone = pictureForm.find('.shared').clone()
+    parentForm.find('.main_content').prepend(clone)
+    target = clone.find('.preview .images')
+
+    clone.find('.image_upload_cache').val(params.image_location)
+    target.html('<img src="'+params.image_location+'" />')
+
+    parentForm.find('.picture_options').fadeOut 150
+    clone.fadeIn 150
+
+    $('#picture_fetch').val('').blur().parent().fadeOut(150)
+    setContributeToPicture(parentForm)
+
+  # Update the images when the image fetch URL is changed
+  $('.contributeC #picture_fetch').live 'change', (e) ->
     self = $(@)
-    if self.data 'tip'
-      self.qtip({
-        content:
-          self.data 'tip'
-        style:
-          classes: 'ui-tooltip-red ui-tooltip-shadow'
-        position:
-          my: 'left center'
-          at: 'right center'
-      })
+    if $.trim(self.val()) == ''
+      return
 
+    fetchImages($(@))
+
+  # Update the images when the image fetch URL is changed
+  $('.contributeC #link_fetch').live 'change', (e) ->
+    self = $(@)
+    if $.trim(self.val()) == ''
+      return
+
+    fetchImages($(@))
+
+  $('.contributeC .switcher .left').live 'click', (e) ->
+    target = $(@).parents('.shared:first').find('.preview img:visible').hide()
+    if target.prev().is('img')
+      found = target.prev()
+    else
+      found = $(@).parents('.shared:first').find('.preview img:last')
+
+    $(@).parents('.shared:first').find('.remote_image_url').val(found.attr('src'))
+    found.show()
+
+  $('.contributeC .switcher .right').live 'click', (e) ->
+    target = $(@).parents('.shared:first').find('.preview img:visible').hide()
+    if target.next().is('img')
+      found = target.next()
+    else
+      found = $(@).parents('.shared:first').find('.preview img:first')
+
+    $(@).parents('.shared:first').find('.remote_image_url').val(found.attr('src'))
+    found.show()
+
+  $('.contributeC .shared .cancel').live 'click', (e) ->
+    $(@).parents('.contributeC:first').find('.option:visible .cancel').click()
+
+  $('.contributeC .actions .cancel').live 'click', (e) ->
+    $(@).parents('.contributeC:first').slideUp(150)
+
+  ####
+  # END
+  ####
+
+  # mention boxes
   $('.mention').livequery ->
     $(@).mentionable()
 
+  # out of context mentions on contribute form
   $('.mention-ooc .auto input').autocomplete($('#static-data').data('d').autocomplete, {
     minChars: 2,
     width: 450,

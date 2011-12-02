@@ -1,20 +1,21 @@
-<%= form_for talk, :html => { :class => 'core_object new_talk ajax' } do |f| %>
-  <%= render "shared/mention_help" %>
-  <%= render 'shared/error_messages', :object => f.object %>
+<%= form_for talk, :html => { :class => 'new_talk ajax' } do |f| %>
+  <%#= render "shared/mention_help" %>
 
   <div class="errors"></div>
+
+  <div class="main_content">
+    <div class="content required lClear">
+      <%= f.label :content, "What do you want to talk about?" %>
+      <%= render "shared/mention_box", :f => f %>
+    </div>
+    <%= render "shared/mention_ooc", :f => f %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Submit", :class => 'submit' %>
+    <div class="cancel">cancel</div>
+  </div>
+
   <% if responding %>
     <%= f.hidden_field :response_to_id, :value => responding.id.to_s %>
   <% end %>
-  <div class="group">
-    <div class="field required lClear">
-      <%= f.label :content, "What do you want to talk about?" %>
-      <%= render "shared/mention_box", :f => f %>
-      <%= render "shared/mention_ooc", :f => f %>
-    </div>
-    <div class="actions">
-      <%= f.submit "Post Talk" %>
-    </div>
-  </div>
-
 <% end %>

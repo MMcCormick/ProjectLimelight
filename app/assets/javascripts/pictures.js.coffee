@@ -1,17 +1,16 @@
 jQuery ->
 
-  # When a user clicks on the upload image element, click the hidden file input to show the choose image dialogue
-  $('#picture_uploadB').live 'click', (e) ->
-    parent = $('#new_picture')
-    if ($(@).hasClass('on'))
-      $(@).removeClass('on')
-      $('#picture_asset_image_image_cache').val('')
-      parent.find('.image-preview .default').show()
-      parent.find('.image-preview .upload').hide()
-    else
-      $(@).addClass 'on'
-      $('#picture_pupB').click()
+  # choose to fetch from url on contribute form
+  $('.contributeC .picture_options .first').live 'click', (e) ->
+    $(@).parent().fadeOut 150, ->
+      $(@).siblings('.url.picture').fadeIn 150
 
+  # cancel fetch from url on contribute form
+  $('.contributeC .url.picture .cancel').live 'click', (e) ->
+    $(@).parent().fadeOut 150, ->
+      $(@).siblings('.picture_options').fadeIn 150
+
+  # used to expand pictures in feeds
   $('.img .full-black-icon').live 'click', (e) ->
     self = $(@)
     title = if $(this).parents('.teaser:first').length > 0 then $(this).parents('.teaser:first').find('.titleC a').text() else ''

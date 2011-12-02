@@ -1,0 +1,19 @@
+<%= form_for video, :html => { :class => 'new_video' } do |f| %>
+
+  <div class="shared with-preview hide">
+    <div class="preview"></div>
+    <div class="info">
+      <div class="title required lClear">
+        <%= f.label :title, "Video title..." %>
+        <%= f.text_area :title, :class => 'content', :spellcheck => false, :autocomplete => :off %>
+        <%#= f.hidden_field :title_raw, :class => 'data', :autocomplete => :off %>
+      </div>
+    </div>
+    <div class="cancel">X</div>
+
+    <%= f.hidden_field :source_name %>
+    <%= f.hidden_field :source_video_id %>
+    <%= f.hidden_field :source_url %>
+  </div>
+
+<% end %>

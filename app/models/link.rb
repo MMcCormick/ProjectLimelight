@@ -15,4 +15,8 @@ class Link < CoreObject
   def name
     self.title
   end
+
+  def has_valid_url
+
+  end
 end

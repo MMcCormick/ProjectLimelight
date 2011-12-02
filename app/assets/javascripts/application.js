@@ -17,6 +17,7 @@
 //= require jquery.scroll
 //= require jquery.typing
 //= require jquery.label
+//= require jquery.elastic
 //= require plupload/plupload.full
 //= require help
 //= require pusher

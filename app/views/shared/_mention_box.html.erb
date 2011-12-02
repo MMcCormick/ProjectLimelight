@@ -1,4 +1,4 @@
 <div class="mention-box">
-  <%= f.text_area :content, :class => 'content mention iHelp', :title => 'What do you want to talk about?', :spellcheck => false %>
-  <%= f.hidden_field :content_raw, :class => 'data' %>
+  <%= f.text_area :content, :class => 'content mention', :spellcheck => false, :autocomplete => :off %>
+  <%= f.hidden_field :content_raw, :class => 'data', :autocomplete => :off %>
 </div>

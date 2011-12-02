@@ -310,8 +310,18 @@ module Limelight #:nodoc:
 
       if @content_raw
 
-        short_names = Array.new
+        # Search for regular topic mentions
+        found_topics = Array.new
+        # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
+        @content_raw.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/).map do |topic|
+          unless found_topics.include? topic[0]
+            found_topics << topic[0]
+          end
+        end
+        save_topic_mentions(found_topics, false) if found_topics.length > 0
 
+        # Search for topic short name mentions
+        short_names = Array.new
         # Searches for short names in format #ShortName
         @content_raw.scan(/\#([a-zA-Z0-9]*)/).map do |short_name|
           unless short_names.include? short_name
@@ -328,27 +338,17 @@ module Limelight #:nodoc:
           end
         end
 
-        found_topics = Array.new
-
-        # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
-        @content_raw.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:' ]*)\]/).map do |topic|
-          unless found_topics.include? topic[0]
-            found_topics << topic[0]
-          end
-        end
-
-        save_topic_mentions(found_topics, false) if found_topics.length > 0
-
+        # Search for new topic mentions
         # Explodes the string. Returns an array of arrays containing
         # [string, slugified string] without duplicates.
-        new_topic_mentions = @content_raw.scan(/\#\[([a-zA-Z0-9,!\-_:' ]*[^#])\]/).flatten(1).map do |topic|
+        new_topic_mentions = @content_raw.scan(/\#\[([a-zA-Z0-9,!\-_:'&\?\$ ]*[^#])\]/).flatten(1).map do |topic|
           # strip of disallowed characters
           cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
           @content_raw.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
           [cleaned, topic.to_url, false]
         end.uniq
-
         save_new_topic_mentions(new_topic_mentions)
+
       end
 
       @ooc_mentions = Yajl::Parser.parse(@ooc_mentions) if @ooc_mentions

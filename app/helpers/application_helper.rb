@@ -33,7 +33,7 @@ module ApplicationHelper
 
   def parse_mentions(text, object, absolute=false)
     # Loop through all of the topic mentions in the content
-    text.scan(/\#\[([0-9a-zA-Z]+)#([a-zA-Z0-9,!\-_:' ]+)\]/).each do |topic|
+    text.scan(/\#\[([0-9a-zA-Z]+)#([a-zA-Z0-9,!\-_:'&\?\$ ]+)\]/).each do |topic|
       # Loop through all of the topic mentions connected to this object
       # If we found a match, replace the mention with a link to the topic
       topic_mention = object.topic_mentions.detect{|m| m.id.to_s == topic[0]}
@@ -48,8 +48,24 @@ module ApplicationHelper
       end
     end
 
+    # Loop through all of the user mentions in the content
+    text.scan(/\@\[([0-9a-zA-Z]+)#([\w ]+)\]/).each do |user|
+      # Loop through all of the user mentions connected to this object
+      # If we found a match, replace the mention with a link to the user
+      user_mention = object.user_mentions.detect{|m| m.id = user[0]}
+      if user_mention
+        if absolute
+          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_url(user_mention)})")
+        else
+          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_path(user_mention)})")
+        end
+      else
+        text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, user_mention.username)
+      end
+    end
+
     # Loop through all of the topic short names in the content
-    text.scan(/\#([0-9a-zA-Z]+)/).each do |topic|
+    text.scan(/\#([0-9a-zA-Z&]+)/).each do |topic|
       # Loop through all of the topic mentions connected to this object
       # If we found a match, replace the mention with a link to the topic
       topic_mention = object.topic_mentions.detect{|m| m.short_name == topic[0]}
@@ -64,24 +80,8 @@ module ApplicationHelper
       end
     end
 
-    # Loop through all of the user mentions in the content
-    text.scan(/\@\[([0-9a-zA-Z]+)#([\w ]+)\]/).each do |user|
-      # Loop through all of the user mentions connected to this object
-      # If we found a match, replace the mention with a link to the user
-      user_mention = object.user_mentions.detect{|m| m.id.to_s = user[0]}
-      if user_mention
-        if absolute
-          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_url(user_mention)})")
-        else
-          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_path(user_mention)})")
-        end
-      else
-        text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, user_mention.username)
-      end
-    end
-
     # Replace any messed up mentions
-    text.gsub!(/\#\[([a-zA-Z0-9,!\-_:' ]*)\]/, "\\1")
+    text.gsub!(/\#\[(.*)\]/, "\\1")
 
     # Replace any messed up short names
     #text.gsub!(/\#([a-zA-Z0-9]*)/, "\\1")

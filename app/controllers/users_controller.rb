@@ -31,7 +31,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update_attributes(params[:user])
         format.html { redirect_to user_settings_path @user }
-        response = build_ajax_response(:ok, nil, "Settings updated!")
+        response = build_ajax_response(:ok, user_settings_path(@user), "Settings updated!")
         format.json { render json: response, status: :created }
       else
         format.html { redirect_to user_settings_path @user }

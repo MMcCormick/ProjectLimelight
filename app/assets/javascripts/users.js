@@ -4,11 +4,29 @@ $(function() {
     title:false,
     transition: "elastic",
     speed: 200,
-    opacity: .85,
+    opacity: .90,
     inline: true,
     fixed: true,
     href: "#auth_box"
   });
+
+  if ($('#username_reset_box').length > 0)
+  {
+    $.colorbox({
+      title:false,
+      transition: "elastic",
+      speed: 100,
+      opacity: .95,
+      inline: true,
+      fixed: true,
+      href: "#username_reset_box",
+      overlayClose: false,
+      escKey: false,
+      onLoad: function() {
+        $('#cboxClose').remove();
+      }
+    });
+  }
 
   $('#register').live('click', function() {
     $('#auth-login .switch').click()

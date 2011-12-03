@@ -84,6 +84,9 @@
       <div id="feed-reload" data-url='<%= request.url %>' class='ac'></div>
       <%= render "core_object_shares/form" %>
       <%= render 'users/auth_box', :show => nil %>
+      <% if signed_in? && current_user.username_reset %>
+        <%= render 'users/username_reset_box' %>
+      <% end %>
     </div>
 
     <%= new_user_splash %>

@@ -11,9 +11,9 @@ class User
   class << self; attr_accessor :marc_id, :matt_id end
 
   # Include default devise modules. Others available are:
-  # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
+  # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   # Denormilized:
   # CoreObject.user_snippet.username
@@ -43,6 +43,9 @@ class User
 
   field :status, :default => 'Active'
   field :email
+  field :gender
+  field :birthday, :type => Date
+  field :username_reset, :default => false
   field :time_zone, :type => String, :default => "Eastern Time (US & Canada)"
   field :roles, :default => []
   field :following_users_count, :type => Integer, :default => 0
@@ -66,6 +69,8 @@ class User
 
   auto_increment :public_id
 
+  embeds_many :social_connects
+
   has_many :core_objects
   has_many :links
   has_many :videos
@@ -85,12 +90,15 @@ class User
             :format => { :with => /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/, :message => "must start with a letter and end with a letter or number." }
   validates :email, :uniqueness => { :case_sensitive => false }
   validates :bio, :length => { :maximum => 150 }
+  validate :username_change
 
   after_create :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
   index :slug
+  index :email
+  index "social_connects.uid"
   index :following_users
   index :ph
   index :pd
@@ -115,11 +123,16 @@ class User
   # Pull image from Gravatar
   def save_profile_image
     hash = Digest::MD5.hexdigest(self.email.downcase)+'.jpeg'
-    image_url = "http://www.gravatar.com/avatar/#{hash}?s=500&d=monsterid"
+    facebook = get_social_connect 'facebook'
+    image_url = if facebook
+                  "http://graph.facebook.com/#{facebook.uid}/picture?type=large"
+                else
+                  "http://www.gravatar.com/avatar/#{hash}?s=500&d=monsterid"
+                end
 
-    writeOut = open("/tmp/#{hash}", "wb")
-    writeOut.write(open(image_url).read)
-    writeOut.close
+    write_out = open("/tmp/#{hash}", "wb")
+    write_out.write(open(image_url).read)
+    write_out.close
 
     image = self.images.create(:user_id => id)
     version = AssetImage.new(:isOriginal => true)
@@ -132,6 +145,15 @@ class User
 
   def recalculate_vote_ratio
     self.vote_ratio = vote_neg_count > 0 ? vote_pos_count/vote_neg_count : vote_pos_count
+  end
+
+  def username_change
+    if username_was && persisted? && username_changed? && username_was != username
+      if username_reset == false
+        errors.add(:username, "cannot be changed right now")
+      end
+    end
+    self.username_reset = false if persisted?
   end
 
   ###
@@ -282,11 +304,70 @@ class User
     UserMailer.welcome_email(self).deliver
   end
 
+  def get_social_connect provider
+    social_connects.each do |social|
+      return social if social.provider == provider
+    end
+    nil
+  end
+
+  class << self
+    # Omniauth providers
+    def find_by_omniauth(omniauth, signed_in_resource=nil)
+      info = omniauth['info']
+      extra = omniauth['extra']['raw_info']
+      user = User.where("social_connects.uid" => omniauth['uid'], 'social_connects.provider' => omniauth['provider']).first
+
+      # Try to get via email if user not found and email provided
+      unless user || !info['email']
+        user = User.where(:email => info['email']).first
+      end
+
+      # If we found the user, update their token
+      if user
+        connect = user.social_connects.detect{|connection| connection.uid == omniauth['uid'] && connection.provider == omniauth['provider']}
+        # Is this a new connection?
+        unless connect
+          connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'])
+          user.social_connects << connect
+        end
+        # Update the token
+        connect.token = omniauth['credentials']['token']
+      else # Create a new user with a stub password.
+        if extra["gender"] && !extra["gender"].blank?
+          gender = extra["gender"] == 'male' || extra["gender"] == 'm' ? 'm' : 'f'
+        else
+          gender = nil
+        end
+
+        username = info['nickname'].gsub(/[^a-zA-Z0-9]/, '')
+        existing_username = User.where(:slug => username).first
+        if existing_username
+          username += Random.rand(99).to_s
+        end
+
+        user = User.new(
+                username: username,
+                first_name: extra["first_name"], last_name: extra["last_name"],
+                gender: gender, email: info["email"], password: Devise.friendly_token[0,20]
+        )
+        user.username_reset = true
+        user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]
+        user.social_connects << SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
+      end
+
+      user.save
+      user
+    end
+  end
+
   protected
 
-  def self.find_for_database_authentication(conditions)
-    login = conditions.delete(:login)
-    self.any_of({ :username => login }, { :email => login }).first
+  class << self
+    def find_for_database_authentication(conditions)
+      login = conditions.delete(:login)
+      self.any_of({ :username => login }, { :email => login }).first
+    end
   end
 
   def update_denorms

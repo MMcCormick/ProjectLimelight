@@ -64,6 +64,8 @@ $(function() {
         if (error) {
           error();
         }
+
+        $.colorbox.resize();
       }
     });
 

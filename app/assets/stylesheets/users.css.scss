@@ -147,6 +147,36 @@
     }
 }
 
+#username_reset_box {
+  padding: 10px;
+  width: 310px;
+  h2 {
+
+  }
+  .help {
+    font-size: 13px;
+    margin: 5px 0 8px 0;
+    span {
+      color: red;
+    }
+  }
+  .errors {
+    margin: 0 0 8px 0;
+    width: 280px;
+  }
+  .field {
+    input {
+      width: 130px;
+    }
+  }
+  .submit {
+    @include green-conservative-button(14px, 2px, 1px);
+    font-weight: normal;
+    padding: 4px 8px;
+    margin: 8px 0 0 0;
+  }
+}
+
 // User profile images
 .profileImage {
     @include border-radius(3px);

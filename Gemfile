@@ -18,6 +18,7 @@ gem 'redcarpet' # Markdown
 gem 'fog' # Cloud support (amazon s3, etc)
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+gem 'omniauth-facebook'
 gem 'embedly'
 gem 'heroku'
 gem 'resque', :require => 'resque/server'
@@ -26,12 +27,12 @@ gem 'resque-loner' # Unique resque jobs
 gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
-gem "airbrake" # Exception notification
+gem 'airbrake' # Exception notification
 gem 'rpm_contrib', '2.1.6' # extra instrumentation for the new relic rpm agent
 gem 'newrelic_rpm' # performance / server monitoring
 gem 'soulmate' # Redis based autocomplete storage
 gem 'dalli' # memcache
-gem 'vanity' # a/b testing
+#gem 'vanity' # a/b testing
 gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby
 

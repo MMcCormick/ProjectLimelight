@@ -85,7 +85,7 @@ GEM
       querystring
       typhoeus
     erubis (2.7.0)
-    excon (0.7.8)
+    excon (0.7.9)
     execjs (1.2.9)
       multi_json (~> 1.0)
     extlib (0.9.15)
@@ -94,6 +94,10 @@ GEM
     factory_girl_rails (1.4.0)
       factory_girl (~> 2.3.0)
       railties (>= 3.0.0)
+    faraday (0.7.5)
+      addressable (~> 2.2.6)
+      multipart-post (~> 1.1.3)
+      rack (>= 1.1.0, < 2)
     ffi (1.0.11)
     fog (1.1.1)
       builder
@@ -118,7 +122,8 @@ GEM
     guard-spork (0.3.2)
       guard (>= 0.8.4)
       spork (>= 0.8.4)
-    heroku (2.14.0)
+    hashie (1.2.0)
+    heroku (2.15.1)
       launchy (>= 0.3.2)
       rest-client (~> 1.6.1)
       rubyzip
@@ -165,12 +170,24 @@ GEM
       mongoid (~> 2.0)
       stringex (~> 1.3)
     multi_json (1.0.4)
+    multipart-post (1.1.4)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.2.1)
     newrelic_rpm (3.3.0)
     nokogiri (1.5.0)
     oauth (0.4.5)
+    oauth2 (0.5.1)
+      faraday (~> 0.7.4)
+      multi_json (~> 1.0.3)
+    omniauth (1.0.1)
+      hashie (~> 1.2)
+      rack
+    omniauth-facebook (1.0.0)
+      omniauth-oauth2 (~> 1.0.0)
+    omniauth-oauth2 (1.0.0)
+      oauth2 (~> 0.5.0)
+      omniauth (~> 1.0)
     orm_adapter (0.0.5)
     polyglot (0.3.3)
     pry (0.9.7.4)
@@ -322,9 +339,6 @@ GEM
       kgio (~> 2.4)
       rack
       raindrops (~> 0.6)
-    vanity (1.7.1)
-      redis (~> 2.0)
-      redis-namespace (~> 1.0.0)
     vegas (0.1.8)
       rack (>= 1.0.0)
     warden (1.1.0)
@@ -368,6 +382,7 @@ DEPENDENCIES
   mongoid_auto_inc
   mongoid_slug
   newrelic_rpm
+  omniauth-facebook
   pry
   pusher
   rails (= 3.1.3)
@@ -388,5 +403,4 @@ DEPENDENCIES
   spork (> 0.9.0.rc)
   uglifier
   unicorn
-  vanity
   yajl-ruby

@@ -124,8 +124,11 @@ class User
   def save_profile_image
     hash = Digest::MD5.hexdigest(self.email.downcase)+'.jpeg'
     facebook = get_social_connect 'facebook'
+    google = get_social_connect 'google_oath2'
     image_url = if facebook
                   "http://graph.facebook.com/#{facebook.uid}/picture?type=large"
+                elsif google
+                  google.image
                 else
                   "http://www.gravatar.com/avatar/#{hash}?s=500&d=monsterid"
                 end
@@ -328,7 +331,7 @@ class User
         connect = user.social_connects.detect{|connection| connection.uid == omniauth['uid'] && connection.provider == omniauth['provider']}
         # Is this a new connection?
         unless connect
-          connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'])
+          connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :image => info['image'])
           user.social_connects << connect
         end
         # Update the token

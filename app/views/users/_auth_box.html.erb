@@ -5,14 +5,16 @@
   <div class="bottom">
     <div class="left">
       <div class="head">Use your existing social account.</div>
-      <div class="option one">
-        <div class="log">log in with</div>
-        <div class="google-l-icon"></div>
-      </div>
       <a href="<%= user_omniauth_authorize_path(:facebook) %>">
-        <div class="option two">
+        <div class="option one">
           <div class="log">log in with</div>
           <div class="facebook-l-icon"></div>
+        </div>
+      </a>
+      <a href="<%= user_omniauth_authorize_path(:google_oauth2) %>">
+        <div class="option two">
+          <div class="log">log in with</div>
+          <div class="google-l-icon"></div>
         </div>
       </a>
       <div class="foot1">We do not share your information.</div>

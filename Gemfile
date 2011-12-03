@@ -19,6 +19,7 @@ gem 'fog' # Cloud support (amazon s3, etc)
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
 gem 'embedly'
 gem 'heroku'
 gem 'resque', :require => 'resque/server'

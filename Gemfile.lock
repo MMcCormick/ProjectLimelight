@@ -185,6 +185,9 @@ GEM
       rack
     omniauth-facebook (1.0.0)
       omniauth-oauth2 (~> 1.0.0)
+    omniauth-google-oauth2 (0.1.7)
+      omniauth (~> 1.0)
+      omniauth-oauth2
     omniauth-oauth2 (1.0.0)
       oauth2 (~> 0.5.0)
       omniauth (~> 1.0)
@@ -383,6 +386,7 @@ DEPENDENCIES
   mongoid_slug
   newrelic_rpm
   omniauth-facebook
+  omniauth-google-oauth2
   pry
   pusher
   rails (= 3.1.3)

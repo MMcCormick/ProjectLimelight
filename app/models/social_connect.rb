@@ -4,6 +4,7 @@ class SocialConnect
   field :provider
   field :uid, :type => String
   field :token, :type => String
+  field :image
 
   embedded_in :user
 

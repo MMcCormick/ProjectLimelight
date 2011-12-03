@@ -197,10 +197,16 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   if Rails.env.development?
     ENV['FACEBOOK_APP_ID'] = '121044708007507'
-    ENV["FACEBOOK_APP_SECRET"] = '812c097d7a4b36893a736614b1cbd2f4'
+    ENV['FACEBOOK_APP_SECRET'] = '812c097d7a4b36893a736614b1cbd2f4'
   end
 
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV["FACEBOOK_APP_SECRET"], {:scope => 'email,offline_access'}
+
+  if Rails.env.development?
+    ENV['GOOGLE_KEY'] = '247482894960.apps.googleusercontent.com'
+    ENV['GOOGLE_SECRET'] = 'YIbxjJdk3D1hwjHiUCXcZkux'
+  end
+  config.omniauth :google_oauth2, ENV['GOOGLE_KEY'], ENV['GOOGLE_SECRET'], { :scope => 'userinfo.email,userinfo.profile' }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

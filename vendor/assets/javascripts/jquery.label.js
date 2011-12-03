@@ -4,6 +4,8 @@ jQuery.fn.labelOver = function(overClass) {
 		var f = label.attr('for');
 		if (f) {
 			var input = label.parents('form:first').find('#' + f);
+      if (input.length == 0)
+        input = jQuery('#' + f);
 			
 			this.hide = function() {
 			  label.css({ textIndent: -10000 })

@@ -434,7 +434,8 @@ class User
   end
 
   def expire_caches
-    ActionController::Base.new.expire_cell_state UserCell, :sidebar_left, id.to_s
+    ActionController::Base.new.expire_cell_state UserCell, :sidebar_left, "#{id.to_s}-full"
+    ActionController::Base.new.expire_cell_state UserCell, :sidebar_left, "#{id.to_s}-mini"
     ActionController::Base.new.expire_cell_state UserCell, :sidebar_right, id.to_s
     ActionController::Base.new.expire_cell_state UserCell, :sidebar_right, "#{id.to_s}-following"
   end

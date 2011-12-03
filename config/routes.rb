@@ -105,12 +105,12 @@ ProjectLimelight::Application.routes.draw do
   put 'topic_connections/toggle_primary' => 'topic_connections#toggle_primary', :as => :toggle_primary
 
   # Pages
-  root :to => "pages#home"
   get "/pages/about" => 'pages#about', :as => :about_path
   get "/pages/contact" => 'pages#contact', :as => :contact_path
   get "/pages/privacy" => 'pages#privacy', :as => :privacy_path
   get "/pages/terms" => 'pages#terms', :as => :terms_path
   get "/pages/help" => 'pages#help', :as => :help_path
+  root :to => "pages#home"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

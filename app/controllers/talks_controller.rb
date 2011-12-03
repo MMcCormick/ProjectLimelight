@@ -2,6 +2,7 @@ class TalksController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
+    @site_style = 'narrow'
     @talk = Talk.find_by_encoded_id(params[:id])
 
     unless @talk

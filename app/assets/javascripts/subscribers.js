@@ -154,6 +154,16 @@ $(function() {
       $(this).hide();
     })
 
+    if ($('#core-feed').hasClass('list'))
+    {
+      $('body').addClass('narrow')
+    }
+    else
+    {
+      $('body').removeClass('narrow')
+    }
+
+    resizeLayout();
     rearrange_feed_columns();
   });
 

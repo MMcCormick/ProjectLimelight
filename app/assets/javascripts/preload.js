@@ -13,10 +13,11 @@ var resizeLayout = function(rightSidebarAdjust) {
   var footer = $('#footer');
   var h = $(window).height() - footer.height();
 
-  sidebar.css('height', h - 7 - parseInt(sidebar.css('left').replace("px", "")) * 2 - parseInt(sidebar.css('padding-bottom').replace("px", "")));
+  sidebar.css('height', h - 36);
 
-  var w = $('body').width() - 4
-          - (sidebar.width() + parseInt(sidebar.css('left').replace("px", "")));
+  var w = $('#content .interior').width() - sidebar.width() - 8;
+
+  pageHeader.css({width: w + 1});
 
   if (rightSidebar.length > 0) {
     rightSidebar.css('min-height', $(window).height()+60);
@@ -24,11 +25,11 @@ var resizeLayout = function(rightSidebarAdjust) {
     if (rightSidebarAdjust) {
       w -= rightSidebar.width() + parseInt(rightSidebar.css('margin-right').replace("px", "")) + (parseInt(rightSidebar.css('padding-right').replace("px", "") * 2));
     }
+
+    $('#sidebar-right').css({'padding-top': pageHeader.height() + 10});
   }
 
-  pageHeader.css({width: w + 2});
-
-  $('#page').css({'padding-top': pageHeader.height() + 10, width: w + 2});
+  $('#page').css({'padding-top': pageHeader.height() + 10, width: w});
 };
 
 // Check if something is visible on the screen

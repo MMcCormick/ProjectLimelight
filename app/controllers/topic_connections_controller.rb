@@ -19,6 +19,7 @@ class TopicConnectionsController < ApplicationController
   end
 
   def new
+    @site_style = 'narrow'
     @connections = TopicConnection.where(:opposite => "")
   end
 

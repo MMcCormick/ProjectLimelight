@@ -856,7 +856,7 @@ $scoreBox-width: 160px;
 .teaser.list {
   @include clearfix();
   padding: 4px 0 0 0;
-  margin: 5px;
+  margin: 0 0 5px 5px;
   z-index: 10;
   p {
     margin: 0;
@@ -1015,7 +1015,7 @@ $scoreBox-width: 160px;
 }
 #core-feed {
   padding: 0 5px;
-  margin: 10px 0;
+  margin: 0 0 10px 0;
   position: relative;
   &.grid {
     display: inline-block;
@@ -1065,8 +1065,9 @@ $scoreBox-width: 160px;
 }
 
 #feed-filters {
-    height: 30px;
-    padding: 3px 0 4px 10px;
+    height: 25px;
+    padding: 4px 0 4px 5px;
+    border-bottom: 1px solid transparent;
 
     .feed-display,
     .feed-sort,
@@ -1075,7 +1076,7 @@ $scoreBox-width: 160px;
         float: left;
 
         h5 {
-            padding: 9px 0 0 0;
+            padding: 6px 0 0 0;
             color: #888;
             cursor: default;
         }
@@ -1094,7 +1095,8 @@ $scoreBox-width: 160px;
             font-weight: bold;
             text-decoration: none;
             display: block;
-            padding: 5px 8px;
+            padding: 2px 6px;
+            height: 15px;
             font-size: 12px;
             cursor: pointer;
         }
@@ -1112,18 +1114,16 @@ $scoreBox-width: 160px;
 
     .feed-layout {
         float: right;
-        margin-right: 8px;
+        margin-right: 0;
 
-        ul {
-        }
         li {
             @include border-radius(2px);
             border: 1px solid #AAA;
-            margin: 1px 3px;
+            margin: 0 3px;
             float: left;
         }
         .opt {
-            padding: 4px 5px;
+            padding: 2px 3px;
             height: 15px;
         }
     }
@@ -1132,7 +1132,9 @@ $scoreBox-width: 160px;
         width: 200px;
 
         .arrow-small {
-            position: absolute; top: 9px; right: 8px;
+            position: absolute;
+            top: 6px;
+            right: 8px;
             z-index: 10;
             cursor: pointer;
         }
@@ -1163,7 +1165,7 @@ $scoreBox-width: 160px;
 
     .scrollTop {
         float: left;
-        margin: 11px 0 0 10px;
+        margin: 8px 0 0 8px;
         font-size: 8px;
         cursor: pointer;
         color: blue;

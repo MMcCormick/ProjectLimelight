@@ -10,6 +10,14 @@ module ApplicationHelper
     end
   end
 
+  def site_style
+    if session[:feed_filters][:layout] == 'list'
+      'narrow'
+    elsif @site_style
+      @site_style
+    end
+  end
+
   # Return the page load time (defined in application_controller.rb init)
   def load_time
     "#{(Time.now-@start_time).round(4)}s"

@@ -35,6 +35,7 @@ class TopicsController < ApplicationController
   end
 
   def edit
+    @site_style = 'narrow'
     @topic = Topic.find_by_slug(params[:id])
     authorize! :edit, @topic
     @connections = @topic.get_connections
@@ -212,12 +213,14 @@ class TopicsController < ApplicationController
   end
 
   def followers
+    @site_style = 'narrow'
     @topic = Topic.find_by_slug(params[:id])
     authorize! :read, @topic
     @followers = User.where(:following_topics => @topic.id)
   end
 
   def connected
+    @site_style = 'narrow'
     @topic = Topic.find_by_slug(params[:id])
     authorize! :read, @topic
     @connections = @topic.get_connections

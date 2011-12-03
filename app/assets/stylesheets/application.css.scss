@@ -26,6 +26,19 @@ html, body {
     min-width: $min-width;
     font-family: "lucida grande", Tahoma, Verdana, Arial, sans-serif;
     line-height: 1.3 !important;
+    color: #444;
+
+    &.narrow {
+      .interior {
+        max-width: 1050px;
+      }
+    }
+}
+
+.interior {
+  position: relative;
+  margin: auto;
+  max-width: 1950px;
 }
 
 h1,h2,h3,h4,h5,h6,p,div,span {
@@ -34,6 +47,7 @@ h1,h2,h3,h4,h5,h6,p,div,span {
 }
 h1,h2,h3,h4,h5,h6 {
   font-family: "Helvetica Neue", Arial, Tahoma, Verdana, serif;
+  color: #444;
 }
 h1 {
   font-size: 25px;
@@ -92,20 +106,21 @@ button {
 }
 
 #header {
-    @include single-box-shadow(#AAA, 1px, 1px, 3px);
-    background-color: #2061B6;
-    @include background-image(linear-gradient(#1B59AE, #2664B2 25%, #1B59AE 75%, #124895));
-    height: 40px; width: 100%;
-    border-bottom: 1px solid #003277;
+  @include single-box-shadow(#AAA, 1px, 1px, 3px);
+  background-color: #2061B6;
+  @include background-image(linear-gradient(#1B59AE, #2664B2 25%, #1B59AE 75%, #124895));
+  height: 40px; width: 100%;
+  border-bottom: 1px solid #003277;
+  position: relative;
+  z-index: 150;
+
+  .logo {
+    padding: 0 35px 0 6px;
     position: relative;
+    top: 2px;
 
-    .logo {
-        padding: 0 35px 0 6px;
-        position: relative;
-        top: 2px;
-
-        img { border: none; }
-    }
+    img { border: none; }
+  }
 }
 
 #flash_alert {
@@ -196,40 +211,40 @@ button {
 }
 
 #page_header {
-    position: absolute;
-    margin-left: $sidebar_width+($sidebar_border_width*2)+$sidebar-margin;
-    color: #000;
-    top: 47px;
-    z-index: 150;
+  position: absolute;
+  margin-left: $sidebar_width+($sidebar_border_width*2)+$sidebar-margin;
+  color: #000;
+  z-index: 150;
 
-    &.minimized-sidebar {
-        margin-left: $sidebar-minimized-width+($sidebar_border_width*2)+$sidebar-margin;
-    }
+  &.minimized-sidebar {
+      margin-left: $sidebar-minimized-width+($sidebar_border_width*2)+$sidebar-margin;
+  }
 
-    .wrap {
-        @include border-radius(4px);
-        margin:  0 9px 5px;
-        border: 1px solid transparent;
-    }
+  .wrap {
+    padding-top: 7px;
+    margin:  0 3px 0 7px;
+  }
 
-    h1 {
-      text-align: center;
-      margin: 0 0 2px;
-      text-align: center;
-      border-bottom: double #CCC;
-    }
+  h1 {
+    text-align: center;
+    margin: 0;
+    text-align: center;
+    border-bottom: double #CCC;
+    font-size: 19px;
+    padding: 3px 0 2px 0;
+  }
 
-    &.floating {
-        position: fixed;
-        top: 0px;
-        padding-top: $sidebar-margin;
+  &.floating {
+      position: fixed;
+      top: 0px;
 
-        .wrap {
-            @include single-box-shadow(#DDD, 0px, 2px, 5px);
-            border: 1px solid #CCC;
-            background: #FFF;
+      .wrap {
+        #feed-filters {
+          border-color: #999;
         }
-    }
+        background: image-url("bg_textured.jpg") repeat;
+      }
+  }
 }
 #page-sb1,
 #page-sb2,
@@ -261,8 +276,7 @@ button {
   border: $sidebar_border_width solid #CCC;
   background: $sidebar_background-color;
   position: absolute;
-  top: 42px + $sidebar-margin;
-  left: $sidebar-margin;
+  margin: 7px 0 0 5px;
   padding-bottom: 20px;
 
   .panel-close-left-icon {
@@ -272,8 +286,7 @@ button {
 
   &.floating {
     position: fixed;
-    top: $sidebar-margin;
-    left: $sidebar-margin;
+    top: -2px;
   }
 
   .btn {
@@ -325,11 +338,11 @@ button {
     position: fixed;
     width: 185px;
     bottom: $footer-height + 16;
-    left: 16px;
     text-align: center;
     font-size: 11px;
     color: $url-color;
     cursor: pointer;
+    margin: 0 0 0 13px;
     .dot {
       position: relative;
       top: -3px;
@@ -339,54 +352,52 @@ button {
     position: fixed;
     width: $sidebar_width - 10;
     bottom: 90px;
-    left: 23px;
+    margin-left: 17px;
     font-size: 12px;
   }
 }
 #sidebar-right {
     float: right;
-    height: 100%;
     position: relative;
-    z-index: 170;
 
     .sbrC {
-        @include border-radius(4px);
-        background-color: #FFF;
-        width: $sidebar_right_width;
-        position: relative;
-        border: $sidebar_border_width solid #CCC;
-        margin: $sidebar-margin $sidebar-margin 0 0;
+      @include border-radius(4px);
+      background-color: #FFF;
+      width: $sidebar_right_width;
+      position: relative;
+      border: $sidebar_border_width solid #CCC;
+      margin: 0 $sidebar-margin 0 0;
 
-        .edit {
-            @include link;
-        }
+      .edit {
+          @include link;
+      }
     }
 
     .edit-panel {
-        @include border-radius(4px);
-        background-color: #FFF;
-        width: $sidebar_right_width+150;
-        position: relative;
-        border: $sidebar_border_width solid #CCC;
-        margin: $sidebar-margin $sidebar-margin 0 0;
+      @include border-radius(4px);
+      background-color: #FFF;
+      width: $sidebar_right_width+150;
+      position: relative;
+      border: $sidebar_border_width solid #CCC;
+      margin: $sidebar-margin $sidebar-margin 0 0;
     }
 
     .footer {
-        border-top: 2px solid #F3F3F3;
-        margin-top: 10px;
-        width: 100%;
-        padding: 0;
-        margin:  0;
+      border-top: 2px solid #F3F3F3;
+      margin-top: 10px;
+      width: 100%;
+      padding: 0;
+      margin:  0;
 
-        .content {
-            padding:  5px 10px;
-        }
+      .content {
+          padding:  5px 10px;
+      }
     }
 
     &.floating {
-        position: fixed;
-        top: 0px;
-        right: 0px;
+      position: fixed;
+      top: 0px;
+      right: 0px;
     }
 }
 
@@ -419,12 +430,12 @@ button {
   #twitter-footer {
     position: absolute;
     right: 115px;
-    top: 10px;
+    top: -3px;
   }
   #fb-footer {
     position: absolute;
     right: 15px;
-    top: 10px;
+    top: -3px;
     .fb_edge_comment_widget {
       margin-top: -190px;
       margin-left: -310px;
@@ -469,7 +480,7 @@ button {
 #hints {
   position: relative;
   padding: 0px 0 0 15px;
-  margin: 0 0 0 20px;
+  margin: 0 0 10px 15px;
 
   .info-grey-icon {
     position: absolute;

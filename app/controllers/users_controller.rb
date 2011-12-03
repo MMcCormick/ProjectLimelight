@@ -81,6 +81,7 @@ class UsersController < ApplicationController
   end
 
   def settings
+    @site_style = 'narrow'
     unless signed_in?
       redirect_to root_path
     end
@@ -102,16 +103,19 @@ class UsersController < ApplicationController
   end
 
   def following_users
+    @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
     @following_users = User.where(:_id.in => @user.following_users)
   end
 
   def followers
+    @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
     @followers = User.where(:following_users => @user.id)
   end
 
   def following_topics
+    @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
     @following_topics = Topic.where(:_id.in => @user.following_topics)
   end

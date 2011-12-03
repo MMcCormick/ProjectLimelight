@@ -16,23 +16,26 @@ class PagesController < ApplicationController
   end
 
   def about
+    @site_style = 'narrow'
     @marc = User.find(User.marc_id)
     @matt = User.find(User.matt_id)
   end
 
   def contact
+    @site_style = 'narrow'
     @feedback_topic = Topic.find(Topic.limelight_feedback_id)
   end
 
   def privacy
-
+    @site_style = 'narrow'
   end
 
   def terms
-
+    @site_style = 'narrow'
   end
 
   def help
+    @site_style = 'narrow'
     @feedback_topic = Topic.find(Topic.limelight_feedback_id)
   end
 end

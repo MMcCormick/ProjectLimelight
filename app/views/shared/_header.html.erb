@@ -1,27 +1,29 @@
 <% cache("header#{'-logged' if signed_in?}#{'-admin' if signed_in? && current_user.role?('admin')}") do %>
   <div id="header">
-    <% top_image = image_tag "top-logo.png", :alt => "Limelight" %>
-    <%= link_to top_image, :root, :class => "p logo" %>
+    <div class="interior">
+      <% top_image = image_tag "top-logo.png", :alt => "Limelight" %>
+      <%= link_to top_image, :root, :class => "p logo" %>
 
-    <span id="contribute" data-target="#top-contribute" class="<%= 'auth' unless signed_in? %>">
-      Contribute
-    </span>
+      <span id="contribute" data-target="#top-contribute" class="<%= 'auth' unless signed_in? %>">
+        Contribute
+      </span>
 
-    <% if signed_in? && current_user.role?('admin') %>
-      <%#= link_to 'Admin', admin_dashboard_path, :id => 'admin_link' %>
-      <%= link_to 'Resque', '/resque', :id => 'resque_link' %>
-    <% end %>
+      <% if signed_in? && current_user.role?('admin') %>
+        <%#= link_to 'Admin', admin_dashboard_path, :id => 'admin_link' %>
+        <%= link_to 'Resque', '/resque', :id => 'resque_link' %>
+      <% end %>
 
-    <% if signed_in? %>
-      <%= link_to "Logout", destroy_user_session_path, :id => "logout" %>
-    <% else %>
-      <%= link_to "Login", new_user_session_path, :id => "login" %>
-      <%= link_to "Sign Up", new_user_registration_path, :id => "register" %>
-    <% end %>
+      <% if signed_in? %>
+        <%= link_to "Logout", destroy_user_session_path, :id => "logout" %>
+      <% else %>
+        <%= link_to "Login", new_user_session_path, :id => "login" %>
+        <%= link_to "Sign Up", new_user_registration_path, :id => "register" %>
+      <% end %>
 
-    <div id="search" class="<%= "logged" if signed_in? %> lClear">
-      <label for="top_search">Search users or topics...</label>
-      <input type="text" id="top_search" autocomplete='off' />
+      <div id="search" class="<%= "logged" if signed_in? %> lClear">
+        <label for="top_search">Search users or topics...</label>
+        <input type="text" id="top_search" autocomplete='off' />
+      </div>
     </div>
   </div>
 <% end %>

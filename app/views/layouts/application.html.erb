@@ -25,13 +25,13 @@
 
     <%= javascript_include_tag 'modernizr' %>
   </head>
-  <body id="<%= params[:controller].parameterize %>-c">
-    <div id="application">
+  <body id="<%= params[:controller].parameterize %>-c" class="<%= site_style %>">
+    
+    <%= render 'shared/header' %>
 
-      <%= render 'shared/header' %>
-
-      <div id="content">
-        <%= render_cell :user, :sidebar_left, current_user %>
+    <div id="content">
+      <div class="interior">
+        <%= render_cell :user, :sidebar_left, current_user, session[:sidebar] %>
 
         <div id="sidebar-right" class="scroll">
           <div class="wrap">
@@ -58,7 +58,9 @@
           </div>
         </div>
       </div>
-      <footer id="footer">
+    </div>
+    <footer id="footer">
+      <div class="interior">
         <%= render_cell :topic, :trending %>
         <div id="twitter-footer">
           <a href="https://twitter.com/limelight_team" class="twitter-follow-button" data-button="grey" data-text-color="#FFFFFF" data-link-color="#FFF" data-show-count="false" data-width="160px" data-align="right">Follow @limelight_team</a>
@@ -67,13 +69,13 @@
         <div id="fb-footer">
           <fb:like href="http://www.facebook.com/pages/Limelight/240530529343415" send="false" layout="button_count" width="90" show_faces="false" font="tahoma"></fb:like>
         </div>
-        <div id="plt"><%= load_time %></div>
-      </footer>
+      </div>
+      <div id="plt"><%= load_time %></div>
+    </footer>
 
-      <div id="ajax-loading">Loading...</div>
-      <div id="ajax-notice"></div>
-      <div id="ajax-error"></div>
-    </div>
+    <div id="ajax-loading">Loading...</div>
+    <div id="ajax-notice"></div>
+    <div id="ajax-error"></div>
 
     <!-- HIDDEN TOOLS -->
     <div id="mouse-score"></div>

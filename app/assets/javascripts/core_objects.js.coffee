@@ -199,7 +199,7 @@ jQuery ->
       '
     })
 
-  $('.contributeC .tweet').live 'click', (e) ->
+  $('.contributeC .tweet input').live 'click', (e) ->
     target = $(@).parents('form:first').find('.tweet_content')
     target.toggle()
 

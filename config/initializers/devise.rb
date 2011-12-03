@@ -208,6 +208,12 @@ Devise.setup do |config|
   end
   config.omniauth :google_oauth2, ENV['GOOGLE_KEY'], ENV['GOOGLE_SECRET'], { :scope => 'userinfo.email,userinfo.profile' }
 
+  if Rails.env.development?
+    ENV['TWITTER_KEY'] = 'ZG0pbDrqivgwyBUFRUtmg'
+    ENV['TWITTER_SECRET'] = 'XwqiFq1MeFLuM1iw1JQ9ke2Lnu4PH0pXUGIKDM'
+  end
+  config.omniauth :twitter, ENV['TWITTER_KEY'], ENV['TWITTER_SECRET']
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

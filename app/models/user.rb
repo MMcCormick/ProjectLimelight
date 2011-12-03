@@ -314,12 +314,36 @@ class User
     nil
   end
 
+  def facebook
+    #TODO
+  end
+
+  def twitter
+    provider = get_social_connect('twitter')
+    if provider
+      Twitter.configure do |config|
+        config.consumer_key = ENV['TWITTER_KEY']
+        config.consumer_secret = ENV['TWITTER_SECRET']
+        config.oauth_token = provider.token
+        config.oauth_token_secret = provider.secret
+      end
+      @twitter ||= Twitter.new
+    else
+      nil
+    end
+  end
+
   class << self
     # Omniauth providers
     def find_by_omniauth(omniauth, signed_in_resource=nil)
       info = omniauth['info']
       extra = omniauth['extra']['raw_info']
-      user = User.where("social_connects.uid" => omniauth['uid'], 'social_connects.provider' => omniauth['provider']).first
+
+      if signed_in_resource
+        user = signed_in_resource
+      else
+        user = User.where("social_connects.uid" => omniauth['uid'], 'social_connects.provider' => omniauth['provider']).first
+      end
 
       # Try to get via email if user not found and email provided
       unless user || !info['email']
@@ -332,6 +356,7 @@ class User
         # Is this a new connection?
         unless connect
           connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :image => info['image'])
+          connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
           user.social_connects << connect
         end
         # Update the token
@@ -356,7 +381,9 @@ class User
         )
         user.username_reset = true
         user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]
-        user.social_connects << SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
+        connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
+        connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
+        user.social_connects << connect
       end
 
       user.save

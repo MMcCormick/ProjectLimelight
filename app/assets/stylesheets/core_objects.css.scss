@@ -279,6 +279,28 @@
     }
   }
 
+  .tweet_content {
+    position: relative;
+    border-top: 1px dashed #AAA;
+    padding: 15px 0 0 0;
+    .head {
+      position: absolute;
+      cursor: pointer;
+      color: #999;
+      font-size: 11px;
+      top: 3px;
+      left: 7px;
+    }
+    textarea {
+      height: 100px;
+      font-size: 13px;
+      height: 70px;
+      width: 344px;
+      resize: none;
+      border: none;
+    }
+  }
+
   .mention-ooc {
     position: absolute;
     width: 150px;
@@ -348,12 +370,40 @@
       text-align: center;
       height: 26px;
     }
+    .connect_twitter {
+      @include link();
+      position: absolute;
+      top: 6px;
+      left: 105px;
+      padding: 0 0 0 23px;
+      font-size: 11px;
+
+      .twitter-bird-small {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+    }
+    .tweet {
+      font-size: 11px;
+      cursor: default;
+      position: absolute;
+      top: 6px;
+      left: 110px;
+      padding: 0 0 0 18px;
+
+      input {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+    }
     .cancel {
       @include link();
       font-size: 11px;
       position: absolute;
       top: 6px;
-      left: 100px;
+      right: 10px;
     }
     input.disabled {
       @include opacity(.65);

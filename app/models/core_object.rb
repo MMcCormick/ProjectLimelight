@@ -37,11 +37,11 @@ class CoreObject
   validates :user_id, :status, :presence => true
   validate :title_length, :content_length
 
-  attr_accessible :title, :content, :response_to_id, :source_name, :source_url, :source_video_id
-  attr_accessor :response_to_id, :source_name, :source_url, :source_video_id
+  attr_accessible :title, :content, :response_to_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
+  attr_accessor :response_to_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
   before_validation :set_source_snippet
-  before_create :set_user_snippet, :current_user_own, :set_response_snippet
+  before_create :set_user_snippet, :current_user_own, :set_response_snippet, :send_tweet
   after_create :update_response_count
   after_update :expire_caches
 
@@ -113,6 +113,12 @@ class CoreObject
   def content_length
     if content_clean.length > 200
       errors.add(:content, "must be less than 200 characters long")
+    end
+  end
+
+  def send_tweet
+    if @tweet == '1' && @tweet_content && !@tweet_content.blank? && user.twitter
+      user.twitter.update(@tweet_content)
     end
   end
 

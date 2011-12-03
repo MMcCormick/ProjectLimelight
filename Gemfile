@@ -20,6 +20,9 @@ gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-twitter'
+gem 'koala' # facebook graph api support
+gem 'twitter' # twitter api support
 gem 'embedly'
 gem 'heroku'
 gem 'resque', :require => 'resque/server'
@@ -33,7 +36,6 @@ gem 'rpm_contrib', '2.1.6' # extra instrumentation for the new relic rpm agent
 gem 'newrelic_rpm' # performance / server monitoring
 gem 'soulmate' # Redis based autocomplete storage
 gem 'dalli' # memcache
-#gem 'vanity' # a/b testing
 gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby
 

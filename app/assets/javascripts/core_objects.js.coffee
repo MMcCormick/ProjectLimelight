@@ -179,6 +179,30 @@ jQuery ->
   $('.contributeC .actions .cancel').live 'click', (e) ->
     $(@).parents('.contributeC:first').slideUp(150)
 
+  $('.contributeC .connect_twitter').live 'click', (e) ->
+    $self = $(@)
+    $.colorbox({
+      title:false,
+      transition: "elastic",
+      speed: 100,
+      opacity: '.95',
+      fixed: true,
+      html: '
+        <h3 style="margin: 10px; width: 250px">
+          You need to visit Twitter to authenticate.
+          After authenticating you will need to re-enter your post.
+          You only need to connect to twitter once!
+        </h3>
+        <div style="margin: 0 0 10px 10px;">
+          <a href="'+$self.data('auth')+'">Continue Authenticating</a>
+        </div>
+      '
+    })
+
+  $('.contributeC .tweet').live 'click', (e) ->
+    target = $(@).parents('form:first').find('.tweet_content')
+    target.toggle()
+
   ####
   # END
   ####

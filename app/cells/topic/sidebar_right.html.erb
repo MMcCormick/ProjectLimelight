@@ -1,6 +1,6 @@
 <div id="topic-panel" class="sbrC" data-id="<%= @topic.id.to_s %>">
-  <div class="content">
-    <h1><%= @topic.name %></h1>
+  <div class="section">
+    <h1 class="head"><%= @topic.name %></h1>
     <ul class="topic-types">
       <% @connections.each do |con_id, connection| %>
         <% if con_id.to_s == Topic.type_of_id %>
@@ -10,7 +10,7 @@
         <% end %>
       <% end %>
     </ul>
-
+    
     <% if @topic.short_name && !@topic.short_name.blank? %>
       <div class='sn'>
         <%= "##{@topic.short_name}" %>
@@ -18,50 +18,51 @@
       </div>
       <div class="clear"></div>
     <% end %>
-    
-    <div class="image">
-      <div class="pop p_<%= @topic.id %>" title="Your Popularity"><%= @topic.pt.to_i %></div>
-      <%= image_tag topic_default_picture(@topic, 200, 0, 'fit'), :style => "max-width: 200px;", :class => 'profile-image', :alt => "" %>
-      <% if can? :update, @topic %>
-        <%= link_to "edit topic", edit_topic_path, :class => "edit-topic-b" %>
-      <% end %>
-    </div>
 
     <div class="stats">
       <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>
       <a class="btn followers" href="<%= topic_followers_path @topic %>"><%= @topic.followers_count.to_i %> followers</a>
     </div>
 
+    <div class="image">
+      <div class="pop p_<%= @topic.id %>" title="Your Popularity"><%= @topic.pt.to_i %></div>
+      <%= image_tag topic_default_picture(@topic, 200, 0, 'fit'), :style => "max-width: 200px;", :class => 'profile-image', :alt => "" %>
+    </div>
+  
     <% unless @topic.summary.blank? %>
       <div class="summary">
         <%= show_more(@topic.summary, 100) %>
       </div>
     <% end %>
-
+  
     <% if @topic.also_known_as.length > 1 %>
-      <div class="also">
+      <div class="sub-section also">
         <h5>Also Known As</h5>
         <div><%= @topic.also_known_as.join(', ') %></div>
       </div>
     <% end %>
 
-    <div class="topic-connections">
+    <% if can? :update, @topic %>
+      <%= link_to "edit", edit_topic_path, :class => "edit-topic-b" %>
+    <% end %>
+  </div>
+
+  <% if @connections.length > 0 %>
+    <div class="section topic-connections">
+      <div class="head">Connections</div>
+  
       <% @connections.each do |con_id, connection| %>
-        <% if con_id.to_s != Topic.type_of_id %>
-          <div class="connection">
-            <h5><%= connection[:name] %></h5>
-            <% connection[:data].each_with_index do |data, i| %>
-              <% if i > 1   %>
-                <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
-                <% break %>
-              <% end %>
-              <%= render 'topics/tag', :topic => data[:topic], :include_image => false %>
-            <% end %>
-          </div>
+        <h5 class="sub-section"><%= connection[:name] %></h5>
+        <% connection[:data].each_with_index do |data, i| %>
+          <% if i > 1   %>
+            <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
+            <% break %>
+          <% end %>
+          <%= render 'topics/tag', :topic => data[:topic], :include_image => false %>
         <% end %>
       <% end %>
     </div>
-  </div>
+  <% end %>
 
   <%= render 'help/topic_panel' %>
 </div>

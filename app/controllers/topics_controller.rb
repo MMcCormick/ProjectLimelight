@@ -16,6 +16,7 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by_slug(params[:id])
     authorize! :read, @topic
     @title = @topic.name
+    @right_sidebar = true
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topic_path @topic, :p => page + 1
     topic_ids = @topic.pull_from_ids({}).keys << @topic.id
@@ -36,6 +37,7 @@ class TopicsController < ApplicationController
 
   def edit
     @site_style = 'narrow'
+    @right_sidebar = true
     @topic = Topic.find_by_slug(params[:id])
     authorize! :edit, @topic
     @connections = @topic.get_connections
@@ -217,6 +219,7 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by_slug(params[:id])
     authorize! :read, @topic
     @followers = User.where(:following_topics => @topic.id)
+    @right_sidebar = true
   end
 
   def connected
@@ -224,6 +227,7 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by_slug(params[:id])
     authorize! :read, @topic
     @connections = @topic.get_connections
+    @right_sidebar = true
   end
 
   def hover

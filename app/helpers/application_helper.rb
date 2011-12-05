@@ -18,6 +18,14 @@ module ApplicationHelper
     end
   end
 
+  def right_sidebar
+    if @right_sidebar
+      'sbr'
+    else
+      ''
+    end
+  end
+
   # Return the page load time (defined in application_controller.rb init)
   def load_time
     "#{(Time.now-@start_time).round(4)}s"

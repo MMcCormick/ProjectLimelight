@@ -14,7 +14,7 @@ gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
 gem 'cells' # Components
 gem 'yajl-ruby' # json processing
-gem 'redcarpet' # Markdown
+gem 'redcarpet', '1.17.2' # Markdown
 gem 'fog' # Cloud support (amazon s3, etc)
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'

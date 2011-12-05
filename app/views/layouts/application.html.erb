@@ -31,31 +31,28 @@
 
     <div id="content">
       <div class="interior">
-        <%= render_cell :user, :sidebar_left, current_user, session[:sidebar] %>
-
-        <div id="sidebar-right" class="scroll">
-          <div class="wrap">
-            <%= yield :sidebar_right %>
-          </div>
-        </div>
-
-        <div id="page_header" class="<%= 'minimized-sidebar' if session[:sidebar] == :mini %>">
-          <div class="wrap">
+        <div id="page" class="<%= 'minimized-sidebar' if session[:sidebar] == :mini %>">
+          <div id="page_header" class="<%= 'minimized-sidebar' if session[:sidebar] == :mini %>">
             <%- flash.each do |name, msg| -%>
               <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
             <%- end -%>
             <%= yield :page_header %>
           </div>
-        </div>
+          <div id="page_content" class="<%= params[:action].parameterize %>-c <%= right_sidebar %>">
 
-        <div id="page" class="<%= 'minimized-sidebar' if session[:sidebar] == :mini %>">
-          <div id="page_content" class="<%= params[:action].parameterize %>-c">
             <%= yield %>
+
             <% if Rails.env.development? %>
               <%= debug(params) %>
               <div id="debug-upload-runtime">Upload Runtime: No runtime found</div>
             <% end %>
+
+            <div id="sidebar-right">
+              <%= yield :sidebar_right %>
+            </div>
+
           </div>
+          <%= render_cell :user, :sidebar_left, current_user, session[:sidebar] %>
         </div>
       </div>
     </div>

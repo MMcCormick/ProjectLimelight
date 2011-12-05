@@ -199,31 +199,18 @@ button {
   min-width: $min-width;
 }
 #page {
-    height: 100%;
-    position: relative;
-    margin-left: $sidebar_width+($sidebar_border_width*2)+$sidebar-margin;
-    padding-top: 45px;
-    padding-bottom: 75px;
-
-    &.minimized-sidebar {
-        margin-left: $sidebar-minimized-width+($sidebar_border_width*2)+$sidebar-margin;
-    }
+  height: 100%;
+  position: relative;
+  padding-bottom: 75px;
+  padding: 0 0 0 ($sidebar-width+$sidebar-margin+2);
 }
 
 #page_header {
-  position: absolute;
-  margin-left: $sidebar_width+($sidebar_border_width*2)+$sidebar-margin;
+  position: relative;
   color: #000;
   z-index: 150;
-
-  &.minimized-sidebar {
-      margin-left: $sidebar-minimized-width+($sidebar_border_width*2)+$sidebar-margin;
-  }
-
-  .wrap {
-    padding-top: 7px;
-    margin:  0 3px 0 7px;
-  }
+  margin: 0 7px;
+  padding: 5px 0 0 0;
 
   h1 {
     text-align: center;
@@ -235,49 +222,38 @@ button {
   }
 
   &.floating {
-      position: fixed;
-      top: 0px;
+    position: fixed;
+    top: 0px;
 
-      .wrap {
-        #feed-filters {
-          border-color: #999;
-        }
-        background: image-url("bg_textured.jpg") repeat;
-      }
+    #feed-filters {
+      border-color: #999;
+    }
+    background: image-url("bg_textured.jpg") repeat;
   }
-}
-#page-sb1,
-#page-sb2,
-#page-sb3 {
-    float: left;
-    height: 100%;
-    padding-bottom: $footer_height;
-    overflow-x: hidden;
-    overflow-y: auto;
 }
 #page_content {
     color: $page_content_color;
     position: relative;
-    > h1 {
-      margin: 0 0 5px 10px;
-    }
-    .wrap {
-        padding-bottom: 2px;
-    }
+    margin-top: 10px;
     .empty {
         margin-left: 10px;
+    }
+    &.sbr {
+      padding: 0 ($sidebar_right_width+$sidebar-margin) 0 0;
     }
 }
 #sidebar {
   @include single-box-shadow(#CCC, 1px, 1px, 2px);
   @include border-radius(4px);
   height: 100%;
-  position: relative;
+  position: absolute;
   border: $sidebar_border_width solid #CCC;
   background: $sidebar_background-color;
   position: absolute;
   margin: 7px 0 0 5px;
   padding-bottom: 20px;
+  top: 0;
+  left: 0;
 
   .panel-close-left-icon {
     position: absolute; top: 10px; right: 10px;
@@ -357,20 +333,14 @@ button {
   }
 }
 #sidebar-right {
-    float: right;
-    position: relative;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: $sidebar_right_width;
+    margin: 0 $sidebar-margin 0 0;
 
-    .sbrC {
-      @include border-radius(4px);
-      background-color: #FFF;
-      width: $sidebar_right_width;
-      position: relative;
-      border: $sidebar_border_width solid #CCC;
-      margin: 0 $sidebar-margin 0 0;
-
-      .edit {
-          @include link;
-      }
+    .edit {
+      @include link;
     }
 
     .edit-panel {

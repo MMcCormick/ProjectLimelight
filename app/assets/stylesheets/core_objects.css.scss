@@ -1014,12 +1014,9 @@ $scoreBox-width: 160px;
   }
 }
 #core-feed {
-  padding: 0 5px;
-  margin: 0 0 10px 0;
   position: relative;
   &.grid {
     display: inline-block;
-    margin-top: 12px;
   }
   .overlay {
     @include opacity(.8);
@@ -1066,7 +1063,7 @@ $scoreBox-width: 160px;
 
 #feed-filters {
     height: 25px;
-    padding: 4px 0 4px 5px;
+    padding: 4px 0 9px 5px;
     border-bottom: 1px solid transparent;
 
     .feed-display,

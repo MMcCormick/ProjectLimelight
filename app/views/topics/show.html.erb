@@ -7,4 +7,11 @@
   <%= render 'core_objects/feed_filters' %>
 <% end %>
 
+<% if @topic_ids.length > 1 %>
+  <div data-url="<%= topic_pull_from_path(@topic) %>" class="ac pull-from" data-m="get">
+    This feed includes posts from <%= @topic_ids.length-1 %> other <%= @topic_ids.length-1 > 1 ? 'topics' : 'topic' %>
+  </div>
+  <div class="clear"></div>
+<% end %>
+
 <%= render "core_objects/feed", :core_objects => @core_objects, :more_path => @more_path %>

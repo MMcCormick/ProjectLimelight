@@ -152,7 +152,43 @@
   }
 }
 
+.pull-from-c {
+  padding: 10px;
+  h2 {
+    padding: 0 5px 5px 5px;
+    border-bottom: 1px solid #999;
+  }          
+  .help {
+    font-size: 11px;
+    color: #666;
+    padding: 7px 5px;
+  }
+  .topics {
+    margin: 10px 0 0 0;
+    a {
+      margin: 5px 10px;
+    }
+  }
+}
+
 #topics-c {
+  .show-c {
+    .pull-from {
+      @include border-radius(2px);
+      font-size: 12px;
+      padding: 4px 6px;
+      margin: 0 0 10px 10px;
+      float: left;
+      border: 1px solid transparent;
+      color: #000;
+
+      &:hover {
+        background: #FFF;
+        border-color: #CCC;
+        cursor: pointer;
+      }
+    }
+  }
   .edit-c {
     .section {
       padding: 10px 5px;

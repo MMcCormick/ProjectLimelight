@@ -14,7 +14,7 @@ end
 if Rails.env.production?
   CarrierWave.configure do |config|
     config.storage = :fog
-    config.fog_directory  = 'limelight-img-production'
+    config.fog_directory  = 'img.p-li.me'
     config.fog_host = 'http://img.p-li.me'
   end
 end

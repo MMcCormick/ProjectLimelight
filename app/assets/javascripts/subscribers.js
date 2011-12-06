@@ -89,6 +89,20 @@ $(function() {
     $('#topic-edit').slideDown(300)
   })
 
+  // topic pull from box that shows the topics a topic is pulling from
+  amplify.subscribe('topics_pull_from', function (data) {
+    $.colorbox({
+      title:false,
+      transition: "elastic",
+      speed: 100,
+      opacity: '.95',
+      width: 500,
+      height: 400,
+      fixed: true,
+      html: data.html
+    })
+  })
+
   /*
    * TALK
    */

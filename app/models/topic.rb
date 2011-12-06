@@ -277,7 +277,7 @@ class Topic
 
     topics.each do |topic|
       topic_connection_snippets.each do |snippet|
-        if topic.id == snippet.topic_id
+        if topic.id == snippet.topic_id && snippet.id.to_s != Topic.type_of_id
           connections[snippet.id] ||= {:name => snippet.name, :data => []}
           connections[snippet.id][:data] << {:snippet => snippet, :topic => topic}
         end
@@ -302,8 +302,8 @@ class Topic
   # recursively gets topic ids to pull from in a hash of format {:topic_id => true}
   def pull_from_ids(ids)
     topic_connection_snippets.each do |snippet|
-      if snippet.pull_from? && !ids.has_key?(snippet.topic_id)
-        ids[snippet.topic_id] = true
+      if snippet.pull_from? && !ids.include?(snippet.topic_id)
+        ids << snippet.topic_id
         topic = Topic.find(snippet.topic_id)
         ids = ids.merge(topic.pull_from_ids(ids)) if topic
       end

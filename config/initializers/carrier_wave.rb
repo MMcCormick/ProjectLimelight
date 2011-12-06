@@ -22,7 +22,7 @@ end
 if Rails.env.staging?
   CarrierWave.configure do |config|
     config.storage = :fog
-    config.fog_directory  = 'limelight-img-staging'
+    config.fog_directory  = 'staging.img.p-li.me'
     config.fog_host = 'http://staging.img.p-li.me'
   end
 end

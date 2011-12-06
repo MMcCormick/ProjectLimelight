@@ -52,7 +52,13 @@
       <div class="head">Connections</div>
   
       <% @connections.each do |con_id, connection| %>
-        <h5 class="sub-section"><%= connection[:name] %></h5>
+        <h5 class="sub-section">
+          <% if con_id.to_s == Topic.type_of_id %>
+            Type Of
+          <% else %>
+            <%= "#{connection[:data].length} #{con_id.to_s == Topic.instances_id ? @topic.name : connection[:name]} #{connection[:data].length > 1 ? 'Topics' : 'Topic'}" %>
+          <% end %>
+        </h5>
         <% connection[:data].each_with_index do |data, i| %>
           <% if i > 1   %>
             <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>

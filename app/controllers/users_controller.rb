@@ -46,18 +46,17 @@ class UsersController < ApplicationController
     user = User.find_by_slug(params[:id])
 
     url = default_image_url(user, params[:w], params[:h], params[:m], true)
-    img = open(Rails.env.development? ? Rails.public_path+url : url)
 
-    response.headers['Cache-Control'] = 'no-cache'
-
-    if img
+    if Rails.env.development?
+      img = open(Rails.public_path+url)
       send_data(
         img.read,
         :type => 'image/png',
         :disposition => 'inline'
       )
     else
-      render :nothing => true, :status => 404
+      redirect_to url
+      #render :nothing => true, :status => 404
     end
   end
 

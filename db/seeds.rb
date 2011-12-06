@@ -53,7 +53,7 @@ connection = TopicConnection.find(Topic.type_of_id)
 unless connection
   connection = TopicConnection.new(
           :name => 'Type Of',
-          :pull_from => true,
+          :pull_from => false,
           :opposite => ''
   )
   connection.user_id = marc.id

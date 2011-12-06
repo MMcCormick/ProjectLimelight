@@ -277,7 +277,7 @@ class Topic
 
     topics.each do |topic|
       topic_connection_snippets.each do |snippet|
-        if topic.id == snippet.topic_id && snippet.id.to_s != Topic.type_of_id
+        if topic.id == snippet.topic_id
           connections[snippet.id] ||= {:name => snippet.name, :data => []}
           connections[snippet.id][:data] << {:snippet => snippet, :topic => topic}
         end

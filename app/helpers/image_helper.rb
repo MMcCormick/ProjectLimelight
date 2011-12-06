@@ -23,7 +23,7 @@ module ImageHelper
         url = returnObject ? image.original.first : image.original.first.image_url
       end
     elsif object.instance_of? Topic
-      url = (Rails.public_path unless Rails.env.development?)+"/assets/images/topic-default-#{dimensions[0]}-#{dimensions[1]}.gif"
+      url = "/assets/images/topic-default-#{width}-#{height}.gif"
     else
       return false
     end

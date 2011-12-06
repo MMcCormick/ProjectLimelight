@@ -203,6 +203,10 @@ button {
   position: relative;
   padding-bottom: 75px;
   padding: 0 0 0 ($sidebar-width+$sidebar-margin+2);
+
+  &.minimized-sidebar {
+    padding: 0 0 0 49px;
+  }
 }
 
 #page_header {

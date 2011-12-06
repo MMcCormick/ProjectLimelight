@@ -434,8 +434,8 @@ module Limelight #:nodoc:
         end
         if found_topic
           # add the new ID to the topic mention
-          @title_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
-          @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]")
+          @title_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]") if @title_raw
+          @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]") if @content_raw
 
           payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug, :ooc => topic_mention[2]}
           self.topic_mentions.build(payload)

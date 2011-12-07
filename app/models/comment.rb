@@ -6,7 +6,7 @@ class Comment
   include Mongoid::Timestamps
   include Limelight::Acl
   include Limelight::Voting
-  include Limelight::Mentions
+  #include Limelight::Mentions
   include Limelight::Popularity
 
   field :content

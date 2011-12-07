@@ -16,16 +16,11 @@ $indent: 20px;
     display: block;
     width: 400px;
 
-    .mention-box {
-      height: 65px;
+    textarea {
       width: 380px;
-      .under,
-      .mention {
-        height: 50px;
-        width: 380px;
-        margin: 0;
-        border-color: #CCC;
-      }
+      height: 50px;
+      margin: 0;
+      border-color: #CCC;
     }
     .submit,
     .comment_reply_cancel {
@@ -58,7 +53,7 @@ $indent: 20px;
         position: relative;
         border: 1px solid #CCC;
         margin-top: -1px;
-        margin-right: 5px;
+        margin-right: 10px;
         background: #FFF;
 
         .wrapper {
@@ -90,6 +85,7 @@ $indent: 20px;
             font-size: 14px;
             padding: 3px 0 6px 10px;
             clear: left;
+            color: #524D4D;
         }
         .scoreC {
           position: absolute;

@@ -1,7 +1,7 @@
 <div class="controlsC">
   <div class="pop p_<%= object.id.to_s %>"><div><%= object.pt.to_i %></div></div>
-  <%= render 'votes/btn', :object => object %>
-  <%= render 'favorites/btn', :object => object %>
-  <%= render 'reposts/btn', :object => object %>
-  <%= render 'core_object_shares/share_btn', :object => object %>
+  <%= render 'votes/btn', :current_user => current_user, :object => object %>
+  <%= render 'favorites/btn', :current_user => current_user, :object => object %>
+  <%= render 'reposts/btn', :current_user => current_user, :object => object %>
+  <%= render 'core_object_shares/share_btn', :current_user => current_user, :object => object %>
 </div>

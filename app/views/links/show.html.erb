@@ -1,42 +1,29 @@
+<% content_for :sidebar_right do %>
+  <%= render_cell(:core_object, :sidebar_right, current_user, @link) %>
+<% end %>
+
 <div class="object-show">
   <h1><%= @link.title_clean %></h1>
 
-  <div class="createdC">
-    <%= time_ago_in_words(@link.created_at, false) %> ago by
-    <%= user_link @link.user_snippet %>
-  </div>
-
-  <div class="sources">
-    <% @link.sources.each do |source| %>
-      <a href="<%= source.url %>" target="_blank" rel="nofollow"><%= source.name %></a>
-    <% end %>
-  </div>
-
-  <div class="content">
-    <%= markdown(parse_mentions(@link.content, @link)) %>
-  </div>
-
-  <% if @link.topic_mentions.length > 0 %>
-    <div class="mentions">
-      <div class="head">mentions</div>
-      <% @link.topic_mentions.each do |topic| %>
-        <%= render 'topics/tag', :topic => topic, :include_image => false %>
-      <% end %>
+  <% img = default_image_url(@link, 110, 80, 'fit', false, true) %>
+  <% original = default_image_url(@link, 0, 0, :original) if img %>
+  <% if img %>
+    <div class="img expand">
+      <div class='icon'><div class="full-black-icon"></div></div>
+      <%= image_tag img.image_url, :style => 'max-width: 110px; max-height: 80px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     </div>
   <% end %>
+  
+  <div class="content <%= 'with-image' if img %>">
+    <div class="createdC">
+      <%= time_ago_in_words(@link.created_at, false) %> ago by
+      <%= user_link @link.user_snippet %>
+    </div>
 
-  <div class="left">
-    <% img = default_image_url(@link, 110, 80, 'fit', false, true) %>
-    <% original = default_image_url(@link, 0, 0, :original) if img %>
-    <% if img %>
-      <div class="img expand">
-        <div class='icon'><div class="full-black-icon"></div></div>
-        <%= image_tag img.image_url, :style => 'max-width: 110px; max-height: 80px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
-      </div>
-    <% end %>
-
-    <%= render 'core_objects/feed_teaser_actions', :object => @link %>
+    <%= markdown(parse_mentions(@link.content, @link)) %>
   </div>
+  
+  <div class="clear"></div>
 </div>
 
 <%= render "core_objects/response_header", :object => @link %>

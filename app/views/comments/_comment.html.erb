@@ -8,7 +8,9 @@
     <div class="createdC">
       <%= user_link(comment.user_snippet) %> <%= time_ago_in_words(comment.created_at) %> ago
     </div>
-    <%= markdown(parse_mentions(comment.content, comment)) %>
+    <p>
+      <%= comment.content %>
+    </p>
     <% if comment.depth < 5 %>
       <div class="reply">
         <a href="javascript:void(0);" id="reply_<%= comment.id %>" class="reply-show" data-d='{"id":"<%= comment.id %>"}'>reply</a>

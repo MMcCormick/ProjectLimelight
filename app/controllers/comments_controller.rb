@@ -9,7 +9,7 @@ class CommentsController < ApplicationController
     if comment.save
 
       comment.send_notifications(current_user)
-      comment.send_mention_notifications
+      #comment.send_mention_notifications
 
       html = render_to_string :partial => "comments/comment", :locals => { :comment => comment }
       response = build_ajax_response(:ok, nil, "Comment posted!", nil, { :parent_id => comment.parent_id, :talk_id => comment.talk_id, :comment => html })

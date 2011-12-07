@@ -3,6 +3,7 @@ class LinksController < ApplicationController
 
   def show
     @site_style = 'narrow'
+    @right_sidebar = true
     @link = Link.find_by_encoded_id(params[:id])
 
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @link.id})

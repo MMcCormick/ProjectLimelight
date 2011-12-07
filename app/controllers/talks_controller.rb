@@ -3,6 +3,7 @@ class TalksController < ApplicationController
 
   def show
     @site_style = 'narrow'
+    @right_sidebar = true
     @talk = Talk.find_by_encoded_id(params[:id])
 
     unless @talk

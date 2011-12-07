@@ -1,0 +1,24 @@
+<div id="post-panel" data-id="<%= @object.id.to_s %>">
+  <div class="section">
+    <div class="head"><%= @object.class.name %> Actions</div>
+    <%= render 'core_objects/feed_teaser_actions', :current_user => @current_user, :object => @object %>
+  </div>
+
+  <% if @object.topic_mentions.length > 0 %>
+    <div class="section">
+      <div class="head">Mentions</div>
+      <% @object.topic_mentions.each do |topic| %>
+        <%= render 'topics/tag', :topic => topic, :include_image => false %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @object.sources.length > 0 %>
+    <div class="section">
+      <div class="head">Sources</div>
+      <% @object.sources.each do |source| %>
+        <a href="<%= source.url %>" target="_blank" class="source" rel="nofollow"><%= source.name %></a>
+      <% end %>
+    </div>
+  <% end %>
+</div>

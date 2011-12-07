@@ -1,6 +1,7 @@
 <div id="response-divider">
   <h3>Responses</h3>
   <div id="add_response" data-target="#response-contribute" class="<%= 'auth' unless signed_in? %>">+ Add Response</div>
+  <div class="clear"></div>
   <%= render "shared/contribute", :id => 'response-contribute', :responding => object, :allowed => [] %>
 </div>
 

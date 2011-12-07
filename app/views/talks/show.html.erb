@@ -1,3 +1,7 @@
+<% content_for :sidebar_right do %>
+  <%= render_cell(:core_object, :sidebar_right, current_user, @talk) %>
+<% end %>
+
 <div class="object-show talk">
   <div class="createdC">
     <%= time_ago_in_words(@talk.created_at, false) %> ago by
@@ -7,19 +11,8 @@
   <div class="content">
     <%= markdown(parse_mentions(@talk.content, @talk)) %>
   </div>
+  <div class="clear"></div>
 
-  <% if @talk.topic_mentions.length > 0 %>
-    <div class="mentions">
-      <div class="head">mentions</div>
-      <% @talk.topic_mentions.each do |topic| %>
-        <%= render 'topics/tag', :topic => topic, :include_image => false %>
-      <% end %>
-    </div>
-  <% end %>
-
-  <div class="left">
-    <%= render 'core_objects/feed_teaser_actions', :object => @talk %>
-  </div>
 </div>
 
 <%= render_cell :comment, :thread, @talk.id, true %>

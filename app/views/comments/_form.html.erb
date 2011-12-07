@@ -6,7 +6,7 @@
 
   <div class="field lClear required">
     <%= f.label :content, "Post a comment!" %>
-    <%= render "shared/mention_box", :f => f %>
+    <%= f.text_area :content, :spellcheck => false, :autocomplete => :off %>
   </div>
 
   <%= f.hidden_field :parent_id %>

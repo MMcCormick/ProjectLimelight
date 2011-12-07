@@ -1,40 +1,28 @@
-<div class="object-show">
-  <h1><%= @picture.title_clean %></h1>
+<% content_for :sidebar_right do %>
+  <%= render_cell(:core_object, :sidebar_right, current_user, @picture) %>
+<% end %>
 
+<div class="object-show picture">
+  <h1><%= @picture.title_clean %></h1>
   <div class="createdC">
     <%= time_ago_in_words(@picture.created_at, false) %> ago by
     <%= user_link @picture.user_snippet %>
   </div>
 
-  <div class="sources">
-
-  </div>
-
-  <div class="content">
-    <%= markdown(parse_mentions(@picture.content, @picture)) %>
-  </div>
-
-  <% img = default_image_url(@picture, 500, 150, 'fit', false, true) %>
+  <% img = default_image_url(@picture, 575, 500, 'fit', false, true) %>
   <% original = default_image_url(@picture, 0, 0, :original) if img %>
   <% if img %>
     <div class="img expand">
       <div class='icon'><div class="full-black-icon"></div></div>
-      <%= image_tag img.image_url, :style => 'max-width: 500px; max-height: 150px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+      <%= image_tag img.image_url, :style => 'max-width: 575px; max-height: 500px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     </div>
   <% end %>
 
-  <% if @picture.topic_mentions.length > 0 %>
-    <div class="mentions">
-      <div class="head">mentions</div>
-      <% @picture.topic_mentions.each do |topic| %>
-        <%= render 'topics/tag', :topic => topic, :include_image => false %>
-      <% end %>
-    </div>
-  <% end %>
-
-  <div class="left">
-    <%= render 'core_objects/feed_teaser_actions', :object => @picture %>
+  <div class="content <%= 'with-image' if img %>">
+    <%= markdown(parse_mentions(@picture.content, @picture)) %>
   </div>
+
+  <div class="clear"></div>
 </div>
 
 <%= render "core_objects/response_header", :object => @picture %>

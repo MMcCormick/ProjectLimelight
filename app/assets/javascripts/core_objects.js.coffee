@@ -335,7 +335,7 @@ jQuery ->
               .end()
               .appendTo($button.parent())
               .fadeIn(300)
-              .find('textarea').focus().end()
+              .find('textarea').end()
     $button.parent().find('#comment_talk_id').attr('value', $button.data('d').id)
 
   if ($('.teaser.column').length > 0)

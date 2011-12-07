@@ -49,11 +49,11 @@
   display: none;
 
   .responding {
-    font-style: italic;
     color: #333;
-    font-size: 19px;
+    font-size: 16px;
     margin: 5px 0 5px 14px;
     width: 500px;
+    cursor: default;
   }
   .errors {
     margin: 0 8px 9px 8px;
@@ -1241,76 +1241,18 @@ $scoreBox-width: 160px;
     .add { margin: 2px 0 0 5px;}
 }
 
-.object-show {
-  position: relative;
-  padding: 0 10px 40px 150px;
-  min-height: 150px;
-  .left {
-    @include border-radius(2px);
-    position: absolute;
-    top: 0;
-    left: 8px;
-    background: #fff;
-    width: 130px;
-    border: 1px solid #CCC;
-    img {
-      margin: 5px 0 0 10px;
-    }
-  }
-  h1 {
-    font-size: 20px;
-  }
-  .createdC {
-    font-size: 12px;
-    color: #999;
-    margin: 2px 0 0 0;
-  }
-  .sources {
-    margin: 5px 0 0 0;
-    a {
-      @include border-radius(2px);
-      font-size: 12px;
-      padding: 2px 6px;
-      border: 1px solid #CCC;
-      background: #FFF;
-      margin: 0 10px 0 0;
-      &:hover {
-        background: #999;
-        color: #FFF;
-      }
-    }
-  }
-  .content {
-    font-size: 13px;
-    margin: 10px 0 0 0;
-  }
-  .mentions {
-    margin: 10px 0 10px 0;
-    padding: 0 0 0 60px;
-    position: relative;
-    .head {
-      font-size: 12px;
-      cursor: default;
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      color: #666;
-    }
-    .tag {
-      float: left;
-      font-size: 12px;
-      margin-right: 8px;
-    }
-  }
+#post-panel {
   .controlsC {
     position: relative;
-    height: 65px;
+    height: 55px;
+    width: 150px;
+    margin: 0 0 0 25px;
 
     .pop {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 24px;
+      top: 9px;
+      right: 98px;
+      font-size: 36px;
       color: #555;
       cursor: default;
     }
@@ -1329,8 +1271,8 @@ $scoreBox-width: 160px;
     .favB,
     .unfavB {
       position: absolute;
-      top: 40px;
-      left: 30px;
+      top: 28px;
+      left: 120px;
     }
     .repostB,
     .unrepostB {
@@ -1344,6 +1286,41 @@ $scoreBox-width: 160px;
       left: 95px;
     }
   }
+  .tag {
+    margin: 5px 0 0 5px;
+    font-size: 13px;
+  }
+  .source {
+    display: block;
+    font-size: 13px;
+    margin: 5px 0 0 5px;
+  }
+}
+
+.object-show {
+  position: relative;
+  padding: 0 10px 10px 10px;
+
+  h1 {
+    font-size: 20px;
+  }
+  .img {
+    float: left;
+    margin: 6px 10px 0 0;
+  }
+  .content {
+    margin: 6px 0 0 0;
+    float: left;
+    p {
+      font-size: 16px;
+    }
+  }
+  .createdC {
+    font-size: 12px;
+    color: #999;
+    margin: 2px 0 0 0;
+  }
+
   .video-embed {
     float: none !important;
     margin: 10px 0 0 0;
@@ -1352,40 +1329,48 @@ $scoreBox-width: 160px;
   &.talk {
     min-height: 30px;
     margin: 0 0 0 12px;
+    .content {   
+      p {
+        font-size: 20px;
+      }
+    }
   }
 }
 
 #response-divider {
   position: relative;
+  margin: 10px;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  padding: 3px 5px;
+
   h3 {
     color: #444;
-    position: absolute;
-    left: 0;
-    top: -29px;
-    padding: 0 18px 0 10px;
+    float: left;
     cursor: default;
   }
 }
 #add_response {
-  position: absolute;
   color: #444;
-  left: 50;
   font-size: 15px;
-  top: -28px;
-  left: 125px;
-  padding: 0 20px 0 0px;
   cursor: pointer;
   color: $picture-color;
-  z-index: 100;
+  float: left;
+  margin: 0 0 0 20px;
 }
 #response-contribute {
   position: absolute;
-  top: -45px;
-  left: 114px;
+  top: -5px;
+  left: 95px;
   z-index: 101;
   border-top: 2px solid #94C530;
 }
 #responses {
+  .none {
+    font-size: 14px;
+    font-style: italic;
+    margin: 15px 0 0 10px;
+  }
   .comment-thread {
     padding-bottom: 15px;
     padding-top: 0;

@@ -1,3 +1,7 @@
+<% content_for :sidebar_right do %>
+  <%= render_cell(:core_object, :sidebar_right, current_user, @video) %>
+<% end %>
+
 <div class="object-show">
   <h1><%= @video.title_clean %></h1>
 
@@ -6,30 +10,12 @@
     <%= user_link @video.user_snippet %>
   </div>
 
-  <div class="sources">
-    <% @video.sources.each do |source| %>
-      <a href="<%= source.url %>" target="_blank" rel="nofollow"><%= source.name %></a>
-    <% end %>
-  </div>
+  <%= video_embed(@video.sources[0], 575, 450) %>
 
   <div class="content">
     <%= markdown(parse_mentions(@video.content, @video)) %>
   </div>
-
-  <%= video_embed(@video.sources[0], 150, 150) %>
-
-  <% if @video.topic_mentions.length > 0 %>
-    <div class="mentions">
-      <div class="head">mentions</div>
-      <% @video.topic_mentions.each do |topic| %>
-        <%= render 'topics/tag', :topic => topic, :include_image => false %>
-      <% end %>
-    </div>
-  <% end %>
-
-  <div class="left">
-    <%= render 'core_objects/feed_teaser_actions', :object => @video %>
-  </div>
+  <div class="clear"></div>
 </div>
 
 <%= render "core_objects/response_header", :object => @video %>

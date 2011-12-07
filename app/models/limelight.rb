@@ -307,6 +307,7 @@ module Limelight #:nodoc:
     def set_mentions
       set_user_mentions
       set_topic_mentions
+
       self.title = @title_raw && !@title_raw.blank? ? @title_raw : title
       self.content = @content_raw && !@content_raw.blank? ? @content_raw : content
     end

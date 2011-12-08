@@ -1,6 +1,10 @@
-<div class="user-panel">
-  <%= image_tag user_default_picture_path(@user, :w => 30, :h => 30, :m => 'fillcropmid'), :style => "max-width: 85px;", :class => 'profile-image', :alt => "" %>
-  <h3><%= @user.username %></h3>
+<div class="user-panel section">
+  <div class="head">
+    <div class="img">
+      <%= image_tag user_default_picture_path(@user, :w => 30, :h => 30, :m => 'fillcropmid'), :style => "max-width: 85px;", :alt => "" %>
+    </div>
+    <h3><%= @user.username %></h3>
+  </div>
   <%= render 'follows/btn', :current_user => @current_user, :target => user %>
 
   <% unless @user.bio.blank? %>

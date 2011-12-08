@@ -227,7 +227,6 @@
 
 // The user panel, either left or right sidebar
 .user-panel {
-    @include clearfix();
     padding: 40px 0 0 0;
 
     .profile-image {
@@ -246,7 +245,6 @@
     .stats {
       position: relative;
       height: 62px;
-      margin: 0;
       margin: 0 5px;
 
       .label {
@@ -361,27 +359,54 @@
 
 // For the right sidebar only
 .sbrC {
-  .sidebarB { background-color: #E4E4E4; }
+  .user-panel {
+    .head {
+      position: relative;
+      padding: 5px 5px 0 40px !important;
+      height: 25px;
+      .img {
+        padding: 0 3px 0 0;
+        background: image-url("bg_textured.jpg") repeat;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      h3 {
+        overflow: hidden;
+        font-size: 16px;
+        max-width: none;
+        left: auto;
+        top: auto;
+        position: relative;
+      }
+    }
+    .followB,
+    .unfollowB {
+      margin: 10px 0 10px 0px !important;
+    }
+    .stats {
+      margin: 0;
+    }
+    .bio {
+      margin: 10px 5px 8px 5px;
+      font-size: 12px;
+    }
+  }
+  .sidebarB {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
   .btn {
     color: #444;
   }
   .links {
-    margin-bottom: 1px;
+    margin: 5px 0 0 0;
     a {
       background-color: #E4E4E4;
       top: 0px !important;
     }
-    // In addition to radii applied above in .user-panel
     .badge { @include border-top-left-radius(2px); }
     .user-contributions { @include border-top-right-radius(2px); }
-  }
-  .followB,
-  .unfollowB {
-    margin: 8px 0 8px 6px;
-  }
-  .bio {
-    margin: 10px 5px 8px 5px;
-    font-size: 12px;
   }
 }
     

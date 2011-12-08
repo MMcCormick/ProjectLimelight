@@ -5,6 +5,8 @@ class PicturesController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @picture = Picture.find_by_encoded_id(params[:id])
+    @title = @picture.name
+
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @picture.id})
     unless @picture
       not_found("Picture not found")

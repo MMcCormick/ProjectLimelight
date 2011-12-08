@@ -1,6 +1,7 @@
 class CommentCell < Cell::Rails
 
   include Devise::Controllers::Helpers
+  include CanCan::ControllerAdditions
   helper UsersHelper
   helper ApplicationHelper
   helper TopicsHelper

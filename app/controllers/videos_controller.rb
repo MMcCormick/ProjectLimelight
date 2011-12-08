@@ -5,6 +5,8 @@ class VideosController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @video = Video.find_by_encoded_id(params[:id])
+    @title = @video.name
+
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @video.id})
     unless @video
       not_found("Video not found")

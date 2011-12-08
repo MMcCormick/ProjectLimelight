@@ -5,6 +5,7 @@ class LinksController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @link = Link.find_by_encoded_id(params[:id])
+    @title = @link.name
 
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @link.id})
     unless @link

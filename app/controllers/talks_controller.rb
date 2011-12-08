@@ -5,6 +5,7 @@ class TalksController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @talk = Talk.find_by_encoded_id(params[:id])
+    @title = @talk.name
 
     unless @talk
       not_found("Talk not found")

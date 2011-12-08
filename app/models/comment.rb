@@ -10,6 +10,7 @@ class Comment
   include Limelight::Popularity
 
   field :content
+  field :status, :default => "active"
   field :parent_id
   field :talk_id
   field :user_id
@@ -39,6 +40,10 @@ class Comment
       [ :created_at, Mongo::DESCENDING ]
     ]
   )
+
+  def user_delete
+    self.status = "deleted"
+  end
 
   def send_notifications(current_user)
     parent = nil

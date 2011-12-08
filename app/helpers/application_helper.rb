@@ -3,11 +3,16 @@ module ApplicationHelper
   # Return a title on a per-page basis.
   def title
     base_title = "Limelight"
+    title = truncate(@title, :length => 60, :separator => ' ')
     if @title.nil?
       base_title
     else
-      "#{@title} | #{base_title}"
+      "#{title} | #{base_title}"
     end
+  end
+
+  def description
+    @description.nil? ? "" : @description
   end
 
   def site_style

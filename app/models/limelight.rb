@@ -510,7 +510,7 @@ module Limelight #:nodoc:
       end
 
       amt = amt * current_user.clout
-      unless ["User", "Topic"].include? self.class.name
+      if defined? topic_mentions
         amt = 2 * amt / topic_mentions.length if topic_mentions.length > 2
       end
 
@@ -519,41 +519,10 @@ module Limelight #:nodoc:
         action.pop_snippets.new(:amount => amt, :id => id, :object_type => self.class.name)
 
         unless ["User", "Topic"].include? self.class.name
-
-          ooc_amt = amt * @@pop_amounts[:ooc]
-          ic_amt = amt * @@pop_amounts[:ic]
+          # Update user
           user_amt = amt * @@pop_amounts[:user]
 
-          ooc_ids, ic_ids = [], []
-
-          topic_mentions.each do |t_mention|
-            if t_mention.ooc
-              ooc_ids << t_mention.id
-              action.pop_snippets.new(:amount => ooc_amt, :id => t_mention.id, :object_type => "Topic")
-              Pusher[t_mention.id.to_s].trigger('popularity_changed', {:change => ooc_amt})
-            else
-              ic_ids << t_mention.id
-              action.pop_snippets.new(:amount => ic_amt, :id => t_mention.id, :object_type => "Topic")
-              Pusher[t_mention.id.to_s].trigger('popularity_changed', {:change => ic_amt})
-            end
-          end
           action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")
-
-          # Update the popularities on affected objects
-          Topic.collection.update(
-            {:_id => {"$in" => ooc_ids}},
-            {
-              "$inc" => { :ph => ooc_amt, :pd => ooc_amt, :pw => ooc_amt, :pm => ooc_amt, :pt => ooc_amt },
-              "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
-            }
-          )
-          Topic.collection.update(
-            {:_id => {"$in" => ic_ids}},
-            {
-              "$inc" => { :ph => ic_amt, :pd => ic_amt, :pw => ic_amt, :pm => ic_amt, :pt => ic_amt },
-              "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
-            }
-          )
           User.collection.update(
             {:_id => user_id},
             {
@@ -562,6 +531,41 @@ module Limelight #:nodoc:
             }
           )
           Pusher[user_id.to_s].trigger('popularity_changed', {:change => user_amt})
+
+          # Update mentioned topics if applicable
+          if defined? topic_mentions
+            ooc_amt = amt * @@pop_amounts[:ooc]
+            ic_amt = amt * @@pop_amounts[:ic]
+            ooc_ids, ic_ids = [], []
+
+            topic_mentions.each do |t_mention|
+              if t_mention.ooc
+                ooc_ids << t_mention.id
+                action.pop_snippets.new(:amount => ooc_amt, :id => t_mention.id, :object_type => "Topic")
+                Pusher[t_mention.id.to_s].trigger('popularity_changed', {:change => ooc_amt})
+              else
+                ic_ids << t_mention.id
+                action.pop_snippets.new(:amount => ic_amt, :id => t_mention.id, :object_type => "Topic")
+                Pusher[t_mention.id.to_s].trigger('popularity_changed', {:change => ic_amt})
+              end
+            end
+
+            # Update the popularities on affected objects
+            Topic.collection.update(
+              {:_id => {"$in" => ooc_ids}},
+              {
+                "$inc" => { :ph => ooc_amt, :pd => ooc_amt, :pw => ooc_amt, :pm => ooc_amt, :pt => ooc_amt },
+                "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+              }
+            )
+            Topic.collection.update(
+              {:_id => {"$in" => ic_ids}},
+              {
+                "$inc" => { :ph => ic_amt, :pd => ic_amt, :pw => ic_amt, :pm => ic_amt, :pt => ic_amt },
+                "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+              }
+            )
+          end
         end
 
         action.save!

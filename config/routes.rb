@@ -45,7 +45,7 @@ ProjectLimelight::Application.routes.draw do
   put 'help/tutorials/off' => 'help#tutorial_off', :as => :tutorial_off
 
   # Comments
-  resources :comments
+  resources :comments, :only => [:create, :destroy]
 
   # Notifications
   get '/:id/notifications' => 'notifications#index', :as => :notifications

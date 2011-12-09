@@ -18,6 +18,11 @@ $(function() {
     $currentTarget = $this;
     event.preventDefault();
 
+    if ($this.hasClass('conf')) {
+      if (!confirm('Are you sure you want to remove this post? This cannot be undone.')) {
+        return false;
+      }
+    }
     doAction($url, $requestType, $payload, null, null);
 
     return false;

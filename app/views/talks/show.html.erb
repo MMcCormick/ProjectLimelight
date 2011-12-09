@@ -10,7 +10,7 @@
     </div>
 
     <% if can? :destroy, @talk %>
-      <div class="ac disable hide" data-m="PUT" data-url="<%= disable_talk_path @talk %>">X</div>
+      <div class="ac disable conf conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_talk_path @talk %>">X</div>
     <% end %>
 
     <div class="content">

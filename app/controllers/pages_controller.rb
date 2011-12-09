@@ -17,6 +17,10 @@ class PagesController < ApplicationController
     end
   end
 
+  def admin
+    @title = 'Admin'
+  end
+
   def about
     @title = 'About'
     @description = "A short description of Limelight, a new way to discuss the topics you care about."

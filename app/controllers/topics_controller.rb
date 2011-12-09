@@ -37,6 +37,19 @@ class TopicsController < ApplicationController
     end
   end
 
+  def new
+    authorize! :manage, :all
+    @site_style = 'narrow'
+    @right_sidebar = false
+    @topic = Topic.new
+    @title = "Create a Topic"
+  end
+
+  def create
+    authorize! :manage, :all
+    current_user.topics.create(params[:topic])
+  end
+
   def edit
     @site_style = 'narrow'
     @right_sidebar = true

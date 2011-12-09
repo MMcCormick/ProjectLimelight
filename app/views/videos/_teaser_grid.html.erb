@@ -38,7 +38,7 @@
 <% end # cache %>
 
     <% if can? :destroy, object %>
-      <div class="ac disable hide" data-m="PUT" data-url="<%= disable_video_path object %>">X</div>
+      <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_video_path object %>">X</div>
     <% end %>
 
     <%= render 'core_objects/feed_teaser_actions', :object => object %>

@@ -10,7 +10,8 @@ jQuery ->
         event: 'click'
       }
       hide: {
-        event: 'unfocus'
+        fixed: true
+        event: false
       }
       position: {
         my: 'top right'
@@ -21,3 +22,6 @@ jQuery ->
         classes: 'ui-tooltip-shadow coreShareTip'
       }
     });
+
+  $('.cancel-share').live 'click', (e) ->
+    $('.coreShareB').qtip('hide')

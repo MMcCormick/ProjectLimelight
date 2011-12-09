@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find_by_slug(params[:id])
     @title = @user.username + "'s contributions"
+    @description = "A feed containing all posts submitted by " + @user.username
     page = params[:p] ? params[:p].to_i : 1
     @right_sidebar = true if current_user != @user
     @more_path = user_feed_path :p => page + 1
@@ -84,6 +85,7 @@ class UsersController < ApplicationController
   def settings
     @site_style = 'narrow'
     @title = 'Settings'
+    @description = "Here a user can edit their settings: personal info, profile picture, and email notification settings"
     unless signed_in?
       redirect_to root_path
     end
@@ -108,6 +110,7 @@ class UsersController < ApplicationController
     @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
     @title = "Users " + @user.username + " is following"
+    @description = "A list of all users who are being followed by" + @user.username
     @right_sidebar = true if current_user != @user
     @following_users = User.where(:_id.in => @user.following_users)
   end
@@ -116,6 +119,7 @@ class UsersController < ApplicationController
     @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
     @title = @user.username + "'s followers"
+    @description = "A list of all users who are following" + @user.username
     @right_sidebar = true if current_user != @user
     @followers = User.where(:following_users => @user.id)
   end
@@ -124,6 +128,7 @@ class UsersController < ApplicationController
     @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
     @title = "Topics " + @user.username + " is following"
+    @description = "A list of all topics which are being followed by" + @user.username
     @right_sidebar = true if current_user != @user
     @following_topics = Topic.where(:_id.in => @user.following_topics)
   end

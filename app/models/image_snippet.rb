@@ -6,7 +6,7 @@ class ImageSnippet
 
   include Mongoid::Document
 
-  field :status, :default => 'Active'
+  field :status, :default => 'active'
   field :isDefault, :default => true
   field :user_id
   embeds_many :versions, :class_name => 'AssetImage'

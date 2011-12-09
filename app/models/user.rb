@@ -41,7 +41,7 @@ class User
 
   slug :username
 
-  field :status, :default => 'Active'
+  field :status, :default => 'active'
   field :email
   field :gender
   field :birthday, :type => Date

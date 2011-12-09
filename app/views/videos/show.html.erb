@@ -1,22 +1,30 @@
-<% content_for :sidebar_right do %>
-  <%= render_cell(:core_object, :sidebar_right, current_user, @video) %>
+<% if @video.status == "active" %>
+  <% content_for :sidebar_right do %>
+    <%= render_cell(:core_object, :sidebar_right, current_user, @video) %>
+  <% end %>
+
+  <div class="object-show">
+    <h1><%= @video.title_clean %></h1>
+
+    <div class="createdC">
+      <%= time_ago_in_words(@video.created_at, false) %> ago by
+      <%= user_link @video.user_snippet %>
+    </div>
+
+    <% if can? :destroy, @video %>
+      <div class="ac disable hide" data-m="PUT" data-url="<%= disable_video_path @video %>">X</div>
+    <% end %>
+
+    <%= video_embed(@video.sources[0], 575, 450) %>
+
+    <div class="content">
+      <%= markdown(parse_mentions(@video.content, @video)) %>
+    </div>
+    <div class="clear"></div>
+  </div>
+<% else %>
+  <div class="empty">This video has been removed</div>
 <% end %>
-
-<div class="object-show">
-  <h1><%= @video.title_clean %></h1>
-
-  <div class="createdC">
-    <%= time_ago_in_words(@video.created_at, false) %> ago by
-    <%= user_link @video.user_snippet %>
-  </div>
-
-  <%= video_embed(@video.sources[0], 575, 450) %>
-
-  <div class="content">
-    <%= markdown(parse_mentions(@video.content, @video)) %>
-  </div>
-  <div class="clear"></div>
-</div>
 
 <%= render "core_objects/response_header", :object => @video %>
 <%= render "core_objects/responses", :responses => @responses %>

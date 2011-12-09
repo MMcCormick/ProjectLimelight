@@ -5,15 +5,19 @@ ProjectLimelight::Application.routes.draw do
 
   # Pictures
   resources :pictures
+  put '/pictures/:id/disable' => 'pictures#disable', :as => :disable_picture
 
   # Videos
   resources :videos
+  put '/videos/:id/disable' => 'videos#disable', :as => :disable_video
 
   # Link
   resources :links
+  put '/links/:id/disable' => 'links#disable', :as => :disable_link
 
   # Talk
   resources :talks
+  put '/talks/:id/disable' => 'talks#disable', :as => :disable_talk
 
   # Feeds
   put 'feeds/update' => 'feeds#update', :as => :feed_update

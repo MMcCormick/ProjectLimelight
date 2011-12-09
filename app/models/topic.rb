@@ -41,7 +41,7 @@ class Topic
   field :fb_img, :default => false # use the freebase image?
   field :fb_id # freebase id
   field :fb_mid # freebase mid
-  field :status, :default => 'Active'
+  field :status, :default => 'active'
   field :slug_locked
   field :user_id
   field :followers_count, :default => 0

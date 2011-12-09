@@ -18,7 +18,7 @@ class CoreObject
 
   field :content
 
-  field :status, :default => 'Active'
+  field :status, :default => 'active'
   field :favorites, :default => []
   field :favorites_count, :default => 0
   field :reposts, :default => []
@@ -230,9 +230,9 @@ class CoreObject
 
       # page_length + 1 is used below so that one extra object is returned, allowing the views to check if there are more objects
       if (or_criteria.length > 0)
-        core_objects = self.any_in("_type" => display_types).any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
+        core_objects = self.any_in("_type" => display_types).where(:status => "active").any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
       else
-        core_objects = self.any_in("_type" => display_types).skip(num_to_skip).limit(page_length + 1)
+        core_objects = self.any_in("_type" => display_types).where(:status => "active").skip(num_to_skip).limit(page_length + 1)
       end
 
       if order_by[:target] != 'created_at'

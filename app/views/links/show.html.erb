@@ -1,30 +1,40 @@
-<% content_for :sidebar_right do %>
-  <%= render_cell(:core_object, :sidebar_right, current_user, @link) %>
-<% end %>
-
-<div class="object-show">
-  <h1><%= @link.title_clean %></h1>
-
-  <% img = default_image_url(@link, 110, 80, 'fit', false, true) %>
-  <% original = default_image_url(@link, 0, 0, :original) if img %>
-  <% if img %>
-    <div class="img expand">
-      <div class='icon'><div class="full-black-icon"></div></div>
-      <%= image_tag img.image_url, :style => 'max-width: 110px; max-height: 80px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
-    </div>
+<% if @link.status == "active" %>
+  <% content_for :sidebar_right do %>
+    <%= render_cell(:core_object, :sidebar_right, current_user, @link) %>
   <% end %>
-  
-  <div class="content <%= 'with-image' if img %>">
-    <div class="createdC">
-      <%= time_ago_in_words(@link.created_at, false) %> ago by
-      <%= user_link @link.user_snippet %>
+
+  <div class="object-show">
+    <h1><a href="<%= @link.sources[0].url if @link.sources.length > 0 %>" target="_blank">
+      <%= @link.title_clean %>
+    </a></h1>
+
+    <% img = default_image_url(@link, 110, 80, 'fit', false, true) %>
+    <% original = default_image_url(@link, 0, 0, :original) if img %>
+    <% if img %>
+      <div class="img expand">
+        <div class='icon'><div class="full-black-icon"></div></div>
+        <%= image_tag img.image_url, :style => 'max-width: 110px; max-height: 80px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+      </div>
+    <% end %>
+
+    <div class="content <%= 'with-image' if img %>">
+      <div class="createdC">
+        <%= time_ago_in_words(@link.created_at, false) %> ago by
+        <%= user_link @link.user_snippet %>
+      </div>
+
+      <% if can? :destroy, @link %>
+        <div class="ac disable hide" data-m="PUT" data-url="<%= disable_link_path @link %>">X</div>
+      <% end %>
+
+      <%= markdown(parse_mentions(@link.content, @link)) %>
     </div>
 
-    <%= markdown(parse_mentions(@link.content, @link)) %>
+    <div class="clear"></div>
   </div>
-  
-  <div class="clear"></div>
-</div>
+<% else %>
+  <div class="empty">This link has been removed</div>
+<% end %>
 
 <%= render "core_objects/response_header", :object => @link %>
 <%= render "core_objects/responses", :responses => @responses %>

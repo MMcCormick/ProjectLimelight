@@ -225,7 +225,7 @@
       if (!selected)
         return false;
 
-      var v = selected.result;
+      var v = selected.value.show;
       previousValue = v;
 
       if (options.multiple) {
@@ -429,7 +429,7 @@
 
               $(options.buckets).each(function (i, val) {
                 buckets.push(val[0]);
-                tmpData[val[2]] = acData.results[val[1]];
+                tmpData[val[2]] = acData.results[val[1]] ? acData.results[val[1]] : [];
                 data[val[2]] = [];
               })
             }
@@ -439,6 +439,9 @@
             var x = 0;
 
             $.each(tmpData, function (i, bucket) {
+              console.log(tmpData);
+              console.log(i);
+              console.log(bucket);
               $.each(tmpData[i], function (i2, val) {
                 // If we have not used this id yet
                 if ($.inArray(val.id, used_ids) == -1 && val.id != my_id) {

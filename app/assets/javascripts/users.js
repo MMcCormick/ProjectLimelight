@@ -63,7 +63,7 @@ $(function() {
       selectFirst: false,
       mustMatch: false,
       max: 10,
-      buckets: [['user','user','OTHER USERS']],
+      buckets: [['user', $('#static-data').data('d').userAutoBucket, 'FOLLOWING'], ['user','user','OTHER USERS']],
       extraParams: {"types":['user']},
       allowNew: false,
       dataType: 'json',

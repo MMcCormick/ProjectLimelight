@@ -156,6 +156,8 @@ $(function() {
     if(data.status == "ok") {
       $currentTarget.parents('.teaser:first').remove();
     }
+    rearrange_feed_columns();
+
   });
 
 

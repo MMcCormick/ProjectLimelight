@@ -43,7 +43,7 @@ class TwitterController < ApplicationController
           new_tweet[:type] = 'Video'
           new_tweet[:title] = link_obembed[:title]
           new_tweet[:video_id] = video_id(link_obembed[:provider_name], link_objectify)
-          new_tweet[:video_embed] = video_embed(nil, 120, 120, link_obembed[:provider_name], new_tweet[:video_id])
+          new_tweet[:video_embed] = video_embed(nil, 110, 110, link_obembed[:provider_name], new_tweet[:video_id])
         end
         if link_obembed[:type] == 'link'
           new_tweet[:type] = 'Link'

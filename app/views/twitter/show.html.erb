@@ -1,16 +1,26 @@
 <div class="tweets">
   <% @processed_tweets.each do |tweet| %>
     <div class="tweet <%= tweet[:type] %>">
+      <div class="top">
+        <div class="type"><%= tweet[:type] %></div>
+        <% unless tweet[:type] == 'Talk' %>
+          <div class="link"><%= tweet[:provider] %> - <%= tweet[:original_url] %></div>
+        <% end %>
+      </div>
+      
       <% unless tweet[:type] == 'Talk' %>
-        <textarea class="title" name='tweets[<%= tweet[:id] %>][title]' autocomplete='off'><%= tweet[:title] %></textarea>
+        <div class="title-c">
+          <div class="head">TITLE</div>
+          <textarea class="title" name='tweets[<%= tweet[:id] %>][title]' autocomplete='off'><%= tweet[:title] %></textarea>
+        </div>
         <div class="info">
           <% if tweet[:type] == 'Picture' %>
-            <img src='<%= tweet[:link][:thumbnail_url] %>' width='120' />
+            <img src='<%= tweet[:link][:thumbnail_url] %>' />
             <input type='hidden' name='tweets[<%= tweet[:id] %>][asset_image][remote_image_url]' value='<%= tweet[:url] %>' autocomplete='off' />
           <% end %>
 
           <% if tweet[:type] == 'Link' %>
-            <img src='<%= tweet[:link][:thumbnail_url] %>' width='120' />
+            <img src='<%= tweet[:link][:thumbnail_url] %>' />
             <input type='hidden' name='tweets[<%= tweet[:id] %>][asset_image][remote_image_url]' value='<%= tweet[:url] %>' autocomplete='off' />
           <% end %>
 
@@ -22,7 +32,9 @@
         <input type='hidden' name='tweets[<%= tweet[:id] %>][source_name]' value='<%= tweet[:provider] %>' autocomplete='off' />
         <input type='hidden' name='tweets[<%= tweet[:id] %>][source_url]' value='<%= tweet[:original_url] %>' autocomplete='off' />
       <% end %>
-      <div class="content">
+
+      <div class="content-c">
+        <div class="head">CONTENT</div>
         <textarea name='tweets[<%= tweet[:id] %>][content]' autocomplete='off'><%= tweet[:text] %></textarea>
         <input type='hidden' name='tweets[<%= tweet[:id] %>][type]' value='<%= tweet[:id] %>' autocomplete='off' />
       </div>

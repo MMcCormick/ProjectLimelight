@@ -5,6 +5,9 @@ class PicturesController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @picture = Picture.find_by_encoded_id(params[:id])
+    @title = @picture.name
+    @description = @picture.content_clean
+
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @picture.id})
     unless @picture
       not_found("Picture not found")
@@ -27,4 +30,22 @@ class PicturesController < ApplicationController
     end
   end
 
+  def disable
+    picture = Picture.find_by_encoded_id(params[:id])
+    if picture
+      authorize! :update, picture
+      picture.status = "disabled"
+      if picture.save
+        response = build_ajax_response(:ok, nil, "Picture successfully disabled")
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, "Picture could not be disabled", picture.errors)
+        status = 500
+      end
+    else
+      response = build_ajax_response(:error, nil, "Picture could not be found")
+      status = 404
+    end
+    render json: response, :status => status
+  end
 end

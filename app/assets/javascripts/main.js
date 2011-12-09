@@ -21,7 +21,7 @@ $(function() {
 
     var $button = $(this);
     $('.comment_reply:visible').remove();
-    var $reply = $('#response_form form').clone()
+    var $reply = $('.comment_reply').clone()
             .find('.comment_reply_cancel').click(
             function() {
               $reply.remove();

@@ -3,6 +3,8 @@ class FavoritesController < ApplicationController
 
   def index
     @user = User.find_by_slug(params[:id])
+    @title = @user.username + "'s favorites"
+    @description = @user.username + "'s favorite posts on Limelight."
     unless @user
       not_found("User not found")
     end

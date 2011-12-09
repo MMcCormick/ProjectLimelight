@@ -5,6 +5,7 @@ class TopicsController < ApplicationController
 
   def index
     @topics = Topic.all
+    authorize! :manage, :all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -16,6 +17,7 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by_slug(params[:id])
     authorize! :read, @topic
     @title = @topic.name
+    @description = @topic.summary
     @right_sidebar = true
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topic_path @topic, :p => page + 1
@@ -39,6 +41,7 @@ class TopicsController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @topic = Topic.find_by_slug(params[:id])
+    @title = "Edit '" + @topic.name + "'"
     authorize! :edit, @topic
     @connections = @topic.get_connections
   end
@@ -217,6 +220,8 @@ class TopicsController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @topic = Topic.find_by_slug(params[:id])
+    @title = "Users following '" + @topic.name + "'"
+    @description = "A list of all users following" + @topic.name
     authorize! :read, @topic
     @followers = User.where(:following_topics => @topic.id)
   end
@@ -225,6 +230,8 @@ class TopicsController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @topic = Topic.find_by_slug(params[:id])
+    @title = "Topics connected to " + @topic.name
+    @description = "A list of all topics connected to" + @topic.name
     authorize! :read, @topic
     @connections = @topic.get_connections
   end

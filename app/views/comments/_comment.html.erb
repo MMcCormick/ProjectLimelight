@@ -1,22 +1,30 @@
 <a name="<%= comment.id.to_s %>"></a>
 <div class="comment d-<%= comment.depth.to_s %>" id="comment_<%= comment.id %>">
   <div class="wrapper">
-    <div class="profileImage">
-      <%= image_tag user_default_picture_path(comment.user_snippet, :w => 50, :h => 50, :m => 'fillcropmid'), :style => "max-width: 50px;", :alt => "" if comment.depth == 0 %>
-      <%= image_tag user_default_picture_path(comment.user_snippet, :w => 30, :h => 30, :m => 'fillcropmid'), :style => "max-width: 30px;", :alt => "" if comment.depth != 0 %>
-    </div>
-    <div class="createdC">
-      <%= user_link(comment.user_snippet) %> <%= time_ago_in_words(comment.created_at) %> ago
-    </div>
-    <p>
-      <%= comment.content %>
-    </p>
-    <% if comment.depth < 5 %>
-      <div class="reply">
-        <a href="javascript:void(0);" id="reply_<%= comment.id %>" class="reply-show" data-d='{"id":"<%= comment.id %>"}'>reply</a>
+    <% if comment.status == "deleted" %>
+      <p><i>This comment has been removed by the user</i></p>
+    <% else %>
+      <div class="profileImage">
+        <%= image_tag user_default_picture_path(comment.user_snippet, :w => 50, :h => 50, :m => 'fillcropmid'), :style => "max-width: 50px;", :alt => "" if comment.depth == 0 %>
+        <%= image_tag user_default_picture_path(comment.user_snippet, :w => 30, :h => 30, :m => 'fillcropmid'), :style => "max-width: 30px;", :alt => "" if comment.depth != 0 %>
       </div>
+      <div class="createdC">
+        <%= user_link(comment.user_snippet) %> <%= time_ago_in_words(comment.created_at) %> ago
+      </div>
+      <p>
+        <%= comment.content %>
+      </p>
+      <% if comment.depth < 5 %>
+        <div class="reply">
+          <a href="javascript:void(0);" id="reply_<%= comment.id %>" class="reply-show" data-d='{"id":"<%= comment.id %>"}'>reply</a>
+        </div>
+        <% if can? :destroy, comment %>
+          <a class="ac delete" data-m="delete" data-url="<%= comment_path comment %>" data-d="'id':'<%= comment.id %>'">delete</a>
+        <% end %>
+        <div class="clear-left"></div>
+      <% end %>
+      <%= render 'votes/btn', :object => comment, :current_user => current_user %>
+      <div class="pop"><%= comment.votes_count %></div>
     <% end %>
-    <%= render 'votes/btn', :object => comment, :current_user => current_user %>
-    <div class="pop"><%= comment.votes_count %></div>
   </div>
 </div>

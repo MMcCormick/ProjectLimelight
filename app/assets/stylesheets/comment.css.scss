@@ -59,7 +59,6 @@ $indent: 20px;
         .wrapper {
           padding: 2px $scoreC-width+20 5px $small-image-width+13;
           max-width: $max-width;
-          min-height: 60px;
           position: relative;
         }
         .comment_form {
@@ -80,12 +79,12 @@ $indent: 20px;
             float: left;
             font-size: 12px;
             padding: 4px 0 0 10px;
+            color: #524D4D;
         }
         p {
             font-size: 14px;
-            padding: 3px 0 6px 10px;
+            padding: 3px 0 3px 10px;
             clear: left;
-            color: #524D4D;
         }
         .scoreC {
           position: absolute;
@@ -112,7 +111,12 @@ $indent: 20px;
         }
         .reply {
           margin: 0 0 0 10px;
-          font-size: 14px;
+        }
+        .delete {
+          margin-left: 10px;
+          float: left;
+          font-size: 10px;
+          cursor: pointer;
         }
         &.d-0 {
             margin-left: 0px;

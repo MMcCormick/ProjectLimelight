@@ -34,6 +34,11 @@
   <div class="createdC">
     <%= time_ago_in_words(object.created_at, false) %> ago
   </div>
+
+  <% if can? :destroy, object %>
+    <div class="ac disable hide" data-m="PUT" data-url="<%= disable_talk_path object %>">X</div>
+  <% end %>
+
   <%= render 'core_objects/feed_teaser_actions', :object => object %>
   <div class="pc pc_<%= object.id.to_s %>"></div>
   <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>

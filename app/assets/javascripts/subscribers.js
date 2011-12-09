@@ -145,10 +145,21 @@ $(function() {
         $('#my-contributions').qtip('show')
       }
       // Clear forms on appropriate window
+      contribute.find('.option.on .cancel').click();
       contribute.find('.lClear input, .lClear textarea, .iClear input').val("").focus().blur();
       contribute.find('.image-preview .images img').remove();
     }
   });
+
+  // Removes a deleted core object
+  amplify.subscribe("talks_disable links_disable pictures_disable videos_disable", function (data) {
+    if(data.status == "ok") {
+      $currentTarget.parents('.teaser:first').remove();
+    }
+    rearrange_feed_columns();
+
+  });
+
 
   // When a new page of feed items is loaded
   amplify.subscribe("loaded_feed_page", function (data) {

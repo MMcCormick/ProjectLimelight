@@ -1,29 +1,37 @@
-<% content_for :sidebar_right do %>
-  <%= render_cell(:core_object, :sidebar_right, current_user, @picture) %>
-<% end %>
-
-<div class="object-show picture">
-  <h1><%= @picture.title_clean %></h1>
-  <div class="createdC">
-    <%= time_ago_in_words(@picture.created_at, false) %> ago by
-    <%= user_link @picture.user_snippet %>
-  </div>
-
-  <% img = default_image_url(@picture, 575, 500, 'fit', false, true) %>
-  <% original = default_image_url(@picture, 0, 0, :original) if img %>
-  <% if img %>
-    <div class="img expand">
-      <div class='icon'><div class="full-black-icon"></div></div>
-      <%= image_tag img.image_url, :style => 'max-width: 575px; max-height: 500px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
-    </div>
+<% if @picture.status == "active" %>
+  <% content_for :sidebar_right do %>
+    <%= render_cell(:core_object, :sidebar_right, current_user, @picture) %>
   <% end %>
 
-  <div class="content <%= 'with-image' if img %>">
-    <%= markdown(parse_mentions(@picture.content, @picture)) %>
-  </div>
+  <div class="object-show picture">
+    <h1><%= @picture.title_clean %></h1>
+    <div class="createdC">
+      <%= time_ago_in_words(@picture.created_at, false) %> ago by
+      <%= user_link @picture.user_snippet %>
+    </div>
 
-  <div class="clear"></div>
-</div>
+    <% if can? :destroy, @picture %>
+      <div class="ac disable hide" data-m="PUT" data-url="<%= disable_picture_path @picture %>">X</div>
+    <% end %>
+
+    <% img = default_image_url(@picture, 575, 500, 'fit', false, true) %>
+    <% original = default_image_url(@picture, 0, 0, :original) if img %>
+    <% if img %>
+      <div class="img expand">
+        <div class='icon'><div class="full-black-icon"></div></div>
+        <%= image_tag img.image_url, :style => 'max-width: 575px; max-height: 500px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+      </div>
+    <% end %>
+
+    <div class="content <%= 'with-image' if img %>">
+      <%= markdown(parse_mentions(@picture.content, @picture)) %>
+    </div>
+
+    <div class="clear"></div>
+  </div>
+<% else %>
+  <div class="empty">This picture has been removed</div>
+<% end %>
 
 <%= render "core_objects/response_header", :object => @picture %>
 <%= render "core_objects/responses", :responses => @responses %>

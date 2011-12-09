@@ -5,6 +5,8 @@ class LinksController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @link = Link.find_by_encoded_id(params[:id])
+    @title = @link.name
+    @description = @link.content_clean + " - a link on Limelight"
 
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @link.id})
     unless @link
@@ -28,4 +30,22 @@ class LinksController < ApplicationController
     end
   end
 
+  def disable
+    link = Link.find_by_encoded_id(params[:id])
+    if link
+      authorize! :update, link
+      link.status = "disabled"
+      if link.save
+        response = build_ajax_response(:ok, nil, "Link successfully disabled")
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, "Link could not be disabled", link.errors)
+        status = 500
+      end
+    else
+      response = build_ajax_response(:error, nil, "Link could not be found")
+      status = 404
+    end
+    render json: response, :status => status
+  end
 end

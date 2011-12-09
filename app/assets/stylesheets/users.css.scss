@@ -579,3 +579,41 @@
     border: 1px solid #333;
   }
 }
+
+.tweets {
+  .tweet {
+    border-bottom: 1px solid #CCC;
+    padding: 7px 130px 7px 7px;
+    position: relative;
+    min-height: 121px;
+
+    textarea {
+      background: transparent;
+      border-color: transparent;
+      resize: none;
+      width: 450px;
+      height: 50px;
+
+      &:hover {
+        background: #FFF;
+        border-color: #999;
+      }
+    }
+    .title {
+      height: 40px;
+      font-size: 16px;
+    }
+    .content {
+      height: 55px;
+      font-size: 13px;
+    }
+    .info {
+      position: absolute;
+      top: 7px;
+      right: 0px;
+    }
+    &.Talk {
+      min-height: auto;
+    }
+  }
+}

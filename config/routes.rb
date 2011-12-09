@@ -65,6 +65,11 @@ ProjectLimelight::Application.routes.draw do
   # Sidebar
   put 'sidebar' => 'application#sidebar', :as => :sidebar
 
+  # Twitter
+  scope 'twitter' do
+    get '/analyze' => 'twitter#show', :as => :twitter_view_feed
+  end
+
   # Users
   scope 'users' do
     get '/settings' => 'users#settings', :as => :user_settings

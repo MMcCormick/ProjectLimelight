@@ -27,37 +27,8 @@ jQuery ->
       url: self.val()
       (data) ->
         provider = data.embedly.provider_name
-        switch provider
-          when 'YouTube'
-            video_id = data.embedly.payload.video.data.id
-            html = "<iframe
-                      width='120'
-                      height='120'
-                      src='http://www.youtube.com/embed/"+video_id+"'
-                      frameborder='0' allowfullscreen>
-                    </iframe>"
-          when 'Vimeo'
-            video_id = data.embedly.payload.video_id
-            html = "<iframe
-                      width='120'
-                      height='120'
-                      src='http://player.vimeo.com/video/"+video_id+"' frameborder='0'
-                      webkitAllowFullScreen allowFullScreen>
-                    </iframe>"
-          when 'Dailymotion'
-            video_id_parts = $(data.embedly.payload.html).attr('src').split('/')
-            video_id = video_id_parts[video_id_parts.length-1]
-            html = "<iframe
-                      frameborder='0'
-                      width='120'
-                      height='120'
-                      src='http://www.dailymotion.com/embed/video/"+video_id+"'>
-                    </iframe>"
-          else
-            html = null
-            video_id = data.embedly.payload.video_id
-
-
+        video_id = data.video_id
+        html = data.video_html
         parentForm = self.parents('.contributeC:first')
         videoForm = parentForm.find('.new_video')
         clone = videoForm.find('.shared').clone()

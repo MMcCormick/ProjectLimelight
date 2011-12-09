@@ -454,7 +454,7 @@ module Limelight #:nodoc:
         :v_down => -1.0,
         :rp => 3.0,
         :fav => 2.0,
-        :flw => 10.0,
+        :flw => 1.0,
         :share => 1,
 
         # Modifiers

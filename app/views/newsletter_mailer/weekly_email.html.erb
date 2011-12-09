@@ -27,7 +27,7 @@
     <tr>
       <% @pictures.each do |picture| %>
         <td align="center" width="120" style="padding: 5px 5px 0; overflow: hidden;">
-          <%= link_to picture.title, picture_url(picture), :style => "text-decoration: none;" %>
+          <%= link_to picture.title_clean, picture_url(picture), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
@@ -58,7 +58,7 @@
     <tr>
       <% @link.each do |link| %>
         <td align="center" width="120" style="padding: 5px 5px 0; overflow: hidden;">
-          <%= link_to link.title, link_url(link), :style => "text-decoration: none;" %>
+          <%= link_to link.title_clean, link_url(link), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
@@ -93,7 +93,7 @@
     <tr>
       <% @videos.each do |video| %>
         <td align="center" width="120" style="padding: 5px 5px 0; overflow: hidden;">
-          <%= link_to video.title, video_url(video), :style => "text-decoration: none;" %>
+          <%= link_to video.title_clean, video_url(video), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>

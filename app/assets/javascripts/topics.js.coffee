@@ -20,7 +20,7 @@ jQuery ->
   $('#freebase-lookup-id').livequery ->
     freebaseLookup($(@).data('id'))
 
-  # Topic autocomplete for topic connection form
+  # Topic autocomplete for topic connection form + new topic form
   $('.tc-auto').livequery ->
     self = $(@)
     self.autocomplete $('#static-data').data('d').autocomplete,

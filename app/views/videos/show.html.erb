@@ -12,7 +12,7 @@
     </div>
 
     <% if can? :destroy, @video %>
-      <div class="ac disable hide" data-m="PUT" data-url="<%= disable_video_path @video %>">X</div>
+      <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_video_path @video %>">X</div>
     <% end %>
 
     <%= video_embed(@video.sources[0], 575, 450) %>

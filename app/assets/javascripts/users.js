@@ -52,13 +52,22 @@ $(function() {
 
   // Autocomplete for Core Object Shares
   $('.core_object_share_receivers').livequery(function() {
-    $(this).autocomplete($('#static-data').data('d').userAutoUrl, {
-      minChars: 1,
-      width: 175,
+    $(this).autocomplete($('#static-data').data('d').autocomplete, {
+      width: 300,
       multiple: true,
       matchContains: true,
       autoFill: false,
       searchKey: 'username',
+      minChars: 2,
+      matchSubset: false,
+      selectFirst: false,
+      mustMatch: false,
+      max: 10,
+      buckets: [['user','user','OTHER USERS']],
+      extraParams: {"types":['user']},
+      allowNew: false,
+      dataType: 'json',
+      delay: 100,
       formatItem: function(row, i, max) {
         return row.formattedItem;
       },

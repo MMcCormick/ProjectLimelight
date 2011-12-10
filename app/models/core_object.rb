@@ -25,6 +25,7 @@ class CoreObject
   field :reposts_count, :default => 0
   field :user_id
   field :response_count, :default => 0
+  field :tweet_id
 
   auto_increment :public_id
 
@@ -37,7 +38,7 @@ class CoreObject
   validates :user_id, :status, :presence => true
   validate :title_length, :content_length
 
-  attr_accessible :title, :content, :response_to_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
+  attr_accessible :title, :content, :response_to_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet, :tweet_id
   attr_accessor :response_to_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
   before_validation :set_source_snippet

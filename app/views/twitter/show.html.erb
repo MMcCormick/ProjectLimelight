@@ -1,3 +1,20 @@
+<% content_for :page_header do %>
+  <div class="welcome">
+    <h1>Free Your Twitter Feed</h1>
+    <div class="help">
+      This tool connects with Twitter, analyzes your tweets, and organizes them into posts on Limelight.
+      Make edits and choose which posts you would like to submit to Limelight below.
+      When you're ready just click the 'Submit To Limelight' button!
+    </div>
+    <div class="choose-all">
+      Toggle Select All Posts
+    </div>
+    <div class="submit off" data-url='<%= twitter_create_feed_path %>'>
+      Submit <span>0</span> Posts To Limelight
+    </div>
+  </div>
+<% end %>
+
 <div class="tweets">
   <% @processed_tweets.each do |tweet| %>
     <div class="tweet <%= tweet[:type] %>">
@@ -16,12 +33,12 @@
         <div class="info">
           <% if tweet[:type] == 'Picture' %>
             <img src='<%= tweet[:link][:thumbnail_url] %>' />
-            <input type='hidden' name='tweets[<%= tweet[:id] %>][asset_image][remote_image_url]' value='<%= tweet[:url] %>' autocomplete='off' />
+            <input type='hidden' name='tweets[<%= tweet[:id] %>][asset_image][remote_image_url]' value='<%= tweet[:link][:url] %>' autocomplete='off' />
           <% end %>
 
           <% if tweet[:type] == 'Link' %>
             <img src='<%= tweet[:link][:thumbnail_url] %>' />
-            <input type='hidden' name='tweets[<%= tweet[:id] %>][asset_image][remote_image_url]' value='<%= tweet[:url] %>' autocomplete='off' />
+            <input type='hidden' name='tweets[<%= tweet[:id] %>][asset_image][remote_image_url]' value='<%= tweet[:link][:thumbnail_url] %>' autocomplete='off' />
           <% end %>
 
           <% if tweet[:type] == 'Video' %>
@@ -33,11 +50,16 @@
         <input type='hidden' name='tweets[<%= tweet[:id] %>][source_url]' value='<%= tweet[:original_url] %>' autocomplete='off' />
       <% end %>
 
+      <div class="include">
+        Include This Post
+      </div>
+
       <div class="content-c">
         <div class="head">CONTENT</div>
         <textarea name='tweets[<%= tweet[:id] %>][content]' autocomplete='off'><%= tweet[:text] %></textarea>
-        <input type='hidden' name='tweets[<%= tweet[:id] %>][type]' value='<%= tweet[:id] %>' autocomplete='off' />
+        <input type='hidden' name='tweets[<%= tweet[:id] %>][type]' value='<%= tweet[:type] %>' autocomplete='off' />
       </div>
+      <input type='hidden' name='tweets[<%= tweet[:id] %>][tweet_id]' value='<%= tweet[:id] %>' autocomplete='off' />
     </div>
   <% end %>
 </div>

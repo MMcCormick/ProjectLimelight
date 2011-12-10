@@ -42,4 +42,8 @@ class AssetImage < Asset
     end
   end
 
+  def calculate_h(new_width)
+    (1/(width.to_f/height.to_f))*new_width
+  end
+
 end

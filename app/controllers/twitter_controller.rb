@@ -55,4 +55,28 @@ class TwitterController < ApplicationController
     end
   end
 
+  def create
+    tweets = params[:tweets]
+    tweets.each do |tweet_id, tweet|
+      case tweet[:type]
+        when 'Video'
+          post = current_user.videos.build(tweet)
+        when 'Picture'
+          post = current_user.pictures.build(tweet)
+          post.save_original_image
+          post.save_images
+        when 'Link'
+          post = current_user.links.build(tweet)
+          post.save_original_image
+          post.save_images
+        when 'Talk'
+          post = current_user.talks.build(tweet)
+      end
+
+      post.save
+    end
+
+    render json: build_ajax_response(:ok, user_path(current_user), nil, nil, nil), status: :created
+  end
+
 end

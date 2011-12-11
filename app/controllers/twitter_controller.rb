@@ -7,11 +7,20 @@ class TwitterController < ApplicationController
     @processed_tweets = []
     twitter = current_user.get_social_connect 'twitter'
     tweets = current_user.twitter.user_timeline(twitter.uid.to_i)
+    tweet_ids = tweets.map{|t| t.id.to_s}
+    tweet_posts = CoreObject.where(:tweet_id => {'$in' => tweet_ids})
     embedly_api = Embedly::API.new :key => 'ca77b5aae56d11e0a9544040d3dc5c07'
     tweets.each do |tweet|
+      previous = tweet_posts.detect{|tp| tp.tweet_id.to_s == tweet.id.to_s}
+      if previous
+        @processed_tweets << {
+                :where => :limelight,
+                :post => previous
+        }
+        next
+      end
 
       links = URI.extract(tweet.text)
-      link_info = nil
       if links.length > 0
         obj = embedly_api.objectify :url => links[0]
         link_objectify = obj[0].marshal_dump
@@ -24,6 +33,7 @@ class TwitterController < ApplicationController
       end
 
       new_tweet = {
+        :where => :twitter,
         :id => tweet.id,
         :links => links,
         :text => cleaned_text,

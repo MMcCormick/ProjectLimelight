@@ -616,26 +616,21 @@
     }
   }
   .tweets {
+    .previous {
+      span {
+        font-size: 10px;
+        color: #666;
+        width: 155px;
+        display: inline-block;
+        cursor: default;
+      }
+    }
     .tweet {
       border-bottom: 1px solid #999;
       padding: 7px;
       position: relative;
       margin: 0 6px 0 6px;
 
-      textarea {
-        background: transparent;
-        border-color: #CCC;
-        resize: none;
-        width: 450px;
-        height: 50px;
-        margin-left: 65px;
-
-        &:hover,
-        &:focus {
-          background: #FFF;
-          border-color: #999;
-        }
-      }
       .top {
         @include clearfix();
         margin: 0 0 10px 0;
@@ -667,26 +662,46 @@
         width: 55px;
         top: 3px;
       }
+      .autocomplete {
+        margin: 20px 0 0 65px;
+      }
+      .mention,
+      .under {
+        position: absolute;
+        font-size: 13px;
+        width: 347px;
+        border: none;
+        width: 450px;
+        border-color: #CCC;
+        resize: none;
+        padding: 3px 6px;
+        margin: 0;
+        margin-left: 65px;
+        margin-bottom: 10px;
+        border: 1px solid #CCC;
+
+        &:hover,
+        &:focus {
+          border-color: #999;
+        }
+      }
+      .under {
+        border-color: transparent;
+      }
       .title-c {
         position: relative;
-        .title-head {
-
-        }
-        .title {
+        height: 53px;
+        .mention,
+        .under {
           height: 40px;
-          font-size: 14px;
-          margin-bottom: 10px;
         }
       }
       .content-c {
         position: relative;
-        .head {
-
-        }
-        .content {
-          position: relative;
-          height: 55px;
-          font-size: 13px;
+        height: 65px;
+        .mention,
+        .under {
+          height: 51px;
         }
       }
       .info {

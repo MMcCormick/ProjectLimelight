@@ -3,7 +3,6 @@
   // Prepare Variables
 //  History = window.History,
 //  rootUrl = History.getRootUrl(),
-  $ = window.jQuery,
   $body = $(document.body),
   $application = $('#application'),
   $pageHeader = $('#page_header .wrap'),

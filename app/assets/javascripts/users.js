@@ -84,4 +84,60 @@ $(function() {
       });
   })
 
+  $('#twitter-c .tweet .include').live('click', function() {
+    var parent = $(this).parents('.tweet:first')
+    if (parent.hasClass('on'))
+    {
+      $('#twitter-c .submit span').text(parseInt($('#twitter-c .submit span').text())-1)
+    }
+    else
+    {
+      $('#twitter-c .submit span').text(parseInt($('#twitter-c .submit span').text())+1)
+    }
+
+    $('#twitter-c .submit').addClass('off')
+    parent.toggleClass('on')
+
+    if (parseInt($('#twitter-c .submit span').text()) > 0)
+    {
+      $('#twitter-c .submit').removeClass('off')
+    }
+  })
+
+  $('#twitter-c .choose-all').live('click', function() {
+    if (parseInt($('#twitter-c .submit span').text()) > 0)
+    {
+      $('#twitter-c .submit span').text('0');
+      $('#twitter-c .submit').addClass('off');
+      $('.tweet').removeClass('on');
+    }
+    else
+    {
+      $('#twitter-c .submit span').text($('.tweet').length);
+      $('#twitter-c .submit').removeClass('off');
+      $('.tweet').addClass('on');
+    }
+  })
+
+  // Submit tweets
+  $('#twitter-c .submit').live('click', function() {
+    var $self = $(this);
+
+    if ($self.data('processing') || $('.tweet.on').length == 0)
+      return false;
+
+    $self.data('processing', true).html('Processing...').addClass('off')
+    var $payload = $('.tweet.on input,.tweet.on textarea').serializeArray();
+
+    $.ajax({
+      url: $self.data('url'),
+      type: 'post',
+      dataType: 'json',
+      data: $payload,
+      success: function(data) {
+        appUpdate(data);
+      }
+    })
+  })
+
 })

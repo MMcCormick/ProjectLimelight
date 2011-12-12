@@ -72,6 +72,7 @@ ProjectLimelight::Application.routes.draw do
   # Twitter
   scope 'twitter' do
     get '/analyze' => 'twitter#show', :as => :twitter_view_feed
+    post '/analyze' => 'twitter#create', :as => :twitter_create_feed
   end
 
   # Users

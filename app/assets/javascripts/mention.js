@@ -414,6 +414,7 @@ var fields = [];
           }
         }
       });
+
       if (this.state >= 0) {
         html = html.substr(0, this.state - settings[this.mode].trigger.length + addstate) + '<b>' + settings[this.mode].trigger + this.type + '</b>' + html.substr(this.caret + addstate);
       }

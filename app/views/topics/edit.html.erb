@@ -70,6 +70,13 @@
 
 <div class="section">
   <h3>Edit Aliases</h3>
+  <% @topic.aliases.each do |topic_alias| %>
+    <div class="alias">
+      <div class='name'><%= topic_alias.name %></div>
+      <div class='ac' data-url='' data-m='delete'>[delete]</div>
+      <div class='ac' data-url='' data-m='put'>[<%= topic_alias.ooac == true ? 'undo one of a kind' : 'make one of a kind' %>]</div>
+    </div>
+  <% end %>
   <%= render "topics/add_alias_form", :topic => @topic %>
 </div>
 <div class="clear-left"></div>

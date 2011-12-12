@@ -7,6 +7,8 @@ class TwitterController < ApplicationController
     @processed_tweets = []
     twitter = current_user.get_social_connect 'twitter'
     tweets = current_user.twitter.user_timeline(twitter.uid.to_i)
+    #tweets = current_user.twitter.user_timeline('sack')
+    #tweets = current_user.twitter.user_timeline('mattcmccormick')
     tweet_ids = tweets.map{|t| t.id.to_s}
     tweet_posts = CoreObject.where(:tweet_id => {'$in' => tweet_ids})
     embedly_api = Embedly::API.new :key => 'ca77b5aae56d11e0a9544040d3dc5c07'
@@ -43,11 +45,11 @@ class TwitterController < ApplicationController
 
       # parse twitter hashes
       hashes = []
-      cleaned_text.scan(/\#([a-zA-Z0-9,!\-_:'&\?\$]*)/).map do |hash|
+      cleaned_text.scan(/\b\#([a-zA-Z0-9,!\-_:'&\?\$]*)\b/).map do |hash|
         hashes << hash[0] unless hashes.include?(hash[0])
       end
       if hashes.length > 0
-        matches = Topic.where('aliases.hash' => {'$in' => hashes}, 'aliases.ooac' => true).to_a
+        matches = Topic.any_of({:short_name => {'$in' => hashes}}, {'aliases.hash' => {'$in' => hashes}, 'aliases.ooac' => true}).to_a
         new_tweet[:mentions] = matches
       end
 
@@ -85,7 +87,7 @@ class TwitterController < ApplicationController
         end
       end
       if word_combos.length > 0
-        matches = Topic.where('aliases.hash' => {'$in' => word_combos}, 'aliases.ooac' => true).to_a
+        matches = Topic.any_of({:short_name => {'$in' => word_combos}}, {'aliases.hash' => {'$in' => word_combos}, 'aliases.ooac' => true}).to_a
         if matches.length > 0
           if new_tweet[:mentions].length > 0
             new_tweet[:mentions].concat matches
@@ -109,7 +111,7 @@ class TwitterController < ApplicationController
           end
         end
         if word_combos.length > 0
-          matches = Topic.where('aliases.hash' => {'$in' => word_combos}, 'aliases.ooac' => true).to_a
+          matches = Topic.any_of({:short_name => {'$in' => word_combos}}, {'aliases.hash' => {'$in' => word_combos}, 'aliases.ooac' => true}).to_a
           if matches.length > 0
             if new_tweet[:mentions].length > 0
               new_tweet[:mentions].concat matches
@@ -146,16 +148,16 @@ class TwitterController < ApplicationController
             mention.aliases.each do |topic_alias|
               title_index, content_index = nil
               unless new_tweet[:title_raw].blank?
-                title_index = new_tweet[:title_raw].index(/#{topic_alias.name}/i)
+                title_index = new_tweet[:title_raw].index(/\b#{topic_alias.name}\b/i)
                 if title_index
-                  new_tweet[:title_raw].gsub!(/[#]*(#{topic_alias.name})/i, "#[#{mention.id}#\\1]")
+                  new_tweet[:title_raw].gsub!(/\b[#]*(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
                 end
               end
 
               unless new_tweet[:content_raw].blank?
-                content_index = new_tweet[:content_raw].index(/#{topic_alias.name}/i)
+                content_index = new_tweet[:content_raw].index(/\b#{topic_alias.name}\b/i)
                 if content_index
-                  new_tweet[:content_raw].gsub!(/[#]*(#{topic_alias.name})/i, "#[#{mention.id}#\\1]")
+                  new_tweet[:content_raw].gsub!(/\b[#]*(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
                 end
               end
 

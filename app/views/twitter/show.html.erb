@@ -34,7 +34,7 @@
           </div>
           <div class="info">
             <% if tweet[:type] == 'Picture' %>
-              <img src='<%= tweet[:link][:thumbnail_url] %>' />
+              <img src='<%= tweet[:link][:thumbnail_url] ? tweet[:link][:thumbnail_url] : tweet[:original_url] %>' />
               <input type='hidden' name='tweets[<%= tweet[:id] %>][asset_image][remote_image_url]' value='<%= tweet[:link][:url] %>' autocomplete='off' />
             <% end %>
   

@@ -36,9 +36,20 @@ class TwitterController < ApplicationController
         :where => :twitter,
         :id => tweet.id,
         :links => links,
-        :text => cleaned_text,
-        :type => 'Talk'
+        :content => cleaned_text,
+        :type => 'Talk',
+        :mentions => []
       }
+
+      # parse twitter hashes
+      hashes = []
+      cleaned_text.scan(/\#([a-zA-Z0-9,!\-_:'&\?\$]*)/).map do |hash|
+        hashes << hash[0] unless hashes.include?(hash[0])
+      end
+      if hashes.length > 0
+        matches = Topic.where('aliases.hash' => {'$in' => hashes}, 'aliases.ooac' => true).to_a
+        new_tweet[:mentions] = matches
+      end
 
       if link_objectify
         new_tweet[:link] = link_obembed
@@ -47,7 +58,7 @@ class TwitterController < ApplicationController
         if link_obembed[:type] == 'photo'
           new_tweet[:type] = 'Picture'
           new_tweet[:title] = cleaned_text
-          new_tweet[:text] = ''
+          new_tweet[:content] = ''
         end
         if link_obembed[:type] == 'video'
           new_tweet[:type] = 'Video'
@@ -60,6 +71,105 @@ class TwitterController < ApplicationController
           new_tweet[:title] = link_obembed[:title]
         end
       end
+
+      # parse text and create word combinations for main content. take out @ and # tags before.
+      words = cleaned_text.gsub(/[\#|@]([a-zA-Z0-9,!\-_:'&\?\$]*)/, '').split(' ')
+      word_combos = []
+      words.length.times do |i|
+        5.times do |x|
+          word = ''
+          x.times do |y|
+            word += words[i+y].tr('^A-Za-z0-9', '').downcase if words[i+y]
+          end
+          word_combos << word unless word.blank? || word_combos.include?(word)
+        end
+      end
+      if word_combos.length > 0
+        matches = Topic.where('aliases.hash' => {'$in' => word_combos}, 'aliases.ooac' => true).to_a
+        if matches.length > 0
+          if new_tweet[:mentions].length > 0
+            new_tweet[:mentions].concat matches
+          else
+            new_tweet[:mentions] = matches
+          end
+        end
+      end
+
+      # parse text and create word combinations for titles
+      unless new_tweet[:title].blank?
+        words = new_tweet[:title].split(' ')
+        word_combos = []
+        words.length.times do |i|
+          5.times do |x|
+            word = ''
+            x.times do |y|
+              word += words[i+y].tr('^A-Za-z0-9', '').downcase if words[i+y]
+            end
+            word_combos << word unless word.blank? || word_combos.include?(word)
+          end
+        end
+        if word_combos.length > 0
+          matches = Topic.where('aliases.hash' => {'$in' => word_combos}, 'aliases.ooac' => true).to_a
+          if matches.length > 0
+            if new_tweet[:mentions].length > 0
+              new_tweet[:mentions].concat matches
+            else
+              new_tweet[:mentions] = matches
+            end
+          end
+        end
+      end
+
+      new_tweet[:title_raw] = new_tweet[:title]
+      new_tweet[:content_raw] = new_tweet[:content]
+
+      # take out duplicate mentions
+      if new_tweet[:mentions].length > 0
+        used_ids = []
+        mentions = []
+        new_tweet[:mentions].each do |m|
+          unless used_ids.include?(m.id)
+            mentions << m
+            used_ids << m.id
+          end
+        end
+        new_tweet[:mentions] = mentions
+
+        # sort mentions by alias length
+        new_tweet[:mentions] = new_tweet[:mentions].sort_by {|m| (-1)*m.name.length}
+
+        # replace mentions in the raw content
+        used_mentions = []
+        new_tweet[:mentions].each do |mention|
+          already_used = used_mentions.detect{|m| m.name.include?(mention.name)}
+          unless already_used
+            mention.aliases.each do |topic_alias|
+              title_index, content_index = nil
+              unless new_tweet[:title_raw].blank?
+                title_index = new_tweet[:title_raw].index(/#{topic_alias.name}/i)
+                if title_index
+                  new_tweet[:title_raw].gsub!(/[#]*(#{topic_alias.name})/i, "#[#{mention.id}#\\1]")
+                end
+              end
+
+              unless new_tweet[:content_raw].blank?
+                content_index = new_tweet[:content_raw].index(/#{topic_alias.name}/i)
+                if content_index
+                  new_tweet[:content_raw].gsub!(/[#]*(#{topic_alias.name})/i, "#[#{mention.id}#\\1]")
+                end
+              end
+
+              if title_index || content_index
+                used_mentions << mention
+              end
+            end
+          end
+        end
+        new_tweet[:mentions] = used_mentions
+      end
+
+      # store a string of mention names
+      new_tweet[:mentions_string] = new_tweet[:mentions].map{|m| m.name}
 
       @processed_tweets << new_tweet
     end

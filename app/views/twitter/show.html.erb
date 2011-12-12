@@ -30,7 +30,7 @@
           <div class="title-c mention-box">
             <div class="head">TITLE</div>
             <textarea name='tweets[<%= tweet[:id] %>][title]' class="mention" autocomplete='off' spellcheck='false'><%= tweet[:title] %></textarea>
-            <input type='hidden' class="data" name='tweets[<%= tweet[:id] %>][title_raw]' value='<%= tweet[:title] %>' autocomplete='off' />
+            <input type='hidden' class="data" name='tweets[<%= tweet[:id] %>][title_raw]' value="<%= tweet[:title_raw] %>" autocomplete='off' />
           </div>
           <div class="info">
             <% if tweet[:type] == 'Picture' %>
@@ -58,9 +58,14 @@
   
         <div class="content-c mention-box">
           <div class="head">CONTENT</div>
-          <textarea name='tweets[<%= tweet[:id] %>][content]' class="mention" autocomplete='off' spellcheck='false'><%= tweet[:text] %></textarea>
-          <input type='hidden' class="data" name='tweets[<%= tweet[:id] %>][content_raw]' value='<%= tweet[:text] %>' autocomplete='off' />
+          <textarea name='tweets[<%= tweet[:id] %>][content]' class="mention" autocomplete='off' spellcheck='false'><%= tweet[:content] %></textarea>
+          <input type='hidden' class="data" name='tweets[<%= tweet[:id] %>][content_raw]' value="<%= tweet[:content_raw] %>" autocomplete='off' />
         </div>
+        <% if tweet[:mentions].length > 0 %>
+          <div class="mentions">
+            Mentions Found: <%= tweet[:mentions_string].join(', ') %>
+          </div>
+        <% end %>
         <input type='hidden' name='tweets[<%= tweet[:id] %>][type]' value='<%= tweet[:type] %>' autocomplete='off' />
         <input type='hidden' name='tweets[<%= tweet[:id] %>][tweet_id]' value='<%= tweet[:id] %>' autocomplete='off' />
       </div>

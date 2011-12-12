@@ -737,6 +737,13 @@
           border-color: $picture-color;
         }
       }
+      .mentions {
+        font-size: 11px;
+        color: #888;
+        margin: 5px 0 0 66px;
+        width: 460px;
+        cursor: default;
+      }
       &.on {
         .include {
           background: $picture-color;

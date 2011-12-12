@@ -101,7 +101,7 @@ class Topic
     return unless new_alias && !new_alias.blank?
 
     unless get_alias new_alias
-      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :ooac => ooac)
+      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :hash => new_alias.to_url.gsub('-', ''), :ooac => ooac)
       Resque.enqueue(SmCreateTopic, id.to_s)
     end
   end

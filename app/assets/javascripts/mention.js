@@ -113,6 +113,8 @@ var fields = [];
 
     var mentionField = new field(input, autocomplete, under, hidden);
 
+    mentionField.repaint();
+
     input.bind('keypress',
     function(e) { // Handle keypresses within mentionField fields that need to fire before keyup()
       var keyCode = catchKey(e);
@@ -332,6 +334,20 @@ var fields = [];
     this.removeMention = function(index) {
       this.input.trigger('mentionRemoved', index);
       this.mentions.splice(index, 1);
+    }
+
+    this.repaint = function() {
+      var tmp_data = this.data.val();
+      var tmp_val = this.input.val();
+      matches = tmp_data.match(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/);
+      if (matches)
+      {
+        tmp_val = tmp_val.replace(matches[0], matches[2]);
+        this.input.val(tmp_val);
+        var start = tmp_val.indexOf(matches[2]);
+        this.mode = 1;
+        this.addMention(start, start+matches[2].length, matches[1], matches[2], {bucketType:'topic'});
+      }
     }
 
     // Loads autocompleter

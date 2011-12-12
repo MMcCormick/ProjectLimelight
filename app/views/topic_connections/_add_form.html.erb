@@ -11,9 +11,9 @@
     </div>
   <% end %>
 
-  <div class="field required">
+  <div class="field lClear">
     <% if !from_freebase %>
-      <%= label_tag "tc-auto", "Connected topic" %><br/>
+      <%= label_tag "tc-auto", "Connected topic" %>
     <% end %>
     <%= text_field_tag "connection[topic_name]", (from_freebase ? type[:name] : nil), :id => "tc-auto", :class => "tc-auto" %>
   </div>

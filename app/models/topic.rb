@@ -93,11 +93,15 @@ class Topic
     add_alias(short_name) unless !short_name || short_name.blank?
   end
 
-  def add_alias new_alias
+  def get_alias name
+    self.aliases.detect{|a| a.slug == name.to_url}
+  end
+
+  def add_alias(new_alias, ooac=false)
     return unless new_alias && !new_alias.blank?
 
-    unless has_alias? new_alias
-      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url)
+    unless get_alias new_alias
+      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :ooac => ooac)
       Resque.enqueue(SmCreateTopic, id.to_s)
     end
   end
@@ -111,6 +115,13 @@ class Topic
       end
     end
     self.aliases = new_aliases
+  end
+
+  def update_alias(name, ooac)
+    found = get_alias name
+    if found
+      found.ooac = ooac
+    end
   end
 
   def update_aliases new_aliases

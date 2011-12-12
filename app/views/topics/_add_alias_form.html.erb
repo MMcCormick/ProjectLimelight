@@ -1,12 +1,12 @@
 <form action="<%= add_topic_alias_path %>" id="add-alias-form" method="POST" class="ajax">
 
-  <div>
-    <label>Name</label>
-    <%= text_field_tag "alias[name]", '' %>
+  <div class="lClear">
+    <label for='alias-name'>Alias name...</label>
+    <%= text_field_tag "alias[name]", '', :id => "alias-name" %>
   </div>
-  <div>
-    <label>One of a kind?</label>
+  <div class="alias-ooac">
     <%= check_box_tag "alias[ooac]", '' %>
+    <label>One of a kind?</label>
   </div>
 
   <div class="actions">

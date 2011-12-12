@@ -1,0 +1,8 @@
+<button class="btn-tog <%= topic_alias.ooac == true ? 'unooacB' : 'ooacB' %> ooac_<%= topic_alias.id.to_s %>">
+  <div class="default" data-url="<%= update_topic_alias_path(topic, :name => topic_alias.name) %>" data-d='' data-m="put">
+    [make one of a kind]
+  </div>
+  <div class="triggered" data-url="<%= update_topic_alias_path(topic, :name => topic_alias.name) %>" data-d='' data-m="put">
+    [remove one of a kind]
+  </div>
+</button>

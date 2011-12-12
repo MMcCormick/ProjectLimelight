@@ -110,6 +110,14 @@ $(function() {
     })
   })
 
+
+  // When a new page in an alt-list is loaded
+  amplify.subscribe("loaded_alt_list", function (data) {
+    $('#load-more').remove()
+    var content = $(data.content)
+    $('.alt-list').append(content)
+  });
+
   /*
    * TALK
    */

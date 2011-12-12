@@ -38,7 +38,8 @@ class Topic
 
   field :summary
   field :short_name
-  field :health, :default => 0
+  field :health, :default => []
+  field :health_index, :default => 0
   field :fb_img, :default => false # use the freebase image?
   field :fb_id # freebase id
   field :fb_mid # freebase mid
@@ -59,9 +60,9 @@ class Topic
   validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
   attr_accessible :name, :summary, :aliases, :short_name
 
-  before_create :init_alias
+  before_create :init_alias, :text_health
   after_create :add_to_soulmate
-  before_update :update_name_alias#, :calculate_health
+  before_update :update_name_alias, :text_health
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
@@ -176,15 +177,20 @@ class Topic
   # Health
   #
 
-  def calculate_health
-    #TODO: make this work. topic_connection_snippets_changed? doesn't work. marc?
-    if summary_changed? || topic_connection_snippets_changed? || images_changed? || short_name_changed?
-      self.health = 0
-      self.health += 1 if !summary.blank?
-      self.health += 1 if !short_name.blank?
-      self.health += 1 if (images.length > 0)
-      self.health += 1 if (topic_connection_snippets.detect { |snip| snip.id.to_s == Topic.type_of_id })
-      self.health += 1 if (topic_connection_snippets.detect { |snip| snip.id.to_s != Topic.type_of_id })
+  def text_health
+    self.health ||= []
+    if summary_changed? || short_name_changed?
+      self.health << 'summary' if !summary.blank?
+      self.health << 'short_name' if !short_name.blank?
+      self.health_index = health.length
+    end
+  end
+
+  def update_health(attr)
+    self.health ||= []
+    if !health.include?(attr)
+      self.health << attr
+      self.health_index = health.length
     end
   end
 
@@ -274,7 +280,11 @@ class Topic
       snippet.user_id = user_id
       if connection.id.to_s == Topic.type_of_id && (primary || get_primary_types.empty?)
         snippet.primary = true
+        update_health("type")
         self.v += 1
+      end
+      if connection.id.to_s != Topic.type_of_id
+        update_health("connection")
       end
       self.topic_connection_snippets << snippet
       true

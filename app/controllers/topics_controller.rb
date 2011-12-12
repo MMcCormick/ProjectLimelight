@@ -83,6 +83,24 @@ class TopicsController < ApplicationController
     end
   end
 
+  def by_health
+    authorize! :manage, :all
+    @site_style = 'narrow'
+    @title = "Topics by Health"
+    @description = "A list of all topics on the site, sorted by health and then by popularity"
+    page = params[:p] ? params[:p].to_i : 1
+    @more_path = topics_by_health_path :p => page + 1
+    per_page = 3
+    @topics = Topic.order_by([[:health_index, :asc], [:pt, :desc]]).limit(per_page).skip((page - 1) * per_page)
+
+    respond_to do |format|
+      format.js {
+        render json: topic_list_response("topics/health_list", @topics, @more_path), status: :ok
+      }
+      format.html # by_health.html.erb
+    end
+  end
+
   def lock_slug
     topic = Topic.find_by_slug(params[:id])
     authorize! :update, topic
@@ -127,6 +145,7 @@ class TopicsController < ApplicationController
     if topic
       image = topic.add_image(current_user.id, params[:image_location])
       topic.set_default_image(image.id) if image
+      topic.update_health('image')
       topic.fb_img = false
 
       if topic.save
@@ -259,6 +278,7 @@ class TopicsController < ApplicationController
 
     if params[:use_image] && params[:image]
       topic.fb_img = true
+      topic.update_health('image')
     end
     if params[:use_summary] && params[:summary]
       topic.summary = params[:summary]

@@ -341,13 +341,12 @@
 }
 
 .topic-con-full {
-  max-width: 500px;
   margin: auto;
 
   h4 {
     @include border-radius(2px);
     display: inline-block;
-    margin: 10px 0 5px 0px;
+    margin: 10px 0 5px 15px;
     padding: 2px 7px;
     background: #B0D751;
     color: white;

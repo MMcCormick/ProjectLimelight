@@ -1,0 +1,17 @@
+<% content_for :page_header do %>
+  <h1><%= @title %></h1>
+<% end %>
+
+<% if !@topics.empty? %>
+  <ul class="alt-list">
+    <li class="labels">
+      <div>Topic</div>
+      <div>Popularity</div>
+      <div>Health</div>
+    </li>
+    <%= render 'health_list', :topics => @topics %>
+  </ul>
+
+<% else %>
+  <div class="empty">This user is not following any topics!</div>
+<% end %>

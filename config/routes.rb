@@ -94,6 +94,7 @@ ProjectLimelight::Application.routes.draw do
 
   # Topics
   resources :topics, :except => [:edit, :show, :update, :index]
+  get '/by_health' => 'topics#by_health', :as => :topics_by_health
   get '/:id/edit' => 'topics#edit', :as => :edit_topic
   get '/:id/connected' => 'topics#connected', :as => :connected_topics
   get '/:id/hover' => 'topics#hover' , :as => :topic_hover

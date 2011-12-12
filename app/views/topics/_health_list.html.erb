@@ -1,0 +1,12 @@
+<% topics.each do |topic| %>
+  <li class="teaser <%= cycle("odd", "") -%>">
+    <div><%= topic_link topic %></div>
+    <div class="score"><%= sprintf "%.1f", topic.pt %></div>
+    <div><%= topic.health_index %></div>
+    <%= render 'follows/btn', :current_user => @current_user, :target => topic %>
+  </li>
+<% end %>
+
+<% unless topics.count(true) == 0 %>
+  <div id="load-more" class="ac" data-m="get" data-url="<%= @more_path %>">load more</div>
+<% end %>

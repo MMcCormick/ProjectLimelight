@@ -434,7 +434,8 @@
 .favB,
 .repostB,
 .voteB,
-.primaryB {
+.primaryB,
+.ooacB {
   .triggered {
     display: none;
   }
@@ -444,7 +445,6 @@
 .unrepostB,
 .unvoteB,
 .unprimaryB,
-.ooacB,
 .unooacB {
   .default {
     display: none;

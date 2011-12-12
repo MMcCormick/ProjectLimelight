@@ -179,17 +179,16 @@ class TopicsController < ApplicationController
     topic = Topic.find_by_slug(params[:id])
     authorize! :update, topic
 
-    if topic.update_alias(params[:alias][:name], params[:alias][:ooac])
-      if topic.save
-        response = build_ajax_response(:ok, nil, "Alias updated!")
-        status = 200
-      else
-        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
-        status = 422
-      end
+    ooac = params[:alias][:ooac] == 'true' ? true : false
+
+    topic.update_alias(params[:alias][:id], nil, ooac)
+    if topic.save
+      response = build_ajax_response(:ok, nil, "Alias updated!", nil,
+                                             {:target => ".ooac_"+params[:alias][:id], :toggle_classes => ['ooacB', 'unooacB']})
+      status = 200
     else
-      response = build_ajax_response(:error, nil, "The topic already has that alias!")
-      status = 400
+      response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+      status = 422
     end
 
     render json: response, :status => status
@@ -199,7 +198,9 @@ class TopicsController < ApplicationController
     topic = Topic.find_by_slug(params[:id])
     authorize! :update, topic
 
-    if topic.add_alias(params[:alias][:name], params[:alias][:ooac])
+    ooac = params[:alias][:ooac] ? true : false
+
+    if topic.add_alias(params[:alias][:name], ooac)
       if topic.save
         response = build_ajax_response(:ok, nil, "Alias added!")
         status = 200

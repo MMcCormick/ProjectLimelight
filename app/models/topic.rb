@@ -117,9 +117,11 @@ class Topic
     self.aliases = new_aliases
   end
 
-  def update_alias(name, ooac)
-    found = get_alias name
+  def update_alias(id, name, ooac)
+    found = self.aliases.detect{|a| a.id.to_s == id}
     if found
+      found.name = name if name
+      found.slug = name.to_url if name
       found.ooac = ooac
     end
   end

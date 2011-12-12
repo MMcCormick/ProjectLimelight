@@ -56,7 +56,7 @@ class Topic
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
-  validates :short_name, :uniqueness => true
+  validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
   attr_accessible :name, :summary, :aliases, :short_name
 
   before_create :init_alias

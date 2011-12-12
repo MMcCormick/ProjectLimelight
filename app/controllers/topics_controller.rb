@@ -78,7 +78,7 @@ class TopicsController < ApplicationController
         format.json { render json: build_ajax_response(:ok, topic_path(@topic), 'Topic was successfully updated.'), :status => :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @topic.errors, status: :unprocessable_entity }
+        format.json { render json: build_ajax_response(:error, nil, 'Topic could not be updated', @topic.errors), status: :unprocessable_entity }
       end
     end
   end

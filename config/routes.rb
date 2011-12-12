@@ -92,7 +92,7 @@ ProjectLimelight::Application.routes.draw do
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
   # Topics
-  resources :topics, :excpet => [:edit]
+  resources :topics, :except => [:edit, :show, :update, :index]
   get '/:id/edit' => 'topics#edit', :as => :edit_topic
   get '/:id/connected' => 'topics#connected', :as => :connected_topics
   get '/:id/hover' => 'topics#hover' , :as => :topic_hover

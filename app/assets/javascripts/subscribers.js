@@ -76,18 +76,25 @@ $(function() {
     $('#hp:visible,.hf:visible').hide('scale', {}, 200)
     if ($('#top-contribute:visible').length == 1)
       $('#contribute').click()
-  })
+  });
 
   /*
    * TOPICS
    */
+
+  amplify.subscribe("topics_create", function (data) {
+    if (data.status == "ok") {
+      $('#created-topics').append(data.tlink);
+      $('#new-topic .field').find('textarea, input').val('');
+    }
+  });
 
   amplify.subscribe("topics_edit", function (data) {
     $('#topic-edit').hide()
     $('#topic-panel .content').slideUp(300)
     $('#topic-edit').html(data.content)
     $('#topic-edit').slideDown(300)
-  })
+  });
 
   // topic pull from box that shows the topics a topic is pulling from
   amplify.subscribe('topics_pull_from', function (data) {

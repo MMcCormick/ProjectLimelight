@@ -19,6 +19,7 @@ class PagesController < ApplicationController
 
   def admin
     @title = 'Admin'
+    @site_style = 'narrow'
   end
 
   def about

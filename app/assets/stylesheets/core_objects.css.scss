@@ -427,19 +427,6 @@
     padding: 4px 10px;
     height: 21px;
     display: block;
-
-    > div {
-      position: relative;
-    }
-
-    .plus-white-s-icon {
-        position: absolute;
-        top: 0px; left: -17px;
-    }
-    .minus-white-s-icon {
-        position: absolute;
-        top: 5px; left: -17px;
-    }
 }
 
 // Styling for btnps that swap
@@ -456,7 +443,9 @@
 .unfavB,
 .unrepostB,
 .unvoteB,
-.unprimaryB {
+.unprimaryB,
+.ooacB,
+.unooacB {
   .default {
     display: none;
   }

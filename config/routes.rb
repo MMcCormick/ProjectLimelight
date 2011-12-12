@@ -101,7 +101,9 @@ ProjectLimelight::Application.routes.draw do
   get '/:id/picture' => 'topics#default_picture', :as => :topic_default_picture
   get '/:id/followers' => 'topics#followers', :as => :topic_followers
   post '/:id/merge' => 'topics#merge', :as => :merge_topic
-  post '/:id/add_alias' => 'topics#add_alias', :as => :add_topic_alias
+  put '/:id/aliases' => 'topics#update_alias', :as => :update_topic_alias
+  delete '/:id/aliases' => 'topics#destroy_alias', :as => :destroy_topic_alias
+  post '/:id/aliases' => 'topics#add_alias', :as => :add_topic_alias
   get '/:id/freebase_lookup' => 'topics#freebase_lookup', :as => :freebase_lookup
   post ':id/freebase_update' => 'topics#freebase_update', :as => :freebase_update
   put '/:id/lock_slug' => 'topics#lock_slug', :as => :lock_topic_slug

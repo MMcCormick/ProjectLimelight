@@ -1,8 +1,8 @@
 <button class="btn-tog <%= snippet.primary ? 'unprimaryB' : 'primaryB' %> fav_<%= snippet.topic_id %>">
   <div class="default" data-url="<%= toggle_primary_path %>" data-d='{ "topic_id":"<%= topic_id %>", "con_topic_id":"<%= snippet.topic_id %>" }' data-m="put">
-    Make Primary
+    [Make Primary]
   </div>
   <div class="triggered" data-url="<%= toggle_primary_path %>" data-d='{ "topic_id":"<%= topic_id %>", "con_topic_id":"<%= snippet.topic_id %>" }' data-m="put">
-    Remove Primary
+    [Remove Primary]
   </div>
 </button>

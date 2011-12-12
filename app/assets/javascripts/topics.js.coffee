@@ -17,8 +17,8 @@ jQuery ->
     .bind "fb-select", (e, data) ->
        freebaseLookup(data.id)
 
-  $('#freebase-lookup-id').livequery ->
-    freebaseLookup($(@).data('id'))
+  $('#freebase-lookup-id span').live 'click', (e) ->
+    freebaseLookup($(@).parent().data('id'))
 
   # Topic autocomplete for topic connection form + new topic form
   $('.tc-auto').livequery ->

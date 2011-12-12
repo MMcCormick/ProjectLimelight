@@ -17,14 +17,6 @@
     <%= text_area_tag "summary", description, :id => "summary" %>
   </div>
 
-  <div class="check-label">
-    <%= check_box_tag "use_aliases" %>
-    <%= label_tag "use_aliases", "Use Aliases?" %>
-  </div>
-  <div class="field">
-    <%= text_field_tag "aliases", aliases.join(", "), :id => "aliases" %>
-  </div>
-
   <%= hidden_field_tag "freebase_id", ids["id"] %>
   <%= hidden_field_tag "freebase_mid", ids["mid"] %>
 
@@ -35,8 +27,12 @@
 
 <div class="clear-left"></div>
 
-<%= label_tag nil, "Types" %>
+<h5>Possible Aliases</h5>
+<% aliases.each do |fb_alias| %>
+  <div class='fb-connection'><%= fb_alias %></div>
+<% end %>
+
+<h5>Possible Connections</h5>
 <% types.each do |type| %>
-  <div class="clear-left"></div>
-  <%= render :partial => "topic_connections/add_form", :locals => {:type => type, :topic_id => topic_id} %>
+  <div class='fb-connection'><%= type[:name] %></div>
 <% end %>

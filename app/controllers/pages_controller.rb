@@ -18,7 +18,9 @@ class PagesController < ApplicationController
   end
 
   def admin
+    authorize! :manage, :all
     @title = 'Admin'
+    @site_style = 'narrow'
   end
 
   def about

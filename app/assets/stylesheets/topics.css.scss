@@ -189,8 +189,22 @@
       }
     }
   }
-  .edit-c {
+  .new-c {
+    #created-topics {
+      position: absolute;
+      top: 59px;
+      left: 290px;
+      a {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+    }
+  }
+  .edit-c,
+  .new-c {
     .section {
+      position: relative;
       padding: 10px 5px;
       h3 {
         border-bottom: 1px solid #999;

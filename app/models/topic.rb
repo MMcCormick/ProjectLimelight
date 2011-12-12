@@ -38,6 +38,7 @@ class Topic
 
   field :summary
   field :short_name
+  field :health, :default => 0
   field :fb_img, :default => false # use the freebase image?
   field :fb_id # freebase id
   field :fb_mid # freebase mid
@@ -55,11 +56,12 @@ class Topic
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
+  validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
   attr_accessible :name, :summary, :aliases, :short_name
 
   before_create :init_alias
   after_create :add_to_soulmate
-  before_update :update_name_alias
+  before_update :update_name_alias#, :calculate_health
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
@@ -167,6 +169,22 @@ class Topic
   class << self
     def find_by_encoded_id(id)
       where(:public_id => id.to_i(36)).first
+    end
+  end
+
+  #
+  # Health
+  #
+
+  def calculate_health
+    #TODO: make this work. topic_connection_snippets_changed? doesn't work. marc?
+    if summary_changed? || topic_connection_snippets_changed? || images_changed? || short_name_changed?
+      self.health = 0
+      self.health += 1 if !summary.blank?
+      self.health += 1 if !short_name.blank?
+      self.health += 1 if (images.length > 0)
+      self.health += 1 if (topic_connection_snippets.detect { |snip| snip.id.to_s == Topic.type_of_id })
+      self.health += 1 if (topic_connection_snippets.detect { |snip| snip.id.to_s != Topic.type_of_id })
     end
   end
 

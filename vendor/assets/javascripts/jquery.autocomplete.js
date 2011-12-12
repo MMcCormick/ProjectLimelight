@@ -439,9 +439,6 @@
             var x = 0;
 
             $.each(tmpData, function (i, bucket) {
-              console.log(tmpData);
-              console.log(i);
-              console.log(bucket);
               $.each(tmpData[i], function (i2, val) {
                 // If we have not used this id yet
                 if ($.inArray(val.id, used_ids) == -1 && val.id != my_id) {

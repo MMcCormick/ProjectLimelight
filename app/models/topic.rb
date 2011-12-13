@@ -353,6 +353,93 @@ class Topic
     ids
   end
 
+  class << self
+
+    # find mentions in a body of text and return the topic matches
+    # optionally return how often the mention occured in the text
+    def parse_text(text, with_counts=nil)
+      words = text.split(' ')
+      word_combos = with_counts ? {} : []
+      words.length.times do |i|
+        5.times do |x|
+          word = ''
+          x.times do |y|
+            word += words[i+y].tr('^A-Za-z0-9', '').downcase if words[i+y]
+          end
+          unless word.blank?
+            if with_counts
+              word_combos[word] ||= {:count => 0}
+              word_combos[word][:count] += 1
+            elsif !word_combos.include? word
+              word_combos << word
+            end
+          end
+          break unless words[i+x]
+        end
+      end
+      if word_combos.length > 0
+        matches = Topic.any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => {'$in' => (with_counts ? word_combos.keys : word_combos)}, 'aliases.ooac' => true}).to_a
+      else
+        matches = []
+      end
+
+      if with_counts
+        processed_matches = {}
+        matches.each do |match|
+          count = 1
+          word_combos.each do |name,v|
+            if match.short_name == name || match.aliases.detect{|a| a.hash == name}
+              count = v[:count]
+              break
+            end
+          end
+          processed_matches[match.id.to_s] = {
+                  :topic => match,
+                  :count => count
+          }
+        end
+        matches = processed_matches
+      end
+
+      matches
+    end
+
+    # given topic mentions, grab and rank their connections in the graph
+    def get_graph(data, depth=1)
+      tmp = data.dup
+
+      # build the counts
+      connection_ids = []
+      tmp.each do |topic_id, data_point|
+        data_point[:topic].topic_connection_snippets.each do |connection|
+          unless connection.id.to_s == Topic.type_of_id
+            unless data[connection.topic_id.to_s]
+              connection_ids << connection.topic_id
+              data[connection.topic_id.to_s] ||= {:topic => nil, :connection => connection, :count => 0}
+            end
+            data[connection.topic_id.to_s][:count] += 1
+          end
+        end
+      end
+
+      # replace the connections with topics
+      topics = Topic.where(:_id => {'$in' => connection_ids})
+      topics.each do |t|
+        data[t.id.to_s][:topic] = t
+      end
+
+      # update the scores
+      data.each do |topic_id, data_point|
+        data_point[:score] = data_point[:count].to_i * (data_point[:topic][:pt] == 0 ? 1 : data_point[:topic][:pt].to_i)
+      end
+
+      # sort the data
+      data.sort_by {|topic_id, d| (-1)*d[:score]}
+
+      data
+    end
+  end
+
   protected
 
   #TODO: check that soulmate gets updated if this topic is a type for another topic

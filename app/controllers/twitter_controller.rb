@@ -6,9 +6,8 @@ class TwitterController < ApplicationController
     @site_style = 'narrow'
     @processed_tweets = []
     twitter = current_user.get_social_connect 'twitter'
-    tweets = current_user.twitter.user_timeline(twitter.uid.to_i)
-    #tweets = current_user.twitter.user_timeline('sack')
-    #tweets = current_user.twitter.user_timeline('mattcmccormick')
+    twitter_id = params[:twitter_id] ? params[:twitter_id] : twitter.uid.to_i
+    tweets = current_user.twitter.user_timeline(twitter_id)
     tweet_ids = tweets.map{|t| t.id.to_s}
     tweet_posts = CoreObject.where(:tweet_id => {'$in' => tweet_ids})
     embedly_api = Embedly::API.new :key => 'ca77b5aae56d11e0a9544040d3dc5c07'
@@ -45,7 +44,7 @@ class TwitterController < ApplicationController
 
       # parse twitter hashes
       hashes = []
-      cleaned_text.scan(/\b\#([a-zA-Z0-9,!\-_:'&\?\$]*)\b/).map do |hash|
+      cleaned_text.scan(/#([a-zA-Z0-9,!\-_:'&\?\$]*)/).map do |hash|
         hashes << hash[0] unless hashes.include?(hash[0])
       end
       if hashes.length > 0
@@ -74,29 +73,6 @@ class TwitterController < ApplicationController
         end
       end
 
-      # parse text and create word combinations for main content. take out @ and # tags before.
-      words = cleaned_text.gsub(/[\#|@]([a-zA-Z0-9,!\-_:'&\?\$]*)/, '').split(' ')
-      word_combos = []
-      words.length.times do |i|
-        5.times do |x|
-          word = ''
-          x.times do |y|
-            word += words[i+y].tr('^A-Za-z0-9', '').downcase if words[i+y]
-          end
-          word_combos << word unless word.blank? || word_combos.include?(word)
-        end
-      end
-      if word_combos.length > 0
-        matches = Topic.any_of({:short_name => {'$in' => word_combos}}, {'aliases.hash' => {'$in' => word_combos}, 'aliases.ooac' => true}).to_a
-        if matches.length > 0
-          if new_tweet[:mentions].length > 0
-            new_tweet[:mentions].concat matches
-          else
-            new_tweet[:mentions] = matches
-          end
-        end
-      end
-
       # parse text and create word combinations for titles
       unless new_tweet[:title].blank?
         words = new_tweet[:title].split(' ')
@@ -118,6 +94,29 @@ class TwitterController < ApplicationController
             else
               new_tweet[:mentions] = matches
             end
+          end
+        end
+      end
+
+      # parse text and create word combinations for main content. take out @ and # tags before.
+      words = cleaned_text.gsub(/[\#|@]([a-zA-Z0-9,!\-_:'&\?\$]*)/, '').split(' ')
+      word_combos = []
+      words.length.times do |i|
+        5.times do |x|
+          word = ''
+          x.times do |y|
+            word += words[i+y].tr('^A-Za-z0-9', '').downcase if words[i+y]
+          end
+          word_combos << word unless word.blank? || word_combos.include?(word)
+        end
+      end
+      if word_combos.length > 0
+        matches = Topic.any_of({:short_name => {'$in' => word_combos}}, {'aliases.hash' => {'$in' => word_combos}, 'aliases.ooac' => true}).to_a
+        if matches.length > 0
+          if new_tweet[:mentions].length > 0
+            new_tweet[:mentions].concat matches
+          else
+            new_tweet[:mentions] = matches
           end
         end
       end
@@ -150,14 +149,14 @@ class TwitterController < ApplicationController
               unless new_tweet[:title_raw].blank?
                 title_index = new_tweet[:title_raw].index(/\b#{topic_alias.name}\b/i)
                 if title_index
-                  new_tweet[:title_raw].gsub!(/\b[#]*(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
+                  new_tweet[:title_raw].gsub!(/[#]*\b(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
                 end
               end
 
               unless new_tweet[:content_raw].blank?
                 content_index = new_tweet[:content_raw].index(/\b#{topic_alias.name}\b/i)
                 if content_index
-                  new_tweet[:content_raw].gsub!(/\b[#]*(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
+                  new_tweet[:content_raw].gsub!(/[#]*\b(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
                 end
               end
 

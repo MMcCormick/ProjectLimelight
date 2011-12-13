@@ -68,6 +68,7 @@ class Topic
 
   index [[ :slug, Mongo::ASCENDING ]]
   index "aliases.slug"
+  index "aliases.hash"
   index :short_name
   index :ph
   index :pd

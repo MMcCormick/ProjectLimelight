@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/hone/resque.git
-  revision: 19b422e7c1367cf6590ace9c44f7dd8c4fad8752
-  branch: keepalive
+  revision: f8f105461d5b622d391e092cc594621b4dd98ef6
+  branch: heroku
   specs:
     resque (1.19.0)
       multi_json (~> 1.0)
@@ -47,8 +47,9 @@ GEM
     archive-tar-minitar (0.5.2)
     arel (2.2.1)
     bcrypt-ruby (3.0.1)
-    bson (1.5.1)
-    bson_ext (1.5.1)
+    bson (1.5.2)
+    bson_ext (1.5.2)
+      bson (= 1.5.2)
     builder (3.0.0)
     cancan (1.6.7)
     capybara (1.1.2)
@@ -133,7 +134,7 @@ GEM
       guard (>= 0.8.4)
       spork (>= 0.8.4)
     hashie (1.2.0)
-    heroku (2.16.1)
+    heroku (2.16.2)
       launchy (>= 0.3.2)
       rest-client (~> 1.6.1)
       rubyzip
@@ -167,8 +168,8 @@ GEM
     method_source (0.6.7)
       ruby_parser (>= 2.3.1)
     mime-types (1.17.2)
-    mongo (1.5.1)
-      bson (= 1.5.1)
+    mongo (1.5.2)
+      bson (= 1.5.2)
     mongoid (2.3.4)
       activemodel (~> 3.1)
       mongo (~> 1.3)

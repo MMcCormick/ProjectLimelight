@@ -45,7 +45,7 @@ class TwitterController < ApplicationController
       # parse twitter hashes
       hashes = []
       cleaned_text.scan(/#([a-zA-Z0-9,!\-_:'&\?\$]*)/).map do |hash|
-        hashes << hash[0] unless hashes.include?(hash[0])
+        hashes << hash[0].downcase unless hashes.include?(hash[0].downcase)
       end
       if hashes.length > 0
         matches = Topic.any_of({:short_name => {'$in' => hashes}}, {'aliases.hash' => {'$in' => hashes}, 'aliases.ooac' => true}).to_a

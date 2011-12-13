@@ -40,6 +40,10 @@ class ApplicationController < ActionController::Base
   end
 
   # Build a user list response
+  def user_list_response(partial, users, more_path)
+    html = render_to_string :partial => partial, :locals => { :users => users, :more_path => more_path }
+    build_ajax_response(:ok, nil, nil, nil, :content => html, :event => "loaded_alt_list")
+  end
 
   # update the sidebar minimized or maximized
   def sidebar

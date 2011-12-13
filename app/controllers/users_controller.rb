@@ -113,6 +113,16 @@ class UsersController < ApplicationController
     @description = "A list of all users who are being followed by" + @user.username
     @right_sidebar = true if current_user != @user
     @following_users = User.where(:_id.in => @user.following_users)
+
+    page = params[:p] ? params[:p].to_i : 1
+    @more_path = user_following_users_path :p => page + 1
+    per_page = 2
+    @following_users = User.where(:_id.in => @user.following_users).limit(per_page).skip((page - 1) * per_page)
+
+    respond_to do |format|
+      format.js { render json: user_list_response("users/std_list", @following_users, @more_path), status: :ok }
+      format.html
+    end
   end
 
   def followers
@@ -121,7 +131,16 @@ class UsersController < ApplicationController
     @title = @user.username + "'s followers"
     @description = "A list of all users who are following" + @user.username
     @right_sidebar = true if current_user != @user
-    @followers = User.where(:following_users => @user.id)
+
+    page = params[:p] ? params[:p].to_i : 1
+    @more_path = user_followers_path :p => page + 1
+    per_page = 2
+    @followers = User.where(:following_users => @user.id).limit(per_page).skip((page - 1) * per_page)
+
+    respond_to do |format|
+      format.js { render json: user_list_response("users/std_list", @followers, @more_path), status: :ok }
+      format.html
+    end
   end
 
   def following_topics
@@ -130,7 +149,16 @@ class UsersController < ApplicationController
     @title = "Topics " + @user.username + " is following"
     @description = "A list of all topics which are being followed by" + @user.username
     @right_sidebar = true if current_user != @user
-    @following_topics = Topic.where(:_id.in => @user.following_topics)
+
+    page = params[:p] ? params[:p].to_i : 1
+    @more_path = user_following_topics_path :p => page + 1
+    per_page = 4
+    @following_topics = Topic.where(:_id.in => @user.following_topics).limit(per_page).skip((page - 1) * per_page)
+
+    respond_to do |format|
+      format.js { render json: topic_list_response("topics/std_list", @following_topics, @more_path), status: :ok }
+      format.html
+    end
   end
 
   # Get a users main feed

@@ -90,14 +90,12 @@ class TopicsController < ApplicationController
     @description = "A list of all topics on the site, sorted by health and then by popularity"
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topics_by_health_path :p => page + 1
-    per_page = 3
+    per_page = 4
     @topics = Topic.order_by([[:health_index, :asc], [:pt, :desc]]).limit(per_page).skip((page - 1) * per_page)
 
     respond_to do |format|
-      format.js {
-        render json: topic_list_response("topics/health_list", @topics, @more_path), status: :ok
-      }
-      format.html # by_health.html.erb
+      format.js { render json: topic_list_response("topics/health_list", @topics, @more_path), status: :ok }
+      format.html
     end
   end
 
@@ -307,7 +305,16 @@ class TopicsController < ApplicationController
     @title = "Users following '" + @topic.name + "'"
     @description = "A list of all users following" + @topic.name
     authorize! :read, @topic
-    @followers = User.where(:following_topics => @topic.id)
+
+    page = params[:p] ? params[:p].to_i : 1
+    @more_path = topic_followers_path :p => page + 1
+    per_page = 2
+    @followers = User.where(:following_topics => @topic.id).limit(per_page).skip((page - 1) * per_page)
+
+    respond_to do |format|
+      format.js { render json: user_list_response("users/std_list", @followers, @more_path), status: :ok }
+      format.html
+    end
   end
 
   def connected

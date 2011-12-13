@@ -15,9 +15,7 @@
       <div>Popularity</div>
       <div>Followers</div>
     </li>
-    <% @following_topics.each do |following_topic| %>
-      <%= render 'topics/teaser', :topic => following_topic %>
-    <% end %>
+    <%= render 'topics/std_list', :topics => @following_topics %>
   </ul>
 <% else %>
   <div class="empty">This user is not following any topics!</div>

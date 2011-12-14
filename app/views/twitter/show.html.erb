@@ -15,6 +15,18 @@
   </div>
 <% end %>
 
+<% if @suggestions.length > 0 %>
+  <div class="suggestions">
+    <h4 class='head'>Limelight Topic Suggestions</h4>
+    <% @suggestions.each do |id, s| %>
+      <div class='suggestion'>
+        <%= render 'follows/btn', :target => s[:topic] %>
+        <%= render 'topics/tag', :topic => s[:topic], :include_image => false %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="tweets">
   <% @processed_tweets.each do |tweet| %>
     <% if tweet[:where] == :twitter %>

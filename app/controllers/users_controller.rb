@@ -170,6 +170,7 @@ class UsersController < ApplicationController
     @title = @user.username + "'s feed"
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_feed_path :p => page + 1
+    @right_sidebar = true if current_user != @user
     @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :created_by_users => @user.following_users,
             :reposted_by_users => @user.following_users,

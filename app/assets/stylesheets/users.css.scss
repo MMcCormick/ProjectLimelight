@@ -615,6 +615,39 @@
       }
     }
   }
+  .suggestions {
+    @include clearfix();
+    padding: 5px;
+    margin: 7px;
+    max-height: 175px;
+    overflow: auto;
+    border-bottom: 1px solid #999;
+
+    .head {
+      margin: 0 0 5px 0;
+    }
+    .suggestion {
+      @include clearfix();
+      float: left;
+      margin: 0 10px 0 0;
+      .tag,
+      .followB,
+      .unfollowB {
+        float: left;
+      }
+      .tag {
+        margin: 7px 0 0 0;
+        width: 155px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .followB,
+      .unfollowB {
+        margin-left: 0px;
+        width: 80px;
+      }
+    }
+  }
   .tweets {
     .previous {
       span {

@@ -7,13 +7,11 @@
 */
 
 .picture {
-    &.teaser.hover {
-        .oType { color: $picture-color }
+    &.teaser {
+      border-color: adjust-lightness($picture-color, 30);
+      &.hover {
         border-color: $picture-color;
-        .wrapper
-        {
-            border-color: $picture-color;
-        }
+      }
     }
     
     &.teaser.grid {

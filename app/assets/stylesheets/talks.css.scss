@@ -7,11 +7,9 @@
 */
 
 .talk {
-  &.teaser.hover {
-    .oType { color: $talk-color }
-    border-color: $talk-color;
-    .wrapper
-    {
+  &.teaser {
+    border-color: #EFD299;
+    &.hover {
       border-color: $talk-color;
     }
   }

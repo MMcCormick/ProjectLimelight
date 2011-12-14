@@ -8,7 +8,7 @@ namespace :soulmate do
     include Rails.application.routes.url_helpers
     include SoulmateHelper
 
-    users = User.where(:status => 'Active')
+    users = User.where(:status => 'active')
 
     soulmate_data = Array.new
     users.each do |user|
@@ -23,10 +23,10 @@ namespace :soulmate do
   task :rebuild_users_following => :environment do
     include SoulmateHelper
 
-    users = User.where(:status => 'Active')
+    users = User.where(:status => 'active')
 
     user_processed = 0
-    following_processed = 0;
+    following_processed = 0
     users.each do |user|
       user_processed += 1
       if user.following_users_count > 0
@@ -47,7 +47,7 @@ namespace :soulmate do
   task :rebuild_topics => :environment do
     include SoulmateHelper
 
-    topics = Topic.where(:status => 'Active')
+    topics = Topic.where(:status => 'active')
 
     topic_count = 0
     soulmate_data = Array.new

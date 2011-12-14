@@ -2,15 +2,15 @@ class TalksController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
-    @site_style = 'narrow'
-    @right_sidebar = true
     @talk = Talk.find_by_encoded_id(params[:id])
-    @title = @talk.name
-    @description = @talk.content_clean
 
     unless @talk
       not_found("Talk not found")
     end
+    @site_style = 'narrow'
+    @right_sidebar = true
+    @title = @talk.name
+    @description = @talk.content_clean
   end
 
   def create

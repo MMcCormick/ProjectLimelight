@@ -60,6 +60,7 @@ class ApplicationController < ActionController::Base
 
   # Not Found (404)
   def not_found(message)
+    @site_style = 'narrow'
     raise ActionController::RoutingError.new(message)
   end
   # Permission denied (401)

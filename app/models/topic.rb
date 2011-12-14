@@ -56,7 +56,7 @@ class Topic
   embeds_many :aliases, :as => :has_alias, :class_name => 'TopicAlias'
 
   validates :user_id, :presence => true
-  validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
+  validates :name, :presence => true, :length => { :minimum => 2, :maximum => 50 }
   validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
   attr_accessible :name, :summary, :aliases, :short_name
 

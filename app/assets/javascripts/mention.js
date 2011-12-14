@@ -302,8 +302,16 @@ var fields = [];
           return false;
         }
       }
+      else if (!data)
+      {
+        this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
+        text = this.value
+      }
+      else
+      {
+        this.value = text;
+      }
 
-      this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
       var delta = this.value.length - this.input.val().length;
 
       this.input.val(this.value);
@@ -318,6 +326,9 @@ var fields = [];
 
       // Unload autocompleter
       this.unload();
+
+      // Undo use shortname
+      this.useShortName = false
 
       // Update highlighting
       this.highlight();

@@ -539,7 +539,7 @@ $teaser-padding: 10px;
   }
 
   p {
-    font-size: 14px;
+    font-size: 13px;
     margin: 2px 0 0 0;
     a {
       text-decoration: none;
@@ -671,7 +671,7 @@ $teaser-padding: 10px;
   max-height: $height;
   position: relative;
   z-index: 10;
-  margin: 5px;
+  margin: 7px 4px 7px 10px;
 
   .wrapper {
     position: absolute;
@@ -774,6 +774,7 @@ $teaser-padding: 10px;
 
 // Column Teaser
 .teaser.column {
+  @include single-box-shadow(#888, 0, 1px, 3px);
   $width: 230px;
   width: $width;
   position: relative;
@@ -792,7 +793,7 @@ $teaser-padding: 10px;
   .content {
     padding: 7px 10px 8px 10px;
     p {
-      font-size: 12px;
+      font-size: 13px;
       margin: 0;
     }
   }
@@ -960,7 +961,7 @@ $scoreBox-width: 160px;
     left: 9px;
   }
   .bodyC {
-    font-size: 14px;
+    font-size: 13px;
     padding-top: 2px;
     float: left;
   }

@@ -49,6 +49,8 @@ function isScrolledIntoView(elem, bufferOn, checkAll, entireElem) {
 // Arrange Column format in feeds
 function rearrange_feed_columns()
 {
+  var $spacing = 18;
+
   if ($('.teaser.column').length == 0)
   {
     $('#core-feed').css('height', 'auto');
@@ -57,7 +59,7 @@ function rearrange_feed_columns()
 
   var feed_min_column = 99999999;
   var teaser_width = $('.teaser.column').width();
-  var feed_columns_num = Math.floor(($('#page_content').width() - 5) / (teaser_width + 10));
+  var feed_columns_num = Math.floor(($('#page_content').width() - 5) / (teaser_width + $spacing));
   var feed_columns = []
   for(var i=0; i<feed_columns_num; i++) {
     feed_columns.push({total_height: 0, teasers:[]})
@@ -86,11 +88,11 @@ function rearrange_feed_columns()
       $(feed_columns[i].teasers[i2]).css({
         'position': 'absolute',
         'top': column_height,
-        'left': teaser_width*i+10*(i+1)
+        'left': teaser_width*i+$spacing*(i)+10
       });
       $(feed_columns[i].teasers[i2]).attr('data-column', i).data('column', i);
       $(feed_columns[i].teasers[i2]).show();
-      column_height += $(feed_columns[i].teasers[i2]).height() + 10;
+      column_height += $(feed_columns[i].teasers[i2]).height() + $spacing;
     }
     if (column_height > max_column_height) {
       max_column_height = column_height

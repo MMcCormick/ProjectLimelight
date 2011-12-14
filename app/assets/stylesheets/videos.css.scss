@@ -7,13 +7,11 @@
 */
 
 .video {
-    &.teaser.hover {
-        .oType { color: $video-color }
+    &.teaser {
+      border-color: adjust-lightness($video-color, 20);
+      &.hover {
         border-color: $video-color;
-        .wrapper
-        {
-            border-color: $video-color;
-        }
+      }
     }
     .video-embed {
       float: left;

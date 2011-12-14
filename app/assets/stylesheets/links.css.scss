@@ -7,11 +7,9 @@
 */
 
 .link {
-  &.teaser.hover {
-    .oType { color: $link-color }
-    border-color: $link-color;
-    .wrapper
-    {
+  &.teaser {
+    border-color: adjust-lightness($link-color, 35);
+    &.hover {
       border-color: $link-color;
     }
   }

@@ -304,9 +304,9 @@ var fields = [];
       {
         if (data['data']['short_name'])
         {
-          short_name = data['data']['short_name'];
-          text = '#'+short_name;
-          this.value = short_name;
+//          short_name = data['data']['short_name'];
+          text = data['data']['short_name'];
+          this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
         }
         else
         {
@@ -316,12 +316,12 @@ var fields = [];
       else if (!data)
       {
         this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
-        text = this.value
       }
       else
       {
         this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
       }
+
       var delta = this.value.length - this.input.val().length;
 
       this.input.val(this.value);

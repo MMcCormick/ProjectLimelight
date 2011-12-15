@@ -208,14 +208,19 @@ class TopicsController < ApplicationController
 
     ooac = params[:alias][:ooac] == 'true' ? true : false
 
-    topic.update_alias(params[:alias][:id], nil, ooac)
-    if topic.save
-      response = build_ajax_response(:ok, nil, "Alias updated!", nil,
-                                             {:target => ".ooac_"+params[:alias][:id], :toggle_classes => ['ooacB', 'unooacB']})
-      status = 200
+    result = topic.update_alias(params[:alias][:id], params[:alias][:name], ooac)
+    if result == true
+      if topic.save
+        response = build_ajax_response(:ok, nil, "Alias updated!", nil,
+                                               {:target => ".ooac_"+params[:alias][:id], :toggle_classes => ['ooacB', 'unooacB']})
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+        status = 422
+      end
     else
-      response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
-      status = 422
+      response = build_ajax_response(:error, nil, result)
+      status = 400
     end
 
     render json: response, :status => status
@@ -227,7 +232,9 @@ class TopicsController < ApplicationController
 
     ooac = params[:alias][:ooac] ? true : false
 
-    if topic.add_alias(params[:alias][:name], ooac)
+    result = topic.add_alias(params[:alias][:name], ooac)
+
+    if result == true
       if topic.save
         response = build_ajax_response(:ok, nil, "Alias added!")
         status = 200
@@ -236,7 +243,7 @@ class TopicsController < ApplicationController
         status = 422
       end
     else
-      response = build_ajax_response(:error, nil, "The topic already has that alias!")
+      response = build_ajax_response(:error, nil, result)
       status = 400
     end
 

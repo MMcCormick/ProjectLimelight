@@ -60,6 +60,10 @@ $(function() {
             })
           })
         }
+        else if (jqXHR.status == 400)
+        {
+
+        }
 
         if (error) {
           error();

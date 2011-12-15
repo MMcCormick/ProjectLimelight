@@ -105,8 +105,16 @@ class Topic
     return unless new_alias && !new_alias.blank?
 
     unless get_alias new_alias
-      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :hash => new_alias.to_url.gsub('-', ''), :ooac => ooac)
-      Resque.enqueue(SmCreateTopic, id.to_s)
+      existing = Topic.where('aliases.slug' => new_alias.to_url, 'ooac' => true).first
+      if existing
+        return "The '#{existing.name}' topic has a one of a kind alias with this name."
+      else
+        self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :hash => new_alias.to_url.gsub('-', ''), :ooac => ooac)
+        Resque.enqueue(SmCreateTopic, id.to_s)
+        return true
+      end
+    else
+      'This topic already has that alias.'
     end
   end
 
@@ -121,13 +129,23 @@ class Topic
     self.aliases = new_aliases
   end
 
-  def update_alias(id, name, ooac)
-    found = self.aliases.detect{|a| a.id.to_s == id}
+  def update_alias(alias_id, name, ooac)
+    found = self.aliases.detect{|a| a.id.to_s == alias_id}
     if found
+      if ooac == true
+        existing = Topic.where('aliases.slug' => name.to_url).to_a
+        if existing.length > 0
+          names = []
+          existing.each {|t| names << t.name if t.id != id}
+          names = names.join(', ')
+          return "The '#{names}' topic already have an alias with this name."
+        end
+      end
       found.name = name if name
       found.slug = name.to_url if name
       found.ooac = ooac
     end
+    true
   end
 
   def update_aliases new_aliases

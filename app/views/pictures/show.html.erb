@@ -21,6 +21,7 @@
         <div class='icon'><div class="full-black-icon"></div></div>
         <%= image_tag img.image_url, :style => 'max-width: 575px; max-height: 500px;', 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
       </div>
+      <div class="clear-left"></div>
     <% end %>
 
     <div class="content <%= 'with-image' if img %>">

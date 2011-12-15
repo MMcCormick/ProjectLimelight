@@ -163,6 +163,9 @@ $(function() {
       contribute.find('.option.on .cancel').click();
       contribute.find('.lClear input, .lClear textarea, .iClear input').val("").focus().blur();
       contribute.find('.image-preview .images img').remove();
+      contribute.find('.under').html('');
+      contribute.find('.mentions').html('');
+      contribute.find('.mention-ooc .hidden_data').val('{"existing":[],"new":[]}');
     }
   });
 
@@ -212,13 +215,23 @@ $(function() {
    */
 
   amplify.subscribe("comments_create", function (data) {
-    if (data.parent_id) {
-      $('#comment_' + data.parent_id).after(data.comment);
+    if (data.status == "ok")
+    {
+      if (data.parent_id) {
+        $('#comment_' + data.parent_id).after(data.comment);
+      }
+      else {
+        $('.c_'+data.talk_id).show().find('.comments').prepend(data.comment);
+      }
+      $('.comment_reply:visible').remove();
     }
-    else {
-      $('.c_'+data.talk_id).show().prepend(data.comment);
+  })
+
+  amplify.subscribe("comments_destroy", function (data) {
+    if (data.status == "ok")
+    {
+      $('#comment_' + data.id).replaceWith(data.comment)
     }
-    $('.comment_form:visible').remove();
   })
 
   /*

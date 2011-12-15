@@ -3,10 +3,8 @@ class TalksController < ApplicationController
 
   def show
     @talk = Talk.find_by_encoded_id(params[:id])
+    not_found("Talk not found") unless @talk
 
-    unless @talk
-      not_found("Talk not found")
-    end
     @site_style = 'narrow'
     @right_sidebar = true
     @title = @talk.name

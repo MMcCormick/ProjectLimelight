@@ -237,9 +237,9 @@ class CoreObject
       end
 
       if order_by[:target] != 'created_at'
-        core_objects.order_by([order_by[:target], order_by[:order], [:created_at, :desc]])
+        core_objects = core_objects.order_by([[order_by[:target], order_by[:order]], [:created_at, :desc]])
       else
-        core_objects.order_by([order_by[:target], order_by[:order]])
+        core_objects = core_objects.order_by([[order_by[:target], order_by[:order]]])
       end
     end
   end

@@ -7,7 +7,9 @@
     </div>
   <% end %>
 
-  <% @comments.each do |comment| %>
-    <%= render "comments/comment", :comment => comment, :current_user => @user %>
-  <% end %>
+  <div class="comments">
+    <% @comments.each do |comment| %>
+      <%= render "comments/comment", :comment => comment, :current_user => @user %>
+    <% end %>
+  </div>
 </div>

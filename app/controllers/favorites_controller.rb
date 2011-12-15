@@ -3,11 +3,10 @@ class FavoritesController < ApplicationController
 
   def index
     @user = User.find_by_slug(params[:id])
+    not_found("User not found") unless @user
+
     @title = @user.username + "'s favorites"
     @description = @user.username + "'s favorite posts on Limelight."
-    unless @user
-      not_found("User not found")
-    end
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_favorites_path :p => page + 1
     @right_sidebar = true if current_user != @user

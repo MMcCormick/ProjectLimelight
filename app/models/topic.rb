@@ -217,6 +217,10 @@ class Topic
     # Update topic mentions
     objects = CoreObject.where("topic_mentions._id" => aliased_topic.id)
     objects.each do |object|
+      # if an object mentions both, delete the old one
+      if object.mentions?(aliased_topic.id) && object.mentions?(id)
+        object.topic_mentions.destroy_all(conditions: { id: aliased_topic.id })
+      end
       object.content = object.content.gsub(aliased_topic.id.to_s, id.to_s)
       object.save!
     end

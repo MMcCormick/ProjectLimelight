@@ -2,16 +2,15 @@ class VideosController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
+    @video = Video.find_by_encoded_id(params[:id])
+    not_found("Video not found") unless @link
+
     @site_style = 'narrow'
     @right_sidebar = true
-    @video = Video.find_by_encoded_id(params[:id])
     @title = @video.name
     @description = @video.content_clean
 
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @video.id})
-    unless @video
-      not_found("Video not found")
-    end
   end
 
   def create

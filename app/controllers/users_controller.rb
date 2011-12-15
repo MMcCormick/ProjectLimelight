@@ -120,7 +120,7 @@ class UsersController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_following_users_path :p => page + 1
-    per_page = 2
+    per_page = 50
     @following_users = User.where(:_id.in => @user.following_users).limit(per_page).skip((page - 1) * per_page)
 
     respond_to do |format|
@@ -140,7 +140,7 @@ class UsersController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_followers_path :p => page + 1
-    per_page = 2
+    per_page = 50
     @followers = User.where(:following_users => @user.id).limit(per_page).skip((page - 1) * per_page)
 
     respond_to do |format|
@@ -160,7 +160,7 @@ class UsersController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_following_topics_path :p => page + 1
-    per_page = 4
+    per_page = 50
     @following_topics = Topic.where(:_id.in => @user.following_topics).limit(per_page).skip((page - 1) * per_page)
 
     respond_to do |format|

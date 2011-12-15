@@ -14,7 +14,7 @@
       <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_picture_path @picture %>">X</div>
     <% end %>
 
-    <% img = default_image_url(@picture, 575, 500, 'fit', false, true) %>
+    <% img = default_image_url(@picture, 515, 500, 'fit', false, true) %>
     <% original = default_image_url(@picture, 0, 0, :original) if img %>
     <% if img %>
       <div class="img expand">

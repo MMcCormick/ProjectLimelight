@@ -11,6 +11,11 @@
       border-color: adjust-lightness($picture-color, 30);
       &.hover {
         border-color: $picture-color;
+
+        .wrapper
+        {
+          border-color: $picture-color;
+        }
       }
     }
     
@@ -29,6 +34,17 @@
     &.teaser.column {
       p {
         margin-top: 5px;
+      }
+    }
+    &.teaser.list {
+      border: none;
+      .wrapper {
+        border-color: adjust-lightness($picture-color, 30);
+      }
+      &.hover {
+        .wrapper {
+          border-color: $picture-color;
+        }
       }
     }
     &.objectContent {

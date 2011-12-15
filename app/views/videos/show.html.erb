@@ -15,7 +15,7 @@
       <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_video_path @video %>">X</div>
     <% end %>
 
-    <%= video_embed(@video.sources[0], 575, 450) %>
+    <%= video_embed(@video.sources[0], 515, 450) %>
 
     <div class="content">
       <%= markdown(parse_mentions(@video.content, @video)) %>

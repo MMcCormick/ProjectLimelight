@@ -1,37 +1,47 @@
-<% cache("teaser-#{object.id.to_s}-list") do %>
+<% cache("teaser-#{object.id.to_s}-list-top") do %>
 
 <div class="teaser list <%= object._type.downcase %>" data-id="<%= object.id %>">
 
-  <div class="content">
-    <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title_clean, object), :object => object %>
-    <%= video_embed(object.sources[0], 150, 120) %>
+  <div class="left">
+    <%= video_embed(object.sources[0], 120, 120) %>
   </div>
 
-  <div class="connectionsC">
-    <div class="oType"><div class="video-grey-icon" title="video"></div></div>
-
-    <a href="<%= url_for object %>" class="commentC p">
-      <div class="comment-icon"></div>
-      <%= object.response_count.to_i %>
-    </a>
-
-    <% if object.topic_mentions %>
-      <div class="mentions">
-        <% object.topic_mentions.each do |topic| %>
-          <%= render 'topics/tag', :topic => topic, :include_image => false %>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+  <div class="wrapper">
+    <div class="content">
+      <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title_clean, object), :object => object %>
 
 <% end %>
 
-  <% if can? :destroy, object %>
-    <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_video_path object %>">X</div>
-  <% end %>
+      <%= render 'core_objects/feed_teaser_created', :object => object %>
 
-  <%= render 'core_objects/feed_teaser_created', :object => object %>
-  <%= render 'core_objects/feed_teaser_actions', :object => object %>
-  <div class="pc pc_<%= object.id.to_s %>"></div>
-  <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
+      <% if can? :destroy, object %>
+        <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_video_path object %>">X</div>
+      <% end %>
+      <%= render 'core_objects/feed_teaser_actions', :object => object %>
+      <div class="pc pc_<%= object.id.to_s %>"></div>
+      <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
+
+<% cache("teaser-#{object.id.to_s}-list-bottom") do %>
+
+      <%= markdown(parse_mentions(object.content, object)) %>
+    </div>
+    <div class="connectionsC">
+        <div class="oType"><div class="video-grey-icon" title="video"></div></div>
+
+        <a href="<%= url_for object %>" class="commentC p">
+          <div class="comment-icon"></div>
+          <%= object.response_count.to_i %>
+        </a>
+
+        <% if object.topic_mentions %>
+          <div class="mentions">
+            <% object.topic_mentions.each do |topic| %>
+              <%= render 'topics/tag', :topic => topic, :include_image => false %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+  </div>
+  <div class="clear"></div>
+<% end %>
 </div>

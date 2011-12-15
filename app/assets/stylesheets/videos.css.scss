@@ -11,24 +11,34 @@
       border-color: adjust-lightness($video-color, 20);
       &.hover {
         border-color: $video-color;
+
+        .wrapper
+        {
+          border-color: $video-color;
+        }
       }
     }
     .video-embed {
       float: left;
     }
     &.teaser.grid {
-        p {
-            overflow: hidden;
-            height: 22px;
-            bottom: 22px;
-        }
+      p {
+          overflow: hidden;
+          height: 22px;
+          bottom: 22px;
+      }
     }
     
     &.teaser.list {
-        .videoC {
-            float: left;
-            display: block;
+      border: none;
+      .wrapper {
+        border-color: adjust-lightness($video-color, 20);
+      }
+      &.hover {
+        .wrapper {
+          border-color: $video-color;
         }
+      }
     }
 
     &.teaser.column {

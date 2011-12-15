@@ -89,7 +89,8 @@ class CoreObject
   def expire_caches
     ['list', 'grid', 'column'].each do |view|
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}")
-      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-response") # talk list view includes response on feeds but not on show pages.
+      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top-response") # talk list view includes response on feeds but not on show pages.
+      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom-response") # talk list view includes response on feeds but not on show pages.
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top")
       ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom")
     end

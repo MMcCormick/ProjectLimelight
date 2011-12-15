@@ -289,21 +289,39 @@ var fields = [];
     // Adds a mention to this field (and tidy up after)
     this.addMention = function(start, end, id, text, data) {
       short_name = false;
+
+      // Preserve the user's capitalization
+      if (data && data.original && text)
+      {
+        var found = text.match(new RegExp(data.original, 'gi'));
+        if (found)
+        {
+          text = data.original + text.substr(data.original.length, text.length)
+        }
+      }
+
       if (this.useShortName)
       {
         if (data['data']['short_name'])
         {
-          short_name = data['data']['short_name'];
-          text = '#'+short_name;
-          this.value = short_name;
+//          short_name = data['data']['short_name'];
+          text = data['data']['short_name'];
+          this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
         }
         else
         {
           return false;
         }
       }
+      else if (!data)
+      {
+        this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
+      }
+      else
+      {
+        this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
+      }
 
-      this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
       var delta = this.value.length - this.input.val().length;
 
       this.input.val(this.value);
@@ -318,6 +336,9 @@ var fields = [];
 
       // Unload autocompleter
       this.unload();
+
+      // Undo use shortname
+      this.useShortName = false
 
       // Update highlighting
       this.highlight();
@@ -403,6 +424,7 @@ var fields = [];
       this.autocompleteLoaded = false;
       this.state = -1;
       this.type = '';
+      $('.ac_results').remove();
     }
 
     // Add highlighting (also calls ".store()")
@@ -414,7 +436,6 @@ var fields = [];
       var add = 0;
       var addstate = 0;
       var s = this.state;
-      var m = this.mode;
       $.each(this.mentions, function(i, mention) {
         if (mention.short_name)
         {

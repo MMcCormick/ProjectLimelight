@@ -539,7 +539,7 @@ $teaser-padding: 10px;
   }
 
   p {
-    font-size: 14px;
+    font-size: 13px;
     margin: 2px 0 0 0;
     a {
       text-decoration: none;
@@ -662,6 +662,7 @@ $teaser-padding: 10px;
 
 // Grid Teaser
 .teaser.grid {
+  @include single-box-shadow(#888, 0, 1px, 3px);
   $width: 200px;
   $height: 221px;
   $expand-height: 5px;
@@ -671,7 +672,7 @@ $teaser-padding: 10px;
   max-height: $height;
   position: relative;
   z-index: 10;
-  margin: 5px;
+  margin: 7px 4px 7px 10px;
 
   .wrapper {
     position: absolute;
@@ -776,6 +777,7 @@ $teaser-padding: 10px;
 
 // Column Teaser
 .teaser.column {
+  @include single-box-shadow(#888, 0, 1px, 3px);
   $width: 230px;
   width: $width;
   position: relative;
@@ -794,7 +796,7 @@ $teaser-padding: 10px;
   .content {
     padding: 7px 10px 8px 10px;
     p {
-      font-size: 12px;
+      font-size: 13px;
       margin: 0;
     }
   }
@@ -874,17 +876,33 @@ $teaser-padding: 10px;
 // List Teaser
 $scoreBox-width: 160px;
 .teaser.list {
-  @include clearfix();
-  padding: 4px 0 0 0;
-  margin: 0 10px 5px 10px;
+  background: transparent;
+  margin: 0 10px 10px 10px;
   z-index: 10;
-  p {
-    margin: 0;
-    padding: 4px 0;
+  padding-left: 120px;
+
+  .left {
+    @include clearfix();
+    float: left;
+    width: 120px;
+    margin-left: -120px;
+    img {
+      display: block;
+      float: right;
+      margin: 0px;
+    }
+  }
+  .wrapper {
+    @include single-box-shadow(#888, 1px, 1px, 2px);
+    position: relative;
+    background: #FFF;
+    border: 1px solid #999;
+    margin-left: 10px;
+    padding: 0;
   }
   .disable {
-    bottom: 2px;
-    right: 2px;
+    bottom: 0;
+    right: 0;
   }
   .controlsC {
     position: absolute;
@@ -933,18 +951,12 @@ $scoreBox-width: 160px;
       left: 40px;
     }
   }
-  .content {
-    @include clearfix();
-    margin: 0 140px 5px $teaser-padding;
-  }
   .titleC {
+    font-size: 14px;
+    margin: 4px 0 0 6px;
     .icon {
       top: 6px;
     }
-    font-size: 15px;
-    margin: 0 0 10px 0;
-    overflow: hidden;
-    white-space: nowrap;
   }
   .pc {
     position: absolute;
@@ -959,31 +971,36 @@ $scoreBox-width: 160px;
     margin:  0 $teaser-padding 0 0;
   }
   .createdC {
-    position: absolute;
-    top: 22px;
-    left: 9px;
+    margin: 1px 0 0 6px;
   }
-  .bodyC {
-    font-size: 14px;
-    padding-top: 2px;
-    float: left;
+  p {
+    margin: 5px 0 7px 6px;
+  }
+  .content {
+    min-height: 65px;
+    padding: 0 120px 0 0;
   }
   .connectionsC {
     @include clearfix();
     min-height: 18px;
+    clear: none;
+    width: 100%;
+
     .comment_form {
       clear: left;
       padding: 5px 5px 10px 10px;
     }
   }
   .oType {
-    margin: 3px 10px 0;
+    margin: 3px 10px 0 5px;
   }
   .commentC {
     margin: 3px 10px 0 0;
   }
   .mentions {
-    padding: 2px 0 0 5px;
+    padding: 0 0 0 5px;
+    position: relative;
+    top: 2px;
     .tag {
       float: left;
       margin: 0 10px 3px 0;
@@ -997,6 +1014,14 @@ $scoreBox-width: 160px;
   }
 }
 
+.teaser.response {
+  padding-left: 65px;
+  .left {
+    width: 65px;
+    margin-left: -65px;
+  }
+}
+
 .img.expand {
   position: relative;
   .icon {
@@ -1004,8 +1029,8 @@ $scoreBox-width: 160px;
     @include border-radius(3px);
     display: none;
     position: absolute;
-    top: 7px;
-    left: 2px;
+    top: 3px;
+    right: 3px;
     background: #FFF;
     padding: 3px;
     &:hover {

@@ -407,11 +407,12 @@
             limit:options.max
           }, extraParams),
           success:function (acData) {
+
             // Used for soulmate redis store
             // APPLICATION SPECIFIC
             var buckets = [],
-                    tmpData = {},
-                    data = {};
+                tmpData = {},
+                data = {};
 
             if (options.buckets.length > 0) {
               if (options.allowNew) {
@@ -445,6 +446,10 @@
                   used_ids.push(val.id);
                   val.bucketType = buckets[x];
                   val.show = val.term;
+                  if (val.bucketType == 'topic')
+                  {
+                    val.original = original;
+                  }
 
                   // use an alias if there is an appropriate one
                   if (val['aliases'] && val.term.toLowerCase().indexOf(acData.term.toLowerCase()) != 0) {

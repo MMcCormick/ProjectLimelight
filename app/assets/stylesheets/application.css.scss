@@ -18,21 +18,21 @@
 @import "compass/utilities";
 
 html, body {
-    margin: 0; padding: 0;
-    width: 100%; height: 100%;
-    background: image-url("bg_textured.jpg") repeat;
-    position: relative;
-    z-index: 0;
-    min-width: $min-width;
-    font-family: "lucida grande", Tahoma, Verdana, Arial, sans-serif;
-    line-height: 1.3 !important;
-    color: #444;
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  background: image-url("bg_textured.jpg") repeat;
+  position: relative;
+  z-index: 0;
+  min-width: $min-width;
+  font-family: "lucida grande", Tahoma, Verdana, Arial, sans-serif;
+  line-height: 1.3 !important;
+  color: #444;
 
-    &.narrow {
-      .interior {
-        max-width: 1020px;
-      }
+  &.narrow {
+    .interior {
+      width: 960px;
     }
+  }
 }
 
 .interior {
@@ -54,16 +54,16 @@ h1 {
 }
 
 a {
-    color: $url-color;
-    text-decoration: none;
-    border: none;
+  color: $url-color;
+  text-decoration: none;
+  border: none;
 
-    &:hover {
-      text-decoration: none;
-    }
-    &:visited {
-      color: $url-color;
-    }
+  &:hover {
+    text-decoration: none;
+  }
+  &:visited {
+    color: $url-color;
+  }
 }
 
 ol,ul,li { list-style: none; margin: 0; padding: 0; }

@@ -151,12 +151,13 @@ class User
   end
 
   def username_change
-    if username_was && persisted? && username_changed? && username_was != username
+    if username_was && username_changed? && username_was != username
       if username_reset == false
         errors.add(:username, "cannot be changed right now")
+      else
+        self.username_reset = false
       end
     end
-    self.username_reset = false if persisted?
   end
 
   ###

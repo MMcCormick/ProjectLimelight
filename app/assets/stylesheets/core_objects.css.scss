@@ -311,32 +311,32 @@
     top: 0px;
     right: 0px;
     height: 130px;
-    border-left: 1px solid #f1f1f1;
+    border-left: 1px solid #E1E1E1;
     margin-bottom: -999px;
     padding-bottom: 999px;
 
     .auto {
       label {
         top: 6px;
-        left: 9px;
+        left: 10px;
         color: #666666;
         font-size: 11px;
       }
       input {
         border: none;
-        border-bottom: 1px solid #F1F1F1;
+        border-bottom: 1px solid #E1E1E1;
         width: 136px;
         padding: 6px 5px;
-        margin: 0 0 0 4px;
+        margin: 0 0 0 5px;
         font-size: 11px;
       }
     }
     .mentions {
-      padding: 10px;
+      padding: 5px 10px;
       .item {
         @include clearfix();
         position: relative;
-        padding: 6px 0 7px 33px;
+        padding: 2px 0;
       }
       img {
         @include border-radius(2px);
@@ -356,7 +356,7 @@
         float: left;
         font-size: 10px;
         color: red;
-        margin: 3px 0 0 5px;
+        margin: 2px 5px 0 0;
         cursor: pointer;
       }
     }
@@ -365,7 +365,6 @@
     background: #F1F1F1;
     border-top: 1px solid #AAA;
     position: relative;
-    top: 1px;
 
     .submit {
       @include green-conservative-button(14px, 0, 0);

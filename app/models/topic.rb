@@ -181,8 +181,8 @@ class Topic
   def text_health
     self.health ||= []
     if summary_changed? || short_name_changed?
-      self.health << 'summary' if !summary.blank?
-      self.health << 'short_name' if !short_name.blank?
+      update_health('summary') if !summary.blank?
+      update_health('short_name') if !short_name.blank?
       self.health_index = health.length
     end
   end
@@ -226,6 +226,7 @@ class Topic
     end
 
     topic_mention_updates = {}
+    topic_mention_updates["topic_mentions.$.name"] = name
     topic_mention_updates["topic_mentions.$.slug"] = slug
     topic_mention_updates["topic_mentions.$._id"] = id
     topic_mention_updates["topic_mentions.$.public_id"] = public_id
@@ -453,6 +454,7 @@ class Topic
     connection_snippet_updates = {}
     if name_changed?
       soulmate = true
+      topic_mention_updates["topic_mentions.$.name"] = self.name
       connection_snippet_updates["topic_connection_snippets.$.topic_name"] = self.name
     end
     if slug_changed?

@@ -316,6 +316,7 @@ var fields = [];
       else if (!data)
       {
         this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
+//        text = this.value
       }
       else
       {
@@ -424,7 +425,7 @@ var fields = [];
       this.autocompleteLoaded = false;
       this.state = -1;
       this.type = '';
-      $('.ac_results').remove();
+      setTimeout("$('.ac_results').remove();", 200);
     }
 
     // Add highlighting (also calls ".store()")

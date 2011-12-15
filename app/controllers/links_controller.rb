@@ -2,16 +2,15 @@ class LinksController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
+    @link = Link.find_by_encoded_id(params[:id])
+    not_found("Link not found") unless @link
+
     @site_style = 'narrow'
     @right_sidebar = true
-    @link = Link.find_by_encoded_id(params[:id])
     @title = @link.name
     @description = @link.content_clean + " - a link on Limelight"
 
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @link.id})
-    unless @link
-      not_found("Talk not found")
-    end
   end
 
   def create

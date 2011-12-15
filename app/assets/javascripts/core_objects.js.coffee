@@ -249,17 +249,16 @@ jQuery ->
 
     if mentions.find('.item[data-id="'+id+'"]').length > 0
       createGrowl(false, 'You have already added that topic!', '', 'red')
-    else if mentions.find('.item').length >= 4
-      createGrowl(false, 'You can only mention 4 topics out of context!', '', 'red')
+    else if mentions.find('.item').length >= 3
+      createGrowl(false, 'You can only mention 3 topics out of context!', '', 'red')
     else
       if data.data && data.data.image
         image = data.data.image
       else
         image = '/assets/topic_default_25_25.gif'
       mention = $("<div/>").addClass('item hide').attr('data-id', id).attr('data-type', type).html('
-        <img width="25px" src="'+image+'" />
-        <div class="name">'+data.term+'</div>
         <div class="remove">[x]</div>
+        <div class="name" title="'+data.term+'">'+data.term+'</div>
       ').appendTo(mentions)
       mention.fadeIn(200)
 

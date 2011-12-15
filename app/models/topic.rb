@@ -56,7 +56,7 @@ class Topic
   embeds_many :aliases, :as => :has_alias, :class_name => 'TopicAlias'
 
   validates :user_id, :presence => true
-  validates :name, :presence => true, :length => { :minimum => 2, :maximum => 30 }
+  validates :name, :presence => true, :length => { :minimum => 2, :maximum => 50 }
   validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
   attr_accessible :name, :summary, :aliases, :short_name
 
@@ -199,8 +199,8 @@ class Topic
   def text_health
     self.health ||= []
     if summary_changed? || short_name_changed?
-      self.health << 'summary' if !summary.blank?
-      self.health << 'short_name' if !short_name.blank?
+      update_health('summary') if !summary.blank?
+      update_health('short_name') if !short_name.blank?
       self.health_index = health.length
     end
   end
@@ -235,11 +235,16 @@ class Topic
     # Update topic mentions
     objects = CoreObject.where("topic_mentions._id" => aliased_topic.id)
     objects.each do |object|
+      # if an object mentions both, delete the old one
+      if object.mentions?(aliased_topic.id) && object.mentions?(id)
+        object.topic_mentions.destroy_all(conditions: { id: aliased_topic.id })
+      end
       object.content = object.content.gsub(aliased_topic.id.to_s, id.to_s)
       object.save!
     end
 
     topic_mention_updates = {}
+    topic_mention_updates["topic_mentions.$.name"] = name
     topic_mention_updates["topic_mentions.$.slug"] = slug
     topic_mention_updates["topic_mentions.$._id"] = id
     topic_mention_updates["topic_mentions.$.public_id"] = public_id
@@ -467,6 +472,7 @@ class Topic
     connection_snippet_updates = {}
     if name_changed?
       soulmate = true
+      topic_mention_updates["topic_mentions.$.name"] = self.name
       connection_snippet_updates["topic_connection_snippets.$.topic_name"] = self.name
     end
     if slug_changed?

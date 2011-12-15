@@ -32,9 +32,9 @@
   <% if @topic.fb_id %>
     <div id="freebase-lookup-id" data-id="<%= @topic.fb_id %>">Connected to freebase topic '<%= @topic.fb_id %>' <span>[re-fetch info]</span></div>
   <% end %>
-  <div class="field lClear">
-    <%= label_tag "freebase-ac", "Search freebase topics..." %>
-    <%= text_field_tag "freebase", '', :id => "freebase-ac", "data-url" => freebase_lookup_path(@topic), :spellcheck => false, :autocomplete => 'off' %>
+  <div class="field">
+    <h5>Search freebase topics</h5>
+    <%= text_field_tag "freebase", @topic.name, :id => "freebase-ac", "data-url" => freebase_lookup_path(@topic), :spellcheck => false, :autocomplete => 'off' %>
   </div>
 
   <div id="freebase-form-c"></div>

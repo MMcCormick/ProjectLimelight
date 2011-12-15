@@ -25,11 +25,13 @@ class CommentsController < ApplicationController
       authorize! :destroy, comment
       comment.user_delete
       if comment.save
-        response = build_ajax_response(:ok, nil, "Comment successfully deleted")
+        html = render_to_string :partial => "comments/comment", :locals => { :comment => comment }
+
+        response = build_ajax_response(:ok, nil, "Comment successfully deleted", nil, { :id => comment.id, :comment => html })
         status = 200
       else
         response = build_ajax_response(:error, nil, "Comment could not be saved", comment.errors)
-        status = 500
+        status = 422
       end
     else
       response = build_ajax_response(:error, nil, "Comment could not be found")

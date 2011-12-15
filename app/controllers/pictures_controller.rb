@@ -2,16 +2,15 @@ class PicturesController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
+    @picture = Picture.find_by_encoded_id(params[:id])
+    not_found("Picture not found") unless @picture
+
     @site_style = 'narrow'
     @right_sidebar = true
-    @picture = Picture.find_by_encoded_id(params[:id])
     @title = @picture.name
     @description = @picture.content_clean
 
     @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @picture.id})
-    unless @picture
-      not_found("Picture not found")
-    end
   end
 
   def create

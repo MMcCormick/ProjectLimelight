@@ -14,15 +14,18 @@
       <p>
         <%= comment.content %>
       </p>
+
       <% if comment.depth < 5 %>
         <div class="reply">
           <a href="javascript:void(0);" id="reply_<%= comment.id %>" class="reply-show" data-d='{"id":"<%= comment.id %>"}'>reply</a>
         </div>
-        <% if can? :destroy, comment %>
-          <a class="ac delete" data-m="delete" data-url="<%= comment_path comment %>" data-d="'id':'<%= comment.id %>'">delete</a>
-        <% end %>
-        <div class="clear-left"></div>
       <% end %>
+
+      <% if can? :destroy, comment %>
+        <a class="ac delete" data-m="delete" data-url="<%= comment_path comment %>" data-d="'id':'<%= comment.id %>'">delete</a>
+      <% end %>
+      <div class="clear-left"></div>
+
       <%= render 'votes/btn', :object => comment, :current_user => current_user %>
       <div class="pop"><%= comment.votes_count %></div>
     <% end %>

@@ -28,7 +28,7 @@ class Comment
   validates :depth, :numericality => { :less_than_or_equal_to => 5 }
 
   before_validation :set_path
-  before_create :set_user_snippet
+  before_create :set_user_snippet, :current_user_own
   after_create :add_to_count
 
   attr_accessible :content, :parent_id, :talk_id
@@ -132,5 +132,9 @@ class Comment
         }
       )
     end
+  end
+
+  def current_user_own
+    grant_owner(user.id)
   end
 end

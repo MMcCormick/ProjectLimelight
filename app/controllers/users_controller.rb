@@ -6,6 +6,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find_by_slug(params[:id])
+    not_found("User not found") unless @user
+
     @title = @user.username + "'s contributions"
     @description = "A feed containing all posts submitted by " + @user.username
     page = params[:p] ? params[:p].to_i : 1
@@ -107,8 +109,10 @@ class UsersController < ApplicationController
   end
 
   def following_users
-    @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
+    not_found("User not found") unless @user
+
+    @site_style = 'narrow'
     @title = "Users " + @user.username + " is following"
     @description = "A list of all users who are being followed by" + @user.username
     @right_sidebar = true if current_user != @user
@@ -126,8 +130,10 @@ class UsersController < ApplicationController
   end
 
   def followers
-    @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
+    not_found("User not found") unless @user
+
+    @site_style = 'narrow'
     @title = @user.username + "'s followers"
     @description = "A list of all users who are following" + @user.username
     @right_sidebar = true if current_user != @user
@@ -144,8 +150,10 @@ class UsersController < ApplicationController
   end
 
   def following_topics
-    @site_style = 'narrow'
     @user = User.find_by_slug(params[:id])
+    not_found("User not found") unless @user
+
+    @site_style = 'narrow'
     @title = "Topics " + @user.username + " is following"
     @description = "A list of all topics which are being followed by" + @user.username
     @right_sidebar = true if current_user != @user
@@ -167,6 +175,8 @@ class UsersController < ApplicationController
   # Includes core objects mentioning this user
   def feed
     @user = User.find_by_slug(params[:id])
+    not_found("User not found") unless @user
+
     @title = @user.username + "'s feed"
     page = params[:p] ? params[:p].to_i : 1
     @more_path = user_feed_path :p => page + 1

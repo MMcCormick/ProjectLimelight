@@ -293,6 +293,10 @@ module Limelight #:nodoc:
       clean
     end
 
+    def mentions?(id)
+      !!topic_mentions.detect{|mention| mention.id == id}
+    end
+
     def send_mention_notifications
       sent = []
       self.user_mentions.each do |mentioned_user|

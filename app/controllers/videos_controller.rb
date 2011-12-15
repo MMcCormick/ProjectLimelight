@@ -3,7 +3,7 @@ class VideosController < ApplicationController
 
   def show
     @video = Video.find_by_encoded_id(params[:id])
-    not_found("Video not found") unless @link
+    not_found("Video not found") unless @video
 
     @site_style = 'narrow'
     @right_sidebar = true

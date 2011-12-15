@@ -134,7 +134,7 @@ class Topic
     if found
       if ooac == true
         existing = Topic.where('aliases.slug' => name.to_url).to_a
-        if existing.length > 0
+        if existing.length > 1
           names = []
           existing.each {|t| names << t.name if t.id != id}
           names = names.join(', ')

@@ -361,7 +361,7 @@ class Topic
   end
 
   def get_instances
-    topic_connection_snippets.select { |snippet| snippet.id.to_s == @instances_id }
+    topic_connection_snippets.select { |snippet| snippet.id.to_s == Topic.instances_id }
   end
 
   # recursively gets topic ids to pull from in a hash of format {:topic_id => true}

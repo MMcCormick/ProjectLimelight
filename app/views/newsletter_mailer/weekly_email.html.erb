@@ -36,7 +36,7 @@
         <td width="120" style="padding: 5px 10px">
           <% img = default_image_url(picture, 120, 120, 'fillcropmid') %>
           <a target="_blank" href="<%= picture_url picture %>">
-            <%= image_tag base + img, :style => 'max-width: 120px; max-height: 120px;' if img %>
+            <%= image_tag img, :style => 'max-width: 120px; max-height: 120px;' if img %>
           </a>
           <span style="font-size: 10px;">
             by <%= link_to picture.user_snippet.username, user_url(picture.user_snippet), :style => "text-decoration: none;" %>
@@ -68,7 +68,7 @@
           <% img = default_image_url(link, 120, 120, 'fillcropmid') %>
           <% if img %>
             <a target="_blank" href="<%= link_url link %>">
-              <%= image_tag base + img, :style => 'max-width: 120px; max-height: 120px;' if img %>
+              <%= image_tag img, :style => 'max-width: 120px; max-height: 120px;' if img %>
             </a>
           <% else %>
             <%= markdown(parse_mentions(link.content, link, true)) %>

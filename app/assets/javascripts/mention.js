@@ -109,7 +109,7 @@ var fields = [];
         hidden = input.parent().find('.data');
 
     input.before(under);
-    input.after(autocomplete);
+    input.before(autocomplete);
 
     var mentionField = new field(input, autocomplete, under, hidden);
 

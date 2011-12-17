@@ -5,8 +5,16 @@
 
   <div class="object-show talk">
     <div class="createdC">
-      <%= time_ago_in_words(@talk.created_at, false) %> ago by
       <%= user_link @talk.user_snippet %>
+      <div class="response s">
+        <span>@</span>
+        <a href="<%= core_object_url(@talk.response_to) %>" class="r">
+          <%= @talk.response_to.title %>
+          <div class="<%= @talk.response_to.type.parameterize %>-grey-icon icon"></div>
+        </a>
+      </div>
+      <%= time_ago_in_words(@talk.created_at, false) %> ago
+
     </div>
 
     <% if can? :destroy, @talk %>
@@ -14,7 +22,7 @@
     <% end %>
 
     <div class="content">
-      <%= markdown(parse_mentions(@talk.content, @talk)) %>
+      <p><%= parse_mentions(@talk.content, @talk) %></p>
     </div>
     <div class="clear"></div>
 

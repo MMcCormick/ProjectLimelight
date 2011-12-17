@@ -43,29 +43,33 @@
 
 <div class="section">
   <h3>Edit Topic Connections</h3>
-  <%= render_cell :topic, :add_connection, @topic %>
+  <% if !@topic.typed? %>
+    <%= render 'topic_connections/add_type_form', :topic_id => @topic.id %>
+  <% else %>
+    <%= render_cell :topic, :add_connection, @topic %>
 
-  <div class="clear-left"></div>
-  <div class="topic-connections">
-    <% @connections.each do |con_id, connection| %>
-      <div class="connection">
-        <h5><%= connection[:name] %></h5>
-        <% connection[:data].each do |data| %>
-          <div class="con-topic">
-            <%= render 'topics/tag', :topic => data[:topic], :include_image => false %>
+    <div class="clear-left"></div>
+    <div class="topic-connections">
+      <% @connections.each do |con_id, connection| %>
+        <div class="connection">
+          <h5><%= connection[:name] %></h5>
+          <% connection[:data].each do |data| %>
+            <div class="con-topic">
+              <%= render 'topics/tag', :topic => data[:topic], :include_image => false %>
 
-            <% if con_id.to_s == Topic.type_of_id %>
-              <%= render 'topic_connections/toggle_primary_btn', :snippet => data[:snippet], :topic_id => @topic.id %>
-            <% end %>
+              <% if con_id.to_s == Topic.type_of_id %>
+                <%= render 'topic_connections/toggle_primary_btn', :snippet => data[:snippet], :topic_id => @topic.id %>
+              <% end %>
 
-            <a data-url="<%= remove_connection_path %>" data-d='{ "con_id":"<%= con_id %>", "topic_id":"<%= @topic.id %>", "con_topic_id":"<%= data[:topic].id %>" }'
-               data-m="delete" class="ac delete">[delete]</a>
-          </div>
-          <div class="clear-left"></div>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+              <a data-url="<%= remove_connection_path %>" data-d='{ "con_id":"<%= con_id %>", "topic_id":"<%= @topic.id %>", "con_topic_id":"<%= data[:topic].id %>" }'
+                 data-m="delete" class="ac delete">[delete]</a>
+            </div>
+            <div class="clear-left"></div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 </div>
 <div class="clear-left"></div>
 

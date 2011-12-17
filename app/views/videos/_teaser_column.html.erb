@@ -5,7 +5,7 @@
   <div class="content">
     <%= video_embed(object.sources[0], 210, 180) %>
 
-    <%= markdown(parse_mentions(object.content, object)) %>
+    <p><%= parse_mentions(object.content, object) %></p>
   </div>
 
   <div class="connectionsC">

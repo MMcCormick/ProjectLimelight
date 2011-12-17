@@ -8,7 +8,7 @@
 
   <div class="wrapper">
     <div class="content">
-      <%= markdown(parse_mentions(object.content, object)) %>
+      <%= "<p>#{parse_mentions(object.content, object)}</p>".html_safe %>
       <%#= render 'core_objects/feed_teaser_title', :title => user_link(object.user_snippet), :object => (response == true ? nil : object) %>
 <% end %>
 

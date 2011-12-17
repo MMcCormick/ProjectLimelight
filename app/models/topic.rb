@@ -279,6 +279,10 @@ class Topic
   # Connections
   #
 
+  def typed?
+    topic_connection_snippets.any?{ |snippet| snippet.id == Topic.type_of_id }
+  end
+
   def has_connection?(con_id, con_topic_id)
     topic_connection_snippets.any?{ |snippet| snippet.topic_id == con_topic_id && snippet.id == con_id }
   end
@@ -361,7 +365,7 @@ class Topic
   end
 
   def get_instances
-    topic_connection_snippets.select { |snippet| snippet.id.to_s == @instances_id }
+    topic_connection_snippets.select { |snippet| snippet.id.to_s == Topic.instances_id }
   end
 
   # recursively gets topic ids to pull from in a hash of format {:topic_id => true}

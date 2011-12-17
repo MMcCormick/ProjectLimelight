@@ -10,7 +10,8 @@ class CoreObject
   include Limelight::Popularity
 
   # Denormilized:
-  # CoreObject.response_to.name
+  # CoreObject.response_to
+  # Notification.object
   # Notification.shared_object_snippet.name TODO: update this once notifications are implemented
   #TODO: bug: each core object type currently validates the length of content, but after creation content_raw is copied to content.
   #TODO: since the topic and user mentions in raw content increase the length, validation may fail when the obj is saved again

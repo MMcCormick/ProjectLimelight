@@ -25,7 +25,7 @@
 <% cache("teaser-#{object.id.to_s}-list-bottom") do %>
   
       <% source = object.sources.length > 0 ? "<a href='#{object.sources[0].url}' target='_blank' rel='nofollow' class='s'>#{object.sources[0].name}</a> - " : '' %>
-      <%= markdown(source + parse_mentions(object.content, object)) %>
+      <%= source + "<p>#{parse_mentions(object.content, object)}</p>".html_safe %>
     </div>
     <div class="connectionsC">
       <div class="oType"><div class="link-grey-icon" title="link"></div></div>

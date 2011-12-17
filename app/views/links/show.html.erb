@@ -27,7 +27,7 @@
         <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_link_path @link %>">X</div>
       <% end %>
 
-      <%= markdown(parse_mentions(@link.content, @link)) %>
+      <%= "<p>#{parse_mentions(@link.content, @link)}</p>".html_safe %>
     </div>
 
     <div class="clear"></div>

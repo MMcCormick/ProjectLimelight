@@ -2,7 +2,7 @@
 
 <div class="teaser column <%= object._type.downcase %>" data-id="<%= object.id %>">
   <div class="content">
-    <%= markdown(parse_mentions(object.content, object)) %>
+    <p><%= parse_mentions(object.content, object) %></p>
   </div>
 
   <div class="connectionsC">

@@ -1,24 +1,11 @@
 class TestingController < ApplicationController
 
   def test
-
-    5.times do |past|
-      print "Fetching twitter trends for: #{Chronic.parse("#{past} weeks ago")}\n"
-      days = Twitter.trends_weekly(Chronic.parse("#{past} weeks ago"), {:exclude => 'hashtags'})
-      days.each do |day, trends|
-        trends.each do |trend|
-          found = Topic.where(:slug => trend[:name].to_url).first
-          unless found
-            topic = Topic.create(
-                    :name => trend[:name]
-            )
-            topic.save
-            total += 1
-          end
-        end
-      end
-    end
-    foo = 'bar'
+    pop_talks = Talk.all.desc(:pw).limit(3)
+    pop_link = Link.all.desc(:pw).limit(3)
+    pop_pics = Picture.all.desc(:pw).limit(3)
+    pop_vids = Video.all.desc(:pw).limit(3)
+    NewsletterMailer.weekly_email(current_user, pop_talks, pop_link, pop_pics, pop_vids).deliver if current_user.weekly_email
   end
 
 end

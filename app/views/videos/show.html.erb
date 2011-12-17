@@ -18,7 +18,7 @@
     <%= video_embed(@video.sources[0], 515, 450) %>
 
     <div class="content">
-      <%= markdown(parse_mentions(@video.content, @video)) %>
+      <p><%= parse_mentions(@video.content, @video) %></p>
     </div>
     <div class="clear"></div>
   </div>

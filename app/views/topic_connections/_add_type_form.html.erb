@@ -1,15 +1,9 @@
-<form action="<%= add_connection_path %>" id="add-connection-form" method="POST" class="ajax">
+<form action="<%= add_connection_path %>" id="add-type-form" method="POST" class="ajax">
 
   <!--If type is defined, it's a "type of" connection suggested by freebase-->
   <% from_freebase = defined?(type) %>
 
-  <% if from_freebase %>
-    <%= hidden_field_tag "connection[con_id]", Topic.type_of_id %>
-  <% else %>
-    <div class="field">
-      <%= collection_select(:connection, :con_id, connection_types, :id, :name, :prompt => "Connection Type") %>
-    </div>
-  <% end %>
+  <%= hidden_field_tag "connection[con_id]", Topic.type_of_id %>
 
   <div class="field lClear">
     <% if !from_freebase %>
@@ -32,6 +26,6 @@
   <% end %>
 
   <div class="actions">
-    <%= submit_tag "Add", :class => "submit" %>
+    <%= submit_tag "Add Type", :class => "submit" %>
   </div>
 </form>

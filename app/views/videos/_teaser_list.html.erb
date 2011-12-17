@@ -23,7 +23,7 @@
 
 <% cache("teaser-#{object.id.to_s}-list-bottom") do %>
 
-      <%= markdown(parse_mentions(object.content, object)) %>
+      <p><%= parse_mentions(object.content, object) %></p>
     </div>
     <div class="connectionsC">
         <div class="oType"><div class="video-grey-icon" title="video"></div></div>

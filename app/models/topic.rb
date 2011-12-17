@@ -279,6 +279,10 @@ class Topic
   # Connections
   #
 
+  def typed?
+    topic_connection_snippets.any?{ |snippet| snippet.id == Topic.type_of_id }
+  end
+
   def has_connection?(con_id, con_topic_id)
     topic_connection_snippets.any?{ |snippet| snippet.topic_id == con_topic_id && snippet.id == con_id }
   end

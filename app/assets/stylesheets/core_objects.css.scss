@@ -479,6 +479,10 @@ $teaser-padding: 10px;
     .s { // the source link
       text-decoration: underline;
     }
+    .tlink,
+    .ulink {
+      color: #2B3E8E;
+    }
   }
   .titleC {
     font-size: 18px;
@@ -1348,6 +1352,11 @@ $scoreBox-width: 160px;
   position: relative;
   padding: 0 10px 10px 10px;
 
+  .tlink,
+  .ulink {
+    color: #2B3E8E;
+  }
+
   &:hover {
     .disable {
       display: block;
@@ -1382,6 +1391,25 @@ $scoreBox-width: 160px;
     font-size: 12px;
     color: #999;
     margin: 2px 0 0 0;
+    >a,
+    >div {
+      display: inline;
+    }
+  }
+  .response {
+    color: #666;
+    .r {
+      position: relative;
+      padding: 0 0 0 17px;
+    }
+    .icon {
+      position: absolute;
+      top: 2px;
+      left: 0px;
+    }
+    a {
+      font-weight: normal;
+    }
   }
 
   .video-embed {

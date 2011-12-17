@@ -13,7 +13,7 @@
 
 <% cache("teaser-#{object.id.to_s}-grid-bottom") do %>
 
-      <%= markdown(parse_mentions(object.content, object)) %>
+      <p><%= parse_mentions(object.content, object) %></p>
     </div>
 
     <div class="connectionsC">

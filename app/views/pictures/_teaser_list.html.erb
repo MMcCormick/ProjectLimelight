@@ -25,7 +25,7 @@
       <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
 
 <% cache("teaser-#{object.id.to_s}-list-bottom") do %>
-      <%= markdown(parse_mentions(object.content, object)) %>
+      <p><%= parse_mentions(object.content, object) %></p>
     </div>
     <div class="connectionsC">
       <div class="oType"><div class="picture-grey-icon" title="picture"></div></div>

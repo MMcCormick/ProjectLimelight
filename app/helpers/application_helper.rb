@@ -60,9 +60,9 @@ module ApplicationHelper
       topic_mention = object.topic_mentions.detect{|m| m.id.to_s == topic[0]}
       if topic_mention
         if absolute
-          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic[1]}](#{topic_url(topic_mention)})")
+          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "<a href='#{topic_url(topic_mention)}'>#{topic[1]}</a>")
         else
-          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "[#{topic[1]}](#{topic_path(topic_mention)})")
+          text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, "#{topic_link(topic_mention, topic[1])}")
         end
       else
         text.gsub!(/\#\[#{topic[0]}##{topic[1]}\]/, topic[1])
@@ -76,9 +76,9 @@ module ApplicationHelper
       user_mention = object.user_mentions.detect{|m| m.id = user[0]}
       if user_mention
         if absolute
-          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_url(user_mention)})")
+          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "<a href='#{user_url(user_mention)}'>#{user_mention.username}</a>")
         else
-          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "[#{user_mention.username}](#{user_path(user_mention)})")
+          text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "#{user_link(user_mention)}")
         end
       else
         text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, user_mention.username)

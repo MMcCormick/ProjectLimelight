@@ -10,6 +10,7 @@ namespace :twitter do
       days = Twitter.trends_weekly(Chronic.parse("#{past} weeks ago"), {:exclude => 'hashtags'})
       days.each do |day, trends|
         trends.each do |trend|
+          next if trend[:name].downcase.include?('twitter')
           found = Topic.where(:slug => trend[:name].to_url).first
           unless found
             topic = Topic.create(
@@ -29,11 +30,12 @@ namespace :twitter do
   desc "Inject hourly twitter trends."
   task :insert_hourly_trends => :environment do
     total = 0
-    10.times do |past|
+    30.times do |past|
       print "Fetching twitter trends for: #{Chronic.parse("#{past} days ago")}\n"
       days = Twitter.trends_daily(Chronic.parse("#{past} days ago"), {:exclude => 'hashtags'})
       days.each do |day, trends|
         trends.each do |trend|
+          next if trend[:name].downcase.include?('twitter')
           found = Topic.where(:slug => trend[:name].to_url).first
           unless found
             topic = Topic.create(

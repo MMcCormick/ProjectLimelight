@@ -11,7 +11,7 @@ namespace :twitter do
       days.each do |day, trends|
         trends.each do |trend|
           next if trend[:name].downcase.include?('twitter')
-          found = Topic.where(:slug => trend[:name].to_url).first
+          found = Topic.where('aliases.slug' => trend[:name].to_url).first
           unless found
             topic = Topic.create(
                     :name => trend[:name]
@@ -36,7 +36,7 @@ namespace :twitter do
       days.each do |day, trends|
         trends.each do |trend|
           next if trend[:name].downcase.include?('twitter')
-          found = Topic.where(:slug => trend[:name].to_url).first
+          found = Topic.where('aliases.slug' => trend[:name].to_url).first
           unless found
             topic = Topic.create(
                     :name => trend[:name]

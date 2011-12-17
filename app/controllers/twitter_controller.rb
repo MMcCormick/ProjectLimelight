@@ -7,11 +7,10 @@ class TwitterController < ApplicationController
     @processed_tweets = []
     twitter = current_user.get_social_connect 'twitter'
     twitter_id = params[:twitter_id] ? params[:twitter_id] : twitter.uid.to_i
-    tweets = current_user.twitter.user_timeline(twitter_id, :count => 200, :include_rts => false, :include_entities => true, :trim_user => true, :exclude_replies => true)
+    tweets = current_user.twitter.user_timeline(twitter_id, :count => 50, :include_rts => false, :include_entities => true, :trim_user => true, :exclude_replies => true)
     tweet_ids = tweets.map{|t| t.id.to_s}
     tweet_posts = CoreObject.where(:tweet_id => {'$in' => tweet_ids})
     embedly_api = Embedly::API.new :key => 'ca77b5aae56d11e0a9544040d3dc5c07'
-    tweet_text = ''
     tweets.each_with_index do |tweet, i|
       previous = tweet_posts.detect{|tp| tp.tweet_id.to_s == tweet.id.to_s}
       if previous
@@ -74,24 +73,9 @@ class TwitterController < ApplicationController
         end
       end
 
-      # only use last 50 tweets
-      unless i > 50
-
-        # parse text and create word combinations for titles
-        unless new_tweet[:title].blank?
-          matches = Topic.parse_text(new_tweet[:title])
-          if matches.length > 0
-            if new_tweet[:mentions].length > 0
-              new_tweet[:mentions].concat matches
-            else
-              new_tweet[:mentions] = matches
-            end
-          end
-        end
-
-        # parse text and create word combinations for main content. take out @ and # tags before.
-        words = cleaned_text.gsub(/[\#|@]([a-zA-Z0-9,!\-_:'&\?\$]*)/, '')
-        matches = Topic.parse_text(words)
+      # parse text and create word combinations for titles
+      unless new_tweet[:title].blank?
+        matches = Topic.parse_text(new_tweet[:title])
         if matches.length > 0
           if new_tweet[:mentions].length > 0
             new_tweet[:mentions].concat matches
@@ -99,66 +83,84 @@ class TwitterController < ApplicationController
             new_tweet[:mentions] = matches
           end
         end
+      end
 
-        new_tweet[:title_raw] = new_tweet[:title].blank? ? '' : new_tweet[:title].dup
-        new_tweet[:content_raw] = new_tweet[:content].blank? ? '' : new_tweet[:content].dup
-
-        # take out duplicate mentions
+      # parse text and create word combinations for main content. take out @ and # tags before.
+      words = cleaned_text.gsub(/[\#|@]([a-zA-Z0-9,!\-_:'&\?\$]*)/, '')
+      matches = Topic.parse_text(words)
+      if matches.length > 0
         if new_tweet[:mentions].length > 0
-          used_ids = []
-          mentions = []
-          new_tweet[:mentions].each do |m|
-            unless used_ids.include?(m.id)
-              mentions << m
-              used_ids << m.id
-            end
+          new_tweet[:mentions].concat matches
+        else
+          new_tweet[:mentions] = matches
+        end
+      end
+
+      new_tweet[:title_raw] = new_tweet[:title].blank? ? '' : new_tweet[:title].dup
+      new_tweet[:content_raw] = new_tweet[:content].blank? ? '' : new_tweet[:content].dup
+
+      # take out duplicate mentions
+      if new_tweet[:mentions].length > 0
+        used_ids = []
+        mentions = []
+        new_tweet[:mentions].each do |m|
+          unless used_ids.include?(m.id)
+            mentions << m
+            used_ids << m.id
           end
-          new_tweet[:mentions] = mentions
+        end
+        new_tweet[:mentions] = mentions
 
-          # sort mentions by alias length
-          new_tweet[:mentions] = new_tweet[:mentions].sort_by {|m| (-1)*m.name.length}
+        # sort mentions by alias length
+        new_tweet[:mentions] = new_tweet[:mentions].sort_by {|m| (-1)*m.name.length}
 
-          # replace mentions in the raw content
-          used_mentions = []
-          new_tweet[:mentions].each do |mention|
-            already_used = used_mentions.detect{|m| m.name.include?(mention.name)}
-            unless already_used
-              mention.aliases.each do |topic_alias|
-                title_index, content_index = nil
-                unless new_tweet[:title_raw].blank?
-                  title_index = new_tweet[:title_raw].index(/\b#{topic_alias.name}\b/i)
-                  if title_index
-                    new_tweet[:title_raw].gsub!(/[#]*\b(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
-                  end
+        # replace mentions in the raw content
+        used_mentions = []
+        new_tweet[:mentions].each do |mention|
+          already_used = used_mentions.detect{|m| m.name.include?(mention.name)}
+          unless already_used
+            mention.aliases.each do |topic_alias|
+              title_index, content_index = nil
+              unless new_tweet[:title_raw].blank?
+                title_index = new_tweet[:title_raw].index(/\b#{topic_alias.name}\b/i)
+                if title_index
+                  new_tweet[:title_raw].gsub!(/[#]*\b(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
                 end
+              end
 
-                unless new_tweet[:content_raw].blank?
-                  content_index = new_tweet[:content_raw].index(/\b#{topic_alias.name}\b/i)
-                  if content_index
-                    new_tweet[:content_raw].gsub!(/[#]*\b(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
-                  end
+              unless new_tweet[:content_raw].blank?
+                content_index = new_tweet[:content_raw].index(/\b#{topic_alias.name}\b/i)
+                if content_index
+                  new_tweet[:content_raw].gsub!(/[#]*\b(#{topic_alias.name})\b/i, "#[#{mention.id}#\\1]")
                 end
+              end
 
-                if title_index || content_index
-                  used_mentions << mention
-                end
+              if title_index || content_index
+                used_mentions << mention
               end
             end
           end
-          new_tweet[:mentions] = used_mentions
         end
-
-        # store a string of mention names
-        new_tweet[:mentions_string] = new_tweet[:mentions].map{|m| m.name}
-
-        @processed_tweets << new_tweet
+        new_tweet[:mentions] = used_mentions
       end
 
-      # we are grabbing tweet text for all 200 tweets
-      tweet_text += " #{new_tweet[:title]} #{new_tweet[:content]}"
+      # store a string of mention names
+      new_tweet[:mentions_string] = new_tweet[:mentions].map{|m| m.name}
+
+      @processed_tweets << new_tweet
     end
 
-    total_mentions = Topic.parse_text(tweet_text, true)
+    # Find things for the user to follow
+    tweet_text = ''
+    10.times do |i|
+      tweets = current_user.twitter.user_timeline(twitter_id, :count => 200*(i+1), :include_rts => false, :include_entities => true, :trim_user => true, :exclude_replies => true)
+      tweets.each do |tweet|
+        tweet_text += "#{tweet[:text]} "
+      end
+    end
+
+
+    total_mentions = Topic.parse_text(tweet_text, false, true)
     @suggestions = Topic.get_graph(total_mentions)
   end
 

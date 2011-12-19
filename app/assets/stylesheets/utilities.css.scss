@@ -41,6 +41,16 @@
   cursor: default;
 }
 
+.counter {
+  &.warning {
+    color: orange;
+  }
+  &.exceeded {
+    color: red;
+  }
+}
+
+
 #form-submitting {
     @include opacity(.8);
     @include border-radius(2px);

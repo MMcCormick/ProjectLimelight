@@ -386,7 +386,7 @@ class Topic
 
     # find mentions in a body of text and return the topic matches
     # optionally return how often the mention occured in the text
-    def parse_text(text, with_counts=nil)
+    def parse_text(text, ooac=true, with_counts=nil)
       words = text.split(' ')
       word_combos = with_counts ? {} : []
       words.length.times do |i|
@@ -406,8 +406,13 @@ class Topic
           break unless words[i+x]
         end
       end
+
       if word_combos.length > 0
-        matches = Topic.any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => {'$in' => (with_counts ? word_combos.keys : word_combos)}, 'aliases.ooac' => true}).to_a
+        hash_query = {'$in' => (with_counts ? word_combos.keys : word_combos)}
+        if ooac == true
+          hash_query['aliases.ooac'] = true
+        end
+        matches = Topic.any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).to_a
       else
         matches = []
       end

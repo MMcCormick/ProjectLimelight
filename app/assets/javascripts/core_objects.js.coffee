@@ -203,8 +203,22 @@ jQuery ->
     target = $(@).parents('form:first').find('.tweet_content')
     target.toggle()
 
+  # Title character counter
+  $('.contributeC .title .mention').livequery (e) ->
+    $(@).charCount({
+      allowed: 125,
+      warning: 20
+    })
+
+  # Content character counter
+  $('.contributeC .talk_content .mention').livequery (e) ->
+    $(@).charCount({
+      allowed: 280,
+      warning: 30
+    })
+
   ####
-  # END
+  # END CONTRIBUTE FORM
   ####
 
   # mention boxes

@@ -24,7 +24,7 @@ class RecalculatePopularity
     set_pop(CoreObject.where("p"+timeframe[0,1]+"c" => true), timeframe)
     set_pop(Comment.where("p"+timeframe[0,1]+"c" => true), timeframe)
     set_pop(User.where("p"+timeframe[0,1]+"c" => true), timeframe)
-    set_pop(Topic.where("p"+timeframe[0,1]+"c" => true), timeframe)
+    set_pop(Topic.where("p"+timeframe[0,1]+"c" => true), timeframe, true)
   end
 
   def self.perform(timeframe)

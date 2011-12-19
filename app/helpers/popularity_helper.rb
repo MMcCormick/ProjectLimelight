@@ -1,5 +1,5 @@
 module PopularityHelper
-  def set_pop(objects, timeframe)
+  def set_pop(objects, timeframe, is_topic=false)
     objects.each do |object|
       pop_amount = 0
       @results.find("_id" => object.id).each do |doc|

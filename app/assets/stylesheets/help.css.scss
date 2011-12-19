@@ -13,8 +13,8 @@
   .num {
     font-size: 26px;
     position: absolute;
-    top: 5px;
-    left: 7px;
+    top: -3px;
+    left: 6px;
   }
   .c {
     font-size: 14px;
@@ -117,7 +117,7 @@
     cursor: pointer;
   }
   .more {
-    right: 108px;
+    right: 120px;
   }
   .close {
     right: 13px;
@@ -141,7 +141,7 @@
   left: 140px;
 }
 #hf-ptype { // contribute post type
-  top: 120px;
+  top: 5px;
   left: -15px;
 }
 #hf-mention { // contribute mention
@@ -154,23 +154,23 @@
 }
 #hf-types { // topic types
   left: -30px;
-  top: 16px;
+  top: 10px;
 }
 #hf-popularity { // topic popularity
   left: -30px;
-  top: 58px;
+  top: 76px;
 }
 #hf-follow { // topic following
   left: -30px;
-  top: 285px;
+  top: 43px;
 }
 #hf-aliases { // topic aliases
   left: -30px;
-  top: 345px;
+  top: 186px;
 }
 #hf-connections { // topic connections
   left: -30px;
-  top: 410px;
+  top: 241px;
 }
 #hf-sort { // feed sorting
   left: 19px;

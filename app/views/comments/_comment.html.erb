@@ -27,7 +27,8 @@
       <div class="clear-left"></div>
 
       <%= render 'votes/btn', :object => comment, :current_user => current_user %>
-      <div class="pop"><%= comment.votes_count %></div>
+      <div class="p_<%= comment.id %> pop"><%= comment.votes_count %></div>
+      <div class="pt_<%= comment.id %> hide"><%= comment.pt %></div>
     <% end %>
   </div>
 </div>

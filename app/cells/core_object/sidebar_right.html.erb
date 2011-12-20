@@ -1,4 +1,4 @@
-<div id="post-panel" data-id="<%= @object.id.to_s %>">
+<div id="post-panel" data-push="<%= @object.id.to_s %>">
   <div class="section">
     <div class="head"><%= @object.class.name %> Actions</div>
     <%= render 'core_objects/feed_teaser_actions', :current_user => @current_user, :object => @object %>
@@ -21,4 +21,5 @@
       <% end %>
     </div>
   <% end %>
+  <div class="pt_<%= @object.id.to_s %> hide"><%= @object.pt %></div>
 </div>

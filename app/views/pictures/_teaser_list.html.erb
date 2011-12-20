@@ -1,6 +1,6 @@
 <% cache("teaser-#{object.id.to_s}-list-top") do %>
 
-<div class="teaser list <%= object._type.downcase %>" data-id="<%= object.id %>">
+<div class="teaser list <%= object._type.downcase %>" data-push="<%= object.id %>">
 
   <div class="left">
     <% img = default_image_url(object, 120, 120, 'fit') %>

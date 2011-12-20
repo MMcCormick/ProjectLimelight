@@ -1,6 +1,6 @@
 <% cache("teaser-#{object.id.to_s}-list-top#{'-response' if response}") do %>
 
-<div class="teaser list talk <%= 'response' if response %>" data-id="<%= object.id %>">
+<div class="teaser list talk <%= 'response' if response %>" data-push="<%= object.id %>">
 
   <div class="left">
     <%= image_tag user_default_picture_path(object.user_snippet, :w => 65, :h => 65, :m => 'fillcropmid'), :style => "max-width: 65px;", :alt => "" %>

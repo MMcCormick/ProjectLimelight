@@ -534,7 +534,7 @@ module Limelight #:nodoc:
               "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
             }
           )
-          Pusher[user_id.to_s].trigger('popularity_changed', {:change => user_amt})
+          Pusher[user_id.to_s].trigger('popularity_changed', {:id => user_id.to_s, :change => user_amt})
 
           # Update mentioned topics if applicable
           if defined? topic_mentions
@@ -546,11 +546,11 @@ module Limelight #:nodoc:
               if t_mention.ooc
                 ooc_ids << t_mention.id
                 action.pop_snippets.new(:amount => ooc_amt, :id => t_mention.id, :object_type => "Topic")
-                Pusher[t_mention.id.to_s].trigger('popularity_changed', {:change => ooc_amt})
+                Pusher[t_mention.id.to_s].trigger('popularity_changed', {:id => id.to_s, :change => ooc_amt})
               else
                 ic_ids << t_mention.id
                 action.pop_snippets.new(:amount => ic_amt, :id => t_mention.id, :object_type => "Topic")
-                Pusher[t_mention.id.to_s].trigger('popularity_changed', {:change => ic_amt})
+                Pusher[t_mention.id.to_s].trigger('popularity_changed', {:id => id.to_s, :change => ic_amt})
               end
             end
 
@@ -591,7 +591,8 @@ module Limelight #:nodoc:
       self.pdc = true
       self.pwc = true
       self.pmc = true
-      Pusher[id.to_s].trigger('popularity_changed', {:change => amt})
+
+      Pusher[(self.class.name == 'Comment' ? talk_id.to_s : id.to_s)].trigger('popularity_changed', {:id => id.to_s, :change => amt})
     end
   end
 end

@@ -31,7 +31,6 @@
 		var options = $.extend(defaults, options);
 
 		function calculate(obj){
-      console.log('test');
       var count = $(obj).val().length;
 			var available = options.allowed - count;
 			if(available <= options.warning && available >= 0){
@@ -51,9 +50,7 @@
       if (!$(this).next().hasClass(options.css))
         $(this).after('<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
 
-      console.log(this);
-
-			calculate(this);
+      calculate(this);
 			$(this).keyup(function(){calculate(this)});
 			$(this).change(function(){calculate(this)});
 		});

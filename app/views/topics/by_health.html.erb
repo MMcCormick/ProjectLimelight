@@ -1,5 +1,11 @@
 <% content_for :page_header do %>
   <h1><%= @title %></h1>
+  <h1 id="health-nav">
+    <a href="<%= topics_by_health_path %>">All</a>
+    <% 6.times do |n| %>
+      <a href="<%= topics_by_health_path :h => n %>"><%= n %></a>
+    <% end %>
+  </h1>
 <% end %>
 
 <% if !@topics.empty? %>
@@ -13,5 +19,5 @@
   </ul>
 
 <% else %>
-  <div class="empty">This user is not following any topics!</div>
+  <div class="empty">No topics found!</div>
 <% end %>

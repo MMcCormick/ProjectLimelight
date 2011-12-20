@@ -28,7 +28,8 @@ class TopicConnectionsController < ApplicationController
     authorize! :update, topic
 
     original_slug = topic.slug
-    connection = TopicConnection.find(params[:connection][:con_id])
+    con_id = params[:connection][:sug_con_id].blank? ? params[:connection][:con_id] : params[:connection][:sug_con_id]
+    connection = TopicConnection.find(con_id)
 
     if params[:connection][:topic_id] == "0"
       name = params[:connection][:topic_name]

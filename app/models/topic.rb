@@ -279,10 +279,10 @@ class Topic
   # Connections
   #
 
+  # Returns true if the topic has one type_of or instances connection
   def typed?
-    typed = topic_connection_snippets.any?{ |snippet| snippet.id == Topic.type_of_id } ||
-          topic_connection_snippets.any?{ |snippet| snippet.id == Topic.instances_id }
-    typed
+    topic_connection_snippets.any?{ |snippet| snippet.id.to_s == Topic.type_of_id } ||
+          topic_connection_snippets.any?{ |snippet| snippet.id.to_s == Topic.instances_id }
   end
 
   def has_connection?(con_id, con_topic_id)
@@ -340,7 +340,7 @@ class Topic
   end
 
   # Gets connections, returning a hash of the following format
-  # connections => {:connection_id => {:name => "Products", :topics => [topic1, topic2]}}
+  # connections => {:connection_id => {:name => "ConnectionName", :topics => [topic1, topic2]}}
   def get_connections
     topic_ids = topic_connection_snippets.map { |snippet| snippet.topic_id }
     topics = Topic.where(:_id.in => topic_ids).desc(:pt)
@@ -358,6 +358,37 @@ class Topic
     connections
   end
 
+  # recursively gets topic ids to pull from in a hash of format {:topic_id => true}
+  def pull_from_ids(ids)
+    topic_connection_snippets.each do |snippet|
+      if snippet.pull_from? && !ids.include?(snippet.topic_id)
+        ids << snippet.topic_id
+        topic = Topic.find(snippet.topic_id)
+        ids = ids.merge(topic.pull_from_ids(ids)) if topic
+      end
+    end
+    ids
+  end
+
+  # TODO: finish
+  # Suggests connections for the topic based on other topics of the same type(s)
+  def suggested_connections
+    similar_topic_ids = []
+    con_ids = []
+    type_ids = get_types.map { |snippet| snippet.topic_id }
+    type_topics = Topic.where("_id" => { "$in" => type_ids })
+    type_topics.each_with_index do |type_topic, i|
+      similar_topic_ids = similar_topic_ids | type_topic.get_instances.map { |snippet| snippet.topic_id }
+    end
+
+    topics = Topic.where("_id" => { "$in" => similar_topic_ids })
+    topics.each do |topic|
+      con_ids = con_ids | topic.get_connection_ids
+    end
+
+    TopicConnection.where("_id" => { "$in" => con_ids })
+  end
+
   def get_types
     topic_connection_snippets.select { |snippet| snippet.id.to_s == Topic.type_of_id }
   end
@@ -370,16 +401,8 @@ class Topic
     topic_connection_snippets.select { |snippet| snippet.id.to_s == Topic.instances_id }
   end
 
-  # recursively gets topic ids to pull from in a hash of format {:topic_id => true}
-  def pull_from_ids(ids)
-    topic_connection_snippets.each do |snippet|
-      if snippet.pull_from? && !ids.include?(snippet.topic_id)
-        ids << snippet.topic_id
-        topic = Topic.find(snippet.topic_id)
-        ids = ids.merge(topic.pull_from_ids(ids)) if topic
-      end
-    end
-    ids
+  def get_connection_ids
+    topic_connection_snippets.map{ |snippet| snippet.id }.uniq
   end
 
   class << self

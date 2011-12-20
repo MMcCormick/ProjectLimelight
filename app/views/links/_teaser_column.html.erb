@@ -7,8 +7,8 @@
     <% original = default_image_url(object, 0, 0, :original) if img %>
     <% image = image_tag img.image_url, :width => img.calculate_d(75)[0].to_s, :height => img.calculate_d(75)[1].to_s, 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     <%= render 'core_objects/feed_teaser_image', :image => image if img %>
-    <% source = object.sources.length > 0 ? "<a href='#{object.sources[0].url}' target='_blank' rel='nofollow' class='s'>#{object.sources[0].name}</a> - " : '' %>
-    <%= source + "<p>#{parse_mentions(object.content, object)}</p>".html_safe %>
+    <p><%= parse_mentions(object.content, object) %></p>
+
     <div class="clear"></div>
   </div>
 

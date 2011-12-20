@@ -93,9 +93,12 @@ class TopicsController < ApplicationController
     @title = "Topics by Health"
     @description = "A list of all topics on the site, sorted by health and then by popularity"
     page = params[:p] ? params[:p].to_i : 1
-    @more_path = topics_by_health_path :p => page + 1
+    health = params[:h] ? params[:h].to_i : -1
+    @more_path = topics_by_health_path :p => page + 1, :h => health
     per_page = 50
-    @topics = Topic.order_by([[:health_index, :asc], [:pt, :desc]]).limit(per_page).skip((page - 1) * per_page)
+    health_q = (health == -1 ? {} : { :health_index => health } )
+    @topics = Topic.where(health_q).order_by([[:health_index, :asc], [:pt, :desc]]).limit(per_page).skip((page - 1) * per_page)
+    @more_path = nil if @topics.count(true) < per_page
 
     respond_to do |format|
       format.js { render json: topic_list_response("topics/health_list", @topics, @more_path), status: :ok }
@@ -323,6 +326,7 @@ class TopicsController < ApplicationController
     @more_path = topic_followers_path :p => page + 1
     per_page = 50
     @followers = User.where(:following_topics => @topic.id).limit(per_page).skip((page - 1) * per_page)
+    @more_path = nil if @followers.count(true) < per_page
 
     respond_to do |format|
       format.js { render json: user_list_response("users/std_list", @followers, @more_path), status: :ok }

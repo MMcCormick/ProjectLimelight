@@ -28,6 +28,13 @@
   }
 }
 
+// Health Navigation
+#health-nav {
+  a {
+    margin: 0 5px;
+  }
+}
+
 #topic-panel {
   h1 {
     font-size: 20px;
@@ -240,7 +247,7 @@
       input,
       textarea {
         width: 250px;
-        margin: 0 0 0 4px;
+        margin: 0 0 0 5px;
       }
       .tag {
         margin: 0 10px 5px 7px;
@@ -328,6 +335,9 @@
           max-height: 150px;
           max-width: 150px;
           margin: 0 5px;
+        }
+        #summary {
+          height: 180px;
         }
       }
       #user_uploadB-progress {

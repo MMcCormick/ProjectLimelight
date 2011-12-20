@@ -1,6 +1,6 @@
 <% cache("teaser-#{object.id.to_s}-column") do %>
 
-<div class="teaser column <%= object._type.downcase %>" data-id="<%= object.id %>">
+<div class="teaser column <%= object._type.downcase %>" data-push="<%= object.id %>">
   <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title_clean, object), :object => object %>
   <div class="content">
     <% img = default_image_url(object, 75, 75, 'fit', false, true) %>

@@ -1,4 +1,4 @@
-<div id="sidebar" class="<%= 'user-subscribe' if signed_in? %>" data-id="<%= @user.id.to_s if signed_in? %>">
+<div id="sidebar" data-push="<%= @user.id.to_s if signed_in? %>">
   <div class="full <%= 'hide' unless session[:sidebar] == :full %>">
     <div class="panel-close-left-icon ac" data-url="<%= sidebar_path(:state => :mini) %>" data-m="put" title="Minimize Sidebar"></div>
 

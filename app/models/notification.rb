@@ -63,21 +63,25 @@ class Notification
     string
   end
 
-  def action_text(count=nil)
-    count = triggered_by.length unless count
-    case type
+  def notification_text(count)
+    case type.to_sym
       when :follow
         count > 1 ? 'are following you' : 'is following you'
       when :also # also signifies that someone has also responded to something your responded to
-        'also commented on the post'
+        "also replied to #{object_user.username}'s comment on the #{object.type.downcase} '#{object.name}'".html_safe
       when :mention
-        'mentioned you... foo'
+        "mentioned you in their #{object.type.downcase} '#{object.name}'".html_safe
       when :reply
-        "replied to your #{object.type} #{object.name}"
+        if object.comment_id
+          name = object_user.id == user_id ? 'your' : "#{object_user.username}'s"
+          "replied to your comment on #{name} #{object.type.downcase} '#{object.name}'".html_safe
+        else
+          "replied to your #{object.type.downcase} '#{object.name}'".html_safe
+        end
       when :share
-        'shared foo'
+        "shared #{object.type.downcase} '#{object.name}'".html_safe
       else
-        "did something weird..."
+        "did something weird... this is a mistake and the Limelight team has been notified to fix it!"
     end
   end
 
@@ -170,6 +174,12 @@ class Notification
         notification.read = false
         notification.emailed = false
       end
+
+      Pusher["#{target_user.id.to_s}_private"].trigger('notification', {
+              :id => target_user.id.to_s,
+              :message => (message ? message : "#{triggered_by_user.username} #{notification.notification_text(1)}"),
+              :url => ''
+      })
 
       if notification.save && (!notification.read || new_trigger || !trigger_notified)
         if new_notification

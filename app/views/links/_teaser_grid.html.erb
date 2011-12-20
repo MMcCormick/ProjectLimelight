@@ -17,6 +17,12 @@
     </div>
 
     <div class="connectionsC">
+      <% if object.sources.length > 0 %>
+        <div class="sourceC s">
+          <%= "via <a href='#{object.sources[0].url}' target='_blank' rel='nofollow'>#{object.sources[0].name}</a>".html_safe %>
+        </div>
+      <% end %>
+
       <div class="s">
         <div class="oType"><div class="link-grey-icon" title="link"></div></div>
 

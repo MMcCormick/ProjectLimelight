@@ -736,6 +736,13 @@ $teaser-padding: 10px;
       margin-top: 0px;
     }
   }
+  .sourceC {
+    color: #666;
+    font-size: 11px;
+    font-weight: normal;
+    overflow: hidden;
+    white-space: nowrap;
+  }
   .mentions {
     @include clearfix();
     clear: both;
@@ -861,6 +868,13 @@ $teaser-padding: 10px;
     overflow: hidden;
     white-space: nowrap;
   }
+  .sourceC {
+    color: #666;
+    font-size: 11px;
+    font-weight: normal;
+    overflow: hidden;
+    white-space: nowrap;
+  }
   .controlsC {
     display: none;
   }
@@ -976,8 +990,17 @@ $scoreBox-width: 160px;
   .video-embed {
     margin:  0 $teaser-padding 0 0;
   }
-  .createdC {
+  .created-wrap {
     margin: 1px 0 0 6px;
+    color: #999999;
+    font-size: 9px;
+    .createdC {
+      margin: 0;
+      display: inline;
+    }
+    .sourceC {
+      display: inline;
+    }
   }
   p {
     margin: 5px 0 7px 6px;

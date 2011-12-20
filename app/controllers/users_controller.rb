@@ -122,6 +122,7 @@ class UsersController < ApplicationController
     @more_path = user_following_users_path :p => page + 1
     per_page = 50
     @following_users = User.where(:_id.in => @user.following_users).limit(per_page).skip((page - 1) * per_page)
+    @more_path = nil if @following_users.count(true) < per_page
 
     respond_to do |format|
       format.js { render json: user_list_response("users/std_list", @following_users, @more_path), status: :ok }
@@ -142,6 +143,7 @@ class UsersController < ApplicationController
     @more_path = user_followers_path :p => page + 1
     per_page = 50
     @followers = User.where(:following_users => @user.id).limit(per_page).skip((page - 1) * per_page)
+    @more_path = nil if @followers.count(true) < per_page
 
     respond_to do |format|
       format.js { render json: user_list_response("users/std_list", @followers, @more_path), status: :ok }
@@ -162,6 +164,7 @@ class UsersController < ApplicationController
     @more_path = user_following_topics_path :p => page + 1
     per_page = 50
     @following_topics = Topic.where(:_id.in => @user.following_topics).limit(per_page).skip((page - 1) * per_page)
+    @more_path = nil if @following_topics.count(true) < per_page
 
     respond_to do |format|
       format.js { render json: topic_list_response("topics/std_list", @following_topics, @more_path), status: :ok }

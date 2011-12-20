@@ -6,8 +6,11 @@
   <% if from_freebase %>
     <%= hidden_field_tag "connection[con_id]", Topic.type_of_id %>
   <% else %>
+    <% if defined?(suggested_connections) %>
+      <%= collection_select(:connection, :sug_con_id, suggested_connections, :id, :name, :prompt => "Suggested Connections") %>
+    <% end %>
     <div class="field">
-      <%= collection_select(:connection, :con_id, connection_types, :id, :name, :prompt => "Connection Type") %>
+      <%= collection_select(:connection, :con_id, connection_types, :id, :name, :prompt => "Other Connections") %>
     </div>
   <% end %>
 

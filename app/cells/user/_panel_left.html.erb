@@ -44,17 +44,19 @@
       Favorites
     </a>
   </div>
-  
-  <% if @user.get_social_connect('twitter') %>
-    <a id="" class="sidebarB btn" href="<%= twitter_view_feed_path %>">
-      <div class="icon twitter-bird-small"></div>
-      Get My Twitter Feed
-    </a>
-  <% else %>
-    <a id="" class="sidebarB btn" href="<%= user_omniauth_authorize_path(:twitter) %>">
-      <div class="icon twitter-bird-small"></div>
-      Connect Twitter
-    </a>
-  <% end %>
+
+  <div class="hide">
+    <% if @user.get_social_connect('twitter') %>
+      <a id="" class="sidebarB btn" href="<%= twitter_view_feed_path %>">
+        <div class="icon twitter-bird-small"></div>
+        Get My Twitter Feed
+      </a>
+    <% else %>
+      <a id="" class="sidebarB btn" href="<%= user_omniauth_authorize_path(:twitter) %>">
+        <div class="icon twitter-bird-small"></div>
+        Connect Twitter
+      </a>
+    <% end %>
+  </div>
 
 </div>

@@ -337,6 +337,7 @@ class User
   class << self
     # Omniauth providers
     def find_by_omniauth(omniauth, signed_in_resource=nil)
+      new_user = false
       info = omniauth['info']
       extra = omniauth['extra']['raw_info']
 
@@ -363,6 +364,7 @@ class User
         # Update the token
         connect.token = omniauth['credentials']['token']
       else # Create a new user with a stub password.
+        new_user = true
         if extra["gender"] && !extra["gender"].blank?
           gender = extra["gender"] == 'male' || extra["gender"] == 'm' ? 'm' : 'f'
         else
@@ -389,6 +391,11 @@ class User
       end
 
       user.save :validate => false
+
+      if new_user == true
+        user.slug = user.id.to_s # set a temporary slug
+        user.save :validate => false
+      end
       user
     end
   end

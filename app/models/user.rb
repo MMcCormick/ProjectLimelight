@@ -389,6 +389,8 @@ class User
       end
 
       user.save :validate => false
+      user.slug = user.id.to_s # set a temporary slug
+      user.save :validate => false
       user
     end
   end

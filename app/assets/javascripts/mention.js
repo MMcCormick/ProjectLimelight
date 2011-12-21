@@ -379,6 +379,7 @@ var fields = [];
       this.autocomplete.autocomplete(settings[this.mode].autocomplete, {
         minChars: 2,
         width: 500,
+        scrollHeight: 400,
         matchContains: true,
         matchSubset: false,
         autoFill: false,

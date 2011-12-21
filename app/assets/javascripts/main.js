@@ -234,10 +234,11 @@ $(function() {
     $(this).animate({'width':'150px'}, 200);
   }).autocomplete($('#static-data').data('d').autocomplete, {
     minChars: 2,
-    width: 300,
+    width: 314,
     matchContains: true,
     matchSubset: false,
     autoFill: false,
+    scrollHeight: 400,
     selectFirst: false,
     mustMatch: false,
     searchKey: 'term',

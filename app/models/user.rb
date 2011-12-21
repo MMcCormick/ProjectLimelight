@@ -151,8 +151,8 @@ class User
   end
 
   def username_change
-    if username_was && username_changed? && username_was != username && !role?('admin')
-      if username_reset == false
+    if username_was && username_changed? && username_was != username
+      if username_reset == false && !role?('admin')
         errors.add(:username, "cannot be changed right now")
       else
         self.username_reset = false

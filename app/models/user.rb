@@ -108,7 +108,7 @@ class User
 
   # Return the users slug instead of their ID
   def to_param
-    self.slug
+    self.slug.downcase
   end
 
   def follow_limelight_topic

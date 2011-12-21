@@ -2,10 +2,17 @@
 <%= form_for user, :html => {:class => "ajax"} do |f| %>
   <div class="errors"></div>
 
-  <div class="static">
-    <div class="name">Username:</div>
-    <div class="value"><%= user.username %></div>
-  </div>
+  <% if can? :manage, :all %>
+    <div class="field">
+      <%= f.label :username, "Username", :class => "" %><br />
+      <%= f.text_field :username, :class => "" %>
+    </div>
+  <% else %>
+    <div class="static">
+      <div class="name">Username:</div>
+      <div class="value"><%= user.username %></div>
+    </div>
+  <% end %>
 
   <div class="field">
     <%= f.label :first_name, "First Name", :class => "" %><br />

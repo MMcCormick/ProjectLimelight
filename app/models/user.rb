@@ -151,7 +151,7 @@ class User
   end
 
   def username_change
-    if username_was && username_changed? && username_was != username
+    if username_was && username_changed? && username_was != username && !role?('admin')
       if username_reset == false
         errors.add(:username, "cannot be changed right now")
       else
@@ -369,11 +369,12 @@ class User
           gender = nil
         end
 
-        username = info['nickname'].gsub(/[^a-zA-Z0-9]/, '')
-        existing_username = User.where(:slug => username).first
-        if existing_username
-          username += Random.rand(99).to_s
-        end
+        username = ""
+        #username = info['nickname'].gsub(/[^a-zA-Z0-9]/, '')
+        #existing_username = User.where(:slug => username).first
+        #if existing_username
+        #  username += Random.rand(99).to_s
+        #end
 
         user = User.new(
                 username: username,
@@ -387,7 +388,7 @@ class User
         user.social_connects << connect
       end
 
-      user.save
+      user.save :valiate => false
       user
     end
   end
@@ -402,7 +403,6 @@ class User
   end
 
   def update_denorms
-    #TODO: update soulmate
     user_snippet_updates = {}
     object_user_updates = {}
     triggered_by_updates = {}
@@ -431,6 +431,7 @@ class User
       Comment.where(:user_id => id).update_all(user_snippet_updates)
       Notification.where("object_user._id" => id).update_all(object_user_updates)
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
+      Resque.enqueue(SmCreateUser, id)
     end
   end
 

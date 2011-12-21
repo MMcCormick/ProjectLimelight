@@ -3,9 +3,9 @@
 <div class="teaser column <%= object._type.downcase %>" data-push="<%= object.id %>">
   <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title_clean, object), :object => object %>
   <div class="content">
-    <% img = default_image_url(object, 75, 75, 'fit', false, true) %>
+    <% img = default_image_url(object, 210, 0, 'fit', false, true) %>
     <% original = default_image_url(object, 0, 0, :original) if img %>
-    <% image = image_tag img.image_url, :width => img.calculate_d(75)[0].to_s, :height => img.calculate_d(75)[1].to_s, 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+    <% image = image_tag img.image_url, :width => 210, :height => img.calculate_h(210).to_s, 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
     <%= render 'core_objects/feed_teaser_image', :image => image if img %>
     <p><%= parse_mentions(object.content, object) %></p>
 

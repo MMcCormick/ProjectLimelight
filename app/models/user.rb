@@ -388,7 +388,7 @@ class User
         user.social_connects << connect
       end
 
-      user.save :valiate => false
+      user.save :validate => false
       user
     end
   end

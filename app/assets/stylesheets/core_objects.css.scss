@@ -438,6 +438,7 @@
 .voteB,
 .primaryB,
 .ooacB {
+  line-height: 1.0em;
   .triggered {
     display: none;
   }
@@ -448,6 +449,7 @@
 .unvoteB,
 .unprimaryB,
 .unooacB {
+  line-height: 1.0em;
   .default {
     display: none;
   }
@@ -1430,6 +1432,9 @@ $scoreBox-width: 160px;
     font-size: 14px;
     font-style: italic;
     margin: 15px 0 0 10px;
+  }
+  .teaser.list {
+    margin-bottom: 10px;
   }
   .comment-thread {
     padding-bottom: 15px;

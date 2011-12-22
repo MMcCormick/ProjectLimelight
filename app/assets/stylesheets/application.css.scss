@@ -359,22 +359,23 @@ button {
 
   .btn-large {
     position: relative;
-    padding: 5px 0 5px 30px;
+    padding: 6px 0 6px 30px;
     border-bottom: 1px solid #CCC;
     font-weight: normal;
+    line-height: 1.0em;
 
     a {
       color: #444;
     }
     .icon {
       position: absolute;
-      top: 5px;
+      top: 4px;
       left: 5px;
     }
     .notification-count {
       position: absolute;
       font-size: 18px;
-      top: 0px;
+      top: 5px;
       left: 4px;
       width: 20px;
       text-align: center;
@@ -515,7 +516,7 @@ button {
       .following {
         font-size: 11px;
         position: absolute;
-        top: 7px;
+        top: 6px;
         left: 68px;
         width: 105px;
         text-align: right;

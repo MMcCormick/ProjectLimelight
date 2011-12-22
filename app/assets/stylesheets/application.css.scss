@@ -353,11 +353,11 @@ button {
 
   .top {
     position: relative;
-    height: 60px;
     border-bottom: 1px solid #9F9F9F;
     background: #FFF;
     z-index: 130;
     overflow: hidden;
+    height: auto;
 
     &.floating {
       position: fixed;
@@ -487,7 +487,6 @@ button {
   .user {
     .top {
       width: 180px;
-      height: auto;
 
       .user-panel {
         padding: 0 0 0 60px;
@@ -555,7 +554,6 @@ button {
   .topic {
     .top {
       width: 180px;
-      height: auto;
       overflow: visible;
 
       &.floating {

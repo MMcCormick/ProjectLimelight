@@ -73,7 +73,7 @@ module ApplicationHelper
     text.scan(/\@\[([0-9a-zA-Z]+)#([\w ]+)\]/).each do |user|
       # Loop through all of the user mentions connected to this object
       # If we found a match, replace the mention with a link to the user
-      user_mention = object.user_mentions.detect{|m| m.id = user[0]}
+      user_mention = object.user_mentions.detect{|m| m.id.to_s == user[0]}
       if user_mention
         if absolute
           text.gsub!(/\@\[#{user[0]}##{user[1]}\]/, "<a href='#{user_url(user_mention)}'>#{user_mention.username}</a>")

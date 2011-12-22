@@ -563,9 +563,13 @@ $teaser-padding: 10px;
   .tag.user,
   .time { float: left; }
 
+  .content {
+    border-bottom: 1px solid #DCDFD4;
+  }
+
   .connectionsC {
     margin: 0;
-    background: #EBEEE2;
+    background: #F9F9F9;
     clear: left;
     font-size: 11px;
     position: relative;
@@ -575,7 +579,7 @@ $teaser-padding: 10px;
       padding: 3px 10px;
       overflow: none;
       border-bottom: 1px solid #DCDFD4;
-      border-top: 1px solid #F3F6EA;
+      border-top: 1px solid #F3F3F3;
     }
     .mentions {
       @include clearfix();

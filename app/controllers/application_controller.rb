@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :init, :set_session, :set_user_time_zone
+  before_filter :init, :set_request_type, :set_session, :set_user_time_zone
   layout :layout
 
   def authenticate_admin_user!
@@ -45,15 +45,9 @@ class ApplicationController < ActionController::Base
     build_ajax_response(:ok, nil, nil, nil, :content => html, :event => "loaded_alt_list")
   end
 
-  # update the sidebar minimized or maximized
-  def sidebar
-    state = params[:state]
-    if [:mini, :full].include? state.to_sym
-      session[:sidebar] = state.to_sym
-    end
-
-    response = build_ajax_response(:ok, nil, nil)
-    render json: response, :status => 200
+  def set_request_type
+    # this fixes an IE 8 issue with refreshing page returning javascript response
+    request.format = :html if request.format == "*/*"
   end
 
   # Exception Throwers

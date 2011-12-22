@@ -66,9 +66,6 @@ ProjectLimelight::Application.routes.draw do
   # Uploads
   match "/upload" => "uploads#create", :as => :upload_tmp
 
-  # Sidebar
-  put 'sidebar' => 'application#sidebar', :as => :sidebar
-
   # Twitter
   scope 'twitter' do
     get '/analyze' => 'twitter#show', :as => :twitter_view_feed

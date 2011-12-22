@@ -86,15 +86,5 @@
     <% end %>
   <% end %>
 
-  <div id="static-links">
-    <a href="/pages/about">About</a> <span class="dot">.</span>
-    <a href="/pages/contact">Contact</a> <span class="dot">.</span>
-    <a href="/pages/privacy">Privacy</a>
-    <br>
-    <a href="/pages/terms">Terms</a> <span class="dot">.</span>
-    <a href="/pages/help">Help</a> <span class="dot">.</span>
-    <span data-m="put" data-url="/help/tutorials/on" class="tutorial-start <%= signed_in? ? 'ac' : 'auth' %>">Tutorials</span>
-  </div>
-
   <%= render 'help/user_panel' %>
 </div>

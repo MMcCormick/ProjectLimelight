@@ -208,11 +208,11 @@ button {
   position: relative;
   min-width: $min-width;
   background: #FFF; // right sidebar background color
-  border-left: 1px solid #CCC;
+  border-left: 1px solid #9F9F9F;
   margin-left: 7px; // margin between left side and left sidebar
 
   &.sbr {
-    border-right: 1px solid #CCC;
+    border-right: 1px solid #9F9F9F;
     margin-right: 7px; // margin between right side and right sidebar
 
     #colmid {
@@ -242,7 +242,7 @@ button {
   width: 200%;
   background: image-url("bg_textured.jpg") repeat; // center content background
   height: 100%;
-  border-right: 1px solid #CCC;
+  border-right: 1px solid #9F9F9F;
 }
 #page {
   position: relative;
@@ -252,8 +252,7 @@ button {
   left: 180px;
   //padding-bottom: 75px;
   background: #FFF; // left sidebar background color
-  border-right: 1px solid #CCC;
-  border-right: 1px solid #CCC;
+  border-right: 1px solid #9F9F9F;
   height: 100%;
 }
 #page_content {
@@ -271,12 +270,18 @@ button {
   position: relative;
 }
 
+.show-c {
+  #page_header {
+    min-height: 60px;
+  }
+}
+
 #page_header {
   position: relative;
   color: #000;
   z-index: 130;
   background: #FFF;
-  border-bottom: 1px solid #9C9C9C;
+  border-bottom: 1px solid #9F9F9F;
 
   h1 {
     text-align: center;
@@ -327,7 +332,7 @@ button {
 
   &.left {
     .top {
-      border-right: 1px solid #CCC;
+      border-right: 1px solid #9F9F9F;
 
       &.floating {
       }
@@ -338,9 +343,10 @@ button {
     display: none;
 
     .top {
-      border-left: 1px solid #CCC;
+      border-left: 1px solid #9F9F9F;
 
       &.floating {
+        width: 179px;
       }
     }
   }
@@ -348,9 +354,10 @@ button {
   .top {
     position: relative;
     height: 60px;
-    border-bottom: 1px solid #9C9C9C;
+    border-bottom: 1px solid #9F9F9F;
     background: #FFF;
     z-index: 130;
+    overflow: hidden;
 
     &.floating {
       position: fixed;
@@ -358,12 +365,13 @@ button {
     }
   }
 
-  .btn-large {
+  .sb-btn-l {
     position: relative;
     padding: 6px 0 6px 30px;
-    border-bottom: 1px solid #CCC;
     font-weight: normal;
     line-height: 1.0em;
+    width: 150px;
+    height: 14px;
 
     a {
       color: #444;
@@ -388,9 +396,6 @@ button {
 
     &:hover,
     &.on {
-      @include single-box-shadow(#666, 0px, 0px, 2px);
-      background: #AAA;
-      border-bottom: 1px solid #999;
       color: #FFF;
       a {
         color: #FFF;
@@ -426,17 +431,17 @@ button {
   }
 
   .section-h {
-    background: #444;
-    color: #EEE;
-    padding: 3px 6px;
+    color: #EFEFEF;
+    padding: 0 0 0 7px;
     font-weight: normal;
-    font-size: 14px;
-    margin-top: -1px;
+    font-size: 13px;
+    margin-top: -4px;
+    height: 25px;
+    line-height: 28px;
   }
   .section {
     padding: 0px;
     font-size: 13px;
-    border-bottom: 1px solid #CCC;
 
     .none {
       font-style: italic;
@@ -489,7 +494,7 @@ button {
         width: 120px;
         position: relative;
         height: 60px;
-        border-bottom: 1px solid #9C9C9C;
+        border-bottom: 1px solid #9F9F9F;
 
         img {
           position: absolute;
@@ -524,7 +529,7 @@ button {
         left: 22px;
       }
     }
-    .btn-large {
+    .sb-btn-l {
       a {
         display: block;
         width: 130px;
@@ -551,6 +556,8 @@ button {
     .top {
       width: 180px;
       height: auto;
+      overflow: visible;
+
       &.floating {
         width: 179px;
       }
@@ -558,7 +565,7 @@ button {
     .topic-panel {
       height: 60px;
       width: 180px;
-      border-bottom: 1px solid #9C9C9C;
+      border-bottom: 1px solid #9F9F9F;
       display: table;
     }
     .topic-name {

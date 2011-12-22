@@ -8,7 +8,7 @@ class UserCell < Cell::Rails
     user_id = user ? user.id.to_s : 0
 
     if current_id == user_id
-      "#{current_id}-mine-#{state}"
+      "#{current_id}-mine"
     elsif current_user && current_user.is_following?(user)
       "#{user_id}-following"
     else

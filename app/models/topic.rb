@@ -405,6 +405,19 @@ class Topic
     topic_connection_snippets.map{ |snippet| snippet.id }.uniq
   end
 
+  def expire_caches
+    Topic.expire_caches(id.to_s)
+
+    # if name/slug changed clear any cached thing with links to this topic
+    if name_changed? || slug_changed? || short_name_changed?
+      objects = CoreObject.where('topic_mentions._id' => id)
+      objects.each do |object|
+        object.expire_caches
+      end
+      ActionController::Base.new.expire_cell_state TopicCell, :trending
+    end
+  end
+
   class << self
 
     # find mentions in a body of text and return the topic matches
@@ -495,6 +508,13 @@ class Topic
 
       data
     end
+
+    def expire_caches(target_id)
+      # topic right sidebar
+      ['', '-following', '-manage', '-following-manage'].each do |key|
+        ActionController::Base.new.expire_cell_state TopicCell, :sidebar, target_id.to_s+key
+      end
+    end
   end
 
   protected
@@ -549,22 +569,6 @@ class Topic
 
     if soulmate
       Resque.enqueue(SmCreateTopic, id.to_s)
-    end
-  end
-
-  def expire_caches
-    # topic right sidebar
-    ['', '-following', '-manage', '-following-manage'].each do |key|
-      ActionController::Base.new.expire_cell_state TopicCell, :sidebar, id.to_s+key
-    end
-
-    # if name/slug changed clear any cached thing with links to this topic
-    if name_changed? || slug_changed? || short_name_changed?
-      objects = CoreObject.where('topic_mentions._id' => id)
-      objects.each do |object|
-        object.expire_caches
-      end
-      ActionController::Base.new.expire_cell_state TopicCell, :trending
     end
   end
 end

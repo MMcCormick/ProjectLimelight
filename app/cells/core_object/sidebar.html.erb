@@ -13,7 +13,7 @@
     </div>
   <% end %>
 
-  <% if @object.sources.length > 0 %>
+  <% if @object.sources.detect {|s| !s.name.blank?} %>
     <h3 class="section-h">Sources</h3>
     <div class="section sources">
       <% @object.sources.each do |source| %>

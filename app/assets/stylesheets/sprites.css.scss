@@ -31,6 +31,36 @@
     @include icon-sprite(arrow_grey_right_24x24);
     width: 24px; height: 24px;
 }
+
+.sidebar {
+  .section-h {
+    height: 28px;
+    width: 187px;
+  }
+
+  &.left {
+    .section-h {
+      @include icon-sprite(section-h-l-bg);
+    }
+  }
+  &.right {
+    .section-h {
+      @include icon-sprite(section-h-r-bg);
+      margin-left: -6px;
+      padding-left: 13px;
+    }
+  }
+}
+.sb-btn-l {
+  @include icon-sprite(sb-btn-l-off);
+  height: 26px;
+  width: 180px;
+
+  &.on,
+  &:hover {
+    @include icon-sprite(sb-btn-l-on);
+  }
+}
 .settings-icon {
     @include icon-sprite(settings-icon);
     height: 16px;

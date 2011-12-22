@@ -9,6 +9,7 @@ class NotificationsController < ApplicationController
     if current_user.unread_notification_count > 0
       Notification.where('user_id' => current_user.id).update_all({'read' => true})
       current_user.unread_notification_count = 0
+      current_user.expire_caches
       current_user.save
     end
   end

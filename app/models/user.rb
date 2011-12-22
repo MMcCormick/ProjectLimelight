@@ -400,12 +400,22 @@ class User
     end
   end
 
+  def expire_caches
+    User.expire_caches(id.to_s)
+  end
+
   protected
 
   class << self
     def find_for_database_authentication(conditions)
       login = conditions.delete(:login)
       self.any_of({ :username => login }, { :email => login }).first
+    end
+
+    def expire_caches(target_id)
+      ActionController::Base.new.expire_cell_state UserCell, :sidebar, target_id
+      ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-mine"
+      ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-following"
     end
   end
 
@@ -438,15 +448,9 @@ class User
       Comment.where(:user_id => id).update_all(user_snippet_updates)
       Notification.where("object_user._id" => id).update_all(object_user_updates)
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
+      expire_caches
       Resque.enqueue(SmCreateUser, id)
     end
-  end
-
-  def expire_caches
-    ActionController::Base.new.expire_cell_state UserCell, :sidebar, id.to_s
-    ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{id.to_s}-mine"
-    ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{id.to_s}-mine-tutorials"
-    ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{id.to_s}-following"
   end
 
 end

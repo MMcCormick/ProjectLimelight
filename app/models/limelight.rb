@@ -535,6 +535,7 @@ module Limelight #:nodoc:
             }
           )
           Pusher[user_id.to_s].trigger('popularity_changed', {:id => user_id.to_s, :change => user_amt})
+          User.expire_caches(user_id.to_s)
 
           # Update mentioned topics if applicable
           if defined? topic_mentions
@@ -562,6 +563,7 @@ module Limelight #:nodoc:
                 "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
               }
             )
+            ooc_ids.each {|target| Topic.expire_caches(target.to_s)}
             Topic.collection.update(
               {:_id => {"$in" => ic_ids}},
               {
@@ -569,6 +571,7 @@ module Limelight #:nodoc:
                 "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
               }
             )
+            ic_ids.each {|target| Topic.expire_caches(target.to_s)}
           end
         end
 

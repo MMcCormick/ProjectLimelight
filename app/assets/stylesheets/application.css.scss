@@ -30,12 +30,12 @@ html, body {
 
   &.narrow {
     .interior {
-      width: 1000px;
+      width: $min-width;
     }
     #colmask {
-      width: 1000px;
-      border-left: 1px solid #CCC; // left sidebar border on narrow view
-      border-right: 1px solid #CCC; // right sidebar border on narrow view
+      width: $min-width;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 }
@@ -206,11 +206,15 @@ button {
   margin: auto;
   overflow: hidden;
   position: relative;
-  width: 100%;
   min-width: $min-width;
   background: #FFF; // right sidebar background color
+  border-left: 1px solid #CCC;
+  margin-left: 7px; // margin between left side and left sidebar
 
   &.sbr {
+    border-right: 1px solid #CCC;
+    margin-right: 7px; // margin between right side and right sidebar
+
     #colmid {
       margin-left: -180px; // right sidebar width
     }
@@ -272,7 +276,7 @@ button {
   color: #000;
   z-index: 130;
   background: #FFF;
-  border-bottom: 1px solid #CCC;
+  border-bottom: 1px solid #9C9C9C;
 
   h1 {
     text-align: center;
@@ -310,7 +314,6 @@ button {
   }
 
   &.floating {
-    @include single-box-shadow(#999, 0, 0, 3px);
     position: fixed;
     top: 0px;
   }
@@ -327,7 +330,6 @@ button {
       border-right: 1px solid #CCC;
 
       &.floating {
-        @include single-box-shadow(#999, -2px, 0, 3px);
       }
     }
   }
@@ -339,7 +341,6 @@ button {
       border-left: 1px solid #CCC;
 
       &.floating {
-        @include single-box-shadow(#999, 2px, 0, 3px);
       }
     }
   }
@@ -347,7 +348,7 @@ button {
   .top {
     position: relative;
     height: 60px;
-    border-bottom: 1px solid #CCC;
+    border-bottom: 1px solid #9C9C9C;
     background: #FFF;
     z-index: 130;
 
@@ -381,7 +382,7 @@ button {
       text-align: center;
       font-weight: bold;
       &.on {
-        color: red;
+        color: $picture-color;
       }
     }
 
@@ -391,6 +392,9 @@ button {
       background: #AAA;
       border-bottom: 1px solid #999;
       color: #FFF;
+      a {
+        color: #FFF;
+      }
     }
   }
 
@@ -477,14 +481,40 @@ button {
 
   .user {
     .top {
-      padding: 0 0 0 60px;
-      width: 120px;
+      width: 180px;
+      height: auto;
 
-      img {
-        position: absolute;
-        top: 0px;
-        left: 0px;
+      .user-panel {
+        padding: 0 0 0 60px;
+        width: 120px;
+        position: relative;
+        height: 60px;
+        border-bottom: 1px solid #9C9C9C;
+
+        img {
+          position: absolute;
+          top: 0px;
+          left: 0px;
+        }
+        .username {
+          padding: 5px 0 0 5px;
+          margin: 0 5px 0 0;
+          overflow: hidden;
+        }
+        .followers,
+        .pop {
+          padding: 2px 0 0 5px;
+          font-size: 11px;
+          display: block;
+        }
+        .followers {
+
+        }
+        .pop {
+          cursor: default;
+        }
       }
+
       #login {
         @include green-conservative-button(14, 2px, 0px);
         padding: 5px 0;
@@ -493,37 +523,24 @@ button {
         top: 15px;
         left: 22px;
       }
-      .username {
-        padding: 5px 0 0 5px;
-        margin: 0 5px 0 0;
-        overflow: hidden;
-      }
-      .followers,
-      .pop {
-        padding: 2px 0 0 5px;
-        font-weight: bold;
-        font-size: 11px;
-        display: block;
-      }
-      .followers {
-
-      }
-      .pop {
-        cursor: default;
-      }
     }
     .btn-large {
+      a {
+        display: block;
+        width: 130px;
+      }
       .following {
         font-size: 11px;
         position: absolute;
         top: 6px;
-        left: 68px;
-        width: 105px;
+        right: 5px;
         text-align: right;
         
         a {
+          display: inline;
+          width: auto;
           &:hover {
-            color: #FFF;
+            text-decoration: underline;
           }
         }
       }
@@ -533,13 +550,22 @@ button {
   .topic {
     .top {
       width: 180px;
-      display:table-cell;
-      vertical-align: middle;
-      height: 61px;
+      height: auto;
+      &.floating {
+        width: 179px;
+      }
+    }
+    .topic-panel {
+      height: 60px;
+      width: 180px;
+      border-bottom: 1px solid #9C9C9C;
+      display: table;
     }
     .topic-name {
       font-size: 14px;
-      margin: 0 10px;
+      padding: 0 10px;
+      display: table-cell;
+      vertical-align: middle;
     }
     .topic-image {
       margin: 0 0 0 1px;
@@ -548,8 +574,8 @@ button {
       @include single-box-shadow(#444, 1px, 1px, 2px);
       background: #444;
       position: absolute;
-      top: 61px;
-      left: 1px;
+      top: 86px;
+      left: 0px;
       font-weight: bold;
       color: #fff;
       padding: 3px 9px;
@@ -559,7 +585,7 @@ button {
       border-right: 1px solid #CCC;
     }
     .follow-c {
-      border-top: 1px solid #CCC;
+      border-bottom: none;
     }
     .short-name,
     .summary {

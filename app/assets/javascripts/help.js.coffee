@@ -60,7 +60,7 @@ jQuery ->
 
   $('#hp-topic').live 'click', (e) ->
     # go to limelight topic if not on that page
-    if ($('#topic-panel[data-id="4ec69d9fcddc7f9fe80000b8"]').length == 0)
+    if ($('[data-push="4ec69d9fcddc7f9fe80000b8"]').length == 0)
       window.location = '/limelight'
       return false
 

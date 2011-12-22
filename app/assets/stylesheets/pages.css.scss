@@ -4,14 +4,9 @@
   .privacy-c,
   .terms-c,
   .help-c {
-    margin: auto;
-    max-width: 700px;
-    font-size: 12px;
-
     p {
       margin-bottom: 10px;
     }
-
   }
 
   .privacy-c,
@@ -22,7 +17,9 @@
   }
 
   .admin-c {
-    margin-left: 5px;
-    margin-right: 5px;
   }
+}
+
+.static-page {
+  padding: 10px;
 }

@@ -102,14 +102,13 @@ function handleScroll() {
     $('.sidebar, #page_inside').css('padding-top', '0px');
   }
   else {
+    $('#page_inside').css('padding-top', $('#page_header').outerHeight());
+    $('.sidebar.left').css('padding-top', $('.sidebar.left .top').outerHeight());
     $('#page_header').css('width', $('#page_header').width());
     $('.sidebar .top, #page_header').each(function() {
       $(this).css('left', $(this).offset().left+'px')
       $(this).addClass('floating')
     });
-
-    $('#page_inside').css('padding-top', $('#page_header').outerHeight());
-    $('.sidebar.left').css('padding-top', $('.sidebar.left .top').outerHeight());
   }
 }
 

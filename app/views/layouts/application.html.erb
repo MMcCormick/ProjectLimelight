@@ -29,33 +29,38 @@
     
     <%= render 'shared/header' %>
 
-    <div id="content">
-      <div class="interior">
-        <div id="page" class="<%= 'minimized-sidebar' if session[:sidebar] == :mini %>">
-          <div id="page_header" class="<%= 'minimized-sidebar' if session[:sidebar] == :mini %>">
-            <%- flash.each do |name, msg| -%>
-              <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
-            <%- end -%>
-            <%= yield :page_header %>
-          </div>
-          <div id="page_content" class="<%= params[:action].parameterize %>-c <%= right_sidebar %>">
+    <div id="colmask" class="<%= right_sidebar %>">
+      <div id="colmid">
+        <div id="page">
+          <div id="page_content" class="<%= params[:action].parameterize %>-c">
+            <div id="page_inside">
+              <div id="page_header">
+                <%- flash.each do |name, msg| -%>
+                  <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+                <%- end -%>
+                <%= yield :page_header %>
+              </div>
 
-            <%= yield %>
+              <%= yield %>
 
-            <% if Rails.env.development? %>
-              <%= debug(params) %>
-              <div id="debug-upload-runtime">Upload Runtime: No runtime found</div>
-            <% end %>
-
-            <div id="sidebar-right">
-              <%= yield :sidebar_right %>
+              <% if Rails.env.development? %>
+                <%= debug(params) %>
+                <div id="debug-upload-runtime">Upload Runtime: No runtime found</div>
+              <% end %>
             </div>
-
           </div>
-          <%= render_cell :user, :sidebar_left, current_user, session[:sidebar] %>
+
+          <div class="sidebar left">
+            <%= render_cell :user, :sidebar, current_user, current_user, '' %>
+          </div>
+          
+          <div class="sidebar right">
+            <%= yield :sidebar_right %>
+          </div>
         </div>
       </div>
     </div>
+
     <footer id="footer">
       <div class="interior">
         <%= render_cell :topic, :trending %>

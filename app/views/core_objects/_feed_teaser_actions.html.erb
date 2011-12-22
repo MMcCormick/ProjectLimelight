@@ -1,5 +1,5 @@
 <div class="controlsC">
-  <div class="pop p_<%= object.id.to_s %>"><div><%= object.pt.to_i %></div></div>
+  <%= render 'shared/popularity', :object => object, :extra => '' %>
   <%= render 'votes/btn', :current_user => current_user, :object => object %>
   <%= render 'favorites/btn', :current_user => current_user, :object => object %>
   <%= render 'reposts/btn', :current_user => current_user, :object => object %>

@@ -1,36 +1,32 @@
 <% if @talk.status == "active" %>
   <% content_for :sidebar_right do %>
-    <%= render_cell(:core_object, :sidebar_right, current_user, @talk) %>
+    <%= render_cell(:core_object, :sidebar, current_user, @talk) %>
   <% end %>
 
-  <div class="object-show talk">
+  <% content_for :page_header do %>
+    <h1 class="core-object">
+      <%= parse_mentions(@talk.content, @talk) %>
+    </h1>
+
     <div class="createdC">
-      <% if @talk.response_to %>
-        <%= user_link @talk.user_snippet %>
-        <div class="response s">
-          <span>@</span>
-          <a href="<%= core_object_url(@talk.response_to) %>" class="r">
-            <%= @talk.response_to.title %>
-            <div class="<%= @talk.response_to.type.parameterize %>-grey-icon icon"></div>
-          </a>
-        </div>
-        <%= time_ago_in_words(@talk.created_at, false) %> ago
-      <% else %>
-        <%= time_ago_in_words(@talk.created_at, false) %> ago by
-        <%= user_link @talk.user_snippet %>
-      <% end %>
+      <%= time_ago_in_words(@talk.created_at, false) %> ago by
+      <%= user_link @talk.user_snippet %>
     </div>
-
-    <% if can? :destroy, @talk %>
-      <div class="ac disable conf conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_talk_path @talk %>">X</div>
+    <% if @talk.response_to %>
+      <div class="response s">
+        <span>@</span>
+        <a href="<%= core_object_url(@talk.response_to) %>" class="r">
+          <%= @talk.response_to.title %>
+          <div class="<%= @talk.response_to.type.parameterize %>-grey-icon icon"></div>
+        </a>
+      </div>
     <% end %>
-
-    <div class="content">
-      <p><%= parse_mentions(@talk.content, @talk) %></p>
-    </div>
     <div class="clear"></div>
+  <% end %>
 
-  </div>
+  <% if can? :destroy, @talk %>
+    <div class="ac disable conf conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_talk_path @talk %>">X</div>
+  <% end %>
 <% else %>
   <div class="empty">This talk has been removed</div>
 <% end %>

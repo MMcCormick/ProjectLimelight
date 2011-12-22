@@ -1,13 +1,21 @@
 <% if @link.status == "active" %>
   <% content_for :sidebar_right do %>
-    <%= render_cell(:core_object, :sidebar_right, current_user, @link) %>
+    <%= render_cell(:core_object, :sidebar, current_user, @link) %>
+  <% end %>
+
+  <% content_for :page_header do %>
+    <h1 class="core-object">
+      <a href="<%= @link.sources[0].url if @link.sources.length > 0 %>" target="_blank"><%= @link.title_clean %></a>
+    </h1>
+
+    <div class="createdC">
+      <%= time_ago_in_words(@link.created_at, false) %> ago by
+      <%= user_link @link.user_snippet %>
+    </div>
+    <div class="clear"></div>
   <% end %>
 
   <div class="object-show">
-    <h1><a href="<%= @link.sources[0].url if @link.sources.length > 0 %>" target="_blank">
-      <%= @link.title_clean %>
-    </a></h1>
-
     <% img = default_image_url(@link, 110, 80, 'fit', false, true) %>
     <% original = default_image_url(@link, 0, 0, :original) if img %>
     <% if img %>
@@ -18,11 +26,6 @@
     <% end %>
 
     <div class="content <%= 'with-image' if img %>">
-      <div class="createdC">
-        <%= time_ago_in_words(@link.created_at, false) %> ago by
-        <%= user_link @link.user_snippet %>
-      </div>
-
       <% if can? :destroy, @link %>
         <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_link_path @link %>">X</div>
       <% end %>

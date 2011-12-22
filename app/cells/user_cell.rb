@@ -2,25 +2,21 @@ class UserCell < Cell::Rails
 
   include Devise::Controllers::Helpers
   helper ImageHelper
-  cache :sidebar_left do |cell,user,state|
-    id = user ? user.id.to_s : 0
-    "#{id}-#{state}"
-  end
-  cache :sidebar_right do |cell,current_user,user|
-    if current_user && current_user.is_following?(user)
-      "#{user.id.to_s}-following"
+
+  cache :sidebar do |cell,user,current_user,state|
+    current_id = current_user ? current_user.id.to_s : 0
+    user_id = user ? user.id.to_s : 0
+
+    if current_id == user_id
+      "#{current_id}-mine-#{state}"
+    elsif current_user && current_user.is_following?(user)
+      "#{user_id}-following"
     else
-      user.id.to_s
+      user_id
     end
-
   end
 
-  def sidebar_left(user, state)
-    @user = user
-    render
-  end
-
-  def sidebar_right(current_user, user)
+  def sidebar(user, current_user, state)
     @user = user
     @current_user = current_user
     render

@@ -1,0 +1,60 @@
+<div class="topic" data-push="<%= @topic.id.to_s if signed_in? %>">
+  <div class="top">
+    <h4 class="topic-name"><a href="<%= topic_path(@topic) %>"><%= @topic.name %></a></h4>
+  </div>
+
+  <%= image_tag topic_default_picture(@topic, 180, 0, 'fit'), :style => "max-width: 180px;", :class => 'topic-image', :alt => "" %>
+  <%= render 'shared/popularity', :object => @topic, :extra => '' %>
+
+  <div class="follow-c">
+    <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>
+    <a href="<%= topic_followers_path @topic %>" class="count"><%= pluralize(@topic.followers_count.to_i, 'follower') %></a>
+    <div class="clear"></div>
+  </div>
+
+  <div class="section">
+    <% if can? :update, @topic %>
+      <%= link_to "edit", edit_topic_path, :class => "edit-topic-b" %>
+    <% end %>
+
+    <% if @topic.short_name && !@topic.short_name.blank? %>
+      <div class='short-name'>
+        <%= "##{@topic.short_name}" %>
+        <!--<span class='tip' title='Short names are an alternative way (often shorter) to mention a topic in a post. Just type #<%= @topic.short_name %> to mention this topic in a post. They function similar to twitter hash tags.'>?</span>-->
+      </div>
+    <% end %>
+
+    <% unless @topic.summary.blank? %>
+      <div class="summary">
+        <%= show_more(@topic.summary, 100) %>
+      </div>
+    <% end %>
+
+    <% if @topic.also_known_as.length > 1 %>
+      <div class="sub-section also">
+        <h5>Also Known As</h5>
+        <div><%= @topic.also_known_as.join(', ') %></div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @connections.length > 0 %>
+    <h3 class="section-h">Connections</h3>
+    <div class="section connections">
+      <% @connections.each do |con_id, connection| %>
+        <div class="sub-section also">
+          <h5><%= "#{con_id.to_s == Topic.instances_id ? @topic.name.pluralize : connection[:name]} (#{connection[:data].length})" %></h5>
+          <% connection[:data].each_with_index do |data, i| %>
+            <% if i > 1   %>
+              <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
+              <% break %>
+            <% end %>
+            <%= render 'topics/tag', :topic => data[:topic], :include_image => false %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render 'help/topic_panel' %>
+</div>

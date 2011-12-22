@@ -77,15 +77,30 @@ jQuery ->
       $('#static-data').data('d').fetchEmbedUrl
       url: pullFrom.val()
       (data) ->
+        parentForm = pullFrom.parents('.contributeC:first')
+
+        if (pullFrom.attr('id') == 'picture_fetch')
+          childForm = parentForm.find('.new_picture')
+        else
+          childForm = parentForm.find('.new_link')
+
+        clone = childForm.find('.shared').clone()
+
+        if (pullFrom.attr('id') == 'picture_fetch')
+          clone.find('#picture_source_url').val(data.embedly.url)
+          clone.find('#picture_source_name').val(data.embedly.provider_name)
+          setContributeToPicture(parentForm)
+        else
+          clone.find('#link_title').focus().val(data.embedly.title)
+          clone.find('#link_source_url').val(data.embedly.url)
+          clone.find('#link_source_name').val(data.embedly.provider_name)
+          setContributeToLink(parentForm)
+
+        parentForm.find('.main_content').prepend(clone)
+        clone.fadeIn 150
+        pullFrom.val('').blur().parent().fadeOut 150
+
         if data.embedly.images.length > 0
-          parentForm = pullFrom.parents('.contributeC:first')
-
-          if (pullFrom.attr('id') == 'picture_fetch')
-            childForm = parentForm.find('.new_picture')
-          else
-            childForm = parentForm.find('.new_link')
-
-          clone = childForm.find('.shared').clone()
           target = clone.find('.preview .images')
           target.html('')
 
@@ -98,20 +113,6 @@ jQuery ->
 
           if data.embedly.images.length > 1
             clone.find('.switcher').removeClass('hide')
-
-          if (pullFrom.attr('id') == 'picture_fetch')
-            clone.find('#picture_source_url').val(data.embedly.url)
-            clone.find('#picture_source_name').val(data.embedly.provider_name)
-            setContributeToPicture(parentForm)
-          else
-            clone.find('#link_title').focus().val(data.embedly.title)
-            clone.find('#link_source_url').val(data.embedly.url)
-            clone.find('#link_source_name').val(data.embedly.provider_name)
-            setContributeToLink(parentForm)
-
-          parentForm.find('.main_content').prepend(clone)
-          clone.fadeIn 150
-          pullFrom.val('').blur().parent().fadeOut 150
 
         else if (pullFrom.attr('id') == 'picture_fetch')
           createGrowl(false, 'There was an error fetching the images from that URL. Please try again later or let us know if it continues to happen!', '', 'red')

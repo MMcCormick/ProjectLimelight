@@ -30,7 +30,12 @@ html, body {
 
   &.narrow {
     .interior {
-      width: 960px;
+      width: 1000px;
+    }
+    #colmask {
+      width: 1000px;
+      border-left: 1px solid #CCC; // left sidebar border on narrow view
+      border-right: 1px solid #CCC; // right sidebar border on narrow view
     }
   }
 }
@@ -57,6 +62,7 @@ a {
   color: $url-color;
   text-decoration: none;
   border: none;
+  outline: 0;
 
   &:hover {
     text-decoration: none;
@@ -104,6 +110,8 @@ button {
 #flash_notice {
   display: none;
 }
+
+
 
 #header {
   @include single-box-shadow(#AAA, 1px, 1px, 3px);
@@ -193,179 +201,447 @@ button {
   right: 0px;
 }
 
-#content {
-  height: 100%;
+#colmask {
+  clear: both;
+  margin: auto;
+  overflow: hidden;
+  position: relative;
   width: 100%;
   min-width: $min-width;
+  background: #FFF; // right sidebar background color
+
+  &.sbr {
+    #colmid {
+      margin-left: -180px; // right sidebar width
+    }
+    #page {
+      left: 360px;
+    }
+    .sidebar {
+      &.right {
+        display: block;
+      }
+    }
+
+    #page_content {
+      right: 180px;
+    }
+    #page_inside {
+      margin-left: 180px;
+    }
+  }
+}
+#colmid {
+  float: left;
+  position: relative;
+  right: 100%;
+  width: 200%;
+  background: image-url("bg_textured.jpg") repeat; // center content background
+  height: 100%;
+  border-right: 1px solid #CCC;
 }
 #page {
-  height: 100%;
   position: relative;
+  float: left;
+  width: 100%;
+  margin-left: -50%;
+  left: 180px;
+  //padding-bottom: 75px;
+  background: #FFF; // left sidebar background color
+  border-right: 1px solid #CCC;
+  border-right: 1px solid #CCC;
+  height: 100%;
+}
+#page_content {
+  float: left;
+  position: relative;
+  right: 0px;
+  width: 50%;
+  height: 100%;
   padding-bottom: 75px;
-  padding: 0 0 50px ($sidebar-width+$sidebar-margin+2);
-
-  &.minimized-sidebar {
-    padding: 0 0 0 49px;
-  }
+}
+#page_inside {
+  left: 200%;
+  margin: 0 180px 0 0;
+  overflow: hidden;
+  position: relative;
 }
 
 #page_header {
   position: relative;
   color: #000;
-  z-index: 150;
-  margin: 0 5px;
-  padding: 5px 0 0 0;
+  z-index: 130;
+  background: #FFF;
+  border-bottom: 1px solid #CCC;
 
   h1 {
     text-align: center;
     margin: 0;
     text-align: center;
     border-bottom: double #CCC;
-    font-size: 19px;
-    padding: 3px 0 2px 0;
+    font-size: 18px;
+    padding: 4px 7px;
+    min-height: 23px;
+
+    &.core-object {
+      text-align: left;
+    }
   }
 
-  &.floating {
-    position: fixed;
-    top: 0px;
-
-    #feed-filters {
-      border-color: #999;
-    }
-    background: image-url("bg_textured.jpg") repeat;
-  }
-}
-#page_content {
-    color: $page_content_color;
-    position: relative;
-    margin-top: 10px;
-    .empty {
-      margin-left: 10px;
-    }
-    &.sbr {
-      padding: 0 ($sidebar_right_width+$sidebar-margin) 0 0;
-    }
-}
-#sidebar {
-  @include single-box-shadow(#CCC, 1px, 1px, 2px);
-  @include border-radius(4px);
-  height: 100%;
-  position: absolute;
-  border: $sidebar_border_width solid #CCC;
-  background: $sidebar_background-color;
-  position: absolute;
-  margin: 7px 0 0 5px;
-  padding-bottom: 20px;
-  top: 0;
-  left: 0;
-
-  .panel-close-left-icon {
-    position: absolute; top: 10px; right: 10px;
-    cursor: pointer;
-  }
-
-  &.floating {
-    position: fixed;
-    top: -2px;
-  }
-
-  .btn {
-    color: #444;
-  }
-
-  .full {
-    width: $sidebar_width;
-  }
-  .minimized {
-    width: $sidebar-minimized-width;
-
-    .panel-open-left-icon {
-      margin:  5px 0 3px 14px;
-      cursor: pointer;
-    }
-    .profile-image {
-      @include border-radius(2px);
-      margin:  5px 0 2px 5px;
-    }
-    .btn {
-      @include border-radius(3px);
-      border:  1px solid transparent;
-      display: block;
-      clear: both;
-      padding: 5px;
-      margin:  0 0 0 6px;
-      float: left;
-    }
-    .pop {
-      padding:  2px 0;
-      width: 40px;
-      color: #666;
-      text-align: center;
-      cursor: pointer;
-    }
-    .notifications {
-      padding:  2px 0;
-      width: 26px;
-      color: #666;
-      text-align: center;
-    }
-  }
-  .empty {
-    margin: 8px 20px 0 10px;
+  .createdC {
+    margin: 5px 7px;
     font-size: 12px;
+    float: left;
   }
-  #static-links {
-    position: fixed;
-    width: 185px;
-    bottom: $footer-height + 16;
-    text-align: center;
-    font-size: 11px;
-    color: $url-color;
-    cursor: pointer;
-    margin: 0 0 0 13px;
-    .dot {
+
+  .response {
+    float: left;
+    font-size: 12px;
+    margin: 5px 7px 5px 0;
+    a {
+      padding: 0 0 0 15px;
       position: relative;
-      top: -3px;
-    }
-  }
-  .sidenote {
-    position: fixed;
-    width: $sidebar_width - 10;
-    bottom: 90px;
-    margin-left: 17px;
-    font-size: 12px;
-  }
-}
-#sidebar-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: $sidebar_right_width;
-  margin: 0 $sidebar-margin 0 0;
-
-  .section {
-    margin: 0 0 15px 0;
-    padding: 0 !important;
-
-    .head {
-      @include border-radius(1px);
-      color: #fff;
-      background: #555;
-      padding: 1px 7px;
-      font-size: 17px;
-
-      h1,h2,h3,h4 {
-        color: #fff;
+      .icon {
+        position: absolute;
+        top: 1px;
+        left: 0px;
       }
     }
   }
-  .sub-section {
-    margin-top: 6px;
+
+  &.floating {
+    @include single-box-shadow(#999, 0, 0, 3px);
+    position: fixed;
+    top: 0px;
   }
-  h5 {
-    padding: 0;
-    color: #555;
-    margin-bottom: 2px;
+}
+
+.sidebar {
+  width: 180px;
+  position: relative;
+  float: right;
+  height: 100%;
+
+  &.left {
+    .top {
+      border-right: 1px solid #CCC;
+
+      &.floating {
+        @include single-box-shadow(#999, -2px, 0, 3px);
+      }
+    }
+  }
+  &.right {
+    left: 50%;
+    display: none;
+
+    .top {
+      border-left: 1px solid #CCC;
+
+      &.floating {
+        @include single-box-shadow(#999, 2px, 0, 3px);
+      }
+    }
+  }
+
+  .top {
+    position: relative;
+    height: 60px;
+    border-bottom: 1px solid #CCC;
+    background: #FFF;
+    z-index: 130;
+
+    &.floating {
+      position: fixed;
+      top: 0px;
+    }
+  }
+
+  .btn-large {
+    position: relative;
+    padding: 5px 0 5px 30px;
+    border-bottom: 1px solid #CCC;
+    font-weight: normal;
+
+    a {
+      color: #444;
+    }
+    .icon {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+    }
+    .notification-count {
+      position: absolute;
+      font-size: 18px;
+      top: 0px;
+      left: 4px;
+      width: 20px;
+      text-align: center;
+      font-weight: bold;
+      &.on {
+        color: red;
+      }
+    }
+
+    &:hover,
+    &.on {
+      @include single-box-shadow(#666, 0px, 0px, 2px);
+      background: #AAA;
+      border-bottom: 1px solid #999;
+      color: #FFF;
+    }
+  }
+
+  .follow-c {
+    border-bottom: 1px solid #CCC;
+
+    .followB,
+    .unfollowB {
+      @include border-radius(0px);
+      background: #99CA33;
+      float: left;
+      margin: 0px;
+      font-size: 16px;
+      border-right: 1px solid #CCC;
+      padding: 5px 10px;
+      height: 24px;
+      font-weight: normal;
+      &:hover {
+        @include single-box-shadow(#888, 1px, 1px, 2px);
+      }
+    }
+    .count {
+      float: left;
+      font-size: 11px;
+      position: relative;
+      left: 5px;
+      top: 5px;
+    }
+  }
+
+  .section-h {
+    background: #444;
+    color: #EEE;
+    padding: 3px 6px;
+    font-weight: normal;
+    font-size: 14px;
+    margin-top: -1px;
+  }
+  .section {
+    padding: 0px;
+    font-size: 13px;
+    border-bottom: 1px solid #CCC;
+
+    .none {
+      font-style: italic;
+      padding: 5px 7px;
+    }
+  }
+  .sub-section {
+    border-bottom: 1px solid #CCC;
+    padding: 8px 0;
+
+    h5 {
+      font-size: 13px;
+      margin: 0 7px 3px 7px;
+    }
+    > div {
+      margin: 5px 7px 0 7px;
+      font-size: 12px;
+    }
+  }
+
+  #static-links {
+    font-size: 11px;
+    margin: 10px 7px;
+
+    a {
+      float: left;
+    }
+    .tutorial-start {
+      @include link();
+      float: left;
+      text-decoration: none;
+    }
+    .dot {
+      font-size: 14px;
+      float: left;
+      margin: 0 5px;
+      position: relative;
+      top: -6px;
+      height: 5px;
+    }
+  }
+
+  .user {
+    .top {
+      padding: 0 0 0 60px;
+      width: 120px;
+
+      img {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+      #login {
+        @include green-conservative-button(14, 2px, 0px);
+        padding: 5px 0;
+        width: 75px;
+        position: relative;
+        top: 15px;
+        left: 22px;
+      }
+      .username {
+        padding: 5px 0 0 5px;
+        margin: 0 5px 0 0;
+        overflow: hidden;
+      }
+      .followers,
+      .pop {
+        padding: 2px 0 0 5px;
+        font-weight: bold;
+        font-size: 11px;
+        display: block;
+      }
+      .followers {
+
+      }
+      .pop {
+        cursor: default;
+      }
+    }
+    .btn-large {
+      .following {
+        font-size: 11px;
+        position: absolute;
+        top: 7px;
+        left: 68px;
+        width: 105px;
+        text-align: right;
+        
+        a {
+          &:hover {
+            color: #FFF;
+          }
+        }
+      }
+    }
+  }
+
+  .topic {
+    .top {
+      width: 180px;
+      display:table-cell;
+      vertical-align: middle;
+      height: 61px;
+    }
+    .topic-name {
+      font-size: 14px;
+      margin: 0 10px;
+    }
+    .topic-image {
+      margin: 0 0 0 1px;
+    }
+    .pop {
+      @include single-box-shadow(#444, 1px, 1px, 2px);
+      background: #444;
+      position: absolute;
+      top: 61px;
+      left: 1px;
+      font-weight: bold;
+      color: #fff;
+      padding: 3px 9px;
+      font-size: 20px;
+      cursor: default;
+      border-bottom: 1px solid #CCC;
+      border-right: 1px solid #CCC;
+    }
+    .follow-c {
+      border-top: 1px solid #CCC;
+    }
+    .short-name,
+    .summary {
+      font-size: 12px;
+      color: #444;
+      margin: 8px 7px 0 7px;
+    }
+    .edit-topic-b {
+      background: #FFF;
+      position: absolute;
+      top: 60px;
+      right: 0px;
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+    .connections {
+      .view-all {
+        font-size: 11px;
+        margin: 0 0 0 7px;
+      }
+    }
+  }
+
+  .core-object {
+    .top {
+      height: 60px;
+
+      .controlsC {
+        height: 60px;
+        position: relative;
+        width: 180px;
+      }
+      .pop {
+        position: absolute;
+        top: 6px;
+        right: 100px;
+        font-size: 36px;
+        color: #555;
+        cursor: default;
+      }
+      .scoreC {
+        .up {
+          position: absolute;
+          top: 8px;
+          left: 85px;
+        }
+        .down {
+          position: absolute;
+          top: 14px;
+          left: 115px;
+        }
+      }
+      .favB,
+      .unfavB {
+        position: absolute;
+        top: 25px;
+        left: 145px;
+      }
+      .repostB,
+      .unrepostB {
+        position: absolute;
+        top: 37px;
+        left: 85px;
+      }
+      .coreShareB {
+        position: absolute;
+        top: 35px;
+        left: 120px;
+      }
+    }
+    .mentions {
+      .tag {
+        margin: 5px 7px;
+        font-size: 13px;
+      }
+    }
+    .sources {
+      .source {
+        display: block;
+        margin: 5px 7px;
+        font-size: 13px;
+      }
+    }
   }
 }
 
@@ -447,8 +723,8 @@ button {
 
 #hints {
   position: relative;
-  padding: 0px 0 0 15px;
-  margin: 0 0 10px 15px;
+  padding: 0 0 0 15px;
+  margin: 10px 0 0 15px;
 
   .info-grey-icon {
     position: absolute;

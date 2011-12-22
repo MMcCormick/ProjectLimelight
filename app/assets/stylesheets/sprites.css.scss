@@ -20,8 +20,8 @@
 }
 .arrow-small {
     @include icon-sprite(arrow-small);
-    width: 14px;
-    height: 9px;
+    width: 12px;
+    height: 12px;
 }
 .arrow-g-r-2424 {
     @include icon-sprite(arrow_green_right_24x24);
@@ -183,20 +183,20 @@
 }
 .feed-grid {
     @include icon-sprite(grid-off);
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     &.on { @include icon-sprite(grid-on); }
 }
 .feed-column {
     @include icon-sprite(column-off);
-    width: 16px;
+    width: 14px;
     height: 14px;
     &.on { @include icon-sprite(column-on); }
 }
 .feed-list {
     @include icon-sprite(list-off);
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     &.on { @include icon-sprite(list-on); }
 }
 .info-grey-icon {

@@ -1,20 +1,26 @@
 <% if @picture.status == "active" %>
   <% content_for :sidebar_right do %>
-    <%= render_cell(:core_object, :sidebar_right, current_user, @picture) %>
+    <%= render_cell(:core_object, :sidebar, current_user, @picture) %>
   <% end %>
 
-  <div class="object-show picture">
-    <h1><%= @picture.title_clean %></h1>
+  <% content_for :page_header do %>
+    <h1 class="core-object">
+      <%= @picture.title_clean %>
+    </h1>
+
     <div class="createdC">
       <%= time_ago_in_words(@picture.created_at, false) %> ago by
       <%= user_link @picture.user_snippet %>
     </div>
+    <div class="clear"></div>
+  <% end %>
 
+  <div class="object-show picture">
     <% if can? :destroy, @picture %>
       <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_picture_path @picture %>">X</div>
     <% end %>
 
-    <% img = default_image_url(@picture, 515, 500, 'fit', false, true) %>
+    <% img = default_image_url(@picture, 620, 500, 'fit', false, true) %>
     <% original = default_image_url(@picture, 0, 0, :original) if img %>
     <% if img %>
       <div class="img expand">

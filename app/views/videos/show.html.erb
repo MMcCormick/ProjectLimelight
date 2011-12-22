@@ -1,21 +1,24 @@
 <% if @video.status == "active" %>
   <% content_for :sidebar_right do %>
-    <%= render_cell(:core_object, :sidebar_right, current_user, @video) %>
+    <%= render_cell(:core_object, :sidebar, current_user, @video) %>
   <% end %>
 
-  <div class="object-show">
-    <h1><%= @video.title_clean %></h1>
+  <% content_for :page_header do %>
+    <h1 class="core-object"><%= @video.title_clean %></h1>
 
     <div class="createdC">
       <%= time_ago_in_words(@video.created_at, false) %> ago by
       <%= user_link @video.user_snippet %>
     </div>
+    <div class="clear"></div>
+  <% end %>
 
+  <div class="object-show">
     <% if can? :destroy, @video %>
       <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_video_path @video %>">X</div>
     <% end %>
 
-    <%= video_embed(@video.sources[0], 515, 450) %>
+    <%= video_embed(@video.sources[0], 620, 475) %>
 
     <div class="content">
       <p><%= parse_mentions(@video.content, @video) %></p>

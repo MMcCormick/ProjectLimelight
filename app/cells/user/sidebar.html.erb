@@ -1,0 +1,99 @@
+<div class="user" data-push="<%= @user.id.to_s if signed_in? %>">
+  <div class="top">
+    <% if @current_user || @user %>
+      <%= image_tag user_default_picture_path(@user, :w => 60, :h => 60, :m => 'fillcropmid'), :style => "max-width: 60px; max-height: 60px;", :alt => "" %>
+      <h4 class="username"><a href="<%= user_feed_path(@user) %>"><%= @user.username %></a></h4>
+
+      <% if @user.id == @current_user.id %>
+        <a class="followers" href="<%= user_followers_path @user %>"><%= @user.followers_count.to_i %> followers</a>
+      <% end %>
+
+      <%= render 'shared/popularity', :object => @user, :extra => ' points' %>
+    <% else %>
+      <%= image_tag 'lime-white-grey-60-60.png' %>
+      <div id='login'>Login</div>
+    <% end %>
+  </div>
+  
+  <% if @current_user || @user %>
+    <% if @user.id == @current_user.id %>
+      <a href="<%= notifications_path @user %>">
+        <h4 class="btn-large">
+          <div class="notification-count <%= 'on' if @user.unread_notification_count > 0 %>"><%= @user.unread_notification_count.to_i %></div>
+          Notification<%= 's' unless @user.unread_notification_count == 1 %>
+        </h4>
+      </a>
+    <% else %>
+      <div class="follow-c">
+        <%= render 'follows/btn', :current_user => @current_user, :target => @user %>
+        <a href="<%= user_followers_path @user %>" class="count"><%= pluralize(@user.followers_count.to_i, 'follower') %></a>
+        <div class="clear"></div>
+      </div>
+    <% end %>
+
+    <h4 class="btn-large">
+      <a href="<%= user_feed_path @user %>">
+      <div class="icon feed-icon"></div>
+      Feed
+      </a>
+      <div class="following">
+        <a href="<%= user_following_topics_path(@user) %>"><%= pluralize @user.following_topics_count.to_i, 'topics' %></a>,
+        <a href="<%= user_following_users_path(@user) %>"><%= pluralize @user.following_users_count.to_i, 'users' %></a>
+      </div>
+    </h4>
+
+    <a href="<%= user_path @user %>">
+      <h4 class="btn-large">
+        <div class="icon user-contributions-icon"></div>
+        Contributions
+      </h4>
+    </a>
+
+    <a href="<%= user_favorites_path @user %>">
+      <h4 class="btn-large">
+        <div class="icon user-favorites-icon"></div>
+        Favorites
+      </h4>
+    </a>
+
+    <% if @user.id == @current_user.id %>
+      <a href="<%= user_settings_path %>">
+        <h4 class="btn-large">
+          <div class="icon settings-icon"></div>
+          Settings
+        </h4>
+      </a>
+    <% end %>
+
+    <h3 class="section-h">Interest Profile</h3>
+    <div class="section">
+      <div class="none">Coming Soon!</div>
+    </div>
+
+    <% if @user.id == @current_user.id %>
+      <h3 class="section-h">Topic Suggestions</h3>
+      <div class="section">
+        <div class="none">Coming Soon!</div>
+      </div>
+      <h3 class="section-h">User Suggestions</h3>
+      <div class="section">
+        <div class="none">Coming Soon!</div>
+      </div>
+      <h3 class="section-h">Invite Friends</h3>
+      <div class="section">
+        <div class="none">Coming Soon!</div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div id="static-links">
+    <a href="/pages/about">About</a> <span class="dot">.</span>
+    <a href="/pages/contact">Contact</a> <span class="dot">.</span>
+    <a href="/pages/privacy">Privacy</a>
+    <br>
+    <a href="/pages/terms">Terms</a> <span class="dot">.</span>
+    <a href="/pages/help">Help</a> <span class="dot">.</span>
+    <span data-m="put" data-url="/help/tutorials/on" class="tutorial-start auth">Tutorials</span>
+  </div>
+
+</div>

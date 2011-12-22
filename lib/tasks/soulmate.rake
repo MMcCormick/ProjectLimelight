@@ -17,7 +17,7 @@ namespace :soulmate do
     Soulmate::Loader.new("user").load(soulmate_data)
 
     print "Loading #{soulmate_data.length} users into soulmate.\n"
-    end
+  end
 
   desc "Rebuild each users following soulmate database."
   task :rebuild_users_following => :environment do

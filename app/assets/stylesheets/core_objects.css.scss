@@ -897,7 +897,7 @@ $teaser-padding: 10px;
 $scoreBox-width: 160px;
 .teaser.list {
   background: transparent;
-  margin: 0 10px 10px 10px;
+  margin: 10px 10px 0 10px;
   z-index: 10;
   padding-left: 120px;
 
@@ -1140,138 +1140,144 @@ $scoreBox-width: 160px;
 }
 
 #feed-filters {
-    height: 25px;
-    padding: 4px 0 9px 5px;
-    border-bottom: 1px solid transparent;
+    height: 26px;
 
     .feed-display,
     .feed-sort,
     .feed-layout {
-        position: relative;
+      position: relative;
+      float: left;
+
+      h5 {
+        padding: 6px 0 0 0;
+        color: #888;
+        cursor: default;
+        margin: 0 0 0 20px;
+        font-weight: normal;
+        margin-left: 15px;
+      }
+
+      > h5,
+      > div {
         float: left;
+      }
 
-        h5 {
-            padding: 6px 0 0 0;
-            color: #888;
-            cursor: default;
-        }
+      ul {
+        float: left;
+      }
 
-        > h5,
-        > div {
-            float: left;
-        }
-        ul {
-            @include border-radius(4px);
-            margin: 2px 0 0 10px;
-            float: left;
-        }
-        .opt {
-            color: #AAA;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-            padding: 2px 6px;
-            height: 15px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .opt.on {
-            color: #444;
-        }
-    }
-
-    .feed-display {
-        li {
-            margin: 0 3px;
-            float: left;
-        }
-    }
-
-    .feed-layout {
-        float: right;
-        margin-right: 0;
-
-        li {
-            @include border-radius(2px);
-            border: 1px solid #AAA;
-            margin: 0 3px;
-            float: left;
-        }
-        .opt {
-            padding: 2px 3px;
-            height: 15px;
-        }
+      .opt {
+        color: #AAA;
+        text-decoration: none;
+        display: block;
+        font-size: 11px;
+        cursor: pointer;
+        padding-left: 7px;
+        padding-right: 7px;
+      }
+      .opt.on {
+        color: #444;
+      }
     }
 
     .feed-sort {
-        width: 200px;
+      width: 220px;
 
-        .arrow-small {
-            position: absolute;
-            top: 6px;
-            right: 8px;
-            z-index: 10;
-            cursor: pointer;
-        }
-
-        .feed-sort-select {
-            @include border-radius(2px);
-            border: 1px solid #AAA;
-            position: absolute; top: 0px; left: 50px;
-            z-index: 5;
-            cursor: pointer;
-            margin: 2px 0 0 10px;
-            background: #FFF;
-            float: left;
-            &.closed {
-              background: transparent;
-            }
-            &:hover {
-              background: #FFF;
-            }
-            .opt {
-                width: 95px;
-            }
-            .opt:hover {
-                color: #444;
-            }
-        }
-    }
-
-    .scrollTop {
-        float: left;
-        margin: 8px 0 0 8px;
-        font-size: 8px;
+      .feed-sort-select {
+        border-left: 1px solid #CCC;
+        border-right: 1px solid #CCC;
+        border-bottom: 1px solid #CCC;
+        min-height: 20px;
+        margin: 0 0 0 10px;
+        padding: 6px 0 0 0;
         cursor: pointer;
-        color: blue;
+        position: absolute;
+        top: 0px;
+        left: 70px;
+
+        background: #FFF;
+
+        &.closed {
+          background: transparent;
+        }
+        &:hover {
+          background: #FFF;
+        }
+        .opt {
+          width: 115px;
+          padding-bottom: 5px;
+        }
+        .opt:hover {
+          color: #444;
+        }
+      }
+      .arrow-small {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        z-index: 10;
+        cursor: pointer;
+      }
     }
 
     .feed-display {
-        .opt, > div {
-            @include border-radius(2px);
-            border: 1px solid #AAA;
-            color: #444;
-        }
-        .on.talk {
-            border-color: adjust-lightness($talk-color, 15);
-            background-color: adjust-lightness($talk-color, 38);
-            color: adjust-lightness($talk-color, -7);
-        }
-        .on.link {
-            border-color: adjust-lightness($link-color, 15);
-            background-color: adjust-lightness($link-color, 38);
-            color: adjust-lightness($link-color, -7);
-        }
-        .on.picture {
-            border-color: adjust-lightness($picture-color, 15);
-            background-color: adjust-lightness($picture-color, 38);
-            color: adjust-lightness($picture-color, -7);
-        }
-        .on.video {
-            border-color: adjust-lightness($video-color, 15);
-            background-color: adjust-lightness($video-color, 38);
-            color: adjust-lightness($video-color, -7);
-        }
+      ul {
+        margin: 0 0 0 10px;
+        border-left: 1px solid #CCC;
+        border-right: 1px solid #CCC;
+      }
+      li {
+        float: left;
+      }
+      .opt {
+        padding-top: 6px;
+        height: 20px;
+      }
+    }
+
+    .feed-layout {
+      float: right;
+      margin-right: 0;
+
+      ul {
+        margin: 0 0 0 10px;
+      }
+      li {
+        float: left;
+        border-left: 1px solid #CCC;
+        border-right: 1px solid #CCC;
+        margin-right: -1px;
+      }
+      .opt {
+        padding: 6px 7px;
+      }
+    }
+
+    .scrollTop {
+      float: left;
+      margin: 11px 0 0 10px;
+      font-size: 8px;
+      cursor: pointer;
+      color: blue;
+    }
+
+    .feed-display {
+      .on.talk {
+        background-color: adjust-lightness($talk-color, 38);
+        color: adjust-lightness($talk-color, -7);
+      }
+      .on.link {
+        background-color: adjust-lightness($link-color, 38);
+        color: adjust-lightness($link-color, -7);
+      }
+      .on.picture {
+        background-color: adjust-lightness($picture-color, 38);
+        color: adjust-lightness($picture-color, -7);
+      }
+      .on.video {
+        background-color: adjust-lightness($video-color, 38);
+        color: adjust-lightness($video-color, -7);
+      }
     }
 }
 
@@ -1316,62 +1322,6 @@ $scoreBox-width: 160px;
     }
 
     .add { margin: 2px 0 0 5px;}
-}
-
-#post-panel {
-  .controlsC {
-    position: relative;
-    height: 55px;
-    width: 150px;
-    margin: 0 0 0 25px;
-
-    .pop {
-      position: absolute;
-      top: 9px;
-      right: 98px;
-      font-size: 36px;
-      color: #555;
-      cursor: default;
-    }
-    .scoreC {
-      .up {
-        position: absolute;
-        top: 11px;
-        left: 60px;
-      }
-      .down {
-        position: absolute;
-        top: 17px;
-        left: 90px;
-      }
-    }
-    .favB,
-    .unfavB {
-      position: absolute;
-      top: 28px;
-      left: 120px;
-    }
-    .repostB,
-    .unrepostB {
-      position: absolute;
-      top: 40px;
-      left: 60px;
-    }
-    .coreShareB {
-      position: absolute;
-      top: 38px;
-      left: 95px;
-    }
-  }
-  .tag {
-    margin: 5px 0 0 5px;
-    font-size: 13px;
-  }
-  .source {
-    display: block;
-    font-size: 13px;
-    margin: 5px 0 0 5px;
-  }
 }
 
 .object-show {

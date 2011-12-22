@@ -555,7 +555,7 @@ class Topic
   def expire_caches
     # topic right sidebar
     ['', '-following', '-manage', '-following-manage'].each do |key|
-      ActionController::Base.new.expire_cell_state TopicCell, :sidebar_right, id.to_s+key
+      ActionController::Base.new.expire_cell_state TopicCell, :sidebar, id.to_s+key
     end
 
     # if name/slug changed clear any cached thing with links to this topic

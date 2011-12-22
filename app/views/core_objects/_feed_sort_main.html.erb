@@ -6,19 +6,19 @@
       <div data-d='{"target":"created_at", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'created_at' ? 'on' : 'hide' %>">Newest</div>
     </div>
     <div data-sort="1" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'ph' %>">
-      <div data-d='{"target":"ph", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'ph' ? 'on' : 'hide' %>">Pop - Hour</div>
+      <div data-d='{"target":"ph", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'ph' ? 'on' : 'hide' %>">Hourly Popularity</div>
     </div>
     <div data-sort="2" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pd' %>">
-      <div data-d='{"target":"pd", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pd' ? 'on' : 'hide' %>">Pop - Day</div>
+      <div data-d='{"target":"pd", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pd' ? 'on' : 'hide' %>">Daily Popularity</div>
     </div>
     <div data-sort="3" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pw' %>">
-      <div data-d='{"target":"pw", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pw' ? 'on' : 'hide' %>">Pop - Week</div>
+      <div data-d='{"target":"pw", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pw' ? 'on' : 'hide' %>">Weekly Popularity</div>
     </div>
     <div data-sort="4" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pm' %>">
-      <div data-d='{"target":"pm", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pm' ? 'on' : 'hide' %>">Pop - Month</div>
+      <div data-d='{"target":"pm", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pm' ? 'on' : 'hide' %>">Monthly Popularity</div>
     </div>
     <div data-sort="5" class="item <%= 'hide' unless session[:feed_filters][:sort]['target'] == 'pt' %>">
-      <div data-d='{"target":"pt", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pt' ? 'on' : 'hide' %>">Pop - All</div>
+      <div data-d='{"target":"pt", "order":"desc"}' class="opt <%= session[:feed_filters][:sort]['target'] == 'pt' ? 'on' : 'hide' %>">Total Popularity</div>
     </div>
   </div>
 </div>

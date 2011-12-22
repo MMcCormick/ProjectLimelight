@@ -6,16 +6,11 @@
  * Control the main content resizing
  */
 var resizeLayout = function(rightSidebarAdjust) {
-  var pageHeader = $('#page_header');
-  var sidebar = $('#sidebar');
+  var header = $('#header');
   var footer = $('#footer');
-  var h = $(window).height() - footer.height();
+  var h = $(window).height() - header.height() - footer.height() - 50;
 
-  sidebar.css('height', h - 36);
-  if (pageHeader.hasClass('floating'))
-  {
-    pageHeader.css({width: parseInt($('#page_content').width())+parseInt($('#page_content').css('padding-right').replace("px", ""))-14});
-  }
+  $('#colmask,#colmid,#page,#page_content,#page_inside').css('min-height', h);
 };
 
 // Check if something is visible on the screen
@@ -59,7 +54,7 @@ function rearrange_feed_columns()
 
   var feed_min_column = 99999999;
   var teaser_width = $('.teaser.column').width();
-  var feed_columns_num = Math.floor(($('#page_content').width() - 5) / (teaser_width + $spacing));
+  var feed_columns_num = Math.floor(($('#page_inside').width() - 5) / (teaser_width + $spacing));
   var feed_columns = []
   for(var i=0; i<feed_columns_num; i++) {
     feed_columns.push({total_height: 0, teasers:[]})
@@ -83,7 +78,7 @@ function rearrange_feed_columns()
   var max_column_height = 0;
 
   for(var i=0; i<feed_columns.length; i++) {
-    var column_height = 0;
+    var column_height = 10;
     for(var i2=0; i2<feed_columns[i].teasers.length; i2++) {
       $(feed_columns[i].teasers[i2]).css({
         'position': 'absolute',
@@ -103,16 +98,18 @@ function rearrange_feed_columns()
 
 function handleScroll() {
   if (isScrolledIntoView($('#header'), false, false)) {
-    $('#sidebar,#page_header,#ajax-loading').removeClass('floating');
-    $('#sidebar').css('left', 0);
-    $('#page_header').css('width', 'auto');
-    $('#page_content').css('margin-top', 10);
+    $('.sidebar .top, #page_header').removeClass('floating').css('left', '0');
+    $('.sidebar, #page_inside').css('padding-top', '0px');
   }
   else {
     $('#page_header').css('width', $('#page_header').width());
-    $('#sidebar,#page_header,#ajax-loading').addClass('floating');
-    $('#sidebar').css('left', $('#page').offset().left);
-    $('#page_content').css('margin-top', $('#page_header').height()+10);
+    $('.sidebar .top, #page_header').each(function() {
+      $(this).css('left', $(this).offset().left+'px')
+      $(this).addClass('floating')
+    });
+
+    $('#page_inside').css('padding-top', $('#page_header').outerHeight());
+    $('.sidebar.left').css('padding-top', $('.sidebar.left .top').outerHeight());
   }
 }
 

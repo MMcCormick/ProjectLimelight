@@ -7,7 +7,7 @@ class TopicCell < Cell::Rails
 
   cache :trending, :expires_in => 5.minutes
 
-  cache :sidebar_right do |cell,current_user,topic|
+  cache :sidebar do |cell,current_user,topic|
     key = topic.id.to_s
     if current_user && current_user.is_following?(topic)
       key += '-following'
@@ -18,7 +18,7 @@ class TopicCell < Cell::Rails
     key
   end
 
-  def sidebar_right(current_user, topic, connections=nil)
+  def sidebar(current_user, topic, connections=nil)
     @current_user = current_user
     @topic = topic
     @connections = connections ? connections : @topic.get_connections

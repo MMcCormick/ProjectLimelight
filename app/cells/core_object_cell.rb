@@ -6,7 +6,7 @@ class CoreObjectCell < Cell::Rails
   helper TopicsHelper
   helper ImageHelper
 
-  def sidebar_right(current_user, object)
+  def sidebar(current_user, object)
     @current_user = current_user
     @object = object
     render

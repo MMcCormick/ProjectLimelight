@@ -9,3 +9,17 @@ specific to webkit browsers (chrome, safari)
     line-height: 29px;
   }
 }
+
+#feed-filters {
+  .feed-sort {
+    .feed-sort-select {
+      padding-top: 6px;
+      min-height: 15px;
+    }
+  }
+  .feed-display {
+    .opt {
+      padding-top: 6px;
+    }
+  }
+}

@@ -5,14 +5,14 @@
         <%= image_tag user_default_picture_path(@user, :w => 60, :h => 60, :m => 'fillcropmid'), :style => "max-width: 60px; max-height: 60px;", :alt => "" %>
         <h4 class="username"><a href="<%= user_feed_path(@user) %>"><%= @user.username %></a></h4>
 
-        <% if @user.id == @current_user.id %>
+        <% if (!@current_user && @user) || (@user.id == @current_user.id) %>
           <a class="followers" href="<%= user_followers_path @user %>"><%= @user.followers_count.to_i %> followers</a>
         <% end %>
 
         <%= render 'shared/popularity', :object => @user, :extra => ' points' %>
       </div>
 
-      <% if @user.id == @current_user.id %>
+      <% if (!@current_user && @user) || (@user.id == @current_user.id) %>
         <a href="<%= notifications_path @user %>">
           <h4 class="sb-btn-l">
             <div class="notification-count <%= 'on' if @user.unread_notification_count > 0 %>"><%= @user.unread_notification_count.to_i %></div>
@@ -52,7 +52,7 @@
         </h4>
       </a>
 
-      <% if @user.id == @current_user.id %>
+      <% if (!@current_user && @user) || (@user.id == @current_user.id) %>
         <a href="<%= user_settings_path %>">
           <h4 class="sb-btn-l">
             <div class="icon settings-icon"></div>
@@ -74,7 +74,7 @@
       <!--<div class="none">Coming Soon!</div>-->
     <!--</div>-->
 
-    <% if @user.id == @current_user.id %>
+    <% if (!@current_user && @user) || (@user.id == @current_user.id) %>
       <!--<h3 class="section-h">Topic Suggestions</h3>-->
       <!--<div class="section">-->
         <!--<div class="none">Coming Soon!</div>-->

@@ -39,6 +39,7 @@ gem 'soulmate' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby
+gem 'neography' # neo4j graph database
 
 group :assets do
   gem 'compass', '0.12.alpha.0'

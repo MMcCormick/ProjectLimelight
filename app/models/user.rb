@@ -92,7 +92,7 @@ class User
   validates :bio, :length => { :maximum => 150 }
   validate :username_change
 
-  after_create :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email
+  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
@@ -224,6 +224,11 @@ class User
       self.following_users_count += 1
       user.followers_count += 1
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
+
+      node1 = Neo4j.neo.get_node_index('users', 'id', id.to_s)
+      node2 = Neo4j.neo.get_node_index('users', 'id', user.id.to_s)
+      rel1 = Neo4j.neo.create_relationship('follow', node1, node2)
+
       true
     end
   end
@@ -249,6 +254,11 @@ class User
       self.following_topics << topic.id
       self.following_topics_count += 1
       topic.followers_count += 1
+
+      node1 = Neo4j.neo.get_node_index('users', 'id', id.to_s)
+      node2 = Neo4j.neo.get_node_index('topics', 'id', topic.id.to_s)
+      rel1 = Neo4j.neo.create_relationship('follow', node1, node2)
+
       true
     else
       false
@@ -332,6 +342,16 @@ class User
     else
       nil
     end
+  end
+
+  def neo4j_create
+    node = Neo4j.neo.create_node('id' => id.to_s, 'type' => 'user', 'username' => username, 'slug' => slug)
+    Neo4j.neo.add_node_to_index('users', 'id', id.to_s, node)
+  end
+
+  def neo4j_update
+    node = Neo4j.neo.get_node_index('users', 'id', id.to_s)
+    Neo4j.neo.set_node_properties(node, {'username' => username, 'slug' => slug})
   end
 
   class << self
@@ -448,6 +468,7 @@ class User
       Comment.where(:user_id => id).update_all(user_snippet_updates)
       Notification.where("object_user._id" => id).update_all(object_user_updates)
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
+      neo4j_update
       expire_caches
       Resque.enqueue(SmCreateUser, id)
     end

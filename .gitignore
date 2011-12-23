@@ -46,6 +46,7 @@ tmp/*
 /specifications
 /public/uploads/*
 /config/heroku.yml
+/neo4j
 
 # scm revert files
 **.orig

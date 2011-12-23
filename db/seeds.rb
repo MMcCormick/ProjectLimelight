@@ -14,7 +14,7 @@ puts 'Creating marc'
 marc = User.find(User.marc_id)
 unless marc
   marc = User.new(
-          :username => 'marc',
+          :username => 'Marc',
           :first_name => 'Marc',
           :last_name => 'MacLeod',
           :email => 'marbemac@gmail.com',
@@ -33,7 +33,7 @@ puts 'Creating matt'
 matt = User.find(User.matt_id)
 unless matt
   matt = User.new(
-          :username => 'matt',
+          :username => 'Matt',
           :first_name => 'Matt',
           :last_name => 'McCormick',
           :email => 'matt.c.mccormick@gmail.com',

@@ -25,7 +25,7 @@ namespace :twitter do
     end
 
     print "Loading #{total} twitter topics into limelight.\n"
-    end
+  end
 
   desc "Inject hourly twitter trends."
   task :insert_hourly_trends => :environment do

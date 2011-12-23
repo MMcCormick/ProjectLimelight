@@ -61,7 +61,7 @@ class Topic
   attr_accessible :name, :summary, :aliases, :short_name
 
   before_create :init_alias, :text_health
-  after_create :add_to_soulmate
+  after_create :neo4j_create, :add_to_soulmate
   before_update :update_name_alias, :text_health
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
@@ -317,6 +317,12 @@ class Topic
         update_health("connection")
       end
       self.topic_connection_snippets << snippet
+
+      node1 = Neo4j.neo.get_node_index('topics', 'id', id.to_s)
+      node2 = Neo4j.neo.get_node_index('topics', 'id', con_topic.id.to_s)
+      rel1 = Neo4j.neo.create_relationship(connection.name, node1, node2)
+      Neo4j.neo.set_relationship_properties(rel1, {'primary' => snippet.primary, 'pull' => snippet.pull_from, 'user_id' => user_id.to_s})
+
       true
     end
   end
@@ -416,6 +422,16 @@ class Topic
       end
       ActionController::Base.new.expire_cell_state TopicCell, :trending
     end
+  end
+
+  def neo4j_create
+    node = Neo4j.neo.create_node('id' => id.to_s, 'type' => 'topic', 'name' => name, 'slug' => slug)
+    Neo4j.neo.add_node_to_index('topics', 'id', id.to_s, node)
+  end
+
+  def neo4j_update
+    node = Neo4j.neo.get_node_index('topics', 'id', id.to_s)
+    Neo4j.neo.set_node_properties(node, {'name' => name, 'slug' => slug})
   end
 
   class << self
@@ -568,6 +584,7 @@ class Topic
     end
 
     if soulmate
+      neo4j_update
       Resque.enqueue(SmCreateTopic, id.to_s)
     end
   end

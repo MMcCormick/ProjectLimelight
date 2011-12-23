@@ -16,4 +16,5 @@ class TopicConnectionSnippet
   validates_presence_of :topic_id, :topic_name, :topic_slug, :name, :user_id
 
   attr_accessible :name, :pull_from, :opposite
+
 end

@@ -2,11 +2,10 @@ class TopicConnection
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  # Denormalized in Topic.topic_connection_snippet
   field :name
+  field :opposite_name, :default => nil
+  field :pull, :type => Boolean
   field :user_id
-  field :pull_from, :type => Boolean
-  field :opposite
 
   belongs_to :user
 

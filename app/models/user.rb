@@ -224,10 +224,7 @@ class User
       self.following_users_count += 1
       user.followers_count += 1
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
-
-      node1 = Neo4j.neo.get_node_index('users', 'id', id.to_s)
-      node2 = Neo4j.neo.get_node_index('users', 'id', user.id.to_s)
-      rel1 = Neo4j.neo.create_relationship('follow', node1, node2)
+      Resque.enqueue(Neo4jFollowCreate, id.to_s, user.id.to_s, 'users', 'users')
 
       true
     end
@@ -239,6 +236,8 @@ class User
       self.following_users_count -= 1
       user.followers_count -= 1
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
+      Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
+
       true
     else
       false
@@ -250,18 +249,15 @@ class User
   end
 
   def follow_topic(topic)
-    if !self.following_topics.include?(topic.id)
+    if self.following_topics.include?(topic.id)
+      false
+    else
       self.following_topics << topic.id
       self.following_topics_count += 1
       topic.followers_count += 1
-
-      node1 = Neo4j.neo.get_node_index('users', 'id', id.to_s)
-      node2 = Neo4j.neo.get_node_index('topics', 'id', topic.id.to_s)
-      rel1 = Neo4j.neo.create_relationship('follow', node1, node2)
+      Resque.enqueue(Neo4jFollowCreate, id.to_s, topic.id.to_s, 'users', 'topics')
 
       true
-    else
-      false
     end
   end
 
@@ -270,6 +266,8 @@ class User
       self.following_topics.delete(topic.id)
       self.following_topics_count -= 1
       topic.followers_count -= 1
+      Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s)
+
       true
     else
       false

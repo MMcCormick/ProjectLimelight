@@ -28,7 +28,7 @@ task "resque:setup" => :environment do
   # So, someting like this:
   #require 'jobs'
 
-  ENV['QUEUE'] = 'popularity,soulmate_user,soulmate_topic,images,notifications,slow'
+  #ENV['QUEUE'] = 'popularity,soulmate_user,soulmate_topic,images,notifications,slow'
 end
 
 desc "Alias for resque:work (To run workers on Heroku)"

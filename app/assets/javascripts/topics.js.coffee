@@ -47,7 +47,8 @@ jQuery ->
       return row.term;
 
     self.result (event, data, formatted) ->
-      self.parent().siblings('#connection_topic_id').val(data.id)
+      id = if data.id then data.id else ''
+      self.parent().siblings('#connection_topic2_id').val(id)
 
   # TODO: can we combine this and the above? the self.result part is the only difference
   # Topic autocomplete for topic merge form

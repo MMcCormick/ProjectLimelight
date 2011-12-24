@@ -24,8 +24,8 @@ module NotificationsHelper
         "mentioned you in their #{notification.object.type.downcase} <a href='#{base+core_object_url(notification.object)}'>#{notification.object.name}</a>".html_safe
       when :reply
         if notification.object.comment_id
-          name = notification.object_user.id == current_user.id ? 'your' : "<a href='#{base+user_path(notification.object_user)}'>#{notification.object_user.username}'s</a>"
-          "replied to your <a href='#{base+core_object_url(notification.object)}##{notification.object.comment_id}'>comment</a> on #{name} #{notification.object.type.downcase} <a href='#{base+core_object_url(notification.object)}'>#{notification.object.name}</a>".html_safe
+          #name = notification.object_user.id == current_user.id ? 'your' : "<a href='#{base+user_path(notification.object_user)}'>#{notification.object_user.username}'s</a>"
+          "replied to your <a href='#{base+core_object_url(notification.object)}##{notification.object.comment_id}'>comment</a> on the #{notification.object.type.downcase} <a href='#{base+core_object_url(notification.object)}'>#{notification.object.name}</a>".html_safe
         else
           "replied to your #{notification.object.type.downcase} <a href='#{base+core_object_url(notification.object)}'>#{notification.object.name}</a>".html_safe
         end

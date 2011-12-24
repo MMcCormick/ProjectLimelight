@@ -44,7 +44,7 @@ class CoreObject
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :set_response_snippet, :send_tweet
-  after_create :update_response_count
+  after_create :neo4j_create, :update_response_count
   after_update :expire_caches
 
   # hot damn lots of indexes. can we do this better?
@@ -202,6 +202,10 @@ class CoreObject
         }
       )
     end
+  end
+
+  def neo4j_create
+    Resque.enqueue(Neo4jPostCreate, id.to_s)
   end
 
   class << self

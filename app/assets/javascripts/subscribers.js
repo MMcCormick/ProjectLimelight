@@ -138,7 +138,7 @@ $(function() {
         $('#contribute').click();
         contribute = $('#top-contribute');
 
-        $('#my-contributions').qtip({
+        $('.sidebar.left .contributions').qtip({
           content: {
             text: 'Your '+data.type+' was successfully created.<br/>'+
                   '<a href="'+data.path+'">Click here to view it</a>'+
@@ -153,11 +153,11 @@ $(function() {
           hide: {delay: 300, inactive: 5000},
           events: {
             hide: function(event, api) {
-              $('#my-contributions').qtip('destroy');
+              $('.sidebar.left .contributions').qtip('destroy');
             }
            }
         });
-        $('#my-contributions').qtip('show')
+        $('.sidebar.left .contributions').qtip('show')
       }
       // Clear forms on appropriate window
       contribute.find('.option.on .cancel').click();

@@ -130,7 +130,7 @@ class User
                 elsif google
                   google.image
                 else
-                  "http://www.gravatar.com/avatar/#{hash}?s=500&d=monsterid"
+                  "http://www.gravatar.com/avatar/#{hash}?s=500&d=identicon"
                 end
 
     write_out = open("/tmp/#{hash}", "wb")
@@ -429,7 +429,7 @@ class User
   class << self
     def find_for_database_authentication(conditions)
       login = conditions.delete(:login)
-      self.any_of({ :username => login }, { :email => login }).first
+      self.any_of({ :slug => login.downcase.strip }, { :email => login.downcase.strip }).first
     end
 
     def expire_caches(target_id)

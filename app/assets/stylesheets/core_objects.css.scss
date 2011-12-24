@@ -292,7 +292,7 @@
     padding: 15px 0 0 0;
     .head {
       position: absolute;
-      cursor: pointer;
+      cursor: default;
       color: #999;
       font-size: 11px;
       top: 3px;
@@ -563,9 +563,13 @@ $teaser-padding: 10px;
   .tag.user,
   .time { float: left; }
 
+  .content {
+    border-bottom: 1px solid #DCDFD4;
+  }
+
   .connectionsC {
     margin: 0;
-    background: #EBEEE2;
+    background: #F9F9F9;
     clear: left;
     font-size: 11px;
     position: relative;
@@ -575,7 +579,7 @@ $teaser-padding: 10px;
       padding: 3px 10px;
       overflow: none;
       border-bottom: 1px solid #DCDFD4;
-      border-top: 1px solid #F3F6EA;
+      border-top: 1px solid #F3F3F3;
     }
     .mentions {
       @include clearfix();
@@ -1182,25 +1186,24 @@ $scoreBox-width: 160px;
         border-left: 1px solid #CCC;
         border-right: 1px solid #CCC;
         border-bottom: 1px solid #9F9F9F;
-        min-height: 20px;
-        margin: 0 0 0 10px;
-        padding: 6px 0 0 0;
+        min-height: 16px;
+        margin: 0;
+        padding: 5px 0;
         cursor: pointer;
         position: absolute;
         top: 0px;
         left: 70px;
-
         background: #FFF;
 
-        &.closed {
-          background: transparent;
+        .btn {
+          cursor: pointer;
         }
-        &:hover {
-          background: #FFF;
+        &.closed {
+          border-left-color: transparent;
+          border-right-color: transparent;
         }
         .opt {
           width: 115px;
-          padding-bottom: 5px;
         }
         .opt:hover {
           color: #444;
@@ -1209,7 +1212,7 @@ $scoreBox-width: 160px;
       .arrow-small {
         position: absolute;
         top: 7px;
-        right: 7px;
+        right: 6px;
         z-index: 10;
         cursor: pointer;
       }
@@ -1218,15 +1221,13 @@ $scoreBox-width: 160px;
     .feed-display {
       ul {
         margin: 0 0 0 10px;
-        border-left: 1px solid #CCC;
-        border-right: 1px solid #CCC;
       }
       li {
         float: left;
       }
       .opt {
-        padding-top: 6px;
-        height: 20px;
+        padding-top: 5px;
+        height: 21px;
       }
     }
 
@@ -1239,8 +1240,6 @@ $scoreBox-width: 160px;
       }
       li {
         float: left;
-        border-left: 1px solid #CCC;
-        border-right: 1px solid #CCC;
         margin-right: -1px;
       }
       .opt {
@@ -1257,20 +1256,19 @@ $scoreBox-width: 160px;
     }
 
     .feed-display {
+      .on {
+        font-weight: bold;
+      }
       .on.talk {
-        background-color: adjust-lightness($talk-color, 38);
         color: adjust-lightness($talk-color, -7);
       }
       .on.link {
-        background-color: adjust-lightness($link-color, 38);
         color: adjust-lightness($link-color, -7);
       }
       .on.picture {
-        background-color: adjust-lightness($picture-color, 38);
         color: adjust-lightness($picture-color, -7);
       }
       .on.video {
-        background-color: adjust-lightness($video-color, 38);
         color: adjust-lightness($video-color, -7);
       }
     }

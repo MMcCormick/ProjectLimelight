@@ -69,16 +69,20 @@ class TopicConnection
 
       organized = {}
 
-      outgoing['data'].each do |c|
-        type = c[0]['type']
-        organized[c[0]['connection_id']] ||= {'relationship' => c[0]['data'], 'type' => type, 'connections' => []}
-        organized[c[0]['connection_id']]['connections'] << c[1]['data']
+      if outgoing
+        outgoing['data'].each do |c|
+          type = c[0]['type']
+          organized[c[0]['data']['connection_id']] ||= {'relationship' => c[0]['data'], 'type' => type, 'connections' => []}
+          organized[c[0]['data']['connection_id']]['connections'] << c[1]['data']
+        end
       end
 
-      incoming['data'].each do |c|
-        type = c[0]['data']['reverse_name'] ? c[0]['data']['reverse_name'] : c[0]['type']
-        organized[c[0]['connection_id']] ||= {'relationship' => c[0]['data'], 'type' => type, 'connections' => []}
-        organized[c[0]['connection_id']]['connections'] << c[1]['data']
+      if incoming
+        incoming['data'].each do |c|
+          type = c[0]['data']['reverse_name'].blank? ? c[0]['type'] : c[0]['data']['reverse_name']
+          organized[c[0]['data']['connection_id']] ||= {'relationship' => c[0]['data'], 'type' => type, 'connections' => []}
+          organized[c[0]['data']['connection_id']]['connections'] << c[1]['data']
+        end
       end
 
       organized

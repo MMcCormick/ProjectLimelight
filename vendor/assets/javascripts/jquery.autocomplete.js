@@ -499,15 +499,15 @@
         return '<div class="auto-user"><div class="name term">' + data.term + '</div></div>';
       }
       else if (data.bucketType == 'topic') {
-        var types = '',
+        var type = '',
                 name = '<span class="term">' + data.show + (data.data && data.data['short_name'] ? '*' : '') + '</span>';
-        if (data.data && data.data.types) {
-          types = '<div class="types">' + data.data.types.join(', ') + '</div>';
+        if (data.data && data.data.type) {
+          type = '<div class="types">' + data.data.type + '</div>';
         }
         if (data.showName) {
           name = data.showName;
         }
-        return '<div class="auto-topic"><div class="name' + (types != '' ? ' with-type' : '') + '">' + name + '</div>' + types + '</div>';
+        return '<div class="auto-topic"><div class="name' + (type != '' ? ' with-type' : '') + '">' + name + '</div>' + type + '</div>';
       }
       else if (data.bucketType == 'none') {
         return '<div class="auto"><div class="name">no matches found</div></div>';

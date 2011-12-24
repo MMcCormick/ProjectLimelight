@@ -281,12 +281,6 @@ class Topic
   # Connections
   #
 
-  # Returns true if the topic has one type_of or instances connection
-  def typed?
-    topic_connection_snippets.any?{ |snippet| snippet.id.to_s == Topic.type_of_id } ||
-          topic_connection_snippets.any?{ |snippet| snippet.id.to_s == Topic.instances_id }
-  end
-
   def remove_connection(connection, con_topic)
     remove_connection_helper(connection, con_topic)
     if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
@@ -385,7 +379,7 @@ class Topic
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('id' => id.to_s, 'type' => 'topic', 'name' => name, 'slug' => slug)
+    node = Neo4j.neo.create_node('id' => id.to_s, 'type' => 'topic', 'name' => name, 'slug' => slug, 'public_id' => public_id)
     Neo4j.neo.add_node_to_index('topics', 'id', id.to_s, node)
   end
 

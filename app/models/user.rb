@@ -345,7 +345,7 @@ class User
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('id' => id.to_s, 'type' => 'user', 'username' => username, 'slug' => slug)
+    node = Neo4j.neo.create_node('id' => id.to_s, 'type' => 'user', 'username' => username, 'slug' => slug, 'public_id' => public_id)
     Neo4j.neo.add_node_to_index('users', 'id', id.to_s, node)
   end
 

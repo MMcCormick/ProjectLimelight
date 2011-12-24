@@ -1,7 +1,7 @@
 <form action="<%= add_connection_path %>" id="add-connection-form" method="POST" class="ajax">
 
   <% if defined?(suggested_connections) %>
-    <%= collection_select(:connection, :sug_con_id, suggested_connections, :id, :name, :prompt => "Suggested Connections") %>
+    <%#= collection_select(:connection, :sug_con_id, suggested_connections, :id, :name, :prompt => "Suggested Connections") %>
   <% end %>
 
   <div class="field">
@@ -13,7 +13,7 @@
     <%= text_field_tag "connection[topic_name]", nil, :id => "tc-auto", :class => "tc-auto" %>
   </div>
 
-  <%= hidden_field_tag "topic1_id", topic_id %>
+  <%= hidden_field_tag "connection[topic1_id]", topic_id %>
   <%= hidden_field_tag "connection[topic2_id]", "" %>
 
   <div class="actions">

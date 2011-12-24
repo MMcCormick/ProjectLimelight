@@ -25,13 +25,13 @@ class TopicConnectionsController < ApplicationController
 
   def add
     topic1 = Topic.find(params[:connection][:topic1_id])
-    authorize! :update, topic
+    authorize! :update, topic1
 
     original_slug = topic1.slug
     con_id = params[:connection][:sug_con_id].blank? ? params[:connection][:con_id] : params[:connection][:sug_con_id]
     connection = TopicConnection.find(con_id)
 
-    if params[:connection][:topic2_id] == "0"
+    if params[:connection][:topic2_id].blank?
       name = params[:connection][:topic_name]
       # Checks if there is an untyped topic with an alias equal to the name
       alias_topic = Topic.where("aliases.slug" => name.to_url, "primary_type" => {"$exists" => true}).first
@@ -62,19 +62,19 @@ class TopicConnectionsController < ApplicationController
   end
 
   def remove
-    topic = Topic.find(params[:topic_id])
-    authorize! :update, topic
-    original_slug = topic.slug
-    connection = TopicConnection.find(params[:con_id])
-    con_topic = Topic.find(params[:con_topic_id])
+    topic1 = Topic.find(params[:topic1_id])
+    authorize! :update, topic1
+    original_slug = topic1.slug
+    connection = TopicConnection.find(params[:id])
+    topic2 = Topic.find(params[:topic2_id])
 
-    if topic && con_topic && connection
-      topic.remove_connection(connection, con_topic)
-      if topic.save && con_topic.save
-        response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Connection removed!")
+    if topic1 && topic2 && connection
+      TopicConnection.remove(connection, topic1, topic2)
+      if topic1.save
+        response = build_ajax_response(:ok, (original_slug != topic1.slug) ? edit_topic_path(topic1) : nil, "Connection removed!")
         status = 201
       else
-        response = build_ajax_response(:error, nil, "Could not remove connection", topic.errors)
+        response = build_ajax_response(:error, nil, "Could not remove connection", topic1.errors)
         status = 422
       end
     else

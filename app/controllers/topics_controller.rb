@@ -70,7 +70,7 @@ class TopicsController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @title = "Edit '" + @topic.name + "'"
-    @connections = @topic.get_connections
+    @connections = TopicConnection.get_topic_relationships(@topic.id)
   end
 
   def update

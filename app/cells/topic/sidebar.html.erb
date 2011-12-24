@@ -40,17 +40,17 @@
   </div>
 
   <% if @connections.length > 0 %>
-    <h3 class="section-h">Connections</h3>
+    <h3 class="section-h">Relationships</h3>
     <div class="section connections">
-      <% @connections.each do |con_id, connection| %>
+      <% @connections.each do |id, data| %>
         <div class="sub-section also">
-          <h5><%= "#{con_id.to_s == Topic.instances_id ? @topic.name.pluralize : connection[:name]} (#{connection[:data].length})" %></h5>
-          <% connection[:data].each_with_index do |data, i| %>
+          <h5><%= "#{data['type'] == 'Instance' ? @topic.name.pluralize : data['type']} (#{data['connections'].length})" %></h5>
+          <% data['connections'].each_with_index do |connection, i| %>
             <% if i > 1   %>
               <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
               <% break %>
             <% end %>
-            <%= render 'topics/tag', :topic => data[:topic], :include_image => false %>
+            <%= render 'topics/tag', :topic => TopicSnippet.new(connection), :include_image => false %>
           <% end %>
         </div>
       <% end %>

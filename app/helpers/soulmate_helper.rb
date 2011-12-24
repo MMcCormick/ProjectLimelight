@@ -30,11 +30,8 @@ module SoulmateHelper
       end
     end
 
-    topic.get_types.each do |type|
-      if type.primary
-        nugget['data']['types'] ||= Array.new
-        nugget['data']['types'] << type.topic_name
-      end
+    if topic.primary_type
+      nugget['data']['type'] = topic.primary_type
     end
 
     if topic.short_name && !topic.short_name.blank?

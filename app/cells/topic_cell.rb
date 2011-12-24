@@ -21,7 +21,7 @@ class TopicCell < Cell::Rails
   def sidebar(current_user, topic, connections=nil)
     @current_user = current_user
     @topic = topic
-    @connections = connections ? connections : @topic.get_connections
+    @connections = connections ? connections : TopicConnection.get_topic_relationships(@topic.id)
     render
   end
 

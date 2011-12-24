@@ -48,6 +48,7 @@ class Topic
   field :user_id
   field :followers_count, :default => 0
   field :v, :default => 1
+  field :primary_type
 
   auto_increment :public_id
 
@@ -70,6 +71,7 @@ class Topic
   index "aliases.slug"
   index "aliases.hash"
   index :short_name
+  index :primary_type
   index :ph
   index :pd
   index :pw
@@ -283,48 +285,6 @@ class Topic
   def typed?
     topic_connection_snippets.any?{ |snippet| snippet.id.to_s == Topic.type_of_id } ||
           topic_connection_snippets.any?{ |snippet| snippet.id.to_s == Topic.instances_id }
-  end
-
-  def has_connection?(con_id, con_topic_id)
-    topic_connection_snippets.any?{ |snippet| snippet.topic_id == con_topic_id && snippet.id == con_id }
-  end
-
-  def add_connection(connection, con_topic, user_id, primary=false)
-    if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
-      con_topic.add_connection_helper(opposite, self, user_id, primary)
-    end
-    self.add_connection_helper(connection, con_topic, user_id, primary)
-  end
-
-  def add_connection_helper(connection, con_topic, user_id, primary)
-    if self.has_connection?(connection.id, con_topic.id)
-      false
-    else
-      snippet = TopicConnectionSnippet.new()
-      snippet.id = connection.id
-      snippet.name = connection.name
-      snippet.pull_from = connection.pull_from
-      snippet.topic_id = con_topic.id
-      snippet.topic_name = con_topic.name
-      snippet.topic_slug = con_topic.slug
-      snippet.user_id = user_id
-      if connection.id.to_s == Topic.type_of_id && (primary || get_primary_types.empty?)
-        snippet.primary = true
-        update_health("type")
-        self.v += 1
-      end
-      if connection.id.to_s != Topic.type_of_id
-        update_health("connection")
-      end
-      self.topic_connection_snippets << snippet
-
-      node1 = Neo4j.neo.get_node_index('topics', 'id', id.to_s)
-      node2 = Neo4j.neo.get_node_index('topics', 'id', con_topic.id.to_s)
-      rel1 = Neo4j.neo.create_relationship(connection.name, node1, node2)
-      Neo4j.neo.set_relationship_properties(rel1, {'primary' => snippet.primary, 'pull' => snippet.pull_from, 'user_id' => user_id.to_s})
-
-      true
-    end
   end
 
   def remove_connection(connection, con_topic)

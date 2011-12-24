@@ -24,42 +24,34 @@ class TopicConnectionsController < ApplicationController
   end
 
   def add
-    topic = Topic.find(params[:topic_id])
+    topic1 = Topic.find(params[:connection][:topic1_id])
     authorize! :update, topic
 
-    original_slug = topic.slug
+    original_slug = topic1.slug
     con_id = params[:connection][:sug_con_id].blank? ? params[:connection][:con_id] : params[:connection][:sug_con_id]
     connection = TopicConnection.find(con_id)
 
-    if params[:connection][:topic_id] == "0"
+    if params[:connection][:topic2_id] == "0"
       name = params[:connection][:topic_name]
       # Checks if there is an untyped topic with an alias equal to the name
-      alias_topic = Topic.where("aliases.slug" => name.to_url, "topic_connection_snippets._id" => {"$ne" => BSON::ObjectId(Topic.type_of_id)}).first
+      alias_topic = Topic.where("aliases.slug" => name.to_url, "primary_type" => {"$exists" => true}).first
       if alias_topic
-        con_topic = alias_topic
+        topic2 = alias_topic
       else
-        con_topic = current_user.topics.create({name: name})
+        topic2 = current_user.topics.create({name: name})
       end
     else
-      con_topic = Topic.find(params[:connection][:topic_id])
+      topic2 = Topic.find(params[:connection][:topic2_id])
     end
 
-    if topic && con_topic && connection
-      if topic.add_connection(connection, con_topic, current_user.id, !!params[:connection][:primary])
-        if params[:freebase_id] && con_topic.fb_id.blank?
-          con_topic.fb_id = params[:freebase_id]
-          con_topic.fb_mid = params[:freebase_mid]
-        end
-        if topic.save && con_topic.save
-          response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Connection created!")
-          status = 201
-        else
-          response = build_ajax_response(:error, nil, "Could not save connection", topic.errors)
-          status = 422
-        end
+    if topic1 && topic2 && connection
+      TopicConnection.add(connection, topic1, topic2, current_user.id)
+      if topic1.save && topic2.save
+        response = build_ajax_response(:ok, (original_slug != topic1.slug) ? edit_topic_path(topic1) : nil, "Connection created!")
+        status = 201
       else
-        response = build_ajax_response(:error, nil, "Topic already has that connection", topic.errors)
-        status = 400
+        response = build_ajax_response(:error, nil, "Could not save connection", topic1.errors)
+        status = 422
       end
     else
       response = build_ajax_response(:error, nil, 'Object not found!')

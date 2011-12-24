@@ -351,7 +351,7 @@ class User
 
   def neo4j_update
     node = Neo4j.neo.get_node_index('users', 'id', id.to_s)
-    Neo4j.neo.set_node_properties(node, {'username' => username, 'slug' => slug})
+    Neo4j.neo.set_node_properties(node, {'username' => username, 'slug' => slug}) if node
   end
 
   class << self

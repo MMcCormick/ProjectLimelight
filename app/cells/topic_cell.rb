@@ -28,7 +28,7 @@ class TopicCell < Cell::Rails
   def add_connection(topic)
     @topic = topic
     @connection_types = TopicConnection.all.asc(:name)
-    @suggested_connections = @topic.suggested_connections
+    #@suggested_connections = @topic.suggested_connections
     render
   end
 

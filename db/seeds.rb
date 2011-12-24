@@ -53,8 +53,9 @@ connection = TopicConnection.find(Topic.type_of_id)
 unless connection
   connection = TopicConnection.new(
           :name => 'Type Of',
-          :pull_from => false,
-          :opposite => ''
+          :reverse_name => 'Instance',
+          :pull => false,
+          :reverse_pull => true
   )
   connection.user_id = marc.id
   connection.id = Topic.type_of_id
@@ -62,22 +63,6 @@ unless connection
   puts 'Type of connection created'
 else
   puts 'Type of connection already in DB'
-end
-
-puts 'Creating instance of connection'
-connection2 = TopicConnection.find(Topic.instances_id)
-unless connection2
-  connection2 = TopicConnection.new(
-          :name => 'Instances',
-          :pull_from => true,
-          :opposite => connection.id
-  )
-  connection2.user_id = marc.id
-  connection2.id = Topic.instances_id
-  connection2.save!
-  puts 'Instances connection created'
-else
-  puts 'Instances connection already in DB'
 end
 
 puts 'Creating limelight topic'

@@ -13,7 +13,7 @@ class TopicConnection
   validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
   validates :user_id, :presence => true
 
-  attr_accessible :name, :reverse_name, :pull, :reverse_pull
+  attr_accessible :name, :reverse_name, :pull_from, :reverse_pull_from
 
   # Return the topic slug instead of its ID
   def to_param
@@ -29,11 +29,19 @@ class TopicConnection
       Neo4j.neo.set_relationship_properties(rel1, {
               'connection_id' => connection.id.to_s,
               'reverse_name' => connection.reverse_name,
-              'pull_from' => connection.pull_from,
-              'reverse_pull_from' => connection.reverse_pull_from,
               'user_id' => user_id.to_s
       })
       Neo4j.neo.add_relationship_to_index('topic-relationships', 'key', "#{topic1.id.to_s}-#{connection.id.to_s}-#{topic2.id.to_s}", rel1)
+
+      if connection.pull_from == true
+        rel1 = Neo4j.neo.create_relationship('pull', node1, node2)
+        Neo4j.neo.add_relationship_to_index('topic-pulls', 'key', "#{topic1.id.to_s}-pull-#{topic2.id.to_s}", rel1)
+      end
+
+      if connection.reverse_pull_from == true
+        rel1 = Neo4j.neo.create_relationship('pull', node2, node1)
+        Neo4j.neo.add_relationship_to_index('topic-pulls', 'key', "#{topic2.id.to_s}-pull-#{topic1.id.to_s}", rel1)
+      end
 
       if connection.id.to_s == Topic.type_of_id && !topic1.primary_type
         topic1.primary_type = topic2.name
@@ -47,6 +55,19 @@ class TopicConnection
       rel1 = Neo4j.neo.get_relationship_index('topic-relationships', 'key', "#{topic1.id.to_s}-#{connection.id.to_s}-#{topic2.id.to_s}")
       Neo4j.neo.delete_relationship(rel1)
       Neo4j.neo.remove_relationship_from_index('topic-relationships', rel1)
+
+      if connection.pull_from == true
+        rel1 = Neo4j.neo.get_relationship_index('topic-pulls', 'key', "#{topic1.id.to_s}-pull-#{topic2.id.to_s}")
+        Neo4j.neo.delete_relationship(rel1)
+        Neo4j.neo.remove_relationship_from_index('topic-pulls', rel1)
+      end
+
+      if connection.reverse_pull_from == true
+        rel1 = Neo4j.neo.get_relationship_index('topic-pulls', 'key', "#{topic2.id.to_s}-pull-#{topic1.id.to_s}")
+        Neo4j.neo.delete_relationship(rel1)
+        Neo4j.neo.remove_relationship_from_index('topic-pulls', rel1)
+      end
+
       Neo4j.update_affinity(topic1.id.to_s, topic2.id.to_s, nil, nil, -10, true, false)
     end
 
@@ -88,42 +109,18 @@ class TopicConnection
       organized
     end
 
-    #def add_connection(connection, con_topic, user_id, primary=false)
-    #  if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
-    #    con_topic.add_connection_helper(opposite, self, user_id, primary)
-    #  end
-    #  self.add_connection_helper(connection, con_topic, user_id, primary)
-    #end
-    #
-    #def add_connection_helper(connection, con_topic, user_id, primary)
-    #  if self.has_connection?(connection.id, con_topic.id)
-    #    false
-    #  else
-    #    snippet = TopicConnectionSnippet.new()
-    #    snippet.id = connection.id
-    #    snippet.name = connection.name
-    #    snippet.pull_from = connection.pull_from
-    #    snippet.topic_id = con_topic.id
-    #    snippet.topic_name = con_topic.name
-    #    snippet.topic_slug = con_topic.slug
-    #    snippet.user_id = user_id
-    #    if connection.id.to_s == Topic.type_of_id && (primary || get_primary_types.empty?)
-    #      snippet.primary = true
-    #      update_health("type")
-    #      self.v += 1
-    #    end
-    #    if connection.id.to_s != Topic.type_of_id
-    #      update_health("connection")
-    #    end
-    #    self.topic_connection_snippets << snippet
-    #
-    #    node1 = Neo4j.neo.get_node_index('topics', 'id', id.to_s)
-    #    node2 = Neo4j.neo.get_node_index('topics', 'id', con_topic.id.to_s)
-    #    rel1 = Neo4j.neo.create_relationship(connection.name, node1, node2)
-    #    Neo4j.neo.set_relationship_properties(rel1, {'primary' => snippet.primary, 'pull' => snippet.pull_from, 'user_id' => user_id.to_s})
-    #
-    #    true
-    #  end
-    #end
+    def pull_from_ids(topic_id)
+      query = "
+        START n=node:topics(id = '#{topic_id}')
+        MATCH n-[:pull*]->x
+        RETURN distinct x.id
+      "
+      ids = Neo4j.neo.execute_query(query)
+      pull_from = []
+      ids['data'].each do |id|
+        pull_from << BSON::ObjectId(id[0])
+      end
+      pull_from
+    end
   end
 end

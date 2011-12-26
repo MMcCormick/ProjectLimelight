@@ -54,8 +54,8 @@ unless connection
   connection = TopicConnection.new(
           :name => 'Type Of',
           :reverse_name => 'Instance',
-          :pull => false,
-          :reverse_pull => true
+          :pull_from => false,
+          :reverse_pull_from => true
   )
   connection.user_id = marc.id
   connection.id = Topic.type_of_id

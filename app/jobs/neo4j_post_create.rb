@@ -29,7 +29,7 @@ class Neo4jPostCreate
         Neo4j.neo.add_relationship_to_index('post-relationships', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
 
         # increase the creators affinity to these users
-        Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 3, false, false)
+        Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 10, false, false)
       end
 
       topics = []
@@ -41,7 +41,7 @@ class Neo4jPostCreate
         Neo4j.neo.add_relationship_to_index('post-relationships', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
 
         # increase the creators affinity to these topics
-        Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 3, false, false)
+        Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 10, false, false)
 
         topics << {:node => mention_node, :node_id => m.id.to_s}
       end

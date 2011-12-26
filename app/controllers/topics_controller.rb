@@ -23,10 +23,10 @@ class TopicsController < ApplicationController
     @right_sidebar = true
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topic_path @topic, :p => page + 1
-    @topic_ids = @topic.pull_from_ids(Set.new([@topic.id])).to_a
+    @topic_ids = TopicConnection.pull_from_ids(@topic.id.to_s).to_a
 
     @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
-            :mentions_topics => @topic_ids,
+            :mentions_topics => @topic_ids << @topic.id,
             :page => page
     })
 
@@ -354,7 +354,7 @@ class TopicsController < ApplicationController
 
   def pull_from
     topic = Topic.find_by_slug(params[:id])
-    pull_from_ids = topic.pull_from_ids(Set.new).to_a
+    pull_from_ids = TopicConnection.pull_from_ids(topic.id.to_s).to_a
     pull_from_ids.delete(topic.id)
     pull_from_topics = Topic.where(:_id => {'$in' => pull_from_ids})
     html = render_to_string :partial => "topics/pull_from", :locals => {:topic => topic, :pull_from_ids => pull_from_ids, :pull_from_topics => pull_from_topics}

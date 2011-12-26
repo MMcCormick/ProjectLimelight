@@ -131,13 +131,14 @@ class CoreObject
   end
 
   def add_to_favorites(user)
-    unless favorited_by? user.id
+    if favorited_by? user.id
+      false
+    else
       self.favorites << user.id
       self.favorites_count += 1
       user.add_to_favorites(self)
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 2)
       true
-    else
-      false
     end
   end
 
@@ -146,6 +147,7 @@ class CoreObject
       self.favorites.delete(user.id)
       self.favorites_count -= 1
       user.remove_from_favorites(self)
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -2)
       true
     else
       false
@@ -164,6 +166,7 @@ class CoreObject
       self.reposts << user.id
       self.reposts_count += 1
       user.reposts_count += 1
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
       true
     end
   end
@@ -173,6 +176,7 @@ class CoreObject
       self.reposts.delete(user.id)
       self.reposts_count -= 1
       user.reposts_count -= 1
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
       true
     else
       false

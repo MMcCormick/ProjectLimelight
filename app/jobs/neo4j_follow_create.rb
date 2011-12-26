@@ -9,7 +9,7 @@ class Neo4jFollowCreate
     node2 = Neo4j.neo.get_node_index(node2_index, 'id', node2_id)
     rel1 = Neo4j.neo.create_relationship('follow', node1, node2)
     Neo4j.neo.add_relationship_to_index('user-relationships', 'follow', "#{node1_id}-#{node2_id}", rel1)
-    Neo4j.update_affinity(node1_id, node2_id, node1, node2, 10, false, nil)
+    Neo4j.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil)
   end
 
 end

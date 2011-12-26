@@ -318,18 +318,6 @@ class Topic
     connections
   end
 
-  # recursively gets topic ids to pull from in a hash of format {:topic_id => true}
-  def pull_from_ids(ids)
-    topic_connection_snippets.each do |snippet|
-      if snippet.pull_from? && !ids.include?(snippet.topic_id)
-        ids << snippet.topic_id
-        topic = Topic.find(snippet.topic_id)
-        ids = ids.merge(topic.pull_from_ids(ids)) if topic
-      end
-    end
-    ids
-  end
-
   # TODO: finish
   # Suggests connections for the topic based on other topics of the same type(s)
   def suggested_connections

@@ -47,14 +47,14 @@
     <%= render_cell :topic, :add_connection, @topic %>
       <div class="clear-left"></div>
       <div class="topic-connections">
-        <% @connections.each do |id, data| %>
+        <% @connections.each do |type, data| %>
           <div class="connection">
-            <h5><%= data['type'] %></h5>
+            <h5><%= type %></h5>
             <% data['connections'].each do |connection| %>
               <div class="con-topic">
                 <%= render 'topics/tag', :topic => TopicSnippet.new(connection), :include_image => false %>
 
-                <% if data['type'] == 'Type Of' %>
+                <% if type == 'Type Of' %>
                   <%= render 'topic_connections/toggle_primary_btn', :snippet => connection, :topic_id => @topic.id %>
                 <% end %>
 

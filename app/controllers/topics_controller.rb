@@ -23,7 +23,7 @@ class TopicsController < ApplicationController
     @right_sidebar = true
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topic_path @topic, :p => page + 1
-    @topic_ids = TopicConnection.pull_from_ids(@topic.id.to_s).to_a
+    @topic_ids = Neo4j.pull_from_ids(@topic.id.to_s).to_a
 
     @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :mentions_topics => @topic_ids << @topic.id,
@@ -70,7 +70,7 @@ class TopicsController < ApplicationController
     @site_style = 'narrow'
     @right_sidebar = true
     @title = "Edit '" + @topic.name + "'"
-    @connections = TopicConnection.get_topic_relationships(@topic.id)
+    @connections = Neo4j.get_topic_relationships(@topic.id)
   end
 
   def update
@@ -354,7 +354,7 @@ class TopicsController < ApplicationController
 
   def pull_from
     topic = Topic.find_by_slug(params[:id])
-    pull_from_ids = TopicConnection.pull_from_ids(topic.id.to_s).to_a
+    pull_from_ids = Neo4j.pull_from_ids(topic.id.to_s).to_a
     pull_from_ids.delete(topic.id)
     pull_from_topics = Topic.where(:_id => {'$in' => pull_from_ids})
     html = render_to_string :partial => "topics/pull_from", :locals => {:topic => topic, :pull_from_ids => pull_from_ids, :pull_from_topics => pull_from_topics}

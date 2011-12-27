@@ -2,6 +2,7 @@ class UserCell < Cell::Rails
 
   include Devise::Controllers::Helpers
   helper ImageHelper
+  helper TopicsHelper
 
   cache :sidebar do |cell,user,current_user,state|
     current_id = current_user ? current_user.id.to_s : 0
@@ -19,6 +20,11 @@ class UserCell < Cell::Rails
   def sidebar(user, current_user, state)
     @user = user
     @current_user = current_user
+    render
+  end
+
+  def interests(user)
+    @interests = Neo4j.user_interests(user.id.to_s, 10)
     render
   end
 

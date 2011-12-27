@@ -83,7 +83,9 @@
           <fb:like href="http://www.facebook.com/pages/Limelight/240530529343415" send="false" layout="button_count" width="90" show_faces="false" font="tahoma"></fb:like>
         </div>
       </div>
-      <div id="plt"><%= load_time %></div>
+      <% if signed_in? && current_user.role?('admin') %>
+        <div id="plt"><%= load_time %></div>
+      <% end %>
     </footer>
 
     <!-- HIDDEN TOOLS -->

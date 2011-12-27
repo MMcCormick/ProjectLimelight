@@ -42,9 +42,9 @@
   <% if @connections.length > 0 %>
     <h3 class="section-h">Relationships</h3>
     <div class="section connections">
-      <% @connections.each do |id, data| %>
+      <% @connections.each do |type, data| %>
         <div class="sub-section also">
-          <h5><%= "#{data['type'] == 'Instance' ? @topic.name.pluralize : data['type']} (#{data['connections'].length})" %></h5>
+          <h5><%= "#{type == 'Instance' ? @topic.name.pluralize : type} (#{data['connections'].length})" %></h5>
           <% data['connections'].each_with_index do |connection, i| %>
             <% if i > 1   %>
               <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>

@@ -69,10 +69,7 @@
   </div>
   
   <% if @current_user || @user %>
-    <!--<h3 class="section-h">Interest Profile</h3>-->
-    <!--<div class="section">-->
-      <!--<div class="none">Coming Soon!</div>-->
-    <!--</div>-->
+    <%= render_cell :user, :interests, @user %>
 
     <% if (!@current_user && @user) || (@user.id == @current_user.id) %>
       <!--<h3 class="section-h">Topic Suggestions</h3>-->

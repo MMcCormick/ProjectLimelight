@@ -1,0 +1,8 @@
+<% if @interests.length > 2 %>
+  <h3 class="section-h">Interests<span class='tip' title='This interest profile is generated as you post and interact with things on Limelight.'>?</span></h3>
+  <div class="section">
+    <% @interests.each do |interest| %>
+      <%= render 'topics/tag', :topic => TopicSnippet.new(interest), :include_image => false %>
+    <% end %>
+  </div>
+<% end %>

@@ -438,6 +438,17 @@ button {
     margin-top: -4px;
     height: 25px;
     line-height: 28px;
+    position: relative;
+
+    span {
+      position: absolute;
+      top: 0px;
+      right: 22px;
+      font-weight: bold;
+      font-size: 12px;
+      cursor: default;
+      color: #FFF;
+    }
   }
   .section {
     padding: 0px;
@@ -446,6 +457,11 @@ button {
     .none {
       font-style: italic;
       padding: 5px 7px;
+    }
+
+    .tag {
+      margin: 5px 7px;
+      font-size: 12px;
     }
   }
   .sub-section {
@@ -731,8 +747,8 @@ button {
 /* Page load time */
 #plt {
   position: absolute;
-  right: 15px;
-  top: -22px;
+  right: 25px;
+  top: -20px;
   font-size: 9px;
   color: #999;
   font-weight: normal;

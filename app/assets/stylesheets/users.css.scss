@@ -810,3 +810,16 @@
     }
   }
 }
+
+.sidebar {
+  .interests {
+    padding: 2px 4px;
+    img {
+      @include opacity(.8);
+      margin: 2px;
+      &:hover {
+        @include opacity(1);
+      }
+    }
+  }
+}

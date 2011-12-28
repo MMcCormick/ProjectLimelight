@@ -91,8 +91,10 @@ class Neo4j
       "
       ids = self.neo.execute_query(query)
       interests = []
-      ids['data'].each do |n|
-        interests << n[0]['data']
+      if ids
+        ids['data'].each do |n|
+          interests << n[0]['data']
+        end
       end
       interests
     end

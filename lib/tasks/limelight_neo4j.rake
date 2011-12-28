@@ -2,8 +2,6 @@ namespace :limelight_neo4j do
 
   desc "Migrate data from old limelight structure to new one in neo4j."
   task :migrate_data => :environment do
-    print "Fetching twitter trends for: #{Chronic.parse("#{past} weeks ago")}\n"
-    print "Loading #{total} twitter topics into limelight.\n"
 
     # move topics over
     topics = Topic.all
@@ -15,6 +13,7 @@ namespace :limelight_neo4j do
       Neo4j.neo.add_node_to_index('topics', 'id', t.id.to_s, node)
       t.topic_connection_snippets.delete_all
       t.save
+      print "Loaded #{t.name} topic\n"
     end
 
     # move users over
@@ -36,12 +35,15 @@ namespace :limelight_neo4j do
       u.following_topics.each do |f|
         Resque.enqueue(Neo4jFollowCreate, u.id.to_s, f.to_s, 'users', 'topics')
       end
+
+      print "Loaded #{u.username} user\n"
     end
 
     # move posts over
     posts = CoreObject.all
     posts.each do |p|
       Resque.enqueue(Neo4jPostCreate, p.id.to_s)
+      print "Loaded #{posts.length} posts\n"
     end
 
   end

@@ -2,7 +2,7 @@ class Neo4j
 
   class << self
     def neo
-      @neo ||= ENV['NEO4J_REST_URL'] ? Neography::Rest.new(ENV['NEO4J_REST_URL']) : Neography::Rest.new
+      @neo ||= ENV['NEO4J_URL'] ? Neography::Rest.new(ENV['NEO4J_URL']) : Neography::Rest.new
     end
 
     def update_affinity(node1_id, node2_id, node1, node2, change, mutual, with_connection)

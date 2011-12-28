@@ -32,14 +32,7 @@ class TopicConnectionsController < ApplicationController
     connection = TopicConnection.find(con_id)
 
     if params[:connection][:topic2_id].blank?
-      name = params[:connection][:topic_name]
-      # Checks if there is an untyped topic with an alias equal to the name
-      alias_topic = Topic.where("aliases.slug" => name.to_url, "primary_type" => {"$exists" => true}).first
-      if alias_topic
-        topic2 = alias_topic
-      else
-        topic2 = current_user.topics.create({name: name})
-      end
+      topic2 = Topic.find_untyped_or_create(params[:connection][:topic_name])
     else
       topic2 = Topic.find(params[:connection][:topic2_id])
     end

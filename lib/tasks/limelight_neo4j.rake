@@ -43,8 +43,8 @@ namespace :limelight_neo4j do
     posts = CoreObject.all
     posts.each do |p|
       Resque.enqueue(Neo4jPostCreate, p.id.to_s)
-      print "Loaded #{posts.length} posts\n"
     end
+    print "Loaded #{posts.length} posts\n"
 
   end
 

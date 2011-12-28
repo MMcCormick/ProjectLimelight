@@ -24,17 +24,7 @@ class Topic
   # Topic.aliases
   # TopicMention.slug
   # TopicConnectionSnippet.topic_slug
-  slug :name, :v do |doc|
-    if doc.slug_locked
-      doc.slug
-    else
-      if doc.get_primary_types.empty?
-        doc.name
-      else
-        doc.name + " " + doc.get_primary_types[0].topic_name.to_url
-      end
-    end
-  end
+  slug :name
 
   field :summary
   field :short_name
@@ -47,7 +37,6 @@ class Topic
   field :slug_locked
   field :user_id
   field :followers_count, :default => 0
-  field :v, :default => 1
   field :primary_type
 
   auto_increment :public_id
@@ -318,7 +307,7 @@ class Topic
     connections
   end
 
-  # TODO: finish
+  # TODO: remove / port to neo4j
   # Suggests connections for the topic based on other topics of the same type(s)
   def suggested_connections
     similar_topic_ids = []
@@ -377,6 +366,16 @@ class Topic
   end
 
   class << self
+
+    # Checks if there is an untyped topic with an alias equal to the name. If so, returns that topic, if not, returns new topic
+    def find_untyped_or_create(name, user)
+      alias_topic = Topic.where("aliases.slug" => name.to_url, "primary_type" => {"$exists" => false}).first
+      if alias_topic
+        alias_topic
+      else
+        user.topics.create({name: name})
+      end
+    end
 
     # find mentions in a body of text and return the topic matches
     # optionally return how often the mention occured in the text

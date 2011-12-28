@@ -82,11 +82,11 @@ class Neo4j
 
     def user_interests(user_id, limit)
       query = "
-        START n=node:users(id = '#{user_id}')
-        MATCH n-[r:affinity]->x
-        WHERE x.type = 'topic' AND r.weight >= 50
-        RETURN x
-        ORDER BY r.weight
+        START n=node:users(id = k cya'#{user_id}')
+        MATCH n-[r1:affinity]->topic
+        WHERE topic.type = 'topic' AND r1.weight >= 50
+        RETURN topic
+        ORDER BY r1.weight desc
         LIMIT #{limit}
       "
       ids = self.neo.execute_query(query)
@@ -95,6 +95,23 @@ class Neo4j
         interests << n[0]['data']
       end
       interests
+    end
+
+    def user_topic_suggestions(user_id, limit)
+      query = "
+        START user=node:users(id = '#{user_id}')
+        MATCH user-[r1:affinity]->topic-[r2:affinity]-suggestion
+        WHERE (topic.type = 'topic' AND suggestion.type = 'topic' AND r1.weight >= 50) AND NOT(user-[:follow]->suggestion)
+        RETURN suggestion
+        ORDER BY r2.weight desc
+        LIMIT #{limit}
+      "
+      ids = self.neo.execute_query(query)
+      suggestions = []
+      ids['data'].each do |n|
+        suggestions << n[0]['data']
+      end
+      suggestions
     end
   end
 

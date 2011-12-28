@@ -812,7 +812,8 @@
 }
 
 .sidebar {
-  .interests {
+  .interests,
+  .suggestions {
     padding: 2px 4px;
     img {
       @include opacity(.8);

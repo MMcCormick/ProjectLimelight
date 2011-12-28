@@ -24,7 +24,12 @@ class UserCell < Cell::Rails
   end
 
   def interests(user)
-    @interests = Neo4j.user_interests(user.id.to_s, 10)
+    @interests = Neo4j.user_interests(user.id.to_s, 6)
+    render
+  end
+
+  def topic_suggestions(user)
+    @suggestions = Neo4j.user_topic_suggestions(user.id.to_s, 6)
     render
   end
 

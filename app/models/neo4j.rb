@@ -74,8 +74,10 @@ class Neo4j
       "
       ids = Neo4j.neo.execute_query(query)
       pull_from = []
-      ids['data'].each do |id|
-        pull_from << BSON::ObjectId(id[0])
+      if ids
+        ids['data'].each do |id|
+          pull_from << BSON::ObjectId(id[0])
+        end
       end
       pull_from
     end
@@ -110,8 +112,10 @@ class Neo4j
       "
       ids = self.neo.execute_query(query)
       suggestions = []
-      ids['data'].each do |n|
-        suggestions << n[0]['data']
+      if ids
+        ids['data'].each do |n|
+          suggestions << n[0]['data']
+        end
       end
       suggestions
     end

@@ -129,13 +129,13 @@ class Neo4j
     def user_topic_suggestions(user_id, limit)
       query = "
         START user=node:users(id = '#{user_id}')
-        MATCH user-[r1:affinity]->topic-[r2:affinity]-suggestion
-        WHERE (topic.type = 'topic' AND suggestion.type = 'topic' AND r1.weight >= 50) AND NOT(user-[:follow]->suggestion)
-        RETURN suggestion, SUM(r2.weight)
-        ORDER BY SUM(r2.weight) desc
+        MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion
+        WHERE (topic.type = 'topic' AND user2.type = 'user' AND suggestion.type = 'topic' AND r1.weight >= 50) AND NOT(user-[:follow]->suggestion OR user-[:negative]->suggestion)
+        RETURN suggestion, SUM(r3.weight)
+        ORDER BY SUM(r3.weight) desc
         LIMIT #{limit}
       "
-       ids = self.neo.execute_query(query)
+      ids = self.neo.execute_query(query)
       suggestions = []
       if ids
         ids['data'].each do |n|

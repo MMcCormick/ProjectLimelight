@@ -84,6 +84,7 @@ ProjectLimelight::Application.routes.draw do
     get ':id/hover' => 'users#hover' , :as => :user_hover
     get ':id/picture' => 'users#default_picture', :as => :user_default_picture
   end
+  get 'finder/topics' => 'users#topic_finder', :as => :topic_finder
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
   resources :users, :only => [:show, :edit, :update]
   # omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)

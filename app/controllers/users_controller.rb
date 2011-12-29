@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings]
+  before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings, :topic_finder]
   include ImageHelper
 
   caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
@@ -198,6 +198,13 @@ class UsersController < ApplicationController
       }
       format.html # index.html.erb
     end
+  end
+
+  def topic_finder
+    @site_style = 'narrow'
+    @title = "Topic Finder"
+
+
   end
 
 end

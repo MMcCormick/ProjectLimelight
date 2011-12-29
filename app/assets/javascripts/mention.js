@@ -290,44 +290,50 @@ var fields = [];
     this.addMention = function(start, end, id, text, data) {
       short_name = false;
 
-      // Preserve the user's capitalization
-      if (data && data.original && text)
+      if ($.trim(text) != '' || data)
       {
-        var found = text.match(new RegExp(data.original, 'gi'));
-        if (found)
+        // Preserve the user's capitalization
+        if (data && data.original && text)
         {
-          text = data.original + text.substr(data.original.length, text.length)
+          var found = text.match(new RegExp(data.original, 'gi'));
+          if (found)
+          {
+            text = data.original + text.substr(data.original.length, text.length)
+          }
         }
-      }
 
-      if (this.useShortName)
-      {
-        if (data['data']['short_name'])
+        if (this.useShortName)
         {
-//          short_name = data['data']['short_name'];
-          text = data['data']['short_name'];
+          if (data['data']['short_name'])
+          {
+            text = data['data']['short_name'];
+            this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
+          }
+          else
+          {
+            return false;
+          }
+        }
+        else if (!data)
+        {
           this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
         }
         else
         {
-          return false;
+          this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
         }
-      }
-      else if (!data)
-      {
-        this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
-//        text = this.value
+
+        var delta = this.value.length - this.input.val().length;
+
+        this.mentions.push(new mention(start, id, text, data, this.mode, short_name));
       }
       else
       {
         this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
       }
 
-      var delta = this.value.length - this.input.val().length;
-
+      console.log(this.value);
       this.input.val(this.value);
-
-      this.mentions.push(new mention(start, id, text, data, this.mode, short_name));
 
       $.each(this.mentions, function(i, mention) {
         if (mention.pos > start) {

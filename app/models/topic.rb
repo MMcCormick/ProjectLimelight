@@ -310,36 +310,20 @@ class Topic
   # TODO: remove / port to neo4j
   # Suggests connections for the topic based on other topics of the same type(s)
   def suggested_connections
-    similar_topic_ids = []
-    con_ids = []
-    type_ids = get_types.map { |snippet| snippet.topic_id }
-    type_topics = Topic.where("_id" => { "$in" => type_ids })
-    type_topics.each_with_index do |type_topic, i|
-      similar_topic_ids = similar_topic_ids | type_topic.get_instances.map { |snippet| snippet.topic_id }
-    end
-
-    topics = Topic.where("_id" => { "$in" => similar_topic_ids })
-    topics.each do |topic|
-      con_ids = con_ids | topic.get_connection_ids
-    end
-
-    TopicConnection.where("_id" => { "$in" => con_ids })
-  end
-
-  def get_types
-    topic_connection_snippets.select { |snippet| snippet.id.to_s == Topic.type_of_id }
-  end
-
-  def get_primary_types
-    topic_connection_snippets.select { |snippet| (snippet.id.to_s == Topic.type_of_id) && snippet.primary }
-  end
-
-  def get_instances
-    topic_connection_snippets.select { |snippet| snippet.id.to_s == Topic.instances_id }
-  end
-
-  def get_connection_ids
-    topic_connection_snippets.map{ |snippet| snippet.id }.uniq
+    #similar_topic_ids = []
+    #con_ids = []
+    #type_ids = get_types.map { |snippet| snippet.topic_id }
+    #type_topics = Topic.where("_id" => { "$in" => type_ids })
+    #type_topics.each_with_index do |type_topic, i|
+    #  similar_topic_ids = similar_topic_ids | type_topic.get_instances.map { |snippet| snippet.topic_id }
+    #end
+    #
+    #topics = Topic.where("_id" => { "$in" => similar_topic_ids })
+    #topics.each do |topic|
+    #  con_ids = con_ids | topic.get_connection_ids
+    #end
+    #
+    #TopicConnection.where("_id" => { "$in" => con_ids })
   end
 
   def expire_caches
@@ -507,21 +491,6 @@ class Topic
 
     unless connection_snippet_updates.empty?
       CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
-      Topic.where("topic_connection_snippets.topic_id" => id).update_all(connection_snippet_updates)
-
-      # Updates v attribute of instances so they update their slugs
-      instance_ids = get_instances.map{|instance| instance.topic_id}
-      if instance_ids
-        instances = Topic.where("_id" => { "$in" => instance_ids })
-        instances.each do |instance|
-          instance.v += 1
-          instance.save
-        end
-      end
-      #TODO: change above to be more effiecient? need to get affected topics to update their slug if necessary
-      #Topic.collection.update({"topic_connection_snippets.topic_id" => id},
-      #                        { "$set" => connection_snippet_updates,
-      #                          "$inc" => { "v" => 1 } }, false, true)
     end
 
     if soulmate

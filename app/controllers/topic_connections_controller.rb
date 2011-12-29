@@ -79,26 +79,27 @@ class TopicConnectionsController < ApplicationController
   end
 
   def toggle_primary
-    topic = Topic.find(params[:topic_id])
-    authorize! :update, topic
-    original_slug = topic.slug
-    snip = topic.get_types.detect { |snippet| snippet.topic_id.to_s == params[:con_topic_id] }
-    if snip
-      snip.primary = !snip.primary
-      topic.v += 1
-      if topic.save
-        response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, nil, nil,
-                                       {:target => ".fav_"+params[:con_topic_id], :toggle_classes => ['primaryB', 'unprimaryB']})
-        status = 201
-      else
-        response = build_ajax_response(:error, nil, "Could not save topic", topic.errors)
-        status = 422
-      end
-    else
-      response = build_ajax_response(:error, nil, 'Connection not found!')
-      status = 404
-    end
-
-    render json: response, :status => status
+    # TODO: refactor to use new neo4j system
+    #topic = Topic.find(params[:topic_id])
+    #authorize! :update, topic
+    #original_slug = topic.slug
+    #snip = topic.get_types.detect { |snippet| snippet.topic_id.to_s == params[:con_topic_id] }
+    #if snip
+    #  snip.primary = !snip.primary
+    #  topic.v += 1
+    #  if topic.save
+    #    response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, nil, nil,
+    #                                   {:target => ".fav_"+params[:con_topic_id], :toggle_classes => ['primaryB', 'unprimaryB']})
+    #    status = 201
+    #  else
+    #    response = build_ajax_response(:error, nil, "Could not save topic", topic.errors)
+    #    status = 422
+    #  end
+    #else
+    #  response = build_ajax_response(:error, nil, 'Connection not found!')
+    #  status = 404
+    #end
+    #
+    #render json: response, :status => status
   end
 end

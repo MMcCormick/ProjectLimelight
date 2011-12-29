@@ -37,8 +37,6 @@ jQuery ->
 
         if $self.hasClass 'picture'
           parentForm.find('.picture_options').fadeIn 100
-        else if $self.hasClass 'video'
-          parentForm.find('.url.video').fadeIn 100
         else if $self.hasClass 'link'
           parentForm.find('.url.link').fadeIn 100
 
@@ -63,6 +61,14 @@ jQuery ->
     talkForm.find('#talk_content_raw').attr('name', 'picture[content_raw]')
     talkForm.find('#talk_ooc_mentions').attr('name', 'picture[ooc_mentions]')
 
+  setContributeToVideo = (targetForm) ->
+    talkForm = targetForm.find('#new_talk')
+    talkForm.data('old-action', talkForm.attr('action'))
+    talkForm.attr('action', targetForm.find('#new_video').attr('action'))
+    talkForm.find('#talk_content').attr('name', 'video[content]').parents('.lClear:first').removeClass('required').find('label').text('Say something about this video...')
+    talkForm.find('#talk_content_raw').attr('name', 'video[content_raw]')
+    talkForm.find('#talk_ooc_mentions').attr('name', 'video[ooc_mentions]')
+
   setContributeToLink = (targetForm) ->
     talkForm = targetForm.find('#new_talk')
     talkForm.data('old-action', talkForm.attr('action'))
@@ -71,26 +77,43 @@ jQuery ->
     talkForm.find('#talk_content_raw').attr('name', 'link[content_raw]')
     talkForm.find('#talk_ooc_mentions').attr('name', 'link[ooc_mentions]')
 
-  # fetch images from a url. used in contribute form for picture and link submissions.
-  fetchImages = (pullFrom) ->
+  # fetch data from a link and update the contribute form
+  $('.contributeC #link_fetch').live 'change', (e) ->
+    self = $(@)
+    if $.trim(self.val()) == ''
+      return
+
     $.get(
       $('#static-data').data('d').fetchEmbedUrl
-      url: pullFrom.val()
+      url: self.val()
       (data) ->
-        parentForm = pullFrom.parents('.contributeC:first')
+        parentForm = self.parents('.contributeC:first')
 
-        if (pullFrom.attr('id') == 'picture_fetch')
-          childForm = parentForm.find('.new_picture')
-        else
-          childForm = parentForm.find('.new_link')
+        if data.embedly.oembed.type == 'video'
+          clone = parentForm.find('.new_video').find('.shared').clone()
+          provider = data.embedly.provider_name
+          video_id = data.video_id
+          html = data.video_html
+          target = clone.find('.preview')
 
-        clone = childForm.find('.shared').clone()
+          if html
+            target.html(html)
+          else
+            target.html('<div class="none">Sorry, no video embed available.')
 
-        if (pullFrom.attr('id') == 'picture_fetch')
+          clone.find('#video_source_url').val(data.embedly.url)
+          clone.find('#video_title').focus().val(data.embedly.title)
+          clone.find('#video_source_name').val(provider)
+          clone.find('#video_source_video_id').val(video_id)
+          setContributeToVideo(parentForm)
+
+        else if data.embedly.oembed.type == 'photo'
+          clone = parentForm.find('.new_picture').find('.shared').clone()
           clone.find('#picture_source_url').val(data.embedly.url)
           clone.find('#picture_source_name').val(data.embedly.provider_name)
           setContributeToPicture(parentForm)
         else
+          clone = parentForm.find('.new_link').find('.shared').clone()
           clone.find('#link_title').focus().val(data.embedly.title)
           clone.find('#link_source_url').val(data.embedly.url)
           clone.find('#link_source_name').val(data.embedly.provider_name)
@@ -98,7 +121,7 @@ jQuery ->
 
         parentForm.find('.main_content').prepend(clone)
         clone.fadeIn 150
-        pullFrom.val('').blur().parent().fadeOut 150
+        self.val('').blur().parent().fadeOut 150
 
         if data.embedly.images.length > 0
           target = clone.find('.preview .images')
@@ -113,9 +136,6 @@ jQuery ->
 
           if data.embedly.images.length > 1
             clone.find('.switcher').removeClass('hide')
-
-        else if (pullFrom.attr('id') == 'picture_fetch')
-          createGrowl(false, 'There was an error fetching the images from that URL. Please try again later or let us know if it continues to happen!', '', 'red')
 
       'json'
     )
@@ -137,22 +157,6 @@ jQuery ->
 
     $('#picture_fetch').val('').blur().parent().fadeOut(150)
     setContributeToPicture(parentForm)
-
-  # Update the images when the image fetch URL is changed
-  $('.contributeC #picture_fetch').live 'change', (e) ->
-    self = $(@)
-    if $.trim(self.val()) == ''
-      return
-
-    fetchImages($(@))
-
-  # Update the images when the image fetch URL is changed
-  $('.contributeC #link_fetch').live 'change', (e) ->
-    self = $(@)
-    if $.trim(self.val()) == ''
-      return
-
-    fetchImages($(@))
 
   $('.contributeC .switcher .left').live 'click', (e) ->
     target = $(@).parents('.shared:first').find('.preview img:visible').hide()

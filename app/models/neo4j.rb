@@ -131,8 +131,8 @@ class Neo4j
         START user=node:users(id = '#{user_id}')
         MATCH user-[r1:affinity]->topic-[r2:affinity]-suggestion
         WHERE (topic.type = 'topic' AND suggestion.type = 'topic' AND r1.weight >= 50) AND NOT(user-[:follow]->suggestion)
-        RETURN suggestion
-        ORDER BY r2.weight desc
+        RETURN suggestion, SUM(r2.weight)
+        ORDER BY SUM(r2.weight) desc
         LIMIT #{limit}
       "
        ids = self.neo.execute_query(query)

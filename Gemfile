@@ -26,7 +26,7 @@ gem 'twitter' # twitter api support
 gem 'embedly'
 gem 'heroku'
 #gem 'resque', :require => 'resque/server'
-gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
+gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive'
 gem 'resque-scheduler', '2.0.0.e' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com

@@ -1,9 +1,9 @@
 <% if @interests.length > 0 %>
   <h3 class="section-h">Interests<span class='tip' title='This interest profile is generated as you post and interact with things on Limelight.'>?</span></h3>
   <div class="section interests">
-    <% @interests.each do |interest| %>
-      <% snippet = TopicSnippet.new(interest) %>
-      <a href="<%= topic_path(snippet) %>" class='tlink' data-d='{"url":"<%= user_hover_path snippet %>"}' data-pid="<%= snippet.public_id %>">
+    <% @interests[:specific].each do |item| %>
+      <% snippet = TopicSnippet.new(item[:data]) %>
+      <a href="<%= topic_path(snippet) %>" class='tlink' data-d='{"url":"<%= topic_hover_path snippet %>"}' data-pid="<%= snippet.public_id %>">
         <%= image_tag topic_default_picture(snippet, 50, 50, 'fillcropmid'), :style => "max-width: 50px;", :alt => snippet.name, :title => snippet.name %>
       </a>
     <% end %>

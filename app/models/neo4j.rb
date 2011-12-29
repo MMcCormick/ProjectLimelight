@@ -83,21 +83,46 @@ class Neo4j
     end
 
     def user_interests(user_id, limit)
+      interests = {:general => [], :specific => []}
+
+      # tally up what types are generally connected to topics this user likes
+      query = "
+        START n=node:users(id = '#{user_id}')
+        MATCH n-[:affinity]->topic-[r2:`Type Of`]->type
+        WHERE topic.type = 'topic'
+        RETURN type, COUNT(r2)
+        ORDER BY count(r2) desc
+        LIMIT 10
+      "
+      ids = self.neo.execute_query(query)
+      if ids
+        ids['data'].each do |n|
+          interests[:general] << {
+                  :data => n[0]['data'],
+                  :weight => n[1]
+          }
+        end
+      end
+
+      # tally up a users specific interests
       query = "
         START n=node:users(id = '#{user_id}')
         MATCH n-[r1:affinity]->topic
         WHERE topic.type = 'topic' AND r1.weight >= 50
-        RETURN topic
+        RETURN topic, r1.weight as weight
         ORDER BY r1.weight desc
         LIMIT #{limit}
       "
       ids = self.neo.execute_query(query)
-      interests = []
       if ids
         ids['data'].each do |n|
-          interests << n[0]['data']
+          interests[:specific] << {
+                  :data => n[0]['data'],
+                  :weight => n[1]
+          }
         end
       end
+
       interests
     end
 
@@ -110,7 +135,7 @@ class Neo4j
         ORDER BY r2.weight desc
         LIMIT #{limit}
       "
-      ids = self.neo.execute_query(query)
+       ids = self.neo.execute_query(query)
       suggestions = []
       if ids
         ids['data'].each do |n|

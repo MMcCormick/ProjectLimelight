@@ -814,10 +814,10 @@
 .sidebar {
   .interests,
   .suggestions {
-    padding: 2px 4px;
+    padding: 5px 6px;
     img {
       @include opacity(.8);
-      margin: 2px;
+      margin: 1px;
       &:hover {
         @include opacity(1);
       }

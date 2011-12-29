@@ -91,6 +91,7 @@ jQuery ->
 
         if data.embedly.oembed.type == 'video'
           clone = parentForm.find('.new_video').find('.shared').clone()
+          clone.addClass('with-preview')
           provider = data.embedly.provider_name
           video_id = data.video_id
           html = data.video_html
@@ -98,6 +99,7 @@ jQuery ->
 
           if html
             target.html(html)
+            clone.find('#video_embed_html').val(html)
           else
             target.html('<div class="none">Sorry, no video embed available.')
 
@@ -109,11 +111,13 @@ jQuery ->
 
         else if data.embedly.oembed.type == 'photo'
           clone = parentForm.find('.new_picture').find('.shared').clone()
+          clone.removeClass('with-preview')
           clone.find('#picture_source_url').val(data.embedly.url)
           clone.find('#picture_source_name').val(data.embedly.provider_name)
           setContributeToPicture(parentForm)
         else
           clone = parentForm.find('.new_link').find('.shared').clone()
+          clone.removeClass('with-preview')
           clone.find('#link_title').focus().val(data.embedly.title)
           clone.find('#link_source_url').val(data.embedly.url)
           clone.find('#link_source_name').val(data.embedly.provider_name)
@@ -124,6 +128,7 @@ jQuery ->
         self.val('').blur().parent().fadeOut 150
 
         if data.embedly.images.length > 0
+          clone.addClass('with-preview')
           target = clone.find('.preview .images')
           target.html('')
 
@@ -136,6 +141,7 @@ jQuery ->
 
           if data.embedly.images.length > 1
             clone.find('.switcher').removeClass('hide')
+
 
       'json'
     )

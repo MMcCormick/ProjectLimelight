@@ -14,7 +14,7 @@ class EmbedlyController < ApplicationController
     response = {
             :embedly => obj,
             :video_id => video_id,
-            :video_html => video_embed(nil, 120, 120, obj[:provider_name], video_id)
+            :video_html => video_embed(nil, 120, 120, obj[:provider_name], video_id, obj[:oembed][:html])
     }
 
     render json: response

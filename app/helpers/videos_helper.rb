@@ -6,18 +6,14 @@ module VideosHelper
         video_id = data[:payload][:video][:data][:id]
       when 'vimeo'
         video_id = data[:payload][:video_id]
-      when 'dailymotion'
-        # TODO: Handle daily motion
-        #video_id_parts = $(data.embedly.payload.html).attr('src').split('/')
-        #video_id = video_id_parts[video_id_parts.length-1]
       else
         video_id = nil
     end
     video_id
   end
 
-  def video_embed(source, w, h, provider=nil, video_id=nil)
-    if source || (provider && video_id)
+  def video_embed(source, w, h, provider=nil, video_id=nil, embed_html=nil)
+    if (source && source.video_id) || (provider && video_id)
       provider = source.name.downcase unless provider
       video_id = source.video_id unless video_id
       case provider.downcase
@@ -25,8 +21,6 @@ module VideosHelper
           "<iframe class='video-embed' width='#{w}' height='#{h}' src='http://www.youtube.com/embed/#{video_id}?wmode=transparent' frameborder='0' allowfullscreen></iframe>".html_safe
         when 'vimeo'
           "<iframe class='video-embed' width='#{w}' height='#{h}' src='http://player.vimeo.com/video/#{video_id}' frameborder='0' webkitAllowFullScreen allowFullScreen></iframe>".html_safe
-        when 'dailymotion'
-          "<iframe class='video-embed' width='#{w}' height='#{h}' src='http://www.dailymotion.com/embed/video/#{video_id}' frameborder='0'></iframe>".html_safe
         else
           if source && source.name && source.url
             target = "<a href='#{source.url}' rel='nofollow' target='_blank'>#{source.name} - </a>"
@@ -36,7 +30,11 @@ module VideosHelper
           "<p>#{target}Embed not available.</p>".html_safe
       end
     else
-      "<p>Embed not available.</p>".html_safe
+      if embed_html && ((embed_html =~ /width/i) != nil)
+        embed_html.gsub(/(width)="\d+"/, '\1="'+w.to_s+'"').gsub(/(height)="\d+"/, '\1="'+h.to_s+'"')
+      else
+        "<p>Embed not available.</p>".html_safe
+      end
     end
   end
 

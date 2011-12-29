@@ -12,7 +12,7 @@
 
 <% cache("teaser-#{object.id.to_s}-grid-bottom") do %>
 
-      <%= video_embed(object.sources[0], 200, 175) %>
+      <%= video_embed(object.sources[0], 200, 175, nil, nil, object.embed_html) %>
     </div>
 
     <div class="connectionsC">

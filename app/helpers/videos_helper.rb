@@ -31,7 +31,7 @@ module VideosHelper
       end
     else
       if embed_html && ((embed_html =~ /width/i) != nil)
-        embed_html.gsub(/(width)="\d+"/, '\1="'+w.to_s+'"').gsub(/(height)="\d+"/, '\1="'+h.to_s+'"')
+        embed_html.gsub(/(width)="\d+"/, '\1="'+w.to_s+'"').gsub(/(height)="\d+"/, '\1="'+h.to_s+'"').html_safe
       else
         "<p>Embed not available.</p>".html_safe
       end

@@ -84,7 +84,7 @@ class Neo4j
 
     def user_interests(user_id, limit)
       query = "
-        START n=node:users(id = k cya'#{user_id}')
+        START n=node:users(id = '#{user_id}')
         MATCH n-[r1:affinity]->topic
         WHERE topic.type = 'topic' AND r1.weight >= 50
         RETURN topic

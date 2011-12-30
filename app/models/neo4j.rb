@@ -5,6 +5,14 @@ class Neo4j
       @neo ||= ENV['NEO4J_URL'] ? Neography::Rest.new(ENV['NEO4J_URL']) : Neography::Rest.new
     end
 
+    def follow_create(node1_id, node2_id, node1_index, node2_index)
+      node1 = self.neo.get_node_index(node1_index, 'id', node1_id)
+      node2 = self.neo.get_node_index(node2_index, 'id', node2_id)
+      rel1 = self.neo.create_relationship('follow', node1, node2)
+      self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", rel1)
+      self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil)
+    end
+
     def update_affinity(node1_id, node2_id, node1, node2, change, mutual, with_connection)
       affinity = self.neo.get_relationship_index('affinity', 'nodes', "#{node1_id}-#{node2_id}")
       if affinity
@@ -130,7 +138,7 @@ class Neo4j
       query = "
         START user=node:users(id = '#{user_id}')
         MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion
-        WHERE (topic.type = 'topic' AND user2.type = 'user' AND suggestion.type = 'topic' AND r1.weight >= 50) AND NOT(user-[:follow]->suggestion OR user-[:negative]->suggestion)
+        WHERE topic.type = 'topic' AND user2.type = 'user' AND suggestion.type = 'topic' AND r1.weight >= 50 AND r2.weight >= 50 AND NOT(user-[:follow]->suggestion OR user-[:negative]->topic OR user-[:negative]->suggestion)
         RETURN suggestion, SUM(r3.weight)
         ORDER BY SUM(r3.weight) desc
         LIMIT #{limit}

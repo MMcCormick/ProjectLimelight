@@ -203,7 +203,25 @@ class UsersController < ApplicationController
   def topic_finder
     @site_style = 'narrow'
     @title = "Topic Finder"
+    pull = 5
+    pull = pull + 1 if params[:u]
+    @suggestions = Neo4j.user_topic_suggestions(current_user.id.to_s, pull)
 
+    respond_to do |format|
+      format.js {
+        chosen = nil
+        @suggestions.each do |s|
+          chosen = s unless params[:u].include?(s['id'])
+        end
+        if chosen
+          html =  render_to_string :partial => "topics/card", :locals => { :current_user => current_user, :topic => TopicSnippet.new(chosen) }
+        else
+          html = ''
+        end
+        render json: {:card => html}
+      }
+      format.html
+    end
 
   end
 

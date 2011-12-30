@@ -44,12 +44,39 @@ $(function() {
     $('.p_'+data.id).text(parseInt(data.popularity));
   });
 
-  // Listens for follow button events.
-  amplify.subscribe("follow_toggle", function(data) {
-    actionCommon($('.fol_' + data.objectId), data);
+  // Listens for follow button on topic cards in the topic finder.
+  amplify.subscribe("follows_create", function(data) {
+    var topicCard = $(data.target).parents('.topic-card:first')
+    if (topicCard.length > 0)
+    {
+      used_ids = []
+      $('.topic-card').each(function(i, val) {
+        used_ids.push($(val).data('id'));
+      })
+      $.ajax({
+        url: topicCard.parents('.topic-cards').data('url'),
+        type: 'get',
+        dataType: 'json',
+        data: { u: used_ids },
+        success: function(data) {
+          if (data.card != '')
+          {
+            console.log(data.card);
+            console.log($(data.card));
+            topicCard.fadeTo(150, .01, function() {
+              topicCard.replaceWith($(data.card)).fadeTo(150, .75);
+            })
+          }
+          else
+          {
+            topicCard.remove();
+          }
+        }
+      })
+    }
   });
 
-  // Listens for follow button events.
+  // Listens for repost button events.
   amplify.subscribe("reposts_create reposts_destroy", function(data) {
     $('.p_'+data.id).text(parseInt(data.popularity));
   });

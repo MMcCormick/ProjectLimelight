@@ -1,0 +1,10 @@
+<div class='topic-card' data-id='<%= topic.id %>'>
+  <div class='name'>
+    <%= topic.name %>
+    <span class='cancel'>X</span>
+  </div>
+  <div class='actions'>
+    <%= render 'follows/btn', :current_user => current_user, :target => topic %>
+  </div>
+  <%= image_tag topic_default_picture(topic, 150, 150, 'fillcropmid'), :style => "max-width: 180px;", :alt => topic.name, :title => topic.name %>
+</div>

@@ -2,8 +2,14 @@ class FollowsController < ApplicationController
   before_filter :authenticate_user!
 
   def create
-    if ['User', 'Topic'].include? params[:type]
-      target = Kernel.const_get(params[:type]).find(params[:id])
+    if ['User', 'UserSnippet', 'Topic', 'TopicSnippet'].include? params[:type]
+      targets = {
+              'User' => 'User',
+              'UserSnippet' => 'User',
+              'Topic' => 'Topic',
+              'TopicSnippet' => 'Topic'
+      }
+      target = Kernel.const_get(targets[params[:type]]).find(params[:id])
       if target && target.id
         if current_user.follow_object(target)
           if params[:type] == 'User'
@@ -33,8 +39,14 @@ class FollowsController < ApplicationController
   end
 
   def destroy
-    if ['User', 'Topic'].include? params[:type]
-      target = Kernel.const_get(params[:type]).find(params[:id])
+    if ['User', 'UserSnippet', 'Topic', 'TopicSnippet'].include? params[:type]
+      targets = {
+              'User' => 'User',
+              'UserSnippet' => 'User',
+              'Topic' => 'Topic',
+              'TopicSnippet' => 'Topic'
+      }
+      target = Kernel.const_get(targets[params[:type]]).find(params[:id])
       if target
         if current_user.unfollow_object(target)
           current_user.save

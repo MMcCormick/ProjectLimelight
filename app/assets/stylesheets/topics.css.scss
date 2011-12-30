@@ -386,3 +386,52 @@
     }
   }
 }
+
+.topic-card {
+  @include opacity(.75);
+  float: left;
+  background: #FFF;
+  border: 1px solid #999;
+
+  .name {
+    padding: 4px 7px;
+    background: #444;
+    color: #fff;
+    cursor: default;
+    position: relative;
+
+    .cancel {
+      position: absolute;
+      top: 50%;
+      right: 4px;
+      margin: -10px 0 0 0;
+      background: #a1271d;
+      color: #FFF;
+      font-weight: bold;
+      padding: 1px 5px;
+      font-size: 11px;
+      border: 1px solid #FFF;
+    }
+  }
+  .actions {
+  }
+  .followB,
+  .unfollowB {
+    @include border-radius(0px);
+    margin: 0px;
+
+  }
+  img {
+    background: #FFF;
+  }
+
+  &:hover {
+    @include opacity(1);
+  }
+}
+
+.topic-cards {
+  .topic-card {
+    margin: 10px 25px;
+  }
+}

@@ -2,3 +2,8 @@
   <h1>Topic Finder</h1>
 <% end %>
 
+<div class='topic-cards' data-url='<%= topic_finder_path %>'>
+  <% @suggestions.each do |suggestion| %>
+    <%= render 'topics/card', :current_user => current_user, :topic => TopicSnippet.new(suggestion) %>
+  <% end %>
+</div>

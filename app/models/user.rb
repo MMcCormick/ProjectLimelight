@@ -224,7 +224,7 @@ class User
       self.following_users_count += 1
       user.followers_count += 1
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
-      Resque.enqueue(Neo4jFollowCreate, id.to_s, user.id.to_s, 'users', 'users')
+      Neo4j.follow_create(id.to_s, user.id.to_s, 'users', 'users')
 
       true
     end
@@ -255,7 +255,7 @@ class User
       self.following_topics << topic.id
       self.following_topics_count += 1
       topic.followers_count += 1
-      Resque.enqueue(Neo4jFollowCreate, id.to_s, topic.id.to_s, 'users', 'topics')
+      Neo4j.follow_create(id.to_s, topic.id.to_s, 'users', 'topics')
 
       true
     end

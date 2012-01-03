@@ -37,4 +37,9 @@ class TopicCell < Cell::Rails
     render
   end
 
+  def topic_suggestions(topic)
+    @suggestions = Neo4j.topic_related(topic.id.to_s, 6)
+    render
+  end
+
 end

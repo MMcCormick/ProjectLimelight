@@ -167,6 +167,26 @@ class Neo4j
       suggestions
     end
 
+    # related topic, used in the topic sidebar
+    def topic_related(topic_id, limit)
+      query = "
+        START topic=node:topics(id = '#{topic_id}')
+        MATCH topic-[r:affinity]-related
+        WHERE related.type = 'topic'
+        RETURN related, SUM(r.weight)
+        ORDER BY SUM(r.weight) desc
+        LIMIT #{limit}
+      "
+      ids = self.neo.execute_query(query)
+      suggestions = []
+      if ids
+        ids['data'].each do |n|
+          suggestions << n[0]['data']
+        end
+      end
+      suggestions
+    end
+
     def get_sentiment(node1_id, node2_id)
       self.neo.get_relationship_index('sentiment', 'name', "#{node1_id}-#{node2_id}")
     end

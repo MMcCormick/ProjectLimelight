@@ -80,6 +80,7 @@ class User
   has_many :topic_connections
   has_many :comments
   has_many :popularity_actions
+  has_many :topic_con_sugs
 
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio

@@ -8,13 +8,14 @@
     <%= collection_select(:connection, :con_id, connection_types, :id, :name, :prompt => "Other Connections") %>
   </div>
 
+  <%= hidden_field_tag "connection[topic1_id]", topic_id %>
+
   <div class="field lClear">
     <%= label_tag "tc-auto", "Connected topic" %>
     <%= text_field_tag "connection[topic_name]", nil, :id => "tc-auto", :class => "tc-auto" %>
   </div>
 
-  <%= hidden_field_tag "connection[topic1_id]", topic_id %>
-  <%= hidden_field_tag "connection[topic2_id]", "" %>
+  <%= hidden_field_tag "connection[topic2_id]", "", :class => "tc-auto-id" %>
 
   <div class="actions">
     <%= submit_tag "Add", :class => "submit" %>

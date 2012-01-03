@@ -55,7 +55,8 @@ unless connection
           :name => 'Type Of',
           :reverse_name => 'Instance',
           :pull_from => false,
-          :reverse_pull_from => true
+          :reverse_pull_from => true,
+          :inline => "is a"
   )
   connection.user_id = marc.id
   connection.id = Topic.type_of_id

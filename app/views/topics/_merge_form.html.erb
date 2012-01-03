@@ -1,11 +1,11 @@
 <form action="<%= merge_topic_path %>" id="merge-topic-form" method="POST" class="ajax">
 
   <div class="lClear">
-    <%= label_tag "tm-auto", "Topic to merge into" %>
-    <%= text_field_tag "target_name", nil, :id => "tm-auto" %>
+    <%= label_tag "target_name", "Topic to merge into" %>
+    <%= text_field_tag "target_name", nil, :class => "tc-auto" %>
   </div>
 
-  <%= hidden_field_tag "target_id", topic.id %>
+  <%= hidden_field_tag "target_id", "", :class => "tc-auto-id" %>
 
   <div class="actions">
     <%= submit_tag "Merge", :class => "submit", :confirm => "Are you sure you want to merge these topics? This cannot be undone" %>

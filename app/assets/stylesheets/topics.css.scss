@@ -435,3 +435,142 @@
     margin: 10px 25px;
   }
 }
+
+#topic_con_sugs-c {
+  #new_topic_con_sug {
+    position: relative;
+    /*TODO: why does everything mess up if i remove this padding*/
+    padding: 1px;
+    margin: 10px 10px 10px 55px;
+    width: 707px;
+
+    .topic1,
+    .topic2 {
+      position: absolute;
+      input {
+        width: 140px;
+        font-size: 13px;
+      }
+    }
+    .topic1,
+    .topic-pic.two {
+      left: 0px;
+    }
+    .topic2,
+    .topic-pic.two {
+      left: 551px;
+    }
+    .connection-select {
+      position: absolute;
+      left: 186px;
+      select {
+        font-size: 13px;
+        width: 335px;
+        color: #666;
+        padding: 4px 6px;
+      }
+    }
+    .topic-pic {
+      padding: 2px;
+      background: #FFF;
+      border: 1px solid #999;
+      position: absolute;
+      top: 50px;
+      width: 150px;
+      height: 150px;
+      div, img {
+        width: 150px;
+        height: 150px;
+      }
+      div {
+        background: #BBB;
+      }
+    }
+    #reverse-b {
+      @include border-radius(2px);
+      position: absolute;
+      left: 325px;
+      top: 113px;
+      padding: 0 5px 3px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #FFF;
+      background: #666
+    }
+    .sug-a {
+      position: absolute;
+      background: image-url("connection-suggestion-arrows.png");
+      cursor: pointer;
+      width: 335px;
+      height: 13px;
+      left: 186px;
+      &.one {
+        top: 85px;
+        &.bi {
+          top: 115px;
+        }
+      }
+      &.two {
+        top: 150px;
+      }
+      &.pull {
+        background-position: 0px -13px;
+      }
+      &.rev {
+        background-position: 0px -26px;
+      }
+      &.rev.pull {
+        background-position: 0px -39px;
+      }
+      &.bi {
+        background-position: 0px -52px;
+      }
+      &.bi.pull {
+        background-position: 0px -65px;
+      }
+    }
+    #con-description {
+      position: absolute;
+      left: 3px;
+      top: 215px;
+      width: 700px;
+      font-size: 11px;
+      text-align: center;
+
+      .inline,
+      .inline-pull,
+      .inline-rev {
+        color: #000;
+      }
+    }
+    .actions {
+      padding-top: 270px;
+      text-align: center;
+    }
+    .submit {
+      @include green-button(3px, 18px);
+    }
+  }
+}
+
+#topic_connections-c {
+  .new-c {
+    form {
+      padding: 10px;
+    }
+    .float {
+      float: left;
+      margin: 0 5px;
+    }
+    .topic {
+      padding-top: 5px;
+      float: left;
+    }
+    input {
+      margin-bottom: 0px;
+    }
+    .field {
+      margin-bottom: 10px;
+    }
+  }
+}

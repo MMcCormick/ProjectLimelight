@@ -411,6 +411,8 @@
       padding: 1px 5px;
       font-size: 11px;
       border: 1px solid #FFF;
+      cursor: pointer;
+      display: none;
     }
   }
   .actions {
@@ -427,6 +429,10 @@
 
   &:hover {
     @include opacity(1);
+
+    .cancel {
+      display: block;
+    }
   }
 }
 

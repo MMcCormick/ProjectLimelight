@@ -203,7 +203,7 @@ class UsersController < ApplicationController
   def topic_finder
     @site_style = 'narrow'
     @title = "Topic Finder"
-    pull = 5
+    pull = 16
     pull = pull + 1 if params[:u]
     @suggestions = Neo4j.user_topic_suggestions(current_user.id.to_s, pull)
 

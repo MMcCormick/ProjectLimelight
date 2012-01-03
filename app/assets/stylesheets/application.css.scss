@@ -296,7 +296,9 @@ button {
       text-align: left;
     }
   }
-
+  .help {
+    padding: 5px 10px;
+  }
   .createdC {
     margin: 5px 7px;
     font-size: 12px;
@@ -463,6 +465,10 @@ button {
       margin: 5px 7px;
       font-size: 12px;
     }
+    a.bottom {
+      margin: 10px 0 0 5px;
+      font-size: 11px;
+    }
   }
   .sub-section {
     border-bottom: 1px solid #CCC;
@@ -480,7 +486,8 @@ button {
 
   #static-links {
     font-size: 11px;
-    margin: 10px 7px;
+    padding: 8px 7px;
+    border-top: 1px solid #CCC;
 
     a {
       float: left;

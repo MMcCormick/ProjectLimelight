@@ -1,7 +1,7 @@
 <div class='topic-card' data-id='<%= topic.id %>'>
   <div class='name'>
     <%= topic.name %>
-    <span class='cancel'>X</span>
+    <span class='cancel ac' title="I'm not interested in this topic." data-m='post' data-url='<%= sentiment_create_path(:negative) %>' data-d='{"type":"Topic","id":"<%= topic.id %>"}'>X</span>
   </div>
   <div class='actions'>
     <%= render 'follows/btn', :current_user => current_user, :target => topic %>

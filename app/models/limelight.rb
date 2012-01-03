@@ -18,7 +18,7 @@ module Limelight #:nodoc:
     end
 
     # @example Check to see if the object with the given MongoId has a given permission on this document
-    #   document.has_permission?
+    #   document.permission?
     #
     # @param [ Mongoid ] The MongoId of the object requesting permission
     # @param [ String ] The permission to check
@@ -253,6 +253,35 @@ module Limelight #:nodoc:
       end
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, net)
       net
+    end
+  end
+
+  # Include this module to get sentiment functionality for root level documents.
+  # @example Add sentiment support to a document.
+  #   require "limelight"
+  #   class Topic
+  #     include Limelight::Sentiment
+  #   end
+  module Sentiment
+    extend ActiveSupport::Concern
+
+    included do
+      SENTIMENTS = ['negative']
+
+      field :sentiments_count, :default => {}
+    end
+
+    def add_sentiment(sentiment)
+      if SENTIMENTS.include?(sentiment)
+        self.sentiments_count[sentiment] ||= 0
+        self.sentiments_count[sentiment] += 1
+      end
+    end
+
+    def remove_sentiment(sentiment)
+      if SENTIMENTS.include?(sentiment)
+        self.sentiments_count[sentiment] -= 1
+      end
     end
   end
 

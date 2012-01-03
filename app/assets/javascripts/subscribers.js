@@ -45,8 +45,8 @@ $(function() {
   });
 
   // Listens for follow button on topic cards in the topic finder.
-  amplify.subscribe("follows_create", function(data) {
-    var topicCard = $(data.target).parents('.topic-card:first')
+  amplify.subscribe("follows_create sentiments_create", function(data) {
+    var topicCard = $currentTarget.parents('.topic-card:first')
     if (topicCard.length > 0)
     {
       used_ids = []

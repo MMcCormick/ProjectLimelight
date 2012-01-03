@@ -39,8 +39,10 @@
     <% end %>
   </div>
 
+  <%= render_cell :topic, :topic_suggestions, @topic %>
+
   <% if @connections.length > 0 %>
-    <h3 class="section-h">Relationships</h3>
+    <h3 class="section-h">Connections</h3>
     <div class="section connections">
       <% @connections.each do |type, data| %>
         <div class="sub-section also">

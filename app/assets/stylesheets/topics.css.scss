@@ -392,6 +392,7 @@
   float: left;
   background: #FFF;
   border: 1px solid #999;
+  height: 196px;
 
   .name {
     padding: 4px 7px;
@@ -399,6 +400,9 @@
     color: #fff;
     cursor: default;
     position: relative;
+    width: 136px;
+    overflow: hidden;
+    white-space: nowrap;
 
     .cancel {
       position: absolute;
@@ -411,6 +415,8 @@
       padding: 1px 5px;
       font-size: 11px;
       border: 1px solid #FFF;
+      cursor: pointer;
+      display: none;
     }
   }
   .actions {
@@ -427,6 +433,10 @@
 
   &:hover {
     @include opacity(1);
+
+    .cancel {
+      display: block;
+    }
   }
 }
 

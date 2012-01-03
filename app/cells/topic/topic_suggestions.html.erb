@@ -1,5 +1,5 @@
 <% if @suggestions.length > 0 %>
-  <h3 class="section-h">Topic Suggestions</h3>
+  <h3 class="section-h">Users Also Like</h3>
   <div class="section suggestions">
     <% @suggestions.each do |suggestion| %>
       <% snippet = TopicSnippet.new(suggestion) %>
@@ -7,6 +7,5 @@
         <%= image_tag topic_default_picture(snippet, 50, 50, 'fillcropmid'), :style => "max-width: 50px;", :alt => snippet.name, :title => snippet.name %>
       </a>
     <% end %>
-    <a class="bottom" href="<%= topic_finder_path %>">More Suggestions</a>
   </div>
 <% end %>

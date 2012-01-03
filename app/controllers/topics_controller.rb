@@ -158,6 +158,7 @@ class TopicsController < ApplicationController
       topic.fb_img = false
 
       if topic.save
+        topic.expire_caches
         topic.available_dimensions.each do |dimension|
           topic.available_modes.each do |mode|
             expire_fragment("#{topic.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
@@ -295,6 +296,11 @@ class TopicsController < ApplicationController
     if params[:use_image] && params[:image]
       topic.fb_img = true
       topic.update_health('image')
+      topic.available_dimensions.each do |dimension|
+        topic.available_modes.each do |mode|
+          expire_fragment("#{topic.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
+        end
+      end
     end
     if params[:use_summary] && params[:summary]
       topic.summary = params[:summary]
@@ -307,6 +313,7 @@ class TopicsController < ApplicationController
     end
 
     if topic.save
+      topic.expire_caches
       response = build_ajax_response(:ok, nil, "Topic updated!")
       status = 200
     else

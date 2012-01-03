@@ -261,7 +261,6 @@ class Topic
       follower.save
     end
 
-    # TODO:
     Resque.enqueue(SmCreateTopic, id.to_s)
     Resque.enqueue(SmDestroyTopic, aliased_topic.id.to_s)
   end
@@ -452,7 +451,8 @@ class Topic
 
     def expire_caches(target_id)
       # topic right sidebar
-      ['', '-following', '-manage', '-following-manage'].each do |key|
+      ActionController::Base.new.expire_cell_state TopicCell, :sidebar, target_id.to_s
+      ['-following', '-manage', '-following-manage'].each do |key|
         ActionController::Base.new.expire_cell_state TopicCell, :sidebar, target_id.to_s+key
       end
     end

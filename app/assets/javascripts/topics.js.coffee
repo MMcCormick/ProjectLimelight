@@ -47,7 +47,8 @@ jQuery ->
       return row.term;
 
     self.result (event, data, formatted) ->
-      id = if data.id then data.id else ''
+      console.log(data)
+      id = if (data.id && data.id != 0) then data.id else ''
       self.parent().next('.tc-auto-id').val(id)
 
     $('.tc-auto-pic').result (event, data, formatted) ->
@@ -77,6 +78,7 @@ jQuery ->
     $('#con-description .inline-rev').html(rev)
 
     if (form.find('#bi').val() == 'true')
+      $('#con-description .inline-rev').html(pull)
       oneClass = oneClass + " bi"
       twoClass = "hide"
       revClass = "hide"
@@ -96,6 +98,7 @@ jQuery ->
     option = $(@).find('option:selected')
     $("#topic_con_sug_pull_from").val(option.data('d').pull)
     $("#topic_con_sug_reverse_pull_from").val(option.data('d').reverse_pull)
+    $("#topic_con_sug_inline").val(option.data('d').inline)
     $('#bi').val(option.data('d').bi)
     $('#con-description .inline').html(option.data('d').inline)
     repaint()
@@ -107,6 +110,8 @@ jQuery ->
     pickTopic($('#topic_con_sug_topic2_name'), t1_img, t1_name)
 
     t1_id = $('#topic_con_sug_topic1_id').val()
+    $('#topic_con_sug_topic1_id').val($('#topic_con_sug_topic2_id').val())
+    $('#topic_con_sug_topic2_id').val(t1_id)
 
   $('.sug-a.one').live 'click', (e) ->
     value = if $("#topic_con_sug_pull_from").val() == "false" then true else false

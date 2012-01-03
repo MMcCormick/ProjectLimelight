@@ -7,7 +7,7 @@ class VotesController < ApplicationController
   end
 
   def create
-    if ['Talk', 'Link', 'Video', 'Picture', 'Comment'].include? params[:type]
+    if ['Talk', 'Link', 'Video', 'Picture', 'Comment', 'TopicConSug'].include? params[:type]
       object = Kernel.const_get(params[:type]).find(params[:id])
       amount = params[:a].to_i
 

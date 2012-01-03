@@ -4,8 +4,9 @@ class TopicConnection
 
   field :name
   field :reverse_name, :default => nil
-  field :pull_from, :default => false
-  field :reverse_pull_from, :default => false
+  field :inline
+  field :pull_from, :default => false, :type => Boolean
+  field :reverse_pull_from, :default => false, :type => Boolean
   field :user_id
 
   belongs_to :user
@@ -13,7 +14,7 @@ class TopicConnection
   validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
   validates :user_id, :presence => true
 
-  attr_accessible :name, :reverse_name, :pull_from, :reverse_pull_from
+  attr_accessible :name, :reverse_name, :pull_from, :reverse_pull_from, :inline
 
   # Return the topic slug instead of its ID
   def to_param
@@ -22,7 +23,7 @@ class TopicConnection
 
   class << self
 
-    def add(connection, topic1, topic2, user_id)
+    def add(connection, topic1, topic2, user_id, pulla=nil)
       rel1 = Neo4j.neo.get_relationship_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}")
       unless rel1
         node1 = Neo4j.neo.get_node_index('topics', 'id', topic1.id.to_s)
@@ -31,16 +32,17 @@ class TopicConnection
         Neo4j.neo.set_relationship_properties(rel1, {
                 'connection_id' => connection.id.to_s,
                 'reverse_name' => connection.reverse_name,
+                'inline' => connection.inline,
                 'user_id' => user_id.to_s
         })
         Neo4j.neo.add_relationship_to_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}", rel1)
 
-        if connection.pull_from == true
+        if (pulla == nil && connection.pull_from == true) || (pulla != nil && pulla[:pull])
           rel1 = Neo4j.neo.create_relationship('pull', node1, node2)
           Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}", rel1)
         end
 
-        if connection.reverse_pull_from == true
+        if (pulla == nil && connection.reverse_pull_from == true) || (pulla != nil && pulla[:reverse_pull])
           rel1 = Neo4j.neo.create_relationship('pull', node2, node1)
           Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}", rel1)
         end
@@ -51,6 +53,9 @@ class TopicConnection
         end
 
         Neo4j.update_affinity(topic1.id.to_s, topic2.id.to_s, node1, node2, 10, true, true)
+        true
+      else
+        false
       end
     end
 

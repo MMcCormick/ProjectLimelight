@@ -32,14 +32,13 @@ class TopicConnectionsController < ApplicationController
     connection = TopicConnection.find(con_id)
 
     if params[:connection][:topic2_id].blank?
-      topic2 = Topic.find_untyped_or_create(params[:connection][:topic_name])
+      topic2 = Topic.find_untyped_or_create(params[:connection][:topic_name], current_user)
     else
       topic2 = Topic.find(params[:connection][:topic2_id])
     end
 
     if topic1 && topic2 && connection
-      TopicConnection.add(connection, topic1, topic2, current_user.id)
-      if topic1.save && topic2.save
+      if TopicConnection.add(connection, topic1, topic2, current_user.id) && topic1.save && topic2.save
         response = build_ajax_response(:ok, (original_slug != topic1.slug) ? edit_topic_path(topic1) : nil, "Connection created!")
         status = 201
       else

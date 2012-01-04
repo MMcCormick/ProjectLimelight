@@ -6,14 +6,14 @@
   <div class="errors"></div>
 
   <div class="field lClear topic1">
-    <%= f.label :topic1_name, "Topic Name" %>
+    <%= f.label :topic1_name, "Choose a Topic" %>
     <%= f.text_field :topic1_name, :class => "tc-auto-pic" %><br />
   </div>
   <%= f.hidden_field :topic1_id, :class => "tc-auto-id", :autocomplete => 'off' %>
   <div class="topic-pic one"><div></div></div>
 
   <div class="field connection-select">
-    <% options = options_for_select(connections.map{ |c| [c.name, c.id, {"data-d" =>
+    <% options = options_for_select(connections.map{ |c| [c.inline, c.id, {"data-d" =>
             '{"pull":"' + c.pull_from.to_s + '",'+
             '"reverse_pull":"' + c.reverse_pull_from.to_s + '",'+
             '"inline":"' + c.inline + '",'+
@@ -26,7 +26,7 @@
   <div class="sug-a two rev"></div>
 
   <div class="field lClear topic2">
-    <%= f.label :topic2_name, "Topic Name" %>
+    <%= f.label :topic2_name, "Choose a Topic" %>
     <%= f.text_field :topic2_name, :class => "tc-auto-pic", :autocomplete => 'off' %>
     <br />
   </div>

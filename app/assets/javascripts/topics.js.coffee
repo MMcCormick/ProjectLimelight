@@ -29,7 +29,7 @@ jQuery ->
     matchContains: true,
     matchSubset: false,
     autoFill: false,
-    selectFirst: false,
+    selectFirst: true,
     mustMatch: false,
     searchKey: 'term',
     buckets: [['topic', 'topic', 'TOPICS']],
@@ -58,6 +58,10 @@ jQuery ->
   #
   # Topic Connection Suggestions
   #
+  $("form").bind "keypress", (e) ->
+    if (e.keyCode == 13)
+      return false
+
   pickTopic = (ac, img_url, name) ->
     ac.val(name)
     ac.parent().nextAll('.topic-pic:first').html('<img src="'+img_url+'">')

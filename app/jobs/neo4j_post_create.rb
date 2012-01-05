@@ -8,17 +8,17 @@ class Neo4jPostCreate
     post = CoreObject.find(post_id)
     if post
 
-      creator_node = Neo4j.neo.get_node_index('users', 'id', post.user_id.to_s)
+      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
 
-      post_node = Neo4j.neo.get_node_index('posts', 'id', post.id.to_s)
+      post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s)
       unless post_node
         post_node = Neo4j.neo.create_node(
-                'id' => post.id.to_s,
+                'uuid' => post.id.to_s,
                 'type' => 'post',
                 'subtype' => post.class.name,
                 'public_id' => post.public_id
         )
-        Neo4j.neo.add_node_to_index('posts', 'id', post.id.to_s, post_node)
+        Neo4j.neo.add_node_to_index('posts', 'uuid', post.id.to_s, post_node)
       end
 
       rel1 = Neo4j.neo.create_relationship('created', creator_node, post_node)
@@ -26,7 +26,7 @@ class Neo4jPostCreate
 
       post.user_mentions.each do |m|
         # connect the post to it's mentioned users
-        mention_node = Neo4j.neo.get_node_index('users', 'id', m.id.to_s)
+        mention_node = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
         rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
         Neo4j.neo.set_relationship_properties(rel2, {"type" => 'user'})
         Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
@@ -38,7 +38,7 @@ class Neo4jPostCreate
       topics = []
       post.topic_mentions.each do |m|
         # connect the post to it's mentioned topics
-        mention_node = Neo4j.neo.get_node_index('topics', 'id', m.id.to_s)
+        mention_node = Neo4j.neo.get_node_index('topics', 'uuid', m.id.to_s)
         rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
         Neo4j.neo.set_relationship_properties(rel2, {"type" => 'topic'})
         Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)

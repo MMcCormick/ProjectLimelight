@@ -7,8 +7,8 @@ class Neo4j
 
     # creates a follow relationship between two nodes
     def follow_create(node1_id, node2_id, node1_index, node2_index)
-      node1 = self.neo.get_node_index(node1_index, 'id', node1_id)
-      node2 = self.neo.get_node_index(node2_index, 'id', node2_id)
+      node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
+      node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
       rel1 = self.neo.create_relationship('follow', node1, node2)
       self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", rel1)
       self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil)
@@ -207,8 +207,8 @@ class Neo4j
 
       # add the new sentiment and direction
       if sentiment || direction
-        node1 = self.neo.get_node_index(node1_index, 'id', node1_id)
-        node2 = self.neo.get_node_index(node2_index, 'id', node2_id)
+        node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
+        node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
         if sentiment
           new_sentiment = self.neo.create_relationship(sentiment, node1, node2)
           self.neo.add_relationship_to_index('sentiment', 'name', "#{node1_id}-#{node2_id}", new_sentiment)

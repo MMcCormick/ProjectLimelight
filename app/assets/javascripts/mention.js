@@ -295,8 +295,9 @@ var fields = [];
         // Preserve the user's capitalization
         if (data && data.original && text)
         {
-          var found = text.match(new RegExp(data.original, 'gi'));
-          if (found)
+          var found = text.toLowerCase().indexOf(data.original.toLowerCase());
+
+          if (found == 0)
           {
             text = data.original + text.substr(data.original.length, text.length)
           }

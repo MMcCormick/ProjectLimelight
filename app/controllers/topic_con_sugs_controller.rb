@@ -10,7 +10,6 @@ class TopicConSugsController < ApplicationController
   end
 
   def create
-    #TODO: check if id matches name? to avoid switchups where a new name is entered but id is not cleared
     if params[:topic_con_sug][:topic1_id].blank?
       topic1 = Topic.find_untyped_or_create(params[:topic_con_sug][:topic1_name], current_user)
     else
@@ -41,9 +40,10 @@ class TopicConSugsController < ApplicationController
           end
         else
           attr = params[:topic_con_sug].merge({ :name => con.name, :reverse_name => con.reverse_name,
-                                                :topic1_slug => topic1.slug, :topic2_slug => topic2.slug })
+                                                :topic1_slug => topic1.slug, :topic2_slug => topic2.slug,
+                                                :topic1_id => topic1.id, :topic2_id => topic2.id })
           sug = current_user.topic_con_sugs.build(attr)
-          if sug.valid?
+          if sug.save
             response = build_ajax_response(:ok, nil, "You connection has been submitted!")
             status = 201
           else

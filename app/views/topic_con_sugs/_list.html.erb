@@ -1,0 +1,5 @@
+<ul>
+  <% sugs.each do |sug| %>
+    <%= render :partial => 'teaser', :locals => { :sug => sug } %>
+  <% end %>
+</ul>

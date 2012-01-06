@@ -28,23 +28,25 @@ class TopicConSugsController < ApplicationController
       status = 400
     else
       if con
+        # if admin, create connection
         if current_user.role?('admin')
           pull = params[:topic_con_sug][:pull_from] == "true" ? true : false
           reverse_pull = params[:topic_con_sug][:reverse_pull_from] == "true" ? true : false
           if TopicConnection.add(con, topic1, topic2, current_user.id, {:pull => pull, :reverse_pull => reverse_pull})
-            response = build_ajax_response(:ok, nil, "You connection has been saved, admin!")
+            response = build_ajax_response(:ok, nil, "Your connection has been saved, admin!")
             status = 201
           else
-            response = build_ajax_response(:error, nil, "Connection could not be saved (admin)", topic1.errors)
+            response = build_ajax_response(:error, nil, "Connection already exists (admin)", topic1.errors)
             status = 422
           end
+        # if non-admin, create suggestion
         else
           attr = params[:topic_con_sug].merge({ :name => con.name, :reverse_name => con.reverse_name,
                                                 :topic1_slug => topic1.slug, :topic2_slug => topic2.slug,
-                                                :topic1_id => topic1.id, :topic2_id => topic2.id })
+                                                :topic1_id => topic1.id, :topic2_id => topic2.id, :con_id => con.id })
           sug = current_user.topic_con_sugs.build(attr)
           if sug.save
-            response = build_ajax_response(:ok, nil, "You connection has been submitted!")
+            response = build_ajax_response(:ok, nil, "Your connection has been submitted!")
             status = 201
           else
             response = build_ajax_response(:error, nil, "Connection could not be submitted", sug.errors)
@@ -52,11 +54,26 @@ class TopicConSugsController < ApplicationController
           end
         end
       else
-        response = build_ajax_response(:error, nil, "Please select two topics and a connection")
+        response = build_ajax_response(:error, nil, "Please select a connection")
         status = 422
       end
     end
 
+    render json: response, status: status
+  end
+
+  def list
+    if params[:topic2_id].blank?
+      sugs = TopicConSug.any_of({topic1_id: params[:topic1_id]}, {topic2_id: params[:topic1_id]})
+    elsif params[:topic1_id].blank?
+      sugs = TopicConSug.any_of({topic1_id: params[:topic2_id]}, {topic2_id: params[:topic2_id]})
+    else
+      sugs = TopicConSug.any_of({topic1_id: params[:topic1_id]}, {topic2_id: params[:topic1_id]})
+    end
+
+    list = render_to_string :partial => "list", :locals => { :sugs => sugs }
+    response = build_ajax_response(:ok, nil, nil, nil, {:list => list})
+    status = 200
     render json: response, status: status
   end
 end

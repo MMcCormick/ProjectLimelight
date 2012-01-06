@@ -25,11 +25,12 @@ class TopicConnection
 
     # pulla is a hash of format { :pull => Boolean, :reverse_pull => Boolean }
     #TODO: delete suggestions that match topics and connection
+    #TODO: improve error detection - return false and don't save topics if no connection was created?
     def add(connection, topic1, topic2, user_id, pulla=nil)
       rel1 = Neo4j.neo.get_relationship_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}")
       unless rel1
-        node1 = Neo4j.neo.get_node_index('topics', 'id', topic1.id.to_s)
-        node2 = Neo4j.neo.get_node_index('topics', 'id', topic2.id.to_s)
+        node1 = Neo4j.neo.get_node_index('topics', 'uuid', topic1.id.to_s)
+        node2 = Neo4j.neo.get_node_index('topics', 'uuid', topic2.id.to_s)
         rel1 = Neo4j.neo.create_relationship(connection.name, node1, node2)
         Neo4j.neo.set_relationship_properties(rel1, {
                 'connection_id' => connection.id.to_s,
@@ -49,14 +50,20 @@ class TopicConnection
           Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}", rel1)
         end
 
-        if connection.id.to_s == Topic.type_of_id && !topic1.primary_type
-          topic1.primary_type = topic2.name
+        if connection.id.to_s == Topic.type_of_id
           topic1.update_health('type')
-          Resque.enqueue(SmCreateTopic, topic1.id.to_s)
-        elsif connection.id.to_s != Topic.type_of_id
+          if !topic1.primary_type
+            topic1.primary_type = topic2.name
+            Resque.enqueue(SmCreateTopic, topic1.id.to_s)
+          end
+        else
           topic1.update_health('connection')
+          topic2.update_health('connection')
         end
 
+        topic1.save
+        topic2.save
+        TopicConSug.destroy_all(conditions: { con_id: connection.id, topic1_id: topic1.id, topic2_id: topic2.id })
         Neo4j.update_affinity(topic1.id.to_s, topic2.id.to_s, node1, node2, 10, true, true)
         true
       else

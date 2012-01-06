@@ -164,7 +164,8 @@ module ApplicationHelper
             :myId => signed_in? ? current_user.id.to_s : 0,
             :autocomplete => '/soul-data/search',
             :userAutoBucket => signed_in? ? current_user.id.to_s : 0,
-            :feedFiltersUpdate => feed_update_url
+            :feedFiltersUpdate => feed_update_url,
+            :getSugsUrl => list_topic_con_sugs_path
     }
     Yajl::Encoder.encode(data)
   end

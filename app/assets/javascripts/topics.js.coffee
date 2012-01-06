@@ -46,14 +46,17 @@ jQuery ->
     formatResult: (row) ->
       return row.term;
 
-    self.result (event, data, formatted) ->
-      console.log(data)
-      id = if (data.id && data.id != 0) then data.id else ''
-      self.parent().next('.tc-auto-id').val(id)
+  $('.tc-auto').result (event, data, formatted) ->
+    id = if (data.id && data.id != 0) then data.id else ''
+    $(@).parent().next('.tc-auto-id').val(id)
 
-    $('.tc-auto-pic').result (event, data, formatted) ->
-      img_url = '/'+data.data.slug+'/picture?h=150&w=150&m=fillcropmid'
-      pickTopic($(@), img_url, data.show)
+  $('.tc-auto-pic').result (event, data, formatted) ->
+    id = if (data.id && data.id != 0) then data.id else ''
+    $(@).parent().next('.tc-auto-id').val(id)
+    img_url = '/'+data.data.slug+'/picture?h=150&w=150&m=fillcropmid'
+    pickTopic($(@), img_url, data.show)
+    console.log('RESULT')
+    getSugs($('#topic_con_sug_topic1_id').val(), $('#topic_con_sug_topic2_id').val())
 
   #
   # Topic Connection Suggestions
@@ -74,11 +77,10 @@ jQuery ->
     desc = $('#con-description')
 
     oneClass = if (form.find("#topic_con_sug_pull_from").val() == "true") then "pull" else ""
-    pull = if (form.find("#topic_con_sug_pull_from").val() == "true") then "will" else "will not"
-    $('#con-description .inline-pull').html(pull)
-
     twoClass = if (form.find("#topic_con_sug_reverse_pull_from").val() == "true") then "pull" else ""
+    pull = if (form.find("#topic_con_sug_pull_from").val() == "true") then "will" else "will not"
     rev = if (form.find("#topic_con_sug_reverse_pull_from").val() == "true") then "will" else "will not"
+    $('#con-description .inline-pull').html(pull)
     $('#con-description .inline-rev').html(rev)
 
     if (form.find('#bi').val() == 'true')
@@ -126,3 +128,14 @@ jQuery ->
     value = if $("#topic_con_sug_reverse_pull_from").val() == "false" then true else false
     $("#topic_con_sug_reverse_pull_from").val(value)
     repaint()
+
+  getSugs = (t1_id, t2_id) ->
+    console.log($('#static-data').data('d').getSugsUrl)
+    $.get(
+      $('#static-data').data('d').getSugsUrl
+      topic1_id: t1_id, topic2_id: t2_id
+      (data) ->
+        console.log(data)
+        $('#sug-list').html(data.list)
+      'json'
+    )

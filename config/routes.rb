@@ -115,7 +115,9 @@ ProjectLimelight::Application.routes.draw do
   put '/:id' => 'topics#update', :as => :update_topic
 
   # Topic Connection Suggestions
-  resources :topic_con_sugs, :only => [:new, :create]
+  resources :topic_con_sugs, :only => [:create]
+  get 'topic_connections/suggest' => 'topic_con_sugs#new', :as => :new_topic_con_sug
+  get 'topic_con_sugs/list' => 'topic_con_sugs#list', :as => :list_topic_con_sugs
 
   # Topic Connections
   resources :topic_connections, :only => [:create, :new]

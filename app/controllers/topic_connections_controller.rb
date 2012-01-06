@@ -19,6 +19,7 @@ class TopicConnectionsController < ApplicationController
   end
 
   def new
+    authorize! :manage, :all
     @site_style = 'narrow'
     @connections = TopicConnection.where(:opposite => "")
   end

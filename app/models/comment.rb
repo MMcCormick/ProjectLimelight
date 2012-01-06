@@ -29,7 +29,7 @@ class Comment
 
   before_validation :set_path
   before_create :set_user_snippet, :current_user_own
-  after_create :add_to_count
+  after_create :add_to_count, :action_log_create
 
   attr_accessible :content, :parent_id, :talk_id
 
@@ -43,6 +43,7 @@ class Comment
 
   def user_delete
     self.status = "deleted"
+    action_log_delete
   end
 
   def send_notifications(current_user)
@@ -132,6 +133,14 @@ class Comment
         }
       )
     end
+  end
+
+  def action_log_create
+    ActionComment.create(:action => 'create', :from_id => user_snippet.id, :to_id => talk_id, :comment_id => id)
+  end
+
+  def action_log_delete
+    ActionComment.create(:action => 'delete', :from_id => user_snippet.id, :to_id => talk_id, :comment_id => id)
   end
 
   def current_user_own

@@ -20,6 +20,7 @@ class CoreObjectSharesController < ApplicationController
             object.add_pop_action(:share, :a, current_user) if object.user_id != current_user.id
             ShareMailer.share(current_user, receiver, object, object.user).deliver if receiver.shares_email
             Notification.add(receiver, :share, false, current_user, nil, nil, true, object, object.user)
+            ActionShare.create(:action => 'create', :from_id => current_user.id, :to_id => receiver.id, :object_type => object.class.name, :object_id => object.id)
           end
         end
       end

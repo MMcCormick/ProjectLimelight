@@ -33,6 +33,7 @@ class VideosController < ApplicationController
       authorize! :update, video
       video.status = "disabled"
       if video.save
+        video.action_log_delete
         response = build_ajax_response(:ok, nil, "Video successfully disabled")
         status = 200
       else

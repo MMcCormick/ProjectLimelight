@@ -447,11 +447,15 @@
 }
 
 #topic_con_sugs-c {
+  h2 {
+    margin: 15px 0 0 10px;
+    font-weight: normal;
+  }
   #new_topic_con_sug {
     position: relative;
     /*TODO: why does everything mess up if i remove this padding*/
     padding: 1px;
-    margin: 10px 10px 10px 55px;
+    margin: 10px 10px 0px 55px;
     width: 707px;
 
     .topic1,
@@ -559,6 +563,51 @@
     }
     .submit {
       @include green-button(3px, 18px);
+    }
+  }
+  #sug-list {
+    margin: 10px 10px 0 55px;
+
+    .empty {
+      font-style: italic;
+      padding: 2px 0 5px 4px;
+    }
+    .teaser {
+      position: relative;
+      margin: 10px 0;
+
+      .sug-a-small {
+        position: absolute;
+        background: image-url("connection-suggestion-arrows-small.png");
+        cursor: pointer;
+        width: 250px;
+        height: 10px;
+        left: 186px;
+        &.one {
+          top: 85px;
+          &.bi {
+            top: 115px;
+          }
+        }
+        &.two {
+          top: 150px;
+        }
+        &.pull {
+          background-position: 0px -10px;
+        }
+        &.rev {
+          background-position: 0px -20px;
+        }
+        &.rev.pull {
+          background-position: 0px -30px;
+        }
+        &.bi {
+          background-position: 0px -40px;
+        }
+        &.bi.pull {
+          background-position: 0px -50px;
+        }
+      }
     }
   }
 }

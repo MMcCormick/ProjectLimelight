@@ -1,5 +1,7 @@
-<ul>
-  <% sugs.each do |sug| %>
+<ul id="sug-list">
+  <% if sugs.each do |sug| %>
     <%= render :partial => 'teaser', :locals => { :sug => sug } %>
+  <% end.empty? %>
+    <div class="empty">There are no suggestions to display.</div>
   <% end %>
 </ul>

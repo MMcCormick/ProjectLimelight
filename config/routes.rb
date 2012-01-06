@@ -94,6 +94,11 @@ ProjectLimelight::Application.routes.draw do
     post ':direction' => 'sentiments#create', :as => :sentiment_create
   end
 
+  # Moderate
+  scope 'moderate' do
+    get 'connections' => 'topic_con_sugs#new', :as => :new_topic_con_sug
+  end
+
   # Topics
   resources :topics, :except => [:edit, :show, :update, :index]
   get '/topics/by_health' => 'topics#by_health', :as => :topics_by_health
@@ -116,7 +121,6 @@ ProjectLimelight::Application.routes.draw do
 
   # Topic Connection Suggestions
   resources :topic_con_sugs, :only => [:create]
-  get 'topic_connections/suggest' => 'topic_con_sugs#new', :as => :new_topic_con_sug
   get 'topic_con_sugs/list' => 'topic_con_sugs#list', :as => :list_topic_con_sugs
 
   # Topic Connections

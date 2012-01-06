@@ -48,7 +48,7 @@ class Neo4j
     # get a topic's relationships. sort them into two groups, outgoing and incoming
     def get_topic_relationships(topic_id)
       query = "
-        START n=node:topics(id = '#{topic_id.to_s}')
+        START n=node:topics(uuid = '#{topic_id.to_s}')
         MATCH (n)-[r]->(x)
         WHERE r.connection_id
         RETURN r,x
@@ -56,7 +56,7 @@ class Neo4j
       outgoing = Neo4j.neo.execute_query(query)
 
       query = "
-        START n=node:topics(id = '#{topic_id.to_s}')
+        START n=node:topics(uuid = '#{topic_id.to_s}')
         MATCH (n)<-[r]-(x)
         WHERE r.connection_id
         RETURN r,x
@@ -87,7 +87,7 @@ class Neo4j
     # get a topics pull from ids
     def pull_from_ids(topic_id)
       query = "
-        START n=node:topics(id = '#{topic_id}')
+        START n=node:topics(uuid = '#{topic_id}')
         MATCH n-[:pull*]->x
         WHERE x.id != '#{topic_id}'
         RETURN distinct x.id
@@ -108,7 +108,7 @@ class Neo4j
 
       # tally up what types are generally connected to topics this user likes
       query = "
-        START n=node:users(id = '#{user_id}')
+        START n=node:users(uuid = '#{user_id}')
         MATCH n-[:affinity]->topic-[r2:`Type Of`]->type
         WHERE topic.type = 'topic'
         RETURN type, COUNT(r2)
@@ -127,7 +127,7 @@ class Neo4j
 
       # tally up a users specific interests
       query = "
-        START n=node:users(id = '#{user_id}')
+        START n=node:users(uuid = '#{user_id}')
         MATCH n-[r1:affinity]->topic
         WHERE topic.type = 'topic' AND r1.weight >= 50
         RETURN topic, r1.weight as weight
@@ -150,7 +150,7 @@ class Neo4j
     # topic suggestions, used in the user sidebar and topic finder
     def user_topic_suggestions(user_id, limit)
       query = "
-        START user=node:users(id = '#{user_id}')
+        START user=node:users(uuid = '#{user_id}')
         MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion
         WHERE topic.type = 'topic' AND user2.type = 'user' AND suggestion.type = 'topic' AND r1.weight >= 50 AND r2.weight >= 50 AND NOT(user-[:follow]->suggestion OR user-[:negative]->topic OR user-[:negative]->suggestion)
         RETURN suggestion, SUM(r3.weight)
@@ -170,7 +170,7 @@ class Neo4j
     # related topic, used in the topic sidebar
     def topic_related(topic_id, limit)
       query = "
-        START topic=node:topics(id = '#{topic_id}')
+        START topic=node:topics(uuid = '#{topic_id}')
         MATCH topic-[r:affinity]-related
         WHERE related.type = 'topic'
         RETURN related, SUM(r.weight)

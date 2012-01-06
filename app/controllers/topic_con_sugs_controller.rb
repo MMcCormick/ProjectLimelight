@@ -77,7 +77,8 @@ class TopicConSugsController < ApplicationController
     elsif params[:topic1_id].blank?
       sugs = TopicConSug.any_of({topic1_id: params[:topic2_id]}, {topic2_id: params[:topic2_id]})
     else
-      sugs = TopicConSug.any_of({topic1_id: params[:topic1_id]}, {topic2_id: params[:topic1_id]})
+      sugs = TopicConSug.any_of({topic1_id: params[:topic1_id], topic2_id: params[:topic2_id]},
+                                {topic2_id: params[:topic1_id], topic1_id: params[:topic2_id]})
     end
 
     list = render_to_string :partial => "list", :locals => { :sugs => sugs }

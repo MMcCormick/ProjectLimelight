@@ -37,6 +37,7 @@ $(function() {
       $target.find('.up').removeClass('unvoteB').addClass('voteB')
       $target.find('.down').removeClass('voteB').addClass('unvoteB')
     }
+
   });
 
   // Listens for favorite toggles.

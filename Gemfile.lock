@@ -208,7 +208,7 @@ GEM
       rack
     omniauth-facebook (1.2.0)
       omniauth-oauth2 (~> 1.0.0)
-    omniauth-google-oauth2 (0.1.8)
+    omniauth-google-oauth2 (0.1.9)
       omniauth (~> 1.0)
       omniauth-oauth2
     omniauth-oauth (1.0.0)

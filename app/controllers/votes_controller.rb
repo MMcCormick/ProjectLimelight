@@ -20,6 +20,13 @@ class VotesController < ApplicationController
           object.add_pop_vote(:a, net, current_user) if net
           object.save!
           current_user.save!
+          ActionVote.create(
+                  :action => 'create',
+                  :from_id => current_user.id,
+                  :to_id => object.id,
+                  :to_type => object.class.name,
+                  :amount => amount
+          )
           response = build_ajax_response(:ok, nil, nil, nil, { :id => object.id.to_s, :a => amount })
           status = 201
         end

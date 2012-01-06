@@ -6,4 +6,7 @@ class ActionLog
   field :fid, :as => :from_id
   field :tid, :as => :to_id
 
+  index :fid
+  index :tid
+
 end

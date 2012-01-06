@@ -50,7 +50,7 @@ end
 
 group :development do
   gem 'heroku_san'
-  gem "pry"
+  gem "pry", '0.1'
   gem 'rspec-cells'
   gem 'guard-rspec'
   gem "rails-footnotes"

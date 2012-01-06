@@ -44,7 +44,7 @@ class CoreObject
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :set_response_snippet, :send_tweet
-  after_create :neo4j_create, :update_response_count
+  after_create :neo4j_create, :update_response_count, :action_log_create
   after_update :expire_caches
 
   # hot damn lots of indexes. can we do this better?
@@ -167,6 +167,9 @@ class CoreObject
       self.reposts_count += 1
       user.reposts_count += 1
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
+
+      ActionRepost.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
+
       true
     end
   end
@@ -177,6 +180,9 @@ class CoreObject
       self.reposts_count -= 1
       user.reposts_count -= 1
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
+
+      ActionRepost.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
+
       true
     else
       false
@@ -210,6 +216,14 @@ class CoreObject
 
   def neo4j_create
     Resque.enqueue(Neo4jPostCreate, id.to_s)
+  end
+
+  def action_log_create
+    ActionPost.create(:action => 'create', :from_id => user_snippet.id, :to_id => id, :to_type => self.class.name)
+  end
+
+  def action_log_delete
+    ActionPost.create(:action => 'delete', :from_id => user_snippet.id, :to_id => id, :to_type => self.class.name)
   end
 
   class << self

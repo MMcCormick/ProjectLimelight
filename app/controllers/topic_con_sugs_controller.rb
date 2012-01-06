@@ -46,6 +46,15 @@ class TopicConSugsController < ApplicationController
                                                 :topic1_id => topic1.id, :topic2_id => topic2.id, :con_id => con.id })
           sug = current_user.topic_con_sugs.build(attr)
           if sug.save
+            ActionConnection.create(
+                    :action => 'suggest',
+                    :from_id => current_user.id,
+                    :to_id => con.id,
+                    :from_topic => topic1.id,
+                    :to_topic => topic2.id,
+                    :pull_from => params[:topic_con_sug][:pull_from],
+                    :reverse_pull_from => params[:topic_con_sug][:reverse_pull_from]
+            )
             response = build_ajax_response(:ok, nil, "Your connection has been submitted!")
             status = 201
           else

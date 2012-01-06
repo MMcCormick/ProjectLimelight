@@ -226,6 +226,7 @@ class User
       user.followers_count += 1
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
       Neo4j.follow_create(id.to_s, user.id.to_s, 'users', 'users')
+      ActionFollow.create(:action => 'create', :from_id => id, :to_id => user.id, :to_type => 'User')
 
       true
     end
@@ -238,6 +239,7 @@ class User
       user.followers_count -= 1
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
+      ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
 
       true
     else
@@ -257,6 +259,7 @@ class User
       self.following_topics_count += 1
       topic.followers_count += 1
       Neo4j.follow_create(id.to_s, topic.id.to_s, 'users', 'topics')
+      ActionFollow.create(:action => 'create', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
 
       true
     end
@@ -268,6 +271,7 @@ class User
       self.following_topics_count -= 1
       topic.followers_count -= 1
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s)
+      ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
 
       true
     else
@@ -287,6 +291,8 @@ class User
     unless has_favorite? object.id
       self.favorites << object.id
       self.favorites_count += 1
+
+      ActionFavorite.create(:action => 'create', :from_id => id, :to_id => object.id, :to_type => object.class.name)
     end
   end
 
@@ -294,6 +300,8 @@ class User
     if has_favorite? object.id
       self.favorites.delete(object.id)
       self.favorites_count -= 1
+
+      ActionFavorite.create(:action => 'destroy', :from_id => id, :to_id => object.id, :to_type => object.class.name)
     end
   end
 

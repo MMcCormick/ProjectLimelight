@@ -41,6 +41,7 @@ class TalksController < ApplicationController
       authorize! :update, talk
       talk.status = "disabled"
       if talk.save
+        talk.action_log_delete
         response = build_ajax_response(:ok, nil, "Talk successfully disabled")
         status = 200
       else

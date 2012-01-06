@@ -2,7 +2,7 @@ require 'rbconfig'
 HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.3'
+gem 'rails', '3.2.0.rc2'
 gem 'unicorn'
 #gem 'thin'
 gem 'execjs'
@@ -42,14 +42,13 @@ gem 'ken' # Freebase API for Ruby
 gem 'neography' # neo4j graph database
 
 group :assets do
-  gem 'compass', '0.12.alpha.0'
-  gem 'sass-rails'
-  gem 'coffee-rails', "3.1.1"
+  gem 'compass', '0.12.alpha.4'
+  gem 'sass-rails', '3.2.3'
+  gem 'coffee-rails', "3.2.1"
   gem 'uglifier'
 end
 
 group :development do
-  gem 'rails-dev-tweaks'
   gem 'heroku_san'
   gem "pry"
   gem 'rspec-cells'

@@ -23,6 +23,8 @@ class TopicConnection
 
   class << self
 
+    # pulla is a hash of format { :pull => Boolean, :reverse_pull => Boolean }
+    #TODO: delete suggestions that match topics and connection
     def add(connection, topic1, topic2, user_id, pulla=nil)
       rel1 = Neo4j.neo.get_relationship_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}")
       unless rel1
@@ -49,7 +51,10 @@ class TopicConnection
 
         if connection.id.to_s == Topic.type_of_id && !topic1.primary_type
           topic1.primary_type = topic2.name
+          topic1.update_health('type')
           Resque.enqueue(SmCreateTopic, topic1.id.to_s)
+        elsif connection.id.to_s != Topic.type_of_id
+          topic1.update_health('connection')
         end
 
         Neo4j.update_affinity(topic1.id.to_s, topic2.id.to_s, node1, node2, 10, true, true)

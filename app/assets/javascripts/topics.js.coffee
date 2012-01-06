@@ -58,7 +58,7 @@ jQuery ->
   #
   # Topic Connection Suggestions
   #
-  $("form").bind "keypress", (e) ->
+  $("#new_topic_con_sug").bind "keypress", (e) ->
     if (e.keyCode == 13)
       return false
 

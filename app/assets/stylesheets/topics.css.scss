@@ -575,22 +575,46 @@
     .teaser {
       position: relative;
       margin: 10px 0;
+      background: transparent;
+      border: none;
 
+      .topic1,
+      .topic2 {
+        >div {
+          display: table-cell;
+          vertical-align: middle;
+          width: 100px;
+          height: 60px;
+          text-align: center;
+        }
+      }
+      .topic1 {
+
+      }
+      .topic2 {
+        position: absolute;
+        left: 410px;
+        top: 0px;
+      }
+      .inline {
+        left: 130px;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 250px;
+      }
       .sug-a-small {
         position: absolute;
         background: image-url("connection-suggestion-arrows-small.png");
         cursor: pointer;
         width: 250px;
         height: 10px;
-        left: 186px;
+        left: 130px;
         &.one {
-          top: 85px;
-          &.bi {
-            top: 115px;
-          }
+          top: 18px;
         }
         &.two {
-          top: 150px;
+          top: 32px;
         }
         &.pull {
           background-position: 0px -10px;

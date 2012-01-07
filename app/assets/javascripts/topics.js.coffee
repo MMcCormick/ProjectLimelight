@@ -133,6 +133,6 @@ jQuery ->
       $('#static-data').data('d').getSugsUrl
       topic1_id: t1_id, topic2_id: t2_id
       (data) ->
-        $('#sug-list').html(data.list)
+        $('#sug-list-c').html(data.list)
       'json'
     )

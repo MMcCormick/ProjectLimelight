@@ -1,8 +1,8 @@
 <li class="con-sug teaser">
-  <div class="topic1"><%= sug.topic1_name %></div>
+  <div class="topic1"><div><%= sug.topic1_name %></div></div>
   <div class="inline"><%= sug.inline %></div>
-  <div class="topic2"><%= sug.topic2_name %></div>
+  <div class="topic2"><div><%= sug.topic2_name %></div></div>
 
-  <div class="sug-a-small one"></div>
-  <div class="sug-a-small two rev"></div>
+  <div class="sug-a-small one <%= sug.pull ? "pull" : "" %>"></div>
+  <div class="sug-a-small two rev <%= sug.reverse_pull ? "pull" : "" %>"></div>
 </li>

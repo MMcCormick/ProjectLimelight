@@ -266,19 +266,19 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      SENTIMENTS = ['negative']
+      SENTIMENTS = ['positive', 'negative', 'neutral']
 
       field :sentiments_count, :default => {}
     end
 
-    def add_sentiment(sentiment)
+    def add_sentiment(user_id, sentiment)
       if SENTIMENTS.include?(sentiment)
         self.sentiments_count[sentiment] ||= 0
         self.sentiments_count[sentiment] += 1
       end
     end
 
-    def remove_sentiment(sentiment)
+    def remove_sentiment(user_id, sentiment)
       if SENTIMENTS.include?(sentiment)
         self.sentiments_count[sentiment] -= 1
       end

@@ -27,6 +27,17 @@ class VotesController < ApplicationController
                   :to_type => object.class.name,
                   :amount => amount
           )
+          if ['Talk', 'Link', 'Video', 'Picture'].include? params[:type]
+            if amount < 0
+              sentiment = 'negative'
+            elsif amount == 0
+              sentiment = 'neutral'
+            else
+              sentiment = 'positive'
+            end
+            Neo4j.update_sentiment(current_user.id.to_s, 'users', object.id.to_s, 'posts', sentiment)
+          end
+
           response = build_ajax_response(:ok, nil, nil, nil, { :id => object.id.to_s, :a => amount })
           status = 201
         end
@@ -57,6 +68,9 @@ class VotesController < ApplicationController
           object.add_pop_vote(:r, net, current_user)
           current_user.save!
           object.save!
+          if ['Talk', 'Link', 'Video', 'Picture'].include? params[:type]
+            Neo4j.update_sentiment(current_user.id.to_s, 'users', object.id.to_s, 'posts', 'neutral')
+          end
           response = build_ajax_response(:ok, nil, nil, nil, { :id => object.id.to_s, :a => 0 })
           status = 200
         end

@@ -11,38 +11,50 @@ class Neo4j
       node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
       rel1 = self.neo.create_relationship('follow', node1, node2)
       self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", rel1)
-      self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil)
-
-      # remove negative direction (if present)
-      old_direction = self.neo.get_relationship_index('sentiment', 'direction', "#{node1_id}-#{node2_id}")
-      if old_direction && old_direction[0]['type'] == 'negative'
-        self.neo.delete_relationship(old_direction)
-        self.neo.remove_relationship_from_index('sentiment', old_direction)
-      end
+      self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil, 'positive')
 
     end
 
     # updates the affinity between two nodes
-    def update_affinity(node1_id, node2_id, node1, node2, change, mutual, with_connection)
+    def update_affinity(node1_id, node2_id, node1, node2, change=0, mutual=nil, with_connection=nil, sentiment=nil)
       affinity = self.neo.get_relationship_index('affinity', 'nodes', "#{node1_id}-#{node2_id}")
       if affinity
-        properties = self.neo.get_relationship_properties(affinity, 'weight')
-        if properties['weight'] + change == 0
-          self.neo.delete_relationship(affinity)
-          self.neo.remove_relationship_from_index('affinity', affinity)
-        else
-          update = {'weight' => properties['weight']+change}
-          update['with_connection'] = with_connection if with_connection
-          self.neo.set_relationship_properties(affinity, update)
+        payload = {}
+        if change
+          properties = self.neo.get_relationship_properties(affinity, 'weight')
+          if properties['weight'] + change == 0
+            self.neo.delete_relationship(affinity)
+            self.neo.remove_relationship_from_index('affinity', affinity)
+          else
+            payload['weight'] = properties['weight']+change
+            payload['with_connection'] = with_connection if with_connection
+          end
         end
+
+        if sentiment
+          payload['sentiment'] = sentiment
+        end
+
+        self.neo.set_relationship_properties(affinity, payload) if payload.length > 0
       elsif node1 && node2
         affinity = self.neo.create_relationship('affinity', node1, node2)
-        self.neo.set_relationship_properties(affinity, {'weight' => change, 'mutual' => mutual, 'with_connection' => with_connection})
+        self.neo.set_relationship_properties(affinity, {
+                'weight' => change,
+                'mutual' => mutual,
+                'with_connection' => with_connection,
+                'sentiment' => sentiment
+        })
         self.neo.add_relationship_to_index('affinity', 'nodes', "#{node1_id}-#{node2_id}", affinity)
         if mutual == true
           self.neo.add_relationship_to_index('affinity', 'nodes', "#{node2_id}-#{node1_id}", affinity)
         end
       end
+    end
+
+    def update_sentiment(node1_id, node1_index, node2_id, node2_index, sentiment)
+      node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
+      node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
+      update_affinity(node1_id, node2_id, node1, node2, nil, nil, nil, sentiment)
     end
 
     # get a topic's relationships. sort them into two groups, outgoing and incoming
@@ -118,6 +130,7 @@ class Neo4j
       ids = self.neo.execute_query(query)
       if ids
         ids['data'].each do |n|
+          n[0]['data']['id'] = n[0]['data']['uuid']
           interests[:general] << {
                   :data => n[0]['data'],
                   :weight => n[1]
@@ -137,6 +150,7 @@ class Neo4j
       ids = self.neo.execute_query(query)
       if ids
         ids['data'].each do |n|
+          n[0]['data']['id'] = n[0]['data']['uuid']
           interests[:specific] << {
                   :data => n[0]['data'],
                   :weight => n[1]
@@ -152,7 +166,7 @@ class Neo4j
       query = "
         START user=node:users(uuid = '#{user_id}')
         MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion
-        WHERE topic.type = 'topic' AND user2.type = 'user' AND suggestion.type = 'topic' AND r1.weight >= 50 AND r2.weight >= 50 AND NOT(user-[:follow]->suggestion OR user-[:negative]->topic OR user-[:negative]->suggestion)
+        WHERE topic.type = 'topic' AND user2.type = 'user' AND suggestion.type = 'topic' AND r1.weight >= 50 AND r2.weight >= 50 AND NOT(user-[:follow]->suggestion OR (r2.sentiment AND r2.sentiment = 'negative') OR (r3.sentiment AND r3.sentiment? ='negative'))
         RETURN suggestion, SUM(r3.weight)
         ORDER BY SUM(r3.weight) desc
         LIMIT #{limit}
@@ -161,6 +175,7 @@ class Neo4j
       suggestions = []
       if ids
         ids['data'].each do |n|
+          n[0]['data']['id'] = n[0]['data']['uuid']
           suggestions << n[0]['data']
         end
       end
@@ -181,6 +196,7 @@ class Neo4j
       suggestions = []
       if ids
         ids['data'].each do |n|
+          n[0]['data']['id'] = n[0]['data']['uuid']
           suggestions << n[0]['data']
         end
       end
@@ -189,36 +205,6 @@ class Neo4j
 
     def get_sentiment(node1_id, node2_id)
       self.neo.get_relationship_index('sentiment', 'name', "#{node1_id}-#{node2_id}")
-    end
-
-    def toggle_sentiment(node1_index, node1_id, node2_index, node2_id, direction, sentiment)
-
-      # remove the old sentiment and direction (if present)
-      old_sentiment = self.neo.get_relationship_index('sentiment', 'name', "#{node1_id}-#{node2_id}")
-      if old_sentiment
-        self.neo.delete_relationship(old_sentiment)
-        self.neo.remove_relationship_from_index('sentiment', old_sentiment)
-      end
-      old_direction = self.neo.get_relationship_index('sentiment', 'direction', "#{node1_id}-#{node2_id}")
-      if old_direction
-        self.neo.delete_relationship(old_direction)
-        self.neo.remove_relationship_from_index('sentiment', old_direction)
-      end
-
-      # add the new sentiment and direction
-      if sentiment || direction
-        node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
-        node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
-        if sentiment
-          new_sentiment = self.neo.create_relationship(sentiment, node1, node2)
-          self.neo.add_relationship_to_index('sentiment', 'name', "#{node1_id}-#{node2_id}", new_sentiment)
-        end
-        if direction
-          new_direction = self.neo.create_relationship(direction, node1, node2)
-          self.neo.add_relationship_to_index('sentiment', 'direction', "#{node1_id}-#{node2_id}", new_direction)
-        end
-      end
-
     end
   end
 

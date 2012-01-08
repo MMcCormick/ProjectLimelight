@@ -1,5 +1,4 @@
 class SentimentsController < ApplicationController
-  before_filter :authenticate_user!
 
   def create
     if ['User', 'UserSnippet', 'Topic', 'TopicSnippet'].include? params[:type]

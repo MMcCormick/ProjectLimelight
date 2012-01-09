@@ -9,7 +9,7 @@ class Neo4jFollowDestroy
     Neo4j.neo.delete_relationship(rel1)
     Neo4j.neo.remove_relationship_from_index('users', rel1)
 
-    Neo4j.update_affinity(node1_id, node2_id, nil, nil, -50, false, nil)
+    Neo4j.update_affinity(node1_id, node2_id, nil, nil, -50, false, nil, nil, false)
   end
 
 end

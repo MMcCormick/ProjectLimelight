@@ -10,4 +10,8 @@ class TopicSnippet
   def to_param
     self.slug
   end
+
+  def encoded_id
+    public_id.to_i.to_s(36)
+  end
 end

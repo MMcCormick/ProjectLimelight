@@ -110,8 +110,20 @@ $(function() {
         type: "POST",
         url: $(this).data('url'),
         data: {type:'Topic', id:$(ui.draggable).data('pid')},
+        dataType: 'json',
         success: function(data) {
           appUpdate(data);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          data = $.parseJSON(jqXHR.responseText)
+          appUpdate(data);
+
+          // If they need to login
+          if (jqXHR.status == 401)
+          {
+            $('#register').click()
+            $('.qtip.ui-tooltip').qtip('hide')
+          }
         }
       })
     }

@@ -1,4 +1,5 @@
 class SentimentsController < ApplicationController
+  before_filter :authenticate_user!
 
   def create
     if ['User', 'UserSnippet', 'Topic', 'TopicSnippet'].include? params[:type]
@@ -35,7 +36,10 @@ class SentimentsController < ApplicationController
     else
       response = build_ajax_response(:error, nil, 'Limelight does not support opinions on that type of object!', nil)
     end
-    render :json => response, :status => 200
+
+    respond_to do |format|
+      format.json { render :json => response, :status => status }
+    end
   end
 
 end

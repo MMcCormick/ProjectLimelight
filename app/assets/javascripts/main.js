@@ -42,7 +42,7 @@ $(function() {
       var $self = $(this);
       $self.qtip({
         content: {
-          text: 'Foo',
+          text: 'Loading...',
           ajax: {
             once: true,
             url: $self.data('d').url,

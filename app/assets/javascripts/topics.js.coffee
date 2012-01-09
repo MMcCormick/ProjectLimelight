@@ -53,8 +53,9 @@ jQuery ->
   $('.tc-auto-pic').result (event, data, formatted) ->
     id = if (data.id && data.id != 0) then data.id else ''
     $(@).parent().next('.tc-auto-id').val(id)
-    img_url = '/'+data.data.slug+'/picture?h=150&w=150&m=fillcropmid'
-    pickTopic($(@), img_url, data.show)
+    img_url = if data.data then '/'+data.data.slug+'/picture?h=150&w=150&m=fillcropmid' else '/assets/images/topic-default-150-150.gif'
+    console.log(data)
+    pickTopic($(@), img_url, data.term)
     getSugs($('#topic_con_sug_topic1_id').val(), $('#topic_con_sug_topic2_id').val())
 
   #
@@ -66,6 +67,7 @@ jQuery ->
 
   pickTopic = (ac, img_url, name) ->
     ac.val(name)
+    console.log(img_url)
     ac.parent().nextAll('.topic-pic:first').html('<img src="'+img_url+'">')
     $('#con-description .t1').html(name) if ac.is('#topic_con_sug_topic1_name')
     $('#con-description .t2').html(name) if ac.is('#topic_con_sug_topic2_name')
@@ -118,12 +120,12 @@ jQuery ->
     $('#topic_con_sug_topic1_id').val($('#topic_con_sug_topic2_id').val())
     $('#topic_con_sug_topic2_id').val(t1_id)
 
-  $('.sug-a.one').live 'click', (e) ->
+  $('.sug-a.one, .sug-a-label.one').live 'click', (e) ->
     value = if $("#topic_con_sug_pull_from").val() == "false" then true else false
     $("#topic_con_sug_pull_from").val(value)
     repaint()
 
-  $('.sug-a.two').live 'click', (e) ->
+  $('.sug-a.two, .sug-a-label.two').live 'click', (e) ->
     value = if $("#topic_con_sug_reverse_pull_from").val() == "false" then true else false
     $("#topic_con_sug_reverse_pull_from").val(value)
     repaint()

@@ -511,6 +511,18 @@
       color: #FFF;
       background: #666
     }
+    .sug-a-label {
+      position: absolute;
+      top: 71px;
+      width: 335px;
+      left: 186px;
+      text-align: center;
+      font-size: 11px;
+      cursor: pointer;
+      &.two {
+        top: 161px;
+      }
+    }
     .sug-a {
       position: absolute;
       background: image-url("connection-suggestion-arrows.png");

@@ -96,7 +96,7 @@ ProjectLimelight::Application.routes.draw do
 
   # Moderate
   scope 'moderate' do
-    get 'connections' => 'topic_con_sugs#new', :as => :new_topic_con_sug
+    get 'connections' => 'topic_con_sugs#new', :as => :moderate_connections
   end
 
   # Topics

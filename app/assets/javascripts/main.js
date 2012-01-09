@@ -1,14 +1,6 @@
 $(function() {
 
   /*
-   * LISTS
-   */
-
-  $('.list-createB').colorbox({title:"Create a New List", transition: "none", opacity: .5, href: function() {
-    return $(this).attr('href') + '.ajax'
-  }});
-
-  /*
    * COMMENTS
    */
 
@@ -40,50 +32,90 @@ $(function() {
   $('.ulink, .tlink').livequery(function() {
     $(this).each(function() {
       var $self = $(this);
-      $self.qtip({
-        content: {
-          text: 'Loading...',
-          ajax: {
-            once: true,
-            url: $self.data('d').url,
-            type: 'get',
-            success: function(data) {
-              // If self is a ulink, set target to ulink with the given public id, else tlink
-              var target = $self.hasClass('ulink') ? $('.ulink[data-pid="'+$self.data('pid')+'"]') : $('.tlink[data-pid="'+$self.data('pid')+'"]');
-              target.qtip('option', {
-                'content.text': data,
-                'content.ajax': false
-              });
-            },
-            error: function(data) {
-              // If self is a ulink, set target to ulink with the given public id, else tlink
-              var target = $self.hasClass('ulink') ? $('.ulink[data-pid="'+$self.data('pid')+'"]') : $('.tlink[data-pid="'+$self.data('pid')+'"]');
-              target.qtip('option', {
-                'content.text': data.status == 401 ? 'You must sign in to see this user\'s info!' : 'Error',
-                'content.ajax': false
-              });
+
+      /*
+       * HOVER TABS
+       */
+      if (!$self.hasClass('ui-draggable'))
+      {
+        $self.qtip({
+          content: {
+            text: 'Loading...',
+            ajax: {
+              once: true,
+              url: $self.data('d').url,
+              type: 'get',
+              success: function(data) {
+                // If self is a ulink, set target to ulink with the given public id, else tlink
+                var target = $self.hasClass('ulink') ? $('.ulink[data-pid="'+$self.data('pid')+'"]') : $('.tlink[data-pid="'+$self.data('pid')+'"]');
+                target.qtip('option', {
+                  'content.text': data,
+                  'content.ajax': false
+                });
+              },
+              error: function(data) {
+                // If self is a ulink, set target to ulink with the given public id, else tlink
+                var target = $self.hasClass('ulink') ? $('.ulink[data-pid="'+$self.data('pid')+'"]') : $('.tlink[data-pid="'+$self.data('pid')+'"]');
+                target.qtip('option', {
+                  'content.text': data.status == 401 ? 'You must sign in to see this user\'s info!' : 'Error',
+                  'content.ajax': false
+                });
+              }
             }
-          }
-        },
-        style: {
-          classes: 'ui-tooltip-shadow ui-tooltip-light',
-          tip: {
-           mimic: 'center',
-           offset: 8,
-           width: 8,
-           height: 8
-          }
-        },
-        position: {
-          my: 'top left',
-          at: 'bottom left',
-          viewport: $(window)
-        },
-        show: {delay: 1000},
-        hide: {delay: 300, fixed: true}
-      })
+          },
+          style: {
+            classes: 'ui-tooltip-shadow ui-tooltip-light',
+            tip: {
+             mimic: 'center',
+             offset: 8,
+             width: 8,
+             height: 8
+            }
+          },
+          position: {
+            my: 'top left',
+            at: 'bottom left',
+            viewport: $(window)
+          },
+          show: {delay: 1000},
+          hide: {delay: 300, fixed: true}
+        })
+      }
     })
   })
+
+  /*
+   * DRAG BARS
+   */
+  $('.tlink, .topic-name, .topic-card').livequery(function() {
+    var $self = $(this);
+    $self.draggable({
+      revert: true,
+      appendTo: 'body',
+      helper: 'clone',
+      zIndex: 1000,
+      start: function(event, ui) {
+        $('.sentiment-bar .topics').fadeIn(250)
+      },
+      stop: function(event, ui) {
+        $('.sentiment-bar .topics').fadeOut(250)
+      }
+    });
+  })
+
+  $( ".sentiment-bar .topics > div" ).droppable({
+    hoverClass: "hover",
+    drop: function( event, ui ) {
+      $.ajax({
+        type: "POST",
+        url: $(this).data('url'),
+        data: {type:'Topic', id:$(ui.draggable).data('pid')},
+        success: function(data) {
+          appUpdate(data);
+        }
+      })
+    }
+  });
 
   // Static flashes
   if ($('#flash_notice').length > 0)

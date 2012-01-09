@@ -1,7 +1,7 @@
 <div class="topic" data-push="<%= @topic.id.to_s if signed_in? %>">
   <div class="top">
     <div class="topic-panel">
-      <h4 class="topic-name"><a href="<%= topic_path(@topic) %>"><%= @topic.name %></a></h4>
+      <h4 class="topic-name" data-pid="<%= @topic.encoded_id %>"><a href="<%= topic_path(@topic) %>"><%= @topic.name %></a></h4>
     </div>
     <div class="follow-c">
       <%= render 'follows/btn', :current_user => @current_user, :target => @topic %>

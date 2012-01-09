@@ -16,7 +16,7 @@ class Neo4j
     end
 
     # updates the affinity between two nodes
-    def update_affinity(node1_id, node2_id, node1, node2, change=0, mutual=nil, with_connection=nil, sentiment=nil)
+    def update_affinity(node1_id, node2_id, node1, node2, change=0, mutual=nil, with_connection=nil, sentiment='none')
       affinity = self.neo.get_relationship_index('affinity', 'nodes', "#{node1_id}-#{node2_id}")
       if affinity
         payload = {}
@@ -124,7 +124,7 @@ class Neo4j
         MATCH n-[:affinity]->topic-[r2:`Type Of`]->type
         WHERE topic.type = 'topic'
         RETURN type, COUNT(r2)
-        ORDER BY count(r2) desc
+        orDER BY count(r2) desc
         LIMIT 10
       "
       ids = self.neo.execute_query(query)
@@ -142,9 +142,9 @@ class Neo4j
       query = "
         START n=node:users(uuid = '#{user_id}')
         MATCH n-[r1:affinity]->topic
-        WHERE topic.type = 'topic' AND r1.weight >= 50
+        WHERE topic.type = 'topic' and r1.weight >= 50
         RETURN topic, r1.weight as weight
-        ORDER BY r1.weight desc
+        orDER BY r1.weight desc
         LIMIT #{limit}
       "
       ids = self.neo.execute_query(query)
@@ -165,8 +165,8 @@ class Neo4j
     def user_topic_suggestions(user_id, limit)
       query = "
         START user=node:users(uuid = '#{user_id}')
-        MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion
-        WHERE topic.type = 'topic' AND user2.type = 'user' AND suggestion.type = 'topic' AND r1.weight >= 50 AND r2.weight >= 50 AND NOT(user-[:follow]->suggestion OR (r2.sentiment AND r2.sentiment = 'negative') OR (r3.sentiment AND r3.sentiment? ='negative'))
+        MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion, user-[r4?:affinity]->suggestion, user-[r5?:follow]->suggestion
+        WHERE topic.type = 'topic' and user2.type = 'user' and suggestion.type = 'topic' and (r1 IS NULL or r1.sentiment != 'negative') and (r4 IS NULL or r4.sentiment != 'negative') and r5 IS NULL
         RETURN suggestion, SUM(r3.weight)
         ORDER BY SUM(r3.weight) desc
         LIMIT #{limit}
@@ -189,7 +189,7 @@ class Neo4j
         MATCH topic-[r:affinity]-related
         WHERE related.type = 'topic'
         RETURN related, SUM(r.weight)
-        ORDER BY SUM(r.weight) desc
+        orDER BY SUM(r.weight) desc
         LIMIT #{limit}
       "
       ids = self.neo.execute_query(query)

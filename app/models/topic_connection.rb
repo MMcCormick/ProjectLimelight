@@ -86,21 +86,21 @@ class TopicConnection
       Neo4j.neo.delete_relationship(rel1)
       Neo4j.neo.remove_relationship_from_index('topics', rel1)
 
-      if connection.pull_from == true
-        rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}")
+      rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}")
+      if rel1
         Neo4j.neo.delete_relationship(rel1)
         Neo4j.neo.remove_relationship_from_index('topics', rel1)
       end
 
-      if connection.reverse_pull_from == true
-        rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}")
+      rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}")
+      if rel1
         Neo4j.neo.delete_relationship(rel1)
         Neo4j.neo.remove_relationship_from_index('topics', rel1)
       end
 
       if connection.id.to_s == Topic.type_of_id
         query = "
-          START topic=node:topics(id = '#{topic1.id.to_s}')
+          START topic=node:topics(uuid = '#{topic1.id.to_s}')
           MATCH topic-[r1:`Type Of`]->topic2
           RETURN r1,topic2
         "

@@ -91,7 +91,7 @@ ProjectLimelight::Application.routes.draw do
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
   scope 'sentiment' do
-    post ':direction' => 'sentiments#create', :as => :sentiment_create
+    post ':sentiment' => 'sentiments#create', :as => :sentiment_create
   end
 
   # Moderate

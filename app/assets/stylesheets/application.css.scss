@@ -865,6 +865,47 @@ button {
   }
 }
 
+.sentiment-bar {
+  .bar {
+    @include clearfix();
+    position: absolute;
+    bottom: -38px;
+    left: 50%;
+    background: #FFF;
+    border-bottom: 1px solid #999;
+    border-left: 1px solid #999;
+    display: none;
+
+    > div {
+      float: left;
+      border-right: 1px solid #999;
+      font-size: 20px;
+      padding: 5px 15px;
+      &.hover, &:hover {
+        color: #FFF;
+      }
+    }
+    .positive {
+      &.hover, &:hover {
+        background: $picture-color;
+      }
+    }
+    .negative {
+      &.hover, &:hover {
+        background: $link-color;
+      }
+    }
+    .neutral {
+      &.hover, &:hover {
+        background: #666;
+      }
+    }
+  }
+  .topics {
+    margin-left: -162px;
+  }
+}
+
 @import "library";
 @import "sprites";
 @import "mentions";

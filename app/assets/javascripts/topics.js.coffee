@@ -25,7 +25,7 @@ jQuery ->
     self = $(@)
     self.autocomplete $('#static-data').data('d').autocomplete,
     minChars: 2,
-    width: 450,
+    width: 400,
     matchContains: true,
     matchSubset: false,
     autoFill: false,
@@ -54,7 +54,6 @@ jQuery ->
     id = if (data.id && data.id != 0) then data.id else ''
     $(@).parent().next('.tc-auto-id').val(id)
     img_url = if data.data then '/'+data.data.slug+'/picture?h=150&w=150&m=fillcropmid' else '/assets/images/topic-default-150-150.gif'
-    console.log(data)
     pickTopic($(@), img_url, data.term)
     getSugs($('#topic_con_sug_topic1_id').val(), $('#topic_con_sug_topic2_id').val())
 
@@ -67,7 +66,6 @@ jQuery ->
 
   pickTopic = (ac, img_url, name) ->
     ac.val(name)
-    console.log(img_url)
     ac.parent().nextAll('.topic-pic:first').html('<img src="'+img_url+'">')
     $('#con-description .t1').html(name) if ac.is('#topic_con_sug_topic1_name')
     $('#con-description .t2').html(name) if ac.is('#topic_con_sug_topic2_name')

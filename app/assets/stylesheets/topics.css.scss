@@ -618,7 +618,6 @@
       .sug-a-small {
         position: absolute;
         background: image-url("connection-suggestion-arrows-small.png");
-        cursor: pointer;
         width: 250px;
         height: 10px;
         left: 130px;
@@ -643,6 +642,20 @@
         &.bi.pull {
           background-position: 0px -50px;
         }
+      }
+      .con-description {
+        position: absolute;
+        left: 0px;
+        top: 23px;
+        left: 250px;
+        font-size: 11px;
+        padding: 0 3px;
+        color: #666;
+      }
+      .scoreC {
+        position: absolute;
+        top: 20px;
+        left: 530px;
       }
     }
   }

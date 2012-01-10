@@ -17,7 +17,7 @@ class VotesController < ApplicationController
           status = 401
         else
           net = object.add_voter(current_user, amount)
-          object.add_pop_vote(:a, net, current_user) if net
+          object.add_pop_vote(:a, net, current_user) if net && params[:type] != 'TopicConSug'
           object.save!
           current_user.save!
           ActionVote.create(
@@ -56,7 +56,7 @@ class VotesController < ApplicationController
   end
 
   def destroy
-    if ['Talk', 'Link', 'Video', 'Picture', 'Comment'].include? params[:type]
+    if ['Talk', 'Link', 'Video', 'Picture', 'Comment', 'TopicConSug'].include? params[:type]
       object = Kernel.const_get(params[:type]).find(params[:id])
 
       if object
@@ -65,7 +65,7 @@ class VotesController < ApplicationController
           status = 401
         else
           net = object.remove_voter(current_user)
-          object.add_pop_vote(:r, net, current_user)
+          object.add_pop_vote(:r, net, current_user) if params[:type] != 'TopicConSug'
           current_user.save!
           object.save!
           if ['Talk', 'Link', 'Video', 'Picture'].include? params[:type]

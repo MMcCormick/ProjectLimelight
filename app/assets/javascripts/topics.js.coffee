@@ -69,8 +69,8 @@ jQuery ->
     ac.parent().nextAll('.topic-pic:first').html('<img src="'+img_url+'">')
     $('#con-description .t1').html(name) if ac.is('#topic_con_sug_topic1_name')
     $('#con-description .t2').html(name) if ac.is('#topic_con_sug_topic2_name')
-    $('#sugs-title .t1').html("'"+name+"'") if ac.is('#topic_con_sug_topic1_name')
-    $('#sugs-title .t2').html("'"+name+"'") if ac.is('#topic_con_sug_topic2_name')
+    $('#sugs-title .t1').html("'"+name+"'") if ac.is('#topic_con_sug_topic1_name') && $('#topic_con_sug_topic1_id').val() != ""
+    $('#sugs-title .t2').html("'"+name+"'") if ac.is('#topic_con_sug_topic2_name') && $('#topic_con_sug_topic2_id').val() != ""
     repaint()
 
   repaint = () ->

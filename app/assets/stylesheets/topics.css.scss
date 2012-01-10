@@ -451,6 +451,9 @@
     margin: 15px 0 0 10px;
     font-weight: normal;
   }
+  .subheader {
+    margin: 5px 0 0 12px;
+  }
   #new_topic_con_sug {
     position: relative;
     /*TODO: why does everything mess up if i remove this padding*/
@@ -596,7 +599,7 @@
           display: table-cell;
           vertical-align: middle;
           width: 100px;
-          height: 60px;
+          height: 58px;
           text-align: center;
         }
       }
@@ -612,7 +615,7 @@
         left: 130px;
         position: absolute;
         text-align: center;
-        top: 0;
+        top: 7px;
         width: 250px;
       }
       .sug-a-small {
@@ -622,10 +625,10 @@
         height: 10px;
         left: 130px;
         &.one {
-          top: 18px;
+          top: 25px;
         }
         &.two {
-          top: 32px;
+          top: 39px;
         }
         &.pull {
           background-position: 0px -10px;
@@ -646,7 +649,7 @@
       .con-description {
         position: absolute;
         left: 0px;
-        top: 23px;
+        top: 30px;
         left: 250px;
         font-size: 11px;
         padding: 0 3px;
@@ -654,8 +657,27 @@
       }
       .scoreC {
         position: absolute;
-        top: 20px;
+        top: 7px;
         left: 530px;
+        button {
+          display: block;
+          padding: 4px 10px 3px;
+          margin: 2px;
+          width: 130px;
+          color: #FFF;
+          &.up {
+            background: #709721;
+          }
+          &.down {
+            background: #990000;
+          }
+          &.voteB {
+            @include opacity(1);
+          }
+          &.unvoteB {
+            @include opacity(.5);
+          }
+        }
       }
     }
   }

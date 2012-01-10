@@ -24,7 +24,8 @@ class TopicConSug
   attr_protected :votes_count, :user_id
 
   def unique_suggestion
-    if TopicConSug.exists?(conditions: { topic1_id: topic1_id, topic2_id: topic2_id, con_id: con_id, pull_from: pull_from, reverse_pull_from: reverse_pull_from })
+    if TopicConSug.exists?(conditions: { topic1_id: topic1_id, topic2_id: topic2_id, con_id: con_id, pull_from: pull_from,
+                                         reverse_pull_from: reverse_pull_from, id: {"$ne" => id} })
       errors.add("", "That suggestion has already been made")
     end
   end

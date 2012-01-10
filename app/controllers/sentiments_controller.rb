@@ -29,6 +29,10 @@ class SentimentsController < ApplicationController
             "Got it, you don't care about #{target.name}."
         end
 
+        if targets[params[:type]] == 'Topic' && params[:sentiment] == 'positive'
+          current_user.follow_object(target)
+        end
+
         response = build_ajax_response(:ok, nil, message, nil)
       else
         response = build_ajax_response(:error, nil, "Hmm... we couldn't find that #{params[:type]}. If this error continues, please contact us!", nil)

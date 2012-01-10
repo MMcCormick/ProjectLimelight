@@ -9,6 +9,12 @@ class FollowsController < ApplicationController
               'Topic' => 'Topic',
               'TopicSnippet' => 'Topic'
       }
+      indexes = {
+              'User' => 'users',
+              'UserSnippet' => 'users',
+              'Topic' => 'topics',
+              'TopicSnippet' => 'topics'
+      }
       target = Kernel.const_get(targets[params[:type]]).find(params[:id])
       if target && target.id
         if current_user.follow_object(target)

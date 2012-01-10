@@ -11,17 +11,17 @@ class Neo4j
       node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
       rel1 = self.neo.create_relationship('follow', node1, node2)
       self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", rel1)
-      self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil, 'positive')
+      self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil, 'positive', false)
 
     end
 
     # updates the affinity between two nodes
-    def update_affinity(node1_id, node2_id, node1, node2, change=0, mutual=nil, with_connection=nil, sentiment='none')
+    def update_affinity(node1_id, node2_id, node1, node2, change=0, mutual=nil, with_connection=nil, sentiment='none', overrideSentiment=true)
       affinity = self.neo.get_relationship_index('affinity', 'nodes', "#{node1_id}-#{node2_id}")
       if affinity
         payload = {}
         if change
-          properties = self.neo.get_relationship_properties(affinity, 'weight')
+          properties = self.neo.get_relationship_properties(affinity)
           if properties['weight'] + change == 0
             self.neo.delete_relationship(affinity)
             self.neo.remove_relationship_from_index('affinity', affinity)
@@ -32,7 +32,9 @@ class Neo4j
         end
 
         if sentiment
-          payload['sentiment'] = sentiment
+          if (!properties || !properties['sentiment'] || properties['sentiment'] == 'none') || overrideSentiment == true
+            payload['sentiment'] = sentiment
+          end
         end
 
         self.neo.set_relationship_properties(affinity, payload) if payload.length > 0
@@ -51,10 +53,10 @@ class Neo4j
       end
     end
 
-    def update_sentiment(node1_id, node1_index, node2_id, node2_index, sentiment)
+    def update_sentiment(node1_id, node1_index, node2_id, node2_index, sentiment, overrideSentiment=true)
       node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
       node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
-      update_affinity(node1_id, node2_id, node1, node2, nil, nil, nil, sentiment)
+      update_affinity(node1_id, node2_id, node1, node2, nil, nil, nil, sentiment, overrideSentiment)
     end
 
     # get a topic's relationships. sort them into two groups, outgoing and incoming

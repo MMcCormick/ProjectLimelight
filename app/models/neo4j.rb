@@ -7,12 +7,10 @@ class Neo4j
 
     # creates a follow relationship between two nodes
     def follow_create(node1_id, node2_id, node1_index, node2_index)
-      node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
-      node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
-      rel1 = self.neo.create_relationship('follow', node1, node2)
-      self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", rel1)
-      self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil, 'positive', false)
-
+      nodes = self.neo.batch [:get_node_by_index, node1_index, "uuid", node1_id], [:get_node_by_index, node2_index, "uuid", node2_id]
+      self.neo.batch [:create_relationship, "follow", nodes[0]['body'].first['self'].split('/').last, nodes[1]['body'].first['self'].split('/').last],
+                     [:add_relationship_to_index, "users", "follow", "#{node1_id}-#{node2_id}", "{0}"] if nodes && nodes.length == 2
+      self.update_affinity(node1_id, node2_id, nodes[0]['body'].first, nodes[1]['body'].first, 50, false, nil, 'positive', false) if nodes && nodes.length == 2
     end
 
     # updates the affinity between two nodes
@@ -38,7 +36,12 @@ class Neo4j
         end
 
         self.neo.set_relationship_properties(affinity, payload) if payload.length > 0
-      elsif node1 && node2
+      else
+        unless node1 && node2
+          node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
+          node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
+        end
+
         affinity = self.neo.create_relationship('affinity', node1, node2)
         self.neo.set_relationship_properties(affinity, {
                 'weight' => change,

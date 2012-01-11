@@ -665,21 +665,45 @@
           margin: 2px;
           width: 130px;
           color: #FFF;
-          &.up {
+          &.voteB {
+            background: transparent;
+            color: #000;
+          }
+          &.up.voteB {
+            border: 1px solid #709721;
+          }
+          &.up.unvoteB {
             background: #709721;
           }
-          &.down {
+          &.down.voteB {
+            border: 1px solid #990000;
+          }
+          &.down.unvoteB {
             background: #990000;
-          }
-          &.voteB {
-            @include opacity(1);
-          }
-          &.unvoteB {
-            @include opacity(.5);
           }
         }
       }
     }
+  }
+}
+
+.mod-connections {
+  font-size: 12px;
+  padding: 5px 7px;
+  border-bottom: 1px solid #CCC;
+  display: block;
+  margin-top: -3px;
+
+  .first {
+
+  }
+  .second {
+    font-style: italic;
+    font-size: 11px;
+  }
+  &:hover {
+    background: $picture-color;
+    color: #FFF;
   }
 }
 

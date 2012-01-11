@@ -22,6 +22,7 @@ class TopicCell < Cell::Rails
     @current_user = current_user
     @topic = topic
     @connections = connections ? connections : Neo4j.get_topic_relationships(@topic.id)
+    @num_con_sugs = TopicConSug.any_of({topic1_id: @topic.id}, {topic2_id: @topic.id}).count()
     render
   end
 

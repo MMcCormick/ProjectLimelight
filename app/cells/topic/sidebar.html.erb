@@ -41,23 +41,25 @@
 
   <%= render_cell :topic, :topic_suggestions, @topic %>
 
-  <% if @connections.length > 0 %>
-    <h3 class="section-h">Connections</h3>
-    <div class="section connections">
-      <% @connections.each do |type, data| %>
-        <div class="sub-section also">
-          <h5><%= "#{type == 'Instance' ? @topic.name.pluralize : type} (#{data['connections'].length})" %></h5>
-          <% data['connections'].each_with_index do |connection, i| %>
-            <% if i > 1   %>
-              <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
-              <% break %>
-            <% end %>
-            <%= render 'topics/tag', :topic => TopicSnippet.new(connection), :include_image => false %>
+  <h3 class="section-h">Connections</h3>
+  <div class="section connections">
+    <a class="mod-connections" href="<%= moderate_connections_path :topic_id => @topic.encoded_id %>">
+      <div class="first">Moderate Connections</div>
+      <%= "<div class='second'>#{@num_con_sugs} pending</div>".html_safe if @num_con_sugs > 0 %>
+    </a>
+    <% @connections.each do |type, data| %>
+      <div class="sub-section also">
+        <h5><%= "#{type == 'Instance' ? @topic.name.pluralize : type} (#{data['connections'].length})" %></h5>
+        <% data['connections'].each_with_index do |connection, i| %>
+          <% if i > 1   %>
+            <%= link_to "view all", (connected_topics_path @topic), :class => 'view-all' %>
+            <% break %>
           <% end %>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
+          <%= render 'topics/tag', :topic => TopicSnippet.new(connection), :include_image => false %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 
   <%= render 'help/topic_panel' %>
 </div>

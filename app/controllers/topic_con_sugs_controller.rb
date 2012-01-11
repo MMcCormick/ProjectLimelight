@@ -6,6 +6,7 @@ class TopicConSugsController < ApplicationController
     @description = 'Users can suggest connections between topics, and vote on connections that have already been suggested'
 
     @site_style = 'narrow'
+    @topic1 = params[:topic_id] ? Topic.find_by_encoded_id(params[:topic_id]) : nil
     @connections = TopicConnection.all
   end
 
@@ -56,6 +57,8 @@ class TopicConSugsController < ApplicationController
                     :pull_from => params[:topic_con_sug][:pull_from],
                     :reverse_pull_from => params[:topic_con_sug][:reverse_pull_from]
             )
+            topic1.expire_caches
+            topic2.expire_caches
             response = build_ajax_response(:ok, nil, "Your connection has been submitted!")
             status = 201
           else

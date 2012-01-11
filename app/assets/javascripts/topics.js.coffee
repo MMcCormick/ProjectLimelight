@@ -136,3 +136,7 @@ jQuery ->
         $('#sug-list-c').html(data.list)
       'json'
     )
+
+  $('#topic_con_sug_topic1_id').livequery ->
+    if $(@).val() != ""
+      getSugs($(@).val(), $('#topic_con_sug_topic2_id').val())

@@ -7,10 +7,12 @@
 
   <div class="field lClear topic1">
     <%= f.label :topic1_name, "Choose a Topic" %>
-    <%= f.text_field :topic1_name, :class => "tc-auto-pic" %><br />
+    <%= f.text_field :topic1_name, :value => (topic1 ? topic1.name : ""), :class => "tc-auto-pic" %>
   </div>
-  <%= f.hidden_field :topic1_id, :class => "tc-auto-id", :autocomplete => 'off' %>
-  <div class="topic-pic one"><div></div></div>
+  <%= f.hidden_field :topic1_id, :value => (topic1 ? topic1.id : ""), :class => "tc-auto-id", :autocomplete => 'off' %>
+  <div class="topic-pic one">
+    <%= topic1 ? "<img src='/#{topic1.slug}/picture?h=150&w=150&m=fillcropmid'>".html_safe : "<div></div>".html_safe %>
+  </div>
 
   <div class="field connection-select">
     <% options = options_for_select(connections.map{ |c| [c.inline, c.id, {"data-d" =>

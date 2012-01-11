@@ -156,7 +156,7 @@ GEM
       addressable
       extlib
       json
-    kgio (2.7.2)
+    kgio (2.7.0)
     koala (1.3.0)
       faraday (~> 0.7.0)
       multi_json (~> 1.0)

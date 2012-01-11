@@ -1,4 +1,5 @@
 <h2>Suggest a New Connection</h2>
+<div class="subheader">Enter topics to suggest a connection or to see their pending suggestions below.</div>
 <%= render "form", :connections => @connections, :topic1 => @topic1 %>
 
 <h2 id="sugs-title">Pending Suggestions
@@ -8,4 +9,6 @@
   <span class="t2"></span>
 </h2>
 <div class="subheader">A connection is accepted when enough users indicate that it is correct.</div>
+<div class="subheader">A green arrow indicates that posts mentioning one topic will appear in the feed of the other topic.</div>
+<div class="subheader">Posts are pulled in the direction of the arrow.</div>
 <div id="sug-list-c"></div>

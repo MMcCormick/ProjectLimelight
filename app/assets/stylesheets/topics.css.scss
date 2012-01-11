@@ -452,6 +452,7 @@
     font-weight: normal;
   }
   .subheader {
+    font-size: 12px;
     margin: 5px 0 0 12px;
   }
   #new_topic_con_sug {
@@ -615,8 +616,15 @@
         left: 130px;
         position: absolute;
         text-align: center;
-        top: 7px;
+        top: 10px;
         width: 250px;
+        z-index: 20;
+        span {
+          background: #FFF;
+          color: #444;
+          border: 1px solid #444;
+          padding: 0px 5px;
+        }
       }
       .sug-a-small {
         position: absolute;
@@ -625,10 +633,11 @@
         height: 10px;
         left: 130px;
         &.one {
-          top: 25px;
+          top: 14px;
+          z-index: 10;
         }
         &.two {
-          top: 39px;
+          top: 37px;
         }
         &.pull {
           background-position: 0px -10px;
@@ -649,7 +658,7 @@
       .con-description {
         position: absolute;
         left: 0px;
-        top: 30px;
+        top: 26px;
         left: 250px;
         font-size: 11px;
         padding: 0 3px;

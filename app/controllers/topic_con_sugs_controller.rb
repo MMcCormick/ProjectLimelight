@@ -43,7 +43,8 @@ class TopicConSugsController < ApplicationController
         else
           attr = params[:topic_con_sug].merge({ :name => con.name, :reverse_name => con.reverse_name,
                                                 :topic1_slug => topic1.slug, :topic2_slug => topic2.slug,
-                                                :topic1_id => topic1.id, :topic2_id => topic2.id, :con_id => con.id })
+                                                :topic1_id => topic1.id, :topic2_id => topic2.id, :con_id => con.id,
+                                                :topic1_name => topic1.name, :topic2_name => topic2.name })
           sug = current_user.topic_con_sugs.build(attr)
           if sug.save
             ActionConnection.create(
@@ -72,13 +73,15 @@ class TopicConSugsController < ApplicationController
   end
 
   def list
-    if params[:topic2_id].blank?
-      sugs = TopicConSug.any_of({topic1_id: params[:topic1_id]}, {topic2_id: params[:topic1_id]})
+    if params[:topic1_id].blank? && params[:topic2_id].blank?
+      sugs = []
+    elsif params[:topic2_id].blank?
+      sugs = TopicConSug.any_of({topic1_id: BSON::ObjectId(params[:topic1_id])}, {topic2_id: BSON::ObjectId(params[:topic1_id])})
     elsif params[:topic1_id].blank?
-      sugs = TopicConSug.any_of({topic1_id: params[:topic2_id]}, {topic2_id: params[:topic2_id]})
+      sugs = TopicConSug.any_of({topic1_id: BSON::ObjectId(params[:topic2_id])}, {topic2_id: BSON::ObjectId(params[:topic2_id])})
     else
-      sugs = TopicConSug.any_of({topic1_id: params[:topic1_id], topic2_id: params[:topic2_id]},
-                                {topic2_id: params[:topic1_id], topic1_id: params[:topic2_id]})
+      sugs = TopicConSug.any_of({topic1_id: BSON::ObjectId(params[:topic1_id]), topic2_id: BSON::ObjectId(params[:topic2_id])},
+                                {topic2_id: BSON::ObjectId(params[:topic1_id]), topic1_id: BSON::ObjectId(params[:topic2_id])})
     end
 
     list = render_to_string :partial => "list", :locals => { :sugs => sugs }

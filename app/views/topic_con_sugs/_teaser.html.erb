@@ -3,6 +3,17 @@
   <div class="inline"><%= sug.inline %></div>
   <div class="topic2"><div><%= sug.topic2_name %></div></div>
 
-  <div class="sug-a-small one <%= sug.pull ? "pull" : "" %>"></div>
-  <div class="sug-a-small two rev <%= sug.reverse_pull ? "pull" : "" %>"></div>
+  <div class="sug-a-small one <%= sug.pull_from ? "pull" : "" %>"></div>
+  <div class="sug-a-small two rev <%= sug.reverse_pull_from ? "pull" : "" %>"></div>
+
+  <div class="con-description tip" title='
+    The <%= sug.topic1_name %> feed
+    <%= sug.pull_from ? "will" : "will not" %>
+    include posts mentioning <%= sug.topic2_name %>.<br/>
+    The <%= sug.topic2_name %> feed
+    <%= sug.reverse_pull_from ? "will" : "will not" %>
+    include posts mentioning <%= sug.topic1_name %>.
+  '>?</div>
+
+  <%= render 'votes/sugs_btn', :current_user => current_user, :object => sug %>
 </li>

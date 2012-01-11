@@ -15,6 +15,11 @@ class VotesController < ApplicationController
         if object.user_id == current_user.id
           response = build_ajax_response(:error, nil, 'You cannot vote on your own posts!')
           status = 401
+        elsif current_user.role?('admin') && params[:type] == 'TopicConSug'
+          object.admin_vote(amount)
+          response = build_ajax_response(:ok, nil, "Connection approved, admin", nil, { :id => object.id.to_s, :a => amount }) if amount > 0
+          response = build_ajax_response(:ok, nil, "Connection rejected, admin", nil, { :id => object.id.to_s, :a => amount }) if amount < 0
+          status = 201
         else
           net = object.add_voter(current_user, amount)
           object.add_pop_vote(:a, net, current_user) if net && params[:type] != 'TopicConSug'

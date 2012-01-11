@@ -211,6 +211,10 @@ class Neo4j
     def get_sentiment(node1_id, node2_id)
       self.neo.get_relationship_index('sentiment', 'name', "#{node1_id}-#{node2_id}")
     end
+
+    def get_connection(con_id, topic1_id, topic2_id)
+      Neo4j.neo.get_relationship_index('topics', con_id.to_s, "#{topic1_id.to_s}-#{topic2_id.to_s}")
+    end
   end
 
 end

@@ -55,7 +55,7 @@ jQuery ->
     $(@).parent().next('.tc-auto-id').val(id)
     img_url = if data.data then '/'+data.data.slug+'/picture?h=150&w=150&m=fillcropmid' else '/assets/images/topic-default-150-150.gif'
     pickTopic($(@), img_url, data.term)
-    getSugs($('#topic_con_sug_topic1_id').val(), $('#topic_con_sug_topic2_id').val())
+    getSugs()
 
   #
   # Topic Connection Suggestions
@@ -67,10 +67,6 @@ jQuery ->
   pickTopic = (ac, img_url, name) ->
     ac.val(name)
     ac.parent().nextAll('.topic-pic:first').html('<img src="'+img_url+'">')
-    $('#con-description .t1').html(name) if ac.is('#topic_con_sug_topic1_name')
-    $('#con-description .t2').html(name) if ac.is('#topic_con_sug_topic2_name')
-    $('#sugs-title .t1').html("'"+name+"'") if ac.is('#topic_con_sug_topic1_name') && $('#topic_con_sug_topic1_id').val() != ""
-    $('#sugs-title .t2').html("'"+name+"'") if ac.is('#topic_con_sug_topic2_name') && $('#topic_con_sug_topic2_id').val() != ""
     repaint()
 
   repaint = () ->
@@ -92,12 +88,20 @@ jQuery ->
     $('.sug-a.one').removeClass('bi pull').addClass(oneClass)
     $('.sug-a.two').removeClass('pull hide').addClass(twoClass)
     $('#reverse-b').removeClass('hide').addClass(revClass)
+
+    $('#con-description .t1').html($('#topic_con_sug_topic1_name').val())
+    $('#con-description .t2').html($('#topic_con_sug_topic2_name').val())
+    $('#sugs-title .t1').html("")
+    $('#sugs-title .t2').html("")
+    $('#sugs-title .t1').html("'"+$('#topic_con_sug_topic1_name').val()+"'") if $('#topic_con_sug_topic1_id').val() != ""
+    $('#sugs-title .t2').html("'"+$('#topic_con_sug_topic2_name').val()+"'") if $('#topic_con_sug_topic2_id').val() != ""
+    $('#sugs-title .for').removeClass('hide') if ($('#sugs-title .t1').html() != "" || $('#sugs-title .t2').html() != "")
+    $('#sugs-title .and').removeClass('hide') if ($('#sugs-title .t1').html() != "" && $('#sugs-title .t2').html() != "")
+
     if (desc.find('.t1').html() != "" && desc.find('.inline').html() != "" && desc.find('.t2').html() != "")
       desc.removeClass('hide')
     else
       desc.addClass('hide')
-    $('#sugs-title .for').removeClass('hide') if ($('#sugs-title .t1').html() != "" || $('#sugs-title .t2').html() != "")
-    $('#sugs-title .and').removeClass('hide') if ($('#sugs-title .t1').html() != "" && $('#sugs-title .t2').html() != "")
 
   $('#topic_con_sug_con_id').live 'change', (e) ->
     option = $(@).find('option:selected')
@@ -128,10 +132,10 @@ jQuery ->
     $("#topic_con_sug_reverse_pull_from").val(value)
     repaint()
 
-  getSugs = (t1_id, t2_id) ->
+  getSugs = () ->
     $.get(
       $('#static-data').data('d').getSugsUrl
-      topic1_id: t1_id, topic2_id: t2_id
+      topic1_id: $('#topic_con_sug_topic1_id').val(), topic2_id: $('#topic_con_sug_topic2_id').val()
       (data) ->
         $('#sug-list-c').html(data.list)
       'json'
@@ -139,4 +143,11 @@ jQuery ->
 
   $('#topic_con_sug_topic1_id').livequery ->
     if $(@).val() != ""
-      getSugs($(@).val(), $('#topic_con_sug_topic2_id').val())
+      getSugs()
+
+  $('.tc-auto-pic').live 'blur', (e) ->
+    if $(@).val() == ""
+      $(@).parent().nextAll('.topic-pic:first').html('<div></div>')
+      $(@).parent().next('.tc-auto-id').val("")
+      getSugs()
+      repaint()

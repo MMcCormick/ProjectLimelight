@@ -59,7 +59,8 @@ class TopicConSugsController < ApplicationController
             )
             topic1.expire_caches
             topic2.expire_caches
-            response = build_ajax_response(:ok, nil, "Your connection has been submitted!")
+            html = render_to_string :partial => 'teaser', :locals => { :sug => sug }
+            response = build_ajax_response(:ok, nil, "Your connection has been submitted!", nil, :teaser => html)
             status = 201
           else
             response = build_ajax_response(:error, nil, "Connection could not be submitted", sug.errors)

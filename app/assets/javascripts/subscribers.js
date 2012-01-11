@@ -147,6 +147,14 @@ $(function() {
   });
 
   /*
+   * TOPIC CONNECTIONS
+   */
+
+  amplify.subscribe("topic_con_sugs_create", function (data) {
+    $('#sug-list').prepend(data.teaser)
+  });
+
+  /*
    * TALK
    */
 

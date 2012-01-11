@@ -24,10 +24,9 @@ class TopicConnection
   class << self
 
     # pulla is a hash of format { :pull => Boolean, :reverse_pull => Boolean }
-    #TODO: delete suggestions that match topics and connection
-    #TODO: improve error detection - return false and don't save topics if no connection was created?
+    # TODO: improve error detection - return false and don't save topics if no connection was created?
     def add(connection, topic1, topic2, user_id, pulla=nil)
-      rel1 = Neo4j.neo.get_relationship_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}")
+      rel1 = Neo4j.get_connection(connection.id, topic1.id, topic2.id)
       unless rel1
         action_log = {
                 :action => 'create',

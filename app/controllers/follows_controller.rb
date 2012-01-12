@@ -22,8 +22,6 @@ class FollowsController < ApplicationController
             Notification.add(target, :follow, true, current_user)
           end
           current_user.save
-          target.add_pop_action(:flw, :a, current_user)
-          target.save
           response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
           status = 201
         else
@@ -59,8 +57,7 @@ class FollowsController < ApplicationController
           if params[:type] == 'User'
             Notification.remove(target, :follow, current_user)
           end
-          target.add_pop_action(:flw, :r, current_user)
-          target.save
+
           response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
           status = 201
          else

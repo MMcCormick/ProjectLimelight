@@ -13,9 +13,11 @@ class Neo4j
       #self.update_affinity(node1_id, node2_id, nodes[0]['body'].first, nodes[1]['body'].first, 50, false, nil, 'positive', false) if nodes && nodes.length == 2
       node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
       node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
-      self.neo.batch [:create_relationship, "follow", node1, node2],
-                     [:add_relationship_to_index, "users", "follow", "#{node1_id}-#{node2_id}", "{0}"] if node1 && node2
-      self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil, 'positive', false) if node1 && node2
+      if node1 && node2
+        follow = self.neo.create_relationship('follow', node1, node2)
+        self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", follow) if follow
+        self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil, 'positive', false) if follow
+      end
     end
 
     # updates the affinity between two nodes
@@ -130,31 +132,31 @@ class Neo4j
       interests = {:general => [], :specific => []}
 
       # tally up what types are generally connected to topics this user likes
-      query = "
-        START n=node:users(uuid = '#{user_id}')
-        MATCH n-[:affinity]->topic-[r2:`Type Of`]->type
-        WHERE topic.type = 'topic'
-        RETURN type, COUNT(r2)
-        ORDER BY count(r2) desc
-        LIMIT 10
-      "
-      ids = self.neo.execute_query(query)
-      if ids
-        ids['data'].each do |n|
-          n[0]['data']['id'] = n[0]['data']['uuid']
-          interests[:general] << {
-                  :data => n[0]['data'],
-                  :weight => n[1]
-          }
-        end
-      end
+      #query = "
+      #  START n=node:users(uuid = '#{user_id}')
+      #  MATCH n-[:affinity]->topic-[r2:`Type Of`]->type
+      #  WHERE topic.type = 'topic'
+      #  RETURN type, COUNT(r2)
+      #  ORDER BY count(r2) desc
+      #  LIMIT 10
+      #"
+      #ids = self.neo.execute_query(query)
+      #if ids
+      #  ids['data'].each do |n|
+      #    n[0]['data']['id'] = n[0]['data']['uuid']
+      #    interests[:general] << {
+      #            :data => n[0]['data'],
+      #            :weight => n[1]
+      #    }
+      #  end
+      #end
 
       # tally up a users specific interests
       query = "
         START n=node:users(uuid = '#{user_id}')
         MATCH n-[r1:affinity]->topic
-        WHERE topic.type = 'topic' and r1.weight >= 50
-        RETURN topic, r1.weight as weight
+        WHERE topic.type = 'topic' and r1.weight and r1.weight >= 50
+        RETURN topic, r1.weight
         ORDER BY r1.weight desc
         LIMIT #{limit}
       "
@@ -177,7 +179,7 @@ class Neo4j
       query = "
         START user=node:users(uuid = '#{user_id}')
         MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion, user-[r4?:affinity]->suggestion, user-[r5?:follow]->suggestion
-        WHERE topic.type = 'topic' and user2.type = 'user' and suggestion.type = 'topic' and (r1 IS NULL or r1.sentiment != 'negative') and (r4 IS NULL or r4.sentiment != 'negative') and r5 IS NULL
+        WHERE topic.type = 'topic' and user2.type = 'user' and suggestion.type = 'topic' and r1.weight and r1.weight >= 10 and r3.weight and (r1.sentiment != 'negative') and (r4 IS NULL) and r5 IS NULL
         RETURN suggestion, SUM(r3.weight)
         ORDER BY SUM(r3.weight) desc
         LIMIT #{limit}
@@ -198,7 +200,7 @@ class Neo4j
       query = "
         START topic=node:topics(uuid = '#{topic_id}')
         MATCH topic-[r:affinity]-related
-        WHERE related.type = 'topic'
+        WHERE related.type = 'topic' and r.weight
         RETURN related, SUM(r.weight)
         orDER BY SUM(r.weight) desc
         LIMIT #{limit}

@@ -208,7 +208,11 @@ class User
     case target.class.name
       when 'User'
         is_following_user?(target.id)
+      when 'UserSnippet'
+        is_following_user?(target.id)
       when 'Topic'
+        is_following_topic?(target.id)
+      when 'TopicSnippet'
         is_following_topic?(target.id)
     end
   end
@@ -227,6 +231,8 @@ class User
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
       Neo4j.follow_create(id.to_s, user.id.to_s, 'users', 'users')
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => user.id, :to_type => 'User')
+      user.add_pop_action(:flw, :a, self)
+      user.save
 
       true
     end
@@ -240,6 +246,8 @@ class User
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
+      user.add_pop_action(:flw, :r, self)
+      user.save
 
       true
     else
@@ -260,6 +268,8 @@ class User
       topic.followers_count += 1
       Neo4j.follow_create(id.to_s, topic.id.to_s, 'users', 'topics')
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
+      topic.add_pop_action(:flw, :a, self)
+      topic.save
 
       true
     end
@@ -272,6 +282,8 @@ class User
       topic.followers_count -= 1
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
+      topic.add_pop_action(:flw, :r, self)
+      topic.save
 
       true
     else

@@ -40,13 +40,6 @@
                   <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
                 <%- end -%>
                 <%= yield :page_header %>
-                <div class='sentiment-bar'>
-                  <div class='bar topics'>
-                    <div class='positive' data-url='<%= sentiment_create_path(:positive) %>'>LIKE</div>
-                    <div class='negative' data-url='<%= sentiment_create_path(:negative) %>'>DISLIKE</div>
-                    <div class='neutral' data-url='<%= sentiment_create_path(:neutral) %>'>DON'T CARE</div>
-                  </div>
-                </div>
               </div>
 
               <%= yield %>
@@ -94,6 +87,14 @@
         <div id="plt"><%= load_time %></div>
       <% end %>
     </footer>
+
+    <div class='sentiment-bar'>
+      <div class='bar topics'>
+        <div class='positive' data-url='<%= sentiment_create_path(:positive) %>'>LIKE</div>
+        <div class='negative' data-url='<%= sentiment_create_path(:negative) %>'>DISLIKE</div>
+        <div class='neutral' data-url='<%= sentiment_create_path(:neutral) %>'>DON'T CARE</div>
+      </div>
+    </div>
 
     <!-- HIDDEN TOOLS -->
     <div id="mouse-score"></div>

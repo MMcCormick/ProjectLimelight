@@ -125,7 +125,7 @@ module Limelight #:nodoc:
     def add_image_version(image_id, dimensions, mode)
       image = self.images.find(image_id)
 
-      if image && image.original
+      if image && image.original && image.original.first
         original = image.original.first.image.file
         new_image = Image.from_blob(original.read).first
 

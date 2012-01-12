@@ -872,18 +872,22 @@ button {
 .sentiment-bar {
   .bar {
     @include clearfix();
-    position: absolute;
-    bottom: -38px;
+    @include single-box-shadow(#AAA, 1px, 1px, 3px);
+    position: fixed;
     left: 50%;
+    top: 50%;
     background: #FFF;
     border-bottom: 1px solid #999;
+    border-top: 1px solid #999;
     border-left: 1px solid #999;
+    cursor: default;
+    z-index: 1000;
     display: none;
 
     > div {
       float: left;
       border-right: 1px solid #999;
-      font-size: 20px;
+      font-size: 28px;
       padding: 5px 15px;
       &.hover, &:hover {
         color: #FFF;
@@ -906,7 +910,7 @@ button {
     }
   }
   .topics {
-    margin-left: -162px;
+    margin-left: -209px;
   }
 }
 

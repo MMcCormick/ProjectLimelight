@@ -25,11 +25,12 @@ class Neo4j
         payload = {}
         if change
           properties = self.neo.get_relationship_properties(affinity)
-          if properties['weight'] + change == 0
+          weight = properties && properties['weight'] ? properties['weight'] : 0
+          if weight + change == 0
             self.neo.delete_relationship(affinity)
             self.neo.remove_relationship_from_index('affinity', affinity)
           else
-            payload['weight'] = properties['weight']+change
+            payload['weight'] = weight+change
             payload['with_connection'] = with_connection if with_connection
           end
         end
@@ -134,7 +135,7 @@ class Neo4j
         MATCH n-[:affinity]->topic-[r2:`Type Of`]->type
         WHERE topic.type = 'topic'
         RETURN type, COUNT(r2)
-        orDER BY count(r2) desc
+        ORDER BY count(r2) desc
         LIMIT 10
       "
       ids = self.neo.execute_query(query)
@@ -154,7 +155,7 @@ class Neo4j
         MATCH n-[r1:affinity]->topic
         WHERE topic.type = 'topic' and r1.weight >= 50
         RETURN topic, r1.weight as weight
-        orDER BY r1.weight desc
+        ORDER BY r1.weight desc
         LIMIT #{limit}
       "
       ids = self.neo.execute_query(query)

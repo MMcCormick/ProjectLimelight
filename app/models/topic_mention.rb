@@ -14,4 +14,8 @@ class TopicMention
   def to_param
     slug
   end
+
+  def encoded_id
+    public_id.to_i.to_s(36)
+  end
 end

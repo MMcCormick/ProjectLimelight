@@ -168,7 +168,7 @@ class Notification
       end
 
       if mark_unread || (notification.notify && !trigger_notified)
-        if notification.read = true
+        if notification.read == true
           new_notification = true
         end
         notification.read = false

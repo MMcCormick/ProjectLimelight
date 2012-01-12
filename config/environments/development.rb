@@ -41,7 +41,7 @@ ProjectLimelight::Application.configure do
           :host => 'localhost:3000'
   }
   config.action_mailer.smtp_settings = {
-          :domain => 'thewhoot.com',
+          :domain => 'projectlimelight.com',
           :address => 'smtp.sendgrid.net',
           :port => 587,
           :authentication => :plain,

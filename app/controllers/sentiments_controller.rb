@@ -31,6 +31,7 @@ class SentimentsController < ApplicationController
 
         if targets[params[:type]] == 'Topic' && params[:sentiment] == 'positive'
           current_user.follow_object(target)
+          current_user.save
         end
 
         response = build_ajax_response(:ok, nil, message, nil)

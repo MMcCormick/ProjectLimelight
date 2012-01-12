@@ -15,6 +15,13 @@ class PagesController < ApplicationController
       }
       format.html
     end
+    end
+
+  def splash
+    @title = 'Welcome to Limelight!'
+    @description = "The Limelight splash page, where users are directed to sign in"
+
+    render :layout => "blank"
   end
 
   def admin

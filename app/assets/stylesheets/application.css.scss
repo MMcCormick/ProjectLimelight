@@ -38,6 +38,10 @@ html, body {
       margin-right: auto;
     }
   }
+
+  &.blank {
+    background: #FFF repeat;
+  }
 }
 
 .interior {

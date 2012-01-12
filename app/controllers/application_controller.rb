@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :init, :set_request_type, :set_session, :set_user_time_zone
+  before_filter :init, :set_request_type, :set_session, :set_user_time_zone, :require_sign_in
   layout :layout
 
   def authenticate_admin_user!
@@ -135,6 +135,12 @@ class ApplicationController < ActionController::Base
   def layout
     # use ajax layout for ajax requests
     request.xhr? ? "ajax" : "application"
+  end
+
+  def require_sign_in
+    if request.get? && !signed_in? && !['splash', 'facebook'].include?(params[:action])
+      redirect_to (splash_path)
+    end
   end
 
 end

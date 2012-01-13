@@ -288,11 +288,13 @@ $(function() {
   /*
    * AUTHORIZATION
    */
-  amplify.subscribe("invite_codes_check"), function (data) {
+  amplify.subscribe("invite_codes_check", function (data) {
+    console.log(data);
     if (data.status == "ok") {
-      $('#auth_box').find('.invite').hide()
+      $('#auth_box').find('.invite').hide();
       $('#auth_box').find('.login-reg').show().find("#auth-login").hide().siblings().show()
+      $('#auth_box').find('#user_invite_code_id').val(data.invite_code_id)
     }
-  }
+  })
 
 });

@@ -7,144 +7,146 @@
 */
 
 #auth_box {
+  position: relative;
+  width: 620px;
+  .top {
+    @include single-box-shadow(#999, 1px, 1px, 2px);
     position: relative;
-    width: 620px;
-    .top {
-      @include single-box-shadow(#999, 1px, 1px, 2px);
-      position: relative;
-      height: 110px;
-      width: 100%;
-      background: image-url("bg_textured.jpg") repeat;
-      border-bottom: 3px solid #BFCBAD;
-      z-index: 20;
-      img {
-        position: absolute;
-        top: 4px;
-        left: 8px;
-      }
+    height: 110px;
+    width: 100%;
+    background: image-url("bg_textured.jpg") repeat;
+    border-bottom: 3px solid #BFCBAD;
+    z-index: 20;
+    img {
+      position: absolute;
+      top: 4px;
+      left: 8px;
     }
-    .bottom {
-      position: relative;
-      width: 100%;
-      background: #FAFAFA;
-      z-index: 10;
-      padding: 0 0 10px 0;
-    }
+  }
+  .bottom {
+    position: relative;
+    width: 100%;
+    background: #FAFAFA;
+    z-index: 10;
+    padding: 0 0 10px 0;
+  }
+  .head {
+    font-size: 14px;
+    color: #444;
+    cursor: default;
+  }
+  .switch {
+    @include link;
+  }
+  .left {
+    margin-top: 25px;
+    float: left;
+    width: 300px;
+    position: relative;
+    height: 155px;
+
     .head {
-      font-size: 14px;
-      color: #444;
-      cursor: default;
+      margin: 0 0 0 25px;
     }
-    .left {
-      margin-top: 25px;
-      float: left;
-      width: 300px;
-      position: relative;
-      height: 155px;
-
-      .head {
-        margin: 0 0 0 25px;
-      }
-      .option {
-        @include border-radius(3px);
-        border: 2px solid #96C23C;
-        padding: 25px 8px 8px;
+    .option {
+      @include border-radius(3px);
+      border: 2px solid #96C23C;
+      padding: 25px 8px 8px;
+      position: absolute;
+      top: 24px;
+      background: #FFF;
+      .log {
         position: absolute;
-        top: 24px;
-        background: #FFF;
-        .log {
-          position: absolute;
-          left: 5px;
-          top: 2px;
-          font-size: 11px;
-          color: #999;
-        }
-        .google-l-icon {
-
-        }
-        .facebook-l-icon {
-
-        }
-        &.one {
-          left: 30px;
-        }
-        &.two {
-          left: 140px;
-        }
-        &:hover {
-          @include single-box-shadow(#999, 1px, 1px, 2px);
-          cursor: pointer;
-        }
-      }
-      .foot1,
-      .foot2 {
-        position: absolute;
+        left: 5px;
+        top: 2px;
         font-size: 11px;
-        color: #666;
-        left: 35px;
-        width: 190px;
-        cursor: default;
+        color: #999;
       }
-      .foot1 {
-        top: 95px;
-      }
-      .foot2 {
-        top: 115px;
-      }
-    }
-    .right {
-      margin-top: 25px;
-      float: left;
-      position: relative;
+      .google-l-icon {
 
-      .head {
-        margin: 0 0 6px 9px;
       }
-      .lClear {
-        label {
-          position: absolute;
-          top: 0;
-          left: 0;
-          font-size: 14px;
-          font-style: normal;
-          color: #999;
-          padding: 7px 0 7px 8px;
-          text-align: left;
-          width: 100%;
-        }
-        input {
-          @include border-radius(2px);
-          font-size: 16px;
-          width: 280px;
-          border-color: #999;
-          color: #444;
-        }
+      .facebook-l-icon {
+
       }
-      .submit {
-        @include green-button(2px, 17px);
-        font-weight: normal;
-        padding: 2px 8px 4px;
+      &.one {
+        left: 30px;
       }
-      .switch {
-        @include link();
-        position: absolute;
-        bottom: 6px;
-        left: 85px;
-        font-size: 10px;
+      &.two {
+        left: 140px;
+      }
+      &:hover {
+        @include single-box-shadow(#999, 1px, 1px, 2px);
+        cursor: pointer;
       }
     }
-    .sig {
-      text-align: center;
+    .foot1,
+    .foot2 {
+      position: absolute;
       font-size: 11px;
-      margin: 13px 0 -9px 0;
-      color: #555;
+      color: #666;
+      left: 35px;
+      width: 190px;
       cursor: default;
     }
-    .errors {
-      display: block;
-      margin: 0 0 10px 0;
-      width: 282px;
+    .foot1 {
+      top: 95px;
     }
+    .foot2 {
+      top: 115px;
+    }
+  }
+  .right {
+    margin-top: 25px;
+    float: left;
+    position: relative;
+
+    .head {
+      margin: 0 0 6px 9px;
+    }
+    .lClear {
+      label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 14px;
+        font-style: normal;
+        color: #999;
+        padding: 7px 0 7px 8px;
+        text-align: left;
+        width: 100%;
+      }
+      input {
+        @include border-radius(2px);
+        font-size: 16px;
+        width: 280px;
+        border-color: #999;
+        color: #444;
+      }
+    }
+    .submit {
+      @include green-button(2px, 17px);
+      font-weight: normal;
+      padding: 2px 8px 4px;
+    }
+    .switch {
+      position: absolute;
+      bottom: 6px;
+      left: 85px;
+      font-size: 10px;
+    }
+  }
+  .sig {
+    text-align: center;
+    font-size: 11px;
+    margin: 13px 0 -9px 0;
+    color: #555;
+    cursor: default;
+  }
+  .errors {
+    display: block;
+    margin: 0 0 10px 0;
+    width: 282px;
+  }
 }
 
 #username_reset_box {

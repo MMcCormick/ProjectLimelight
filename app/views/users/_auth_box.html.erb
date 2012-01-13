@@ -3,38 +3,44 @@
     <%= image_tag 'splash_top.gif' %>
   </div>
   <div class="bottom">
-    <div class="left">
-      <div class="head">Use your existing social account.</div>
-      <a href="<%= user_omniauth_authorize_path(:facebook) %>">
-        <div class="option one">
-          <div class="log">log in with</div>
-          <div class="facebook-l-icon"></div>
-        </div>
-      </a>
-      <!--<a href="<%#= user_omniauth_authorize_path(:google_oauth2) %>">-->
-        <!--<div class="option two">-->
-          <!--<div class="log">log in with</div>-->
-          <!--<div class="google-l-icon"></div>-->
-        <!--</div>-->
-      <!--</a>-->
-      <div class="foot1">We do not share your information.</div>
-      <div class="foot2">We do not post to your profile without your permission.</div>
+    <div class="invite">
+      <%= render "invite_codes/redeem_form" %>
+      or <div class="switch">Login</div>
     </div>
-    <div class="right">
-      <div id="auth-login" class="<%= 'hide' unless show == :login %>">
-        <div class="head">... or log in directly with Limelight below.</div>
-        <%= render "users/sessions/new" %>
-        <div class="switch">I don't have a Limelight account.</div>
+    <div class="login-reg hide">
+      <div class="left">
+        <div class="head">Use your existing social account.</div>
+        <a href="<%= user_omniauth_authorize_path(:facebook) %>">
+          <div class="option one">
+            <div class="log">log in with</div>
+            <div class="facebook-l-icon"></div>
+          </div>
+        </a>
+        <!--<a href="<%#= user_omniauth_authorize_path(:google_oauth2) %>">-->
+          <!--<div class="option two">-->
+            <!--<div class="log">log in with</div>-->
+            <!--<div class="google-l-icon"></div>-->
+          <!--</div>-->
+        <!--</a>-->
+        <div class="foot1">We do not share your information.</div>
+        <div class="foot2">We do not post to your profile without your permission.</div>
       </div>
-      <div id="auth-register" class="<%= 'hide' unless show == :register %>">
-        <div class="head">... or join directly with Limelight below.</div>
-        <%= render "users/registrations/new" %>
-        <div class="switch">I already have a Limelight account.</div>
+      <div class="right">
+        <div id="auth-login" class="<%= 'hide' unless show == :login %>">
+          <div class="head">... or log in directly with Limelight below.</div>
+          <%= render "users/sessions/new" %>
+          <div class="switch">I don't have a Limelight account.</div>
+        </div>
+        <div id="auth-register" class="<%= 'hide' unless show == :register %>">
+          <div class="head">... or join directly with Limelight below.</div>
+          <%= render "users/registrations/new" %>
+          <div class="switch">I already have a Limelight account.</div>
+        </div>
       </div>
     </div>
     <div class="clear"></div>
     <div class="sig">
-      Limelight was created by <a href="/users/marc" target="_blank">Marc</a> & <a href="/users/matt" target="_blank">Matt</a>
+      Limelight was created by Marc MacLeod & Matt McCormick
     </div>
   </div>
 </div>

@@ -40,6 +40,7 @@ gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby
 gem 'neography' # neo4j graph database
+gem 'kgio', '2.7.0'
 
 group :assets do
   gem 'compass', '0.12.alpha.4'

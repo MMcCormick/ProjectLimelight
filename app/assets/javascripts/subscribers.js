@@ -285,4 +285,14 @@ $(function() {
     $currentTarget.clearForm();
   })
 
+  /*
+   * AUTHORIZATION
+   */
+  amplify.subscribe("invite_codes_check"), function (data) {
+    if (data.status == "ok") {
+      $('#auth_box').find('.invite').hide()
+      $('#auth_box').find('.login-reg').show().find("#auth-login").hide().siblings().show()
+    }
+  }
+
 });

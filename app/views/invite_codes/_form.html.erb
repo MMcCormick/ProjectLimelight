@@ -1,0 +1,17 @@
+<%= form_for InviteCode.new, :html => { :class => 'ajax' } do |f| %>
+  <div class="errors"></div>
+
+  <div class="field lClear">
+    <%= f.label :code, "Code Name (like 'ENGDGT', not like '007')" %>
+    <%= f.text_field :code, %>
+  </div>
+
+  <div class="field lClear">
+    <%= f.label :allotted, "Number of Invites" %>
+    <%= f.text_field :allotted, %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Submit", :class => "submit" %>
+  </div>
+<% end %>

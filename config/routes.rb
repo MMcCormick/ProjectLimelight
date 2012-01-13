@@ -105,7 +105,7 @@ ProjectLimelight::Application.routes.draw do
   get '/:id/edit' => 'topics#edit', :as => :edit_topic
   get '/:id/connected' => 'topics#connected', :as => :connected_topics
   get '/:id/hover' => 'topics#hover' , :as => :topic_hover
-  put "/:id/picture" => "topics#picture_update", :as => :topic_picture_update
+  put '/:id/picture' => 'topics#picture_update', :as => :topic_picture_update
   get '/:id/picture' => 'topics#default_picture', :as => :topic_default_picture
   get '/:id/followers' => 'topics#followers', :as => :topic_followers
   post '/:id/merge' => 'topics#merge', :as => :merge_topic
@@ -130,14 +130,18 @@ ProjectLimelight::Application.routes.draw do
   put 'topic_connections/toggle_primary' => 'topic_connections#toggle_primary', :as => :toggle_primary
 
   # Pages
-  get "/pages/splash" => 'pages#splash', :as => :splash
-  get "/pages/admin" => 'pages#admin', :as => :admin_dashboard
-  get "/pages/about" => 'pages#about', :as => :about_path
-  get "/pages/contact" => 'pages#contact', :as => :contact_path
-  get "/pages/privacy" => 'pages#privacy', :as => :privacy_path
-  get "/pages/terms" => 'pages#terms', :as => :terms_path
-  get "/pages/help" => 'pages#help', :as => :help_path
-  root :to => "pages#home"
+  get '/pages/splash' => 'pages#splash', :as => :splash
+  get '/pages/admin' => 'pages#admin', :as => :admin_dashboard
+  get '/pages/about' => 'pages#about', :as => :about_path
+  get '/pages/contact' => 'pages#contact', :as => :contact_path
+  get '/pages/privacy' => 'pages#privacy', :as => :privacy_path
+  get '/pages/terms' => 'pages#terms', :as => :terms_path
+  get '/pages/help' => 'pages#help', :as => :help_path
+  root :to => 'pages#home'
+  
+  # Invites
+  resources :invite_codes, :only => [:create, :new]
+  post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

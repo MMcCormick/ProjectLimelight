@@ -39,9 +39,17 @@ $(function() {
     })
   })
 
-  // Toggle login and register in the authentication box
-  $('#auth_box .switch').live('click', function() {
-    $(this).parent().hide().siblings().show();
+  // Switch between login and register
+  $('#auth-login .switch').live('click', function() {
+    $(this).closest('.login-reg').hide().siblings().show();
+    $('#login,#register').colorbox.resize();
+  })
+  $('#auth-register .switch').live('click', function() {
+    $(this).closest('#auth-register').hide().siblings().show();
+    $('#login,#register').colorbox.resize();
+  })
+  $('.invite .switch').live('click', function() {
+    $(this).closest('.invite').hide().siblings().show().find('#auth-register').hide().siblings().show();
     $('#login,#register').colorbox.resize();
   })
 

@@ -62,6 +62,7 @@ class User
   field :vote_ratio, :type => Float, :default => 0
   field :clout, :default => 1
   field :bio
+  field :invite_code_id
 
   field :shares_email, :default => true
   field :notify_email, :default => true
@@ -93,7 +94,7 @@ class User
   validates :bio, :length => { :maximum => 150 }
   validate :username_change
 
-  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email
+  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email, :create_invite
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
@@ -359,6 +360,10 @@ class User
   def neo4j_update
     node = Neo4j.neo.get_node_index('users', 'uuid', id.to_s)
     Neo4j.neo.set_node_properties(node, {'username' => username, 'slug' => slug}) if node
+  end
+
+  def create_invite
+    InviteCode.create(:user_id => id, :allotted => 3)
   end
 
   class << self

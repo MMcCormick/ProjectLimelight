@@ -11,6 +11,25 @@ jQuery ->
     talkForm.find('#talk_content_raw').attr('name', 'talk[content_raw]')
     talkForm.find('#talk_ooc_mentions').attr('name', 'talk[ooc_mentions]')
 
+  suggestMentions = (target) ->
+    if ($.trim(target.val()).length != 0)
+      target.stopTime('mention-suggestions')
+      target.oneTime 1000, 'mention-suggestions', ->
+        $.ajax({
+          url: $('#static-data').data('d').mentionSuggestionUrl,
+          type: 'get',
+          dataType: 'json',
+          data: {text: target.siblings('.data').val()}
+          success: (data) ->
+            suggestionBox = target.parents('form:first').find('.suggestions')
+            $(data.suggestions).each (i,val) ->
+              if (suggestionBox.find('.ms_'+val._id).length == 0)
+                suggestionBox.find('.none').hide()
+                suggestionBox.append("<div class='suggestion ms_"+val._id+"' data-id='"+val._id+"'>"+val.name+"</div>").fadeIn(200)
+            if suggestionBox.find('.suggestion:visible').length == 0
+              suggestionBox.find('.none').show()
+        })
+
   $('#contribute, #add_response').live 'click', (e) ->
     if !$logged
       $('#register').click()
@@ -104,7 +123,7 @@ jQuery ->
             target.html('<div class="none">Sorry, no video embed available.')
 
           clone.find('#video_source_url').val(data.embedly.url)
-          clone.find('#video_title').focus().val(data.embedly.title)
+
           clone.find('#video_source_name').val(provider)
           clone.find('#video_source_video_id').val(video_id)
           setContributeToVideo(parentForm)
@@ -118,11 +137,11 @@ jQuery ->
         else
           clone = parentForm.find('.new_link').find('.shared').clone()
           clone.removeClass('with-preview')
-          clone.find('#link_title').focus().val(data.embedly.title)
           clone.find('#link_source_url').val(data.embedly.url)
           clone.find('#link_source_name').val(data.embedly.provider_name)
           setContributeToLink(parentForm)
 
+        clone.find('.mention,.data').val(data.embedly.title)
         parentForm.find('.main_content').prepend(clone)
         clone.fadeIn 150
         self.val('').blur().parent().fadeOut 150
@@ -142,6 +161,8 @@ jQuery ->
           if data.embedly.images.length > 1
             clone.find('.switcher').removeClass('hide')
 
+        if data.embedly.title.length > 0
+          suggestMentions(clone.find('.mention'))
 
       'json'
     )
@@ -227,6 +248,17 @@ jQuery ->
       allowed: 280,
       warning: 30
     })
+
+  # Mention suggestions
+  $('.mention-box .mention').live 'keyup', (e) ->
+    suggestMentions($(@))
+
+  $('form .suggestion').live 'click', (e) ->
+    $self = $(@)
+    $self.parents('form:first').find('.mention').trigger('addMention', [$(@).data('id'), $(@).text()])
+    $self.fadeOut 150, ->
+      if $self.siblings('.suggestion:visible').length == 0
+        $self.siblings('.none').show()
 
   ####
   # END CONTRIBUTE FORM

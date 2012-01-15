@@ -372,4 +372,10 @@ class TopicsController < ApplicationController
     response = build_ajax_response(:ok, nil, nil, nil, {:html => html})
     render json: response, status: 200
   end
+
+  def mention_suggestion
+    suggestions = Topic.parse_text(params[:text], false)
+    response = build_ajax_response(:ok, nil, nil, nil, {:suggestions => suggestions})
+    render json: response, status: 200
+  end
 end

@@ -388,7 +388,7 @@ class Topic
         if ooac == true
           hash_query['aliases.ooac'] = true
         end
-        matches = Topic.any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).to_a
+        matches = Topic.where(:status => 'active').any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).order_by([[:pm, :desc]]).to_a
       else
         matches = []
       end

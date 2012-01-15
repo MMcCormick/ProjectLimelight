@@ -7,6 +7,10 @@
     <div class="talk_content required lClear">
       <%= f.label :content, "What do you want to talk about?" %>
       <%= render "shared/mention_box", :f => f %>
+      <div class='suggestions'>
+        <div class='head'>Mention Suggestions</div>
+        <div class='none'>No suggestions. Type '#' before a word to mention a topic.</div>
+      </div>
     </div>
     <div class="tweet_content hide">
       <div class="head">tweet</div>

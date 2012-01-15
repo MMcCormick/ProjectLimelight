@@ -23,10 +23,15 @@ jQuery ->
           success: (data) ->
             suggestionBox = target.parents('form:first').find('.suggestions')
             $(data.suggestions).each (i,val) ->
-              if (suggestionBox.find('.ms_'+val.topic._id).length == 0)
+              if (suggestionBox.find('.ms_'+val.topics[0].slug).length == 0)
                 suggestionBox.find('.none').hide()
-                suggestionBox.append("<div class='suggestion ms_"+val.topic._id+"' data-id='"+val.topic._id+"'>"+val.match+"</div>").fadeIn(200)
-            if suggestionBox.find('.suggestion:visible').length == 0
+                placeholder = $('<div/>').addClass('placeholder ms_'+val.topics[0].slug).append("<div class='name'>"+val.topics[0].match+"</div><div class='suggestion-group'></div>")
+                $(val.topics).each (i,data) ->
+                  suggestion = $('<div/>').addClass('suggestion').data('id', data.topic._id).data('text', data.match).text(data.match+" ("+(if data.topic.primary_type then data.topic.primary_type else 'no type')+")")
+                  placeholder.find('.suggestion-group').append(suggestion)
+                console.log(placeholder)
+                suggestionBox.append(placeholder)
+            if suggestionBox.find('.placeholder:visible').length == 0
               suggestionBox.find('.none').show()
         })
 
@@ -249,16 +254,24 @@ jQuery ->
       warning: 30
     })
 
-  # Mention suggestions
+  # Populate mention suggestions
   $('.mention-box .mention').live 'keyup', (e) ->
     suggestMentions($(@))
 
+  $('form .suggestions .placeholder').live({
+    mouseenter: ->
+      $(@).find('.suggestion-group').show()
+    mouseleave: ->
+      $(@).find('.suggestion-group').hide()
+  })
+
+  # Handle mention suggestion selection
   $('form .suggestion').live 'click', (e) ->
     $self = $(@)
-    $self.parents('form:first').find('.mention').trigger('addMention', [$(@).data('id'), $(@).text()])
-    $self.fadeOut 150, ->
-      if $self.siblings('.suggestion:visible').length == 0
-        $self.siblings('.none').show()
+    $self.parents('form:first').find('.mention').trigger('addMention', [$(@).data('id'), $(@).data('text')])
+    $self.parents('.placeholder:first').fadeOut 150, ->
+      if $self.parents('.suggestions:first').find('.placeholder:visible').length == 0
+        $self.parents('.suggestions:first').find('.none').show()
 
   ####
   # END CONTRIBUTE FORM

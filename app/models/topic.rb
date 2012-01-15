@@ -417,19 +417,34 @@ class Topic
     # given text and topics, figure out which aliases are mentioned in the text
     def parse_aliases(text, topics)
       response = []
-      search_string = text.downcase.strip.gsub(/[^\w-]/, '')
+      aggregates = {}
+      search_string = text.downcase.strip.gsub(/[^\w ]/, '')
       topics.each do |topic|
-        if search_string.index(topic.name)
-          response << {:topic => topic, :match => topic.name}
+        slug = nil
+        match = nil
+        if search_string.index(topic.name.strip.gsub(/[^\w ]/, ''))
+          slug = topic.name.strip.gsub(/[^\w ]/, '')
+          match = topic.name
         else
           topic.aliases.each do |info|
-            if search_string.index(info.name)
-              response << {:topic => topic, :match => info.name}
+            if search_string.index(info.name.downcase.strip.gsub(/[^\w ]/, ''))
+              slug = info.name.downcase.strip.gsub(/[^\w ]/, '')
+              match = info.name
               break
             end
           end
         end
+
+        if slug && match
+          aggregates[slug] ||= {:topics => []}
+          aggregates[slug][:topics] << {:topic => topic, :match => match, :slug => slug}
+        end
       end
+
+      aggregates.each do |i,aggregate|
+        response << aggregate
+      end
+
       response
     end
 

@@ -293,11 +293,31 @@
       top: 5px;
       left: 0px;
     }
-    .suggestion {
+    .placeholder {
       @include link();
       font-size: 11px;
       float: left;
       margin: 0 7px 0 0;
+      position: relative;
+    }
+    .suggestion-group {
+      background: #FFF;
+      position: absolute;
+      bottom: -6px;
+      left: -6px;
+      display: none;
+      z-index: 500;
+      padding: 5px;
+      border: 1px solid #999;
+
+      span {
+        display: none;
+      }
+    }
+    .suggestion {
+      @include link();
+      font-size: 11px;
+      white-space: nowrap;
     }
     .none {
       font-style: italic;

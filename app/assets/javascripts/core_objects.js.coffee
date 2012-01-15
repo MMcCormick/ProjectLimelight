@@ -27,7 +27,7 @@ jQuery ->
                 suggestionBox.find('.none').hide()
                 placeholder = $('<div/>').addClass('placeholder ms_'+val.topics[0].slug).append("<div class='name'>"+val.topics[0].match+"</div><div class='suggestion-group'></div>")
                 $(val.topics).each (i,data) ->
-                  suggestion = $('<div/>').addClass('suggestion').data('id', data.topic._id).data('text', data.match).text(data.match+" ("+(if data.topic.primary_type then data.topic.primary_type else 'no type')+")")
+                  suggestion = $('<div/>').addClass('suggestion').data('id', data.topic._id).data('text', data.match).text(data.topics[0].name+" ("+(if data.topic.primary_type then data.topic.primary_type else 'no type')+")")
                   placeholder.find('.suggestion-group').append(suggestion)
                 console.log(placeholder)
                 suggestionBox.append(placeholder)

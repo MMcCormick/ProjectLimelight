@@ -54,6 +54,21 @@ function catchKey(e)
   })
 })();
 
+// finds all starting indexes of a string inside another string
+function getIndicesOf(searchStr, str, caseSensitive) {
+    var startIndex = 0, searchStrLen = searchStr.length;
+    var index, indices = [];
+    if (!caseSensitive) {
+        str = str.toLowerCase();
+        searchStr = searchStr.toLowerCase();
+    }
+    while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+        indices.push(index);
+        startIndex = index + searchStrLen;
+    }
+    return indices;
+}
+
 // Basic settings
 var settings = [
   {
@@ -234,8 +249,13 @@ var fields = [];
 
       // Update highlighting
       mentionField.highlight();
+    }).bind('addMention', function(e, id, text) {
+      mentionField.mode = 1;
+      var mentions = getIndicesOf(text, mentionField.input.val(), false)
+      $(mentions).each(function(i,val) {
+        mentionField.addMention(val, val+text.length, id, text, null);
+      })
     });
-
   }
 
   $.fn.setCursorPosition = function(pos) {
@@ -325,7 +345,6 @@ var fields = [];
         }
 
         var delta = this.value.length - this.input.val().length;
-
         this.mentions.push(new mention(start, id, text, data, this.mode, short_name));
       }
       else
@@ -333,7 +352,6 @@ var fields = [];
         this.value = this.input.val().substr(0, start) + text + this.input.val().substr(end);
       }
 
-      console.log(this.value);
       this.input.val(this.value);
 
       $.each(this.mentions, function(i, mention) {

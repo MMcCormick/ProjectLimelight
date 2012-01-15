@@ -388,7 +388,7 @@ class Topic
         if ooac == true
           hash_query['aliases.ooac'] = true
         end
-        matches = Topic.any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).to_a
+        matches = Topic.where(:status => 'active').any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).order_by([[:pm, :desc]]).to_a
       else
         matches = []
       end
@@ -412,6 +412,40 @@ class Topic
       end
 
       matches
+    end
+
+    # given text and topics, figure out which aliases are mentioned in the text
+    def parse_aliases(text, topics)
+      response = []
+      aggregates = {}
+      search_string = text.downcase.strip.gsub(/[^\w ]/, '')
+      topics.each do |topic|
+        slug = nil
+        match = nil
+        if search_string.index(topic.name.strip.gsub(/[^\w ]/, ''))
+          slug = topic.name.strip.gsub(/[^\w ]/, '')
+          match = topic.name
+        else
+          topic.aliases.each do |info|
+            if search_string.index(info.name.downcase.strip.gsub(/[^\w ]/, ''))
+              slug = info.name.downcase.strip.gsub(/[^\w ]/, '')
+              match = info.name
+              break
+            end
+          end
+        end
+
+        if slug && match
+          aggregates[slug] ||= {:topics => []}
+          aggregates[slug][:topics] << {:topic => topic, :match => match, :slug => slug}
+        end
+      end
+
+      aggregates.each do |i,aggregate|
+        response << aggregate
+      end
+
+      response
     end
 
     # given topic mentions, grab and rank their connections in the graph

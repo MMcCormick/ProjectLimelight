@@ -414,6 +414,25 @@ class Topic
       matches
     end
 
+    # given text and topics, figure out which aliases are mentioned in the text
+    def parse_aliases(text, topics)
+      response = []
+      search_string = text.downcase.strip.gsub(/[^\w-]/, '')
+      topics.each do |topic|
+        if search_string.index(topic.name)
+          response << {:topic => topic, :match => topic.name}
+        else
+          topic.aliases.each do |info|
+            if search_string.index(info.name)
+              response << {:topic => topic, :match => info.name}
+              break
+            end
+          end
+        end
+      end
+      response
+    end
+
     # given topic mentions, grab and rank their connections in the graph
     def get_graph(data, depth=1)
       tmp = data.dup

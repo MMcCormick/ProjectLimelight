@@ -23,9 +23,9 @@ jQuery ->
           success: (data) ->
             suggestionBox = target.parents('form:first').find('.suggestions')
             $(data.suggestions).each (i,val) ->
-              if (suggestionBox.find('.ms_'+val._id).length == 0)
+              if (suggestionBox.find('.ms_'+val.topic._id).length == 0)
                 suggestionBox.find('.none').hide()
-                suggestionBox.append("<div class='suggestion ms_"+val._id+"' data-id='"+val._id+"'>"+val.name+"</div>").fadeIn(200)
+                suggestionBox.append("<div class='suggestion ms_"+val.topic._id+"' data-id='"+val.topic._id+"'>"+val.match+"</div>").fadeIn(200)
             if suggestionBox.find('.suggestion:visible').length == 0
               suggestionBox.find('.none').show()
         })

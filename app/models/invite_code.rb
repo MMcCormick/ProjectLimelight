@@ -9,7 +9,7 @@ class InviteCode
 
   validates_presence_of :code, :allotted
   validates_uniqueness_of :code
-  validates_numericality_of :allotted, :only_integer => true
+  validates_numericality_of :allotted
 
   attr_protected :used
 
@@ -30,6 +30,6 @@ class InviteCode
 
   def redeem
     self.used += 1
-    self.save
+    save
   end
 end

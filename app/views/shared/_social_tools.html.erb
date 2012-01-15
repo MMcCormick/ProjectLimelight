@@ -1,0 +1,55 @@
+<!-- GOOGLE ANALYTICS -->
+<script type="text/javascript">
+  <% unless Rails.env.development? %>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-26840635-1']);
+    _gaq.push(['_setDomainName', '<%= Rails.env.production? ? 'projectlimelight.com' : 'staging.projectlimelight.com' %>']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  <% end %>
+</script>
+
+<!-- Start of Woopra Code -->
+<% unless Rails.env.development? %>
+  <script type="text/javascript">
+    function woopraReady(tracker) {
+      tracker.setDomain('<%= Rails.env.production? ? 'projectlimelight.com' : 'staging.projectlimelight.com' %>');
+      tracker.setIdleTimeout(300000);
+
+      <% if signed_in? %>
+          tracker.addVisitorProperty('name', '<%= current_user.username %>');
+          tracker.addVisitorProperty('email', '<%= current_user.email %>');
+      <% end %>
+
+      tracker.addVisitorProperty('feed layout', '<%= session[:feed_filters][:layout] %>');
+      tracker.addVisitorProperty('feed sort', '<%= session[:feed_filters][:sort]['target'] %>');
+      tracker.addVisitorProperty('feed show', '<%= session[:feed_filters][:display].join(', ') %>');
+
+      tracker.track();
+
+      return false;
+    }
+    (function() {
+        var wsc = document.createElement('script');
+        wsc.src = document.location.protocol+'//static.woopra.com/js/woopra.js';
+        wsc.type = 'text/javascript';
+        wsc.async = true;
+        var ssc = document.getElementsByTagName('script')[0];
+        ssc.parentNode.insertBefore(wsc, ssc);
+    })();
+  </script>
+<% end %>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>

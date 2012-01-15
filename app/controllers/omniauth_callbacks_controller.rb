@@ -4,14 +4,16 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def facebook
-    @user = User.find_by_omniauth(env["omniauth.auth"], current_user)
+    foo = session
+    @user = User.find_by_omniauth(env["omniauth.auth"], current_user, session[:invite_code])
 
-    if @user.persisted?
+    if @user && @user.persisted?
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "your Facebook"
       sign_in_and_redirect @user, :event => :authentication
     else
+      flash[:notice] = "Sorry, there was an error with your invite code"
       session["devise.facebook_data"] = env["omniauth.auth"].except('extra')
-      redirect_to new_user_registration_url
+      redirect_to splash_path
     end
   end
 
@@ -23,7 +25,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, :event => :authentication
     else
       session["devise.google_oauth2_data"] = env["omniauth.auth"].except('extra')
-      redirect_to new_user_registration_url
+      redirect_to splash_path
     end
   end
 
@@ -35,7 +37,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, :event => :authentication
     else
       session["devise.twitter_data"] = env["omniauth.auth"].except('extra')
-      redirect_to new_user_registration_url
+      redirect_to splash_path
     end
   end
 end

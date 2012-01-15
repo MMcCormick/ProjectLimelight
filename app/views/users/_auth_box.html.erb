@@ -3,11 +3,11 @@
     <%= image_tag 'splash_top.gif' %>
   </div>
   <div class="bottom">
-    <div class="invite">
+    <div class="invite <%= 'hide' if show == :login %>">
       <%= render "invite_codes/redeem_form" %>
       or <div class="switch">Login</div>
     </div>
-    <div class="login-reg hide">
+    <div class="login-reg <%= 'hide' unless show == :login %>">
       <div class="left">
         <div class="head">Use your existing social account.</div>
         <a href="<%= user_omniauth_authorize_path(:facebook) %>">
@@ -31,7 +31,7 @@
           <%= render "users/sessions/new" %>
           <div class="switch">I don't have a Limelight account.</div>
         </div>
-        <div id="auth-register" class="<%= 'hide' unless show == :register %>">
+        <div id="auth-register" class="<%= 'hide' if show == :login %>">
           <div class="head">... or join directly with Limelight below.</div>
           <%= render "users/registrations/new" %>
           <div class="switch">I already have a Limelight account.</div>

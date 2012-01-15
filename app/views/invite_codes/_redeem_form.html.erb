@@ -1,5 +1,5 @@
 <%= form_for InviteCode.new, :url => :check_invite_code, :html => { :class => 'ajax' } do |f| %>
-  <div class="errors"></div>
+  <div class="errors hide">gotta handle errors somehow</div>
 
   <div class="field lClear">
     <%= f.label :code, "Invite Code" %>

@@ -16,5 +16,7 @@
     <%= f.password_field :password, :id => 'register_password', :autocomplete => :off %>
   </div>
 
+  <%= f.hidden_field :invite_code_id %>
+
   <%= f.submit "Sign Up", :class => 'submit' %>
 <% end %>

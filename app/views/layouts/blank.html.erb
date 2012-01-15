@@ -4,95 +4,21 @@
   <!--[if IE 8]>    <html class="no-js ie8 oldie" xmlns:fb="http://ogp.me/ns/fb#" lang="en"> <![endif]-->
   <!--[if gt IE 8]><!--> <html class="no-js" xmlns:fb="http://ogp.me/ns/fb#" lang="en"> <!--<![endif]-->
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-    <title><%= title %></title>
-
-    <meta name="description" content="<%= description %>">
-    <meta name="author" content="">
-
-    <!-- Mobile viewport optimized: j.mp/bplateviewport -->
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <%= stylesheet_link_tag "application" %>
-    <%= stylesheet_link_tag "webkit", :type => "text/chrome/safari" %>
-    <!--[if lt IE 9]><%= stylesheet_link_tag "ie" %><![endif]-->
-
-    <%= csrf_meta_tags %>
-
-    <%= yield :head %>
-
-    <%= javascript_include_tag 'modernizr' %>
+    <%= render :partial => 'shared/head' %>
   </head>
-  <body id="<%= params[:controller].parameterize %>-c" class="<%= site_style %> blank">
 
+  <body id="<%= params[:controller].parameterize %>-c" class="<%= site_style %> blank">
     <div id="page_content" class="<%= params[:action].parameterize %>-c">
       <%= yield %>
     </div>
 
-    <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="/assets/javascripts/jquery1.6.4.js"><\/script>')</script>
+    <!-- HIDDEN TOOLS -->
+    <div style="display: none">
+      <div id="static-data" data-d='<%= static_data %>' <%= "data-push='#{current_user.id}_private'" if signed_in? %>></div>
+    </div>
 
-    <%= javascript_include_tag "application" %>
-    <%= yield :js %>
+    <%= render 'shared/layout_js' %>
 
-    <!-- GOOGLE ANALYTICS -->
-    <script type="text/javascript">
-      <% unless Rails.env.development? %>
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-26840635-1']);
-        _gaq.push(['_setDomainName', '<%= Rails.env.production? ? 'projectlimelight.com' : 'staging.projectlimelight.com' %>']);
-        _gaq.push(['_trackPageview']);
-
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-      <% end %>
-    </script>
-
-    <!-- Start of Woopra Code -->
-    <% unless Rails.env.development? %>
-      <script type="text/javascript">
-        function woopraReady(tracker) {
-          tracker.setDomain('<%= Rails.env.production? ? 'projectlimelight.com' : 'staging.projectlimelight.com' %>');
-          tracker.setIdleTimeout(300000);
-
-          <% if signed_in? %>
-              tracker.addVisitorProperty('name', '<%= current_user.username %>');
-              tracker.addVisitorProperty('email', '<%= current_user.email %>');
-          <% end %>
-
-          tracker.addVisitorProperty('feed layout', '<%= session[:feed_filters][:layout] %>');
-          tracker.addVisitorProperty('feed sort', '<%= session[:feed_filters][:sort]['target'] %>');
-          tracker.addVisitorProperty('feed show', '<%= session[:feed_filters][:display].join(', ') %>');
-
-          tracker.track();
-
-          return false;
-        }
-        (function() {
-            var wsc = document.createElement('script');
-            wsc.src = document.location.protocol+'//static.woopra.com/js/woopra.js';
-            wsc.type = 'text/javascript';
-            wsc.async = true;
-            var ssc = document.getElementsByTagName('script')[0];
-            ssc.parentNode.insertBefore(wsc, ssc);
-        })();
-      </script>
-    <% end %>
-
-    <div id="fb-root"></div>
-      <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {return;}
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+    <%= render :partial => 'shared/social_tools' %>
   </body>
 </html>

@@ -84,7 +84,7 @@ class User
   has_many :topic_con_sugs
 
   attr_accessor :login
-  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio
+  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio, :invite_code_id
 
   validates :username, :uniqueness => { :case_sensitive => false },
             :length => { :minimum => 3, :maximum => 15, :message => 'must be between 3 and 15 characters.' },
@@ -93,7 +93,12 @@ class User
   validates :email, :uniqueness => { :case_sensitive => false }
   validates :bio, :length => { :maximum => 150 }
   validate :username_change
+  validates_each :invite_code_id, :on => :create do |record, attr, value|
+    invite = InviteCode.find(value)
+    record.errors.add attr, "Please enter correct invite code" unless invite && invite.usable?
+  end
 
+  before_create :redeem_invite
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email, :create_invite
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
@@ -378,10 +383,16 @@ class User
     InviteCode.create(:user_id => id, :allotted => 3)
   end
 
+  def redeem_invite
+    invite = InviteCode.find(invite_code_id)
+    invite.redeem
+  end
+
   class << self
     # Omniauth providers
-    def find_by_omniauth(omniauth, signed_in_resource=nil)
+    def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil)
       new_user = false
+      no_code = false
       info = omniauth['info']
       extra = omniauth['extra']['raw_info']
 
@@ -407,34 +418,44 @@ class User
         end
         # Update the token
         connect.token = omniauth['credentials']['token']
-      else # Create a new user with a stub password.
-        new_user = true
-        if extra["gender"] && !extra["gender"].blank?
-          gender = extra["gender"] == 'male' || extra["gender"] == 'm' ? 'm' : 'f'
+
+      # If an invite code is in the session, create a new user with a stub password.
+      elsif invite = InviteCode.first(conditions: {code: invite_code})
+        if invite.usable?
+          new_user = true
+          if extra["gender"] && !extra["gender"].blank?
+            gender = extra["gender"] == 'male' || extra["gender"] == 'm' ? 'm' : 'f'
+          else
+            gender = nil
+          end
+
+          username = ""
+          #username = info['nickname'].gsub(/[^a-zA-Z0-9]/, '')
+          #existing_username = User.where(:slug => username).first
+          #if existing_username
+          #  username += Random.rand(99).to_s
+          #end
+
+          user = User.new(
+                  username: username, invite_code_id: invite.id,
+                  first_name: extra["first_name"], last_name: extra["last_name"],
+                  gender: gender, email: info["email"], password: Devise.friendly_token[0,20]
+          )
+          user.username_reset = true
+          user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]
+          connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
+          connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
+          user.social_connects << connect
         else
-          gender = nil
+          no_code = true
         end
 
-        username = ""
-        #username = info['nickname'].gsub(/[^a-zA-Z0-9]/, '')
-        #existing_username = User.where(:slug => username).first
-        #if existing_username
-        #  username += Random.rand(99).to_s
-        #end
-
-        user = User.new(
-                username: username,
-                first_name: extra["first_name"], last_name: extra["last_name"],
-                gender: gender, email: info["email"], password: Devise.friendly_token[0,20]
-        )
-        user.username_reset = true
-        user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]
-        connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
-        connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
-        user.social_connects << connect
+      # If no user found + error code provided
+      else
+        no_code = true
       end
 
-      user.save :validate => false
+      user.save :validate => false unless no_code
 
       if new_user == true
         user.slug = user.id.to_s # set a temporary slug

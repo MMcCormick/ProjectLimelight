@@ -3,8 +3,8 @@ class InviteCode
   include Mongoid::Timestamps
 
   field :code
-  field :allotted
-  field :used, :default => 0
+  field :allotted, :type => Integer
+  field :used, :type => Integer, :default => 0
   field :user_id
 
   validates_presence_of :code, :allotted
@@ -26,5 +26,10 @@ class InviteCode
 
   def usable?
     used < allotted
+  end
+
+  def redeem
+    self.used += 1
+    save
   end
 end

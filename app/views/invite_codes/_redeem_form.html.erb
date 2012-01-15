@@ -1,12 +1,15 @@
 <%= form_for InviteCode.new, :url => :check_invite_code, :html => { :class => 'ajax' } do |f| %>
-  <div class="errors hide">gotta handle errors somehow</div>
-
+  <% if flash[:register_fail] %>
+    <div class="errors showem">
+      <div class="error"><%= flash[:register_fail] %></div>
+    </div>
+  <% end %>
   <div class="field lClear">
     <%= f.label :code, "Invite Code" %>
     <%= f.text_field :code, %>
   </div>
 
   <div class="actions">
-    <%= f.submit "Redeem Code", :class => "submit" %>
+    <%= f.submit "Submit", :class => "submit" %>
   </div>
 <% end %>

@@ -98,8 +98,7 @@ class User
     record.errors.add attr, "Please enter correct invite code" unless invite && invite.usable?
   end
 
-  before_create :redeem_invite
-  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email, :create_invite
+  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email, :invite_stuff
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
@@ -379,11 +378,8 @@ class User
     Neo4j.neo.set_node_properties(node, {'username' => username, 'slug' => slug}) if node
   end
 
-  def create_invite
+  def invite_stuff
     InviteCode.create(:user_id => id, :allotted => 3)
-  end
-
-  def redeem_invite
     invite = InviteCode.find(invite_code_id)
     invite.redeem
   end

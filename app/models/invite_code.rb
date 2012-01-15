@@ -30,6 +30,6 @@ class InviteCode
 
   def redeem
     self.used += 1
-    save
+    self.save
   end
 end

@@ -4,14 +4,13 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def facebook
-    foo = session
     @user = User.find_by_omniauth(env["omniauth.auth"], current_user, session[:invite_code])
 
     if @user && @user.persisted?
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "your Facebook"
       sign_in_and_redirect @user, :event => :authentication
     else
-      flash[:notice] = "Sorry, there was an error with your invite code"
+      flash[:register_fail] = "Your invite code is invalid!"
       session["devise.facebook_data"] = env["omniauth.auth"].except('extra')
       redirect_to splash_path
     end

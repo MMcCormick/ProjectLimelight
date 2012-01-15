@@ -89,6 +89,9 @@ form {
     .error {
       margin: 3px 0;
     }
+    &.showem {
+      display: block;
+    }
   }
 }
 

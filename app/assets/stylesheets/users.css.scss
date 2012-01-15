@@ -143,9 +143,41 @@
     cursor: default;
   }
   .errors {
-    display: block;
     margin: 0 0 10px 0;
     width: 282px;
+  }
+  .invite {
+    position: relative;
+    width: 220px;
+    margin-left: 50%;
+    left: -110px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    #new_invite_code {
+      position: relative;
+      label {
+        font-size: 22px;
+        top: 5px;
+      }
+      #invite_code_code {
+        width: 124px;
+        float: left;
+        font-size: 22px;
+      }
+      .submit {
+        @include green-button(2px, 16px);
+        padding: 5px 6px;
+        margin-top: 5px;
+        float: right;
+      }
+      .errors {
+        width: 205px;
+      }
+    }
+  }
+  .switch-c {
+    text-align: center;
+    margin-top: 10px;
   }
 }
 

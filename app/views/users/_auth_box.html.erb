@@ -3,11 +3,13 @@
     <%= image_tag 'splash_top.gif' %>
   </div>
   <div class="bottom">
-    <div class="invite <%= 'hide' if show == :login %>">
+    <div class="invite <%= 'hide' if show == :login || show == :register %>">
       <%= render "invite_codes/redeem_form" %>
-      or <div class="switch">Login</div>
+      <div class="clear"></div>
+      <div class="switch-c">or <span class="switch">Login</span></div>
+
     </div>
-    <div class="login-reg <%= 'hide' unless show == :login %>">
+    <div class="login-reg <%= 'hide' unless show == :login || show == :register %>">
       <div class="left">
         <div class="head">Use your existing social account.</div>
         <a href="<%= user_omniauth_authorize_path(:facebook) %>">
@@ -39,8 +41,5 @@
       </div>
     </div>
     <div class="clear"></div>
-    <div class="sig">
-      Limelight was created by Marc MacLeod & Matt McCormick
-    </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-  <%= output_errors(resource.errors) %>
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => 'ajax' }) do |f| %>
+  <div class="errors"></div>
 
   <div class="line lClear">
     <%= f.label :username %>

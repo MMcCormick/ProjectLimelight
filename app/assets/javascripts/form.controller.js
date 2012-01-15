@@ -22,6 +22,7 @@ $(function() {
       data: form.serializeArray(),
       dataType: 'json',
       beforeSend: function() {
+        console.log('oh yeah');
         form.find('.errors').html('').hide();
         form.find('input, textarea').attr('disabled', true);
         $('#form-submitting').fadeIn(300);

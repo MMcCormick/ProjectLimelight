@@ -26,7 +26,6 @@ class InviteCodesController < ApplicationController
       if invite.usable?
         session[:invite_code] = params[:invite_code][:code]
         response = build_ajax_response(:ok, nil, "Code accpted", nil, :invite_code_id => invite.id)
-        foo = session
         status = 200
       else
         invite.errors.add(:code, "has been used up")

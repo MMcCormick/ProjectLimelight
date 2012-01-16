@@ -362,7 +362,7 @@ class Topic
 
     # find mentions in a body of text and return the topic matches
     # optionally return how often the mention occured in the text
-    def parse_text(text, ooac=true, with_counts=nil)
+    def parse_text(text, ooac=true, with_counts=nil, limit=nil)
       words = text.split(' ')
       word_combos = with_counts ? {} : []
       words.length.times do |i|
@@ -371,7 +371,7 @@ class Topic
           x.times do |y|
             word += words[i+y].tr('^A-Za-z0-9', '').downcase if words[i+y]
           end
-          unless word.blank?
+          unless word.blank? || word.length <= 2
             if with_counts
               word_combos[word] ||= {:count => 0}
               word_combos[word][:count] += 1
@@ -388,14 +388,32 @@ class Topic
         if ooac == true
           hash_query['aliases.ooac'] = true
         end
-        matches = Topic.where(:status => 'active').any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).order_by([[:pm, :desc]]).to_a
+        matches = Topic.where(:status => 'active').any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).order_by([[:pm, :desc]])
+        matches = matches.limit(limit) if limit
       else
         matches = []
       end
 
+      # Remove shorter versions of topics. For example - if 'limelight' and 'limelight feedback' were found, remove 'limelight' and keep the more specific topic.
+      cleaned = []
+      matches.each do |match|
+        found = false
+
+        matches.each do |match2|
+          if match.id != match2.id && match2.name.downcase.strip.gsub(/[^\w ]/, '').include?(match.name.downcase.strip.gsub(/[^\w ]/, ''))
+            found = true
+            break
+          end
+        end
+
+        unless found == true
+          cleaned << match
+        end
+      end
+
       if with_counts
         processed_matches = {}
-        matches.each do |match|
+        cleaned.each do |match|
           count = 1
           word_combos.each do |name,v|
             if match.short_name == name || match.aliases.detect{|a| a.hash == name}
@@ -408,10 +426,10 @@ class Topic
                   :count => count
           }
         end
-        matches = processed_matches
+        cleaned = processed_matches
       end
 
-      matches
+      cleaned
     end
 
     # given text and topics, figure out which aliases are mentioned in the text

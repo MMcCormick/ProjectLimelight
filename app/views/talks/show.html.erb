@@ -24,9 +24,11 @@
     <div class="clear"></div>
   <% end %>
 
-  <% if can? :destroy, @talk %>
-    <div class="ac disable conf conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_talk_path @talk %>">X</div>
-  <% end %>
+  <div class="object-show">
+    <% if can? :destroy, @talk %>
+      <div class="ac disable conf" title="remove this post" data-m="PUT" data-url="<%= disable_talk_path @talk %>">X</div>
+    <% end %>
+  </div>
 <% else %>
   <div class="empty">This talk has been removed</div>
 <% end %>

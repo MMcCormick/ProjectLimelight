@@ -554,9 +554,8 @@ $teaser-padding: 10px;
   .disable {
     z-index: 300;
     position: absolute;
-    background: #AAA;
-    color: #FFF;
-    padding: 0px 5px;
+    color: red;
+    font-weight: bold;
     cursor: pointer;
   }
 
@@ -743,7 +742,7 @@ $teaser-padding: 10px;
     white-space: nowrap;
   }
   .disable {
-    top: 4px;
+    bottom: 2px;
     right: 5px;
   }
   .content {
@@ -848,8 +847,8 @@ $teaser-padding: 10px;
     font-size: 14px;
   }
   .disable {
-    top: 6px;
-    right: 10px;
+    bottom: 2px;
+    right: 6px;
   }
   .content {
     padding: 7px 10px 8px 10px;
@@ -966,8 +965,8 @@ $scoreBox-width: 160px;
     padding: 0;
   }
   .disable {
-    bottom: 0;
-    right: 0;
+    bottom: 2px;
+    right: 5px;
   }
   .controlsC {
     position: absolute;
@@ -1377,9 +1376,8 @@ $scoreBox-width: 160px;
     position: absolute;
     top: 0px;
     right: 20px;
-    background: #AAA;
-    color: #FFF;
-    padding: 0px 5px;
+    color: red;
+    font-weight: bold;
     cursor: pointer;
   }
 

@@ -22,7 +22,7 @@ jQuery ->
           data: {text: target.siblings('.data').val()}
           success: (data) ->
             suggestionBox = target.parents('form:first').find('.suggestions')
-            suggestionBox.find('.placeholder:visible').hide()
+            suggestionBox.find('.placeholder:visible').remove()
             $(data.suggestions).each (i,val) ->
               if (suggestionBox.find('.ms_'+val.topics[0].slug).length == 0)
                 suggestionBox.find('.none').hide()

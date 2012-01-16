@@ -1240,6 +1240,8 @@ $scoreBox-width: 160px;
         &.closed {
           border-left-color: transparent;
           border-right-color: transparent;
+          border-bottom-color: transparent;
+          background: transparent;
         }
         .opt {
           width: 115px;

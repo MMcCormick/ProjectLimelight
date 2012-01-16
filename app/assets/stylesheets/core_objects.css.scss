@@ -880,11 +880,20 @@ $teaser-padding: 10px;
   .response {
     color: #666;
     font-size: 11px;
-    padding: 7px 10px 0 10px;
-    margin-bottom: -2px;
+    padding: 0 0 5px 0;
+    margin: 7px 10px -2px 10px;
+    border-bottom: medium double #DDDDDD;
+    position: relative;
 
     .r {
-      position: relative;
+      padding-left: 17px;
+      display: block;
+    }
+    span {
+      position: absolute;
+      top: 0px;
+      left: 2px;
+      cursor: default;
     }
     .icon {
       position: absolute;

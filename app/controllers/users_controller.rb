@@ -177,12 +177,12 @@ class UsersController < ApplicationController
   # Includes core objects mentioning topics this user is following
   # Includes core objects mentioning this user
   def feed
-    @user = User.find_by_slug(params[:id])
+    @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
     not_found("User not found") unless @user
 
     @title = @user.username + "'s feed"
     page = params[:p] ? params[:p].to_i : 1
-    @more_path = user_feed_path :p => page + 1
+    @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
     @right_sidebar = true if current_user != @user
     @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :created_by_users => @user.following_users,
@@ -196,7 +196,7 @@ class UsersController < ApplicationController
         response = reload_feed(@core_objects, @more_path, page)
         render json: response
       }
-      format.html # index.html.erb
+      format.html
     end
   end
 

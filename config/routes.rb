@@ -138,11 +138,29 @@ ProjectLimelight::Application.routes.draw do
   get '/pages/privacy' => 'pages#privacy', :as => :privacy_path
   get '/pages/terms' => 'pages#terms', :as => :terms_path
   get '/pages/help' => 'pages#help', :as => :help_path
-  root :to => 'pages#home'
+  root :to => 'users#feed'
   
   # Invites
   resources :invite_codes, :only => [:create, :new]
   post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

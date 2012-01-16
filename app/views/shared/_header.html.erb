@@ -2,7 +2,7 @@
   <div id="header">
     <div class="interior">
       <% top_image = image_tag "top-logo.png", :alt => "Limelight" %>
-      <%#= link_to top_image, user_feed_path(current_user), :class => "p logo" %>
+      <%= link_to top_image, root_path, :class => "p logo" %>
 
       <span id="contribute" data-target="#top-contribute" class="<%= 'auth' unless signed_in? %>">
         Contribute

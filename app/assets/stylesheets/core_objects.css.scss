@@ -879,9 +879,12 @@ $teaser-padding: 10px;
   }
   .response {
     color: #666;
+    font-size: 11px;
+    padding: 7px 10px 0 10px;
+    margin-bottom: -2px;
+
     .r {
       position: relative;
-      padding: 0 0 0 17px;
     }
     .icon {
       position: absolute;
@@ -1043,7 +1046,7 @@ $scoreBox-width: 160px;
     margin: 5px 0 7px 6px;
   }
   .content {
-    min-height: 65px;
+    min-height: 60px;
     padding: 0 120px 0 0;
   }
   .connectionsC {
@@ -1072,11 +1075,9 @@ $scoreBox-width: 160px;
       margin: 0 10px 3px 0;
     }
   }
-  .r {
-    font-size: 15px;
-    .icon {
-      top: 3px;
-    }
+  .response {
+    font-size: 12px;
+    padding: 5px 0 0 5px;
   }
 }
 

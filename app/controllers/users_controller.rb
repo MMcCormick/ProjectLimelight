@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     not_found("User not found") unless @user
 
-    @title = @user.username + "'s contributions"
+    @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Contributions"
     @description = "A feed containing all posts submitted by " + @user.username
     page = params[:p] ? params[:p].to_i : 1
     @right_sidebar = true if current_user != @user
@@ -113,7 +113,7 @@ class UsersController < ApplicationController
     not_found("User not found") unless @user
 
     @site_style = 'narrow'
-    @title = "Users " + @user.username + " is following"
+    @title = "Users " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all users who are being followed by" + @user.username
     @right_sidebar = true if current_user != @user
     @following_users = User.where(:_id.in => @user.following_users)
@@ -135,7 +135,7 @@ class UsersController < ApplicationController
     not_found("User not found") unless @user
 
     @site_style = 'narrow'
-    @title = @user.username + "'s followers"
+    @title = (current_user.id == @user.id ? 'Your' : @user.username) + "'s followers"
     @description = "A list of all users who are following" + @user.username
     @right_sidebar = true if current_user != @user
 
@@ -156,7 +156,7 @@ class UsersController < ApplicationController
     not_found("User not found") unless @user
 
     @site_style = 'narrow'
-    @title = "Topics " + @user.username + " is following"
+    @title = "Topics " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all topics which are being followed by" + @user.username
     @right_sidebar = true if current_user != @user
 
@@ -180,7 +180,7 @@ class UsersController < ApplicationController
     @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
     not_found("User not found") unless @user
 
-    @title = @user.username + "'s feed"
+    @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
     page = params[:p] ? params[:p].to_i : 1
     @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
     @right_sidebar = true if current_user != @user

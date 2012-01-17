@@ -87,7 +87,7 @@ function rearrange_feed_columns()
       });
       $(feed_columns[i].teasers[i2]).attr('data-column', i).data('column', i);
       $(feed_columns[i].teasers[i2]).show();
-      column_height += $(feed_columns[i].teasers[i2]).height() + $spacing*2.35;
+      column_height += $(feed_columns[i].teasers[i2]).height() + $spacing*2.5;
     }
     if (column_height > max_column_height) {
       max_column_height = column_height

@@ -1,0 +1,9 @@
+<!--foreach($tag_objects as $tag) {-->
+  <!--?>-->
+    <!--<div class="tag" style="background-color: <?php echo $tag->getBlock()->color; ?>; width: <?php echo $tag->getBlock()->width * UNIT_WIDTH; ?>px; height: <?php echo $tag->getBlock()->height * UNIT_HEIGHT; ?>px; top: <?php echo ($tag->position->y-1) * UNIT_HEIGHT; ?>px; left: <?php echo ($tag->position->x-1) * UNIT_WIDTH; ?>px;"><div><?php echo $tag->name; ?> (<?php echo $tag->score; ?>)</div></div>-->
+  <!--<?php-->
+<!--}-->
+
+<% @topic_wall.tags.each do |t| %>
+  <div class="tag" style="position: absolute; background-color: <%= t.block.color %>; width: <%= t.block.width * TopicWall.new.unit_width %>px; height: <%= t.block.height * TopicWall.new.unit_height %>px; top: <%= (t.position ? t.position.y-1 : 1) * TopicWall.new.unit_height; %>px; left: <%= (t.position ? t.position.x-1 : 1) * TopicWall.new.unit_width %>px;"><div><%= "#{t.name} ( #{t.score} )" %></div></div>
+<% end %>

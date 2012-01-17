@@ -729,23 +729,32 @@ button {
   }
   // Trending topics
   #trending-topics {
-    margin: 11px 285px 0 10px;
+    margin: 11px 405px 0 10px;
     overflow: hidden;
     height: 15px;
 
-    a {
+    .tlink {
       margin-left: 10px;
       color: white;
     }
   }
+  #everything-button {
+    position: absolute;
+    right: 265px;
+    top: 0px;
+    color: #AAE929;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+  }
   #twitter-footer {
     position: absolute;
-    right: 115px;
+    right: 105px;
     top: -3px;
   }
   #fb-footer {
     position: absolute;
-    right: 15px;
+    right: 5px;
     top: -3px;
     .fb_edge_comment_widget {
       margin-top: -190px;

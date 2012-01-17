@@ -138,8 +138,8 @@ class ApplicationController < ActionController::Base
   end
 
   def require_sign_in
-    if request.get? && !signed_in? && !['splash', 'facebook'].include?(params[:action])
-      redirect_to (splash_path)
+    if request.get? && !signed_in? && request.fullpath != "/"
+      redirect_to (root_path)
     end
   end
 

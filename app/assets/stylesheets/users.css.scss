@@ -447,92 +447,92 @@
 
 // Wide buttons for either sidebar
 .sidebarB {
-    @include border-radius(2px);
-    background-color: #FCF9F9;
-    border: 1px solid #CCC;
-    margin: 3px 7px 3px 5px;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 4px 8px 4px 30px;
-    display: block;
-    position: relative;
-    color: #666;
+  @include border-radius(2px);
+  background-color: #FCF9F9;
+  border: 1px solid #CCC;
+  margin: 3px 7px 3px 5px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 4px 8px 4px 30px;
+  display: block;
+  position: relative;
+  color: #666;
 
-    .icon {
-        position: absolute; top: 50%; left: 7px;
-        margin-top: -8px;
-    }
+  .icon {
+    position: absolute; top: 50%; left: 7px;
+    margin-top: -8px;
+  }
 }
 // Located in the user sidebar
 #my-feed,
 #my-favorites {
-    &.dragging {
-        background: blue;
-        color: #FFF;
-    }
-    &.dropping {
-        background: green;
-    }
+  &.dragging {
+    background: blue;
+    color: #FFF;
+  }
+  &.dropping {
+    background: green;
+  }
 }
 
 // Confirmation pages
 #confirm {
+  @include clearfix();
+  @include border-radius(10px);
+  background: #E2E8D4;
+  width: 500px;
+  height: 400px;
+  margin-left: 20px;
+  text-align: center;
+  position: relative;
+  .nav {
     @include clearfix();
-    @include border-radius(10px);
-    background: #E2E8D4;
-    width: 500px;
-    height: 400px;
-    margin-left: 20px;
-    text-align: center;
-    position: relative;
-    .nav {
-        @include clearfix();
-        @include border-radius(5px);
-        background: #F2F8E4;
-        margin: 10px 0 0 28px;
-        width: 440px;
-        font-size: 28px;
-        .stepLabel {
-            float: left;
-            margin: 8px 0 10px 50px;
-            display: block;
-        }
-        .step1, .step2, .step3 {
-            @include green-button(14px, 28px);
-            @include opacity(.5);
-            width: 40px;
-            margin: 10px 0 10px 50px;
-            float: left;
-            &.on {
-                @include opacity(1);
-            }
-        }
+    @include border-radius(5px);
+    background: #F2F8E4;
+    margin: 10px 0 0 28px;
+    width: 440px;
+    font-size: 28px;
+    .stepLabel {
+      float: left;
+      margin: 8px 0 10px 50px;
+      display: block;
     }
-    #confirmPages {
-        margin-top: 20px;
-        .confirmPage.two,
-        .confirmPage.three {
-            display: none;
-        }
-        .bottomNav {
-            @include border-radius(5px);
-            position: absolute;
-            width: 440px;
-            left: 28px;
-            bottom: 10px;
-            .last, .next {
-                @include green-button(14px, 28px);
-                margin: 10px 0 10px 0;
-                padding: 0 10px;
-            }
-            .last {
-                float: left;
-            }
-            .next {
-                float:right;
-            }
-        }
+    .step1, .step2, .step3 {
+      @include green-button(14px, 28px);
+      @include opacity(.5);
+      width: 40px;
+      margin: 10px 0 10px 50px;
+      float: left;
+      &.on {
+        @include opacity(1);
+      }
     }
+  }
+  #confirmPages {
+    margin-top: 20px;
+    .confirmPage.two,
+    .confirmPage.three {
+      display: none;
+    }
+    .bottomNav {
+      @include border-radius(5px);
+      position: absolute;
+      width: 440px;
+      left: 28px;
+      bottom: 10px;
+      .last, .next {
+        @include green-button(14px, 28px);
+        margin: 10px 0 10px 0;
+        padding: 0 10px;
+      }
+      .last {
+        float: left;
+      }
+      .next {
+        float:right;
+      }
+    }
+  }
 }
 
 #users-c {
@@ -600,6 +600,27 @@
         color: #666;
         margin: 11px 0 0 13px;
         font-size: 13px;
+      }
+    }
+  }
+  /* Splash Page styling */
+  &.blank {
+    min-width: 700px;
+    .feed-c {
+      width: 100%;
+      top: 10%;
+
+      .logo {
+        position: relative;
+        left: -122px;
+        margin-left: 50%;
+        margin-bottom: 30px;
+      }
+      #auth_box {
+        border: 5px solid #666666;
+        left: -310px;
+        margin-left: 50%;
+        position: relative;
       }
     }
   }
@@ -854,6 +875,14 @@
       margin: 1px;
       &:hover {
         @include opacity(1);
+      }
+    }
+  }
+  .invites {
+    div {
+      padding: 4px 11px 7px;
+      .code {
+        color: #709721;
       }
     }
   }

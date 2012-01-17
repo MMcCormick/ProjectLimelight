@@ -20,6 +20,7 @@ class UserCell < Cell::Rails
   def sidebar(user, current_user, state)
     @user = user
     @current_user = current_user
+    @invite = InviteCode.first(conditions: {user_id: @user.id})
     render
   end
 

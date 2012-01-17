@@ -24,6 +24,10 @@ class InviteCode
     end
   end
 
+  def remaining
+    allotted - used
+  end
+
   def usable?
     used < allotted
   end

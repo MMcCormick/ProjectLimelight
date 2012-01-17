@@ -131,7 +131,7 @@ ProjectLimelight::Application.routes.draw do
   put 'topic_connections/toggle_primary' => 'topic_connections#toggle_primary', :as => :toggle_primary
 
   # Pages
-  get '/pages/splash' => 'pages#splash', :as => :splash
+  get '/pages/everything' => 'pages#everything', :as => :everything
   get '/pages/admin' => 'pages#admin', :as => :admin_dashboard
   get '/pages/about' => 'pages#about', :as => :about_path
   get '/pages/contact' => 'pages#contact', :as => :contact_path

@@ -177,26 +177,34 @@ class UsersController < ApplicationController
   # Includes core objects mentioning topics this user is following
   # Includes core objects mentioning this user
   def feed
-    @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
-    not_found("User not found") unless @user
+    if signed_in?
+      @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
+      not_found("User not found") unless @user
 
-    @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
-    page = params[:p] ? params[:p].to_i : 1
-    @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
-    @right_sidebar = true if current_user != @user
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
-            :created_by_users => @user.following_users,
-            :reposted_by_users => @user.following_users,
-            :mentions_topics => @user.following_topics,
-            :mentions_users => [@user.id],
-            :page => page
-    })
-    respond_to do |format|
-      format.js {
-        response = reload_feed(@core_objects, @more_path, page)
-        render json: response
-      }
-      format.html
+      @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
+      page = params[:p] ? params[:p].to_i : 1
+      @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
+      @right_sidebar = true if current_user != @user
+      @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
+              :created_by_users => @user.following_users,
+              :reposted_by_users => @user.following_users,
+              :mentions_topics => @user.following_topics,
+              :mentions_users => [@user.id],
+              :page => page
+      })
+      respond_to do |format|
+        format.js {
+          response = reload_feed(@core_objects, @more_path, page)
+          render json: response
+        }
+        format.html
+      end
+    else
+      @title = 'Welcome to Limelight!'
+      @description = "The Limelight splash page, where users are directed to sign in"
+      @show = params[:show] ? params[:show].to_sym : false
+
+      render "splash", :layout => "blank"
     end
   end
 

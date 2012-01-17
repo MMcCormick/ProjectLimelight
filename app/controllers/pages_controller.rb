@@ -1,8 +1,8 @@
 class PagesController < ApplicationController
 
-  def home
-    @title = 'Home'
-    @description = "The Limelight home page. This is a feed of all posts submitted to the site, which can be customized" +
+  def everything
+    @title = 'Everything'
+    @description = "The Everything page. This is a feed of all posts submitted to the site, which can be customized" +
         "by filtering, sorting, and changing the feed style."
     page = params[:p] ? params[:p].to_i : 1
     @more_path = root_path :p => page + 1
@@ -16,14 +16,6 @@ class PagesController < ApplicationController
       format.html
     end
     end
-
-  def splash
-    @title = 'Welcome to Limelight!'
-    @description = "The Limelight splash page, where users are directed to sign in"
-    @show = params[:show] ? params[:show].to_sym : false
-
-    render :layout => "blank"
-  end
 
   def admin
     authorize! :manage, :all

@@ -74,6 +74,15 @@
     <% if (!@current_user && @user) || (@user.id == @current_user.id) %>
       <%= render_cell :user, :topic_suggestions, @user %>
 
+      <% if @invite.usable? %>
+        <h3 class="section-h">
+          Invites (<%= @invite.remaining %> remaining)
+          <span class='tip' title='You have <%= @invite.remaining %> invites left! To invite someone, simply give them the code "<%= @invite.code %>" and direct them to Limelight!'>?</span>
+        </h3>
+        <div class="section invites">
+          <div>Code: <span class="code"><%= @invite.code %></span></div>
+        </div>
+      <% end %>
       <!--<h3 class="section-h">Topic Suggestions</h3>-->
       <!--<div class="section">-->
         <!--<div class="none">Coming Soon!</div>-->

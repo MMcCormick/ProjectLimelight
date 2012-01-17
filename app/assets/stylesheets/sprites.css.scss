@@ -31,6 +31,10 @@
     @include icon-sprite(arrow_grey_right_24x24);
     width: 24px; height: 24px;
 }
+.arrow-w-s {
+    @include icon-sprite(arrow_white_small);
+    width: 17px; height: 13px;
+}
 
 .sidebar {
   .section-h {

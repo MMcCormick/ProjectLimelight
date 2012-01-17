@@ -908,7 +908,6 @@ $teaser-padding: 10px;
     float: none;
   }
   .connectionsC {
-    padding-top: 22px;
   }
   .w {
     position: absolute;
@@ -921,8 +920,21 @@ $teaser-padding: 10px;
     color: #666;
     font-size: 11px;
     font-weight: normal;
-    overflow: hidden;
     white-space: nowrap;
+    position: absolute;
+    bottom: -30px;
+    left: 5px;
+    font-weight: bold;
+    cursor: default;
+
+    a {
+      font-size: 13px;
+    }
+    .arrow-w-s {
+      position: absolute;
+      top: -9px;
+      left: 5px;
+    }
   }
   .sourceC {
     color: #666;

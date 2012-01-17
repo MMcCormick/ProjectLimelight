@@ -23,13 +23,13 @@
         <% end %>
       </div>
     <% end %>
-
+  </div>
 <% end # cache %>
 
-    <div class="s w">
-      <div class="video-grey-icon oType" title="video"></div>
-      <%= render 'core_objects/feed_teaser_created', :object => object %>
-    </div>
+  <div class="createdC">
+    <%= user_link object.user_snippet %>
+    <%= time_ago_in_words(object.created_at, false) %> ago
+    <div class='arrow-w-s'></div>
   </div>
 
   <% if can? :destroy, object %>

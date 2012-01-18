@@ -149,10 +149,10 @@
   .invite {
     position: relative;
     width: 220px;
-    margin-left: 50%;
     left: -110px;
-    margin-top: 20px;
+    margin-left: 50%;
     margin-bottom: 10px;
+    padding-top: 20px;
     #new_invite_code {
       position: relative;
       label {
@@ -604,23 +604,50 @@
     }
   }
   /* Splash Page styling */
-  &.blank {
-    min-width: 700px;
-    .feed-c {
-      width: 100%;
-      top: 10%;
+  #splash_content {
+    width: 100%;
+    top: 10%;
+    position: absolute;
+    z-index: 50;
 
-      .logo {
-        position: relative;
-        left: -122px;
-        margin-left: 50%;
-        margin-bottom: 30px;
+    .logo {
+      position: relative;
+      left: -175px;
+      margin-left: 50%;
+      margin-bottom: 30px;
+    }
+    #auth_box {
+      border: 5px solid #666666;
+      left: -310px;
+      margin-left: 50%;
+      position: relative;
+    }
+  }
+  .topic-wall {
+    width: 110%;
+    height: 110%;
+    .tile {
+      float: left;
+      background: #FFF;
+      border: 1px;
+      position: relative;
+      width: 75px;
+      height: 75px;
+
+      .o {
+        min-width: 75px;
+        min-height: 75px;
       }
-      #auth_box {
-        border: 5px solid #666666;
-        left: -310px;
-        margin-left: 50%;
-        position: relative;
+      .l {
+        display: none;
+      }
+      .bg.hover {
+        @include single-box-shadow(#999, 1px, 1px, 2px);
+        position: absolute;
+        z-index: 100;
+        top: 50%;
+        left: 50%;
+        background: #FFF;
       }
     }
   }

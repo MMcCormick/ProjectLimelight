@@ -148,4 +148,45 @@ $(function() {
     })
   })
 
+  // Topic wall
+  $('.topic-wall .tile img').live({
+    mouseenter:
+      function() {
+        var $self = $(this);
+        $('.topic-wall').stopTime('show-topic-wall-tile').oneTime(250, 'show-topic-wall-tile', function() {
+          $self.data('img_swap', $self.attr('src'));
+          $self.attr('src', $self.next('img').attr('src'));
+          $self.parent().css({'margin-top': $self.next('img').height()/2*-1, 'margin-left': $self.next('img').width()/2*-1}).addClass('hover');
+        })
+      },
+    mouseleave:
+      function() {
+        var $self = $(this);
+        $('.topic-wall').stopTime('show-topic-wall-tile');
+        $self.attr('src', $self.data('img_swap'))
+        $self.parent().css({'margin-top': 0, 'margin-left': 0}).removeClass('hover');
+      }
+
+  })
+  $('.topic-wall .tile img[alt]').qtip({
+     content: {
+        attr: 'alt'
+     },
+     style: {
+       classes: 'ui-tooltip-light ui-tooltip-shadow',
+       tip: false,
+     },
+     position: {
+       my: 'top center',  // Position my top left...
+       at: 'bottom center', // at the bottom right of...
+       viewport: $(window),
+       adjust: {
+          y: -5
+       }
+     },
+     show: {
+       delay: 250
+     }
+  });
+
 })

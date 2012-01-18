@@ -8,6 +8,7 @@ class Topic
   include Limelight::Acl
   include Limelight::Images
   include Limelight::Popularity
+  include ImageHelper
 
   @type_of_id = "4eb82a1caaf9060120000081"
   @instances_id = "4eb82a3daaf906012000008a" # this is the opposite of type_of connection
@@ -265,64 +266,14 @@ class Topic
     Resque.enqueue(SmDestroyTopic, aliased_topic.id.to_s)
   end
 
-  #
-  # Connections
-  #
-
-  def remove_connection(connection, con_topic)
-    remove_connection_helper(connection, con_topic)
-    if !connection.opposite.blank? && opposite = TopicConnection.find(connection.opposite)
-      con_topic.remove_connection_helper(opposite, self)
+  def raw_image(w,h,m)
+    if fb_img == true
+      url = "https://usercontent.googleapis.com/freebase/v1/image#{fb_id}?maxwidth=#{w}&maxheight=#{h}&mode=#{m}"
+    else
+      url = default_image_url(self, w, h, m, true)
+      url = Rails.public_path+url if Rails.env.development? && !url.include?('topic-default')
     end
-  end
-
-  def remove_connection_helper(connection, con_topic)
-    # Update the collection directly since deletion from the array was not persisting to DB
-    Topic.collection.update({:_id => id}, {'$pull' => {'topic_connection_snippets' => {:topic_id => con_topic.id, :_id => connection.id}}})
-    # Also delete from the current record so that the slug gets updated correctly
-    topic_connection_snippets.delete_if { |snippet| snippet.topic_id == con_topic.id && snippet.id == connection.id }
-
-    if connection.id.to_s == Topic.type_of_id
-      self.v += 1
-    end
-  end
-
-  # Gets connections, returning a hash of the following format
-  # connections => {:connection_id => {:name => "ConnectionName", :topics => [topic1, topic2]}}
-  def get_connections
-    topic_ids = topic_connection_snippets.map { |snippet| snippet.topic_id }
-    topics = Topic.where(:_id.in => topic_ids).desc(:pt)
-    connections = {}
-
-    topics.each do |topic|
-      topic_connection_snippets.each do |snippet|
-        if topic.id == snippet.topic_id
-          connections[snippet.id] ||= {:name => snippet.name, :data => []}
-          connections[snippet.id][:data] << {:snippet => snippet, :topic => topic}
-        end
-      end
-    end
-
-    connections
-  end
-
-  # TODO: remove / port to neo4j
-  # Suggests connections for the topic based on other topics of the same type(s)
-  def suggested_connections
-    #similar_topic_ids = []
-    #con_ids = []
-    #type_ids = get_types.map { |snippet| snippet.topic_id }
-    #type_topics = Topic.where("_id" => { "$in" => type_ids })
-    #type_topics.each_with_index do |type_topic, i|
-    #  similar_topic_ids = similar_topic_ids | type_topic.get_instances.map { |snippet| snippet.topic_id }
-    #end
-    #
-    #topics = Topic.where("_id" => { "$in" => similar_topic_ids })
-    #topics.each do |topic|
-    #  con_ids = con_ids | topic.get_connection_ids
-    #end
-    #
-    #TopicConnection.where("_id" => { "$in" => con_ids })
+    url
   end
 
   def expire_caches

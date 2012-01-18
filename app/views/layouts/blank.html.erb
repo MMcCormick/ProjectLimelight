@@ -7,10 +7,8 @@
     <%= render :partial => 'shared/head' %>
   </head>
 
-  <body id="<%= params[:controller].parameterize %>-c" class="<%= site_style %> blank">
-    <div id="page_content" class="<%= params[:action].parameterize %>-c">
-      <%= yield %>
-    </div>
+  <body id="<%= params[:controller].parameterize %>-c" class="blank">
+    <%= yield %>
 
     <!-- HIDDEN TOOLS -->
     <div id="form-submitting">Form submitting...</div>

@@ -128,14 +128,10 @@ class TopicsController < ApplicationController
   def default_picture
     topic = Topic.find_by_slug(params[:id])
 
-    if topic.fb_img == true
-      url = "https://usercontent.googleapis.com/freebase/v1/image#{topic.fb_id}?maxwidth=#{params[:w]}&maxheight=#{params[:h]}&mode=#{params[:m]}"
-    else
-      url = default_image_url(topic, params[:w], params[:h], params[:m], true)
-    end
+    url = topic.raw_image(params[:w], params[:h], params[:m])
 
     if Rails.env.development? && topic.fb_img != true
-      img = open(Rails.public_path+url)
+      img = open(url)
       send_data(
         img.read,
         :type => 'image/png',

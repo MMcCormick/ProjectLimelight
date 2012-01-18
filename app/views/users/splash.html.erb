@@ -1,3 +1,15 @@
-<%= image_tag "logo_black.gif", :alt => "Limelight", :class => "logo" %>
+<div id="splash_content">
+  <%= image_tag "splash-logo.png", :alt => "Limelight", :class => "logo" %>
+  <%= render "users/auth_box", :show => @show %>
+</div>
 
-<%= render "users/auth_box", :show => @show %>
+<div class='topic-wall'>
+  <% @topics.each do |topic| %>
+    <div class='tile'>
+      <div class='bg'>
+        <%= image_tag topic.raw_image(75, 75, 'fit'), :class => "o", :alt => "#{topic.name}" %>
+        <%= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "l", :alt => "" %>
+      </div>
+    </div>
+  <% end %>
+</div>

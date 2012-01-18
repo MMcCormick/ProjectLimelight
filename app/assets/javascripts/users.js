@@ -164,7 +164,7 @@ $(function() {
         var $self = $(this);
         $('.topic-wall').stopTime('show-topic-wall-tile');
         $self.attr('src', $self.data('img_swap'))
-        $self.parent().css({'margin-top': 0, 'margin-left': 0}).removeClass('hover');
+        $self.parent().removeClass('hover');
       }
 
   })

@@ -168,13 +168,13 @@ $(function() {
       }
 
   })
-  $('.topic-wall .tile img[alt]').qtip({
+  $('.topic-wall .tile .o[alt]').qtip({
      content: {
         attr: 'alt'
      },
      style: {
        classes: 'ui-tooltip-light ui-tooltip-shadow',
-       tip: false,
+       tip: false
      },
      position: {
        my: 'top center',  // Position my top left...

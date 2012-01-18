@@ -12,7 +12,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     else
       flash[:register_fail] = "Your invite code is invalid!"
       session["devise.facebook_data"] = env["omniauth.auth"].except('extra')
-      redirect_to splash_path
+      redirect_to root_path
     end
   end
 
@@ -24,7 +24,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, :event => :authentication
     else
       session["devise.google_oauth2_data"] = env["omniauth.auth"].except('extra')
-      redirect_to splash_path
+      redirect_to root_path
     end
   end
 
@@ -36,7 +36,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, :event => :authentication
     else
       session["devise.twitter_data"] = env["omniauth.auth"].except('extra')
-      redirect_to splash_path
+      redirect_to root_path
     end
   end
 end

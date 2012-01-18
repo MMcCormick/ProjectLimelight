@@ -138,6 +138,7 @@ ProjectLimelight::Application.routes.draw do
   get '/pages/privacy' => 'pages#privacy', :as => :privacy_path
   get '/pages/terms' => 'pages#terms', :as => :terms_path
   get '/pages/help' => 'pages#help', :as => :help_path
+  get '/pages/splash' => 'pages#splash', :as => :splash
   root :to => 'users#feed'
   
   # Invites

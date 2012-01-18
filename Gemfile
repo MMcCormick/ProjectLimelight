@@ -41,6 +41,7 @@ gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby
 gem 'neography' # neo4j graph database
 gem 'kgio', '2.7.0'
+gem 'active_cache' # conditional caching
 
 group :assets do
   gem 'compass', '0.12.alpha.4'

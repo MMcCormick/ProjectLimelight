@@ -1,0 +1,106 @@
+<div id="splash_content">
+  <img alt="Limelight" class="logo" src="/assets/splash-logo.png" />
+  <div id="auth_box">
+  <div class="top">
+    <img alt="Splash_top" src="/assets/splash_top.gif" />
+  </div>
+  <div class="bottom">
+    <div class="invite ">
+      <form accept-charset="UTF-8" action="/invite_codes/check" class="ajax" id="new_invite_code" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="sc6zhsu5sTHIIkUpTEsZ4DSsq/AoVM9SGO3rK6HBd/s=" /></div>
+  <div class="field lClear">
+    <label for="invite_code_code">Type Invite Code And Press Enter</label>
+    <input id="invite_code_code" name="invite_code[code]" size="30" type="text" />
+  </div>
+</form>
+      <div class="clear"></div>
+      <div class="switch-c">or <span class="switch">Login With Existing Account</span></div>
+
+    </div>
+    <div class="login-reg hide">
+      <div class="left">
+        <div class="head">Use your existing social account.</div>
+        <a href="/users/auth/facebook">
+          <div class="option one">
+            <img alt="Facebook-login-button" src="/assets/facebook-login-button.png" />
+          </div>
+        </a>
+        <!--<a href="">-->
+          <!--<div class="option two">-->
+            <!--<div class="log">log in with</div>-->
+            <!--<div class="google-l-icon"></div>-->
+          <!--</div>-->
+        <!--</a>-->
+        <div class="foot1">We do not share your information.</div>
+        <div class="foot2">We do not post to your profile without your permission.</div>
+      </div>
+      <div class="right">
+        <div id="auth-login" class="hide">
+          <div class="head">... or log in directly with Limelight.</div>
+          <form accept-charset="UTF-8" action="/users/sign_in" class="user_new" id="user_new" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="sc6zhsu5sTHIIkUpTEsZ4DSsq/AoVM9SGO3rK6HBd/s=" /></div>
+
+  <div class="lClear">
+    <label for="user_login">Email or Username</label>
+    <input id="user_login" name="user[login]" size="30" type="text" />
+  </div>
+
+  <div class="lClear">
+    <label for="login_password">Password</label>
+    <input autocomplete="off" id="login_password" name="user[password]" size="30" type="password" />
+  </div>
+
+
+  <input class="submit" name="commit" type="submit" value="Log In" />
+</form>
+          <div class="switch">I don't have a Limelight account.</div>
+        </div>
+        <div id="auth-register" class="">
+          <div class="head">... or register directly with Limelight.</div>
+          <form accept-charset="UTF-8" action="/users" class="ajax" id="user_new" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="sc6zhsu5sTHIIkUpTEsZ4DSsq/AoVM9SGO3rK6HBd/s=" /></div>
+  <div class="errors"></div>
+
+  <div class="line lClear">
+    <label for="user_username">Username</label>
+    <input autocomplete="off" id="user_username" name="user[username]" size="30" type="text" />
+  </div>
+
+  <div class="line lClear">
+    <label for="user_email">Email</label>
+    <input autocomplete="off" id="user_email" name="user[email]" size="30" type="email" />
+  </div>
+
+  <div class="line lClear">
+    <label for="register_password">Password</label>
+    <input autocomplete="off" id="register_password" name="user[password]" size="30" type="password" />
+  </div>
+
+  <input id="user_invite_code_id" name="user[invite_code_id]" type="hidden" />
+
+  <input class="submit" name="commit" type="submit" value="Sign Up" />
+</form>
+          <div class="switch">I already have a Limelight account.</div>
+        </div>
+      </div>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+</div>
+
+<div class='topic-wall'>
+    <a href="/tom-brady">
+      <div class='tile tile-2'>
+        <div class='bg'>
+          <img alt="Tom Brady" class="o" src="https://usercontent.googleapis.com/freebase/v1/image/en/tom_brady?maxwidth=75&amp;maxheight=75&amp;mode=fillcropmid" />
+          <img alt="" class="l" src="https://usercontent.googleapis.com/freebase/v1/image/en/tom_brady?maxwidth=100&amp;maxheight=0&amp;mode=fit" />
+        </div>
+      </div>
+    </a>
+    <a href="/the-elder-scrolls-v-skyrim">
+      <div class='tile tile-7'>
+        <div class='bg'>
+          <img alt="The Elder Scrolls V: Skyrim" class="o" src="https://usercontent.googleapis.com/freebase/v1/image/en/skyrim?maxwidth=75&amp;maxheight=75&amp;mode=fillcropmid" />
+          <img alt="" class="l" src="https://usercontent.googleapis.com/freebase/v1/image/en/skyrim?maxwidth=100&amp;maxheight=0&amp;mode=fit" />
+        </div>
+      </div>
+    </a>
+</div>

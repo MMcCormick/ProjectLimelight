@@ -1,5 +1,7 @@
 class PagesController < ApplicationController
 
+  caches_page :splash
+
   def everything
     @title = 'Everything'
     @description = "The Everything page. This is a feed of all posts submitted to the site, which can be customized" +
@@ -55,5 +57,15 @@ class PagesController < ApplicationController
     @description = "Main help page for Limelight"
     @site_style = 'narrow'
     @feedback_topic = Topic.find(Topic.limelight_feedback_id)
+  end
+
+  def splash
+    @title = 'Welcome to Limelight!'
+    @description = "The Limelight splash page, where users are directed to sign in"
+    @show = params[:show] ? params[:show].to_sym : false
+    @topics = Topic.where(:health_index.gte => 2).order_by([[:pt, :desc]]).limit(450).to_a
+    @topics.shuffle!
+
+    render :layout => false
   end
 end

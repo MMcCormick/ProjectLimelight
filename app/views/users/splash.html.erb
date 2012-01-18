@@ -6,7 +6,7 @@
 <div class='topic-wall'>
   <% @topics.each do |topic| %>
     <a href="<%= topic_path(topic) %>">
-      <div class='tile'>
+      <div class='tile' data-group='<%= rand(30) %>'>
         <div class='bg'>
           <%= image_tag topic.raw_image(75, 75, 'fillcropmid'), :class => "o", :alt => "#{topic.name}" %>
           <%= image_tag topic.raw_image(100, 0, 'fit'), :class => "l", :alt => "" %>

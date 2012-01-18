@@ -160,15 +160,22 @@ $(function() {
       }
       return o;
   }
-  var e = $('.topic-wall .tile .o') // The elements we're searching
+  var e = $('.topic-wall .tile') // The elements we're searching
   var c = e.size() // Total number of those elements
   var r = randsort(c) // an array of the element indices in random order
+  var used_tiles = [];
+
   e.each(function(i) {
     var e = $(this);
-    e.fadeTo(0, 0.05);
+
+    if ($.inArray(e.data('group'), used_tiles) != -1)
+      return true;
+
+    e.fadeTo(0, 0.1);
+    used_tiles.push(e.data('group'));
     setTimeout(function(){
       e.fadeTo(250, 1);
-    }, r[i]*20);
+    }, r[i]*10);
   });
   // END RANDOM FADE IN
 

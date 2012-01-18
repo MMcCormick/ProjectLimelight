@@ -166,12 +166,12 @@ $(function() {
   var used_tiles = [];
 
   e.each(function(i) {
-    var e = $(this);
+    var e = $('.topic-wall .tile-'+$(this).data('group'));
 
     if ($.inArray(e.data('group'), used_tiles) != -1)
       return true;
 
-    e.fadeTo(0, 0.1);
+    e.fadeTo(0, 0.07);
     used_tiles.push(e.data('group'));
     setTimeout(function(){
       e.fadeTo(250, 1);

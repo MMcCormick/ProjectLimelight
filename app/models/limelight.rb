@@ -371,6 +371,7 @@ module Limelight #:nodoc:
     def set_topic_mentions
       return unless @title_raw || @content_raw || @ooc_mentions
 
+      # Important that these are called before ooc_mentions are saved so that new in-context mentions get preference over matching new ooc mentions
       parse_mentions(@title_raw) if @title_raw
       parse_mentions(@content_raw) if @content_raw
 
@@ -444,16 +445,17 @@ module Limelight #:nodoc:
       end
     end
 
+    # takes an array of format [name, slug, out-of-context?]
     def save_new_topic_mentions(new_topic_mentions)
       # See if any of the new topic slugs are already in the DB. Check through topic aliases! Only connect to topics without a type assigned.
+
       topic_slugs = new_topic_mentions.map {|data| data[1]}
-      topic_slugs.uniq!
       # topics with matching aliases that are NOT already typed
       topics = Topic.where("aliases.slug" => {'$in' => topic_slugs}, "primary_type" => {"$exists" => false}).to_a
 
       new_topic_mentions.each do |topic_mention|
         found_topic = false
-        # Do we already have a DB topic for this mention?
+        # Do we already have an *untyped* DB topic for this mention?
         topics.each do |topic|
           if topic.has_alias? topic_mention[1]
             found_topic = topic
@@ -474,7 +476,10 @@ module Limelight #:nodoc:
           @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]") if @content_raw
 
           payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug, :ooc => topic_mention[2]}
-          self.topic_mentions.build(payload)
+          self.topic_mentions.build(payload) if !topic_mentions.detect{|mention| mention.id == payload[:id]}
+        else
+          @title_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#{topic_mention[0]}") if @title_raw
+          @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#{topic_mention[0]}") if @content_raw
         end
       end
     end

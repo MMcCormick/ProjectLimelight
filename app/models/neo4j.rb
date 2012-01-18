@@ -106,6 +106,15 @@ class Neo4j
         end
       end
 
+      # sort by number of connected topics
+      organized = organized.sort do |a,b|
+        b[1]["connections"].length <=> a[1]["connections"].length
+      end
+
+      # put type at the beginning
+      type_of_index = organized.index{ |con| con[1]["connection_id"] == Topic.type_of_id }
+      organized.unshift(organized.delete_at(type_of_index)) if type_of_index
+
       organized
     end
 

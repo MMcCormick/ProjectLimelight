@@ -82,10 +82,10 @@ class ApplicationController < ActionController::Base
 
   # Redirect after sign in / sign up
   def after_sign_in_path_for(resource)
-    user_feed_path current_user
+    root_path
   end
   def after_sign_up_path_for(resource)
-    user_feed_path current_user
+    root_path
   end
 
 
@@ -138,7 +138,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_sign_in
-    if request.get? && !signed_in? && request.fullpath != "/"
+    if request.get? && !signed_in? && !(["feed", "facebook"].include?(params[:action]) && params[:id].blank?)
       redirect_to (root_path)
     end
   end

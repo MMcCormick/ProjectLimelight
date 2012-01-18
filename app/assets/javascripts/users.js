@@ -170,11 +170,11 @@ $(function() {
     $(e).each(function(i,val) {
       var e = $('.topic-wall .tile-'+i);
 
-      e.fadeTo(0, 0.07);
+      e.fadeTo(0, 0.05);
       used_tiles.push(e.data('group'));
       setTimeout(function(){
-        e.fadeTo(250, 1);
-      }, (r[i]+5)*20);
+        e.fadeTo(500, 1);
+      }, (r[i]+5)*130);
     });
     // END RANDOM FADE IN
 

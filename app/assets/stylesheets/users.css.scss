@@ -613,7 +613,8 @@
       z-index: 50;
     }
     #auth_box {
-      border: 5px solid #666666;
+      @include single-box-shadow(#333, 1px, 1px, 3px);
+      border: 5px solid #333;
       margin-left: -310px;
       left: 50%;
       position: absolute;

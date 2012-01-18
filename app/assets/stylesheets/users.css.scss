@@ -49,12 +49,8 @@
       margin: 0 0 0 25px;
     }
     .option {
-      @include border-radius(3px);
-      border: 2px solid #96C23C;
-      padding: 25px 8px 8px;
       position: absolute;
-      top: 24px;
-      background: #FFF;
+      top: 33px;
       .log {
         position: absolute;
         left: 5px;
@@ -69,7 +65,7 @@
 
       }
       &.one {
-        left: 30px;
+        left: 26px;
       }
       &.two {
         left: 140px;
@@ -84,15 +80,15 @@
       position: absolute;
       font-size: 11px;
       color: #666;
-      left: 35px;
+      left: 26px;
       width: 190px;
       cursor: default;
     }
     .foot1 {
-      top: 95px;
+      top: 73px;
     }
     .foot2 {
-      top: 115px;
+      top: 93px;
     }
   }
   .right {
@@ -101,7 +97,7 @@
     position: relative;
 
     .head {
-      margin: 0 0 6px 9px;
+      margin: 0 0 15px 9px;
     }
     .lClear {
       label {
@@ -148,27 +144,27 @@
   }
   .invite {
     position: relative;
-    width: 220px;
-    left: -110px;
+    width: 287px;
+    left: -144px;
     margin-left: 50%;
     margin-bottom: 10px;
-    padding-top: 20px;
+    padding-top: 30px;
     #new_invite_code {
       position: relative;
       label {
-        font-size: 22px;
-        top: 5px;
+        font-size: 14px;
+        top: 12px;
+        left: 30px;
+        color: #777;
+        width: 240px;
       }
       #invite_code_code {
-        width: 124px;
+        @include single-box-shadow(#999, 1px, 1px, 2px);
+        width: 270px;
         float: left;
         font-size: 22px;
-      }
-      .submit {
-        @include green-button(2px, 16px);
-        padding: 5px 6px;
-        margin-top: 5px;
-        float: right;
+        text-align: center;
+        border: 2px solid #666;
       }
       .errors {
         width: 205px;
@@ -608,7 +604,7 @@
     .logo {
       position: absolute;
       left: 50%;
-      margin-left: -175px;
+      margin-left: -153px;
       top: 50px;
       z-index: 50;
     }

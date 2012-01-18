@@ -203,7 +203,7 @@ class UsersController < ApplicationController
       @title = 'Welcome to Limelight!'
       @description = "The Limelight splash page, where users are directed to sign in"
       @show = params[:show] ? params[:show].to_sym : false
-      @topics = Topic.where(:health_index.gte => 2).order_by([[:pt, :desc]]).limit(750).to_a
+      @topics = Topic.where(:health_index.gte => 2).order_by([[:pt, :desc]]).limit(450).to_a
       @topics.shuffle!
 
       render "splash", :layout => "blank"

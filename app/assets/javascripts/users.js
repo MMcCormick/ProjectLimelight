@@ -149,6 +149,29 @@ $(function() {
   })
 
   // Topic wall
+
+  // RANDOM FADE IN OF TOPIC WALL
+  function randsort(c) {
+      var o = new Array();
+      for (var i = 0; i < c; i++) {
+          var n = Math.floor(Math.random()*c);
+          if( jQuery.inArray(n, o) > 0 ) --i;
+          else o.push(n);
+      }
+      return o;
+  }
+  var e = $('.topic-wall .tile .o') // The elements we're searching
+  var c = e.size() // Total number of those elements
+  var r = randsort(c) // an array of the element indices in random order
+  e.each(function(i) {
+    var e = $(this);
+    e.fadeTo(0, 0.05);
+    setTimeout(function(){
+      e.fadeTo(250, 1);
+    }, r[i]*20);
+  });
+  // END RANDOM FADE IN
+
   $('.topic-wall .tile img').live({
     mouseenter:
       function() {

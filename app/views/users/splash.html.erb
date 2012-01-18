@@ -5,11 +5,13 @@
 
 <div class='topic-wall'>
   <% @topics.each do |topic| %>
-    <div class='tile'>
-      <div class='bg'>
-        <%= image_tag topic.raw_image(75, 75, 'fit'), :class => "o", :alt => "#{topic.name}" %>
-        <%= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "l", :alt => "" %>
+    <a href="<%= topic_path(topic) %>">
+      <div class='tile'>
+        <div class='bg'>
+          <%= image_tag topic.raw_image(75, 75, 'fillcropmid'), :class => "o", :alt => "#{topic.name}" %>
+          <%= image_tag topic.raw_image(100, 0, 'fit'), :class => "l", :alt => "" %>
+        </div>
       </div>
-    </div>
+    </a>
   <% end %>
 </div>

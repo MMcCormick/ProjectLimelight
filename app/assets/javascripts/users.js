@@ -156,7 +156,7 @@ $(function() {
         $('.topic-wall').stopTime('show-topic-wall-tile').oneTime(250, 'show-topic-wall-tile', function() {
           $self.data('img_swap', $self.attr('src'));
           $self.attr('src', $self.next('img').attr('src'));
-          $self.parent().css({'margin-top': $self.next('img').height()/2*-1, 'margin-left': $self.next('img').width()/2*-1}).addClass('hover');
+          $self.parent().addClass('hover');
         })
       },
     mouseleave:
@@ -185,7 +185,7 @@ $(function() {
        }
      },
      show: {
-       delay: 250
+       delay: 350
      }
   });
 

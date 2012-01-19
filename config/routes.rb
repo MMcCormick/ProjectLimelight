@@ -117,6 +117,7 @@ ProjectLimelight::Application.routes.draw do
   post ':id/freebase_update' => 'topics#freebase_update', :as => :freebase_update
   put '/:id/lock_slug' => 'topics#lock_slug', :as => :lock_topic_slug
   get '/:id/pull_from' => 'topics#pull_from', :as => :topic_pull_from
+  get '/:id/google_images' => 'topics#google_images', :as => :topic_google_images
   get '/:id' => 'topics#show', :as => :topic
   put '/:id' => 'topics#update', :as => :update_topic
 

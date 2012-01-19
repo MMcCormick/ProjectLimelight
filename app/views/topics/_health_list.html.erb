@@ -1,10 +1,24 @@
+<% content_for :head do %>
+  <link type="text/css" rel="stylesheet" href="http://freebaselibs.com/static/suggest/1.3/suggest.min.css" />
+<% end %>
+
+<% content_for :js do %>
+  <script type="text/javascript" src="http://freebaselibs.com/static/suggest/1.3/suggest.min.js"></script>
+<% end %>
+
 <% topics.each do |topic| %>
-  <li class="teaser <%= cycle("odd", "") -%>">
-    <div><%= topic_link topic %></div>
-    <div class="score"><%= sprintf "%.1f", topic.pt %></div>
-    <div><%= topic.health_index %></div>
-    <%= render 'follows/btn', :current_user => @current_user, :target => topic %>
-  </li>
+  <div class="topic-health-teaser <%= cycle("odd", "") -%>">
+    <%= image_tag topic_default_picture(topic, 100, 100, 'fit'), :style => "max-width: 100px;", :class => 'profile-image', :alt => "" %>
+    <h3><%= topic_link topic %> (points: <%= topic.pt.to_i %>, health: <%= topic.health_index %>)</h3>
+    <div class='google'>
+      <h4>Use Image From Google</h4>
+      <div class='ac fetch-google-images' data-m='get' data-url='<%= topic_google_images_path(topic) %>'>Fetch Google Images</div>
+    </div>
+    <div class='connections'>
+      <h4>Add A Connection<%= " (#{topic.primary_type})" if topic.primary_type %></h4>
+      <%= render_cell :topic, :add_connection, topic %>
+    </div>
+  </div>
 <% end %>
 
 <% unless topics.count(true) == 0 || !@more_path %>

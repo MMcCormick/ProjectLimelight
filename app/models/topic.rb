@@ -31,7 +31,6 @@ class Topic
   field :short_name
   field :health, :default => []
   field :health_index, :default => 0
-  field :fb_img, :default => false # use the freebase image?
   field :fb_id # freebase id
   field :fb_mid # freebase mid
   field :status, :default => 'active'
@@ -267,12 +266,8 @@ class Topic
   end
 
   def raw_image(w,h,m)
-    if fb_img == true
-      url = "https://usercontent.googleapis.com/freebase/v1/image#{fb_id}?maxwidth=#{w}&maxheight=#{h}&mode=#{m}"
-    else
-      url = default_image_url(self, w, h, m, true)
-      url = Rails.public_path+url if Rails.env.development? && !url.include?('topic-default')
-    end
+    url = default_image_url(self, w, h, m, true)
+    url = Rails.public_path+url if Rails.env.development?
     url
   end
 

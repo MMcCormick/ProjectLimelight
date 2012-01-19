@@ -130,7 +130,7 @@ class TopicsController < ApplicationController
 
     url = topic.raw_image(params[:w], params[:h], params[:m])
 
-    if Rails.env.development? && topic.fb_img != true
+    if Rails.env.development?
       img = open(url)
       send_data(
         img.read,
@@ -151,19 +151,22 @@ class TopicsController < ApplicationController
       image = topic.add_image(current_user.id, params[:image_location])
       topic.set_default_image(image.id) if image
       topic.update_health('image')
-      topic.fb_img = false
 
-      if topic.save
+      if image && topic.save
         topic.expire_caches
         topic.available_dimensions.each do |dimension|
           topic.available_modes.each do |mode|
             expire_fragment("#{topic.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
           end
         end
+
+        response = build_ajax_response(:ok, nil, "Topic picture updated!")
+      else
+        response = build_ajax_response(:error, nil, "Woops, something went wrong.")
       end
     end
 
-    render :json => {:status => 'ok'}
+    render :json => response
   end
 
   def merge
@@ -289,23 +292,8 @@ class TopicsController < ApplicationController
     topic.fb_id = params[:freebase_id]
     topic.fb_mid = params[:freebase_mid]
 
-    if params[:use_image] && params[:image]
-      topic.fb_img = true
-      topic.update_health('image')
-      topic.available_dimensions.each do |dimension|
-        topic.available_modes.each do |mode|
-          expire_fragment("#{topic.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
-        end
-      end
-    end
     if params[:use_summary] && params[:summary]
       topic.summary = params[:summary]
-    end
-    if params[:use_aliases] && params[:aliases]
-      aliases = params[:aliases].split(", ")
-      aliases.each do |new_alias|
-        topic.add_alias(new_alias)
-      end
     end
 
     if topic.save
@@ -372,6 +360,13 @@ class TopicsController < ApplicationController
   def mention_suggestion
     suggestions = Topic.parse_aliases(params[:text], Topic.parse_text(params[:text], false))
     response = build_ajax_response(:ok, nil, nil, nil, {:suggestions => suggestions})
+    render json: response, status: 200
+  end
+
+  def google_images
+    topic = Topic.find_by_slug(params[:id])
+    html = render_to_string :partial => "topics/google_image_rotator", :locals => {:topic => topic, :google_images => GoogleImage.all(topic.name + (topic.primary_type ? " #{topic.primary_type}" : ''), 0, request.remote_ip)}
+    response = build_ajax_response(:ok, nil, nil, nil, {:html => html})
     render json: response, status: 200
   end
 end

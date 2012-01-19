@@ -742,3 +742,79 @@
     }
   }
 }
+
+.g-images {
+  @include clearfix();
+  position: relative;
+  padding: 5px 25px 3px 25px;
+  float: left;
+  text-align: center;
+
+  .left,
+  .right {
+    position: absolute;
+    font-weight: bold;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .left {
+    left: 3px;
+  }
+  .right {
+    right: 3px;
+  }
+  .image {
+    float: left;
+    width: 150px;
+
+    img {
+      max-width: 150px;
+      max-height: 150px;
+    }
+    .original-size {
+      font-size: 11px;
+      margin: 2px 0 0 0;
+    }
+  }
+  .submit {
+    @include green-button(2px, 11px);
+    margin: 0 auto !important;
+  }
+}
+
+.fetch-google-images {
+  @include link();
+}
+
+.topic-health-teaser {
+  @include clearfix();
+  position: relative;
+  min-height: 100px;
+  border-bottom: 1px solid #999;
+  padding: 0 0 0 110px;
+  background: #FFF;
+  margin-left: 1px;
+
+  .profile-image {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+  h3 {
+    padding: 5px 0 0 0;
+  }
+  .google {
+    float: left;
+    text-align: center;
+    min-height: 50px;
+
+    h4 {
+      width: 150px;
+    }
+  }
+  .connections {
+    float: left;
+    min-height: 50px;
+    margin: 0 0 0 50px;
+  }
+}

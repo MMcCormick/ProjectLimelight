@@ -173,11 +173,8 @@ $(function() {
       e.fadeTo(0, 0.03);
       used_tiles.push(e.data('group'));
       setTimeout(function(){
-        e.fadeTo(750, 1);
-      }, (r[i]+1)*1000);
-      console.log(i);
-      console.log(val);
-      console.log((r[i]+3)*1000);
+        e.fadeTo(500, 1);
+      }, (r[i]+1)*550);
     });
     // END RANDOM FADE IN
 

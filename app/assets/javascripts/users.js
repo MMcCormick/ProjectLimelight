@@ -163,8 +163,8 @@ $(function() {
 
   if ($('.topic-wall').length > 0)
   {
-    var e = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] // The elements we're searching
-    var c = 20 // Total number of those elements
+    var e = [0,1,2,3,4,5,6,7,8,9] // The elements we're searching
+    var c = 10 // Total number of those elements
     var r = randsort(c) // an array of the element indices in random order
     var used_tiles = [];
     $(e).each(function(i,val) {
@@ -173,8 +173,8 @@ $(function() {
       e.fadeTo(0, 0.01);
       used_tiles.push(e.data('group'));
       setTimeout(function(){
-        e.fadeTo(500, 1);
-      }, (r[i]+5)*130);
+        e.fadeTo(300, 1);
+      }, (r[i]+15)*150);
     });
     // END RANDOM FADE IN
 

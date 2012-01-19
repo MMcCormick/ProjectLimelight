@@ -1,12 +1,7 @@
 <form action="<%= freebase_update_path topic_slug %>" id="freebase-update-form" method="POST" class="ajax">
 
-  <div class="check-label">
-    <%= check_box_tag "use_image" %>
-    <%= label_tag "use_image", "Use Image?" %>
-  </div>
   <div class="field">
     <img class="image-preview" src="<%= image_url %>">
-    <%= hidden_field_tag "image", image_url %>
   </div>
 
   <div class="check-label">

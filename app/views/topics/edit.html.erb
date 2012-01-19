@@ -19,11 +19,14 @@
 <div class="section">
   <h3>Change Default Image</h3>
   <%= image_tag topic_default_picture(@topic, 100, 100, 'fit'), :style => "max-width: 100px;", :class => 'topic-image', :alt => "" %>
-  <div class="upload" id="topic_uploadB">Change Image</div>
+  <div class="upload" id="topic_uploadB">Upload Image</div>
   <div id="topic_uploadB_progress"></div>
   <% content_for :js do %>
     <%= render "topics/image_upload_js" %>
   <% end %>
+
+  <h4>Use Image From Google</h4>
+  <div class='ac fetch-google-images' data-m='get' data-url='<%= topic_google_images_path(@topic) %>'>Fetch Images</div>
 </div>
 <div class="clear-left"></div>
 

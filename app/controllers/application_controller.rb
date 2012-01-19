@@ -138,7 +138,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_sign_in
-    if request.get? && !signed_in? && !(["feed", "facebook"].include?(params[:action]) && params[:id].blank?)
+    if request.get? && !signed_in? && !(["feed", "facebook", "splash"].include?(params[:action]) && params[:id].blank?)
       redirect_to (root_path)
     end
   end

@@ -238,16 +238,6 @@
     width: 8px;
     height: 16px;
 }
-.google-l-icon {
-    @include icon-sprite(google);
-    width: 80px;
-    height: 26px;
-}
-.facebook-l-icon {
-    @include icon-sprite(facebook);
-    width: 80px;
-    height: 26px;
-}
 .twitter-bird-small {
   @include icon-sprite(twitter_bird_small);
   width: 18px;

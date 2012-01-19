@@ -138,12 +138,16 @@ $(function() {
     })
   })
 
-
   // When a new page in an alt-list is loaded
   amplify.subscribe("loaded_alt_list", function (data) {
     $('#load-more').remove()
     var content = $(data.content)
     $('.alt-list').append(content)
+  });
+
+  // Fetching google images for a topic
+  amplify.subscribe("topics_google_images", function (data) {
+    $currentTarget.replaceWith(data.html);
   });
 
   /*

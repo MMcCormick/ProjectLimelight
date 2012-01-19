@@ -160,56 +160,63 @@ $(function() {
       }
       return o;
   }
-  var e = $('.topic-wall .tile .o') // The elements we're searching
-  var c = e.size() // Total number of those elements
-  var r = randsort(c) // an array of the element indices in random order
-  e.each(function(i) {
-    var e = $(this);
-    e.fadeTo(0, 0.05);
-    setTimeout(function(){
-      e.fadeTo(250, 1);
-    }, r[i]*20);
-  });
-  // END RANDOM FADE IN
 
-  $('.topic-wall .tile img').live({
-    mouseenter:
-      function() {
-        var $self = $(this);
-        $('.topic-wall').stopTime('show-topic-wall-tile').oneTime(250, 'show-topic-wall-tile', function() {
-          $self.data('img_swap', $self.attr('src'));
-          $self.attr('src', $self.next('img').attr('src'));
-          $self.parent().addClass('hover');
-        })
-      },
-    mouseleave:
-      function() {
-        var $self = $(this);
-        $('.topic-wall').stopTime('show-topic-wall-tile');
-        $self.attr('src', $self.data('img_swap'))
-        $self.parent().removeClass('hover');
-      }
+  if ($('.topic-wall').length > 0)
+  {
+    var e = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] // The elements we're searching
+    var c = 20 // Total number of those elements
+    var r = randsort(c) // an array of the element indices in random order
+    var used_tiles = [];
+    $(e).each(function(i,val) {
+      var e = $('.topic-wall .tile-'+i);
 
-  })
-  $('.topic-wall .tile .o[alt]').qtip({
-     content: {
-        attr: 'alt'
-     },
-     style: {
-       classes: 'ui-tooltip-light ui-tooltip-shadow',
-       tip: false
-     },
-     position: {
-       my: 'top center',  // Position my top left...
-       at: 'bottom center', // at the bottom right of...
-       viewport: $(window),
-       adjust: {
-          y: -5
+      e.fadeTo(0, 0.01);
+      used_tiles.push(e.data('group'));
+      setTimeout(function(){
+        e.fadeTo(500, 1);
+      }, (r[i]+5)*130);
+    });
+    // END RANDOM FADE IN
+
+    $('.topic-wall .tile img').live({
+      mouseenter:
+        function() {
+          var $self = $(this);
+          $('.topic-wall').stopTime('show-topic-wall-tile').oneTime(250, 'show-topic-wall-tile', function() {
+            $self.data('img_swap', $self.attr('src'));
+            $self.attr('src', $self.next('img').attr('src'));
+            $self.parent().addClass('hover');
+          })
+        },
+      mouseleave:
+        function() {
+          var $self = $(this);
+          $('.topic-wall').stopTime('show-topic-wall-tile');
+          $self.attr('src', $self.data('img_swap'))
+          $self.parent().removeClass('hover');
+        }
+
+    })
+    $('.topic-wall .tile .o[alt]').qtip({
+       content: {
+          attr: 'alt'
+       },
+       style: {
+         classes: 'ui-tooltip-light ui-tooltip-shadow',
+         tip: false
+       },
+       position: {
+         my: 'top center',  // Position my top left...
+         at: 'bottom center', // at the bottom right of...
+         viewport: $(window),
+         adjust: {
+            y: -5
+         }
+       },
+       show: {
+         delay: 350
        }
-     },
-     show: {
-       delay: 350
-     }
-  });
+    });
+  }
 
 })

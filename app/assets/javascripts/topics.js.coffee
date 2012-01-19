@@ -151,3 +151,24 @@ jQuery ->
       $(@).parent().next('.tc-auto-id').val("")
       getSugs()
       repaint()
+
+  # Google image rotator
+  $('.g-images .left').live 'click', (e) ->
+    target = $(@).parent().find('.image:visible')
+    if(target.next().hasClass('image'))
+      next = target.prev()
+    else
+      next = $(@).parent().find('.image:last')
+    target.hide()
+    next.show()
+    $(@).parent().find('input[name="image_location"]').val(next.data('original'))
+
+  $('.g-images .right').live 'click', (e) ->
+    target = $(@).parent().find('.image:visible')
+    if(target.next().hasClass('image'))
+      next = target.next()
+    else
+      next = $(@).parent().find('.image:first')
+    target.hide()
+    next.show()
+    $(@).parent().find('input[name="image_location"]').val(next.data('original'))

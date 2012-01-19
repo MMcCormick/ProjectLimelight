@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   include ImageHelper
 
   caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
+  caches_action :feed, :if => Proc.new { |c| !signed_in? }, :cache_path => Proc.new { |c| c.params }
 
   def show
     @user = User.find_by_slug(params[:id])
@@ -203,7 +204,7 @@ class UsersController < ApplicationController
       @title = 'Welcome to Limelight!'
       @description = "The Limelight splash page, where users are directed to sign in"
       @show = params[:show] ? params[:show].to_sym : false
-      @topics = Topic.where(:health_index.gte => 0).order_by([[:pt, :desc]]).limit(500).to_a
+      @topics = Topic.where(:health_index.gte => 2).order_by([[:pt, :desc]]).limit(450).to_a
       @topics.shuffle!
 
       render "splash", :layout => "blank"

@@ -5,7 +5,7 @@
 
 <div class='topic-wall'>
   <% @topics.each do |topic| %>
-    <% group = rand(10) %>
+    <% group = rand(5) %>
     <a href="<%= topic_path(topic) %>">
       <div class='tile <%= "tile-#{group}" %>'>
         <div class='bg'>

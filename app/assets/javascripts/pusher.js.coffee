@@ -14,4 +14,5 @@ jQuery ->
           $(@).fadeOut(100).text('')
 
     channel.bind 'notification', (data) ->
-      createGrowl(false, data.message, '', 'green');
+      console.log('test');
+      createGrowl(false, data.message, 'Notification', 'green');

@@ -622,7 +622,7 @@
     width: 110%;
     height: 110%;
     .tile {
-      @include opacity(.5);
+      @include opacity(.1);
       float: left;
       background: #FFF;
       position: relative;

@@ -162,9 +162,12 @@ $(function() {
         current_tile_group = $(".tile:eq("+chosen+")").data('group');
       }
 
+      console.log(last_tile_group);
+      console.log(current_tile_group);
+
       last_tile_group = current_tile_group;
-      $('.tile:not(.'+current_tile_group+')').removeClass('hover', 300, function() {
-        $('.'+current_tile_group).addClass('hover', 300);
+      $('.tile:not(.'+current_tile_group+')').removeClass('hover', 1000, function() {
+        $('.'+current_tile_group).addClass('hover', 1000);
       })
     })
   }

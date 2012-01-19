@@ -150,23 +150,12 @@ $(function() {
 
   // Topic wall
 
-  // RANDOM FADE IN OF TOPIC WALL
-  function randsort(c) {
-      var o = new Array();
-      for (var i = 0; i < c; i++) {
-          var n = Math.floor(Math.random()*c);
-          if( jQuery.inArray(n, o) > 0 ) --i;
-          else o.push(n);
-      }
-      return o;
-  }
-
   if ($('.topic-wall').length > 0)
   {
     var tile_count = $('.tile').length;
     var last_tile_group = null;
     var current_tile_group = null;
-    $('.topic-wall').everyTime(7000, 'rotate-shown', function() {
+    $('.topic-wall').everyTime(6000, 'rotate-shown', function() {
       while(last_tile_group == current_tile_group)
       {
         var chosen = Math.floor(Math.random()*(tile_count+1))
@@ -174,9 +163,8 @@ $(function() {
       }
 
       last_tile_group = current_tile_group;
-      $('.tile:not(.'+current_tile_group+')').fadeTo(250, .5, function() {
-        $(this).removeClass('hover');
-        $('.'+current_tile_group).fadeTo(250, 1).addClass('hover');
+      $('.tile:not(.'+current_tile_group+')').removeClass('hover', 300, function() {
+        $('.'+current_tile_group).addClass('hover', 300);
       })
     })
   }

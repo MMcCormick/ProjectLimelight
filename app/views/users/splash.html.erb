@@ -5,7 +5,7 @@
 
 <div class='topic-wall'>
   <% @topics.each do |topic| %>
-    <div class='tile <%= topic.primary_type.to_url if topic.primary_type %>' data-group='<%= topic.primary_type.to_url if topic.primary_type %>'>
+    <div class='tile <%= topic.primary_type ? topic.primary_type.to_url : 'none' %>' data-group='<%= topic.primary_type ? topic.primary_type.to_url : 'none' %>'>
       <div class='s'>
         <div class='name'><%= topic.name %></div>
         <%= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "", :alt => "#{topic.name}" %>

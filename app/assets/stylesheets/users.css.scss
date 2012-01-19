@@ -633,7 +633,7 @@
         display: relative;
 
         .name {
-          @include opacity(.75);
+          @include opacity(.85);
           cursor: default;
           display: none;
           position: absolute;
@@ -664,6 +664,7 @@
         }
       }
       &.hover,&:hover {
+        @include opacity(1);
         .s {
           @include single-box-shadow(#333, 2px, 2px, 4px);
           border: 1px solid #000;
@@ -674,17 +675,15 @@
           left: -1px;
           width: 100px;
           min-height: 100px;
-
-          .name {
-            display: block;
-          }
-          .stats {
-            display: block;
-          }
         }
       }
       &:hover {
-        @include opacity(1);
+        .name {
+          display: block;
+        }
+        .stats {
+          display: block;
+        }
       }
     }
   }

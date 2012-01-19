@@ -16,7 +16,9 @@ module ImageHelper
         object.save
         image = object.default_image
         version = if image then image.find_version dimensions, mode else nil end
-        url = returnObject && version ? version : version.image_url
+        if version
+          url = returnObject ? version : version.image_url
+        end
       else
         # Queue up to process and save this image size for future requests
         Resque.enqueue(ImageProcessor, object.class.to_s, object.id.to_s, image.id.to_s, dimensions, mode)

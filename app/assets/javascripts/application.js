@@ -18,6 +18,7 @@
 //= require jquery.typing
 //= require jquery.label
 //= require jquery.charCount
+//= require jquery.gritter
 //= require plupload/plupload.full
 //= require help
 //= require pusher

@@ -163,8 +163,8 @@ $(function() {
 
   if ($('.topic-wall').length > 0)
   {
-    var e = [0,1,2,3,4] // The elements we're searching
-    var c = 5 // Total number of those elements
+    var e = [0,1,2,3,4,5] // The elements we're searching
+    var c = 6 // Total number of those elements
     var r = randsort(c) // an array of the element indices in random order
     var used_tiles = [];
     $(e).each(function(i,val) {
@@ -174,7 +174,7 @@ $(function() {
       used_tiles.push(e.data('group'));
       setTimeout(function(){
         e.fadeTo(500, 1);
-      }, (r[i]+1)*550);
+      }, (r[i]+3)*650);
     });
     // END RANDOM FADE IN
 

@@ -9,8 +9,8 @@
     <a href="<%= topic_path(topic) %>">
       <div class='tile <%= "tile-#{group}" %>'>
         <div class='bg'>
-          <%= image_tag topic.raw_image(75, 75, 'fillcropmid'), :class => "o", :alt => "#{topic.name}" %>
-          <%= image_tag topic.raw_image(100, 0, 'fit'), :class => "l", :alt => "" %>
+          <%= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "o", :alt => "#{topic.name}" %>
+          <%= image_tag topic.raw_image(150, 0, 'fit'), :class => "l", :alt => "" %>
         </div>
       </div>
     </a>

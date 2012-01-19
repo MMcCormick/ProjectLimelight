@@ -174,7 +174,7 @@ $(function() {
       used_tiles.push(e.data('group'));
       setTimeout(function(){
         e.fadeTo(500, 1);
-      }, (r[i]+3)*650);
+      }, (r[i]+1)*650);
     });
     // END RANDOM FADE IN
 

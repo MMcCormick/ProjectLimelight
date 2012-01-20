@@ -153,8 +153,8 @@ $(function() {
   if ($('.topic-wall').length > 0)
   {
     var tile_count = $('.tile').length;
-    var last_tile_group = null;
-    var current_tile_group = null;
+    var last_tile_group = 'first-iteration';
+    var current_tile_group = 'first-iteration';
     $('.topic-wall').everyTime(6000, 'rotate-shown', function() {
       while(last_tile_group == current_tile_group)
       {
@@ -162,12 +162,12 @@ $(function() {
         current_tile_group = $(".tile:eq("+chosen+")").data('group');
       }
 
-      console.log(last_tile_group);
-      console.log(current_tile_group);
-
       last_tile_group = current_tile_group;
-      $('.tile:not(.'+current_tile_group+')').removeClass('hover', 1000, function() {
-        $('.'+current_tile_group).addClass('hover', 1000);
+      $('.'+last_tile_group).fadeTo(1000, 0, function() {
+        $(this).addClass('hover');
+        $('.'+current_tile_group).fadeTo(1000, 1, function() {
+          $(this).addClass('hover');
+        })
       })
     })
   }

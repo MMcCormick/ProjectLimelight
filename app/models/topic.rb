@@ -80,6 +80,7 @@ class Topic
   index "aliases.hash"
   index :short_name
   index :primary_type
+  index :health_index
   index :ph
   index :pd
   index :pw

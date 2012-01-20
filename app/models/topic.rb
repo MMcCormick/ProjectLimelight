@@ -492,16 +492,13 @@ class Topic
   def update_denorms
     soulmate = nil
     topic_mention_updates = {}
-    connection_snippet_updates = {}
     if name_changed?
       soulmate = true
       topic_mention_updates["topic_mentions.$.name"] = self.name
-      connection_snippet_updates["topic_connection_snippets.$.topic_name"] = self.name
     end
     if slug_changed?
       soulmate = true
       topic_mention_updates["topic_mentions.$.slug"] = self.slug
-      connection_snippet_updates["topic_connection_snippets.$.topic_slug"] = self.slug
     end
     if short_name_changed?
       soulmate = true
@@ -517,7 +514,7 @@ class Topic
       end
     end
 
-    unless connection_snippet_updates.empty?
+    unless topic_mention_updates.empty?
       CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
     end
 

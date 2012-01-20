@@ -664,6 +664,7 @@
         }
       }
       &.hover,&:hover {
+        @include opacity(1);
         .s {
           @include single-box-shadow(#333, 2px, 2px, 4px);
           border: 1px solid #000;
@@ -677,7 +678,6 @@
         }
       }
       &:hover {
-        @include opacity(1);
         .name {
           display: block;
         }

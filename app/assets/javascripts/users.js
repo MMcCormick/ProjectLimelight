@@ -163,7 +163,7 @@ $(function() {
       }
 
       last_tile_group = current_tile_group;
-      $('.'+last_tile_group).fadeTo(1000, 0, function() {
+      $('.'+last_tile_group).fadeTo(1000, .1, function() {
         $(this).addClass('hover');
         $('.'+current_tile_group).fadeTo(1000, 1, function() {
           $(this).addClass('hover');

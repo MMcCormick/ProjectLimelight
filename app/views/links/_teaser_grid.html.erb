@@ -45,7 +45,7 @@
 <% end # cache %>
 
     <% if can? :destroy, object %>
-      <div class="ac disable conf hide" title="remove this post" data-m="PUT" data-url="<%= disable_link_path object %>">X</div>
+      <%= render :partial => 'core_objects/disable_btn', :locals => { :path => disable_link_path(object) } %>
     <% end %>
 
     <%= render 'core_objects/feed_teaser_actions', :object => object %>

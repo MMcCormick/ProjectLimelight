@@ -19,7 +19,7 @@ $(function() {
     event.preventDefault();
 
     if ($this.hasClass('conf')) {
-      if (!confirm('Are you sure you want to remove this post? This cannot be undone.')) {
+      if (!confirm($this.data('conf'))) {
         return false;
       }
     }

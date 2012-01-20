@@ -483,6 +483,17 @@ module Limelight #:nodoc:
         end
       end
     end
+
+    def remove_topic_mentions_of(topic_id)
+      # Loop through all of the topic mentions with the given id
+      self.content.scan(/\#\[#{topic_id.to_s}#([a-zA-Z0-9,!\-_:'&\?\$ ]+)\]/).each do |topic|
+        # If we found a match, replace the mention with just the text
+        self.content.gsub!(/\#\[#{topic_id.to_s}##{topic[0]}\]/, topic[0])
+      end
+
+      self.topic_mentions.delete_all(conditions: {id: topic_id})
+      save
+    end
   end
 
   module Popularity

@@ -100,7 +100,7 @@ ProjectLimelight::Application.routes.draw do
   end
 
   # Topics
-  resources :topics, :except => [:edit, :show, :update, :index]
+  resources :topics, :except => [:edit, :show, :update, :index, :destroy]
   get '/topics/by_health' => 'topics#by_health', :as => :topics_by_health
   get 'topics/mention_suggestion' => 'topics#mention_suggestion', :as => :mention_suggestion
   get '/:id/edit' => 'topics#edit', :as => :edit_topic
@@ -119,6 +119,7 @@ ProjectLimelight::Application.routes.draw do
   get '/:id/pull_from' => 'topics#pull_from', :as => :topic_pull_from
   get '/:id/google_images' => 'topics#google_images', :as => :topic_google_images
   get '/:id' => 'topics#show', :as => :topic
+  delete '/:id' => 'topics#destroy', :as => :topic
   put '/:id' => 'topics#update', :as => :update_topic
 
   # Topic Connection Suggestions

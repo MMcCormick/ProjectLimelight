@@ -397,7 +397,7 @@
       .remove {
         float: left;
         font-size: 10px;
-        color: red;
+        color: #990000;
         margin: 2px 5px 0 0;
         cursor: pointer;
       }
@@ -554,9 +554,6 @@ $teaser-padding: 10px;
   .disable {
     z-index: 300;
     position: absolute;
-    color: red;
-    font-weight: bold;
-    cursor: pointer;
   }
 
   .respond {
@@ -1396,11 +1393,9 @@ $scoreBox-width: 160px;
   .disable {
     z-index: 300;
     position: absolute;
-    top: 0px;
+    top: -23px;
     right: 20px;
-    color: red;
-    font-weight: bold;
-    cursor: pointer;
+    display: block;
   }
 
   h1 {

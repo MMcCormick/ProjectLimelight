@@ -41,6 +41,12 @@
   cursor: default;
 }
 
+.disable {
+  color: #990000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .counter {
   &.warning {
     color: orange;
@@ -49,7 +55,6 @@
     color: red;
   }
 }
-
 
 #form-submitting {
     @include opacity(.8);
@@ -90,7 +95,7 @@
     margin-bottom: 10px;
   }
   &.required label {
-    color: #CD070E;
+    color: #990000;
   }
   .tagDisplay {
     position: absolute;

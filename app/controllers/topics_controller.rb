@@ -14,7 +14,8 @@ class TopicsController < ApplicationController
   end
 
   def show
-    @topic = Topic.find_by_slug(params[:id])
+    # Doesn't use find_by_slug() because it doesn't work after Topic.unscoped (deleted topics are ignored)
+    @topic = Topic.unscoped.where(slug: params[:id]).first
     not_found("Topic not found") unless @topic
     authorize! :read, @topic
 
@@ -85,6 +86,20 @@ class TopicsController < ApplicationController
         format.json { render json: build_ajax_response(:error, nil, 'Topic could not be updated', @topic.errors), status: :unprocessable_entity }
       end
     end
+  end
+
+  def destroy
+    authorize! :manage, :all
+    if topic = Topic.find_by_slug(params[:id])
+      topic.destroy
+      response = build_ajax_response(:ok, nil, "Topic deleted")
+      status = 200
+    else
+      response = build_ajax_response(:error, nil, "Topic not found")
+      status = 400
+    end
+
+    render json: response, status: status
   end
 
   def by_health

@@ -60,7 +60,7 @@
               <%= render 'topic_connections/toggle_primary_btn', :snippet => connection, :topic_id => @topic.id %>
             <% end %>
 
-            <a data-url="<%= remove_connection_path %>" data-d='{ "id":"<%= data['relationship']['connection_id'] %>", "topic1_id":"<%= @topic.id %>", "topic2_id":"<%= connection['uuid'] %>" }'
+            <a data-url="<%= remove_connection_path %>" data-d='{ "id":"<%= data['connection_id'] %>", "topic1_id":"<%= @topic.id %>", "topic2_id":"<%= connection['uuid'] %>" }'
                data-m="delete" class="ac delete">[delete]</a>
           </div>
           <div class="clear-left"></div>

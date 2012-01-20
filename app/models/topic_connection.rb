@@ -42,17 +42,19 @@ class TopicConnection
                 'connection_id' => connection.id.to_s,
                 'reverse_name' => connection.reverse_name,
                 'inline' => connection.inline,
-                'user_id' => user_id.to_s
+                'user_id' => user_id.to_s,
+                'pull' => (pulla.nil? ? connection.pull_from : pulla[:pull]),
+                'reverse_pull' => (pulla.nil? ? connection.reverse_pull_from : pulla[:reverse_pull])
         })
         Neo4j.neo.add_relationship_to_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}", rel1)
 
-        if (pulla == nil && connection.pull_from == true) || (pulla != nil && pulla[:pull])
+        if (pulla.nil? && connection.pull_from == true) || (!pulla.nil? && pulla[:pull])
           rel1 = Neo4j.neo.create_relationship('pull', node1, node2)
           Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}", rel1)
           action_log[:pull_from] = true
         end
 
-        if (pulla == nil && connection.reverse_pull_from == true) || (pulla != nil && pulla[:reverse_pull])
+        if (pulla.nil? && connection.reverse_pull_from == true) || (!pulla.nil? && pulla[:reverse_pull])
           rel1 = Neo4j.neo.create_relationship('pull', node2, node1)
           Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}", rel1)
           action_log[:reverse_pull_from] = true

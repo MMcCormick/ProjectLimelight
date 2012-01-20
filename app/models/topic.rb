@@ -57,7 +57,6 @@ class Topic
   auto_increment :public_id
 
   belongs_to :user
-  embeds_many :topic_connection_snippets
   embeds_many :aliases, :as => :has_alias, :class_name => 'TopicAlias'
 
   validates :user_id, :presence => true
@@ -160,6 +159,7 @@ class Topic
     true
   end
 
+  # not used?
   def update_aliases new_aliases
     self.aliases = []
     init_alias
@@ -242,7 +242,7 @@ class Topic
   #
 
   def merge(aliased_topic)
-    self.aliases = aliases + aliased_topic.aliases
+    self.aliases = aliases | aliased_topic.aliases
 
     # Update topic mentions
     objects = CoreObject.where("topic_mentions._id" => aliased_topic.id)
@@ -263,15 +263,17 @@ class Topic
     CoreObject.where("topic_mentions._id" => aliased_topic.id).update_all(topic_mention_updates)
 
     # Move Connections
-    aliased_connection_snippets = aliased_topic.topic_connection_snippets.dup
-    topic_ids = aliased_connection_snippets.map { |snippet| snippet.topic_id }
-    topics = Topic.where(:_id.in => topic_ids)
-
-    aliased_connection_snippets.each do |snippet|
-      topic = topics.detect {|topic| topic.id == snippet.topic_id }
-      connection = TopicConnection.find(snippet.id)
-      aliased_topic.remove_connection(connection, topic)
-      add_connection(connection, topic, snippet.user_id)
+    rels = Neo4j.get_topic_relationships aliased_topic.id
+    rels.each do |rel|
+      rev = (rel[0] == rel[1]['reverse_name'])
+      rel[1]['connections'].each do |snip|
+        unless Neo4j.get_connection(rel[1]['connection_id'], (rev ? snip['uuid'] : id), (rev ? id : snip['uuid']))
+          connection = TopicConnection.find(rel[1]['connection_id'])
+          con_topic = Topic.find(snip['uuid'])
+          TopicConnection.add(connection, (rev ? con_topic : self), (rev ? self : con_topic), snip['user_id'],
+                              {:pull => snip['pull'], :reverse_pull => snip['reverse_pull']})
+        end
+      end
     end
 
     # Following
@@ -440,41 +442,6 @@ class Topic
       end
 
       response
-    end
-
-    # given topic mentions, grab and rank their connections in the graph
-    def get_graph(data, depth=1)
-      tmp = data.dup
-
-      # build the counts
-      connection_ids = []
-      tmp.each do |topic_id, data_point|
-        data_point[:topic].topic_connection_snippets.each do |connection|
-          unless connection.id.to_s == Topic.type_of_id
-            unless data[connection.topic_id.to_s]
-              connection_ids << connection.topic_id
-              data[connection.topic_id.to_s] ||= {:topic => nil, :connection => connection, :count => 0}
-            end
-            data[connection.topic_id.to_s][:count] += 1
-          end
-        end
-      end
-
-      # replace the connections with topics
-      topics = Topic.where(:_id => {'$in' => connection_ids})
-      topics.each do |t|
-        data[t.id.to_s][:topic] = t
-      end
-
-      # update the scores
-      data.each do |topic_id, data_point|
-        data_point[:score] = data_point[:count].to_i * (data_point[:topic][:pt] == 0 ? 1 : data_point[:topic][:pt].to_i)
-      end
-
-      # sort the data
-      data.sort_by {|topic_id, d| (-1)*d[:score]}
-
-      data
     end
 
     def expire_caches(target_id)

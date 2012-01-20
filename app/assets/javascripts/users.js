@@ -163,11 +163,7 @@ $(function() {
       }
 
       $('.'+last_tile_group).fadeTo(2000, .1);
-
-      setTimeout(function() {
-        $('.'+last_tile_group).removeClass('hover');
-        $('.'+current_tile_group).addClass('hover').fadeTo(2000, 1);
-      }, 2050);
+      setTimeout("$('."+last_tile_group+").removeClass('hover');$('."+current_tile_group+").addClass('hover').fadeTo(2000, 1);", 2050);
 
       last_tile_group = current_tile_group;
     })

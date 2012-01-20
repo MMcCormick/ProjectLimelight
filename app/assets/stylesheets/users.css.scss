@@ -678,6 +678,9 @@
       }
       &:hover {
         @include opacity(1);
+        .s {
+          z-index: 60;
+        }
         .name {
           display: block;
         }
@@ -686,6 +689,16 @@
         }
       }
     }
+  }
+  .topic-wall-type {
+    @include single-box-shadow(#333, 2px, 2px, 4px);
+    border: 1px solid #333;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #FFF;
+    padding: 8px 12px;
+    color: #444;
   }
 }
 

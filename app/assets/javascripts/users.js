@@ -162,6 +162,9 @@ $(function() {
         current_tile_group = $(".tile:eq("+chosen+")").data('group');
       }
 
+      console.log($('.'+last_tile_group));
+      console.log($('.'+current_tile_group));
+
       $('.'+last_tile_group).fadeTo(1000, .1, function() {
         $(this).addClass('hover');
         $('.'+current_tile_group).fadeTo(1000, 1, function() {

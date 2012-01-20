@@ -5,14 +5,15 @@
 
 <div class='topic-wall'>
   <% @topics.each do |topic| %>
-    <% group = rand(20) %>
-    <a href="<%= topic_path(topic) %>">
-      <div class='tile <%= "tile-#{group}" %>'>
-        <div class='bg'>
-          <%= image_tag topic.raw_image(75, 75, 'fillcropmid'), :class => "o", :alt => "#{topic.name}" %>
-          <%= image_tag topic.raw_image(100, 0, 'fit'), :class => "l", :alt => "" %>
+    <div class='tile <%= topic.primary_type ? topic.primary_type.to_url : 'none' %>' data-group='<%= topic.primary_type ? topic.primary_type.to_url : 'none' %>'>
+      <div class='s'>
+        <div class='name'><%= topic.name %></div>
+        <%= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "", :alt => "#{topic.name}" %>
+        <div class='stats'>
+          <div class='f'><%= topic.followers_count.to_i %> followers</div>
+          <div class='l'><%= topic.pt.to_i %> score</div>
         </div>
       </div>
-    </a>
+    </div>
   <% end %>
 </div>

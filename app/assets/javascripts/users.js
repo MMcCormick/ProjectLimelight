@@ -162,13 +162,14 @@ $(function() {
         current_tile_group = $(".tile:eq("+chosen+")").data('group');
       }
 
-      last_tile_group = current_tile_group;
       $('.'+last_tile_group).fadeTo(1000, .1, function() {
         $(this).addClass('hover');
         $('.'+current_tile_group).fadeTo(1000, 1, function() {
           $(this).addClass('hover');
         })
       })
+
+      last_tile_group = current_tile_group;
     })
   }
 

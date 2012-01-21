@@ -286,9 +286,7 @@ class Topic
   end
 
   def raw_image(w,h,m)
-    url = default_image_url(self, w, h, m, true)
-    url = Rails.public_path+url if Rails.env.development?
-    url
+    default_image_url(self, w, h, m, true)
   end
 
   def expire_caches

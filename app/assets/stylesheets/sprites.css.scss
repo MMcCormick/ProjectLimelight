@@ -243,3 +243,8 @@
   width: 18px;
   height: 12px;
 }
+.play-button {
+  @include icon-sprite(play_alt_24x24);
+  width: 24px;
+  height: 24px;
+}

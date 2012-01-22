@@ -3,7 +3,10 @@
 <div class="teaser list <%= object._type.downcase %>" data-push="<%= object.id %>">
 
   <div class="left">
-    <%= video_embed(object.sources[0], 120, 120, nil, nil, object.embed_html) %>
+    <div class='play-video' data-embed="<%= video_embed(object.sources[0], 120, 120, nil, nil, object.embed_html, true) %>">
+      <div class='icon play-button'></div>
+      Play
+    </div>
   </div>
 
   <div class="wrapper">

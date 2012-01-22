@@ -545,7 +545,21 @@ $teaser-padding: 10px;
       left: 0px;
     }
   }
+  .play-video {
+    position: relative;
+    padding: 4px 0 0 30px;
+    cursor: pointer;
+    height: 20px;
 
+    .icon {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+    &:hover {
+      text-decoration: underline;
+    }
+  }
   &:hover {
     .disable {
       display: block;
@@ -760,6 +774,9 @@ $teaser-padding: 10px;
       overflow: hidden;
     }
   }
+  .play-video {
+    margin: 10px 0 0 5px;
+  }
   .createdC {
     margin: 2px 7px 3px 7px;
     overflow: hidden;
@@ -858,6 +875,9 @@ $teaser-padding: 10px;
       font-size: 13px;
       margin: 0;
     }
+  }
+  .play-video {
+    float: left;
   }
   .img {
     .icon {
@@ -1068,6 +1088,11 @@ $scoreBox-width: 160px;
   .content {
     min-height: 60px;
     padding: 0 120px 0 0;
+  }
+  .play-video {
+    position: absolute;
+    top: 8px;
+    left: 58px;
   }
   .connectionsC {
     @include clearfix();

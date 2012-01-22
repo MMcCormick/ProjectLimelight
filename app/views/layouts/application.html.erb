@@ -54,7 +54,7 @@
 
     <footer id="footer">
       <div class="interior">
-        <%= render_cell :topic, :trending %>
+        <%= render_cell :topic, :trending, @topic %>
         <a id="everything-button" href="<%= everything_path %>" title="It's like a funky Reddit!">The Everything Button</a>
         <div id="twitter-footer">
           <a href="https://twitter.com/limelight_team" class="twitter-follow-button" data-button="grey" data-text-color="#FFFFFF" data-link-color="#FFF" data-show-count="false" data-width="160px" data-align="right">Follow @limelight_team</a>

@@ -5,7 +5,9 @@ class TopicCell < Cell::Rails
   helper ApplicationHelper
   helper TopicsHelper
 
-  cache :trending, :expires_in => 5.minutes
+  cache :trending, :expires_in => 10.minutes do |cell,topic|
+    topic.id.to_s
+  end
 
   cache :sidebar do |cell,current_user,topic|
     key = topic.id.to_s
@@ -33,8 +35,21 @@ class TopicCell < Cell::Rails
     render
   end
 
-  def trending
-    @topics = Topic.all.desc(:pw).limit(40)
+  def trending(topic=nil)
+    if topic
+      pull_ids = Neo4j.pull_from_ids(topic.id)
+      if !pull_ids.empty?
+        @trend_title = "Trending Topics related to "+topic.name+":"
+      elsif topic.primary_type_id
+        pull_ids = Neo4j.pull_from_ids(topic.primary_type_id)
+        @trend_title = "Trending Topics related to "+topic.primary_type+":"
+      else
+        @trend_title = "There are no related trending topics to display"
+      end
+      @topics = Topic.where("_id" => {"$in" => pull_ids}).desc(:pw).limit(40) if !pull_ids.empty?
+    else
+      @topics = Topic.all.desc(:pw).limit(40)
+    end
     render
   end
 

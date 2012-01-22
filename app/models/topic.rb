@@ -53,6 +53,7 @@ class Topic
   field :user_id
   field :followers_count, :default => 0
   field :primary_type
+  field :primary_type_id
 
   auto_increment :public_id
 
@@ -459,9 +460,11 @@ class Topic
   def update_denorms
     soulmate = nil
     topic_mention_updates = {}
+    primary_type_updates = {}
     if name_changed?
       soulmate = true
       topic_mention_updates["topic_mentions.$.name"] = self.name
+      primary_type_updates["primary_type"] = name
     end
     if slug_changed?
       soulmate = true
@@ -483,6 +486,9 @@ class Topic
 
     unless topic_mention_updates.empty?
       CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
+    end
+    unless primary_type_updates.empty?
+      Topic.where("primary_type_id" => id).update_all(primary_type_updates)
     end
 
     if soulmate

@@ -64,6 +64,7 @@ class TopicConnection
           topic1.update_health('type')
           if !topic1.primary_type
             topic1.primary_type = topic2.name
+            topic1.primary_type_id = topic2.id
             Resque.enqueue(SmCreateTopic, topic1.id.to_s)
           end
         else

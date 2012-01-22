@@ -131,6 +131,8 @@ jQuery ->
 
           clone.find('#video_source_name').val(provider)
           clone.find('#video_source_video_id').val(video_id)
+          if data.embedly.images.length > 0
+            clone.find('.remove_image_url').val(data.embedly.images[0].url)
           setContributeToVideo(parentForm)
 
         else if data.embedly.oembed.type == 'photo'
@@ -151,7 +153,7 @@ jQuery ->
         clone.fadeIn 150
         self.val('').blur().parent().fadeOut 150
 
-        if data.embedly.images.length > 0
+        if data.embedly.oembed.type != 'video' && data.embedly.images.length > 0
           clone.addClass('with-preview')
           target = clone.find('.preview .images')
           target.html('')

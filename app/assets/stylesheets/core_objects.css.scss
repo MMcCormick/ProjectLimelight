@@ -547,17 +547,35 @@ $teaser-padding: 10px;
   }
   .play-video {
     position: relative;
-    padding: 4px 0 0 30px;
     cursor: pointer;
-    height: 20px;
 
-    .icon {
+    .button {
+      @include border-radius(3px);
       position: absolute;
-      top: 0px;
-      left: 0px;
+      top: 50%;
+      left: 50%;
+      padding: 5px;
+      background: #FFF;
+      border: 1px solid #666;
+      margin: -17px 0 0 -17px;
     }
     &:hover {
-      text-decoration: underline;
+      .button {
+        border-color: #000;
+        background: #F0F0F0;
+      }
+    }
+    &.no-img {
+      padding: 4px 0 0 30px;
+      height: 20px;
+      .icon {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
   &:hover {
@@ -581,9 +599,7 @@ $teaser-padding: 10px;
 
   img {
     @include border-radius(3px);
-    clear: left;
     display: block;
-    float: left;
   }
 
   .createdC {
@@ -1091,8 +1107,13 @@ $scoreBox-width: 160px;
   }
   .play-video {
     position: absolute;
-    top: 8px;
-    left: 58px;
+    top: 0px;
+    left: 0px;
+
+    &.no-img {
+      top: 8px;
+      left: 58px;
+    }
   }
   .connectionsC {
     @include clearfix();

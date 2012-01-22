@@ -1,4 +1,5 @@
 class Video < CoreObject
+  include Limelight::Images
 
   field :embed_html
 

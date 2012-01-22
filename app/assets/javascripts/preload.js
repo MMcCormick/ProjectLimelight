@@ -44,56 +44,68 @@ function isScrolledIntoView(elem, bufferOn, checkAll, entireElem) {
 // Arrange Column format in feeds
 function rearrange_feed_columns()
 {
-  var $spacing = 18;
+  var $min_spacing = 15;
 
   if ($('.teaser.column').length == 0)
   {
-    $('#core-feed').css('height', 'auto');
     return;
   }
 
+  $('#core-feed').css('width', 'auto');
+
+  // Calculate the # of columns
   var feed_min_column = 99999999;
   var teaser_width = $('.teaser.column').width();
-  var feed_columns_num = Math.floor(($('#page_inside').width() - 5) / (teaser_width + $spacing));
-  var feed_columns = []
-  for(var i=0; i<feed_columns_num; i++) {
-    feed_columns.push({total_height: 0, teasers:[]})
+  var feed_columns_num = Math.floor(($('#page_inside').width() - 5) / (teaser_width + $min_spacing));
+  var feed_columns_spacing = Math.floor(($('#page_inside').width() - 5) - (teaser_width * feed_columns_num)) / (feed_columns_num+1);
+
+  if ($('#core-feed').data('column-count') == feed_columns_num)
+  {
+    $('.feed-vertical-column').css('margin-left', feed_columns_spacing);
+    return;
   }
 
+  $('#core-feed').data('column-count', feed_columns_num);
+
+  // Set the old columns
+  $('.feed-vertical-column').addClass('old');
+
+  // Build and append the new columns
+  var feed_columns = [];
+  for(var i=0; i<feed_columns_num; i++) {
+    feed_columns.push({column: $('<div/>').addClass('feed-vertical-column'), total_height: 0});
+    $('#core-feed').append(feed_columns[i].column);
+  }
+  $('.feed-vertical-column').css('margin-left', feed_columns_spacing);
+
+  // Sort the teasers into columns
   $('.teaser.column').each(function(i,val) {
     var chosen_column = 0;
     for(var i=0; i<feed_columns.length; i++) {
-      if (feed_columns[i].total_height < feed_min_column)
+      if (feed_columns[i].total_height <= feed_min_column)
       {
         chosen_column = i;
+        feed_columns[i].total_height += $(val).outerHeight();
+        break;
+      }
+    }
+
+    feed_min_column = 9999999;
+    for(var i=0; i<feed_columns.length; i++) {
+
+      if (feed_columns[i].total_height <= feed_min_column)
+      {
         feed_min_column = feed_columns[i].total_height;
       }
     }
 
-    feed_columns[chosen_column].total_height += $(val).height();
-    feed_columns[chosen_column].teasers.push ($(val));
-    feed_min_column = 999999999;
+    feed_columns[chosen_column].column.append($(val));
+    $(val).fadeIn(750);
   })
 
-  var max_column_height = 0;
-
-  for(var i=0; i<feed_columns.length; i++) {
-    var column_height = 10;
-    for(var i2=0; i2<feed_columns[i].teasers.length; i2++) {
-      $(feed_columns[i].teasers[i2]).css({
-        'position': 'absolute',
-        'top': column_height,
-        'left': teaser_width*i+$spacing*(i)+10
-      });
-      $(feed_columns[i].teasers[i2]).attr('data-column', i).data('column', i);
-      $(feed_columns[i].teasers[i2]).show();
-      column_height += $(feed_columns[i].teasers[i2]).height() + $spacing*2.5;
-    }
-    if (column_height > max_column_height) {
-      max_column_height = column_height
-    }
-  }
-  $('#core-feed').css('height', max_column_height).data('numcols', feed_columns_num)
+  // Remove the old columns
+  $('.feed-vertical-column.old').remove();
+  $('#core-feed').css('width', $('#core-feed').width());
 }
 
 var didScroll = false;

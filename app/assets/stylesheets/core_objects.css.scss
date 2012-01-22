@@ -834,12 +834,14 @@ $teaser-padding: 10px;
 
 // Column Teaser
 .teaser.column {
-  @include single-box-shadow(#888, 0, 1px, 3px);
+  @include single-box-shadow(#666, 1px, 1px, 3px);
   $width: 230px;
   width: $width;
   position: relative;
   z-index: 10;
   display: none;
+  margin: 0 0 50px 0;
+
   .titleC {
     margin: 6px 10px 0 10px;
     padding: 0 3px 5px 3px;
@@ -955,9 +957,6 @@ $teaser-padding: 10px;
     padding: 0 4px;
   }
   &.hover {
-    margin-top: -1px;
-    margin-left: -1px;
-    border: 2px solid;
   }
 }
 
@@ -1154,6 +1153,10 @@ $scoreBox-width: 160px;
   position: relative;
   &.grid {
     display: inline-block;
+  }
+  .feed-vertical-column {
+    margin-top: 15px;
+    float: left;
   }
   .overlay {
     @include opacity(.8);

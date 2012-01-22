@@ -545,7 +545,39 @@ $teaser-padding: 10px;
       left: 0px;
     }
   }
+  .play-video {
+    position: relative;
+    cursor: pointer;
 
+    .button {
+      @include border-radius(3px);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      padding: 5px;
+      background: #FFF;
+      border: 1px solid #666;
+      margin: -17px 0 0 -17px;
+    }
+    &:hover {
+      .button {
+        border-color: #000;
+        background: #F0F0F0;
+      }
+    }
+    &.no-img {
+      padding: 4px 0 0 30px;
+      height: 20px;
+      .icon {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
   &:hover {
     .disable {
       display: block;
@@ -564,9 +596,7 @@ $teaser-padding: 10px;
 
   img {
     @include border-radius(3px);
-    clear: left;
     display: block;
-    float: left;
   }
 
   .createdC {
@@ -757,6 +787,9 @@ $teaser-padding: 10px;
       overflow: hidden;
     }
   }
+  .play-video {
+    margin: 10px 0 0 5px;
+  }
   .createdC {
     margin: 2px 7px 3px 7px;
     overflow: hidden;
@@ -831,12 +864,14 @@ $teaser-padding: 10px;
 
 // Column Teaser
 .teaser.column {
-  @include single-box-shadow(#888, 0, 1px, 3px);
+  @include single-box-shadow(#666, 1px, 1px, 3px);
   $width: 230px;
   width: $width;
   position: relative;
   z-index: 10;
   display: none;
+  margin: 0 0 50px 0;
+
   .titleC {
     margin: 6px 10px 0 10px;
     padding: 0 3px 5px 3px;
@@ -853,6 +888,9 @@ $teaser-padding: 10px;
       font-size: 13px;
       margin: 0;
     }
+  }
+  .play-video {
+    float: left;
   }
   .img {
     .icon {
@@ -952,9 +990,6 @@ $teaser-padding: 10px;
     padding: 0 4px;
   }
   &.hover {
-    margin-top: -1px;
-    margin-left: -1px;
-    border: 2px solid;
   }
 }
 
@@ -1067,6 +1102,16 @@ $scoreBox-width: 160px;
     min-height: 60px;
     padding: 0 120px 0 0;
   }
+  .play-video {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    &.no-img {
+      top: 8px;
+      left: 58px;
+    }
+  }
   .connectionsC {
     @include clearfix();
     min-height: 18px;
@@ -1151,6 +1196,10 @@ $scoreBox-width: 160px;
   position: relative;
   &.grid {
     display: inline-block;
+  }
+  .feed-vertical-column {
+    margin-top: 15px;
+    float: left;
   }
   .overlay {
     @include opacity(.8);

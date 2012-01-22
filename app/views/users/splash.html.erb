@@ -5,7 +5,8 @@
 
 <div class='topic-wall'>
   <% @topics.each do |topic| %>
-    <div class='tile <%= topic.primary_type ? topic.primary_type.to_url : 'none' %>' data-group='<%= topic.primary_type ? topic.primary_type.to_url : 'none' %>'>
+    <% group = topic.primary_type ? topic.primary_type : 'Random' %>
+    <div class='tile <%= group.to_url %>' data-group='<%= group.to_url %>' data-name='<%= group.pluralize %>'>
       <div class='s'>
         <div class='name'><%= topic.name %></div>
         <%= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "", :alt => "#{topic.name}" %>
@@ -17,3 +18,5 @@
     </div>
   <% end %>
 </div>
+
+<div class='topic-wall-type hide'><h3></h3></div>

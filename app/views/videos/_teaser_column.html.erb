@@ -3,8 +3,21 @@
 <div class="teaser column <%= object._type.downcase %>" data-push="<%= object.id %>">
   <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title_clean, object), :object => object %>
   <div class="content">
-    <%= video_embed(object.sources[0], 210, 180, nil, nil, object.embed_html) %>
-
+    <% img = default_image_url(object, 210, 0, 'fit', false, true) %>
+    <% if img %>
+      <div class='play-video' data-embed="<%= video_embed(object.sources[0], 210, 180, nil, nil, object.embed_html, true) %>">
+        <div class='button'>
+          <div class='icon play-button'></div>
+        </div>
+        <%= image_tag img.image_url, :width => 210, :height => img.calculate_h(210).to_s %>
+      </div>
+    <% else %>
+      <div class='play-video no-img' data-embed="<%= video_embed(object.sources[0], 210, 180, nil, nil, object.embed_html, true) %>">
+        <div class='icon play-button'></div>
+        Play
+      </div>
+    <% end %>
+    <div class='clear'></div>
     <p><%= parse_mentions(object.content, object) %></p>
   </div>
 

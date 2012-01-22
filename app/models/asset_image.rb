@@ -1,3 +1,5 @@
+require 'securerandom'
+
 class AssetImage < Asset
 
   attr_accessible :isOriginal, :resizedTo, :mode, :width, :height, :image, :remote_image_url
@@ -15,7 +17,7 @@ class AssetImage < Asset
   validates :image, :presence => true
 
   def save_image(location)
-    hash = ActiveSupport::SecureRandom::hex(8)+'.jpeg'
+    hash = SecureRandom::hex(8)+'.jpeg'
     writeOut = open("/tmp/#{hash}", "wb")
     writeOut.write(open(location).read)
     writeOut.close

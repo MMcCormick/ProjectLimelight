@@ -1,3 +1,5 @@
+require 'securerandom'
+
 class InviteCode
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -17,9 +19,9 @@ class InviteCode
 
   def generate
     if self.code.blank?
-      self.code = ActiveSupport::SecureRandom.hex(3)
+      self.code = SecureRandom.hex(3)
       while InviteCode.first(conditions: {:code => self.code})
-        self.code = ActiveSupport::SecureRandom.hex(3)
+        self.code = SecureRandom.hex(3)
       end
     end
   end

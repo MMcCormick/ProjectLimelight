@@ -15,6 +15,8 @@ class VideosController < ApplicationController
 
   def create
     @video = current_user.videos.build(params[:video])
+    @video.save_original_image
+    @video.save_images
 
     if @video.save
       @video.send_mention_notifications

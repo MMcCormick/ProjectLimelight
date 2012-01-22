@@ -132,7 +132,7 @@ jQuery ->
           clone.find('#video_source_name').val(provider)
           clone.find('#video_source_video_id').val(video_id)
           if data.embedly.images.length > 0
-            clone.find('.remove_image_url').val(data.embedly.images[0].url)
+            clone.find('.remote_image_url').val(data.embedly.images[0].url)
           setContributeToVideo(parentForm)
 
         else if data.embedly.oembed.type == 'photo'

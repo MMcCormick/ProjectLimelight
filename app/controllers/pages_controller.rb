@@ -7,7 +7,7 @@ class PagesController < ApplicationController
     @description = "The Everything page. This is a feed of all posts submitted to the site, which can be customized" +
         "by filtering, sorting, and changing the feed style."
     page = params[:p] ? params[:p].to_i : 1
-    @more_path = root_path :p => page + 1
+    @more_path = everything_path :p => page + 1
     @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {:page => page})
 
     respond_to do |format|

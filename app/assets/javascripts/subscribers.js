@@ -246,8 +246,6 @@ $(function() {
       $('body').removeClass('narrow')
     }
 
-    $('#page_header').css('width', 'auto');
-
     resizeLayout();
     rearrange_feed_columns();
   });

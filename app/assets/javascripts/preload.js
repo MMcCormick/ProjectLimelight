@@ -59,27 +59,42 @@ function rearrange_feed_columns()
   var feed_columns_num = Math.floor(($('#page_inside').width() - 5) / (teaser_width + $min_spacing));
   var feed_columns_spacing = Math.floor(($('#page_inside').width() - 5) - (teaser_width * feed_columns_num)) / (feed_columns_num+1);
 
-  if ($('#core-feed').data('column-count') == feed_columns_num)
+  if ($('#core-feed').data('column-count') == feed_columns_num && $('#core-feed > .teaser.column').length == 0)
   {
     $('.feed-vertical-column').css('margin-left', feed_columns_spacing);
     return;
   }
 
-  $('#core-feed').data('column-count', feed_columns_num);
+  var target_teasers = $('.teaser.column');
 
-  // Set the old columns
-  $('.feed-vertical-column').addClass('old');
+  if ($('#core-feed').data('column-count') != feed_columns_num)
+  {
+    $('#core-feed').data('column-count', feed_columns_num);
 
-  // Build and append the new columns
-  var feed_columns = [];
-  for(var i=0; i<feed_columns_num; i++) {
-    feed_columns.push({column: $('<div/>').addClass('feed-vertical-column'), total_height: 0});
-    $('#core-feed').append(feed_columns[i].column);
+    // Set the old columns
+    $('.feed-vertical-column').addClass('old');
+
+    // Build and append the new columns
+    var feed_columns = [];
+    for(var i=0; i<feed_columns_num; i++) {
+      feed_columns.push({column: $('<div/>').addClass('feed-vertical-column'), total_height: 0});
+      $('#core-feed').append(feed_columns[i].column);
+    }
   }
+  else
+  {
+    var feed_columns = [];
+    $('.feed-vertical-column').each(function(i,val) {
+      feed_columns.push({column: $(val), total_height: $(val).outerHeight()});
+    })
+
+    target_teasers = $('#core-feed > .teaser.column');
+  }
+
   $('.feed-vertical-column').css('margin-left', feed_columns_spacing);
 
   // Sort the teasers into columns
-  $('.teaser.column').each(function(i,val) {
+  target_teasers.each(function(i,val) {
     var chosen_column = 0;
     for(var i=0; i<feed_columns.length; i++) {
       if (feed_columns[i].total_height <= feed_min_column)
@@ -124,10 +139,10 @@ function handleScroll() {
       $('#page_inside').css('padding-top', $('#page_header').outerHeight());
       $('.sidebar.left').css('padding-top', $('.sidebar.left .top').outerHeight());
       $('.sidebar.right').css('padding-top', $('.sidebar.right .top').outerHeight());
-      $('#page_header').css('width', $('#page_header').width());
+      $('#page_header').css('width', $('#core-feed').width());
       $('.sidebar .top, #page_header').each(function() {
-        $(this).css('left', $(this).offset().left+'px')
-        $(this).addClass('floating')
+        $(this).css('left', $(this).offset().left+'px');
+        $(this).addClass('floating');
       });
     }
     didScroll = false;

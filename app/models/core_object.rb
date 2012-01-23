@@ -10,20 +10,15 @@ class CoreObject
   include Limelight::Popularity
 
   # Denormilized:
-  # CoreObject.response_to
   # Notification.object
-  # Notification.shared_object_snippet.name TODO: update this once notifications are implemented
   #TODO: bug: each core object type currently validates the length of content, but after creation content_raw is copied to content.
-  #TODO: since the topic and user mentions in raw content increase the length, validation may fail when the obj is saved again
   field :title
-
+  field :description
   field :content
 
   field :status, :default => 'active'
   field :favorites, :default => []
   field :favorites_count, :default => 0
-  field :reposts, :default => []
-  field :reposts_count, :default => 0
   field :user_id
   field :response_count, :default => 0
   field :tweet_id
@@ -31,8 +26,8 @@ class CoreObject
   auto_increment :public_id
 
   embeds_one :user_snippet, as: :user_assignable
-  embeds_one :response_to
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
+  embeds_many :likes, as: :user_assignable, :class_name => 'UserSnippet'
 
   belongs_to :user
 

@@ -21,6 +21,8 @@ class CoreObject
   field :favorites_count, :default => 0
   field :user_id
   field :response_count, :default => 0
+  field :parent_type
+  field :parent_id, :type => BSON::ObjectId
   field :tweet_id
 
   auto_increment :public_id
@@ -34,8 +36,8 @@ class CoreObject
   validates :user_id, :status, :presence => true
   validate :title_length, :content_length
 
-  attr_accessible :title, :content, :response_to_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet, :tweet_id
-  attr_accessor :response_to_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
+  attr_accessible :title, :content, :parent_type, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet, :tweet_id
+  attr_accessor :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :set_response_snippet, :send_tweet
@@ -44,8 +46,9 @@ class CoreObject
 
   # hot damn lots of indexes. can we do this better?
   index :user_id
-  index :reposts
   index :favorites
+  index :parent_id, sparse: true
+  index :parent_type, sparse: true
   index :public_id, unique: true
   index :created_at
   index :ph
@@ -55,7 +58,7 @@ class CoreObject
   index :pt
   index "topic_mentions._id"
   index "user_mentions._id"
-  index "response_to._id"
+  index "likes._id"
 
   def to_param
     "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
@@ -185,8 +188,8 @@ class CoreObject
   end
 
   def set_response_snippet
-    unless !@response_to_id || @response_to_id.blank?
-      target = CoreObject.find(@response_to_id)
+    unless !@parent_id || @parent_id.blank?
+      target = CoreObject.find(@parent_id)
       if target
         self.response_to = ResponseTo.new(
                 :type => target._type,
@@ -238,27 +241,32 @@ class CoreObject
       or_criteria = []
       or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
       or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users]
-      or_criteria << {:reposts.in => options[:reposted_by_users]} if options[:reposted_by_users]
+      or_criteria << {"likes._id" => {"$in" => options[:liked_by_users]}} if options[:liked_by_users]
       or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics]
       or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users]
-      or_criteria << {"response_to._id" => options[:response_to_id]} if options[:response_to_id]
+      or_criteria << {"parent_id" => options[:parent_id]} if options[:parent_id]
 
       #page length also hard-coded in views/core_object
-      page_length = options[:limit]? options[:limit] - 1 : 30
+      page_length = options[:limit]? options[:limit] - 1 : 20
       page_number = options[:page]? options[:page] : 1
       num_to_skip = page_length * (page_number - 1)
 
       # page_length + 1 is used below so that one extra object is returned, allowing the views to check if there are more objects
       if (or_criteria.length > 0)
-        core_objects = self.any_in("_type" => display_types).where(:status => "active").any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
+        core_objects = self.where(:status => "active").any_of("_type" => {'$in' => display_types}, 'parent_type' => {'$in' => display_types}).any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
       else
-        core_objects = self.any_in("_type" => display_types).where(:status => "active").skip(num_to_skip).limit(page_length + 1)
+        core_objects = self.where(:status => "active").any_of("_type" => {'$in' => display_types}, 'parent_type' => {'$in' => display_types}).skip(num_to_skip).limit(page_length + 1)
+      end
+
+      # if we are exluding some parent ids
+      if options[:not_parent_ids]
+        core_objects = core_objects.where(:parent_id => {'$nin' => options[:not_parent_ids]})
       end
 
       if order_by[:target] != 'created_at'
-        core_objects = core_objects.order_by([[order_by[:target], order_by[:order]], [:created_at, :desc]])
+        core_objects.order_by([[order_by[:target], order_by[:order]], [:created_at, :desc]])
       else
-        core_objects = core_objects.order_by([[order_by[:target], order_by[:order]]])
+        core_objects.order_by([[order_by[:target], order_by[:order]]])
       end
     end
   end

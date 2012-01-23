@@ -188,7 +188,7 @@ class UsersController < ApplicationController
       @right_sidebar = true if current_user != @user
       @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
               :created_by_users => @user.following_users,
-              :reposted_by_users => @user.following_users,
+              :liked_by_users => @user.following_users,
               :mentions_topics => @user.following_topics,
               :mentions_users => [@user.id],
               :page => page

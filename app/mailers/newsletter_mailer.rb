@@ -9,28 +9,28 @@ class NewsletterMailer < ActionMailer::Base
     @user = user
     talks = CoreObject.feed(['Talk'], {:target=>:pw, :order=>"desc"}, {
             :created_by_users => @user.following_users,
-            :reposted_by_users => @user.following_users,
+            :liked_by_users => @user.following_users,
             :mentions_topics => @user.following_topics,
             :mentions_users => [@user.id],
             :limit => 3
     })
     link = CoreObject.feed(['Link'], {:target=>:pw, :order=>"desc"}, {
             :created_by_users => @user.following_users,
-            :reposted_by_users => @user.following_users,
+            :liked_by_users => @user.following_users,
             :mentions_topics => @user.following_topics,
             :mentions_users => [@user.id],
             :limit => 3
     })
     pictures = CoreObject.feed(['Picture'], {:target=>:pw, :order=>"desc"}, {
             :created_by_users => @user.following_users,
-            :reposted_by_users => @user.following_users,
+            :liked_by_users => @user.following_users,
             :mentions_topics => @user.following_topics,
             :mentions_users => [@user.id],
             :limit => 3
     })
     videos = CoreObject.feed(['Video'], {:target=>:pw, :order=>"desc"}, {
             :created_by_users => @user.following_users,
-            :reposted_by_users => @user.following_users,
+            :liked_by_users => @user.following_users,
             :mentions_topics => @user.following_topics,
             :mentions_users => [@user.id],
             :limit => 3

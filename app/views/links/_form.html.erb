@@ -4,7 +4,7 @@
 
   <div class="errors"></div>
   <% if responding %>
-    <%= f.hidden_field :response_to_id, :value => responding.id.to_s %>
+    <%= f.hidden_field :parent_id, :value => responding.id.to_s %>
   <% end %>
 
   <div class="group">

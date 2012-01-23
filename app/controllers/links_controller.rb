@@ -10,7 +10,7 @@ class LinksController < ApplicationController
     @title = @link.name
     @description = @link.content_clean + " - a link on Limelight"
 
-    @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :response_to_id => @link.id})
+    @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :parent_id => @link.id})
   end
 
   def create

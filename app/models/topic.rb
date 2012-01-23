@@ -227,6 +227,14 @@ class Topic
     end
   end
 
+  def remove_health(attr)
+    self.health ||= []
+    if health.include?(attr)
+      self.health.delete(attr)
+      self.health_index = health.length
+    end
+  end
+
   #
   # SoulMate
   #
@@ -237,6 +245,26 @@ class Topic
 
   def remove_from_soulmate
     Resque.enqueue(SmDestroyTopic, id.to_s)
+  end
+
+  #
+  # Primary Type
+  #
+
+  def set_primary_type(primary_name, primary_id)
+    update_health('type')
+    if !primary_type
+      self.primary_type = primary_name
+      self.primary_type_id = primary_id
+      Resque.enqueue(SmCreateTopic, id.to_s)
+    end
+  end
+
+  def unset_primary_type
+    self.primary_type = nil
+    self.primary_type_id = nil
+    Resque.enqueue(SmCreateTopic, id.to_s)
+    remove_health('type')
   end
 
   #
@@ -277,6 +305,9 @@ class Topic
         end
       end
     end
+
+    # Update primary_type_id's on other topics
+    Topic.where(:primary_type_id => aliased_topic.id).update_all(:primary_type_id => id, :primary_type => name)
 
     # Following
     followers = User.where(:following_topics => aliased_topic.id)
@@ -324,6 +355,12 @@ class Topic
 
     node = Neo4j.neo.get_node_index('topics', 'uuid', id.to_s)
     Neo4j.neo.delete_node!(node)
+
+    Topic.where('primary_type_id' => id).each do |topic|
+      topic.unset_primary_type
+      topic.expire_caches
+      topic.save
+    end
   end
 
   class << self

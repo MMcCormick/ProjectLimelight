@@ -7,14 +7,6 @@
   </div>
 
   <div class="wrapper">
-    <% if object && object.response_to && response != true %>
-      <div class="response">
-        <span>@</span>
-        <a href="<%= core_object_url(object.response_to) %>" class="r">
-          <%= object.response_to.title %>
-        </a>
-      </div>
-    <% end %>
 
     <div class="content">
       <%= "<p>#{parse_mentions(object.content, object)}</p>".html_safe %>

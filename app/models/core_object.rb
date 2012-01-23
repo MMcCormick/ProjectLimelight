@@ -34,13 +34,13 @@ class CoreObject
   belongs_to :user
 
   validates :user_id, :status, :presence => true
-  validate :title_length, :content_length
+  validate :title_length, :content_length, :unique_source
 
   attr_accessible :title, :content, :parent_type, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet, :tweet_id
   attr_accessor :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
   before_validation :set_source_snippet
-  before_create :set_user_snippet, :current_user_own, :set_response_snippet, :send_tweet
+  before_create :set_user_snippet, :current_user_own, :send_tweet
   after_create :neo4j_create, :update_response_count, :action_log_create
   after_update :expire_caches
 
@@ -117,6 +117,14 @@ class CoreObject
     end
   end
 
+  def unique_source
+    if sources.length > 0 && !self.persisted?
+      if CoreObject.where('sources.url' => sources.first.url).first
+        errors.add('Link', "has already been added to Limelight")
+      end
+    end
+  end
+
   def send_tweet
     if @tweet == '1' && @tweet_content && !@tweet_content.blank? && user.twitter
       user.twitter.update(@tweet_content)
@@ -187,24 +195,10 @@ class CoreObject
     end
   end
 
-  def set_response_snippet
-    unless !@parent_id || @parent_id.blank?
-      target = CoreObject.find(@parent_id)
-      if target
-        self.response_to = ResponseTo.new(
-                :type => target._type,
-                :title => target.title_clean,
-                :public_id => target.public_id
-        )
-        self.response_to.id = target.id
-      end
-    end
-  end
-
   def update_response_count
-    if (response_to)
+    if parent_id
       CoreObject.collection.update(
-        {:_id => response_to.id},
+        {:_id => parent_id},
         {
           "$inc" => { :response_count => 1 }
         }
@@ -260,7 +254,7 @@ class CoreObject
 
       # if we are exluding some parent ids
       if options[:not_parent_ids]
-        core_objects = core_objects.where(:parent_id => {'$nin' => options[:not_parent_ids]})
+        core_objects = core_objects.where(:id => {'$nin' => options[:not_parent_ids]}, :parent_id => {'$nin' => options[:not_parent_ids]})
       end
 
       if order_by[:target] != 'created_at'

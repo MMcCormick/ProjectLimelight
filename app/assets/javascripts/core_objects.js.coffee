@@ -8,8 +8,6 @@ jQuery ->
     talkForm = targetForm.find('#new_talk')
     talkForm.attr('action', talkForm.data('old-action'))
     talkForm.find('#talk_content').attr('name', 'talk[content]').parents('.lClear:first').addClass('required').find('label').text('What do you want to talk about?')
-    talkForm.find('#talk_content_raw').attr('name', 'talk[content_raw]')
-    talkForm.find('#talk_ooc_mentions').attr('name', 'talk[ooc_mentions]')
 
   suggestMentions = (target) ->
     if ($.trim(target.val()).length != 0)
@@ -81,25 +79,19 @@ jQuery ->
     talkForm = targetForm.find('#new_talk')
     talkForm.data('old-action', talkForm.attr('action'))
     talkForm.attr('action', targetForm.find('#new_picture').attr('action'))
-    talkForm.find('#talk_content').attr('name', 'picture[content]').parents('.lClear:first').removeClass('required').find('label').text('Say something about this picture...')
-    talkForm.find('#talk_content_raw').attr('name', 'picture[content_raw]')
-    talkForm.find('#talk_ooc_mentions').attr('name', 'picture[ooc_mentions]')
+    talkForm.find('#talk_content').parents('.lClear:first').find('label').text('Talk about this picture...')
 
   setContributeToVideo = (targetForm) ->
     talkForm = targetForm.find('#new_talk')
     talkForm.data('old-action', talkForm.attr('action'))
     talkForm.attr('action', targetForm.find('#new_video').attr('action'))
-    talkForm.find('#talk_content').attr('name', 'video[content]').parents('.lClear:first').removeClass('required').find('label').text('Say something about this video...')
-    talkForm.find('#talk_content_raw').attr('name', 'video[content_raw]')
-    talkForm.find('#talk_ooc_mentions').attr('name', 'video[ooc_mentions]')
+    talkForm.find('#talk_content').parents('.lClear:first').find('label').text('Talk about this video...')
 
   setContributeToLink = (targetForm) ->
     talkForm = targetForm.find('#new_talk')
     talkForm.data('old-action', talkForm.attr('action'))
     talkForm.attr('action', targetForm.find('#new_link').attr('action'))
-    talkForm.find('#talk_content').attr('name', 'link[content]').parents('.lClear:first').removeClass('required').find('label').text('Say something about this link...')
-    talkForm.find('#talk_content_raw').attr('name', 'link[content_raw]')
-    talkForm.find('#talk_ooc_mentions').attr('name', 'link[ooc_mentions]')
+    talkForm.find('#talk_content').parents('.lClear:first').find('label').text('Talk about this link...')
 
   # fetch data from a link and update the contribute form
   $('.contributeC #link_fetch').live 'change', (e) ->
@@ -283,80 +275,80 @@ jQuery ->
   $('.mention').livequery ->
     $(@).mentionable()
 
-  # out of context mentions on contribute form
-  $('.mention-ooc .auto input').autocomplete($('#static-data').data('d').autocomplete, {
-    minChars: 2,
-    width: 450,
-    matchContains: true,
-    matchSubset: false,
-    autoFill: false,
-    selectFirst: true,
-    mustMatch: false,
-    searchKey: 'term',
-    max: 10,
-    buckets: [['topic', 'topic', 'TOPICS']],
-    extraParams: {"types":['topic']},
-    allowNew: true,
-    allowNewName: 'topic',
-    allowNewType: 'topic',
-    dataType: 'json',
-    delay: 100,
-    formatItem: (row, i, max) ->
-      return row.formattedItem
-    formatMatch: (row, i, max) ->
-      return row.term
-    formatResult: (row) ->
-      return row.term
-  }).result (event, data, formatted) ->
-    parent = $(@).parents('.mention-ooc:first')
-    mentions = parent.find('.mentions')
-    hidden_data = JSON.parse(parent.find('.hidden_data').val())
-
-    if data.id
-      id = data.id
-      type = 'existing'
-    else
-      id = data.term
-      type = 'new'
-
-    if mentions.find('.item[data-id="'+id+'"]').length > 0
-      createGrowl(false, 'You have already added that topic!', '', 'red')
-    else if mentions.find('.item').length >= 3
-      createGrowl(false, 'You can only mention 3 topics out of context!', '', 'red')
-    else
-      if data.data && data.data.image
-        image = data.data.image
-      else
-        image = '/assets/topic_default_25_25.gif'
-      mention = $("<div/>").addClass('item hide').attr('data-id', id).attr('data-type', type).html('
-        <div class="remove">[x]</div>
-        <div class="name" title="'+data.term+'">'+data.term+'</div>
-      ').appendTo(mentions)
-      mention.fadeIn(200)
-
-      hidden_data[type].push(id)
-
-      $(@).val('').blur().focus()
-      parent.find('.hidden_data').val(JSON.stringify(hidden_data))
-
-  $('.mention-ooc .auto input').live 'keypress', (e) ->
-    if(window.event)
-      key = window.event.keyCode     #IE
-    else
-      key = e.which     #firefox
-
-    if(key == 35 || key == 64)
-      return false
-
-  $('.mention-ooc .remove').live 'click', (e) ->
-    mention = $(@).parent()
-    hidden_data_field = $(@).parents('.mention-ooc:first').find('.hidden_data')
-    hidden_data = JSON.parse(hidden_data_field.val())
-    idx = hidden_data[mention.data('type')].indexOf(mention.data('id'));
-    if idx != -1
-      hidden_data[mention.data('type')].splice(idx,1)
-      hidden_data_field.val(JSON.stringify(hidden_data))
-    mention.remove()
+#  # out of context mentions on contribute form
+#  $('.mention-ooc .auto input').autocomplete($('#static-data').data('d').autocomplete, {
+#    minChars: 2,
+#    width: 450,
+#    matchContains: true,
+#    matchSubset: false,
+#    autoFill: false,
+#    selectFirst: true,
+#    mustMatch: false,
+#    searchKey: 'term',
+#    max: 10,
+#    buckets: [['topic', 'topic', 'TOPICS']],
+#    extraParams: {"types":['topic']},
+#    allowNew: true,
+#    allowNewName: 'topic',
+#    allowNewType: 'topic',
+#    dataType: 'json',
+#    delay: 100,
+#    formatItem: (row, i, max) ->
+#      return row.formattedItem
+#    formatMatch: (row, i, max) ->
+#      return row.term
+#    formatResult: (row) ->
+#      return row.term
+#  }).result (event, data, formatted) ->
+#    parent = $(@).parents('.mention-ooc:first')
+#    mentions = parent.find('.mentions')
+#    hidden_data = JSON.parse(parent.find('.hidden_data').val())
+#
+#    if data.id
+#      id = data.id
+#      type = 'existing'
+#    else
+#      id = data.term
+#      type = 'new'
+#
+#    if mentions.find('.item[data-id="'+id+'"]').length > 0
+#      createGrowl(false, 'You have already added that topic!', '', 'red')
+#    else if mentions.find('.item').length >= 3
+#      createGrowl(false, 'You can only mention 3 topics out of context!', '', 'red')
+#    else
+#      if data.data && data.data.image
+#        image = data.data.image
+#      else
+#        image = '/assets/topic_default_25_25.gif'
+#      mention = $("<div/>").addClass('item hide').attr('data-id', id).attr('data-type', type).html('
+#        <div class="remove">[x]</div>
+#        <div class="name" title="'+data.term+'">'+data.term+'</div>
+#      ').appendTo(mentions)
+#      mention.fadeIn(200)
+#
+#      hidden_data[type].push(id)
+#
+#      $(@).val('').blur().focus()
+#      parent.find('.hidden_data').val(JSON.stringify(hidden_data))
+#
+#  $('.mention-ooc .auto input').live 'keypress', (e) ->
+#    if(window.event)
+#      key = window.event.keyCode     #IE
+#    else
+#      key = e.which     #firefox
+#
+#    if(key == 35 || key == 64)
+#      return false
+#
+#  $('.mention-ooc .remove').live 'click', (e) ->
+#    mention = $(@).parent()
+#    hidden_data_field = $(@).parents('.mention-ooc:first').find('.hidden_data')
+#    hidden_data = JSON.parse(hidden_data_field.val())
+#    idx = hidden_data[mention.data('type')].indexOf(mention.data('id'));
+#    if idx != -1
+#      hidden_data[mention.data('type')].splice(idx,1)
+#      hidden_data_field.val(JSON.stringify(hidden_data))
+#    mention.remove()
 
   # Feed Sort Selection
   $('.feed-sort-select.closed').live 'click', (e) ->
@@ -417,34 +409,3 @@ jQuery ->
     $(window).stopTime('resize-column-feed')
     $(window).oneTime 500, "resize-column-feed", ->
       rearrange_feed_columns()
-
-  $('.teaser.column,.teaser.grid').livequery ->
-    self = $(@)
-    $(@).qtip({
-      content: {
-        text: self.find('.controlsC')
-      }
-      events: {
-        show: (event, api) ->
-          $('.teaser.column').qtip('hide')
-      }
-      position: {
-        my: 'left top'
-        at: 'right top'
-        adjust: {
-           y: 8
-        }
-        viewport: $(window)
-      }
-      style: {
-        classes: 'ui-tooltip-light ui-tooltip-shadow fab' # fab = feed action box :)
-        tip: {
-           mimic: 'center'
-           offset: 8
-           width: 8
-           height: 8
-        }
-      }
-      show: {delay: 500}
-      hide: {delay: 200, fixed: true}
-    });

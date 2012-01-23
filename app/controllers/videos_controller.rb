@@ -19,8 +19,11 @@ class VideosController < ApplicationController
     @video.save_images
 
     if @video.save
-      @video.send_mention_notifications
-      extras = { :type => "Video", :path => video_path(@video), :response => !!@video.response_to }
+      if params[:talk]
+        current_user.talks.create(params[:talk].merge!({:parent_id => @video.id, :parent_type => 'Video'}))
+      end
+
+      extras = { :type => "Video", :path => video_path(@video) }
       response = build_ajax_response(:ok, nil, nil, nil, extras)
       render json: response, status: :created
     else

@@ -503,9 +503,10 @@ class User
       object_user_updates["object_user.last_name"] = self.last_name
       triggered_by_updates["triggered_by.$.last_name"] = self.last_name
     end
-    if !user_snippet_updates.empty?
+    unless user_snippet_updates.empty?
       CoreObject.where(:user_id => id).update_all(user_snippet_updates)
       CoreObject.where("user_mentions._id" => id).update_all(user_mention_updates)
+      CoreObject.where("likes._id" => id).update_all(user_mention_updates)
       Comment.where(:user_id => id).update_all(user_snippet_updates)
       Notification.where("object_user._id" => id).update_all(object_user_updates)
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)

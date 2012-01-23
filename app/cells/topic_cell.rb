@@ -6,7 +6,7 @@ class TopicCell < Cell::Rails
   helper TopicsHelper
 
   cache :trending, :expires_in => 10.minutes do |cell,topic|
-    topic.id.to_s
+    topic.id.to_s if topic
   end
 
   cache :sidebar do |cell,current_user,topic|

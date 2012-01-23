@@ -77,8 +77,8 @@ $(function() {
     }
   });
 
-  // Listens for repost button events.
-  amplify.subscribe("reposts_create reposts_destroy", function(data) {
+  // Listens for like button events.
+  amplify.subscribe("likes_create likes_destroy", function(data) {
     $('.p_'+data.id).text(parseInt(data.popularity));
   });
 

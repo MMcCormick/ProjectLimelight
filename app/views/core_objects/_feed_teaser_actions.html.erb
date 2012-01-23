@@ -1,7 +1,6 @@
 <div class="controlsC">
   <%= render 'shared/popularity', :object => object, :extra => '' %>
-  <%= render 'votes/btn', :current_user => current_user, :object => object %>
   <%= render 'favorites/btn', :current_user => current_user, :object => object %>
-  <%= render 'reposts/btn', :current_user => current_user, :object => object %>
+  <%= render 'likes/btn', :current_user => current_user, :object => object %>
   <%= render 'core_object_shares/share_btn', :current_user => current_user, :object => object %>
 </div>

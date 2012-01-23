@@ -235,7 +235,7 @@ $(function() {
                 '<div>vote up: shift + up</div>' +
                 '<div>vote down: shift + down</div>' +
                 '<div>favorite: shift + f</div>' +
-                '<div>repost: shift + r</div>' +
+                '<div>like: shift + r</div>' +
                 '<div>share: shift + s</div>'
       },
       style: {classes: 'ui-tooltip-shadow ui-tooltip-light', tip: true},
@@ -317,7 +317,7 @@ $(function() {
    */
 
   // Shortcut keycode mapping
-  var $sc = {'up':38, 'down':40, 'left':37, 'right':39, 'fav':70, 'repost':82, 'share':83, 'talk':84, 'goTo':13}
+  var $sc = {'up':38, 'down':40, 'left':37, 'right':39, 'fav':70, 'like':82, 'share':83, 'talk':84, 'goTo':13}
 
   // Prevents default browser scroll actions for directional keys
   $(document).keydown(function(e) {
@@ -492,9 +492,9 @@ $(function() {
         $('.teaser.hover, .ui-tooltip-content:visible').find('.favB, .unfavB').click();
       break;
 
-      // Repost
-      case (e.shiftKey && $code == $sc.repost):
-        $('.teaser.hover, .ui-tooltip-content:visible').find('.repostB, .unrepostB').click();
+      // Like
+      case (e.shiftKey && $code == $sc.like):
+        $('.teaser.hover, .ui-tooltip-content:visible').find('.likeB, .unLikeB').click();
       break;
 
       // Share

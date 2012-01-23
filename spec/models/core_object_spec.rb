@@ -214,75 +214,75 @@ describe CoreObject do
     end
   end
 
-  describe "reposting" do
+  describe "liking" do
     let(:talk) { FactoryGirl.create(:talk) }
     let(:user) { FactoryGirl.create(:user) }
 
-    it "should respond correctly to reposted_by?" do
-      talk.reposted_by?(user.id).should_not be_true
-      talk.add_to_reposts(user)
-      talk.reposted_by?(user.id).should be_true
+    it "should respond correctly to liked_by?" do
+      talk.liked_by?(user.id).should_not be_true
+      talk.add_to_likes(user)
+      talk.liked_by?(user.id).should be_true
     end
 
-    it "should not allow a user to repost their own objects" do
+    it "should not allow a user to like their own objects" do
       talk2 = FactoryGirl.create(:talk, :user => user)
       expect {
         expect {
-          talk2.add_to_reposts(user).should be_false
-        }.to_not change(user, :reposts_count)
-      }.to_not change(talk, :reposts_count)
-      talk.reposts.should_not include(user.id)
+          talk2.add_to_likes(user).should be_false
+        }.to_not change(user, :likes_count)
+      }.to_not change(talk, :likes_count)
+      talk.likes.should_not include(user.id)
     end
 
-    context "when the user has not already reposted the object" do
-      describe "add_to_reposts" do
+    context "when the user has not already liked the object" do
+      describe "add_to_likes" do
         it "should record the user and update counts when passed a valid user" do
           expect {
             expect {
-              talk.add_to_reposts(user).should be_true
-            }.to change(user, :reposts_count).by(1)
-          }.to change(talk, :reposts_count).by(1)
-          talk.reposts.should include(user.id)
+              talk.add_to_likes(user).should be_true
+            }.to change(user, :likes_count).by(1)
+          }.to change(talk, :likes_count).by(1)
+          talk.likes.should include(user.id)
         end
       end
-      describe "remove_from_reposts" do
+      describe "remove_from_likes" do
         it "should do nothing" do
           expect {
             expect {
-              talk.remove_from_reposts(user).should be_false
-            }.to_not change(user, :reposts_count)
-          }.to_not change(talk, :reposts_count)
-          talk.reposts.should_not include(user.id)
+              talk.remove_from_likes(user).should be_false
+            }.to_not change(user, :likes_count)
+          }.to_not change(talk, :likes_count)
+          talk.likes.should_not include(user.id)
         end
       end
     end
 
-    context "when the user has already reposted the object" do
+    context "when the user has already liked the object" do
       before(:each) do
-        talk.add_to_reposts(user)
+        talk.add_to_likes(user)
       end
 
-      describe "add_to_reposts" do
+      describe "add_to_likes" do
         it "should not change counts" do
           expect {
             expect {
-              talk.add_to_reposts(user).should be_false
-            }.to_not change(user, :reposts_count)
-          }.to_not change(talk, :reposts_count)
+              talk.add_to_likes(user).should be_false
+            }.to_not change(user, :likes_count)
+          }.to_not change(talk, :likes_count)
         end
         it "should keep the user recorded" do
-          talk.add_to_reposts(user).should be_false
-          talk.reposts.should include(user.id)
+          talk.add_to_likes(user).should be_false
+          talk.likes.should include(user.id)
         end
       end
-      describe "remove_from_reposts" do
+      describe "remove_from_likes" do
         it "should remove the user and update counts" do
           expect {
             expect {
-              talk.remove_from_reposts(user).should be_true
-            }.to change(user, :reposts_count).by(-1)
-          }.to change(talk, :reposts_count).by(-1)
-          talk.reposts.should_not include(user.id)
+              talk.remove_from_likes(user).should be_true
+            }.to change(user, :likes_count).by(-1)
+          }.to change(talk, :likes_count).by(-1)
+          talk.likes.should_not include(user.id)
         end
       end
     end

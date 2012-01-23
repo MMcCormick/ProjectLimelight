@@ -55,7 +55,7 @@ class User
   field :followers_count, :type => Integer, :default => 0
   field :favorites, :default => []
   field :favorites_count, :type => Integer, :default => 0
-  field :reposts_count, :type => Integer, :default => 0
+  field :likes_count, :type => Integer, :default => 0
   field :unread_notification_count, :default => 0
   field :vote_pos_count, :default => 0
   field :vote_neg_count, :default => 0

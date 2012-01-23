@@ -37,9 +37,9 @@ ProjectLimelight::Application.routes.draw do
   delete '/votes' => 'votes#destroy', :as => :destroy_vote
   get    '/votes' => 'votes#index', :as => :user_votes
 
-  # Reposting
-  post   '/reposts' => 'reposts#create', :as => :create_repost
-  delete '/reposts' => 'reposts#destroy', :as => :destroy_repost
+  # Likeing
+  post   '/likes' => 'likes#create', :as => :create_like
+  delete '/likes' => 'likes#destroy', :as => :destroy_like
 
   # Embedly
   get 'embed' => 'embedly#show', :as => :embedly_fetch

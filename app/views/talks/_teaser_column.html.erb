@@ -1,14 +1,6 @@
 <% cache("teaser-#{object.id.to_s}-column") do %>
 
 <div class="teaser column <%= object._type.downcase %>" data-push="<%= object.id %>">
-  <% if object && object.response_to %>
-    <div class="response">
-      <span>@</span>
-      <a href="<%= core_object_url(object.response_to) %>" class="r">
-        <%= object.response_to.title %>
-      </a>
-    </div>
-  <% end %>
 
   <div class="content">
     <p><%= parse_mentions(object.content, object) %></p>

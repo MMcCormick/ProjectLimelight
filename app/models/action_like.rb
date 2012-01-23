@@ -1,4 +1,4 @@
-class ActionRepost < ActionLog
+class ActionLike < ActionLog
 
   field :tt, :as => :to_type
 

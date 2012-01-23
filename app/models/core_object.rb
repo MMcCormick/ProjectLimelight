@@ -5,7 +5,6 @@ class CoreObject
   include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Limelight::Acl
-  include Limelight::Voting
   include Limelight::Mentions
   include Limelight::Popularity
 
@@ -152,34 +151,34 @@ class CoreObject
     end
   end
 
-  # Reposts
-  def reposted_by?(user_id)
-    reposts.include? user_id
+  # Likes
+  def liked_by?(user_id)
+    likes.include? user_id
   end
 
-  def add_to_reposts(user)
-    if (reposted_by? user.id) || (user_id == user.id)
+  def add_to_likes(user)
+    if (liked_by? user.id) || (user_id == user.id)
       false
     else
-      self.reposts << user.id
-      self.reposts_count += 1
-      user.reposts_count += 1
+      self.likes << user.id
+      self.likes_count += 1
+      user.likes_count += 1
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
 
-      ActionRepost.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
+      ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
 
       true
     end
   end
 
-  def remove_from_reposts(user)
-    if reposted_by? user.id
-      self.reposts.delete(user.id)
-      self.reposts_count -= 1
-      user.reposts_count -= 1
+  def remove_from_likes(user)
+    if liked_by? user.id
+      self.likes.delete(user.id)
+      self.likes_count -= 1
+      user.likes_count -= 1
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
 
-      ActionRepost.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
+      ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
 
       true
     else

@@ -347,7 +347,7 @@
     }
   }
 
-  /* Deprecated
+   Deprecated
   .mention-ooc {
     position: absolute;
     width: 150px;
@@ -403,7 +403,7 @@
         cursor: pointer;
       }
     }
-  }*/
+  }
   .actions {
     background: #F1F1F1;
     border-top: 1px solid #AAA;
@@ -474,7 +474,7 @@
 // Styling for btnps that swap
 .followB,
 .favB,
-.repostB,
+.likeB,
 .voteB,
 .primaryB,
 .ooacB {
@@ -485,7 +485,7 @@
 }
 .unfollowB,
 .unfavB,
-.unrepostB,
+.unlikeB,
 .unvoteB,
 .unprimaryB,
 .unooacB {
@@ -722,8 +722,8 @@ $teaser-padding: 10px;
       margin-left: -14px;
       top: 85px;
     }
-    .repostB,
-    .unrepostB {
+    .likeB,
+    .unlikeB {
       position: absolute;
       left: 50%;
       margin-left: -14px;
@@ -1053,8 +1053,8 @@ $scoreBox-width: 160px;
     }
     .favB,
     .unfavB,
-    .repostB,
-    .unrepostB {
+    .likeB,
+    .unlikeB {
       position: absolute;
       top: 42px;
     }
@@ -1067,8 +1067,8 @@ $scoreBox-width: 160px;
     .unfavB {
       left: 5px;
     }
-    .repostB,
-    .unrepostB {
+    .likeB,
+    .unlikeB {
       left: 40px;
     }
   }

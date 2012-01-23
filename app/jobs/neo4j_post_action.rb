@@ -1,6 +1,6 @@
 require 'json'
 
-# called for post actions (vote, repost, favorite, etc)
+# called for post actions (vote, like, favorite, etc)
 class Neo4jPostAction
 
   @queue = :neo4j

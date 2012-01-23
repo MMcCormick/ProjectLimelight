@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RepostsController do
+describe LikesController do
   describe "POST create" do
     it "should click the login button when not signed in"
 
@@ -19,8 +19,8 @@ describe RepostsController do
         let(:object) { mock('object').as_null_object }
         before(:each) { CoreObject.should_receive(:find).with("fooid").and_return(object) }
 
-        it "should call add_to_reposts on the object" do
-          object.should_receive(:add_to_reposts).with(user)
+        it "should call add_to_likes on the object" do
+          object.should_receive(:add_to_likes).with(user)
           xhr :post, :create, :id => "fooid"
         end
         it "should save the current user and object" do
@@ -60,8 +60,8 @@ describe RepostsController do
         let(:object) { mock('object').as_null_object }
         before(:each) { CoreObject.should_receive(:find).with("fooid").and_return(object) }
 
-        it "should call remove_from_reposts on the object" do
-          object.should_receive(:remove_from_reposts).with(user)
+        it "should call remove_from_likes on the object" do
+          object.should_receive(:remove_from_likes).with(user)
           xhr :delete, :destroy, :id => "fooid"
         end
         it "should save the current user and object" do

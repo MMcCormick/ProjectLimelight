@@ -1,8 +1,0 @@
-<button class="btn-tog <%= !signed_in? || !object.reposted_by?(current_user.id) ? 'repostB' : 'unrepostB' %> repost_<%= object.id %>" title="<%= !signed_in? || !object.reposted_by?(current_user.id) ? 'repost this to your followers' : 'undo repost' %>">
-  <div class="default" data-url="<%= create_repost_path %>" data-d='{"id":"<%= object.id %>"}' data-m="post">
-    <div class="repost-grey-icon icon"></div>
-  </div>
-  <div class="triggered" data-url="<%= destroy_repost_path %>" data-d='{"id":"<%= object.id %>"}' data-m="delete">
-    <div class="repost-green-icon icon"></div>
-  </div>
-</button>

@@ -19,8 +19,11 @@ class LinksController < ApplicationController
     @link.save_images
 
     if @link.save
-      @link.send_mention_notifications
-      extras = { :type => "Link", :path => link_path(@link), :response => @link.response_to }
+      if params[:talk]
+        current_user.talks.create(params[:talk].merge!({:parent_id => @link.id, :parent_type => 'Link'}))
+      end
+
+      extras = { :type => "Link", :path => link_path(@link) }
       response = build_ajax_response(:ok, nil, nil, nil, extras)
       render json: response, status: :created
     else

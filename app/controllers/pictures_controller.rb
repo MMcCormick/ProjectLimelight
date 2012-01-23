@@ -19,8 +19,11 @@ class PicturesController < ApplicationController
     @picture.save_images
 
     if @picture.save
-      @picture.send_mention_notifications
-      extras = { :type => "Picture", :path => picture_path(@picture), :response => !!@picture.response_to }
+      if params[:talk]
+        current_user.talks.create(params[:talk].merge!({:parent_id => @picture.id, :parent_type => 'Picture'}))
+      end
+
+      extras = { :type => "Picture", :path => picture_path(@picture) }
       response = build_ajax_response(:ok, nil, nil, nil, extras)
       render json: response, status: :created
     else

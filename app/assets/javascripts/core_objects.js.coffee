@@ -9,6 +9,7 @@ jQuery ->
     talkForm.attr('action', talkForm.data('old-action'))
     talkForm.find('#talk_content').attr('name', 'talk[content]').parents('.lClear:first').addClass('required').find('label').text('What do you want to talk about?')
     targetForm.find('.response .image, .response .title, .response .created_at').text('')
+    targetForm.find('.response').removeClass('with-image')
     $('#talk_parent_id').val('')
 
   suggestMentions = (target) ->

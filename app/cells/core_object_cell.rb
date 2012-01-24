@@ -6,17 +6,15 @@ class CoreObjectCell < Cell::Rails
   helper TopicsHelper
   helper ImageHelper
 
-  def teaser_root(current_user, root, original)
+  def teaser_root(current_user, root)
     @current_user = current_user
     @root = root
-    @original = original
     render
   end
 
-  def teaser_personalized(current_user, root, original)
+  def teaser_personalized(current_user, responses)
     @current_user = current_user
-    @root = root
-    @original = original
+    @responses = responses
     render
   end
 

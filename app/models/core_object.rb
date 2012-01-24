@@ -42,7 +42,7 @@ class CoreObject
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :set_parent_type, :send_tweet
-  after_create :neo4j_create, :update_response_count, :action_log_create
+  after_create :feeds_post_create, :neo4j_create, :update_response_count, :action_log_create
   after_update :expire_caches
 
   # hot damn lots of indexes. can we do this better? YES WE CAN
@@ -68,6 +68,10 @@ class CoreObject
 
   def encoded_id
     public_id.to_i.to_s(36)
+  end
+
+  def name
+    title
   end
 
   def set_source_snippet
@@ -202,6 +206,11 @@ class CoreObject
     end
   end
 
+  def feeds_post_create
+    push_to_feeds
+    #Resque.enqueue(FeedsPostCreate, id.to_s)
+  end
+
   def neo4j_create
     Resque.enqueue(Neo4jPostCreate, id.to_s)
   end
@@ -212,6 +221,48 @@ class CoreObject
 
   def action_log_delete
     ActionPost.create(:action => 'delete', :from_id => user_snippet.id, :to_id => id, :to_type => self.class.name)
+  end
+
+  def push_to_feeds
+    topic_mention_ids = topic_mentions.map{|tm| tm.id}
+    user_mention_ids = user_mentions.map{|um| um.id}
+    user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => user_snippet.id}, {:following_topics => {'$in' => topic_mention_ids}}).to_a
+
+    if parent_id
+      root_id = parent_id
+    else
+      root_id = id
+    end
+
+    updates = {"$set" => {
+                      :root_type => parent_type ? parent_type : _type,
+                      :last_response_time => Time.now
+              }}
+    updates["$push"] = { :responses => id } if parent_id
+
+    user_feed_users.each do |u|
+      topic_intersection = (topic_mention_ids & u.following_topics)
+      unless parent_id || topic_intersection.length == 0
+        topic = Topic.where(:_id => {'$in' => topic_mention_ids}).order_by(:pm, :desc).first
+        if topic
+          root_id = topic.id
+          updates["$set"][:root_type] = 'Topic'
+          updates["$push"] = { :responses => id }
+        end
+      end
+
+      strength = 0
+      strength += topic_intersection.length
+      strength += 1 if u.following_users.include?(user_snippet.id)
+      strength += 1 if user_mention_ids.include?(u.id)
+      updates["$inc"] = { :strength => strength }
+
+      FeedItem.collection.update(
+        {:feed_id => u.id, :feed_type => 'uf', :root_id => root_id},
+        updates,
+        {:upsert => true}
+      )
+    end
   end
 
   class << self
@@ -227,59 +278,94 @@ class CoreObject
     # @param { options } Options TODO: Fill out these options
     #
     # @return [ CoreObjects ]
-    def feed(display_types, order_by, options)
-      or_criteria = []
-      or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
-      or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users] && !options[:created_by_users].empty?
-      or_criteria << {"likes._id" => {"$in" => options[:liked_by_users]}} if options[:liked_by_users] && !options[:liked_by_users].empty?
-      or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics] && !options[:mentions_topics].empty?
-      or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users] && !options[:mentions_users].empty?
-      or_criteria << {"parent_id" => options[:parent_id]} if options[:parent_id]
+    def feed(feed_id, feed_type, display_types, order_by, options)
 
-      #page length also hard-coded in views/core_object
-      page_length = options[:limit]? options[:limit] - 1 : 20
-      page_number = options[:page]? options[:page] : 1
-      num_to_skip = page_length * (page_number - 1)
-
-      core_objects = self.only(:id, :_type, :parent_type, :parent_id)
-
-      # page_length + 1 is used below so that one extra object is returned, allowing the views to check if there are more objects
-      if or_criteria.length > 0
-        core_objects = core_objects.where(:status => "active", :parent_type => {'$in' => display_types}).any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
-      else
-        core_objects = core_objects.where(:status => "active", :parent_type => {'$in' => display_types}).skip(num_to_skip).limit(page_length + 1)
+      if display_types.include?('Talk')
+        display_types << 'Topic'
       end
 
-      # if we are exluding some parent ids
-      if options[:not_parent_ids]
-        core_objects = core_objects.where(:id => {'$nin' => options[:not_parent_ids]}, :parent_id => {'$nin' => options[:not_parent_ids]})
-      end
+      items = FeedItem.where(:feed_id => feed_id, :feed_type => feed_type, :root_type => {'$in' => display_types})
 
-      if order_by[:target] != 'created_at'
-        core_objects = core_objects.order_by([[order_by[:target], order_by[:order]], [:created_at, :desc]])
-      else
-        core_objects = core_objects.order_by([[order_by[:target], order_by[:order]]])
-      end
-
-      # get the link data in one query
-      root_ids = []
-      core_objects.each do |core_object|
-        if core_object.parent_id
-          root_ids << core_object.parent_id
-        elsif !core_object._type == 'Talk'
-          root_ids << core_object.id
+      topic_ids = []
+      item_ids = []
+      items.each do |i|
+        if i.root_type == 'Topic'
+          topic_ids << i.root_id
+        else
+          item_ids << i.root_id
         end
+        item_ids += i.responses if i.responses
       end
-      roots = CoreObject.where(:_id => {'$in' => root_ids}).to_a
 
-      # build the structure
+      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      objects = CoreObject.where(:_id => {'$in' => item_ids})
+
       return_objects = []
-      core_objects.each do |core_object|
-        root = roots.detect{|l| l.id == core_object.id || l.id == core_object.parent_id}
-        return_objects << {:root => root, :original => core_object}
+      items.each do |i|
+        if i.root_type == 'Topic'
+          root = topics.detect{|t| t.id == i.root_id}
+        else
+          root = objects.detect{|o| o.id == i.root_id}
+        end
+
+        responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        return_objects << {:root => root, :responses => responses}
       end
 
       return_objects
+
+      #or_criteria = []
+      #or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
+      #or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users] && !options[:created_by_users].empty?
+      #or_criteria << {"likes._id" => {"$in" => options[:liked_by_users]}} if options[:liked_by_users] && !options[:liked_by_users].empty?
+      #or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics] && !options[:mentions_topics].empty?
+      #or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users] && !options[:mentions_users].empty?
+      #or_criteria << {"parent_id" => options[:parent_id]} if options[:parent_id]
+      #
+      ##page length also hard-coded in views/core_object
+      #page_length = options[:limit]? options[:limit] - 1 : 20
+      #page_number = options[:page]? options[:page] : 1
+      #num_to_skip = page_length * (page_number - 1)
+      #
+      #core_objects = self.only(:id, :_type, :parent_type, :parent_id)
+      #
+      ## page_length + 1 is used below so that one extra object is returned, allowing the views to check if there are more objects
+      #if or_criteria.length > 0
+      #  core_objects = core_objects.where(:status => "active", :parent_type => {'$in' => display_types}).any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
+      #else
+      #  core_objects = core_objects.where(:status => "active", :parent_type => {'$in' => display_types}).skip(num_to_skip).limit(page_length + 1)
+      #end
+      #
+      ## if we are exluding some parent ids
+      #if options[:not_parent_ids]
+      #  core_objects = core_objects.where(:id => {'$nin' => options[:not_parent_ids]}, :parent_id => {'$nin' => options[:not_parent_ids]})
+      #end
+      #
+      #if order_by[:target] != 'created_at'
+      #  core_objects = core_objects.order_by([[order_by[:target], order_by[:order]], [:created_at, :desc]])
+      #else
+      #  core_objects = core_objects.order_by([[order_by[:target], order_by[:order]]])
+      #end
+      #
+      ## get the link data in one query
+      #root_ids = []
+      #core_objects.each do |core_object|
+      #  if core_object.parent_id
+      #    root_ids << core_object.parent_id
+      #  elsif !core_object._type == 'Talk'
+      #    root_ids << core_object.id
+      #  end
+      #end
+      #roots = CoreObject.where(:_id => {'$in' => root_ids}).to_a
+      #
+      ## build the structure
+      #return_objects = []
+      #core_objects.each do |core_object|
+      #  root = roots.detect{|l| l.id == core_object.id || l.id == core_object.parent_id}
+      #  return_objects << {:root => root, :original => core_object}
+      #end
+      #
+      #return_objects
     end
   end
 

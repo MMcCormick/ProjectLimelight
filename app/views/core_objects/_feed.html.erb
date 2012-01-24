@@ -1,9 +1,9 @@
 <div id="core-feed" class="<%= session[:feed_filters][:layout] %>">
   <% core_objects.each_with_index do |core_object, i| %>
     <% if i < 20 %>
-      <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:root]._type.downcase}" %>'>
-        <%= render_cell :core_object, :teaser_root, current_user, core_object[:root], core_object[:original] %>
-        <%= render_cell :core_object, :teaser_personalized, current_user, core_object[:root], core_object[:original] %>
+      <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:root].class.name.downcase}" %>'>
+        <%= render_cell :core_object, :teaser_root, current_user, core_object[:root] %>
+        <%= render_cell :core_object, :teaser_personalized, current_user, core_object[:responses] %>
       </div>
       <%#= render "#{core_object._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => core_object, :style => session[:feed_filters][:layout].to_sym, :response => false %>
     <% end %>

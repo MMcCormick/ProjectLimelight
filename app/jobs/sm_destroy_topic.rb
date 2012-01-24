@@ -3,7 +3,7 @@ require 'json'
 class SmDestroyTopic
   include Resque::Plugins::UniqueJob
 
-  @queue = :soulmate_topic
+  @queue = :soulmate
 
   def self.perform(topic_id)
     Soulmate::Loader.new("topic").remove({'id' => topic_id})

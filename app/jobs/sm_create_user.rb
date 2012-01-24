@@ -6,7 +6,7 @@ class SmCreateUser
   include Rails.application.routes.url_helpers
   include SoulmateHelper
 
-  @queue = :soulmate_user
+  @queue = :soulmate
 
   def initialize(user)
     Soulmate::Loader.new("user").add(user_nugget(user))

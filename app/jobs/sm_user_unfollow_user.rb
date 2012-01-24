@@ -3,7 +3,7 @@ require 'json'
 class SmUserUnfollowUser
   include Resque::Plugins::UniqueJob
 
-  @queue = :soulmate_user
+  @queue = :soulmate
 
   def self.perform(user_id, unfollow_user_id)
     user = User.find(user_id)

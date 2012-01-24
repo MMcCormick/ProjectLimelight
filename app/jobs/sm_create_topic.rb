@@ -6,7 +6,7 @@ class SmCreateTopic
   include Rails.application.routes.url_helpers
   include SoulmateHelper
 
-  @queue = :soulmate_topic
+  @queue = :soulmate
 
   def initialize(topic)
     Soulmate::Loader.new("topic").add(topic_nugget(topic))

@@ -6,7 +6,7 @@ class SmUserFollowUser
   include Rails.application.routes.url_helpers
   include SoulmateHelper
 
-  @queue = :soulmate_user
+  @queue = :soulmate
 
   def initialize(user, following)
     Soulmate::Loader.new(user.id.to_s).add(user_nugget(following))

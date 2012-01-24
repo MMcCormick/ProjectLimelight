@@ -552,7 +552,8 @@ module Limelight #:nodoc:
       amt
     end
 
-    def add_pop_action(type, subtype, current_user)
+    # secondary boolean means the function is being called on the parent of the object which actually had the action
+    def add_pop_action(type, subtype, current_user, secondary=false)
       amt = 0
       if subtype == :a
         amt = @@pop_amounts[type]
@@ -564,25 +565,29 @@ module Limelight #:nodoc:
       if defined? topic_mentions
         amt = 2 * amt / topic_mentions.length if topic_mentions.length > 2
       end
+      amt = amt / 10 if secondary
 
       if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
         action.pop_snippets.new(:amount => amt, :id => id, :object_type => self.class.name)
 
         unless ["User", "Topic"].include? self.class.name
-          # Update user
-          user_amt = amt * @@pop_amounts[:user]
 
-          action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")
-          User.collection.update(
-            {:_id => user_id},
-            {
-              "$inc" => { :ph => user_amt, :pd => user_amt, :pw => user_amt, :pm => user_amt, :pt => user_amt },
-              "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
-            }
-          )
-          Pusher[user_id.to_s].trigger('popularity_changed', {:id => user_id.to_s, :change => user_amt})
-          User.expire_caches(user_id.to_s)
+          # Update user if not a link, video, or picture
+          unless ["Link", "Video", "Picture"].include? self.class.name
+            user_amt = amt * @@pop_amounts[:user]
+
+            action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")
+            User.collection.update(
+              {:_id => user_id},
+              {
+                "$inc" => { :ph => user_amt, :pd => user_amt, :pw => user_amt, :pm => user_amt, :pt => user_amt },
+                "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+              }
+            )
+            Pusher[user_id.to_s].trigger('popularity_changed', {:id => user_id.to_s, :change => user_amt})
+            User.expire_caches(user_id.to_s)
+          end
 
           # Update mentioned topics if applicable
           if defined? topic_mentions
@@ -619,6 +624,11 @@ module Limelight #:nodoc:
               }
             )
             ic_ids.each {|target| Topic.expire_caches(target.to_s)}
+          end
+
+          if parent_id
+            object = CoreObject.find(parent_id)
+            object.add_pop_action() if object
           end
         end
 

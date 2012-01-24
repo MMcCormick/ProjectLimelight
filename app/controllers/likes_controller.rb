@@ -10,7 +10,7 @@ class LikesController < ApplicationController
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})
         status = 201
       else
-        response = build_ajax_response(:error, nil, 'You have already like that!')
+        response = build_ajax_response(:error, nil, 'You already like that!')
         status = 401
       end
     else

@@ -34,6 +34,7 @@
     <%= render :partial => 'core_objects/disable_btn', :locals => { :path => disable_talk_path(object) } %>
   <% end %>
 
+  <%= render 'likes/btn', :current_user => current_user, :object => object %>
   <%= render 'core_objects/feed_teaser_actions', :object => object %>
   <div class="pc pc_<%= object.id.to_s %>"></div>
   <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>

@@ -161,33 +161,27 @@ class CoreObject
 
   # Likes
   def liked_by?(user_id)
-    likes.include? user_id
+    likes.where(:_id => user_id).first
   end
 
   def add_to_likes(user)
-    if (liked_by? user.id) || (user_id == user.id)
+    like = liked_by? user.id
+    if like || (user_id == user.id)
       false
     else
-      self.likes << user.id
-      self.likes_count += 1
-      user.likes_count += 1
+      self.likes << UserSnippet.new(user.attributes)
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
-
       ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
-
       true
     end
   end
 
   def remove_from_likes(user)
-    if liked_by? user.id
-      self.likes.delete(user.id)
-      self.likes_count -= 1
-      user.likes_count -= 1
+    like = liked_by? user.id
+    if like
+      like.destroy
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
-
       ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
-
       true
     else
       false

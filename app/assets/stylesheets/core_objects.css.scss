@@ -190,10 +190,10 @@
     }
     &.with-preview {
       .info {
-        width: 228px;
+        width: 379px;
         .under,
         .mention {
-          width: 205px;
+          width: 310px;
         }
       }
     }
@@ -205,7 +205,7 @@
       }
       .mention,
       .under {
-        padding: 0 4px 0 0 !important;
+        padding: 0 4px 0 6px !important;
         height: 65px;
         font-size: 13px;
         width: 347px;
@@ -253,8 +253,8 @@
     }
     .cancel {
       position: absolute;
-      top: 1px;
-      right: 7px;
+      top: 10px;
+      right: 8px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -263,11 +263,12 @@
     margin: 0 8px;
     border-top: 1px solid #AAA;
     position: relative;
-    padding: 0 150px 0 0;
+    padding: 0;
     overflow: hidden;
 
     label {
       top: 6px;
+      left: 5px;
     }
     .talk_content {
       .mention-box {
@@ -277,11 +278,37 @@
       .mention {
         height: 86px;
         padding: 6px 3px !important;
-        width: 351px;
+        width: 450px;
       }
     }
   }
+  .response {
+    padding: 5px;
+    position: relative;
+    display: none;
+    min-height: 45px;
 
+    &.with_image {
+      padding-left: 65px;
+    }
+    .image {
+      @include border-radius(2px);
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+    }
+    .title {
+      font-weight: bold;
+      cursor: default;
+    }
+    .created_at {
+      font-size: 11px;
+      color: #888;
+      cursor: default;
+    }
+  }
   .suggestions {
     @include clearfix();
     position: relative;

@@ -58,6 +58,7 @@ class CoreObject
   index "topic_mentions._id"
   index "user_mentions._id"
   index "likes._id"
+  index "sources.url"
 
   def to_param
     "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"

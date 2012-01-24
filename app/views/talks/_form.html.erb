@@ -3,6 +3,12 @@
   <div class="errors"></div>
 
   <div class="main_content">
+    <div class='response'>
+      <div class='image'></div>
+      <div class='title'>Some Limelight Post</div>
+      <div class='created_at'>link originally submitted 20 minutes ago</div>
+    </div>
+
     <div class="talk_content required lClear">
       <%= f.label :content, "What do you want to talk about?" %>
       <%= render "shared/mention_box", :f => f %>
@@ -29,7 +35,5 @@
     <div class="cancel">cancel</div>
   </div>
 
-  <% if responding %>
-    <%= f.hidden_field :parent_id, :value => responding.id.to_s %>
-  <% end %>
+  <%= f.hidden_field :parent_id, :value => responding ? responding.id.to_s : '' %>
 <% end %>

@@ -14,11 +14,19 @@ class TalksController < ApplicationController
   def create
     @talk = current_user.talks.build(params[:talk])
 
+    if params[:talk][:parent_id]
+      object = CoreObject.find(params[:talk][:parent_id])
+      if object && ['Video', 'Link', 'Picture'].include?(object._type)
+        @talk.parent_id = object.id
+        @talk.parent_type = object._type
+      else
+        @talk.parent_id = nil
+      end
+    end
+
     if @talk.save
       if @talk.parent_id
         view = 'list'
-        object = CoreObject.find(@talk.parent_id)
-        Notification.add(object.user, :reply, true, current_user, nil, nil, true, object, object.user, nil)
         teaser = render_to_string :partial => "talks/teaser_#{view}", :locals => { :object => @talk }
         extras = { :teaser => teaser, :response => true }
         object.expire_caches

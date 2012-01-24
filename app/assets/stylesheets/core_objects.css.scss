@@ -286,7 +286,8 @@
     padding: 5px;
     position: relative;
     display: none;
-    min-height: 45px;
+    min-height: 51px;
+    border-bottom: 1px dashed #999;
 
     &.with-image {
       padding-left: 65px;

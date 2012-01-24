@@ -26,7 +26,7 @@ class CoreObject
 
   auto_increment :public_id
 
-  embeds_one :user_snippet, as: :user_assignable
+  embeds_one :user_snippet, as: :user_assignable, :class_name => 'SourceSnippet'
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
   embeds_many :likes, as: :user_assignable, :class_name => 'UserSnippet'
 
@@ -269,7 +269,8 @@ class CoreObject
 
   # Set some denormilized user data
   def set_user_snippet
-    self.build_user_snippet({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.build_user_snippet({public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.user_snippet.id = user.id
   end
 
   def current_user_own

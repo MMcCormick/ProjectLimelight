@@ -52,6 +52,7 @@ class Neo4jPostCreate
         parent_node = Neo4j.neo.get_node_index('posts', 'uuid', post.parent_id.to_s)
         if parent_node
           talk_rel = Neo4j.neo.create_relationship('talked', creator_node, parent_node)
+          Neo4j.neo.set_relationship_properties(talk_rel, {"created_at" => Time.now})
           Neo4j.neo.add_relationship_to_index('users', 'talked', "#{post.user_id.to_s}-#{post.parent_id.to_s}", talk_rel)
         end
       end

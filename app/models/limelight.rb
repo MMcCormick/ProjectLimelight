@@ -628,7 +628,7 @@ module Limelight #:nodoc:
 
           if parent_id
             object = CoreObject.find(parent_id)
-            object.add_pop_action() if object
+            object.add_pop_action(type, subtype, current_user, true) if object
           end
         end
 

@@ -55,6 +55,8 @@ ProjectLimelight::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
+  config.log_tags = [:uuid, :remote_ip]
+
   # ActionMailer Config
   # Setup for production - deliveries, no errors raised
   config.action_mailer.delivery_method = :smtp

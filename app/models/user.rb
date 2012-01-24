@@ -6,6 +6,8 @@ class User
   include Limelight::Images
   include Limelight::Popularity
 
+  cache
+
   @marc_id = "4eb9cda1cddc7f4068000042"
   @matt_id = "4ebf1748cddc7f0c9f000002"
   class << self; attr_accessor :marc_id, :matt_id end

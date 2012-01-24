@@ -1,0 +1,7 @@
+<% unless @root.title.blank? %>
+  <h2 class="titleC">
+    <%= @root.title %>
+  </h2>
+<% end %>
+
+<%#= render "#{@root._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => @root %>

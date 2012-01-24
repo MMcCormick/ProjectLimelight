@@ -4,6 +4,8 @@ class InviteCode
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  cache
+
   field :code
   field :allotted, :type => Integer
   field :used, :type => Integer, :default => 0

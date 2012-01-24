@@ -2,6 +2,8 @@ class TopicConnection
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  cache
+
   field :name
   field :reverse_name, :default => nil
   field :inline

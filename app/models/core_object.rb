@@ -8,6 +8,8 @@ class CoreObject
   include Limelight::Mentions
   include Limelight::Popularity
 
+  cache
+
   # Denormilized:
   # Notification.object
   #TODO: bug: each core object type currently validates the length of content, but after creation content_raw is copied to content.
@@ -39,15 +41,15 @@ class CoreObject
   attr_accessor :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
   before_validation :set_source_snippet
-  before_create :set_user_snippet, :current_user_own, :send_tweet
+  before_create :set_user_snippet, :current_user_own, :set_parent_type, :send_tweet
   after_create :neo4j_create, :update_response_count, :action_log_create
   after_update :expire_caches
 
-  # hot damn lots of indexes. can we do this better?
+  # hot damn lots of indexes. can we do this better? YES WE CAN
   index :user_id
   index :favorites
   index :parent_id, sparse: true
-  index :parent_type, sparse: true
+  index :parent_type
   index :public_id, unique: true
   index :created_at
   index :ph
@@ -228,10 +230,10 @@ class CoreObject
     def feed(display_types, order_by, options)
       or_criteria = []
       or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
-      or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users]
-      or_criteria << {"likes._id" => {"$in" => options[:liked_by_users]}} if options[:liked_by_users]
-      or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics]
-      or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users]
+      or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users] && !options[:created_by_users].empty?
+      or_criteria << {"likes._id" => {"$in" => options[:liked_by_users]}} if options[:liked_by_users] && !options[:liked_by_users].empty?
+      or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics] && !options[:mentions_topics].empty?
+      or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users] && !options[:mentions_users].empty?
       or_criteria << {"parent_id" => options[:parent_id]} if options[:parent_id]
 
       #page length also hard-coded in views/core_object
@@ -239,11 +241,13 @@ class CoreObject
       page_number = options[:page]? options[:page] : 1
       num_to_skip = page_length * (page_number - 1)
 
+      core_objects = self.only(:id, :_type, :parent_type, :parent_id)
+
       # page_length + 1 is used below so that one extra object is returned, allowing the views to check if there are more objects
-      if (or_criteria.length > 0)
-        core_objects = self.where(:status => "active").any_of("_type" => {'$in' => display_types}, 'parent_type' => {'$in' => display_types}).any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
+      if or_criteria.length > 0
+        core_objects = core_objects.where(:status => "active", :parent_type => {'$in' => display_types}).any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
       else
-        core_objects = self.where(:status => "active").any_of("_type" => {'$in' => display_types}, 'parent_type' => {'$in' => display_types}).skip(num_to_skip).limit(page_length + 1)
+        core_objects = core_objects.where(:status => "active", :parent_type => {'$in' => display_types}).skip(num_to_skip).limit(page_length + 1)
       end
 
       # if we are exluding some parent ids
@@ -252,10 +256,30 @@ class CoreObject
       end
 
       if order_by[:target] != 'created_at'
-        core_objects.order_by([[order_by[:target], order_by[:order]], [:created_at, :desc]])
+        core_objects = core_objects.order_by([[order_by[:target], order_by[:order]], [:created_at, :desc]])
       else
-        core_objects.order_by([[order_by[:target], order_by[:order]]])
+        core_objects = core_objects.order_by([[order_by[:target], order_by[:order]]])
       end
+
+      # get the link data in one query
+      root_ids = []
+      core_objects.each do |core_object|
+        if core_object.parent_id
+          root_ids << core_object.parent_id
+        elsif !core_object._type == 'Talk'
+          root_ids << core_object.id
+        end
+      end
+      roots = CoreObject.where(:_id => {'$in' => root_ids}).to_a
+
+      # build the structure
+      return_objects = []
+      core_objects.each do |core_object|
+        root = roots.detect{|l| l.id == core_object.id || l.id == core_object.parent_id}
+        return_objects << {:root => root, :original => core_object}
+      end
+
+      return_objects
     end
   end
 
@@ -269,6 +293,12 @@ class CoreObject
 
   def current_user_own
     grant_owner(user.id)
+  end
+
+  def set_parent_type
+    if parent_type.blank?
+      self.parent_type = self._type
+    end
   end
 
   def update_denorms

@@ -3,6 +3,8 @@ class Notification
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  cache
+
   field :active, :default => true
   field :message
   field :type

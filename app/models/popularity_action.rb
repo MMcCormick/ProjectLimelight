@@ -2,6 +2,8 @@ class PopularityAction #lawsuit?
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  cache
+
   field :t, :as => :type
   field :st, :as => :subtype
   field :uid, :as => :user_id

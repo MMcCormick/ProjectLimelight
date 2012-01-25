@@ -8,7 +8,7 @@
   <% else %>
     <div class='topic-head'>
       <%= image_tag topic_default_picture(@root, 50, 50, 'fit'), :style => "max-width: 50px;", :alt => "" %>
-      <h2><a href="<%= topic_path(@root) %>"><%= @root.name %></a></h2>
+      <h2>Talking about <a href="<%= topic_path(@root) %>"><%= @root.name %></a></h2>
       <%= render 'follows/btn', :current_user => @current_user, :target => @root %>
     </div>
   <% end %>

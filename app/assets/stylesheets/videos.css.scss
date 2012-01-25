@@ -8,30 +8,9 @@
 
 .video {
     &.teaser {
-      border-color: adjust-lightness($video-color, 20);
       &.hover {
         border-color: $video-color;
-
-        .wrapper
-        {
-          border-color: $video-color;
-        }
       }
-    }
-
-    &.teaser.list {
-      border: none;
-      .wrapper {
-        border-color: adjust-lightness($video-color, 20);
-      }
-      &.hover {
-        .wrapper {
-          border-color: $video-color;
-        }
-      }
-    }
-
-    &.teaser.column {
     }
 
     &.objectContent {

@@ -13,6 +13,6 @@ class UserSnippet
 
   # Return the users username instead of their ID
   def to_param
-    self.username.to_url
+    username.to_url
   end
 end

@@ -14,7 +14,13 @@ class CoreObjectCell < Cell::Rails
     render
   end
 
-  def teaser_personal(current_user, responses)
+  def teaser_personal_column(current_user, responses)
+    @current_user = current_user
+    @responses = responses
+    render
+  end
+
+  def teaser_personal_list(current_user, responses)
     @current_user = current_user
     @responses = responses
     render

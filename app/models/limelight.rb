@@ -421,7 +421,10 @@ module Limelight #:nodoc:
           unless existing
             payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
             self.topic_mentions.build(payload)
-            self.primary_topic_mention = topic.id if topic.pm > primary_topic_pm
+            if topic.pm > primary_topic_pm
+              self.primary_topic_mention = topic.id
+              self.primary_topic_pm = topic.pm
+            end
           end
         end
       end
@@ -446,7 +449,10 @@ module Limelight #:nodoc:
         unless existing
           payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
           self.topic_mentions.build(payload.merge!(:ooc => ooc))
-          self.primary_topic_mention = topic.id if topic.pm > primary_topic_pm
+          if topic.pm > primary_topic_pm
+            self.primary_topic_mention = topic.id
+            self.primary_topic_pm = topic.pm
+          end
         end
       end
     end
@@ -484,7 +490,10 @@ module Limelight #:nodoc:
           payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug, :ooc => topic_mention[2]}
           if !topic_mentions.detect{|mention| mention.id == payload[:id]}
             self.topic_mentions.build(payload)
-            self.primary_topic_mention = found_topic.id if found_topic.pm > primary_topic_pm
+            if found_topic.pm > primary_topic_pm
+              self.primary_topic_mention = found_topic.id
+              self.primary_topic_pm = found_topic.pm
+            end
           end
         else
           @title_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#{topic_mention[0]}") if @title_raw

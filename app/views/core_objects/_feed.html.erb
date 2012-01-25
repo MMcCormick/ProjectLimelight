@@ -3,9 +3,8 @@
     <% if i < 20 %>
       <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:root].class.name.downcase}" %>'>
         <%= render_cell :core_object, :teaser_root, current_user, core_object[:root] %>
-        <%= render_cell :core_object, :teaser_personal, current_user, core_object[:responses] %>
+        <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:responses] %>
       </div>
-      <%#= render "#{core_object._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => core_object, :style => session[:feed_filters][:layout].to_sym, :response => false %>
     <% end %>
   <% end %>
   <div class="clear"></div>

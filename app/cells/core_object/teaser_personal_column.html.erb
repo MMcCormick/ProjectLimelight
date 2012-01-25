@@ -2,9 +2,9 @@
   <div class='personal'>
     <% @responses.each do |response| %>
       <div class='response'>
-        <%= user_link response.user_snippet %>
-        <div class='created_at'>
-          <%= time_ago_in_words(response.created_at, false) %> ago
+        <div class='created'>
+          <%= user_link response.user_snippet %>
+          <span class='when'><%= time_ago_in_words(response.created_at, false) %> ago</span>
         </div>
         <p><%= parse_mentions(response.content, response) %></p>
         <div class='actions'>

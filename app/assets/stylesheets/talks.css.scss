@@ -8,33 +8,8 @@
 
 .talk {
   &.teaser {
-    border-color: #EFD299;
     &.hover {
       border-color: $talk-color;
-
-      .wrapper
-      {
-        border-color: $talk-color;
-      }
-    }
-  }
-  &.teaser.grid {
-    .content {
-      p {
-        clear: both;
-        margin: 0 5px;
-      }
-    }
-  }
-  &.teaser.list {
-    border: none;
-    .wrapper {
-      border-color: adjust-lightness($talk-color, 30);
-    }
-    &.hover {
-      .wrapper {
-        border-color: $talk-color;
-      }
     }
   }
 }

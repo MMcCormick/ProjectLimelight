@@ -8,47 +8,9 @@
 
 .picture {
     &.teaser {
-      border-color: adjust-lightness($picture-color, 30);
       &.hover {
         border-color: $picture-color;
-
-        .wrapper
-        {
-          border-color: $picture-color;
-        }
       }
-    }
-    
-    &.teaser.grid {
-        p {
-            overflow: hidden;
-            height: 22px;
-            bottom: 22px;
-        }
-        .bodyC {
-            .imageC {
-                text-align: center;
-            }
-        }
-    }
-    &.teaser.column {
-      p {
-        margin-top: 5px;
-      }
-    }
-    &.teaser.list {
-      border: none;
-      .wrapper {
-        border-color: adjust-lightness($picture-color, 30);
-      }
-      &.hover {
-        .wrapper {
-          border-color: $picture-color;
-        }
-      }
-    }
-    &.objectContent {
-        text-align: center;
     }
 }
 

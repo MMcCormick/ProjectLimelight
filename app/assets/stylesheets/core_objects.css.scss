@@ -628,6 +628,13 @@ $teaser-padding: 10px;
           }
         }
       }
+      .actions {
+        .likeB,
+        .unlikeB,
+        .coreShareB {
+          display: none;
+        }
+      }
     }
   }
   .when {
@@ -663,6 +670,15 @@ $teaser-padding: 10px;
       }
       &:hover {
         text-decoration: underline;
+      }
+    }
+  }
+  &.talk {
+    .actions {
+      .likeB,
+      .unlikeB,
+      .coreShareB {
+        display: none;
       }
     }
   }

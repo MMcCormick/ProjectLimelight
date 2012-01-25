@@ -161,6 +161,10 @@ module ApplicationHelper
     end
   end
 
+  def pretty_time(date)
+    time_ago_in_words(date, false).sub('about', '')+ ' ago'
+  end
+
   def static_data
     data = {
             :fetchEmbedUrl => embedly_fetch_path,

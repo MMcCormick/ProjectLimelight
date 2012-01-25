@@ -2,7 +2,7 @@
 
 <%= user_link object.user_snippet %>
 <div class='created_at'>
-  <%= time_ago_in_words(object.created_at, false) %> ago
+  <%= pretty_time(object.created_at) %>
 </div>
 
 <div class='actions'>

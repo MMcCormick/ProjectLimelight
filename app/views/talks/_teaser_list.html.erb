@@ -5,7 +5,7 @@
 <p><%= parse_mentions(object.content, object) %></p>
 
 <div class='actions'>
-  <span class='when'><%= time_ago_in_words(object.created_at, false) %> ago</span>
+  <span class='when'><%= pretty_time(object.created_at) %></span>
   <a href="<%= url_for object %>" class="comments">
     <%= object.response_count.to_i %> comments
   </a>

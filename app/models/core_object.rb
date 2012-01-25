@@ -224,45 +224,7 @@ class CoreObject
   end
 
   def push_to_feeds
-    topic_mention_ids = topic_mentions.map{|tm| tm.id}
-    user_mention_ids = user_mentions.map{|um| um.id}
-    user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => user_snippet.id}, {:following_topics => {'$in' => topic_mention_ids}}).to_a
-
-    if parent_id
-      root_id = parent_id
-    else
-      root_id = id
-    end
-
-    updates = {"$set" => {
-                      :root_type => parent_type ? parent_type : _type,
-                      :last_response_time => Time.now
-              }}
-    updates["$push"] = { :responses => id } if parent_id
-
-    user_feed_users.each do |u|
-      topic_intersection = (topic_mention_ids & u.following_topics)
-      unless parent_id || topic_intersection.length == 0
-        topic = Topic.where(:_id => {'$in' => topic_mention_ids}).order_by(:pm, :desc).first
-        if topic
-          root_id = topic.id
-          updates["$set"][:root_type] = 'Topic'
-          updates["$push"] = { :responses => id }
-        end
-      end
-
-      strength = 0
-      strength += topic_intersection.length
-      strength += 1 if u.following_users.include?(user_snippet.id)
-      strength += 1 if user_mention_ids.include?(u.id)
-      updates["$inc"] = { :strength => strength }
-
-      FeedItem.collection.update(
-        {:feed_id => u.id, :feed_type => 'uf', :root_id => root_id},
-        updates,
-        {:upsert => true}
-      )
-    end
+    FeedItem.post_create(self)
   end
 
   class << self

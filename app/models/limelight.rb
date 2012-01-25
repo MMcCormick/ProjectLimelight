@@ -289,13 +289,15 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
+      field :primary_topic_mention
+
       embeds_many :user_mentions, as: :user_mentionable
       embeds_many :topic_mentions, as: :topic_mentionable
 
       before_create :set_mentions
 
       attr_accessible :title_raw, :content_raw, :ooc_mentions
-      attr_accessor :title_raw, :content_raw, :ooc_mentions
+      attr_accessor :title_raw, :content_raw, :ooc_mentions, :primary_topic_pm
     end
 
     def title_clean
@@ -340,6 +342,8 @@ module Limelight #:nodoc:
     end
 
     def set_mentions
+      self.primary_topic_pm = -1
+
       set_user_mentions
       set_topic_mentions
 
@@ -417,6 +421,7 @@ module Limelight #:nodoc:
           unless existing
             payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
             self.topic_mentions.build(payload)
+            self.primary_topic_mention = topic.id if topic.pm > primary_topic_pm
           end
         end
       end
@@ -441,6 +446,7 @@ module Limelight #:nodoc:
         unless existing
           payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
           self.topic_mentions.build(payload.merge!(:ooc => ooc))
+          self.primary_topic_mention = topic.id if topic.pm > primary_topic_pm
         end
       end
     end
@@ -476,7 +482,10 @@ module Limelight #:nodoc:
           @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]") if @content_raw
 
           payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug, :ooc => topic_mention[2]}
-          self.topic_mentions.build(payload) if !topic_mentions.detect{|mention| mention.id == payload[:id]}
+          if !topic_mentions.detect{|mention| mention.id == payload[:id]}
+            self.topic_mentions.build(payload)
+            self.primary_topic_mention = found_topic.id if found_topic.pm > primary_topic_pm
+          end
         else
           @title_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#{topic_mention[0]}") if @title_raw
           @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#{topic_mention[0]}") if @content_raw

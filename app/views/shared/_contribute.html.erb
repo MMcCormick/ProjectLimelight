@@ -1,12 +1,13 @@
 <% if signed_in? %>
   <div id="<%= id %>" class="contributeC">
-    <% if responding %>
-      <div class="responding">
-        Responding to <%= responding.class.to_s %>: <%= responding.name %>
-      </div>
-    <% end %>
 
-    <% if !defined?(allowed) || allowed.length > 0 %>
+    <div class="responding">
+      <% if responding %>
+        Responding to <%= responding.class.to_s %>: <%= responding.name %>
+      <% end %>
+    </div>
+
+    <% if !responding && (!defined?(allowed) || allowed.length > 0) %>
       <div class="options">
         <% if !defined?(allowed) || allowed.include?(:picture) %>
           <div class="option picture" data-target=".new_picture">

@@ -172,40 +172,30 @@ $(function() {
       if (data.response) {
         $('#add_response').click();
         $('#responses').prepend(data.teaser);
-        contribute = $('#response-contribute')
       }
-      else {
-        $('#contribute').click();
-        contribute = $('#top-contribute');
 
-        $('.sidebar.left .contributions').qtip({
-          content: {
-            text: 'Your '+data.type+' was successfully created.<br/>'+
-                  '<a href="'+data.path+'">Click here to view it</a>'+
-                  '<br/> or see all in "Contributions"'
-          },
-          style: {classes: 'object-created-tip ui-tooltip-shadow ui-tooltip-light ui-tooltip-green', tip: true},
-          position: {
-            my: 'left top',
-            at: 'right middle',
-            viewport: $(window)
-          },
-          hide: {delay: 300, inactive: 5000},
-          events: {
-            hide: function(event, api) {
-              $('.sidebar.left .contributions').qtip('destroy');
-            }
-           }
-        });
-        $('.sidebar.left .contributions').qtip('show')
-      }
-      // Clear forms on appropriate window
-      contribute.find('.option.on .cancel').click();
-      contribute.find('.lClear input, .lClear textarea, .iClear input').val("").focus().blur();
-      contribute.find('.image-preview .images img').remove();
-      contribute.find('.under').html('');
-      contribute.find('.mentions').html('');
-      contribute.find('.mention-ooc .hidden_data').val('{"existing":[],"new":[]}');
+      $('.sidebar.left .contributions').qtip({
+        content: {
+          text: 'Your '+data.type+' was successfully created.<br/>'+
+                '<a href="'+data.path+'">Click here to view it</a>'+
+                ' or see all your posts in "Contributions"'
+        },
+        style: {classes: 'object-created-tip ui-tooltip-shadow ui-tooltip-light ui-tooltip-green', tip: true},
+        position: {
+          my: 'left top',
+          at: 'right middle',
+          viewport: $(window)
+        },
+        hide: {delay: 300, inactive: 5000},
+        events: {
+          hide: function(event, api) {
+            $('.sidebar.left .contributions').qtip('destroy');
+          }
+         }
+      });
+      $('.sidebar.left .contributions').qtip('show')
+
+      $('.contributeC').fadeOut(250, function() { $(this).remove() })
     }
   });
 

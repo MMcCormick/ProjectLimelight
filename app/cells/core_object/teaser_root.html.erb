@@ -16,6 +16,7 @@
   <% unless @root.class.name == 'Topic' %>
     <% unless @root.class.name == 'Talk' %>
       <div class='actions'>
+        <span class='talk-response' data-id='<%= @root.id %>' data-name='<%= @root.title_clean %>' data-type='<%= @root.class.name %>'>+Talk</span>
         <%= render 'likes/btn', :current_user => @current_user, :object => @root %>
         <%= render 'core_object_shares/share_btn', :current_user => @current_user, :object => @root %>
       </div>

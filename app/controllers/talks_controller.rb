@@ -28,10 +28,9 @@ class TalksController < ApplicationController
       if @talk.parent_id
         view = 'list'
         teaser = render_to_string :partial => "talks/teaser_#{view}", :locals => { :object => @talk }
-        extras = { :teaser => teaser, :response => true }
+        extras = { :type => "Talk", :teaser => teaser, :response => true }
         object.expire_caches
       else
-        view = session[:feed_filters][:layout]
         extras = { :type => "Talk", :path => talk_path(@talk), :response => false }
       end
 

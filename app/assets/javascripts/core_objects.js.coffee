@@ -36,16 +36,17 @@ jQuery ->
               suggestionBox.find('.none').show()
         })
 
-  $('#contribute, #add_response').live 'click', (e) ->
+  $('#contribute').live 'click', (e) ->
     if !$logged
       $('#register').click()
       return false
 
-    target = $($(@).data('target'))
-    if target.is(':visible')
-      target.slideUp(200)
-    else
-      target.slideDown(200)
+    $('.contributeC').hide()
+    form = $('#contribute-top')
+    if form.length == 0
+      form = $('#blank-contribute').clone()
+    form.attr('id', 'contribute-top')
+    $('body').append(form.fadeIn(250))
 
   # handle option choices on contribute form (clicking add picture/video/link)
   $('.contributeC .options .option').live 'click', (e) ->
@@ -225,7 +226,7 @@ jQuery ->
     $(@).parents('.contributeC:first').find('.option:visible .cancel').click()
 
   $('.contributeC .actions .cancel').live 'click', (e) ->
-    $(@).parents('.contributeC:first').slideUp(150)
+    $(@).parents('.contributeC:first').fadeOut(250)
 
   $('.contributeC .connect_twitter').live 'click', (e) ->
     $self = $(@)
@@ -286,6 +287,42 @@ jQuery ->
 
   ####
   # END CONTRIBUTE FORM
+  ####
+
+  ####
+  # RESPONSE FORM
+  ####
+
+  $('.talk-response').live 'click', (e) ->
+    $('.contributeC').hide()
+
+    form = $('#contribute-'+$(@).data('id'))
+    if form.length == 0
+      form = $('#blank-contribute').clone()
+      $('body').append(form)
+
+    form.find('#talk_parent_id').val($(@).data('id'))
+    form.addClass('responding').find('.options').remove()
+    form.find('.responding').text('Responding to '+$(@).data('type')+' "'+$(@).data('name')+'"')
+
+
+    offset_x = $(@).offset().left - 10
+    offset_y = $(@).offset().top + 20
+    form_width = form.width()
+    form_height = form.height()
+
+    if (offset_x + form_width) > ($(window).width() - 20)
+      offset_x -= (offset_x + form_width) - ($(window).width() - 20)
+
+    if (offset_y + form_height) > ($(window).height() - 20)
+      offset_y -= (offset_y + form_height) - ($(window).height() - 20)
+
+    form.attr('id', 'contribute-'+$(@).data('id')).css({'position':'absolute','left':offset_x,'top':offset_y})
+    form.fadeIn 250, ->
+      $(@).find('#talk_content').click().focus()
+
+  ####
+  # END RESPONSE FORM
   ####
 
   # mention boxes

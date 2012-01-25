@@ -53,6 +53,8 @@ module ApplicationHelper
   end
 
   def parse_mentions(obj_text, object, absolute=false)
+    return unless obj_text
+
     text = obj_text.dup
     # Loop through all of the topic mentions in the content
     text.scan(/\#\[([0-9a-zA-Z]+)#([a-zA-Z0-9,!\-_:'&\?\$ ]+)\]/).each do |topic|

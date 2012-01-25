@@ -70,10 +70,6 @@ class CoreObject
     public_id.to_i.to_s(36)
   end
 
-  def name
-    title
-  end
-
   def set_source_snippet
     if @source_name || @source_url || @source_video_id
       source = SourceSnippet.new

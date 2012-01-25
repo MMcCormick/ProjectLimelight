@@ -375,7 +375,7 @@
     }
   }
 
-   Deprecated
+   /*Deprecated*/
   .mention-ooc {
     position: absolute;
     width: 150px;
@@ -675,22 +675,6 @@ $teaser-padding: 10px;
       border-bottom: 1px solid #DCDFD4;
       border-top: 1px solid #F3F3F3;
     }
-    .mentions {
-      @include clearfix();
-      position: relative;
-      margin: 0px;
-      padding: 2px 0 3px 65px;
-      .head {
-        position: absolute;
-        font-size: 11px;
-        color: #666;
-        cursor: default;
-        position: absolute;
-        top: 2px;
-        left: 10px;
-        font-weight: normal;
-      }
-    }
   }
 
   .oType {
@@ -705,13 +689,6 @@ $teaser-padding: 10px;
     .comment-icon {
       float: left;
       margin: 0px 5px 0 0;
-    }
-  }
-
-  .mentions {
-    margin: 0 0 0 85px;
-    .tag {
-      margin: 5px 10px 0 0;
     }
   }
 }
@@ -766,131 +743,6 @@ $teaser-padding: 10px;
   }
 }
 
-// Grid Teaser
-.teaser.grid {
-  @include single-box-shadow(#888, 0, 1px, 3px);
-  $width: 200px;
-  $height: 221px;
-  $expand-height: 5px;
-  float: left;
-  width: $width;
-  min-height: $height;
-  max-height: $height;
-  position: relative;
-  z-index: 10;
-  margin: 7px 4px 7px 10px;
-
-  .wrapper {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: $width;
-    min-height: $height;
-    max-height: $height;
-    z-index: 10;
-  }
-  .titleC {
-    overflow: hidden;
-    margin: 4px 5px 0 5px;
-    padding: 0 2px 5px 2px;
-    border-bottom: double #DDD;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-  .disable {
-    bottom: 2px;
-    right: 5px;
-  }
-  .content {
-    padding: 1px 0px 0px 0px;
-    position: relative;
-    height: 198px;
-
-    img,
-    .video-embed {
-      @include border-radius(0px);
-      margin: 3px 0 0 0;
-    }
-    p {
-      max-height: 165px;
-      overflow: hidden;
-    }
-  }
-  .play-video {
-    margin: 10px 0 0 5px;
-  }
-  .createdC {
-    margin: 2px 7px 3px 7px;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .controlsC {
-    display: none;
-  }
-  .oType {
-    margin: 0 10px 0 0;
-  }
-  .commentC {
-    margin: 0;
-  }
-  .connectionsC {
-    display: none;
-    .tag {
-      margin-top: 0px;
-    }
-  }
-  .sourceC {
-    color: #666;
-    font-size: 11px;
-    font-weight: normal;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .mentions {
-    @include clearfix();
-    clear: both;
-  }
-  .pc {
-    position: absolute;
-    top: 4px;
-    right: 10px;
-    font-size: 12px;
-    background: #FFF;
-    padding: 0 4px;
-  }
-  &.hover {
-    z-index: 15;
-    overflow: visible;
-    max-height: none;
-
-    .wrapper {
-      @include single-box-shadow(#999, 1px, 2px, 3px);
-      max-height: none;
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      border: 2px solid;
-      background: #FFF;
-    }
-    .titleC {
-      white-space: normal;
-    }
-    .content {
-      min-height: 198px;
-      height: auto;
-      p {
-        max-height: none;
-        overflow: visible;
-        clear: both;
-      }
-    }
-    .connectionsC {
-      left: 0;
-      display: block;
-    }
-  }
-}
-
 // Column Teaser
 .teaser.column {
   @include single-box-shadow(#666, 1px, 1px, 3px);
@@ -899,127 +751,215 @@ $teaser-padding: 10px;
   position: relative;
   z-index: 10;
   display: none;
-  margin: 0 0 50px 0;
+  margin: 0 0 20px 0;
+  padding: 0 0 10px 0;
 
-  .titleC {
-    margin: 6px 10px 0 10px;
-    padding: 0 3px 5px 3px;
-    border-bottom: double #DDD;
-    font-size: 14px;
-  }
-  .disable {
-    bottom: 2px;
-    right: 6px;
-  }
-  .content {
-    padding: 7px 10px 8px 10px;
-    p {
+  .root {
+    .titleC {
+      margin: 7px 10px 0 10px;
       font-size: 13px;
-      margin: 0;
     }
-  }
-  .play-video {
-    float: left;
-  }
-  .img {
-    .icon {
-      top: 3px;
-    }
-  }
-  img {
-    @include border-radius(0px);
-    float: none;
-  }
-  .oType {
-    margin: 1px 5px 0 0;
-  }
-  .commentC {
-    margin: 0;
-    font-weight: normal;
-    font-size: 11px;
-  }
-  .tag {
-    margin: 0px 10px 0 0;
-  }
-  .response {
-    color: #666;
-    font-size: 11px;
-    padding: 0 0 5px 0;
-    margin: 7px 10px -2px 10px;
-    border-bottom: medium double #DDDDDD;
-    position: relative;
+    .topic-head {
+      position: relative;
+      padding: 7px 10px 0 60px;
 
-    .r {
-      padding-left: 17px;
+      img {
+        @include border-radius(0px);
+        position: absolute;
+        background: #999;
+        height: 50px;
+        width: 50px;
+        top: 0px;
+        left: 0px;
+      }
+      h2 {
+        font-size: 13px;
+        a {
+          @include link();
+        }
+      }
+      button {
+        @include link();
+        background: transparent;
+        font-size: 11px;
+        font-weight: normal;
+        margin: 0 0 -6px 0;
+        padding: 0px;
+      }
+    }
+    .actions {
+      margin: 2px 0 0 5px;
+      font-size: 12px;
+
+      button {
+        @include link();
+      }
+    }
+    .media {
+      margin: 5px 10px 0 10px;
+    }
+    .mentions {
+      @include clearfix();
+      margin: 9px 10px -7px 10px;
+      font-size: 11px;
+      .tag {
+        float: left;
+        margin: 0 10px 3px 0;
+      }
+    }
+    .talking {
+      font-size: 11px;
+      margin: 10px 10px 0 10px;
       display: block;
     }
-    span {
-      position: absolute;
-      top: -1px;
-      left: 2px;
-      cursor: default;
-    }
-    .icon {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-    }
-    a {
-      font-weight: normal;
-    }
   }
-  .video-embed {
-    float: none;
-  }
-  .connectionsC {
-  }
-  .w {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 210px;
-    height: 14px;
-  }
-  .createdC {
-    color: #666;
-    font-size: 11px;
-    font-weight: normal;
-    white-space: nowrap;
-    position: absolute;
-    bottom: -30px;
-    left: 5px;
-    font-weight: bold;
-    cursor: default;
 
-    a {
-      font-size: 13px;
+  .personal {
+    border-top: #DCDFD4;
+    background: #F9F9F9;
+    margin: 10px 0 -10px 0;
+
+    .response {
+      position: relative;
+      padding: 18px 10px 4px 10px;
+      border-top: 1px solid #F3F3F3;
+      border-bottom: 1px solid #DCDFD4;
+
+      .ulink {
+        position: absolute;
+        top: 0px;
+        left: 10px;
+        font-weight: bold;
+      }
+      .created_at {
+        position: absolute;
+        top: 4px;
+        right: 10px;
+        color: #999999;
+        font-size: 9px;
+        cursor: default;
+      }
+      p {
+        font-size: 12px;
+        .tlink {
+          border-bottom: 1px dotted #BBB;
+          color: #000;
+          &:hover {
+            text-decoration: none;
+            border-bottom: 1px solid #666;
+          }
+        }
+      }
+      .actions {
+        font-size: 10px;  
+        margin: 3px 0 0 0;
+
+        .comments,
+        button {
+          @include link();
+        }
+      }
     }
-    .arrow-w-s {
-      position: absolute;
-      top: -10px;
-      left: 5px;
+  }
+
+  &.talk {
+    padding-bottom: 0px;
+
+    .root {
+      position: relative;
+      padding: 18px 10px 4px 10px;
+
+      .ulink {
+        position: absolute;
+        top: 1px;
+        left: 10px;
+        font-weight: bold;
+      }
+      .created_at {
+        position: absolute;
+        top: 4px;
+        right: 10px;
+        color: #999999;
+        font-size: 9px;
+        cursor: default;
+      }
+      p {
+        font-size: 12px;
+        .tlink {
+          border-bottom: 1px dotted #BBB;
+          color: #000;
+          &:hover {
+            text-decoration: none;
+            border-bottom: 1px solid #666;
+          }
+        }
+      }
+      .actions {
+        font-size: 10px;
+        margin: 3px 0 0 0;
+
+        .comments,
+        button {
+          @include link();
+        }
+      }
     }
   }
-  .sourceC {
-    color: #666;
-    font-size: 11px;
-    font-weight: normal;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .controlsC {
-    display: none;
-  }
-  .pc {
-    position: absolute;
-    top: 4px;
-    right: 10px;
-    font-size: 12px;
-    background: #FFF;
-    padding: 0 4px;
-  }
-  &.hover {
-  }
+
+
+
+
+
+
+
+
+  /*.w {*/
+    /*position: absolute;*/
+    /*top: 0px;*/
+    /*left: 0px;*/
+    /*width: 210px;*/
+    /*height: 14px;*/
+  /*}*/
+  /*.createdC {*/
+    /*color: #666;*/
+    /*font-size: 11px;*/
+    /*font-weight: normal;*/
+    /*white-space: nowrap;*/
+    /*position: absolute;*/
+    /*bottom: -30px;*/
+    /*left: 5px;*/
+    /*font-weight: bold;*/
+    /*cursor: default;*/
+
+    /*a {*/
+      /*font-size: 13px;*/
+    /*}*/
+    /*.arrow-w-s {*/
+      /*position: absolute;*/
+      /*top: -10px;*/
+      /*left: 5px;*/
+    /*}*/
+  /*}*/
+  /*.sourceC {*/
+    /*color: #666;*/
+    /*font-size: 11px;*/
+    /*font-weight: normal;*/
+    /*overflow: hidden;*/
+    /*white-space: nowrap;*/
+  /*}*/
+  /*.controlsC {*/
+    /*display: none;*/
+  /*}*/
+  /*.pc {*/
+    /*position: absolute;*/
+    /*top: 4px;*/
+    /*right: 10px;*/
+    /*font-size: 12px;*/
+    /*background: #FFF;*/
+    /*padding: 0 4px;*/
+  /*}*/
+  /*&.hover {*/
+  /*}*/
 }
 
 // List Teaser
@@ -1157,15 +1097,6 @@ $scoreBox-width: 160px;
   }
   .commentC {
     margin: 3px 10px 0 0;
-  }
-  .mentions {
-    padding: 0 0 0 5px;
-    position: relative;
-    top: 2px;
-    .tag {
-      float: left;
-      margin: 0 10px 3px 0;
-    }
   }
   .response {
     font-size: 12px;

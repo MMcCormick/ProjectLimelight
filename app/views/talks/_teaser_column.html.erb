@@ -1,41 +1,18 @@
-<% cache("teaser-#{object.id.to_s}-column") do %>
+<p><%= parse_mentions(object.content, object) %></p>
 
-<div class="teaser column <%= object._type.downcase %>" data-push="<%= object.id %>">
-
-  <div class="content">
-    <p><%= parse_mentions(object.content, object) %></p>
-  </div>
-
-  <div class="connectionsC">
-    <div class="s">
-      <a href="<%= url_for object %>" class="commentC p">
-        <%= object.response_count.to_i %> comments
-      </a>
-    </div>
-
-    <% if object.topic_mentions.length > 0 %>
-      <div class="mentions s">
-        <div class="head">mentions</div>
-        <% object.topic_mentions.each do |topic| %>
-          <%= render 'topics/tag', :topic => topic, :include_image => false %>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-<% end # cache %>
-
-  <div class="createdC">
-    <%= user_link object.user_snippet %>
-    <%= time_ago_in_words(object.created_at, false) %> ago
-    <div class='arrow-w-s'></div>
-  </div>
-
-  <% if can? :destroy, object %>
-    <%= render :partial => 'core_objects/disable_btn', :locals => { :path => disable_talk_path(object) } %>
-  <% end %>
-
-  <%= render 'likes/btn', :current_user => current_user, :object => object %>
-  <%= render 'core_objects/feed_teaser_actions', :object => object %>
-  <div class="pc pc_<%= object.id.to_s %>"></div>
-  <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
+<%= user_link object.user_snippet %>
+<div class='created_at'>
+  <%= time_ago_in_words(object.created_at, false) %> ago
 </div>
+
+<div class='actions'>
+  <a href="<%= url_for object %>" class="comments">
+    <%= object.response_count.to_i %> comments
+  </a>
+  <%= render 'likes/btn', :current_user => current_user, :object => object %>
+  <%= render 'core_object_shares/share_btn', :current_user => current_user, :object => object %>
+</div>
+
+<% if can? :destroy, object %>
+  <%= render :partial => 'core_objects/disable_btn', :locals => { :path => disable_talk_path(object) } %>
+<% end %>

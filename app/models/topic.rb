@@ -100,6 +100,14 @@ class Topic
     public_id.to_i.to_s(36)
   end
 
+  def title
+    name
+  end
+
+  def title_clean
+    name
+  end
+
   #
   # Aliases
   #

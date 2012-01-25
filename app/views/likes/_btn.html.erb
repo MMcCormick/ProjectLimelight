@@ -1,8 +1,8 @@
 <button class="btn-tog <%= !signed_in? || !object.liked_by?(current_user.id) ? 'likeB' : 'unlikeB' %> like_<%= object.id %>" title="<%= !signed_in? || !object.liked_by?(current_user.id) ? 'like this' : 'unlike' %>">
   <div class="default" data-url="<%= create_like_path %>" data-d='{"id":"<%= object.id %>"}' data-m="post">
-    <div class="like-grey-icon icon"></div>
+    like
   </div>
   <div class="triggered" data-url="<%= destroy_like_path %>" data-d='{"id":"<%= object.id %>"}' data-m="delete">
-    <div class="like-green-icon icon"></div>
+    unlike
   </div>
 </button>

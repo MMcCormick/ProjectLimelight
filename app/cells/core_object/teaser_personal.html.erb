@@ -1,0 +1,20 @@
+<% if @responses.length > 0 %>
+  <div class='personal'>
+    <% @responses.each do |response| %>
+      <div class='response'>
+        <%= user_link response.user_snippet %>
+        <div class='created_at'>
+          <%= time_ago_in_words(response.created_at, false) %> ago
+        </div>
+        <p><%= parse_mentions(response.content, response) %></p>
+        <div class='actions'>
+          <a href="<%= url_for response %>" class="comments">
+            <%= response.response_count.to_i %> comments
+          </a>
+          <%= render 'likes/btn', :current_user => @current_user, :object => response %>
+          <%= render 'core_object_shares/share_btn', :current_user => @current_user, :object => response %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

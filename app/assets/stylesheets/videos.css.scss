@@ -18,17 +18,7 @@
         }
       }
     }
-    .video-embed {
-      float: left;
-    }
-    &.teaser.grid {
-      p {
-          overflow: hidden;
-          height: 22px;
-          bottom: 22px;
-      }
-    }
-    
+
     &.teaser.list {
       border: none;
       .wrapper {
@@ -42,9 +32,6 @@
     }
 
     &.teaser.column {
-      p {
-        margin-top: 5px;
-      }
     }
 
     &.objectContent {

@@ -1,7 +1,41 @@
-<% unless @root.name.blank? %>
-  <h2 class="titleC">
-    <%= @root.name %>
-  </h2>
-<% end %>
+<div class='root'>
+  <% if @root.class.name != 'Topic' %>
+    <% unless @root.title.blank? %>
+      <h2 class="titleC">
+        <%= @root.title_clean %>
+      </h2>
+    <% end %>
+  <% else %>
+    <div class='topic-head'>
+      <%= image_tag topic_default_picture(@root, 50, 50, 'fit'), :style => "max-width: 50px;", :alt => "" %>
+      <h2><a href="<%= topic_path(@root) %>"><%= @root.name %></a></h2>
+      <%= render 'follows/btn', :current_user => @current_user, :target => @root %>
+    </div>
+  <% end %>
 
-<%#= render "#{@root._type.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => @root %>
+  <% unless @root.class.name == 'Topic' %>
+    <% unless @root.class.name == 'Talk' %>
+      <div class='actions'>
+        <%= render 'likes/btn', :current_user => @current_user, :object => @root %>
+        <%= render 'core_object_shares/share_btn', :current_user => @current_user, :object => @root %>
+      </div>
+    <% end %>
+
+    <%= render "#{@root.class.name.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => @root, :current_user => @current_user %>
+
+    <% unless @root.class.name == 'Talk' %>
+      <% if @root.topic_mentions.length > 0 %>
+        <div class="mentions">
+          <% @root.topic_mentions.each do |topic| %>
+            <%= render 'topics/tag', :topic => topic, :include_image => false %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <a href="<%= url_for @root %>" class="talking">
+        <%= pluralize(@root.response_count.to_i, 'person') %> <%= @root.response_count > 1 || @root.response_count == 0 ? 'are' : 'is' %> talking about this
+      </a>
+
+    <% end %>
+  <% end %>
+</div>

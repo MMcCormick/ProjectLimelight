@@ -1,56 +1,14 @@
-<% cache("teaser-#{object.id.to_s}-column") do %>
-
-<div class="teaser column <%= object._type.downcase %>" data-push="<%= object.id %>">
-  <%= render 'core_objects/feed_teaser_title', :title => link_to(object.title_clean, object), :object => object %>
-  <div class="content">
-    <% img = default_image_url(object, 210, 0, 'fit', false, true) %>
-    <% if img %>
-      <div class='play-video' data-embed="<%= video_embed(object.sources[0], 210, 180, nil, nil, object.embed_html, true) %>">
-        <div class='button'>
-          <div class='icon play-button'></div>
-        </div>
-        <%= image_tag img.image_url, :width => 210, :height => img.calculate_h(210).to_s %>
-      </div>
-    <% else %>
-      <div class='play-video no-img' data-embed="<%= video_embed(object.sources[0], 210, 180, nil, nil, object.embed_html, true) %>">
-        <div class='icon play-button'></div>
-        Play
-      </div>
-    <% end %>
-    <div class='clear'></div>
-    <p><%#= parse_mentions(object.content, object) %></p>
-  </div>
-
-  <div class="connectionsC">
-    <div class="s">
-      <a href="<%= url_for object %>" class="commentC p">
-        <%= object.response_count.to_i %> comments
-      </a>
+<% img = default_image_url(object, 210, 0, 'fit', false, true) %>
+<% if img %>
+  <div class='media play-video' data-embed="<%= video_embed(object.sources[0], 210, 180, nil, nil, object.embed_html, true) %>">
+    <div class='button'>
+      <div class='icon play-button'></div>
     </div>
-
-    <% if object.topic_mentions.length > 0 %>
-      <div class="mentions s">
-        <div class="head">mentions</div>
-        <% object.topic_mentions.each do |topic| %>
-          <%= render 'topics/tag', :topic => topic, :include_image => false %>
-        <% end %>
-      </div>
-    <% end %>
+    <%= image_tag img.image_url, :width => 210, :height => img.calculate_h(210).to_s %>
   </div>
-<% end # cache %>
-
-  <div class="createdC">
-    <%= user_link object.user_snippet %>
-    <%= time_ago_in_words(object.created_at, false) %> ago
-    <div class='arrow-w-s'></div>
+<% else %>
+  <div class='media play-video no-img' data-embed="<%= video_embed(object.sources[0], 210, 180, nil, nil, object.embed_html, true) %>">
+    <div class='icon play-button'></div>
+    Play
   </div>
-
-  <% if can? :destroy, object %>
-    <%= render :partial => 'core_objects/disable_btn', :locals => { :path => disable_video_path(object) } %>
-  <% end %>
-
-  <%= render 'likes/btn', :current_user => current_user, :object => object %>
-  <%= render 'core_objects/feed_teaser_actions', :object => object %>
-  <div class="pc pc_<%= object.id.to_s %>"></div>
-  <div class="pt_<%= object.id.to_s %> hide"><%= object.pt %></div>
-</div>
+<% end %>

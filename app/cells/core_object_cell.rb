@@ -5,6 +5,8 @@ class CoreObjectCell < Cell::Rails
   helper ApplicationHelper
   helper TopicsHelper
   helper ImageHelper
+  helper UsersHelper
+  helper VideosHelper
 
   def teaser_root(current_user, root)
     @current_user = current_user
@@ -12,7 +14,7 @@ class CoreObjectCell < Cell::Rails
     render
   end
 
-  def teaser_personalized(current_user, responses)
+  def teaser_personal(current_user, responses)
     @current_user = current_user
     @responses = responses
     render

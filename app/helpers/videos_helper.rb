@@ -19,9 +19,9 @@ module VideosHelper
       autoplay = autoplay ? '&autoplay=1' : ''
       case provider.downcase
         when 'youtube'
-          "<iframe class='video-embed' width='#{w}' height='#{h}' src='http://www.youtube.com/embed/#{video_id}?wmode=transparent&rel=0#{autoplay}' frameborder='0' allowfullscreen></iframe>".html_safe
+          "<iframe class='media video-embed' width='#{w}' height='#{h}' src='http://www.youtube.com/embed/#{video_id}?wmode=transparent&rel=0#{autoplay}' frameborder='0' allowfullscreen></iframe>".html_safe
         when 'vimeo'
-          "<iframe class='video-embed' width='#{w}' height='#{h}' src='http://player.vimeo.com/video/#{video_id}?color=ff0179#{autoplay}' frameborder='0' webkitAllowFullScreen allowFullScreen></iframe>".html_safe
+          "<iframe class='media video-embed' width='#{w}' height='#{h}' src='http://player.vimeo.com/video/#{video_id}?color=ff0179#{autoplay}' frameborder='0' webkitAllowFullScreen allowFullScreen></iframe>".html_safe
         else
           if source && source.name && source.url
             target = "<a href='#{source.url}' rel='nofollow' target='_blank'>#{source.name} - </a>"

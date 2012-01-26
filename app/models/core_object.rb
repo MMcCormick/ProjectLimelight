@@ -25,6 +25,8 @@ class CoreObject
   field :parent_type
   field :parent_id, :type => BSON::ObjectId
   field :tweet_id
+  field :root_type
+  field :root_id, :type => BSON::ObjectId
 
   auto_increment :public_id
 
@@ -41,7 +43,7 @@ class CoreObject
   attr_accessor :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
   before_validation :set_source_snippet
-  before_create :set_user_snippet, :current_user_own, :set_parent_type, :send_tweet
+  before_create :set_user_snippet, :current_user_own, :send_tweet, :set_root
   after_create :feeds_post_create, :neo4j_create, :update_response_count, :action_log_create
   after_update :expire_caches
 
@@ -172,7 +174,9 @@ class CoreObject
     if like || (user_id == user.id)
       false
     else
-      self.likes << UserSnippet.new(user.attributes)
+      like = self.likes.new(user.attributes)
+      like.id = user.id
+      user.likes_count += 1
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
       ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
       true
@@ -183,6 +187,7 @@ class CoreObject
     like = liked_by? user.id
     if like
       like.destroy
+      user.likes_count -= 1
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
       ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
       true
@@ -221,6 +226,23 @@ class CoreObject
 
   def push_to_feeds
     FeedItem.post_create(self)
+  end
+
+  def set_root
+    if parent_id
+      self.root_id = parent_id
+      self.root_type = parent_type
+    elsif self.class.name == 'Talk' && primary_topic_mention
+      self.root_id = primary_topic_mention
+      self.root_type = 'Topic'
+    else
+      self.root_id = id
+      self.root_type = _type
+    end
+  end
+
+  def is_root?
+    id == root_id
   end
 
   class << self
@@ -337,12 +359,6 @@ class CoreObject
 
   def current_user_own
     grant_owner(user.id)
-  end
-
-  def set_parent_type
-    if parent_type.blank?
-      self.parent_type = self._type
-    end
   end
 
   def update_denorms

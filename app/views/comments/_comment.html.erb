@@ -16,13 +16,11 @@
       </p>
 
       <% if comment.depth < 5 %>
-        <div class="reply">
-          <a href="javascript:void(0);" id="reply_<%= comment.id %>" class="reply-show" data-d='{"id":"<%= comment.id %>"}'>reply</a>
-        </div>
+        <span class='comment-response<%= ' auth' unless signed_in? %>' data-id='<%= comment.talk_id %>' data-pid='<%= comment.id %>' data-t="<%= comment.user_snippet.username %>'s comment">+Reply</span>
       <% end %>
 
       <% if can? :destroy, comment %>
-        <a class="ac delete" data-m="delete" data-url="<%= comment_path comment %>" data-d="'id':'<%= comment.id %>'">delete</a>
+        <a class="ac delete" data-m="delete" data-url="<%= comment_path comment %>" data-d="'id':'<%= comment.id %>'">Delete</a>
       <% end %>
       <div class="clear-left"></div>
 

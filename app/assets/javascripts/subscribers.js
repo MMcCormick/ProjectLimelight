@@ -253,7 +253,7 @@ $(function() {
       else {
         $('.c_'+data.talk_id).show().find('.comments').prepend(data.comment);
       }
-      $('.comment_reply:visible').remove();
+      $('.comment_form:visible').fadeOut(250, function() { $(this).remove() })
     }
   })
 

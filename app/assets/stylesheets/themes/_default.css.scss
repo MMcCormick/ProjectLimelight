@@ -95,6 +95,22 @@ $talk-color: #D88E00;
     }
 }
 
+@mixin grey-rollover($font-size) {
+  @include border-radius(0px);
+  @include single-box-shadow(#BBB, 0px, 1px, 1px);
+  background: #F1F1F1;
+  @include background-image(linear-gradient(#FDFDFD, #F1F1F1 25%, #EFEFEF 75%, #F1F1F1));
+  font-size: $font-size;
+  font-weight: bold;
+  color: #333;
+  border: 1px solid #888;
+  border-bottom: 1px solid #838383;
+  &:hover {
+    color: #FFF;
+    background: #88B42C;
+  }
+}
+
 @mixin list-teaser($column-width) {
   @include clearfix();
   &.odd { background: transparent; }

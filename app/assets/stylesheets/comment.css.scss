@@ -12,27 +12,42 @@ $scoreC-width: 50px;
 $indent: 20px;
 
 .comment_form {
-    @include clearfix();
-    display: block;
-    width: 400px;
+  @include border-radius(2px);
+  @include single-box-shadow(#888, 1px, 1px, 3px);
+  background: #FFF;
+  width: 400px;
+  z-index: 210;
+  border: 1px solid #94C530;
 
+  h4 {
+    padding: 5px 0 6px 8px;
+    border-bottom: 1px solid #CCC;
+  }
+  .field {
+    margin: 0px;
     textarea {
-      width: 380px;
-      height: 50px;
-      margin: 0;
-      border-color: #CCC;
+      border: none;
+      height: 100px;
+      width: 385px;
     }
-    .submit,
-    .comment_reply_cancel {
-        @include green-button(2px, 12px);
-        margin: 5px 10px 0;
-        float: right;
-        padding: 4px 9px;
+  }
+  .actions {
+    background: #F9F9F9;
+    border-top: 1px solid #CCC;
+    position: relative;
+
+    .submit {
+      @include grey-rollover(12px);
+      margin: 7px;
     }
-    input {
-      float: left;
+    .comment-cancel {
+      @include link();
+      position: absolute;
+      top: 11px;
+      left: 150px;
+      font-size: 12px;
     }
-    padding-bottom: 10px;
+  }
 }
 
 .comment-thread {
@@ -61,19 +76,16 @@ $indent: 20px;
           max-width: $max-width;
           position: relative;
         }
-        .comment_form {
-            padding-bottom: 0px;
-        }
         .profileImage {
             position: absolute;
             top: 7px;
             left: 7px;
         }
-        .reply-show {
+        .comment-response {
             @include link();
             float: left;
             font-size: 10px;
-            margin: 0px;
+            margin: 0 0 0 10px;
         }
         .createdC {
             float: left;
@@ -108,9 +120,6 @@ $indent: 20px;
           right: 35px;
           top: 13px;
           cursor: default;
-        }
-        .reply {
-          margin: 0 0 0 10px;
         }
         .delete {
           margin-left: 10px;

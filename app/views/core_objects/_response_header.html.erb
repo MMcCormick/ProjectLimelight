@@ -1,9 +1,5 @@
 <div id="response-divider">
-  <h3>Talking About This <%= object.class.name %></h3>
+  <h3>Talking About This <%= object.class.name %> (<%= object.response_count %>)</h3>
   <span class='talk-response<%= ' auth' unless signed_in? %>' data-id='<%= object.id %>' data-name='<%= object.title_clean %>' data-type='<%= object.class.name %>'>+Talk</span>
   <div class="clear"></div>
-</div>
-
-<div class="hide" id="response_form">
-  <%= render "comments/form", :reply => true %>
 </div>

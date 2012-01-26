@@ -304,12 +304,10 @@ jQuery ->
     form = $('#contribute-'+$(@).data('id'))
     if form.length == 0
       form = $('#blank-contribute').clone()
+      form.find('#talk_parent_id').val($(@).data('id'))
+      form.addClass('responding').find('.options').remove()
+      form.find('.responding').text('Talking about the '+$(@).data('type')+' "'+$(@).data('name')+'"')
       $('body').append(form)
-
-    form.find('#talk_parent_id').val($(@).data('id'))
-    form.addClass('responding').find('.options').remove()
-    form.find('.responding').text('Talking about the '+$(@).data('type')+' "'+$(@).data('name')+'"')
-
 
     offset_x = $(@).offset().left - 10
     offset_y = $(@).offset().top + 20
@@ -330,6 +328,44 @@ jQuery ->
   # END RESPONSE FORM
   ####
 
+  ####
+  # COMMENT FORM
+  ####
+
+  $('.comment-response').live 'click', (e) ->
+    $('.comment_form').hide()
+
+    form = $('#comment-form-'+$(@).data('id')+'-'+$(@).data('pid'))
+    if form.length == 0
+      form = $('#blank-comment').clone()
+      form.find('#comment_talk_id').val($(@).data('id'))
+      form.find('#comment_parent_id').val($(@).data('pid'))
+      form.find('h4').text('Responding to '+$(@).data('t'))
+      form.attr('id', 'comment-form-'+$(@).data('id')+'-'+$(@).data('pid'))
+      $('body').append(form)
+
+    offset_x = $(@).offset().left - 10
+    offset_y = $(@).offset().top + 20
+    form_width = form.width()
+    form_height = form.height()
+
+    if (offset_x + form_width) > ($(window).width() - 20)
+      offset_x -= (offset_x + form_width) - ($(window).width() - 20)
+
+    if (offset_y + form_height) > ($(window).height() - 20)
+      offset_y -= (offset_y + form_height) - ($(window).height() - 20)
+
+    form.css({'position':'absolute','left':offset_x,'top':offset_y})
+    form.fadeIn 250, ->
+      $(@).find('#comment_content').click().focus()
+
+  $('.comment-cancel').live 'click', (e) ->
+    $(@).parents('.comment_form:first').fadeOut(250)
+
+  ####
+  # END COMMENT FORM
+  ####
+
   # mention boxes
   $('.mention').livequery ->
     $(@).mentionable()
@@ -337,9 +373,9 @@ jQuery ->
   # show action buttons on teasers on hover
   $('.teaser .response,.teaser.talk').live({
     mouseenter: ->
-      $(@).find('.likeB,.unlikeB,.coreShareB').show()
+      $(@).find('.comment-response,.likeB,.unlikeB,.coreShareB').show()
     mouseleave: ->
-      $(@).find('.likeB,.unlikeB,.coreShareB').hide()
+      $(@).find('.comment-response,.likeB,.unlikeB,.coreShareB').hide()
   })
 
   # Feed Sort Selection
@@ -375,23 +411,6 @@ jQuery ->
   # Automatically click if visible on page load
   if $('#load-more').length > 0 && isScrolledIntoView($('#load-more'), true)
     $('#load-more').click()
-
-  # Core object add response
-  $('.teaser.list .respond').live 'click', (e) ->
-    if !$logged
-      $('#register').click()
-      return false
-
-    $button = $(@);
-    $('.comment_reply:visible').remove();
-    $reply = $('#response_form form').clone()
-              .find('.comment_reply_cancel').click (e) ->
-                $reply.remove()
-              .end()
-              .appendTo($button.parent())
-              .fadeIn(300)
-              .find('textarea').end()
-    $button.parent().find('#comment_talk_id').attr('value', $button.data('d').id)
 
   if ($('.teaser.column').length > 0)
     rearrange_feed_columns()

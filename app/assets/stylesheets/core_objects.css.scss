@@ -39,8 +39,8 @@
 }
 
 .contributeC {
-  @include border-radius(0 0 3px 3px);
-  @include single-box-shadow(#AAA, 1px, 1px, 3px);
+  @include border-radius(2px);
+  @include single-box-shadow(#888, 1px, 1px, 3px);
 
   position: absolute;
   top: 0px;
@@ -489,6 +489,7 @@ $teaser-padding: 10px;
 
   .actions {
     .talk-response,
+    .comment-response,
     .comments,
     button {
       @include link();
@@ -588,6 +589,7 @@ $teaser-padding: 10px;
         }
       }
       .actions {
+        .comment-response,
         .likeB,
         .unlikeB,
         .coreShareB {
@@ -634,6 +636,7 @@ $teaser-padding: 10px;
   }
   &.talk {
     .actions {
+      .comment-response,
       .likeB,
       .unlikeB,
       .coreShareB {
@@ -1203,7 +1206,8 @@ $teaser-padding: 10px;
     float: left;
     cursor: default;
   }
-  .talk-response {
+  .talk-response,
+  .comment-response {
     @include link();
     position: relative;
     top: 1px;

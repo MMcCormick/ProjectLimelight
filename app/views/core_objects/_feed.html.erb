@@ -1,10 +1,17 @@
 <div id="core-feed" class="<%= session[:feed_filters][:layout] %>">
   <% core_objects.each_with_index do |core_object, i| %>
     <% if i < 20 %>
-      <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:root].class.name.downcase}" %>'>
-        <%= render_cell :core_object, :teaser_root, current_user, core_object[:root], session[:feed_filters][:layout] %>
-        <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:responses] %>
-      </div>
+      <% if core_object[:root].class.name == 'Topic' && core_object[:responses].length == 1 %>
+        <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:responses][0].class.name.downcase}" %>'>
+          <%= render_cell :core_object, :teaser_root, current_user, core_object[:responses][0], session[:feed_filters][:layout] %>
+          <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, [] %>
+        </div>
+      <% else %>
+        <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:root].class.name.downcase}" %>'>
+          <%= render_cell :core_object, :teaser_root, current_user, core_object[:root], session[:feed_filters][:layout] %>
+          <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:responses] %>
+        </div>
+      <% end %>
     <% end %>
   <% end %>
   <div class="clear"></div>

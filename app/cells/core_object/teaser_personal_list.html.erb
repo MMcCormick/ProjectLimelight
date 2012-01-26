@@ -12,6 +12,7 @@
           <a href="<%= url_for response %>" class="comments">
             <%= response.response_count.to_i %> comments
           </a>
+          <span class='comment-response' data-id='<%= response.id %>' data-pid='' data-t="<%= response.user_snippet.username %>'s talk">+Comment</span>
           <%= render 'likes/btn', :current_user => @current_user, :object => response %>
           <%= render 'core_object_shares/share_btn', :current_user => @current_user, :object => response %>
         </div>

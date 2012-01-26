@@ -1,53 +1,37 @@
 <% if signed_in? %>
   <div id="<%= id %>" class="contributeC">
 
-    <div class="responding">
-      <% if responding %>
-        Responding to <%= responding.class.to_s %>: <%= responding.name %>
-      <% end %>
-    </div>
+    <div class="responding"></div>
 
-    <% if !responding && (!defined?(allowed) || allowed.length > 0) %>
-      <div class="options">
-        <% if !defined?(allowed) || allowed.include?(:picture) %>
-          <div class="option picture" data-target=".new_picture">
-            <span id='picture_uploadB'>Upload Picture</span>
-            <div class="icon picture-grey-icon"></div>
-            <div class="cancel">cancel picture</div>
-          </div>
-        <% end %>
-        <% if !defined?(allowed) || allowed.include?(:links) %>
-          <div class="option link" data-target=".new_link">
-            Add Link
-            <div class="icon link-grey-icon"></div>
-            <div class="cancel">cancel link</div>
-          </div>
-        <% end %>
-        <div class="clear"></div>
-        <div class="url link hide lClear">
-          <label for="link_fetch">Link URL</label>
-          <input type="text" id="link_fetch" />
-          <div class="fetch">fetch</div>
-        </div>
+    <div class="options">
+      <div class="option picture" data-target=".new_picture">
+        <span id='picture_uploadB'>Upload Picture</span>
+        <div class="icon picture-grey-icon"></div>
+        <div class="cancel">cancel picture</div>
       </div>
-    <% end %>
+      <div class="option link" data-target=".new_link">
+        Add Link
+        <div class="icon link-grey-icon"></div>
+        <div class="cancel">cancel link</div>
+      </div>
+      <div class="clear"></div>
+      <div class="url link hide lClear">
+        <label for="link_fetch">Link URL</label>
+        <input type="text" id="link_fetch" />
+        <div class="fetch">fetch</div>
+      </div>
+    </div>
 
     <div class="forms">
-      <%= render "talks/form", :talk => Talk.new, :responding => responding %>
+      <%= render "talks/form", :talk => Talk.new %>
 
       <div class="hide">
-        <% if !defined?(allowed) || allowed.include?(:picture) %>
-          <%= render "pictures/contribute", :picture => Picture.new %>
-        <% end %>
-        <% if !defined?(allowed) || allowed.include?(:video) %>
-          <%= render "videos/contribute", :video => Video.new %>
-        <% end %>
-        <% if !defined?(allowed) || allowed.include?(:links) %>
-          <%= render "links/contribute", :link => Link.new %>
-        <% end %>
+        <%= render "pictures/contribute", :picture => Picture.new %>
+        <%= render "videos/contribute", :video => Video.new %>
+        <%= render "links/contribute", :link => Link.new %>
       </div>
     </div>
 
-    <%= render 'help/contribute' unless responding %>
+    <%= render 'help/contribute' %>
   </div>
 <% end %>

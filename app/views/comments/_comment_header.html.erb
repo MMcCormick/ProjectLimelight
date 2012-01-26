@@ -1,0 +1,5 @@
+<div id="response-divider">
+  <h3>Comments (<%= object.response_count %>)</h3>
+  <span class='comment-response<%= ' auth' unless signed_in? %>' data-id='<%= object.id %>' data-pid='' data-t="<%= object.user_snippet.username %>'s talk">+Comment</span>
+  <div class="clear"></div>
+</div>

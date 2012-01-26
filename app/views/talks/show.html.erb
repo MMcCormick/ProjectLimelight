@@ -12,25 +12,16 @@
       <%= time_ago_in_words(@talk.created_at, false) %> ago by
       <%= user_link @talk.user_snippet %>
     </div>
-    <% if @talk.response_to %>
-      <div class="response s">
-        <span>@</span>
-        <a href="<%= core_object_url(@talk.response_to) %>" class="r">
-          <%= @talk.response_to.title %>
-          <div class="<%= @talk.response_to.type.parameterize %>-grey-icon icon"></div>
-        </a>
-      </div>
-    <% end %>
-    <div class="clear"></div>
-  <% end %>
 
-  <div class="object-show">
     <% if can? :destroy, @talk %>
       <%= render :partial => 'core_objects/disable_btn', :locals => { :path => disable_talk_path(@talk) } %>
     <% end %>
-  </div>
+
+    <div class="clear"></div>
+  <% end %>
 <% else %>
   <div class="empty">This talk has been removed</div>
 <% end %>
 
+<%= render "comments/comment_header", :object => @talk %>
 <%= render_cell :comment, :thread, @talk.id, true %>

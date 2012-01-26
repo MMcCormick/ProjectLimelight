@@ -1,11 +1,8 @@
 <div id="response-divider">
-  <h3>Responses</h3>
-  <div id="add_response" data-target="#response-contribute" class="<%= 'auth' unless signed_in? %>">+ Add Response</div>
+  <h3>Talking About This <%= object.class.name %></h3>
+  <span class='talk-response<%= ' auth' unless signed_in? %>' data-id='<%= object.id %>' data-name='<%= object.title_clean %>' data-type='<%= object.class.name %>'>+Talk</span>
   <div class="clear"></div>
-  <%= render "shared/contribute", :id => 'response-contribute', :responding => object, :allowed => [] %>
 </div>
-
-<%#= render 'core_objects/feed_filters' %>
 
 <div class="hide" id="response_form">
   <%= render "comments/form", :reply => true %>

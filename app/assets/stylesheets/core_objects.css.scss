@@ -501,6 +501,16 @@ $teaser-padding: 10px;
     .titleC {
       padding: 7px 10px 0 10px;
       font-size: 13px;
+      a {
+        color: #444;
+      }
+      .source {
+        font-size: 10px;
+        font-weight: normal;
+        color: #999;
+        margin: 0 0 0 3px;
+        cursor: default;
+      }
     }
     .actions {
       font-size: 12px;
@@ -808,10 +818,17 @@ $teaser-padding: 10px;
     }
     .actions {
       font-size: 10px;
+      margin-left: 5px;
     }
     .when {
       margin-right: 7px;
       margin-left: 5px;
+    }
+  }
+  &.link {
+    img {
+      max-width: 100px;
+      max-height: 100px;
     }
   }
 }
@@ -1175,40 +1192,33 @@ $teaser-padding: 10px;
 
 #response-divider {
   position: relative;
-  margin: 10px;
-  border-top: 1px solid #999;
-  border-bottom: 1px solid #999;
-  padding: 3px 5px;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+  padding: 3px 10px;
+  background: #FFF;
+  margin-left: 1px;
 
   h3 {
     color: #444;
     float: left;
     cursor: default;
   }
+  .talk-response {
+    @include link();
+    position: relative;
+    top: 1px;
+    left: 15px;
+    font-weight: bold;
+  }
 }
-#add_response {
-  color: #444;
-  font-size: 15px;
-  cursor: pointer;
-  color: $picture-color;
-  float: left;
-  margin: 0 0 0 20px;
-}
-#response-contribute {
-  position: absolute;
-  top: -5px;
-  left: 95px;
-  z-index: 101;
-  border-top: 2px solid #94C530;
-}
-#responses {
+
+.object-show-responses {
+  margin-left: 1px;
+
   .none {
     font-size: 14px;
     font-style: italic;
     margin: 15px 0 0 10px;
-  }
-  .teaser.list {
-    margin-bottom: 10px;
   }
   .comment-thread {
     padding-bottom: 15px;

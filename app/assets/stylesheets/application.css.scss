@@ -39,7 +39,7 @@ html, body {
       margin-right: auto;
     }
     #page_inside {
-      border-right: 1px solid #999;
+
     }
   }
 
@@ -218,7 +218,7 @@ button {
   overflow: hidden;
   position: relative;
   min-width: $min-width;
-  background: #FFF; // right sidebar background color
+  background: #FCFCFC; // right sidebar background color
   border-left: 1px solid #9F9F9F;
   margin-left: 7px; // margin between left side and left sidebar
 
@@ -262,7 +262,7 @@ button {
   margin-left: -50%;
   left: 180px;
   //padding-bottom: 75px;
-  background: #FFF; // left sidebar background color
+  background: #FCFCFC; // left sidebar background color
   border-right: 1px solid #9F9F9F;
   height: 100%;
 }
@@ -368,7 +368,7 @@ button {
   .top {
     position: relative;
     border-bottom: 1px solid #9F9F9F;
-    background: #FFF;
+    background: #FCFCFC;
     z-index: 130;
     overflow: hidden;
     height: auto;

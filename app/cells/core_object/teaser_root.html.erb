@@ -2,7 +2,12 @@
   <% if @root.class.name != 'Topic' %>
     <% unless @root.title.blank? %>
       <h2 class="titleC">
-        <%= @root.title_clean %>
+        <% if @root.sources.empty? %>
+          <%= @root.title_clean %>
+        <% else %>
+          <a href="<%= @root.sources[0].url %>" target="_blank"><%= @root.title_clean %></a>
+          <span class='source'><%= @root.sources[0].name %></span>
+        <% end %>
       </h2>
     <% end %>
   <% else %>
@@ -22,7 +27,7 @@
       </div>
     <% end %>
 
-    <%= render "#{@root.class.name.pluralize.underscore}/teaser_#{session[:feed_filters][:layout]}", :object => @root, :current_user => @current_user %>
+    <%= render "#{@root.class.name.pluralize.underscore}/teaser_#{@feed_layout}", :object => @root, :current_user => @current_user %>
 
     <% unless @root.class.name == 'Talk' %>
       <% if @root.topic_mentions.length > 0 %>

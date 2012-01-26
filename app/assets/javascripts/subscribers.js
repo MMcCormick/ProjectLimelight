@@ -195,7 +195,7 @@ $(function() {
       });
       $('.sidebar.left .contributions').qtip('show')
 
-      $('.contributeC').fadeOut(250, function() { $(this).remove() })
+      $('.contributeC:visible').fadeOut(250, function() { $(this).remove() })
     }
   });
 

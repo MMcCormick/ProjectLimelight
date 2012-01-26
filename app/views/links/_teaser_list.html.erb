@@ -1,4 +1,4 @@
-<% img = default_image_url(object, 120, 120, 'fit', false, true) %>
+<% img = default_image_url(object, 100, 100, 'fit', false, true) %>
 <% original = default_image_url(object, 0, 0, :original) if img %>
-<% image = image_tag img.image_url, :width => img.calculate_d(120)[0].to_s, :height => img.calculate_d(120)[1].to_s, 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+<% image = image_tag img.image_url, 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
 <%= render 'core_objects/feed_teaser_image', :image => image if img %>

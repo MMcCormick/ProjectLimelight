@@ -42,11 +42,16 @@ jQuery ->
       return false
 
     $('.contributeC').hide()
+
     form = $('#contribute-top')
     if form.length == 0
       form = $('#blank-contribute').clone()
-    form.attr('id', 'contribute-top')
-    $('body').append(form.fadeIn(250))
+      form.attr('id', 'contribute-top')
+      $('body').append(form)
+
+    form.css({'left':$(@).offset().left - 20})
+
+    form.fadeIn(250)
 
   # handle option choices on contribute form (clicking add picture/video/link)
   $('.contributeC .options .option').live 'click', (e) ->
@@ -303,7 +308,7 @@ jQuery ->
 
     form.find('#talk_parent_id').val($(@).data('id'))
     form.addClass('responding').find('.options').remove()
-    form.find('.responding').text('Responding to '+$(@).data('type')+' "'+$(@).data('name')+'"')
+    form.find('.responding').text('Talking about the '+$(@).data('type')+' "'+$(@).data('name')+'"')
 
 
     offset_x = $(@).offset().left - 10

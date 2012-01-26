@@ -4,7 +4,7 @@
       <div class='response'>
         <div class='created'>
           <%= user_link response.user_snippet %>
-          <span class='when'><%= time_ago_in_words(response.created_at, false) %> ago</span>
+          <span class='when'><%= pretty_time(response.created_at) %></span>
         </div>
         <p><%= parse_mentions(response.content, response) %></p>
         <div class='actions'>

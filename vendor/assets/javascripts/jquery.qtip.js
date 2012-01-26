@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan  2 08:23:37.0000000000 2012
+* Date: Wed Jan 25 15:59:10.0000000000 2012
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -174,7 +174,8 @@ function QTip(target, options, id, attr)
 		event: {},
 		target: $(),
 		disabled: FALSE,
-		attr: attr
+		attr: attr,
+		onTarget: FALSE
 	};
 
 	/*
@@ -620,15 +621,21 @@ function QTip(target, options, id, attr)
 			if(posOptions.adjust.mouse) {
 				// Apply a mouseleave event so we don't get problems with overlapping
 				if(options.hide.event) {
+					// Hide when we leave the tooltip and not onto the show target
 					tooltip.bind('mouseleave'+namespace, function(event) {
 						if((event.relatedTarget || event.target) !== targets.show[0]) { self.hide(event); }
+					});
+
+					// Track if we're on the target or not
+					elements.target.bind('mouseenter'+namespace+' mouseleave'+namespace, function(event) {
+						cache.onTarget = event.type === 'mouseenter';
 					});
 				}
 
 				// Update tooltip position on mousemove
 				targets.document.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(!tooltip.hasClass(disabled) && tooltip.is(':visible')) {
+					if(cache.onTarget && !tooltip.hasClass(disabled) && tooltip.is(':visible')) {
 						self.reposition(event || MOUSE);
 					}
 				});
@@ -1287,7 +1294,9 @@ function QTip(target, options, id, attr)
 						target = cache.target;
 					}
 				}
-				else { cache.target = $(target); }
+				else {
+					target = cache.target = $(target.jquery ? target : elements.target);
+				}
 
 				// Parse the target into a jQuery object and make sure there's an element present
 				target = $(target).eq(0);
@@ -1300,8 +1309,8 @@ function QTip(target, options, id, attr)
 
 					if(target[0] === window) {
 						position = {
-							top: fixed || PLUGINS.iOS ? (viewport || target).scrollTop() : 0,
-							left: fixed || PLUGINS.iOS ? (viewport || target).scrollLeft() : 0
+							top: (viewport || target).scrollTop(),
+							left: (viewport || target).scrollLeft()
 						};
 					}
 				}
@@ -1704,9 +1713,12 @@ QTIP.bind = function(opts, event)
 		/*
 		 * Also make sure initial mouse targetting works correctly by caching mousemove coords
 		 * on show targets before the tooltip has rendered.
+		 *
+		 * Also set onTarget when triggered to keep mouse tracking working
 		 */
 		targets.show.bind('mousemove'+namespace, function(event) {
 			MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
+			api.cache.onTarget = TRUE;
 		});
 
 		// Define hoverIntent function
@@ -2357,6 +2369,9 @@ function Tip(qTip, command)
 				}
 			}
 
+			// Cache it
+			cache.corner = new PLUGINS.Corner( self.corner.string() );
+
 			return self.corner.string() !== 'centercenter';
 		},
 
@@ -2634,7 +2649,7 @@ function Tip(qTip, command)
 		}
 	});
 
-	cache.corner = new PLUGINS.Corner( self.init() );
+	self.init();
 }
 
 PLUGINS.tip = function(api)

@@ -64,7 +64,7 @@ $(function() {
             }
           },
           style: {
-            classes: 'ui-tooltip-shadow ui-tooltip-light',
+            classes: 'ui-tooltip-shadow ui-tooltip-light hover-tab-qtip',
             tip: {
              mimic: 'center',
              offset: 8,
@@ -77,8 +77,19 @@ $(function() {
             at: 'bottom left',
             viewport: $(window)
           },
-          show: {delay: 1000},
-          hide: {delay: 300, fixed: true}
+          show: {
+            delay: 1000,
+            effect: function(offset) {
+               $(this).slideDown(250); // "this" refers to the tooltip
+            }
+          },
+          hide: {
+            delay: 300,
+            fixed: true,
+            effect: function(offset) {
+               $(this).slideUp(250); // "this" refers to the tooltip
+            }
+          }
         })
       }
     })

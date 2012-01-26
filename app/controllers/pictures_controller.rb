@@ -10,7 +10,7 @@ class PicturesController < ApplicationController
     @title = @picture.name
     @description = @picture.content_clean
 
-    @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :parent_id => @picture.id})
+    @responses = CoreObject.for_show_page(@picture.id)
   end
 
   def create

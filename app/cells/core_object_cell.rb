@@ -8,9 +8,10 @@ class CoreObjectCell < Cell::Rails
   helper UsersHelper
   helper VideosHelper
 
-  def teaser_root(current_user, root)
+  def teaser_root(current_user, root, feed_layout)
     @current_user = current_user
     @root = root
+    @feed_layout = feed_layout
     render
   end
 

@@ -51,7 +51,10 @@
   border-top: none;
   padding: 0;
   display: none;
-
+         
+  &.responding {
+    border-top: 2px solid #94C530;
+  }
   .responding {
     color: #333;
     font-size: 16px;
@@ -375,63 +378,6 @@
     }
   }
 
-   /*Deprecated*/
-  .mention-ooc {
-    position: absolute;
-    width: 150px;
-    top: 0px;
-    right: 0px;
-    height: 130px;
-    border-left: 1px solid #E1E1E1;
-    margin-bottom: -999px;
-    padding-bottom: 999px;
-
-    .auto {
-      label {
-        top: 6px;
-        left: 10px;
-        color: #666666;
-        font-size: 11px;
-      }
-      input {
-        border: none;
-        border-bottom: 1px solid #E1E1E1;
-        width: 136px;
-        padding: 6px 5px;
-        margin: 0 0 0 5px;
-        font-size: 11px;
-      }
-    }
-    .mentions {
-      padding: 5px 10px;
-      .item {
-        @include clearfix();
-        position: relative;
-        padding: 2px 0;
-      }
-      img {
-        @include border-radius(2px);
-        position: absolute;
-        top: 3px;
-        left: 0;
-      }
-      .name {
-        float: left;
-        font-size: 13px;
-        overflow: hidden;
-        max-width: 93px;
-        white-space: nowrap;
-        cursor: default;
-      }
-      .remove {
-        float: left;
-        font-size: 10px;
-        color: #990000;
-        margin: 2px 5px 0 0;
-        cursor: pointer;
-      }
-    }
-  }
   .actions {
     background: #F1F1F1;
     border-top: 1px solid #AAA;
@@ -542,9 +488,12 @@ $teaser-padding: 10px;
   background: #FFF;
 
   .actions {
+    .talk-response,
     .comments,
     button {
       @include link();
+      margin: 0 8px 0 0;
+      padding: 0px;
     }
   }
 
@@ -552,10 +501,20 @@ $teaser-padding: 10px;
     .titleC {
       padding: 7px 10px 0 10px;
       font-size: 13px;
+      a {
+        color: #444;
+      }
+      .source {
+        font-size: 10px;
+        font-weight: normal;
+        color: #999;
+        margin: 0 0 0 3px;
+        cursor: default;
+      }
     }
     .actions {
       font-size: 12px;
-      margin: 2px 0 0 5px;
+      margin: 2px 0 0 8px;
     }
     .media {
       margin: 5px 10px 0 10px;
@@ -628,6 +587,13 @@ $teaser-padding: 10px;
           }
         }
       }
+      .actions {
+        .likeB,
+        .unlikeB,
+        .coreShareB {
+          display: none;
+        }
+      }
     }
   }
   .when {
@@ -663,6 +629,15 @@ $teaser-padding: 10px;
       }
       &:hover {
         text-decoration: underline;
+      }
+    }
+  }
+  &.talk {
+    .actions {
+      .likeB,
+      .unlikeB,
+      .coreShareB {
+        display: none;
       }
     }
   }
@@ -843,10 +818,17 @@ $teaser-padding: 10px;
     }
     .actions {
       font-size: 10px;
+      margin-left: 5px;
     }
     .when {
       margin-right: 7px;
       margin-left: 5px;
+    }
+  }
+  &.link {
+    img {
+      max-width: 100px;
+      max-height: 100px;
     }
   }
 }
@@ -1210,40 +1192,33 @@ $teaser-padding: 10px;
 
 #response-divider {
   position: relative;
-  margin: 10px;
-  border-top: 1px solid #999;
-  border-bottom: 1px solid #999;
-  padding: 3px 5px;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+  padding: 3px 10px;
+  background: #FFF;
+  margin-left: 1px;
 
   h3 {
     color: #444;
     float: left;
     cursor: default;
   }
+  .talk-response {
+    @include link();
+    position: relative;
+    top: 1px;
+    left: 15px;
+    font-weight: bold;
+  }
 }
-#add_response {
-  color: #444;
-  font-size: 15px;
-  cursor: pointer;
-  color: $picture-color;
-  float: left;
-  margin: 0 0 0 20px;
-}
-#response-contribute {
-  position: absolute;
-  top: -5px;
-  left: 95px;
-  z-index: 101;
-  border-top: 2px solid #94C530;
-}
-#responses {
+
+.object-show-responses {
+  margin-left: 1px;
+
   .none {
     font-size: 14px;
     font-style: italic;
     margin: 15px 0 0 10px;
-  }
-  .teaser.list {
-    margin-bottom: 10px;
   }
   .comment-thread {
     padding-bottom: 15px;

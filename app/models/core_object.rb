@@ -30,7 +30,7 @@ class CoreObject
 
   auto_increment :public_id
 
-  embeds_one :user_snippet, as: :user_assignable, :class_name => 'SourceSnippet'
+  embeds_one :user_snippet, as: :user_assignable, :class_name => 'UserSnippet'
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
   embeds_many :likes, as: :user_assignable, :class_name => 'UserSnippet'
 
@@ -248,6 +248,10 @@ class CoreObject
   class << self
     def find_by_encoded_id(id)
       where(:public_id => id.to_i(36)).first
+    end
+
+    def for_show_page(parent_id)
+      CoreObject.where(:parent_id => parent_id).order_by(:created_at, :desc)
     end
 
     # @example Fetch the core_objects for a feed with the given criteria

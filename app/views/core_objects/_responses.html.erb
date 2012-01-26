@@ -1,10 +1,14 @@
-<div id="responses">
+<div class="object-show-responses">
   <% if responses.length == 0 %>
     <div class="none">This post is lonely, add a response!</div>
   <% end %>
   
   <% responses.each do |core_object| %>
-    <%= render "#{core_object._type.pluralize.underscore}/teaser_list", :object => core_object, :style => :list, :response => true %>
+    <div class='teaser list <%= core_object.class.name.downcase %>'>
+      <%= render_cell :core_object, :teaser_root, current_user, core_object, 'list' %>
+      <%= render_cell :core_object, "teaser_personal_list", current_user, [] %>
+    </div>
+
     <%= render_cell :comment, :thread, core_object.id, false %>
   <% end %>
 </div>

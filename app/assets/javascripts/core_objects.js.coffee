@@ -36,16 +36,22 @@ jQuery ->
               suggestionBox.find('.none').show()
         })
 
-  $('#contribute, #add_response').live 'click', (e) ->
+  $('#contribute').live 'click', (e) ->
     if !$logged
       $('#register').click()
       return false
 
-    target = $($(@).data('target'))
-    if target.is(':visible')
-      target.slideUp(200)
-    else
-      target.slideDown(200)
+    $('.contributeC').hide()
+
+    form = $('#contribute-top')
+    if form.length == 0
+      form = $('#blank-contribute').clone()
+      form.attr('id', 'contribute-top')
+      $('body').append(form)
+
+    form.css({'left':$(@).offset().left - 20})
+
+    form.fadeIn(250)
 
   # handle option choices on contribute form (clicking add picture/video/link)
   $('.contributeC .options .option').live 'click', (e) ->
@@ -225,7 +231,7 @@ jQuery ->
     $(@).parents('.contributeC:first').find('.option:visible .cancel').click()
 
   $('.contributeC .actions .cancel').live 'click', (e) ->
-    $(@).parents('.contributeC:first').slideUp(150)
+    $(@).parents('.contributeC:first').fadeOut(250)
 
   $('.contributeC .connect_twitter').live 'click', (e) ->
     $self = $(@)
@@ -288,84 +294,53 @@ jQuery ->
   # END CONTRIBUTE FORM
   ####
 
+  ####
+  # RESPONSE FORM
+  ####
+
+  $('.talk-response').live 'click', (e) ->
+    $('.contributeC').hide()
+
+    form = $('#contribute-'+$(@).data('id'))
+    if form.length == 0
+      form = $('#blank-contribute').clone()
+      $('body').append(form)
+
+    form.find('#talk_parent_id').val($(@).data('id'))
+    form.addClass('responding').find('.options').remove()
+    form.find('.responding').text('Talking about the '+$(@).data('type')+' "'+$(@).data('name')+'"')
+
+
+    offset_x = $(@).offset().left - 10
+    offset_y = $(@).offset().top + 20
+    form_width = form.width()
+    form_height = form.height()
+
+    if (offset_x + form_width) > ($(window).width() - 20)
+      offset_x -= (offset_x + form_width) - ($(window).width() - 20)
+
+    if (offset_y + form_height) > ($(window).height() - 20)
+      offset_y -= (offset_y + form_height) - ($(window).height() - 20)
+
+    form.attr('id', 'contribute-'+$(@).data('id')).css({'position':'absolute','left':offset_x,'top':offset_y})
+    form.fadeIn 250, ->
+      $(@).find('#talk_content').click().focus()
+
+  ####
+  # END RESPONSE FORM
+  ####
+
   # mention boxes
   $('.mention').livequery ->
     $(@).mentionable()
 
-#  # out of context mentions on contribute form
-#  $('.mention-ooc .auto input').autocomplete($('#static-data').data('d').autocomplete, {
-#    minChars: 2,
-#    width: 450,
-#    matchContains: true,
-#    matchSubset: false,
-#    autoFill: false,
-#    selectFirst: true,
-#    mustMatch: false,
-#    searchKey: 'term',
-#    max: 10,
-#    buckets: [['topic', 'topic', 'TOPICS']],
-#    extraParams: {"types":['topic']},
-#    allowNew: true,
-#    allowNewName: 'topic',
-#    allowNewType: 'topic',
-#    dataType: 'json',
-#    delay: 100,
-#    formatItem: (row, i, max) ->
-#      return row.formattedItem
-#    formatMatch: (row, i, max) ->
-#      return row.term
-#    formatResult: (row) ->
-#      return row.term
-#  }).result (event, data, formatted) ->
-#    parent = $(@).parents('.mention-ooc:first')
-#    mentions = parent.find('.mentions')
-#    hidden_data = JSON.parse(parent.find('.hidden_data').val())
-#
-#    if data.id
-#      id = data.id
-#      type = 'existing'
-#    else
-#      id = data.term
-#      type = 'new'
-#
-#    if mentions.find('.item[data-id="'+id+'"]').length > 0
-#      createGrowl(false, 'You have already added that topic!', '', 'red')
-#    else if mentions.find('.item').length >= 3
-#      createGrowl(false, 'You can only mention 3 topics out of context!', '', 'red')
-#    else
-#      if data.data && data.data.image
-#        image = data.data.image
-#      else
-#        image = '/assets/topic_default_25_25.gif'
-#      mention = $("<div/>").addClass('item hide').attr('data-id', id).attr('data-type', type).html('
-#        <div class="remove">[x]</div>
-#        <div class="name" title="'+data.term+'">'+data.term+'</div>
-#      ').appendTo(mentions)
-#      mention.fadeIn(200)
-#
-#      hidden_data[type].push(id)
-#
-#      $(@).val('').blur().focus()
-#      parent.find('.hidden_data').val(JSON.stringify(hidden_data))
-#
-#  $('.mention-ooc .auto input').live 'keypress', (e) ->
-#    if(window.event)
-#      key = window.event.keyCode     #IE
-#    else
-#      key = e.which     #firefox
-#
-#    if(key == 35 || key == 64)
-#      return false
-#
-#  $('.mention-ooc .remove').live 'click', (e) ->
-#    mention = $(@).parent()
-#    hidden_data_field = $(@).parents('.mention-ooc:first').find('.hidden_data')
-#    hidden_data = JSON.parse(hidden_data_field.val())
-#    idx = hidden_data[mention.data('type')].indexOf(mention.data('id'));
-#    if idx != -1
-#      hidden_data[mention.data('type')].splice(idx,1)
-#      hidden_data_field.val(JSON.stringify(hidden_data))
-#    mention.remove()
+  # show action buttons on teasers on hover
+  $('.teaser .response,.teaser.talk').live({
+    mouseenter: ->
+      $(@).find('.likeB,.unlikeB,.coreShareB').show()
+    mouseleave: ->
+      $(@).find('.likeB,.unlikeB,.coreShareB').hide()
+  })
 
   # Feed Sort Selection
   $('.feed-sort-select.closed').live 'click', (e) ->

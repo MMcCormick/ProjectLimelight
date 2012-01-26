@@ -2,13 +2,13 @@
   <div class='personal'>
     <% @responses.each do |response| %>
       <div class='response'>
-        <%= image_tag user_default_picture_path(response.user_snippet.username, :w => 30, :h => 30, :m => 'fillcropmid'), :alt => "" %>
+        <%= image_tag user_default_picture_path(response.user_snippet, :w => 30, :h => 30, :m => 'fillcropmid'), :alt => "" %>
         <p>
           <%= user_link response.user_snippet %>
           <%= parse_mentions(response.content, response) %>
         </p>
         <div class='actions'>
-          <span class='when'><%= time_ago_in_words(response.created_at, false) %> ago</span>
+          <span class='when'><%= pretty_time(response.created_at) %></span>
           <a href="<%= url_for response %>" class="comments">
             <%= response.response_count.to_i %> comments
           </a>

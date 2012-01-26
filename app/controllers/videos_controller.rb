@@ -10,7 +10,7 @@ class VideosController < ApplicationController
     @title = @video.name
     @description = @video.content_clean
 
-    @responses = CoreObject.feed([:Talk], {'target' => 'created_at', 'order' => 'ASC'}, {:limit => 500, :parent_id => @video.id})
+    @responses = CoreObject.for_show_page(@video.id)
   end
 
   def create

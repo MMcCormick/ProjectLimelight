@@ -79,7 +79,7 @@
 
     <!-- HIDDEN TOOLS -->
     <div id="mouse-score"></div>
-    <%= render "shared/contribute", :id => 'top-contribute', :responding => nil %>
+    <%= render "shared/contribute", :id => 'blank-contribute', :responding => nil %>
     <div id="form-submitting">Form submitting...</div>
     <div style="display: none">
       <div id="static-data" data-d='<%= static_data %>' <%= "data-push='#{current_user.id}_private'" if signed_in? %>></div>

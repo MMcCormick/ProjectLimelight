@@ -36,7 +36,7 @@ class LinksController < ApplicationController
     link = Link.find_by_encoded_id(params[:id])
     if link
       authorize! :update, link
-      link.status = "disabled"
+      link.disable
       if link.save
         link.action_log_delete
         response = build_ajax_response(:ok, nil, "Link successfully disabled")

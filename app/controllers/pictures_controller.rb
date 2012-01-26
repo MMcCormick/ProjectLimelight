@@ -36,7 +36,7 @@ class PicturesController < ApplicationController
     picture = Picture.find_by_encoded_id(params[:id])
     if picture
       authorize! :update, picture
-      picture.status = "disabled"
+      picture.disable
       if picture.save
         picture.action_log_delete
         response = build_ajax_response(:ok, nil, "Picture successfully disabled")

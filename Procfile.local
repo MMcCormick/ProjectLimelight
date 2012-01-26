@@ -1,4 +1,4 @@
-mongo:            mongod
+mongo:            sudo mongod
 redis:            redis-server /usr/local/etc/redis.conf
 scheduler:        bundle exec rake resque:scheduler
 worker:           bundle exec rake resque:work QUEUE=neo4j,feeds,popularity,soulmate,images,notifications,slow

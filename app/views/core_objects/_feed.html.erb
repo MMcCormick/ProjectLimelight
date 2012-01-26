@@ -1,6 +1,6 @@
 <div id="core-feed" class="<%= session[:feed_filters][:layout] %>">
   <% core_objects.each_with_index do |core_object, i| %>
-    <% if i < 20 %>
+    <% if i < 20 #&& core_object[:root] %>
       <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:root].class.name.downcase}" %>'>
         <%= render_cell :core_object, :teaser_root, current_user, core_object[:root], session[:feed_filters][:layout] %>
         <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:responses] %>

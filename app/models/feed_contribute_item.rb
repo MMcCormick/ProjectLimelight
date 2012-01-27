@@ -18,7 +18,7 @@ class FeedContributeItem
       FeedContributeItem.collection.update({:feed_id => post.user_snippet.id, :root_id => post.root_id}, updates, {:upsert => true})
     end
 
-    def disable(user, post)
+    def disable(post)
       updates = {"$inc" => { :strength => -1 }}
       updates["$pull"] = { :responses => post.id } unless post.is_root?
       FeedContributeItem.collection.update({:feed_id => post.user_snippet.id, :root_id => post.root_id }, updates)

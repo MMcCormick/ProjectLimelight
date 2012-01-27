@@ -48,8 +48,9 @@ class FeedItem
       if post.is_root?
         FeedItem.delete_all(conditions: { :feed_type => 'uf', :root_id => post.id })
       else
-        feed_items = FeedItem.where(:feed_type => 'uf').any_of(:responses => post.id)
-        user_feed_users = User.only(:id, :following_topics, :following_users).where(:id => { '$in' => feed_items.map{ |f| f.feed_id } })
+        feed_items = FeedItem.where(:feed_type => 'uf').and(:responses => post.id)
+        foobar = feed_items.map{ |f| f.feed_id }
+        user_feed_users = User.only(:id, :following_topics, :following_users).where(:_id => { '$in' => foobar })
 
         user_feed_users.each do |u|
           unless u.id == post.user_snippet.id

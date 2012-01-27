@@ -1,0 +1,15 @@
+<div class='response' data-id='<%= object.id.to_s %>'>
+  <div class='created'>
+    <%= user_link object.user_snippet %>
+    <span class='when'><%= pretty_time(object.created_at) %></span>
+  </div>
+  <p><%= parse_mentions(object.content, object) %></p>
+  <div class='actions'>
+    <a href="<%= url_for object %>" class="comments">
+      <%= object.response_count.to_i %> comments
+    </a>
+    <span class='comment-response' data-id='<%= object.id %>' data-pid='' data-t="<%= object.user_snippet.username %>'s talk">+Comment</span>
+    <%= render 'likes/btn', :current_user => current_user, :object => object %>
+    <%= render 'core_object_shares/share_btn', :current_user => current_user, :object => object %>
+  </div>
+</div>

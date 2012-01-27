@@ -15,15 +15,33 @@ class CoreObjectCell < Cell::Rails
     render
   end
 
-  def teaser_personal_column(current_user, responses)
+  def teaser_personal_column(current_user, root, personal_count, responses)
     @current_user = current_user
+    @root = root
+    @personal_count = personal_count
     @responses = responses
     render
   end
 
-  def teaser_personal_list(current_user, responses)
+  def teaser_personal_list(current_user, root, personal_count, responses)
     @current_user = current_user
+    @root = root
+    @personal_count = personal_count
     @responses = responses
+    render
+  end
+
+  def teaser_public_column(current_user, root)
+    @current_user = current_user
+    @root = root
+    @response = Talk.where(:root_id => root.id).order_by(:created_at, :desc).first
+    render
+  end
+
+  def teaser_public_list(current_user, root)
+    @current_user = current_user
+    @root = root
+    @response = Talk.where(:root_id => root.id).order_by(:created_at, :desc).first
     render
   end
 

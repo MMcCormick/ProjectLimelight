@@ -1,22 +1,7 @@
 <% if @responses.length > 0 %>
   <div class='personal'>
     <% @responses.each do |response| %>
-      <div class='response'>
-        <%= image_tag user_default_picture_path(response.user_snippet, :w => 30, :h => 30, :m => 'fillcropmid'), :alt => "" %>
-        <p>
-          <%= user_link response.user_snippet %>
-          <%= parse_mentions(response.content, response) %>
-        </p>
-        <div class='actions'>
-          <span class='when'><%= pretty_time(response.created_at) %></span>
-          <a href="<%= url_for response %>" class="comments">
-            <%= response.response_count.to_i %> comments
-          </a>
-          <span class='comment-response' data-id='<%= response.id %>' data-pid='' data-t="<%= response.user_snippet.username %>'s talk">+Comment</span>
-          <%= render 'likes/btn', :current_user => @current_user, :object => response %>
-          <%= render 'core_object_shares/share_btn', :current_user => @current_user, :object => response %>
-        </div>
-      </div>
+      <%= render 'talks/response_list', :object => response, :current_user => @current_user %>
     <% end %>
   </div>
 <% end %>

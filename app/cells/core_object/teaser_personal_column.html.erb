@@ -1,21 +1,12 @@
 <% if @responses.length > 0 %>
   <div class='personal'>
+    <% if @personal_count && @root.class.name != 'Topic' %>
+      <a href="<%= url_for @root %>" class="talking">
+        <%= pluralize(@personal_count, 'friend') %> <%= @personal_count > 1 || @personal_count == 0 ? 'are' : 'is' %> talking about this
+      </a>
+    <% end %>
     <% @responses.each do |response| %>
-      <div class='response'>
-        <div class='created'>
-          <%= user_link response.user_snippet %>
-          <span class='when'><%= pretty_time(response.created_at) %></span>
-        </div>
-        <p><%= parse_mentions(response.content, response) %></p>
-        <div class='actions'>
-          <a href="<%= url_for response %>" class="comments">
-            <%= response.response_count.to_i %> comments
-          </a>
-          <span class='comment-response' data-id='<%= response.id %>' data-pid='' data-t="<%= response.user_snippet.username %>'s talk">+Comment</span>
-          <%= render 'likes/btn', :current_user => @current_user, :object => response %>
-          <%= render 'core_object_shares/share_btn', :current_user => @current_user, :object => response %>
-        </div>
-      </div>
+      <%= render 'talks/response_column', :object => response, :current_user => @current_user %>
     <% end %>
   </div>
 <% end %>

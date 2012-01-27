@@ -13,5 +13,10 @@ jQuery ->
         $(@).oneTime 500, 'update_popularity', ->
           $(@).fadeOut(100).text('')
 
+    channel.bind 'new_talk', (data) ->
+      target = $('.teaser[data-push="'+data.id+'"]:not(.hover) .public')
+      target.find('.response').replaceWith(data.html)
+      target.show().effect('highlight', {color:'#88B42C'}, 1500)
+
     channel.bind 'notification', (data) ->
       createGrowl(false, data.message, 'Notification', 'green');

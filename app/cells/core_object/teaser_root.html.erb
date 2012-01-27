@@ -37,11 +37,6 @@
           <% end %>
         </div>
       <% end %>
-
-      <a href="<%= url_for @root %>" class="talking">
-        <%= pluralize(@root.response_count.to_i, 'person') %> <%= @root.response_count > 1 || @root.response_count == 0 ? 'are' : 'is' %> talking about this
-      </a>
-
     <% end %>
   <% end %>
 </div>

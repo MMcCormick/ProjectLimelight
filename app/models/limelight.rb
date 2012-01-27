@@ -670,8 +670,6 @@ module Limelight #:nodoc:
       self.pdc = true
       self.pwc = true
       self.pmc = true
-
-      Pusher[(self.class.name == 'Comment' ? talk_id.to_s : id.to_s)].trigger('popularity_changed', {:id => id.to_s, :change => amt})
     end
   end
 end

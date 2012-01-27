@@ -34,6 +34,11 @@ class TalksController < ApplicationController
         extras = { :type => "Talk", :path => talk_path(@talk), :response => false }
       end
 
+      if @talk.root_id
+        response_html = render_to_string :partial => "talks/response_#{session[:feed_filters][:layout]}", :locals => { :object => @talk, :current_user => current_user }
+        Pusher[@talk.root_id.to_s].trigger('new_talk', {:id => @talk.root_id.to_s, :count => object ? object.response_count : nil, :html => response_html})
+      end
+
       render json: build_ajax_response(:ok, nil, nil, nil, extras), status: :created
     else
       response = build_ajax_response(:error, nil, "Talk could not be created", @talk.errors)

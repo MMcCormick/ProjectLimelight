@@ -493,7 +493,7 @@ $teaser-padding: 10px;
     .comments,
     button {
       @include link();
-      margin: 0 8px 0 0;
+      margin: 0 5px 0 0;
       padding: 0px;
     }
   }
@@ -522,17 +522,12 @@ $teaser-padding: 10px;
     }
     .mentions {
       @include clearfix();
-      margin: 9px 10px -7px 10px;
+      margin: 9px 10px 0 10px;
       font-size: 11px;
       .tag {
         float: left;
         margin: 0 10px 3px 0;
       }
-    }
-    .talking {
-      font-size: 11px;
-      margin: 10px 10px 0 10px;
-      display: block;
     }
     .topic-head {
       h2 {
@@ -551,14 +546,19 @@ $teaser-padding: 10px;
       }
     }
   }
-  .personal {
+  .personal,
+  .public {
     .actions {
       font-size: 10px;
       margin: 3px 0 0 0;
     }
+    .talking {
+      font-size: 11px;
+      display: block;
+    }
     .response {
       position: relative;
-      padding: 18px 10px 4px 10px;
+      padding: 19px 10px 4px 10px;
 
       .ulink {
         font-weight: bold;
@@ -566,7 +566,7 @@ $teaser-padding: 10px;
       }
       .created {
         position: absolute;
-        top: 0px;
+        top: 1px;
         left: 10px;
 
         .when {
@@ -655,12 +655,13 @@ $teaser-padding: 10px;
   z-index: 10;
   display: none;
   margin: 0 0 20px 0;
-  padding: 0 0 10px 0;
+  padding: 0;
 
   .root {
     .topic-head {
       position: relative;
       padding: 7px 10px 0 60px;
+      min-height: 44px;
 
       img {
         @include border-radius(0px);
@@ -674,11 +675,17 @@ $teaser-padding: 10px;
     }
   }
 
-  .personal {
+  .personal,
+  .public {
     border-top: #DCDFD4;
     background: #F9F9F9;
-    margin: 10px 0 -10px 0;
-
+    margin: 0;
+    .talking {
+      background: #FFF;
+      margin-top: 5px;
+      padding: 3px 10px;
+      border-bottom: 1px solid #DCDFD4;
+    }
     .response {
       border-top: 1px solid #F3F3F3;
       border-bottom: 1px solid #DCDFD4;
@@ -726,6 +733,7 @@ $teaser-padding: 10px;
       }
     }
     .actions {
+      font-size: 10px;
       margin-left: 0px;
     }
   }
@@ -759,6 +767,7 @@ $teaser-padding: 10px;
     }
     .topic-head {
       padding: 7px 0 0 10px;
+
       img {
         position: absolute;
         left: 10px;

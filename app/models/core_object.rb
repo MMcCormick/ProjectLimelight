@@ -177,7 +177,7 @@ class CoreObject
     like = liked_by? user.id
     if like
       false
-    elsif (user_id == user.id)
+    elsif user_id == user.id
       nil
     else
       like = self.likes.new(user.attributes)
@@ -186,6 +186,7 @@ class CoreObject
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
       ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
       FeedItem.like(user, self)
+      FeedLikeItem.like(user, self)
       true
     end
   end
@@ -198,6 +199,7 @@ class CoreObject
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
       ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
       FeedItem.unlike(user, self)
+      FeedLikeItem.unlike(user, self)
       true
     else
       false

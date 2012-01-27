@@ -1,5 +1,6 @@
 class FeedItem
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   field :feed_id, :type => BSON::ObjectId
   field :feed_type

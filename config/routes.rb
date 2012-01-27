@@ -30,7 +30,7 @@ ProjectLimelight::Application.routes.draw do
   # Favoriting
   post   '/favorites' => 'favorites#create', :as => :create_favorite
   delete '/favorites' => 'favorites#destroy', :as => :destroy_favorite
-  get    '/:id/favorites/' => 'favorites#index', :as => :user_favorites
+  get    '/:id/favorites' => 'favorites#index', :as => :user_favorites
 
   # Voting
   post   '/votes' => 'votes#create', :as => :create_vote
@@ -40,6 +40,7 @@ ProjectLimelight::Application.routes.draw do
   # Likeing
   post   '/likes' => 'likes#create', :as => :create_like
   delete '/likes' => 'likes#destroy', :as => :destroy_like
+  get    '/:id/likes' => 'likes#index', :as => :user_likes
 
   # Embedly
   get 'embed' => 'embedly#show', :as => :embedly_fetch

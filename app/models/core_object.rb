@@ -185,7 +185,7 @@ class CoreObject
       user.likes_count += 1
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
       ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
-      FeedItem.like(user, self)
+      FeedUserItem.like(user, self)
       FeedLikeItem.like(user, self)
       true
     end
@@ -198,7 +198,7 @@ class CoreObject
       user.likes_count -= 1
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
       ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
-      FeedItem.unlike(user, self)
+      FeedUserItem.unlike(user, self)
       FeedLikeItem.unlike(user, self)
       true
     else
@@ -230,7 +230,7 @@ class CoreObject
   end
 
   def push_to_feeds
-    FeedItem.post_create(self)
+    FeedUserItem.post_create(self)
     #Resque.enqueue(FeedsPostCreate, id.to_s)
   end
 
@@ -253,7 +253,7 @@ class CoreObject
 
   def disable
     self.status = 'disabled'
-    FeedItem.post_disable(self, self.class.name == 'Talk' && !is_popular)
+    FeedUserItem.post_disable(self, self.class.name == 'Talk' && !is_popular)
   end
 
   class << self
@@ -279,7 +279,7 @@ class CoreObject
         display_types << 'Topic'
       end
 
-      items = FeedItem.where(:feed_id => feed_id, :feed_type => feed_type, :root_type => {'$in' => display_types})
+      items = FeedUserItem.where(:feed_id => feed_id, :feed_type => feed_type, :root_type => {'$in' => display_types})
 
       topic_ids = []
       item_ids = []

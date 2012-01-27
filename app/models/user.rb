@@ -238,7 +238,7 @@ class User
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
       Neo4j.follow_create(id.to_s, user.id.to_s, 'users', 'users')
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => user.id, :to_type => 'User')
-      FeedItem.follow(self, user)
+      FeedUserItem.follow(self, user)
       user.add_pop_action(:flw, :a, self)
       user.save
 
@@ -254,7 +254,7 @@ class User
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
-      FeedItem.unfollow(self, user)
+      FeedUserItem.unfollow(self, user)
       user.add_pop_action(:flw, :r, self)
       user.save
 
@@ -277,7 +277,7 @@ class User
       topic.followers_count += 1
       Neo4j.follow_create(id.to_s, topic.id.to_s, 'users', 'topics')
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
-      FeedItem.follow(self, topic)
+      FeedUserItem.follow(self, topic)
       topic.add_pop_action(:flw, :a, self)
       topic.save
 
@@ -292,7 +292,7 @@ class User
       topic.followers_count -= 1
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
-      FeedItem.unfollow(self, topic)
+      FeedUserItem.unfollow(self, topic)
       topic.add_pop_action(:flw, :r, self)
       topic.save
 

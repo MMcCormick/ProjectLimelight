@@ -22,9 +22,13 @@
 
   <% if @root %>
     <h4 class='root-response'>Response to a <%= @root.class.name %></h4>
-    <div class='root <%= 'with-media' if @root.class.name == 'Video' || @root.images.length > 0 %>'>
+    <div class='root-object <%= 'with-video' if @root.class.name == 'Video' %> <%= 'with-media' if @root.class.name != 'Video' && @root.images.length > 0 %>'>
       <div class='media'>
-        <%= render "#{@root.class.name.downcase.pluralize}/media", :object => @root, :width => 100, :height => 100 %>
+        <% if @root.class.name == 'Video' %>
+          <%= render "#{@root.class.name.downcase.pluralize}/media", :object => @root, :width => 200, :height => 160, :show_video => true, :autoplay => false %>
+        <% else %>
+          <%= render "#{@root.class.name.downcase.pluralize}/media", :object => @root, :width => 100, :height => 100 %>
+        <% end %>
       </div>
       <h4 class="title">
         <% if @root.sources.empty? %>
@@ -37,6 +41,9 @@
       <a href="<%= url_for @root %>" class="talking">
         <span><%= pluralize(@root.response_count.to_i, 'person') %> <%= @root.response_count > 1 || @root.response_count == 0 ? 'are' : 'is' %></span> talking about this
       </a>
+    </div>
+    <div class='teaser list talk'>
+      <%= render_cell :core_object, :teaser_root_list, current_user, @talk %>
     </div>
   <% end %>
 

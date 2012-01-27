@@ -14,7 +14,7 @@ class Talk < CoreObject
 
   def talk_is_cheap
     if !is_popular && pw > 1
-      FeedItem.post_create(self, true)
+      FeedUserItem.post_create(self, true)
       self.is_popular = true
       save
     end

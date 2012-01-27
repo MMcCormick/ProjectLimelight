@@ -184,7 +184,7 @@ class UsersController < ApplicationController
       page = params[:p] ? params[:p].to_i : 1
       @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
       @right_sidebar = true if current_user != @user
-      @core_objects = CoreObject.feed(@user.id, 'uf', session[:feed_filters][:display], session[:feed_filters][:sort], {
+      @core_objects = CoreObject.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], {
               :page => page
       })
       respond_to do |format|

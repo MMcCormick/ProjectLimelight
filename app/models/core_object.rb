@@ -273,13 +273,13 @@ class CoreObject
     # @param { options } Options TODO: Fill out these options
     #
     # @return [ CoreObjects ]
-    def feed(feed_id, feed_type, display_types, order_by, options)
+    def feed(feed_id, display_types, order_by, options)
 
       if display_types.include?('Talk')
         display_types << 'Topic'
       end
 
-      items = FeedUserItem.where(:feed_id => feed_id, :feed_type => feed_type, :root_type => {'$in' => display_types})
+      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
 
       topic_ids = []
       item_ids = []

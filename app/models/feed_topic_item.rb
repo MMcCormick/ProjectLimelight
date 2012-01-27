@@ -1,30 +1,22 @@
-class FeedUserItem
+class FeedTopicItem
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :feed_id, :type => BSON::ObjectId
   field :root_id
   field :root_type
-  field :strength
-  field :responses, :type => Array
+  field :mentions
+  field :root_mentions
+  field :latest_responses, :type => Hash
   field :last_response_time, :type => DateTime
 
   class << self
     def post_create(post, popular_talk=false)
       topic_mention_ids = post.topic_mentions.map{|tm| tm.id}
-      user_mention_ids = post.user_mentions.map{|um| um.id}
-      
-      user_feed_users = User.only(:id, :following_topics, :following_users)
 
-      if post.class.name != 'Talk'
-        user_feed_users = user_feed_users.any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_snippet.id}, {:following_topics => {'$in' => topic_mention_ids}})
-      elsif popular_talk
-        user_feed_users = user_feed_users.where(:following_topics => {'$in' => topic_mention_ids})
-      else
-        user_feed_users = user_feed_users.any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_snippet.id})
-      end
+      root_id = post.root_type == 'Topic' ? post.id : post.root_id
+      root_type = post.root_type == 'Topic' ? 'Talk' : post.root_type
 
-      updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
+      updates = {"$set" => { :root_type => root_type, :last_response_time => Time.now }}
       updates["$addToSet"] = { :responses => post.id } unless post.is_root?
 
       user_feed_users.each do |u|
@@ -39,7 +31,7 @@ class FeedUserItem
           end
           updates["$inc"] = { :strength => strength }
 
-          FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
+          FeedUserItem.collection.update({:feed_id => u.id, :root_id => root_id}, updates, {:upsert => true})
         end
       end
     end

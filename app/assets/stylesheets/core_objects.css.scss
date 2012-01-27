@@ -529,6 +529,11 @@ $teaser-padding: 10px;
         margin: 0 10px 3px 0;
       }
     }
+    .talking {
+      font-size: 11px;
+      display: block;
+      margin: 2px 0 4px 10px;
+    }
     .topic-head {
       h2 {
         font-size: 13px;
@@ -551,10 +556,6 @@ $teaser-padding: 10px;
     .actions {
       font-size: 10px;
       margin: 3px 0 0 0;
-    }
-    .talking {
-      font-size: 11px;
-      display: block;
     }
     .response {
       position: relative;
@@ -746,7 +747,7 @@ $teaser-padding: 10px;
   min-height: 59px;
 
   .root {
-    padding: 0 0 0 60px;
+    padding: 0 0 0 85px;
     position: relative;
     h2 {
 
@@ -757,23 +758,25 @@ $teaser-padding: 10px;
       margin-bottom: -3px;
     }
     .talking {
-      margin-top: 3px;
-      margin-bottom: 2px;
       display: block;
       clear: both;
+      border-top: 1px solid #EFEFEF;
+      margin: 5px 0 3px 8px;
+      padding: 4px 0 0 2px;
+      width: 500px;
     }
     .video-embed {
       margin-bottom: 7px;
     }
     .topic-head {
-      padding: 7px 0 0 10px;
+      padding: 7px 0 4px 10px;
 
       img {
         position: absolute;
         left: 10px;
         top: 7px;
-        width: 50px;
-        height: 50px;
+        width: 75px;
+        height: 75px;
         background: #999;
       }
       h2 {
@@ -800,7 +803,7 @@ $teaser-padding: 10px;
     }
   }
   .personal {
-    padding: 0 0 0 70px;
+    padding: 0 0 0 95px;
     .response {
       padding-left: 37px;
       padding-top: 5px;
@@ -822,8 +825,8 @@ $teaser-padding: 10px;
       position: absolute;
       left: 10px;
       top: 7px;
-      width: 50px;
-      height: 50px;
+      width: 75px;
+      height: 75px;
     }
     p {
       padding: 0 10px 0 10px;
@@ -839,14 +842,25 @@ $teaser-padding: 10px;
   }
   &.link {
     img {
-      max-width: 100px;
-      max-height: 100px;
+      max-width: 75px;
+      max-height: 75px;
+    }
+  }
+  &.picture,
+  &.link {
+    .media {
+      max-width: 75px;
+      max-height: 75px;
+      position: absolute;
+      left: 10px;
+      top: 7px;
+      margin: 0px;
     }
   }
 }
 
 .teaser.response {
-  padding-left: 65px;
+  padding-left: 95px;
   .left {
     width: 65px;
     margin-left: -65px;

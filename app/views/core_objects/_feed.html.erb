@@ -2,10 +2,10 @@
   <% core_objects.each_with_index do |core_object, i| %>
     <% if i < 20 %>
       <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:root].class.name.downcase}" %>' data-push='<%= core_object[:root].id %>'>
-        <%= render_cell :core_object, :teaser_root, current_user, core_object[:root], session[:feed_filters][:layout] %>
+        <%= render_cell :core_object, "teaser_root_#{session[:feed_filters][:layout]}", current_user, core_object[:root] %>
 
         <% unless core_object[:root].class.name == 'Talk' %>
-          <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:personal_count], core_object[:responses] %>
+          <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:responses] %>
           <%= render_cell :core_object, "teaser_public_#{session[:feed_filters][:layout]}", current_user, core_object[:root] %>
         <% end %>
       </div>

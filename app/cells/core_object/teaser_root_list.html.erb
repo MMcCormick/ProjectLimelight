@@ -12,7 +12,7 @@
     <% end %>
   <% else %>
     <div class='topic-head'>
-      <%= image_tag topic_default_picture(@root, 50, 50, 'fit'), :style => "max-width: 50px;", :alt => "" %>
+      <%= image_tag topic_default_picture(@root, 75, 75, 'fit'), :alt => "" %>
       <h2>Talking about <a href="<%= topic_path(@root) %>"><%= @root.name %></a></h2>
       <%= render 'follows/btn', :current_user => @current_user, :target => @root %>
     </div>
@@ -27,7 +27,7 @@
       </div>
     <% end %>
 
-    <%= render "#{@root.class.name.pluralize.underscore}/teaser_#{@feed_layout}", :object => @root, :current_user => @current_user %>
+    <%= render "#{@root.class.name.pluralize.underscore}/teaser_list", :object => @root, :current_user => @current_user %>
 
     <% unless @root.class.name == 'Talk' %>
       <% if @root.topic_mentions.length > 0 %>
@@ -38,5 +38,11 @@
         </div>
       <% end %>
     <% end %>
+  <% end %>
+
+  <% if @root.class.name != 'Topic' %>
+    <a href="<%= url_for @root %>" class="talking">
+      <span><%= pluralize(@root.response_count.to_i, 'person') %> <%= @root.response_count > 1 || @root.response_count == 0 ? 'are' : 'is' %></span> talking about this
+    </a>
   <% end %>
 </div>

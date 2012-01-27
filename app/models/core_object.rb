@@ -289,7 +289,6 @@ class CoreObject
           item_ids << i.root_id
         end
         item_ids += i.responses if i.responses
-        response_ids[i.id.to_s] = i.responses.length ? i.responses.length : 0
       end
 
       topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
@@ -304,7 +303,7 @@ class CoreObject
         end
 
         responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
-        return_objects << {:root => root, :personal_count => response_ids[i.id.to_s], :responses => responses}
+        return_objects << {:root => root, :responses => responses}
       end
 
       return_objects

@@ -1,10 +1,5 @@
 <div class='public <%= 'hide' unless @response %>'>
-  <% unless @root.class.name == 'Topic' %>
-    <a href="<%= url_for @root %>" class="talking">
-      <span><%= pluralize(@root.response_count.to_i, 'person') %> <%= @root.response_count > 1 || @root.response_count == 0 ? 'are' : 'is' %></span> talking about this
-    </a>
-  <% end %>
-<% if @response %>
+  <% if @response %>
     <%= render 'talks/response_column', :object => @response, :current_user => @current_user %>
-<% end %>
+  <% end %>
 </div>

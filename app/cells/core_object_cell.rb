@@ -8,25 +8,28 @@ class CoreObjectCell < Cell::Rails
   helper UsersHelper
   helper VideosHelper
 
-  def teaser_root(current_user, root, feed_layout)
+  def teaser_root_column(current_user, root)
     @current_user = current_user
     @root = root
-    @feed_layout = feed_layout
     render
   end
 
-  def teaser_personal_column(current_user, root, personal_count, responses)
+  def teaser_root_list(current_user, root)
     @current_user = current_user
     @root = root
-    @personal_count = personal_count
+    render
+  end
+
+  def teaser_personal_column(current_user, root, responses)
+    @current_user = current_user
+    @root = root
     @responses = responses
     render
   end
 
-  def teaser_personal_list(current_user, root, personal_count, responses)
+  def teaser_personal_list(current_user, root, responses)
     @current_user = current_user
     @root = root
-    @personal_count = personal_count
     @responses = responses
     render
   end

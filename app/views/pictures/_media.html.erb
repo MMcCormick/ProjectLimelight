@@ -1,0 +1,4 @@
+<% img = default_image_url(object, width, height, 'fit', false, true) %>
+<% original = default_image_url(object, 0, 0, :original) %>
+<% image = image_tag img.image_url, :width => width, :height => img.calculate_h(width).to_s, 'data-o' => '{"url":"'+original.image_url+'","w":"'+original.width.to_s+'","h":"'+original.height.to_s+'"}' if img %>
+<%= render 'core_objects/feed_teaser_image', :image => image %>

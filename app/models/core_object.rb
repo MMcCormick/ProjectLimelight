@@ -231,6 +231,7 @@ class CoreObject
 
   def push_to_feeds
     FeedUserItem.post_create(self)
+    FeedContributeItem.create(self)
     #Resque.enqueue(FeedsPostCreate, id.to_s)
   end
 
@@ -254,6 +255,7 @@ class CoreObject
   def disable
     self.status = 'disabled'
     FeedUserItem.post_disable(self, self.class.name == 'Talk' && !is_popular)
+    FeedContributeItem.disable(self)
   end
 
   class << self
@@ -281,34 +283,7 @@ class CoreObject
 
       items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
 
-      topic_ids = []
-      item_ids = []
-      response_ids = {}
-      items.each do |i|
-        if i.root_type == 'Topic'
-          topic_ids << i.root_id
-        else
-          item_ids << i.root_id
-        end
-        item_ids += i.responses if i.responses
-      end
-
-      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
-      objects = CoreObject.where(:_id => {'$in' => item_ids})
-
-      return_objects = []
-      items.each do |i|
-        if i.root_type == 'Topic'
-          root = topics.detect{|t| t.id == i.root_id}
-        else
-          root = objects.detect{|o| o.id == i.root_id}
-        end
-
-        responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
-        return_objects << {:root => root, :responses => responses}
-      end
-
-      return_objects
+      build_feed(items)
 
       #or_criteria = []
       #or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
@@ -362,6 +337,55 @@ class CoreObject
       #end
       #
       #return_objects
+    end
+
+    def contribute_feed(feed_id, display_types, order_by, page)
+      if display_types.include?('Talk')
+        display_types << 'Topic'
+      end
+
+      items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
+      build_feed(items)
+    end
+
+    def like_feed(feed_id, display_types, order_by, page)
+      if display_types.include?('Talk')
+        display_types << 'Topic'
+      end
+
+      items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
+      build_feed(items)
+    end
+
+    def build_feed(items)
+      topic_ids = []
+      item_ids = []
+      response_ids = {}
+      items.each do |i|
+        if i.root_type == 'Topic'
+          topic_ids << i.root_id
+        else
+          item_ids << i.root_id
+        end
+        item_ids += i.responses if i.responses
+      end
+
+      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      objects = CoreObject.where(:_id => {'$in' => item_ids})
+
+      return_objects = []
+      items.each do |i|
+        if i.root_type == 'Topic'
+          root = topics.detect{|t| t.id == i.root_id}
+        else
+          root = objects.detect{|o| o.id == i.root_id}
+        end
+
+        responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        return_objects << {:root => root, :responses => responses}
+      end
+
+      return_objects
     end
   end
 

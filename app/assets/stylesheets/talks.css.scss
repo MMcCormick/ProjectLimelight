@@ -25,6 +25,38 @@
         display: block;
       }
     }
+    .root-response {
+      margin: 10px 0 0 10px;
+    }
+    .root {
+      position: relative;
+      margin: 3px 0 15px 10px;
+
+      .media {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+      .title {
+        margin: 0px;
+
+        .source {
+          font-size: 11px;
+          color: #999;
+        }
+      }
+      .talking {
+        margin: 5px 0 0 0;
+        padding: 5px 0 0 0;
+        width: 210px;
+        border-top: 1px solid #CCC;
+        display: block;
+      }
+      &.with-media {
+        padding-left: 110px;
+        min-height: 100px;
+      }
+    }
     .comment-thread {
       padding-left: 10px;
     }

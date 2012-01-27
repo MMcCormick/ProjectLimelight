@@ -1,6 +1,26 @@
 class LikesController < ApplicationController
   before_filter :authenticate_user!
 
+  def index
+    @user = User.find_by_slug(params[:id])
+    not_found("User not found") unless @user
+
+    @title = @user.username + "'s likes"
+    @description = @user.username + "'s liked posts on Limelight."
+    page = params[:p] ? params[:p].to_i : 1
+    @more_path = user_likes_path :p => page + 1
+    @right_sidebar = true if current_user != @user
+
+    @core_objects = CoreObject.like_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    respond_to do |format|
+      format.js {
+        response = reload_feed(@core_objects, @more_path, page)
+        render json: response
+      }
+      format.html # index.html.erb
+    end
+  end
+
   def create
     object = CoreObject.find(params[:id])
     if object

@@ -14,10 +14,7 @@ class UsersController < ApplicationController
     page = params[:p] ? params[:p].to_i : 1
     @right_sidebar = true if current_user != @user
     @more_path = user_feed_path :p => page + 1
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
-            :created_by_users => [@user.id],
-            :page => page
-    })
+    @core_objects = CoreObject.contribute_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
     respond_to do |format|
       format.js {
         response = reload_feed(@core_objects, @more_path, page)

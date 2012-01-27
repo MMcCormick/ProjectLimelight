@@ -5,7 +5,7 @@
       <%= link_to top_image, root_path, :class => "p logo" %>
 
       <span id="contribute" data-target="#top-contribute" class="<%= 'auth' unless signed_in? %>">
-        Contribute
+        +Talk
       </span>
 
       <% if signed_in? && current_user.role?('admin') %>

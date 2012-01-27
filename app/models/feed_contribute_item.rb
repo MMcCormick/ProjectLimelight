@@ -1,4 +1,4 @@
-class FeedLikeItem
+class FeedContributeItem
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -10,19 +10,19 @@ class FeedLikeItem
   field :last_response_time, :type => DateTime
 
   class << self
-    def create(user, post)
+    def create(post)
       updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
       updates["$addToSet"] = { :responses => post.id } unless post.is_root?
       updates["$inc"] = { :strength => 1 }
 
-      FeedLikeItem.collection.update({:feed_id => user.id, :root_id => post.root_id}, updates, {:upsert => true})
+      FeedContributeItem.collection.update({:feed_id => post.user_snippet.id, :root_id => post.root_id}, updates, {:upsert => true})
     end
 
-    def destroy(user, post)
+    def disable(user, post)
       updates = {"$inc" => { :strength => -1 }}
       updates["$pull"] = { :responses => post.id } unless post.is_root?
-      FeedLikeItem.collection.update({:feed_id => user.id, :root_id => post.root_id }, updates)
-      FeedLikeItem.delete_all(conditions: { :feed_id => user.id, :strength => {"$lte" => 0} })
+      FeedContributeItem.collection.update({:feed_id => post.user_snippet.id, :root_id => post.root_id }, updates)
+      FeedContributeItem.delete_all(conditions: { :feed_id => post.user_snippet.id, :strength => {"$lte" => 0} })
     end
   end
 end

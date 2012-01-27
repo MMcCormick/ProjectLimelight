@@ -231,6 +231,7 @@ class CoreObject
 
   def push_to_feeds
     FeedUserItem.post_create(self)
+    FeedTopicItem.post_create(self) if topic_mentions.length > 0
     FeedContributeItem.create(self)
     #Resque.enqueue(FeedsPostCreate, id.to_s)
   end

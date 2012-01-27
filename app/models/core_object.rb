@@ -42,12 +42,16 @@ class CoreObject
   attr_accessible :title, :content, :parent_type, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet, :tweet_id
   attr_accessor :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
+  default_scope where('status' => {'$ne' => 'disabled'})
+
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :send_tweet, :set_root
-  after_create :feeds_post_create, :neo4j_create, :update_response_count, :action_log_create
+  after_create :push_to_feeds, :neo4j_create, :update_response_count, :action_log_create
   after_update :expire_caches
+  after_destroy :remove_from_feeds
 
   # hot damn lots of indexes. can we do this better? YES WE CAN
+  # McM: chill out obama
   index :user_id
   index :favorites
   index :parent_id, sparse: true
@@ -171,8 +175,10 @@ class CoreObject
 
   def add_to_likes(user)
     like = liked_by? user.id
-    if like || (user_id == user.id)
+    if like
       false
+    elsif (user_id == user.id)
+      nil
     else
       like = self.likes.new(user.attributes)
       like.id = user.id
@@ -209,11 +215,6 @@ class CoreObject
     end
   end
 
-  def feeds_post_create
-    push_to_feeds
-    #Resque.enqueue(FeedsPostCreate, id.to_s)
-  end
-
   def neo4j_create
     Resque.enqueue(Neo4jPostCreate, id.to_s)
   end
@@ -228,6 +229,7 @@ class CoreObject
 
   def push_to_feeds
     FeedItem.post_create(self)
+    #Resque.enqueue(FeedsPostCreate, id.to_s)
   end
 
   def set_root
@@ -245,6 +247,11 @@ class CoreObject
 
   def is_root?
     id == root_id
+  end
+
+  def disable
+    self.status = 'disabled'
+    FeedItem.post_disable(self, self.class.name == 'Talk' && !is_popular)
   end
 
   class << self

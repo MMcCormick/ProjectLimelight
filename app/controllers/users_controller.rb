@@ -175,7 +175,8 @@ class UsersController < ApplicationController
 
   # Get a users main feed
   # Includes core objects created by users this user is following
-  # Includes core objects mentioning topics this user is following
+  # Includes core objects liked by users this user is following
+  # Includes core objects mentioning topics this user is following (unless it's an unpopular talk)
   # Includes core objects mentioning this user
   def feed
     if signed_in?

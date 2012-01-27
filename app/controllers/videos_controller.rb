@@ -36,7 +36,7 @@ class VideosController < ApplicationController
     video = Video.find_by_encoded_id(params[:id])
     if video
       authorize! :update, video
-      video.status = "disabled"
+      video.disable
       if video.save
         video.action_log_delete
         response = build_ajax_response(:ok, nil, "Video successfully disabled")

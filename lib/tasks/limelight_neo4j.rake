@@ -11,7 +11,6 @@ namespace :limelight_neo4j do
         node = Neo4j.neo.create_node('uuid' => t.id.to_s, 'type' => 'topic', 'name' => t.name, 'slug' => t.slug, 'public_id' => t.public_id)
       end
       Neo4j.neo.add_node_to_index('topics', 'uuid', t.id.to_s, node)
-      t.topic_connection_snippets.delete_all
       t.save
       print "Loaded #{t.name} topic\n"
     end

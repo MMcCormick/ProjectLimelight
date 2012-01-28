@@ -371,11 +371,27 @@ jQuery ->
     $(@).mentionable()
 
   # show action buttons on teasers on hover
-  $('.teaser .response,.teaser.talk').live({
+  $('.teaser.talk').live({
+    mouseenter: ->
+      $(@).find('.root .comment-response,.root .likeB,.root .unlikeB,.root .coreShareB').show()
+    mouseleave: ->
+      $(@).find('.root .comment-response,.root .likeB,.root .unlikeB,.root .coreShareB').hide()
+  })
+
+  # show action buttons on responses on hover
+  $('.teaser .response').live({
     mouseenter: ->
       $(@).find('.comment-response,.likeB,.unlikeB,.coreShareB').show()
     mouseleave: ->
       $(@).find('.comment-response,.likeB,.unlikeB,.coreShareB').hide()
+  })
+
+  # show action buttons on comments on hover
+  $('.comment').live({
+    mouseenter: ->
+      $(@).find('.comment-response,.delete').show()
+    mouseleave: ->
+      $(@).find('.comment-response,.delete').hide()
   })
 
   # Feed Sort Selection

@@ -7,8 +7,7 @@
     <div class='teaser list <%= core_object.class.name.downcase %>'>
       <%= render_cell :core_object, :teaser_root_list, current_user, core_object %>
       <%= render_cell :core_object, :teaser_personal_list, current_user, core_object, [] %>
+      <%= render_cell :comment, :thread, core_object.id, false %>
     </div>
-
-    <%= render_cell :comment, :thread, core_object.id, false %>
   <% end %>
 </div>

@@ -2,7 +2,7 @@ require 'rbconfig'
 HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.0'
+gem 'rails', '3.2.1'
 gem 'unicorn'
 #gem 'thin'
 gem 'execjs'

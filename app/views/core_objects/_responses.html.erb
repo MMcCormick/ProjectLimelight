@@ -6,7 +6,7 @@
   <% responses.each do |core_object| %>
     <div class='teaser list <%= core_object.class.name.downcase %>'>
       <%= render_cell :core_object, :teaser_root_list, current_user, core_object %>
-      <%= render_cell :core_object, "teaser_personal_list", current_user, [] %>
+      <%= render_cell :core_object, :teaser_personal_list, current_user, core_object, [] %>
     </div>
 
     <%= render_cell :comment, :thread, core_object.id, false %>

@@ -1,32 +1,27 @@
 <a name="<%= comment.id.to_s %>"></a>
 <div class="comment d-<%= comment.depth.to_s %>" id="comment_<%= comment.id %>">
-  <div class="wrapper">
-    <% if comment.status == "deleted" %>
-      <p><i>This comment has been removed by the user</i></p>
-    <% else %>
-      <div class="profileImage">
-        <%= image_tag user_default_picture_path(comment.user_snippet, :w => 50, :h => 50, :m => 'fillcropmid'), :style => "max-width: 50px;", :alt => "" if comment.depth == 0 %>
-        <%= image_tag user_default_picture_path(comment.user_snippet, :w => 30, :h => 30, :m => 'fillcropmid'), :style => "max-width: 30px;", :alt => "" if comment.depth != 0 %>
-      </div>
-      <div class="createdC">
-        <%= user_link(comment.user_snippet) %> <%= time_ago_in_words(comment.created_at) %> ago
-      </div>
-      <p>
-        <%= comment.content %>
-      </p>
+  <% if comment.status == "deleted" %>
+    <p><i>This comment was removed by the user</i></p>
+  <% else %>
+    <div class="profileImage">
+      <%= image_tag user_default_picture_path(comment.user_snippet, :w => 30, :h => 30, :m => 'fillcropmid'), :style => "max-width: 30px;", :alt => "" if comment.depth != 0 %>
+    </div>
 
+    <p>
+      <%= user_link(comment.user_snippet) %> - <%= comment.content %>
+    </p>
+
+    <div class='actions'>
+      <div class='when'><%= pretty_time(comment.created_at) %> ago</div>
       <% if comment.depth < 5 %>
         <span class='comment-response<%= ' auth' unless signed_in? %>' data-id='<%= comment.talk_id %>' data-pid='<%= comment.id %>' data-t="<%= comment.user_snippet.username %>'s comment">+Reply</span>
       <% end %>
-
       <% if can? :destroy, comment %>
         <a class="ac delete" data-m="delete" data-url="<%= comment_path comment %>" data-d="'id':'<%= comment.id %>'">Delete</a>
       <% end %>
-      <div class="clear-left"></div>
+    </div>
 
-      <%= render 'votes/btn', :object => comment, :current_user => current_user %>
-
-      <%= render 'shared/popularity', :object => comment, :extra => '' %>
-    <% end %>
-  </div>
+    <%= render 'votes/btn', :object => comment, :current_user => current_user %>
+    <%= render 'shared/popularity', :object => comment, :extra => '' %>
+  <% end %>
 </div>

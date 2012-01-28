@@ -26,11 +26,18 @@
       }
     }
     .root-response {
-      margin: 10px 0 0 10px;
+      padding: 10px 0 0 10px;
     }
-    .teaser.talk {
-      position: relative;
-      left: 1px;
+    .talk-snippet {
+      font-size: 16px;
+      .ulink {
+        color: #333;
+        font-weight: bold;
+      }
+    }
+    .root-object-c {
+      background: #FFF;
+      margin: 0 0 0 1px;
     }
     .root-object {
       position: relative;

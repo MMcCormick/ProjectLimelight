@@ -15,6 +15,7 @@ class Talk < CoreObject
   def talk_is_cheap
     if !is_popular && pw > 1
       FeedUserItem.post_create(self, true)
+      FeedTopicItem.post_create(self) unless topic_mentions.empty?
       self.is_popular = true
       save
     end

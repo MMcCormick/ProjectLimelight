@@ -26,10 +26,7 @@ class TopicsController < ApplicationController
     @more_path = topic_path @topic, :p => page + 1
     @topic_ids = Neo4j.pull_from_ids(@topic.id.to_s).to_a
 
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
-            :mentions_topics => @topic_ids << @topic.id,
-            :page => page
-    })
+    @core_objects = CoreObject.topic_feed(@topic.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
 
     respond_to do |format|
       format.js {

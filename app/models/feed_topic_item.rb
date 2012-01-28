@@ -6,11 +6,13 @@ class FeedTopicItem
   field :root_type
   field :mentions
   field :root_mentions
-  field :latest_responses, :type => Hash
-  field :last_response_time, :type => DateTime
+  field :responses
 
   class << self
-    def post_create(post, popular_talk=false)
+
+    #TODO: latest response time?
+
+    def post_create(post)
       topic_mention_ids = post.topic_mentions.map{|tm| tm.id}
 
       # warning: do not use post.is_root? in this function, since topic roots are excluded
@@ -22,16 +24,15 @@ class FeedTopicItem
         root_type = post.class.name
       end
 
-      latest_responses
-
-      updates = {"$set" => { :last_response_time => Time.now }}
+      updates = {"$set" => { :last_response_time => Time.now, :root_type => root_type, }}
+      updates["$addToSet"] = { "mentions" => { "$each" => topic_mention_ids } }
       if root_id == post.id
-        updates["$set"] = { :root_type => root_type, :root_mentions => topic_mention_ids }
+        updates["$set"].merge!({ :root_mentions => topic_mention_ids })
       else
-        updates["$addToSet"] = { :latest_responses => 'foobar' }
+        responses = {}
+        topic_mention_ids.each{ |m| responses["responses."+m.to_s] = post.id }
+        updates["$set"].merge!(responses)
       end
-
-
 
       FeedTopicItem.collection.update({:root_id => root_id}, updates, {:upsert => true})
     end

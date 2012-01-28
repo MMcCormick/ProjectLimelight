@@ -186,7 +186,7 @@ class CoreObject
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
       ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
       FeedUserItem.like(user, self)
-      FeedLikeItem.like(user, self)
+      FeedLikeItem.create(user, self)
       true
     end
   end
@@ -199,7 +199,7 @@ class CoreObject
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
       ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
       FeedUserItem.unlike(user, self)
-      FeedLikeItem.unlike(user, self)
+      FeedLikeItem.create(user, self)
       true
     else
       false
@@ -231,7 +231,7 @@ class CoreObject
 
   def push_to_feeds
     FeedUserItem.post_create(self)
-    FeedTopicItem.post_create(self) if topic_mentions.length > 0
+    FeedTopicItem.post_create(self) unless self.class.name == 'Talk' || topic_mentions.empty?
     FeedContributeItem.create(self)
     #Resque.enqueue(FeedsPostCreate, id.to_s)
   end
@@ -255,7 +255,7 @@ class CoreObject
 
   def disable
     self.status = 'disabled'
-    FeedUserItem.post_disable(self, self.class.name == 'Talk' && !is_popular)
+    FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
     FeedContributeItem.disable(self)
   end
 
@@ -358,7 +358,12 @@ class CoreObject
       build_feed(items)
     end
 
-    def build_feed(items)
+    def topic_feed(feed_id, display_types, order_by, page)
+      items = FeedTopicItem.where(:mentions => feed_id, :root_type => {'$in' => display_types})
+      build_feed(items, feed_id.to_s)
+    end
+
+    def build_feed(items, topic_feed_id=nil)
       topic_ids = []
       item_ids = []
       response_ids = {}
@@ -368,7 +373,11 @@ class CoreObject
         else
           item_ids << i.root_id
         end
-        item_ids += i.responses if i.responses
+        if topic_feed_id
+          item_ids << i.responses[topic_feed_id] if i.responses && i.responses[topic_feed_id]
+        else
+          item_ids += i.responses if i.responses
+        end
       end
 
       topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
@@ -382,7 +391,12 @@ class CoreObject
           root = objects.detect{|o| o.id == i.root_id}
         end
 
-        responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        if topic_feed_id
+          responses = objects.select{|o| i.responses && i.responses[topic_feed_id] && i.responses[topic_feed_id] == o.id}
+        else
+          responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        end
+
         return_objects << {:root => root, :responses => responses}
       end
 

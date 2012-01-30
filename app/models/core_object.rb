@@ -271,7 +271,7 @@ class CoreObject
     end
 
     def for_show_page(parent_id)
-      CoreObject.where('response_to.id' => parent_id).order_by(:created_at, :desc)
+      CoreObject.where('response_to._id' => parent_id).order_by(:created_at, :desc)
     end
 
     # @example Fetch the core_objects for a feed with the given criteria

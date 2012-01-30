@@ -206,7 +206,7 @@ class CoreObject
 
   def set_response_to
     if parent
-      self.response_to = CoreObjectSnippet.build(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
+      self.response_to = CoreObjectSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
       self.response_to.id = parent.id
       save
     end
@@ -236,9 +236,9 @@ class CoreObject
   end
 
   def push_to_feeds
-    #FeedUserItem.post_create(self)
-    #FeedTopicItem.post_create(self) unless self.class.name == 'Talk' || topic_mentions.empty?
-    #FeedContributeItem.create(self)
+    FeedUserItem.post_create(self)
+    FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
+    FeedContributeItem.create(self)
     #Resque.enqueue(FeedsPostCreate, id.to_s)
   end
 
@@ -364,12 +364,43 @@ class CoreObject
       build_feed(items)
     end
 
-    def topic_feed(feed_id, display_types, order_by, page)
+    def topic_feed(feed_id, user_id, display_types, order_by, page)
       items = FeedTopicItem.where(:mentions => feed_id, :root_type => {'$in' => display_types})
-      build_feed(items, feed_id.to_s)
+      user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
+      build_topic_feed(items, user_items, feed_id)
     end
 
-    def build_feed(items, topic_feed_id=nil)
+    def build_topic_feed(items, user_items, feed_id)
+      item_ids = []
+      items.each do |i|
+        item_ids << i.root_id
+        user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
+        item_ids += user_i.responses if user_i && user_i.responses
+        if (i.root_mentions ? !i.root_mentions.include?(feed_id) : true) && i.responses && i.responses[feed_id.to_s]
+          item_ids << i.responses[feed_id.to_s]
+        end
+      end
+
+      objects = CoreObject.where(:_id => {'$in' => item_ids})
+
+      return_objects = []
+      items.each do |i|
+        root = objects.detect{|o| o.id == i.root_id}
+        user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
+        user_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
+        if (i.root_mentions ? !i.root_mentions.include?(feed_id) : true) && i.responses && i.responses[feed_id.to_s]
+          topic_responses = objects.select{ |o| i.responses[feed_id.to_s] == o.id }
+        else
+          topic_responses = []
+        end
+
+        return_objects << { :root => root, :responses => user_responses, :topic_responses => topic_responses }
+      end
+
+      return_objects
+    end
+
+    def build_feed(items)
       topic_ids = []
       item_ids = []
       response_ids = {}
@@ -379,11 +410,7 @@ class CoreObject
         else
           item_ids << i.root_id
         end
-        if topic_feed_id
-          item_ids << i.responses[topic_feed_id] if i.responses && i.responses[topic_feed_id]
-        else
-          item_ids += i.responses if i.responses
-        end
+        item_ids += i.responses if i.responses
       end
 
       topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
@@ -397,13 +424,8 @@ class CoreObject
           root = objects.detect{|o| o.id == i.root_id}
         end
 
-        if topic_feed_id
-          responses = objects.select{|o| i.responses && i.responses[topic_feed_id] && i.responses[topic_feed_id] == o.id}
-        else
-          responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
-        end
-
-        return_objects << {:root => root, :responses => responses}
+        responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        return_objects << { :root => root, :responses => responses }
       end
 
       return_objects

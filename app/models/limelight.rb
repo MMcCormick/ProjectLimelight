@@ -644,8 +644,8 @@ module Limelight #:nodoc:
             ic_ids.each {|target| Topic.expire_caches(target.to_s)}
           end
 
-          if parent_id
-            object = CoreObject.find(parent_id)
+          if response_to
+            object = CoreObject.find(response_to.id)
             object.add_pop_action(type, subtype, current_user, true) if object
           end
         end

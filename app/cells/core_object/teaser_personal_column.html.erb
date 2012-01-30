@@ -1,5 +1,5 @@
 <% if @responses.length > 0 %>
-  <div class='personal'>
+  <div class='<%= @teaser_class ? @teaser_class : 'personal' %>'>
     <% @responses.each do |response| %>
       <%= render 'talks/response_column', :object => response, :current_user => @current_user %>
     <% end %>

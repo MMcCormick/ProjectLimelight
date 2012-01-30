@@ -1,6 +1,7 @@
-class TestingController < ApplicationController
+namespace :push_feeds do
 
-  def test
+  desc "Create initial push feeds from the old architecture"
+  task :migrate => :environment do
     # get all objects
     CoreObject.all.each do |co|
 
@@ -21,12 +22,9 @@ class TestingController < ApplicationController
 
     # loop through all core objects and push to feeds
     CoreObject.all.each do |co|
-      if co.id.to_s == '4f0b420ebb30bd000500011e'
-        foo = 'bar'
-      end
 
       # set the primary topic mention
-      mentions = Topic.where(:_id => {'$in' => co.topic_mentions.map{|t| t.id}}).to_a
+      mentions = Topic.where(:_id => {'$in' => co.topic_mentions.map{|t| t.id}})
       mentions.each do |topic|
         if !co.primary_topic_pm || topic.pt > co.primary_topic_pm
           co.primary_topic_mention = topic.id
@@ -39,6 +37,7 @@ class TestingController < ApplicationController
       FeedTopicItem.post_create(co) unless co.class.name == 'Talk' || co.topic_mentions.empty?
       FeedContributeItem.create(co)
     end
+
   end
 
 end

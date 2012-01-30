@@ -178,7 +178,7 @@ $(function() {
         content: {
           text: 'Your '+data.type+' was successfully created.<br/>'+
                 '<a href="'+data.path+'">Click here to view it</a>'+
-                ' or see all your posts in "Contributions"'
+                ' or see all your posts in "Talks"'
         },
         style: {classes: 'object-created-tip ui-tooltip-shadow ui-tooltip-light ui-tooltip-green', tip: true},
         position: {

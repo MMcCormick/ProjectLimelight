@@ -20,7 +20,7 @@ class PicturesController < ApplicationController
 
     if @picture.save
       if params[:talk]
-        current_user.talks.create(params[:talk].merge!({:parent_id => @picture.id, :parent_type => 'Picture'}))
+        current_user.talks.create(params[:talk].merge!({:parent => @picture}))
       end
 
       extras = { :type => "Picture", :path => picture_path(@picture) }

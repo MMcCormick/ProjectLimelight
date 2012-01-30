@@ -20,7 +20,7 @@ class LinksController < ApplicationController
 
     if @link.save
       if params[:talk]
-        current_user.talks.create(params[:talk].merge!({:parent_id => @link.id, :parent_type => 'Link'}))
+        current_user.talks.create(params[:talk].merge!({:parent => @link}))
       end
 
       extras = { :type => "Link", :path => link_path(@link) }

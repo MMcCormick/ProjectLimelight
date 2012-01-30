@@ -22,6 +22,7 @@ class CoreObject
   field :favorites_count, :default => 0
   field :user_id
   field :response_count, :default => 0
+  field :talking_ids, :default => [] # ids of users talking about this
   field :tweet_id
   field :root_type
   field :root_id, :type => BSON::ObjectId

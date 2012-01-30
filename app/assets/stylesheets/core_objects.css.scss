@@ -1204,22 +1204,6 @@ $teaser-padding: 10px;
     float: none !important;
     margin: 10px 0 0 0;
   }
-
-  &.talk {
-    min-height: 30px;
-    margin: 0 0 0 12px;
-    .content {   
-      p {
-        font-size: 20px;
-      }
-    }
-    .root {
-      padding-left: 65px;
-      img {
-        left: 15px;
-      }
-    }
-  }
 }
 
 #response-divider {
@@ -1252,5 +1236,18 @@ $teaser-padding: 10px;
     font-size: 14px;
     font-style: italic;
     margin: 15px 0 0 10px;
+  }
+  .talk.list {
+    .content {
+      p {
+        font-size: 20px;
+      }
+    }
+    .root {
+      padding-left: 65px;
+      img {
+        left: 15px;
+      }
+    }
   }
 }

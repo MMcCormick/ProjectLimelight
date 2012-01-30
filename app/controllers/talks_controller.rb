@@ -13,20 +13,19 @@ class TalksController < ApplicationController
   end
 
   def create
-    @talk = current_user.talks.build(params[:talk])
+    data = params[:talk]
 
     if params[:talk][:parent_id]
       object = CoreObject.find(params[:talk][:parent_id])
       if object && ['Video', 'Link', 'Picture'].include?(object._type)
-        @talk.parent_id = object.id
-        @talk.parent_type = object._type
-      else
-        @talk.parent_id = nil
+        data.merge!(:parent => object)
       end
     end
 
+    @talk = current_user.talks.build(data)
+
     if @talk.save
-      if @talk.parent_id
+      if @talk.response_to
         view = 'list'
         teaser = render_to_string :partial => "talks/teaser_#{view}", :locals => { :object => @talk }
         extras = { :type => "Talk", :teaser => teaser, :response => true }

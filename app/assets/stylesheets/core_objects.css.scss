@@ -823,23 +823,25 @@ $teaser-padding: 10px;
   }
   &.talk {
     min-height: 58px;
-    img {
-      position: absolute;
-      left: 35px;
-      top: 7px;
-      width: 50px;
-      height: 50px;
-    }
-    p {
-      padding: 0 10px 0 10px;
-    }
-    .actions {
-      font-size: 10px;
-      margin-left: 5px;
-    }
-    .when {
-      margin-right: 7px;
-      margin-left: 5px;
+    .root {
+      img {
+        position: absolute;
+        left: 35px;
+        top: 7px;
+        width: 50px;
+        height: 50px;
+      }
+      p {
+        padding: 0 10px 0 10px;
+      }
+      .actions {
+        font-size: 10px;
+        margin-left: 5px;
+      }
+      .when {
+        margin-right: 7px;
+        margin-left: 5px;
+      }
     }
   }
   &.link {
@@ -1144,6 +1146,7 @@ $teaser-padding: 10px;
 .object-show {
   position: relative;
   padding: 0 10px 10px 10px;
+  background: #FFF;
 
   .tlink,
   .ulink {
@@ -1243,10 +1246,5 @@ $teaser-padding: 10px;
     font-size: 14px;
     font-style: italic;
     margin: 15px 0 0 10px;
-  }
-  .comment-thread {
-    padding-bottom: 15px;
-    padding-top: 0;
-    margin-top: -6px;
   }
 }

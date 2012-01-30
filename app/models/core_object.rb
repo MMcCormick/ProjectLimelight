@@ -22,8 +22,6 @@ class CoreObject
   field :favorites_count, :default => 0
   field :user_id
   field :response_count, :default => 0
-  field :parent_type
-  field :parent_id, :type => BSON::ObjectId
   field :tweet_id
   field :root_type
   field :root_id, :type => BSON::ObjectId
@@ -31,6 +29,7 @@ class CoreObject
   auto_increment :public_id
 
   embeds_one :user_snippet, as: :user_assignable, :class_name => 'UserSnippet'
+  embeds_one :response_to, as: :core_object_assignable, :class_name => 'CoreObjectSnippet'
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
   embeds_many :likes, as: :user_assignable, :class_name => 'UserSnippet'
 
@@ -39,23 +38,22 @@ class CoreObject
   validates :user_id, :status, :presence => true
   validate :title_length, :content_length, :unique_source
 
-  attr_accessible :title, :content, :parent_type, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet, :tweet_id
-  attr_accessor :source_name, :source_url, :source_video_id, :tweet_content, :tweet
+  attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet, :tweet_id
+  attr_accessor :parent, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
-  default_scope where('status' => {'$ne' => 'disabled'})
+  default_scope where('status' => 'active')
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :send_tweet, :set_root
-  after_create :push_to_feeds, :neo4j_create, :update_response_count, :action_log_create
+  after_create :neo4j_create, :set_response_to, :update_response_count, :push_to_feeds, :action_log_create
   after_update :expire_caches
   after_destroy :remove_from_feeds
 
-  # hot damn lots of indexes. can we do this better? YES WE CAN
-  # McM: chill out obama
+  # MBM: hot damn lots of indexes. can we do this better? YES WE CAN
+  # MCM: chill out obama
+  # MBM: lolz
   index :user_id
   index :favorites
-  index :parent_id, sparse: true
-  index :parent_type
   index :public_id, unique: true
   index :created_at
   index :ph
@@ -206,10 +204,18 @@ class CoreObject
     end
   end
 
+  def set_response_to
+    if parent
+      self.response_to = CoreObjectSnippet.build(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
+      self.response_to.id = parent.id
+      save
+    end
+  end
+
   def update_response_count
-    if parent_id
+    if response_to
       CoreObject.collection.update(
-        {:_id => parent_id},
+        {:_id => response_to.id},
         {
           "$inc" => { :response_count => 1 }
         }
@@ -237,9 +243,9 @@ class CoreObject
   end
 
   def set_root
-    if parent_id
-      self.root_id = parent_id
-      self.root_type = parent_type
+    if response_to
+      self.root_id = response_to.id
+      self.root_type = response_to.type
     elsif self.class.name == 'Talk' && primary_topic_mention
       self.root_id = primary_topic_mention
       self.root_type = 'Topic'
@@ -265,7 +271,7 @@ class CoreObject
     end
 
     def for_show_page(parent_id)
-      CoreObject.where(:parent_id => parent_id).order_by(:created_at, :desc)
+      CoreObject.where('response_to.id' => parent_id).order_by(:created_at, :desc)
     end
 
     # @example Fetch the core_objects for a feed with the given criteria
@@ -276,13 +282,13 @@ class CoreObject
     # @param { options } Options TODO: Fill out these options
     #
     # @return [ CoreObjects ]
-    def feed(feed_id, display_types, order_by, options)
+    def feed(feed_id, display_types, order_by, page)
 
       if display_types.include?('Talk')
         display_types << 'Topic'
       end
 
-      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
+      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
 
       build_feed(items)
 
@@ -397,6 +403,7 @@ class CoreObject
     def build_feed(items)
       topic_ids = []
       item_ids = []
+      response_ids = {}
       items.each do |i|
         if i.root_type == 'Topic'
           topic_ids << i.root_id

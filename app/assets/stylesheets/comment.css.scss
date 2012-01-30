@@ -51,132 +51,89 @@ $indent: 20px;
 }
 
 .comment-thread {
-    padding: 10px 0 0 20px;
+    padding: 2px 0 0 34px;
 
     .comment_reply {
         padding: 15px 0 10px 10px;
         clear: left;
     }
-    .commentCount {
-        margin: 10px 0 5px 0;
-    }
     .comments {
 
     }
     .comment {
-      $max-width: 800px;
-        position: relative;
-        border: 1px solid #CCC;
-        margin-top: -1px;
-        margin-right: 10px;
-        background: #FFF;
+      position: relative;
+      margin: 5px 10px 0 0;
+      border-top: 1px solid #EFEFEF;
+      min-height: 37px;
 
-        .wrapper {
-          padding: 2px $scoreC-width+20 5px $small-image-width+13;
-          max-width: $max-width;
-          position: relative;
-        }
-        .profileImage {
-            position: absolute;
-            top: 7px;
-            left: 7px;
-        }
+      .wrapper {
+        padding: 0 $scoreC-width+20 0 37px;
+        position: relative;
+      }
+      img {
+          position: absolute;
+          top: 6px;
+          left: 0;
+          width: 30px;
+          height: 30px;
+      }
+      .ulink {
+        color: #333;
+        font-weight: bold;
+      }
+      p {
+          font-size: 12px;
+          padding: 6px 0 1px 0;
+          clear: left;
+      }
+      .actions {
+        font-size: 10px;
         .comment-response {
-            @include link();
-            float: left;
-            font-size: 10px;
-            margin: 0 0 0 10px;
+          @include link();
+          margin: 0 10px 0 10px;
         }
-        .createdC {
-            float: left;
-            font-size: 12px;
-            padding: 4px 0 0 10px;
-            color: #524D4D;
-        }
-        p {
-            font-size: 14px;
-            padding: 3px 0 3px 10px;
-            clear: left;
-        }
-        .scoreC {
-          position: absolute;
-          right: 0;
-          top: 0;
-          .up {
-            position: absolute;
-            top: 10px;
-            right: 5px;
-          }
-          .down {
-            position: absolute;
-            top: 35px;
-            right: 5px;
-          }
-        }
-        .pop {
-          position: absolute;
-          font-size: 22px;
-          color: #555;
-          right: 35px;
-          top: 13px;
-          cursor: default;
+        .when {
+
         }
         .delete {
-          margin-left: 10px;
-          float: left;
-          font-size: 10px;
           cursor: pointer;
+          display: none;
         }
-        &.d-0 {
-            margin-left: 0px;
-            .wrapper {
-              padding: 2px $scoreC-width+20 5px $big-image-width+14;
-            }
+      }
+      &.d-0 {
+        margin-left: 0px;
+      }
+      &.d-1 { margin-left: $indent; }
+      &.d-2 {
+        margin-left: $indent*2;
+        .wrapper {
+          /*max-width: $max-width - $indent;*/
         }
-        &.d-1 { margin-left: $indent; }
-        &.d-2 {
-          margin-left: $indent*2;
-          .wrapper {
-            max-width: $max-width - $indent;
-          }
+      }
+      &.d-3 {
+        margin-left: $indent*3;
+        .wrapper {
+          /*max-width: $max-width - $indent*2;*/
         }
-        &.d-3 {
-          margin-left: $indent*3;
-          .wrapper {
-            max-width: $max-width - $indent*2;
-          }
+      }
+      &.d-4 {
+        margin-left: $indent*4;
+        .wrapper {
+          /*max-width: $max-width - $indent*3;*/
         }
-        &.d-4 {
-          margin-left: $indent*4;
-          .wrapper {
-            max-width: $max-width - $indent*3;
-          }
+      }
+      &.d-5 {
+        margin-left: $indent*5;
+        .wrapper {
+          /*max-width: $max-width - $indent*4;*/
         }
-        &.d-5 {
-          margin-left: $indent*5;
-          .wrapper {
-            max-width: $max-width - $indent*4;
-          }
+      }
+      &.d-6 {
+        margin-left: $indent*6;
+        .wrapper {
+          /*max-width: $max-width - $indent*5;*/
         }
-        &.d-6 {
-          margin-left: $indent*6;
-          .wrapper {
-            max-width: $max-width - $indent*5;
-          }
-        }
-
-        &.hover-0 {
-            border-left-color: $picture-color;
-        }
-        &.hover-1 {
-            border-left-color: $link-color;
-        }
-        &.hover-2 {
-            border-left-color: $video-color;
-        }
-        &.hover-3 {
-            border-left-color: $talk-color;
-        }
+      }
     }
 }
 

@@ -20,7 +20,7 @@ class VideosController < ApplicationController
 
     if @video.save
       if params[:talk]
-        current_user.talks.create(params[:talk].merge!({:parent_id => @video.id, :parent_type => 'Video'}))
+        current_user.talks.create(params[:talk].merge!({:parent => @video}))
       end
 
       extras = { :type => "Video", :path => video_path(@video) }

@@ -1,8 +1,0 @@
-<div class="mention-ooc">
-  <div class="field lClear auto" data-tip="If a relevant topic does not fit naturally into the content you can mention it out of context. Max 4.">
-    <label for="ooc_ac_<%= f.object.class.name.underscore %>">#mention out of context</label>
-    <input type="text" id="ooc_ac_<%= f.object.class.name.underscore %>" autocomplete="off" />
-    <div class="mentions"></div>
-  </div>
-  <%= f.hidden_field :ooc_mentions, :class => 'hidden_data', :value => '{"existing":[],"new":[]}', :autocomplete => :off %>
-</div>

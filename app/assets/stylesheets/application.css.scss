@@ -295,12 +295,10 @@ button {
   border-bottom: 1px solid #9F9F9F;
 
   h1 {
-    text-align: center;
     margin: 0;
-    text-align: center;
-    border-bottom: double #CCC;
+    border-bottom: 1px solid #f3f3f3;
     font-size: 18px;
-    padding: 4px 7px;
+    padding: 6px 15px 4px 15px;
     min-height: 23px;
 
     &.core-object {

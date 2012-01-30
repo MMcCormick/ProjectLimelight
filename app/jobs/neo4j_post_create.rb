@@ -48,12 +48,12 @@ class Neo4jPostCreate
         topics << {:node => mention_node, :node_id => m.id.to_s}
       end
 
-      if post.parent_id
-        parent_node = Neo4j.neo.get_node_index('posts', 'uuid', post.parent_id.to_s)
+      if post.response_to
+        parent_node = Neo4j.neo.get_node_index('posts', 'uuid', post.response_to.id.to_s)
         if parent_node
           talk_rel = Neo4j.neo.create_relationship('talked', creator_node, parent_node)
           Neo4j.neo.set_relationship_properties(talk_rel, {"created_at" => Time.now})
-          Neo4j.neo.add_relationship_to_index('users', 'talked', "#{post.user_id.to_s}-#{post.parent_id.to_s}", talk_rel)
+          Neo4j.neo.add_relationship_to_index('users', 'talked', "#{post.user_id.to_s}-#{post.response_to.id.to_s}", talk_rel)
         end
       end
 

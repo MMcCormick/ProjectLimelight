@@ -9,7 +9,7 @@ class TalksController < ApplicationController
     @right_sidebar = true
     @title = @talk.name
     @description = @talk.content_clean
-    @root = @talk.parent_id ? CoreObject.find(@talk.root_id) : nil
+    @root = @talk.response_to ? CoreObject.find(@talk.root_id) : nil
   end
 
   def create

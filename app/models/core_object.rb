@@ -206,7 +206,7 @@ class CoreObject
 
   def set_response_to
     if parent
-      self.response_to = CoreObjectSnippet.build(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
+      self.response_to = CoreObjectSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
       self.response_to.id = parent.id
       save
     end
@@ -237,7 +237,7 @@ class CoreObject
 
   def push_to_feeds
     FeedUserItem.post_create(self)
-    FeedTopicItem.post_create(self) unless parent_id || topic_mentions.empty?
+    FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
     FeedContributeItem.create(self)
     #Resque.enqueue(FeedsPostCreate, id.to_s)
   end

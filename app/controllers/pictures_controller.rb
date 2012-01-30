@@ -2,7 +2,7 @@ class PicturesController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
-    @picture = Picture.find_by_encoded_id(params[:id])
+    @picture = Picture.unscoped.find_by_encoded_id(params[:id])
     not_found("Picture not found") unless @picture
 
     @site_style = 'narrow'

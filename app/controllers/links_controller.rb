@@ -2,7 +2,7 @@ class LinksController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
-    @link = Link.find_by_encoded_id(params[:id])
+    @link = Link.unscoped.find_by_encoded_id(params[:id])
     not_found("Link not found") unless @link
 
     @site_style = 'narrow'

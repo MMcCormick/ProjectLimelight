@@ -2,7 +2,7 @@ class VideosController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
-    @video = Video.find_by_encoded_id(params[:id])
+    @video = Video.unscoped.find_by_encoded_id(params[:id])
     not_found("Video not found") unless @video
 
     @site_style = 'narrow'

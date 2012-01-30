@@ -53,13 +53,6 @@ $indent: 20px;
 .comment-thread {
     padding: 2px 0 0 94px;
 
-    .comment_reply {
-        padding: 15px 0 10px 10px;
-        clear: left;
-    }
-    .comments {
-
-    }
     .load-more-comments {
       @include link();
       font-size: 11px;

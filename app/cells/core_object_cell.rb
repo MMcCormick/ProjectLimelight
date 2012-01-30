@@ -20,17 +20,19 @@ class CoreObjectCell < Cell::Rails
     render
   end
 
-  def teaser_personal_column(current_user, root, responses)
+  def teaser_personal_column(current_user, root, responses, teaser_class=nil)
     @current_user = current_user
     @root = root
     @responses = responses
+    @teaser_class = teaser_class
     render
   end
 
-  def teaser_personal_list(current_user, root, responses)
+  def teaser_personal_list(current_user, root, responses, teaser_class=nil)
     @current_user = current_user
     @root = root
     @responses = responses
+    @teaser_class = teaser_class
     render
   end
 

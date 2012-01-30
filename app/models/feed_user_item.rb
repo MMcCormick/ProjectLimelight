@@ -46,7 +46,7 @@ class FeedUserItem
 
     def post_disable(post, unpopular_talk=false)
       if post.is_root?
-        FeedUserItem.delete_all(conditions: { :root_id => post.id })
+        FeedUserItem.destroy_all(conditions: { :root_id => post.id })
       else
         feed_items = FeedUserItem.where(:responses => post.id)
         foobar = feed_items.map{ |f| f.feed_id }
@@ -66,7 +66,7 @@ class FeedUserItem
             FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
           end
         end
-        FeedUserItem.delete_all(conditions: { :strength => {"$lte" => 0} })
+        FeedUserItem.destroy_all(conditions: { :strength => {"$lte" => 0} })
       end
     end
 
@@ -81,7 +81,7 @@ class FeedUserItem
         unless user.id == post.user_snippet.id
           unless target.class.name == 'Topic' && post.class.name == 'Talk' && !post.is_popular
 
-            updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
+            updates = {"$set" => { :root_type => post.root_type, :last_response_time => post.created_at }}
             updates["$addToSet"] = { :responses => post.id } unless post.is_root?
             updates["$inc"] = { :strength => 1 }
 
@@ -116,7 +116,7 @@ class FeedUserItem
           end
         end
       end
-      FeedUserItem.delete_all(conditions: { :feed_id => user.id, :strength => {"$lte" => 0} })
+      FeedUserItem.destroy_all(conditions: { :feed_id => user.id, :strength => {"$lte" => 0} })
     end
 
     def like(user, post)
@@ -149,7 +149,7 @@ class FeedUserItem
 
         FeedUserItem.collection.update({:feed_id => follower.id, :root_id => post.root_id }, updates)
       end
-      FeedUserItem.delete_all(conditions: { :strength => {"$lte" => 0} })
+      FeedUserItem.destroy_all(conditions: { :strength => {"$lte" => 0} })
     end
   end
 end

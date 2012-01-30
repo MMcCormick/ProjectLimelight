@@ -2,7 +2,7 @@ class TalksController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
 
   def show
-    @talk = Talk.find_by_encoded_id(params[:id])
+    @talk = Talk.unscoped.find_by_encoded_id(params[:id])
     not_found("Talk not found") unless @talk
 
     @site_style = 'narrow'

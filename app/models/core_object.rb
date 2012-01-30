@@ -45,8 +45,8 @@ class CoreObject
   default_scope where('status' => 'active')
 
   before_validation :set_source_snippet
-  before_create :set_user_snippet, :current_user_own, :send_tweet, :set_root
-  after_create :neo4j_create, :set_response_to, :update_response_count, :push_to_feeds, :action_log_create
+  before_create :set_user_snippet, :current_user_own, :send_tweet, :set_response_to, :set_root
+  after_create :neo4j_create, :update_response_count, :push_to_feeds, :action_log_create
   after_update :expire_caches
   after_destroy :remove_from_feeds
 
@@ -209,7 +209,6 @@ class CoreObject
     if parent
       self.response_to = CoreObjectSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
       self.response_to.id = parent.id
-      save
     end
   end
 
@@ -263,6 +262,7 @@ class CoreObject
   def disable
     self.status = 'disabled'
     FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
+    FeedTopicItem.post_disable(self) unless self.class.name == 'Talk' && !is_popular
     FeedContributeItem.disable(self)
   end
 

@@ -285,6 +285,13 @@ class Topic
   def merge(aliased_topic)
     self.aliases = aliases | aliased_topic.aliases
 
+    # Unfollowing (must happen before mention updates bc root_id will change for talks about the old topic)
+    followers = User.where('following_topics.in' => [id, aliased_topic.id])
+    followers.each do |follower|
+      follower.unfollow_topic aliased_topic
+      follower.unfollow_topic self
+    end
+
     # Update topic mentions
     objects = CoreObject.where("topic_mentions._id" => aliased_topic.id)
     objects.each do |object|
@@ -292,6 +299,7 @@ class Topic
       if object.mentions?(aliased_topic.id) && object.mentions?(id)
         object.topic_mentions.destroy_all(conditions: { id: aliased_topic.id })
       end
+      object.root_id = id if object.root_id == aliased_topic.id
       object.content = object.content.gsub(aliased_topic.id.to_s, id.to_s)
       object.save!
     end
@@ -321,9 +329,7 @@ class Topic
     Topic.where(:primary_type_id => aliased_topic.id).update_all(:primary_type_id => id, :primary_type => name)
 
     # Following
-    followers = User.where(:following_topics => aliased_topic.id)
     followers.each do |follower|
-      follower.unfollow_topic aliased_topic
       follower.follow_topic self
       follower.save
     end

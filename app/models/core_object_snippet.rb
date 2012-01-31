@@ -5,6 +5,7 @@ class CoreObjectSnippet
   field :name
   field :type
   field :public_id
+  field :comment_id
 
   embedded_in :core_object_assignable, polymorphic: true
 

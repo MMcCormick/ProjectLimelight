@@ -42,7 +42,7 @@
 
   <% if @root.class.name != 'Topic' && @root.class.name != 'Talk' %>
     <a href="<%= url_for @root %>" class="talking">
-      <span><%= pluralize(@root.response_count.to_i, 'person') %> <%= @root.response_count > 1 || @root.response_count == 0 ? 'are' : 'is' %></span> talking about this
+      <span><%= @root.response_count.to_i %></span> <%= @root.response_count > 1 || @root.response_count == 0 ? 'people are' : 'person is' %> talking about this
     </a>
   <% end %>
 </div>

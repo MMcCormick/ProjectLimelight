@@ -162,7 +162,8 @@ module ApplicationHelper
   end
 
   def pretty_time(date)
-    time_ago_in_words(date, false).sub('about', '')+ ' ago'
+    pretty = time_ago_in_words(date, false).sub('about', '')+ ' ago'
+    pretty == 'Today ago' ? 'just now' : pretty
   end
 
   def static_data

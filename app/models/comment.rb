@@ -74,7 +74,7 @@ class Comment
     # Sorts by votes descending by default, but could use any other field.
     # If you want to build out an internal balanced score, pass that field in,
     # and be sure to index it on the database.
-    def threaded_with_field(talk_id, field_name='created_at')
+    def threaded_with_field(talk_id, field_name='created_at', limit)
       comments = Comment.where(:talk_id => talk_id).asc(:path).desc(field_name)
       results, map = [], {}
       comments.each do |comment|
@@ -88,7 +88,23 @@ class Comment
           end
         end
       end
-      assemble(results, map)
+
+      comments = assemble(results, map)
+
+      results = {:show => [], :hide => []}
+      if limit
+        comments.each_with_index do |comment,i|
+          if i < limit
+            results[:show] << comment
+          else
+            results[:hide] << comment
+          end
+        end
+      else
+        results[:show] = comments
+      end
+
+      results
     end
 
     # Used by Comment#threaded_with_field to assemble the results.
@@ -124,15 +140,6 @@ class Comment
   def add_to_count
     talk.response_count += 1
     talk.save
-
-    #if (talk.response_to)
-    #  CoreObject.collection.update(
-    #    {:_id => talk.response_to.id},
-    #    {
-    #      "$inc" => { :response_count => 1 }
-    #    }
-    #  )
-    #end
   end
 
   def action_log_create

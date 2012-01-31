@@ -4,27 +4,17 @@ $(function() {
    * COMMENTS
    */
 
-  // Show the comment reply box
-  $('.comment .reply-show').live('click', function() {
-    if (!$logged) {
-      $('#register').click();
-      return false;
+  // Toggle show/hide additional comments
+  $('.load-more-comments').live('click', function() {
+    if ($(this).siblings('.more-comments').is(':visible'))
+    {
+      $(this).text($(this).data('original')).siblings('.more-comments').slideUp(300);
     }
-
-    var $button = $(this);
-    $('.comment_reply:visible').remove();
-    var $reply = $('.comment_reply').clone()
-            .find('.comment_reply_cancel').click(
-            function() {
-              $reply.remove();
-            }).end()
-            .appendTo($button.parent().parent())
-            .fadeIn(300)
-            .find('textarea').end();
-    // add the comment parent id to the hidden form
-    $button.parents('.comment:first').find('#comment_parent_id').attr('value', $button.data('d').id);
-    $button.parents('.comment:first').find('#comment_talk_id').attr('value', $button.parents('.comment-thread:first').data('d').talk_id);
-  });
+    else
+    {
+      $(this).data('original', $(this).text()).text('hide extra comments').siblings('.more-comments').slideDown(300);
+    }
+  })
 
   /*
    * User and Topic Hover Tabs - QTips

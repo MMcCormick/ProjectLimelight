@@ -22,6 +22,7 @@ class CoreObject
   field :favorites_count, :default => 0
   field :user_id
   field :response_count, :default => 0
+  field :talking_ids, :default => [] # ids of users talking about this
   field :tweet_id
   field :root_type
   field :root_id, :type => BSON::ObjectId
@@ -212,13 +213,12 @@ class CoreObject
   end
 
   def update_response_count
-    if response_to
-      CoreObject.collection.update(
-        {:_id => response_to.id},
-        {
-          "$inc" => { :response_count => 1 }
-        }
-      )
+    if parent
+      unless parent.talking_ids.include?(user_snippet.id)
+        parent.talking_ids << user_snippet.id
+        parent.response_count += 1
+        parent.save
+      end
     end
   end
 
@@ -271,7 +271,7 @@ class CoreObject
     end
 
     def for_show_page(parent_id)
-      CoreObject.where('response_to.id' => parent_id).order_by(:created_at, :desc)
+      CoreObject.where('response_to._id' => parent_id).order_by(:created_at, :desc)
     end
 
     # @example Fetch the core_objects for a feed with the given criteria
@@ -351,7 +351,7 @@ class CoreObject
         display_types << 'Topic'
       end
 
-      items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
+      items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
       build_feed(items)
     end
 
@@ -360,12 +360,12 @@ class CoreObject
         display_types << 'Topic'
       end
 
-      items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
+      items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
       build_feed(items)
     end
 
     def topic_feed(feed_id, user_id, display_types, order_by, page)
-      items = FeedTopicItem.where(:mentions => feed_id, :root_type => {'$in' => display_types})
+      items = FeedTopicItem.where(:mentions => feed_id, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
       user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
       build_topic_feed(items, user_items, feed_id)
     end
@@ -410,7 +410,7 @@ class CoreObject
         else
           item_ids << i.root_id
         end
-        item_ids += i.responses if i.responses
+        item_ids += i.responses.last(2) if i.responses
       end
 
       topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
@@ -425,7 +425,7 @@ class CoreObject
         end
 
         responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
-        return_objects << { :root => root, :responses => responses }
+        return_objects << { :root => root, :responses => responses.reverse }
       end
 
       return_objects

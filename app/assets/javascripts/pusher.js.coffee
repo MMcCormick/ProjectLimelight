@@ -14,9 +14,13 @@ jQuery ->
           $(@).fadeOut(100).text('')
 
     channel.bind 'new_talk', (data) ->
-      target = $('.teaser[data-push="'+data.id+'"]:not(.hover) .public')
-      target.find('.response').replaceWith(data.html)
-      target.show().effect('highlight', {color:'#88B42C'}, 1500)
+      target = $('.teaser[data-push="'+data.id+'"]:not(.hover)')
+      if data.count == 1
+        text = data.count+' person is talking about this'
+      else
+        text = data.count+' people are talking about this'
+      target.find('.talking').text(text)
+      target.find('.public').html(data.html).show().effect('highlight', {color:'#88B42C'}, 1500)
 
     channel.bind 'notification', (data) ->
       createGrowl(false, data.message, 'Notification', 'green');

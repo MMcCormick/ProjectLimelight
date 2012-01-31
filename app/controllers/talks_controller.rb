@@ -26,8 +26,7 @@ class TalksController < ApplicationController
 
     if @talk.save
       if @talk.response_to
-        view = 'list'
-        teaser = render_to_string :partial => "talks/teaser_#{view}", :locals => { :object => @talk }
+        teaser = render_to_string :partial => "talks/teaser_list_full", :locals => { :object => @talk }
         extras = { :type => "Talk", :teaser => teaser, :response => true }
         object.expire_caches
       else
@@ -35,8 +34,10 @@ class TalksController < ApplicationController
       end
 
       if @talk.root_id
-        response_html = render_to_string :partial => "talks/response_#{session[:feed_filters][:layout]}", :locals => { :object => @talk, :current_user => current_user }
-        Pusher[@talk.root_id.to_s].trigger('new_talk', {:id => @talk.root_id.to_s, :count => object ? object.response_count : nil, :html => response_html})
+        list_response_html = render_to_string :partial => "talks/response_list", :locals => { :object => @talk }
+        column_response_html = render_to_string :partial => "talks/response_column", :locals => { :object => @talk }
+        Pusher["#{@talk.root_id.to_s}_list"].trigger('new_talk', {:id => @talk.root_id.to_s+'_list', :count => object ? object.response_count : nil, :html => list_response_html})
+        Pusher["#{@talk.root_id.to_s}_column"].trigger('new_talk', {:id => @talk.root_id.to_s+'_column', :count => object ? object.response_count : nil, :html => column_response_html})
       end
 
       render json: build_ajax_response(:ok, nil, nil, nil, extras), status: :created

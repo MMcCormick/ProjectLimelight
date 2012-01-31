@@ -171,30 +171,31 @@ $(function() {
     if(data.status == "ok") {
       if (data.response) {
         $('#add_response').click();
-        $('#responses').prepend(data.teaser);
+        $('.object-show-responses').prepend(data.teaser);
       }
-
-      $('.sidebar.left .contributions').qtip({
-        content: {
-          text: 'Your '+data.type+' was successfully created.<br/>'+
-                '<a href="'+data.path+'">Click here to view it</a>'+
-                ' or see all your posts in "Talks"'
-        },
-        style: {classes: 'object-created-tip ui-tooltip-shadow ui-tooltip-light ui-tooltip-green', tip: true},
-        position: {
-          my: 'left top',
-          at: 'right middle',
-          viewport: $(window)
-        },
-        hide: {delay: 300, inactive: 5000},
-        events: {
-          hide: function(event, api) {
-            $('.sidebar.left .contributions').qtip('destroy');
-          }
-         }
-      });
-      $('.sidebar.left .contributions').qtip('show')
-
+      else
+      {
+        $('.sidebar.left .contributions').qtip({
+          content: {
+            text: 'Your '+data.type+' was successfully created.<br/>'+
+                  '<a href="'+data.path+'">Click here to view it</a>'+
+                  ' or see all your posts in "Talks"'
+          },
+          style: {classes: 'object-created-tip ui-tooltip-shadow ui-tooltip-light ui-tooltip-green', tip: true},
+          position: {
+            my: 'left top',
+            at: 'right middle',
+            viewport: $(window)
+          },
+          hide: {delay: 300, inactive: 5000},
+          events: {
+            hide: function(event, api) {
+              $('.sidebar.left .contributions').qtip('destroy');
+            }
+           }
+        });
+        $('.sidebar.left .contributions').qtip('show')
+      }
       $('.contributeC:visible').fadeOut(250, function() { $(this).remove() })
     }
   });

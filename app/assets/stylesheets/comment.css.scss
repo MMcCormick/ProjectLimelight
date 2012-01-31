@@ -51,14 +51,16 @@ $indent: 20px;
 }
 
 .comment-thread {
-    padding: 2px 0 0 34px;
+    padding: 2px 0 0 74px;
 
-    .comment_reply {
-        padding: 15px 0 10px 10px;
-        clear: left;
+    .load-more-comments {
+      @include link();
+      font-size: 11px;
+      display: inline-block;
+      margin: 5px 0 0 0;
     }
-    .comments {
-
+    .more-comments {
+      display: none;
     }
     .comment {
       position: relative;

@@ -1,0 +1,5 @@
+<div class='teaser list <%= object.class.name.downcase %>'>
+  <%= render_cell :core_object, :teaser_root_list, current_user, object %>
+  <%= render_cell :core_object, :teaser_personal_list, current_user, object, [] %>
+  <%= render_cell :comment, :thread, object.id, false, nil %>
+</div>

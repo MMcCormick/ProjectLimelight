@@ -285,11 +285,12 @@ class Topic
   def merge(aliased_topic)
     self.aliases = aliases | aliased_topic.aliases
 
-    # Unfollowing (must happen before mention updates bc root_id will change for talks about the old topic)
-    followers = User.where('following_topics.in' => [id, aliased_topic.id])
+    # Unfollowing (must happen before mention updates bc root_id may change for talks about the aliased old topic)
+    followers = User.where(:following_topics => { "$in" => [id, aliased_topic.id] }).to_a
     followers.each do |follower|
       follower.unfollow_topic aliased_topic
       follower.unfollow_topic self
+      follower.save
     end
 
     # Update topic mentions
@@ -300,7 +301,8 @@ class Topic
         object.topic_mentions.destroy_all(conditions: { id: aliased_topic.id })
       end
       object.root_id = id if object.root_id == aliased_topic.id
-      object.content = object.content.gsub(aliased_topic.id.to_s, id.to_s)
+      object.content = object.content.gsub(aliased_topic.id.to_s, id.to_s) if object.content
+      object.title = object.title.gsub(aliased_topic.id.to_s, id.to_s) if object.title
       object.save!
     end
 
@@ -324,6 +326,12 @@ class Topic
         end
       end
     end
+
+    FeedTopicItem.collection.update({ "mentions" => aliased_topic.id }, { "$set" => { "mentions.$" => id },
+                                    "$rename" => {"responses."+aliased_topic.id.to_s => "responses."+id.to_s}}, {:multi => true})
+    FeedTopicItem.collection.update({ "root_mentions" => aliased_topic.id}, {"$set" => {"root_mentions.$" => id}}, {:multi => true})
+    #FeedTopicItem.collection.update({ "mentions" => BSON::ObjectId("4f282a10aaf90603c7000021") }, { "$set" => { "mentions.$" => BSON::ObjectId("4f206cb9aaf90603440001e0") }, "$rename" => {"responses.4f282a10aaf90603c7000021" => "responses.4f206cb9aaf90603440001e0"}}, {:multi => true})
+    #FeedTopicItem.collection.update({ "mentions" => BSON::ObjectId("4f206cb9aaf90603440001e0") }, { "$set" => { "mentions.$" => BSON::ObjectId("4f282a10aaf90603c7000021") }, "$rename" => {"responses.4f206cb9aaf90603440001e0" => "responses.4f282a10aaf90603c7000021"}})
 
     # Update primary_type_id's on other topics
     Topic.where(:primary_type_id => aliased_topic.id).update_all(:primary_type_id => id, :primary_type => name)

@@ -75,7 +75,7 @@ class FeedUserItem
       if target.class.name == 'Topic'
         core_objects = CoreObject.where('topic_mentions._id' => target.id)
       else
-        core_objects = CoreObject.any_of('user_snippet._id' => target.id, 'likes._id' => target.id)
+        core_objects = CoreObject.any_of({'user_snippet._id' => target.id}, {'likes._id' => target.id})
       end
       core_objects.each do |post|
         unless user.id == post.user_snippet.id
@@ -106,7 +106,7 @@ class FeedUserItem
               keep = true if target.class.name == 'Topic' && user.is_following_user?(post.user_snippet.id) ||
                              post.user_mentions.detect{ |u| u.id == user.id } ||
                              post.topic_mentions.detect{ |t| t.id != target.id && user.is_following_topic?(t.id) } ||
-                             post.likes.detect{ |l| l.id != target.id && u.is_following_user?(l.id) }
+                             post.likes.detect{ |l| l.id != target.id && user.is_following_user?(l.id) }
             end
 
             updates = {"$inc" => { :strength => -1 }}
@@ -127,7 +127,9 @@ class FeedUserItem
       updates["$inc"] = { :strength => 1 }
 
       user_feed_users.each do |u|
-        FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
+        unless u.id == post.user_snippet.id
+          FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
+        end
       end
     end
 
@@ -137,17 +139,19 @@ class FeedUserItem
       updates = {"$inc" => { :strength => -1 }}
 
       user_feed_users.each do |follower|
-        keep = false
-        unless post.is_root?
-          keep = true if follower.is_following_user?(post.user_snippet.id) ||
-                         post.user_mentions.detect{ |u| u.id == follower.id } ||
-                         post.topic_mentions.detect{ |t| follower.is_following_topic?(t.id) } ||
-                         post.likes.detect{ |l| u.is_following_user?(l.id) }
+        unless follower.id == post.user_snippet.id
+          keep = false
+          unless post.is_root?
+            keep = true if follower.is_following_user?(post.user_snippet.id) ||
+                           post.user_mentions.detect{ |u| u.id == follower.id } ||
+                           post.topic_mentions.detect{ |t| follower.is_following_topic?(t.id) } ||
+                           post.likes.detect{ |l| u.is_following_user?(l.id) }
+          end
+
+          updates["$pull"] = { :responses => post.id } unless post.is_root? || keep
+
+          FeedUserItem.collection.update({:feed_id => follower.id, :root_id => post.root_id }, updates)
         end
-
-        updates["$pull"] = { :responses => post.id } unless post.is_root? || keep
-
-        FeedUserItem.collection.update({:feed_id => follower.id, :root_id => post.root_id }, updates)
       end
       FeedUserItem.destroy_all(conditions: { :strength => {"$lte" => 0} })
     end

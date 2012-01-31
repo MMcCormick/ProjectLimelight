@@ -26,11 +26,11 @@ function isScrolledIntoView(elem, bufferOn, checkAll, entireElem) {
 
   var inView;
   if (entireElem) {
-  inView = (elemTop <= docViewBottom - footer) && (elemBottom >= docViewTop + pageHeader)
-    && (elemBottom <= docViewBottom - footer) && (elemTop >= docViewTop + pageHeader)
+    inView = (elemTop <= docViewBottom - footer) && (elemBottom >= docViewTop + pageHeader)
+      && (elemBottom <= docViewBottom - footer) && (elemTop >= docViewTop + pageHeader)
   }
   else {
-  inView = (elemTop <= docViewBottom - footer) && (elemBottom >= docViewTop + pageHeader)
+    inView = (elemTop <= docViewBottom - footer) && (elemBottom >= docViewTop + pageHeader)
   }
 
   if (checkAll)
@@ -157,7 +157,7 @@ $('.response').livequery(function() {
   $(this).each(function(i,val) {
     if ($('.response[data-id="'+$(val).data('id')+'"]').length > 1)
     {
-      $(this).parents('.teaser:first').find('.public').hide();
+      $(this).parents('.teaser:first').find('.public,.topic-related').hide();
     }
   })
 })

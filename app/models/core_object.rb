@@ -213,13 +213,12 @@ class CoreObject
   end
 
   def update_response_count
-    if response_to
-      CoreObject.collection.update(
-        {:_id => response_to.id},
-        {
-          "$inc" => { :response_count => 1 }
-        }
-      )
+    if parent
+      unless parent.talking_ids.include?(user_snippet.id)
+        parent.talking_ids << user_snippet.id
+        parent.response_count += 1
+        parent.save
+      end
     end
   end
 

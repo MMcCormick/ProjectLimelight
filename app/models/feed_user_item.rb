@@ -6,6 +6,8 @@ class FeedUserItem
   field :root_id
   field :root_type
   field :strength
+  field :ds
+  field :dt, :default => Time.now
   field :responses, :type => Array
   field :last_response_time, :type => DateTime
 
@@ -37,7 +39,7 @@ class FeedUserItem
             strength += 1 if u.following_users.include?(post.user_snippet.id)
             strength += 1 if user_mention_ids.include?(u.id)
           end
-          updates["$inc"] = { :strength => strength }
+          updates["$inc"] = { :strength => strength, :ds => strength }
 
           FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
         end
@@ -60,7 +62,7 @@ class FeedUserItem
             strength -= 1 if post.user_mentions.detect{ |us| us.id == user.id }
             strength -= 1 if post.likes.detect{ |l| u.is_following_user?(l.id) }
 
-            updates = {"$inc" => { :strength => strength }}
+            updates = {"$inc" => { :strength => strength, :ds => strength }}
             updates["$pull"] = { :responses => post.id }
 
             FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
@@ -83,7 +85,7 @@ class FeedUserItem
 
             updates = {"$set" => { :root_type => post.root_type, :last_response_time => post.created_at }}
             updates["$addToSet"] = { :responses => post.id } unless post.is_root?
-            updates["$inc"] = { :strength => 1 }
+            updates["$inc"] = { :strength => 1, :ds => 1 }
 
             FeedUserItem.collection.update({:feed_id => user.id, :root_id => post.root_id }, updates, {:upsert => true})
           end
@@ -108,7 +110,7 @@ class FeedUserItem
                              post.likes.detect{ |l| l.id != target.id && user.is_following_user?(l.id) }
             end
 
-            updates = {"$inc" => { :strength => -1 }}
+            updates = {"$inc" => { :strength => -1, :ds => -1 }}
             updates["$pull"] = { :responses => post.id } unless post.is_root? || keep
 
             FeedUserItem.collection.update({:feed_id => user.id, :root_id => post.root_id }, updates)
@@ -123,11 +125,10 @@ class FeedUserItem
 
       updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
       updates["$addToSet"] = { :responses => post.id } unless post.is_root?
-      updates["$inc"] = { :strength => 1 }
-      updates["$set"]["likes.#{user.id.to_s}_#{post.id.to_s}"] = {
-              :clout => user.clout,
-              :created_at => Time.now
-      }
+      updates["$inc"] = { :strength => 1, :ds => 1 }
+
+      # add a like to any feed items including this post
+
 
       user_feed_users.each do |u|
         unless u.id == post.user_snippet.id
@@ -139,7 +140,7 @@ class FeedUserItem
     def unlike(user, post)
       user_feed_users = User.only(:id, :following_topics, :following_users).where(:following_users => user.id)
 
-      updates = {"$inc" => { :strength => -1 }, "$unset" => {"likes.#{user.id.to_s}_#{post.id.to_s}" => 1}}
+      updates = {"$inc" => { :strength => -1, :ds => -1 }}
 
       user_feed_users.each do |follower|
         unless follower.id == post.user_snippet.id

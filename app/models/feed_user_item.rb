@@ -100,7 +100,6 @@ class FeedUserItem
       core_objects.each do |post|
         unless user.id == post.user_snippet.id
           unless target.class.name == 'Topic' && post.class.name == 'Talk' && !post.is_popular
-
             keep = false
             unless post.is_root?
               keep = true if target.class.name == 'Topic' && user.is_following_user?(post.user_snippet.id) ||

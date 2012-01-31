@@ -364,20 +364,23 @@ class CoreObject
       build_feed(items)
     end
 
-    def topic_feed(feed_id, user_id, display_types, order_by, page)
-      items = FeedTopicItem.where(:mentions => feed_id, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
+    def topic_feed(feed_ids, user_id, display_types, order_by, page)
+      items = FeedTopicItem.where(:mentions => feed_ids, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
       user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
-      build_topic_feed(items, user_items, feed_id)
+      build_topic_feed(items, user_items, feed_ids)
     end
 
-    def build_topic_feed(items, user_items, feed_id)
+    def build_topic_feed(items, user_items, feed_ids)
       item_ids = []
       items.each do |i|
         item_ids << i.root_id
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
-        item_ids += user_i.responses if user_i && user_i.responses
-        if (i.root_mentions ? !i.root_mentions.include?(feed_id) : true) && i.responses && i.responses[feed_id.to_s]
-          item_ids << i.responses[feed_id.to_s]
+        item_ids += user_i.responses.last(2) if user_i && user_i.responses
+        overlap = (i.root_mentions & feed_ids).first
+
+        # if we are not on a topic feed mentioned in root mentions, show the latest object that mentions this topic feed
+        if overlap && i.responses && i.responses[overlap.to_s]
+          item_ids << i.responses[overlap.to_s].last
         end
       end
 
@@ -388,8 +391,9 @@ class CoreObject
         root = objects.detect{|o| o.id == i.root_id}
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
         user_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
-        if (i.root_mentions ? !i.root_mentions.include?(feed_id) : true) && i.responses && i.responses[feed_id.to_s]
-          topic_responses = objects.select{ |o| i.responses[feed_id.to_s] == o.id }
+        overlap = (i.root_mentions & feed_ids).first
+        if overlap && i.responses && i.responses[overlap.to_s]
+          topic_responses = objects.select{ |o| i.responses[overlap.to_s] == o.id }
         else
           topic_responses = []
         end

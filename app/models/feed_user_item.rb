@@ -125,6 +125,10 @@ class FeedUserItem
       updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
       updates["$addToSet"] = { :responses => post.id } unless post.is_root?
       updates["$inc"] = { :strength => 1 }
+      updates["$set"]["likes.#{user.id.to_s}_#{post.id.to_s}"] = {
+              :clout => user.clout,
+              :created_at => Time.now
+      }
 
       user_feed_users.each do |u|
         FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
@@ -134,7 +138,7 @@ class FeedUserItem
     def unlike(user, post)
       user_feed_users = User.only(:id, :following_topics, :following_users).where(:following_users => user.id)
 
-      updates = {"$inc" => { :strength => -1 }}
+      updates = {"$inc" => { :strength => -1 }, "$unset" => {"likes.#{user.id.to_s}_#{post.id.to_s}" => 1}}
 
       user_feed_users.each do |follower|
         keep = false

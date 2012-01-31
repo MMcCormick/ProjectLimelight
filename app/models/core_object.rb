@@ -365,7 +365,7 @@ class CoreObject
     end
 
     def topic_feed(feed_ids, user_id, display_types, order_by, page)
-      items = FeedTopicItem.where(:mentions => feed_ids, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
+      items = FeedTopicItem.where(:mentions.in => feed_ids, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20).to_a
       user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
       build_topic_feed(items, user_items, feed_ids)
     end
@@ -379,8 +379,9 @@ class CoreObject
         overlap = (i.root_mentions & feed_ids).first
 
         # if we are not on a topic feed mentioned in root mentions, show the latest object that mentions this topic feed
-        if overlap && i.responses && i.responses[overlap.to_s]
-          item_ids << i.responses[overlap.to_s].last
+        if !overlap && i.responses
+          overlap = (i.responses.keys & feed_ids.map{|f| f.to_s}).first
+          item_ids << i.responses[overlap] if overlap
         end
       end
 
@@ -392,8 +393,9 @@ class CoreObject
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
         user_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
         overlap = (i.root_mentions & feed_ids).first
-        if overlap && i.responses && i.responses[overlap.to_s]
-          topic_responses = objects.select{ |o| i.responses[overlap.to_s] == o.id }
+        if !overlap && i.responses
+          overlap = (i.responses.keys & feed_ids.map{|f| f.to_s}).first
+          topic_responses = objects.select{ |o| i.responses[overlap] == o.id }
         else
           topic_responses = []
         end

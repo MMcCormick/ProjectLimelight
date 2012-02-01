@@ -5,11 +5,12 @@
 #  args:
 #  description: "This job calls the scout executable to send log data to scout."
 
-recalculate_popularity:
-  every: 10m
-  class: RecalculatePopularity
-  args:
-  description: "This job recalculates popularity scores"
+# TODO: uncomment when done with pop in testing controller
+#recalculate_popularity:
+#  every: 10m
+#  class: RecalculatePopularity
+#  args:
+#  description: "This job recalculates popularity scores"
 
 #recalculate_hourly:
 #  every: 10m

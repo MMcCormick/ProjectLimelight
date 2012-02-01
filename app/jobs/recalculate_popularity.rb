@@ -25,6 +25,7 @@ class RecalculatePopularity
 
     #take time into account?
     @results = PopularityAction.collection.map_reduce(map, reduce, :query => {}, :out => "pop_results")
+
   end
 
   def self.perform

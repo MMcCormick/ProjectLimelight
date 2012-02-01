@@ -8,6 +8,8 @@ class FeedLikeItem
   field :strength
   field :responses, :type => Array
   field :last_response_time, :type => DateTime
+  field :p, :default => 0
+
 
   class << self
     def create(user, post)

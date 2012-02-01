@@ -1,4 +1,4 @@
-class PopularityAction #lawsuit?
+class PopularityAction
   include Mongoid::Document
   include Mongoid::Timestamps
 

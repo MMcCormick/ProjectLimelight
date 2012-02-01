@@ -587,7 +587,10 @@ module Limelight #:nodoc:
 
       if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
-        action.pop_snippets.new(:amount => amt, :id => id, :object_type => self.class.name)
+        snippet_attrs = {:amount => amt, :id => id, :object_type => self.class.name}
+        snippet_attrs[:root_id] = root_id if root_id
+        snippet_attrs[:root_type] = root_type if root_id
+        action.pop_snippets.new(snippet_attrs)
 
         unless ["User", "Topic"].include? self.class.name
 
@@ -644,10 +647,11 @@ module Limelight #:nodoc:
             ic_ids.each {|target| Topic.expire_caches(target.to_s)}
           end
 
-          if response_to
-            object = CoreObject.find(response_to.id)
-            object.add_pop_action(type, subtype, current_user, true) if object
-          end
+          # Removed because popularity for push feeds is aggregated around the root
+          #if response_to
+          #  object = CoreObject.find(response_to.id)
+          #  object.add_pop_action(type, subtype, current_user, true) if object
+          #end
         end
 
         action.save!

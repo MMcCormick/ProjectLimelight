@@ -1,6 +1,10 @@
 class TestingController < ApplicationController
 
   def test
+    RecalculatePopularity.perform
+  end
+
+  def foo
     # get all objects
     CoreObject.all.each do |co|
 

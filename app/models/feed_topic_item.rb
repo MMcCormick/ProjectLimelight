@@ -7,6 +7,7 @@ class FeedTopicItem
   field :mentions
   field :root_mentions
   field :responses
+  field :p, :default => 0
 
   class << self
 

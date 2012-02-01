@@ -514,7 +514,7 @@ $teaser-padding: 10px;
       }
     }
     .actions {
-      font-size: 12px;
+      font-size: 11px;
       margin: 2px 0 0 8px;
     }
     .media {
@@ -522,7 +522,7 @@ $teaser-padding: 10px;
     }
     .mentions {
       @include clearfix();
-      margin: 9px 10px 0 10px;
+      margin: 6px 10px 0 10px;
       font-size: 11px;
       .tag {
         float: left;
@@ -532,7 +532,7 @@ $teaser-padding: 10px;
     .talking {
       font-size: 11px;
       display: block;
-      margin: 2px 0 4px 10px;
+      margin: 2px 0 7px 10px;
     }
     .topic-head {
       h2 {
@@ -675,6 +675,9 @@ $teaser-padding: 10px;
         left: 0px;
       }
     }
+    .actions {
+      margin-top: 5px;
+    }
   }
 
   .personal,
@@ -707,18 +710,18 @@ $teaser-padding: 10px;
 
     .root {
       position: relative;
-      padding: 18px 10px 4px 10px;
+      padding: 28px 10px 7px 10px;
 
       > .ulink {
         position: absolute;
-        top: 1px;
+        top: 7px;
         left: 10px;
         font-weight: bold;
         color: #333;
       }
       .created_at {
         position: absolute;
-        top: 4px;
+        top: 9px;
         right: 10px;
         color: #999999;
         font-size: 9px;

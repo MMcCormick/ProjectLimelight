@@ -1,6 +1,6 @@
 class PopularityAction
   include Mongoid::Document
-  include Mongoid::Timestamps
+  include Mongoid::Timestamps::Created
 
   cache
 

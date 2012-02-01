@@ -20,6 +20,46 @@ namespace :push_feeds do
       co.save
     end
 
+    # Reset clout
+    User.all.each do |u|
+      u.clout = 1
+      u.save
+    end
+
+    # Create likes from pop actions
+    used_ids = []
+    PopularityAction.all.each do |pa|
+      next if used_ids.include?(pa.object_id.to_s) || pa.type == 'flw'
+
+      used_ids << pa.object_id.to_s
+      object = CoreObject.find(pa.object_id)
+      user = User.find(pa.user_id)
+      if object && user
+        object.add_to_likes(user)
+        object.save
+        user.save
+      end
+    end
+
+    # Remove old pop actions
+    PopularityAction.delete_all(:conditions => {:t => {'$ne' => 'lk'}})
+
+    # Refollow all users/topics for each user
+    User.all.each do |u|
+      u.following_users.each do |f|
+        fol = User.find(f)
+        fol.add_pop_action(:flw, :a, u)
+        fol.save
+      end
+
+      u.following_topics.each do |f|
+        fol = Topic.find(f)
+        fol.add_pop_action(:flw, :a, u)
+        fol.save
+      end
+      u.save
+    end
+
     # loop through all core objects and push to feeds
     CoreObject.all.each do |co|
 
@@ -37,7 +77,6 @@ namespace :push_feeds do
       FeedTopicItem.post_create(co) unless co.class.name == 'Talk' || co.topic_mentions.empty?
       FeedContributeItem.create(co)
     end
-
   end
 
 end

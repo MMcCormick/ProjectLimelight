@@ -280,6 +280,7 @@ class Topic
 
   #
   # Merge
+  # aliased_topic is the old topic (the topic being merged in)
   #
 
   def merge(aliased_topic)
@@ -313,7 +314,7 @@ class Topic
     topic_mention_updates["topic_mentions.$.public_id"] = public_id
     CoreObject.where("topic_mentions._id" => aliased_topic.id).update_all(topic_mention_updates)
 
-    # Move Connections
+    # NEO4J: Move Connections
     rels = Neo4j.get_topic_relationships aliased_topic.id
     rels.each do |rel|
       rev = (rel[0] == rel[1]['reverse_name'])
@@ -327,11 +328,30 @@ class Topic
       end
     end
 
-    FeedTopicItem.collection.update({ "mentions" => aliased_topic.id }, { "$set" => { "mentions.$" => id },
-                                    "$rename" => {"responses."+aliased_topic.id.to_s => "responses."+id.to_s}}, {:multi => true})
-    FeedTopicItem.collection.update({ "root_mentions" => aliased_topic.id}, {"$set" => {"root_mentions.$" => id}}, {:multi => true})
-    #FeedTopicItem.collection.update({ "mentions" => BSON::ObjectId("4f282a10aaf90603c7000021") }, { "$set" => { "mentions.$" => BSON::ObjectId("4f206cb9aaf90603440001e0") }, "$rename" => {"responses.4f282a10aaf90603c7000021" => "responses.4f206cb9aaf90603440001e0"}}, {:multi => true})
-    #FeedTopicItem.collection.update({ "mentions" => BSON::ObjectId("4f206cb9aaf90603440001e0") }, { "$set" => { "mentions.$" => BSON::ObjectId("4f282a10aaf90603c7000021") }, "$rename" => {"responses.4f206cb9aaf90603440001e0" => "responses.4f282a10aaf90603c7000021"}})
+    # PUSH FEEDS
+    FeedTopicItem.collection.update(
+            { "mentions" => aliased_topic.id },
+            {
+                    "$set" => { "mentions.$" => id },
+                    "$rename" => {"responses."+aliased_topic.id.to_s => "responses."+id.to_s}
+            },
+            {:multi => true}
+    )
+    FeedTopicItem.collection.update(
+            { "root_mentions" => aliased_topic.id},
+            { "$set" => {"root_mentions.$" => id}},
+            {:multi => true}
+    )
+    FeedLikeItem.collection.update(
+            { "root_id" => aliased_topic.id },
+            { "$set" => {:root_id => id}},
+            {:multi => true}
+    )
+    FeedContributeItem.collection.update(
+            { "root_id" => aliased_topic.id },
+            { "$set" => {:root_id => id}},
+            {:multi => true}
+    )
 
     # Update primary_type_id's on other topics
     Topic.where(:primary_type_id => aliased_topic.id).update_all(:primary_type_id => id, :primary_type => name)

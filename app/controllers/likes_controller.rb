@@ -26,7 +26,6 @@ class LikesController < ApplicationController
     if object
       like_success = object.add_to_likes(current_user)
       if like_success
-        object.add_pop_action(:rp, :a, current_user)
         current_user.save if object.save
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})
         status = 201
@@ -51,7 +50,6 @@ class LikesController < ApplicationController
     object = CoreObject.find(params[:id])
     if object
       if object.remove_from_likes(current_user)
-        object.add_pop_action(:rp, :r, current_user)
         current_user.save if object.save
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})
         status = 200

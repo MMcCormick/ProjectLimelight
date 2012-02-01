@@ -521,7 +521,7 @@ module Limelight #:nodoc:
       @@pop_amounts = {
         :v_up => 1.0,
         :v_down => -1.0,
-        :rp => 3.0,
+        :lk => 1.0,
         :fav => 2.0,
         :flw => 1.0,
         :share => 1,
@@ -532,16 +532,7 @@ module Limelight #:nodoc:
         :user => 0.5
       }
 
-      field :ph, :default => 0.0
-      field :pd, :default => 0.0
-      field :pw, :default => 0.0
-      field :pm, :default => 0.0
-      field :pt, :default => 0.0
-
-      field :phc, :default => false
-      field :pdc, :default => false
-      field :pwc, :default => false
-      field :pmc, :default => false
+      field :score, :default => 0.0
     end
 
     def add_pop_vote(subtype, net, current_user)
@@ -588,11 +579,13 @@ module Limelight #:nodoc:
       if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
         snippet_attrs = {:amount => amt, :id => id, :object_type => self.class.name}
-        snippet_attrs[:root_id] = root_id if root_id
-        snippet_attrs[:root_type] = root_type if root_id
-        action.pop_snippets.new(snippet_attrs)
 
-        unless ["User", "Topic"].include? self.class.name
+        if ["User", "Topic"].include? self.class.name
+          action.pop_snippets.new(snippet_attrs)
+        else
+          snippet_attrs[:root_id] = root_id if root_id
+          snippet_attrs[:root_type] = root_type if root_id
+          action.pop_snippets.new(snippet_attrs)
 
           # Update user if not a link, video, or picture
           unless ["Link", "Video", "Picture"].include? self.class.name
@@ -602,8 +595,7 @@ module Limelight #:nodoc:
             User.collection.update(
               {:_id => user_id},
               {
-                "$inc" => { :ph => user_amt, :pd => user_amt, :pw => user_amt, :pm => user_amt, :pt => user_amt },
-                "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+                "$inc" => { :score => user_amt }
               }
             )
             Pusher[user_id.to_s].trigger('popularity_changed', {:id => user_id.to_s, :change => user_amt})
@@ -632,16 +624,14 @@ module Limelight #:nodoc:
             Topic.collection.update(
               {:_id => {"$in" => ooc_ids}},
               {
-                "$inc" => { :ph => ooc_amt, :pd => ooc_amt, :pw => ooc_amt, :pm => ooc_amt, :pt => ooc_amt },
-                "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+                "$inc" => { :score => ooc_amt }
               }
             )
             ooc_ids.each {|target| Topic.expire_caches(target.to_s)}
             Topic.collection.update(
               {:_id => {"$in" => ic_ids}},
               {
-                "$inc" => { :ph => ic_amt, :pd => ic_amt, :pw => ic_amt, :pm => ic_amt, :pt => ic_amt },
-                "$set" => { :phc => true, :pdc => true, :pwc => true, :pmc => true }
+                "$inc" => { :score => ic_amt }
               }
             )
             ic_ids.each {|target| Topic.expire_caches(target.to_s)}
@@ -664,16 +654,7 @@ module Limelight #:nodoc:
     protected
 
     def change_pop(amt)
-      self.ph += amt
-      self.pd += amt
-      self.pw += amt
-      self.pm += amt
-      self.pt += amt
-
-      self.phc = true
-      self.pdc = true
-      self.pwc = true
-      self.pmc = true
+      self.score += amt
     end
   end
 end

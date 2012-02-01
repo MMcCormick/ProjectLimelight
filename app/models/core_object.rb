@@ -182,6 +182,7 @@ class CoreObject
       like = self.likes.new(user.attributes)
       like.id = user.id
       user.likes_count += 1
+      add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
       ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
       FeedUserItem.like(user, self)
@@ -195,6 +196,7 @@ class CoreObject
     if like
       like.destroy
       user.likes_count -= 1
+      add_pop_action(:lk, :r, user)
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
       ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
       FeedUserItem.unlike(user, self)

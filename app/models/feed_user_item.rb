@@ -12,6 +12,16 @@ class FeedUserItem
   field :last_response_time, :type => DateTime
   field :p, :default => 0
 
+  index [[ :root_id, Mongo::DESCENDING ]]
+  index(
+    [
+      [ :feed_id, Mongo::DESCENDING ],
+      [ :root_id, Mongo::DESCENDING ]
+    ],
+    unique: true
+  )
+  index :responses
+
   class << self
     def post_create(post, popular_talk=false)
       topic_mention_ids = post.topic_mentions.map{|tm| tm.id}
@@ -69,7 +79,7 @@ class FeedUserItem
             FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
           end
         end
-        FeedUserItem.destroy_all(conditions: { :strength => {"$lte" => 0} })
+        FeedUserItem.destroy_all(conditions: { :root_id => post.root_id, :strength => {"$lte" => 0} })
       end
     end
 
@@ -78,7 +88,7 @@ class FeedUserItem
       if target.class.name == 'Topic'
         core_objects = CoreObject.where('topic_mentions._id' => target.id)
       else
-        core_objects = CoreObject.any_of({'user_snippet._id' => target.id}, {'likes._id' => target.id})
+        core_objects = CoreObject.any_of({:user_id => target.id}, {'likes._id' => target.id})
       end
       core_objects.each do |post|
         unless user.id == post.user_snippet.id
@@ -98,7 +108,7 @@ class FeedUserItem
       if target.class.name == 'Topic'
         core_objects = CoreObject.where('topic_mentions._id' => target.id)
       else
-        core_objects = CoreObject.any_of('user_snippet._id' => target.id, 'likes._id' => target.id)
+        core_objects = CoreObject.any_of(:user_id => target.id, 'likes._id' => target.id)
       end
       core_objects.each do |post|
         unless user.id == post.user_snippet.id
@@ -158,7 +168,7 @@ class FeedUserItem
           FeedUserItem.collection.update({:feed_id => follower.id, :root_id => post.root_id }, updates)
         end
       end
-      FeedUserItem.destroy_all(conditions: { :strength => {"$lte" => 0} })
+      FeedUserItem.destroy_all(conditions: { :root_id => post.root_id, :strength => {"$lte" => 0} })
     end
   end
 end

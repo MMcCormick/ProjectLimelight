@@ -53,19 +53,19 @@ class CoreObject
   # MBM: hot damn lots of indexes. can we do this better? YES WE CAN
   # MCM: chill out obama
   # MBM: lolz
-  index :user_id
-  index :favorites
-  index :public_id, unique: true
-  index :created_at
-  index :ph
-  index :pd
-  index :pw
-  index :pm
-  index :pt
-  index "topic_mentions._id"
-  index "user_mentions._id"
-  index "likes._id"
-  index "sources.url"
+  # MBM: YES WE DID
+  index [[ :public_id, Mongo::DESCENDING ]]
+  index [[ :root_id, Mongo::DESCENDING ]]
+  index "topic_mentions"
+  index "user_mentions"
+  index "likes"
+  index "sources"
+  index(
+      [
+        [ :user_id, Mongo::DESCENDING ],
+        [ "likes", Mongo::DESCENDING ]
+      ]
+    ) # used in FeedUserItem
 
   def to_param
     "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
@@ -277,7 +277,7 @@ class CoreObject
     end
 
     def for_show_page(parent_id)
-      CoreObject.where('response_to._id' => parent_id).order_by(:created_at, :desc)
+      CoreObject.where(:root_id => parent_id).order_by(:created_at, :desc)
     end
 
     # @example Fetch the core_objects for a feed with the given criteria
@@ -371,7 +371,7 @@ class CoreObject
     end
 
     def topic_feed(feed_ids, user_id, display_types, order_by, page)
-      items = FeedTopicItem.where(:mentions.in => feed_ids, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20).to_a
+      items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions.in => feed_ids).skip((page-1)*20).limit(20).to_a
       user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
       build_topic_feed(items, user_items, feed_ids)
     end

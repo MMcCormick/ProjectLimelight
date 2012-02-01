@@ -9,6 +9,14 @@ class FeedTopicItem
   field :responses
   field :p, :default => 0
 
+  index [[ :root_id, Mongo::DESCENDING ]]
+  index(
+    [
+      [ :root_type, Mongo::ASCENDING ],
+      [ :mentions, Mongo::DESCENDING ]
+    ]
+  )
+
   class << self
 
     #TODO: latest response time?

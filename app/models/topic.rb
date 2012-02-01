@@ -81,16 +81,11 @@ class Topic
   before_destroy :remove_from_soulmate, :disconnect, :expire_caches
 
   index [[ :slug, Mongo::ASCENDING ]]
-  index "aliases.slug"
-  index "aliases.hash"
-  index :short_name
-  index :primary_type
-  index :health_index
-  index :ph
-  index :pd
-  index :pw
-  index :pm
-  index :pt
+  index [[ :public_id, Mongo::DESCENDING ]]
+  index [[ :score, Mongo::DESCENDING ]]
+  index [[ :short_name, Mongo::ASCENDING ]]
+  index :aliases
+  index :primary_type_id
 
   # Return the topic slug instead of its ID
   def to_param
@@ -394,13 +389,16 @@ class Topic
   end
 
   def disconnect
+    # remove mentions of this topic
     CoreObject.where("topic_mentions._id" => id).each do |object|
       object.remove_topic_mentions_of(id)
     end
 
+    # remove from neo4j
     node = Neo4j.neo.get_node_index('topics', 'uuid', id.to_s)
     Neo4j.neo.delete_node!(node)
 
+    # reset primary types
     Topic.where('primary_type_id' => id).each do |topic|
       topic.unset_primary_type
       topic.expire_caches
@@ -412,7 +410,7 @@ class Topic
 
     # Checks if there is an untyped topic with an alias equal to the name. If so, returns that topic, if not, returns new topic
     def find_untyped_or_create(name, user)
-      alias_topic = Topic.where("aliases.slug" => name.to_url, "primary_type" => {"$exists" => false}).first
+      alias_topic = Topic.where("aliases.slug" => name.to_url, "primary_type_id" => {"$exists" => false}).first
       if alias_topic
         alias_topic
       else

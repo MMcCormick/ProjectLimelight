@@ -19,10 +19,13 @@ class InviteCode
 
   before_validation :generate
 
+  index :user_id
+  index :code
+
   def generate
     if self.code.blank?
       self.code = SecureRandom.hex(3)
-      while InviteCode.first(conditions: {:code => self.code})
+      while InviteCode.where(:code => self.code).first
         self.code = SecureRandom.hex(3)
       end
     end

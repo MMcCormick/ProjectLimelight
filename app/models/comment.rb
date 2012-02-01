@@ -35,11 +35,12 @@ class Comment
 
   index(
     [
-      [ :talk_id, Mongo::ASCENDING ],
+      [ :talk_id, Mongo::DESCENDING ],
       [ :path, Mongo::ASCENDING ],
       [ :created_at, Mongo::DESCENDING ]
     ]
   )
+  index [[ :parent_id, Mongo::DESCENDING ]]
 
   def user_delete
     self.status = "deleted"

@@ -10,6 +10,13 @@ class FeedLikeItem
   field :last_response_time, :type => DateTime
   field :p, :default => 0
 
+  index(
+    [
+      [ :feed_id, Mongo::DESCENDING ],
+      [ :root_id, Mongo::DESCENDING ]
+    ],
+    unique: true
+  )
 
   class << self
     def create(user, post)
@@ -24,7 +31,7 @@ class FeedLikeItem
       updates = {"$inc" => { :strength => -1 }}
       updates["$pull"] = { :responses => post.id } unless post.is_root?
       FeedLikeItem.collection.update({:feed_id => user.id, :root_id => post.root_id }, updates)
-      FeedLikeItem.delete_all(conditions: { :feed_id => user.id, :strength => {"$lte" => 0} })
+      FeedLikeItem.delete_all(conditions: { :feed_id => user.id, :root_id => post.root_id, :strength => {"$lte" => 0} })
     end
   end
 end

@@ -46,7 +46,7 @@ class TopicCell < Cell::Rails
       else
         @trend_title = "There are no related trending topics to display"
       end
-      @topics = Topic.where("_id" => {"$in" => pull_ids}).desc(:pw).limit(40) if !pull_ids.empty?
+      @topics = Topic.where("_id" => {"$in" => pull_ids}).desc(:score).limit(40) if !pull_ids.empty?
     else
       @topics = Topic.all.desc(:pw).limit(40)
     end

@@ -9,7 +9,7 @@ class TwitterController < ApplicationController
     twitter_id = params[:twitter_id] ? params[:twitter_id] : twitter.uid.to_i
     tweets = current_user.twitter.user_timeline(twitter_id, :count => 50, :include_rts => false, :include_entities => true, :trim_user => true, :exclude_replies => true)
     tweet_ids = tweets.map{|t| t.id.to_s}
-    tweet_posts = CoreObject.where(:tweet_id => {'$in' => tweet_ids})
+    tweet_posts = CoreObject.where(:tweet_id => {'$in' => tweet_ids}) # ADD index for this if we end up using tweet_id
     embedly_api = Embedly::API.new :key => 'ca77b5aae56d11e0a9544040d3dc5c07'
     tweets.each_with_index do |tweet, i|
       previous = tweet_posts.detect{|tp| tp.tweet_id.to_s == tweet.id.to_s}

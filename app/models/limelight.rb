@@ -522,9 +522,10 @@ module Limelight #:nodoc:
         :v_up => 1.0,
         :v_down => -1.0,
         :lk => 1.0,
-        :fav => 2.0,
-        :flw => 1.0,
-        :share => 1,
+        :new => 0.5,
+        :fav => 0,
+        :flw => 2.0,
+        :share => 0.5,
 
         # Modifiers
         :ooc => 0.3,
@@ -561,6 +562,10 @@ module Limelight #:nodoc:
       amt
     end
 
+    def pop_new_action
+
+    end
+
     # secondary boolean means the function is being called on the parent of the object which actually had the action
     def add_pop_action(type, subtype, current_user, secondary=false)
       amt = 0
@@ -587,8 +592,8 @@ module Limelight #:nodoc:
           snippet_attrs[:root_type] = root_type if root_id
           action.pop_snippets.new(snippet_attrs)
 
-          # Update user if not a link, video, or picture
-          unless ["Link", "Video", "Picture"].include? self.class.name
+          # Update user if not a link, video, or picture and this is not a :new action
+          unless type == :new || ["Link", "Video", "Picture"].include?(self.class.name)
             user_amt = amt * @@pop_amounts[:user]
 
             action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")

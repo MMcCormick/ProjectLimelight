@@ -46,7 +46,7 @@ class CoreObject
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :send_tweet, :set_response_to, :set_root
-  after_create :neo4j_create, :update_response_count, :push_to_feeds, :action_log_create
+  after_create :neo4j_create, :update_response_count, :push_to_feeds, :action_log_create, :add_initial_pop
   after_update :expire_caches
   after_destroy :remove_from_feeds
 
@@ -83,6 +83,10 @@ class CoreObject
       source.video_id = @source_video_id unless @source_video_id.blank?
       add_source(source)
     end
+  end
+
+  def add_initial_pop
+    add_pop_action(:new, :a, user)
   end
 
   def add_source(source)

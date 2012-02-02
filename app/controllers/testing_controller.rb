@@ -3,18 +3,19 @@ class TestingController < ApplicationController
   def test
 
     map    = "function() {
+      var hours = this.et;
       this.pop_snippets.forEach(function(snippet) {
         if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {
-          emit(snippet._id, {amount: snippet.a, type: snippet.ot});
+          emit(snippet._id, {amount: snippet.a, type: snippet.ot, temp_time: hours});
         }
         if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Talk')
         {
-          emit(snippet.rid, {amount: snippet.a, type: snippet.rt});
+          emit(snippet.rid, {amount: snippet.a, type: snippet.rt, temp_time: hours});
         }
       });
     };"
     reduce = "function(key, values) {
-      var result = {amount: 0, type: values[0].type}
+      var result = {amount: 0, type: values[0].type, temp_time: values[0].temp_time}
 
       values.forEach(function(doc) {
         result.amount += doc.amount
@@ -25,11 +26,15 @@ class TestingController < ApplicationController
 
     @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:created_at => {'$gte' => Chronic.parse("three months ago").utc}}, :out => "popularity_results")
 
+  end
+
+  # temporarily excluded for faster testing of above
+  def testrest
     ###############################
     # AVERAGES
 
     map2    = "function() {
-      emit(this.value.type, {amount: this.value.amount, type: this.value.type});
+      emit(this.value.type, {amount: this.value.amount});
     };"
     reduce2 = "function(key, values) {
       var sum = 0;
@@ -41,7 +46,7 @@ class TestingController < ApplicationController
       });
       if (count > 0)
         average = sum/count;
-      return {amount: average, type: key};
+      return {amount: average};
     };"
 
     @results2 = PopularityResults.collection.map_reduce(map2, reduce2, :out => "popularity_averages")
@@ -49,7 +54,7 @@ class TestingController < ApplicationController
     averages2 = SiteData.where(:name => 'object_averages').first
     averages2 = SiteData.new(:name => 'object_averages') unless averages2
     @results2.find().each do |doc|
-      averages2.data[doc['value']['type']] = doc['value']['amount']
+      averages2.data[doc['_id']] = doc['value']['amount']
     end
     averages2.save
 
@@ -57,6 +62,7 @@ class TestingController < ApplicationController
 
     averages = SiteData.where(:name => 'object_averages').first
     if averages
+      averages.data.delete('User')
       normalized_average = averages.data.values.inject{ |sum, el| sum + el }.to_f / averages.data.size
       normalized = {
               :topic => normalized_average/averages.data['Topic'],

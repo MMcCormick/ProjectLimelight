@@ -294,7 +294,7 @@ class CoreObject
         display_types << 'Topic'
       end
 
-      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
+      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:rel, :desc).skip((page-1)*20).limit(20)
 
       build_feed(items)
 

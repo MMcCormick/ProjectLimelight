@@ -1,52 +1,107 @@
 class TestingController < ApplicationController
 
   def test
-    map    = "function() { " +
-      "this.pop_snippets.forEach(function(snippet) { " +
-      "  if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {" +
-      "  emit(snippet._id, {amount: snippet.a, type: snippet.ot}); " +
-      "  }" +
-      "  if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Talk') " +
-      "  emit(snippet.rid, {amount: snippet.a, type: snippet.ot}); " +
-      "}); " +
-    "};"
-    reduce = "function(key, values) { " +
-      "var sum = 0; " +
-      "values.forEach(function(doc) { " +
-      " sum += doc.amount; " +
-      "}); " +
-      "var otype = values[0].type; " +
-      "return {amount: sum, type: otype}; " +
-    "};"
 
-    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:created_at => {'$gte' => Chronic.parse("three months ago").utc}}, :out => "pop_results")
+    averages = SiteData.where(:name => 'object_averages').first
+    if averages
+      normalized_average = averages.data.values.inject{ |sum, el| sum + el }.to_f / averages.data.size
+      normalized = {
+              :topic => normalized_average/averages.data['Topic'],
+              :link => normalized_average/averages.data['Link'],
+              :picture => normalized_average/averages.data['Picture'],
+              :video => normalized_average/averages.data['Video'],
+              :talk => normalized_average/averages.data['Talk']
+      }
+    else
+      normalized = {
+              :topic => 1,
+              :link => 1,
+              :picture => 1,
+              :video => 1,
+              :talk => 1
+      }
+    end
+
+
+    map    = "function() {
+      this.pop_snippets.forEach(function(snippet) {
+        if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {
+          emit(snippet._id, {amount: snippet.a, type: snippet.ot});
+        }
+        if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Talk')
+        {
+          emit(snippet.rid, {amount: snippet.a, type: snippet.ot});
+        }
+      });
+    };"
+    reduce = "function(key, values) {
+      var result = {amount: 0, type: values[0].type}
+
+      values.forEach(function(doc) {
+        result.amount += doc.amount
+      });
+
+      return result;
+    };"
+
+    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:created_at => {'$gte' => Chronic.parse("three months ago").utc}}, :out => "popularity_results")
 
     @results.find().each do |doc|
-      FeedTopicItem.where(:root_id => doc["_id"]).update_all("p" => doc["value"]["amount"])
-      FeedLikeItem.where(:root_id => doc["_id"]).update_all("p" => doc["value"]["amount"])
-      FeedContributeItem.where(:root_id => doc["_id"]).update_all("p" => doc["value"]["amount"])
+      # Normalize the popularity
+      normalized_value = doc["value"]["amount"]
+      case doc["value"]["type"]
+        when 'Topic'
+          normalized_value = normalized[:topic] / normalized_value
+        when 'Link'
+          normalized_value = normalized[:link] / normalized_value
+        when 'Picture'
+          normalized_value = normalized[:picture] / normalized_value
+        when 'Video'
+          normalized_value = normalized[:video] / normalized_value
+        when 'Talk'
+          normalized_value = normalized[:talk] / normalized_value
+      end
+
+      FeedTopicItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
+      FeedLikeItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
+      FeedContributeItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
 
       FeedUserItem.where(:root_id => doc["_id"]).each do |item|
         item.ds = item.ds * (1 - (Time.now - item.dt) / 360000) if item.dt
-        item.p = doc["value"]["amount"]
+        item.p = normalized_value
         item.rel = item.p * item.ds
         item.dt = Time.now
         item.save
       end
     end
 
-    #map2    = "function() { " +
-    #  "emit(this._id, this.p * this.ds);" +
-    #"};"
-    #reduce2 = "function(key, values) { " +
-    #  "return values[0]; " +
-    #"};"
-    #
-    #@results2 = FeedUserItem.collection.map_reduce(map2, reduce2, :query => {}, :out => "feed_user_relevance")
-    #
-    #@results2.find().each do |doc|
-    #  FeedUserItem.where(:_id => doc["_id"]).update_all("rel" => doc["value"])
-    #end
+    ###############################
+    # AVERAGES
+
+    map    = "function() {
+      emit(this.value.type, {amount: this.value.amount, type: this.value.type});
+    };"
+    reduce = "function(key, values) {
+      var sum = 0;
+      var count = 0;
+      var average = 0;
+      values.forEach(function(doc) {
+        sum += doc.amount;
+        count += 1;
+      });
+      if (count > 0)
+        average = sum/count;
+      return {amount: average, type: key};
+    };"
+
+    @results = PopularityResults.collection.map_reduce(map, reduce, :out => "popularity_averages")
+
+    averages = SiteData.where(:name => 'object_averages').first
+    averages = SiteData.new(:name => 'object_averages') unless averages
+    @results.find().each do |doc|
+      averages.data[doc['value']['type']] = doc['value']['amount']
+    end
+    averages.save
 
   end
 

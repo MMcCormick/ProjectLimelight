@@ -21,6 +21,13 @@ class FeedUserItem
     ],
     unique: true
   )
+  index(
+    [
+      [ :feed_id, Mongo::DESCENDING ],
+      [ :root_type, Mongo::DESCENDING ],
+      [ :rel, Mongo::DESCENDING ]
+    ]
+  )
   index :responses
 
   class << self

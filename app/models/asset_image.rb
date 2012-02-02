@@ -14,8 +14,6 @@ class AssetImage < Asset
 
   embedded_in :image_snippet
 
-  validates :image, :presence => true
-
   def save_image(location)
     hash = SecureRandom::hex(8)+'.jpeg'
     writeOut = open("/tmp/#{hash}", "wb")

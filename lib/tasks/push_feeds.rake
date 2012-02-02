@@ -16,6 +16,21 @@ namespace :push_feeds do
         co.content = ''
       end
 
+      # Set the primary topic mention
+      if co.topic_mentions && co.topic_mentions.length > 0
+        topics = Topic.where(:_id => {'$in' => co.topic_mentions.map{|m| m.id}})
+        primary_mention_score = -9999
+        primary_topic_mention = nil
+        topics.each do |t|
+          if t.score > primary_mention_score
+            primary_mention_score = t.score
+            primary_topic_mention = t.id
+          end
+        end
+
+        co.primary_topic_mention = primary_topic_mention if primary_topic_mention
+      end
+
       co.set_root
       co.save!
     end

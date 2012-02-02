@@ -2,6 +2,59 @@ class TestingController < ApplicationController
 
   def test
 
+    map    = "function() {
+      this.pop_snippets.forEach(function(snippet) {
+        if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {
+          emit(snippet._id, {amount: snippet.a, type: snippet.ot});
+        }
+        if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Talk')
+        {
+          emit(snippet.rid, {amount: snippet.a, type: snippet.rt});
+        }
+      });
+    };"
+    reduce = "function(key, values) {
+      var result = {amount: 0, type: values[0].type}
+
+      values.forEach(function(doc) {
+        result.amount += doc.amount
+      });
+
+      return result;
+    };"
+
+    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:created_at => {'$gte' => Chronic.parse("three months ago").utc}}, :out => "popularity_results")
+
+    ###############################
+    # AVERAGES
+
+    map2    = "function() {
+      emit(this.value.type, {amount: this.value.amount, type: this.value.type});
+    };"
+    reduce2 = "function(key, values) {
+      var sum = 0;
+      var count = 0;
+      var average = 0;
+      values.forEach(function(doc) {
+        sum += doc.amount;
+        count += 1;
+      });
+      if (count > 0)
+        average = sum/count;
+      return {amount: average, type: key};
+    };"
+
+    @results2 = PopularityResults.collection.map_reduce(map2, reduce2, :out => "popularity_averages")
+
+    averages2 = SiteData.where(:name => 'object_averages').first
+    averages2 = SiteData.new(:name => 'object_averages') unless averages2
+    @results2.find().each do |doc|
+      averages2.data[doc['value']['type']] = doc['value']['amount']
+    end
+    averages2.save
+
+    # END AVERAGES
+
     averages = SiteData.where(:name => 'object_averages').first
     if averages
       normalized_average = averages.data.values.inject{ |sum, el| sum + el }.to_f / averages.data.size
@@ -22,44 +75,20 @@ class TestingController < ApplicationController
       }
     end
 
-
-    map    = "function() {
-      this.pop_snippets.forEach(function(snippet) {
-        if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {
-          emit(snippet._id, {amount: snippet.a, type: snippet.ot});
-        }
-        if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Talk')
-        {
-          emit(snippet.rid, {amount: snippet.a, type: snippet.ot});
-        }
-      });
-    };"
-    reduce = "function(key, values) {
-      var result = {amount: 0, type: values[0].type}
-
-      values.forEach(function(doc) {
-        result.amount += doc.amount
-      });
-
-      return result;
-    };"
-
-    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:created_at => {'$gte' => Chronic.parse("three months ago").utc}}, :out => "popularity_results")
-
     @results.find().each do |doc|
       # Normalize the popularity
       normalized_value = doc["value"]["amount"]
       case doc["value"]["type"]
         when 'Topic'
-          normalized_value = normalized[:topic] / normalized_value
+          normalized_value = normalized[:topic] * normalized_value
         when 'Link'
-          normalized_value = normalized[:link] / normalized_value
+          normalized_value = normalized[:link] * normalized_value
         when 'Picture'
-          normalized_value = normalized[:picture] / normalized_value
+          normalized_value = normalized[:picture] * normalized_value
         when 'Video'
-          normalized_value = normalized[:video] / normalized_value
+          normalized_value = normalized[:video] * normalized_value
         when 'Talk'
-          normalized_value = normalized[:talk] / normalized_value
+          normalized_value = normalized[:talk] * normalized_value
       end
 
       FeedTopicItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
@@ -74,34 +103,6 @@ class TestingController < ApplicationController
         item.save
       end
     end
-
-    ###############################
-    # AVERAGES
-
-    map    = "function() {
-      emit(this.value.type, {amount: this.value.amount, type: this.value.type});
-    };"
-    reduce = "function(key, values) {
-      var sum = 0;
-      var count = 0;
-      var average = 0;
-      values.forEach(function(doc) {
-        sum += doc.amount;
-        count += 1;
-      });
-      if (count > 0)
-        average = sum/count;
-      return {amount: average, type: key};
-    };"
-
-    @results = PopularityResults.collection.map_reduce(map, reduce, :out => "popularity_averages")
-
-    averages = SiteData.where(:name => 'object_averages').first
-    averages = SiteData.new(:name => 'object_averages') unless averages
-    @results.find().each do |doc|
-      averages.data[doc['value']['type']] = doc['value']['amount']
-    end
-    averages.save
 
   end
 

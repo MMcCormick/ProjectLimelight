@@ -11,7 +11,7 @@ class PopularityAction
 
   embeds_many :pop_snippets, :as => :pop_ac_snip
 
-  index [[ :created_at, Mongo::DESCENDING ]]
+  index [[ :et, Mongo::DESCENDING ]]
 
   belongs_to :user
 

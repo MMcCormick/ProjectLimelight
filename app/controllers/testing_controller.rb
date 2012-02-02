@@ -24,7 +24,7 @@ class TestingController < ApplicationController
       return result;
     };"
 
-    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:created_at => {'$gte' => Chronic.parse("three months ago").utc}}, :out => "popularity_results")
+    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:et => {'$gte' => Chronic.parse("three months ago").utc.to_i}}, :out => "popularity_results")
 
   end
 

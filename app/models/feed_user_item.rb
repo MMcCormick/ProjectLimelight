@@ -11,6 +11,7 @@ class FeedUserItem
   field :responses, :type => Array
   field :last_response_time, :type => DateTime
   field :p, :default => 0
+  field :rel, :default => 0
 
   class << self
     def post_create(post, popular_talk=false)

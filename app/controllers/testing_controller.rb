@@ -19,15 +19,34 @@ class TestingController < ApplicationController
       "return {amount: sum, type: otype}; " +
     "};"
 
-    #take time into account?
-    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {}, :out => "pop_results")
+    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:created_at => {'$gte' => Chronic.parse("three months ago").utc}}, :out => "pop_results")
 
     @results.find().each do |doc|
-      FeedUserItem.where(:root_id => doc["_id"]).update_all("p" => doc["value"]["amount"])
       FeedTopicItem.where(:root_id => doc["_id"]).update_all("p" => doc["value"]["amount"])
       FeedLikeItem.where(:root_id => doc["_id"]).update_all("p" => doc["value"]["amount"])
       FeedContributeItem.where(:root_id => doc["_id"]).update_all("p" => doc["value"]["amount"])
+
+      FeedUserItem.where(:root_id => doc["_id"]).each do |item|
+        item.ds = item.ds * (1 - (Time.now - item.dt) / 360000) if item.dt
+        item.p = doc["value"]["amount"]
+        item.rel = item.p * item.ds
+        item.dt = Time.now
+        item.save
+      end
     end
+
+    #map2    = "function() { " +
+    #  "emit(this._id, this.p * this.ds);" +
+    #"};"
+    #reduce2 = "function(key, values) { " +
+    #  "return values[0]; " +
+    #"};"
+    #
+    #@results2 = FeedUserItem.collection.map_reduce(map2, reduce2, :query => {}, :out => "feed_user_relevance")
+    #
+    #@results2.find().each do |doc|
+    #  FeedUserItem.where(:_id => doc["_id"]).update_all("rel" => doc["value"])
+    #end
 
   end
 

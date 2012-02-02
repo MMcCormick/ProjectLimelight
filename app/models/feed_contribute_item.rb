@@ -10,6 +10,13 @@ class FeedContributeItem
   field :last_response_time, :type => DateTime
   field :p, :default => 0
 
+  index(
+    [
+      [ :feed_id, Mongo::DESCENDING ],
+      [ :root_id, Mongo::DESCENDING ]
+    ],
+    unique: true
+  )
 
   class << self
     def create(post)
@@ -24,7 +31,7 @@ class FeedContributeItem
       updates = {"$inc" => { :strength => -1 }}
       updates["$pull"] = { :responses => post.id } unless post.is_root?
       FeedContributeItem.collection.update({:feed_id => post.user_snippet.id, :root_id => post.root_id }, updates)
-      FeedContributeItem.delete_all(conditions: { :feed_id => post.user_snippet.id, :strength => {"$lte" => 0} })
+      FeedContributeItem.delete_all(conditions: { :feed_id => post.user_snippet.id, :root_id => post.root_id, :strength => {"$lte" => 0} })
     end
   end
 end

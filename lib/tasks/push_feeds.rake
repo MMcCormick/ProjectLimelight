@@ -17,7 +17,7 @@ namespace :push_feeds do
       end
 
       co.set_root
-      co.save
+      co.save!
     end
 
     # Reset clout
@@ -60,7 +60,7 @@ namespace :push_feeds do
       u.save
     end
 
-    # loop through all core objects and push to feeds
+    # loop through all core objects and push to feeds + some other things
     CoreObject.all.each do |co|
 
       # set the primary topic mention
@@ -71,11 +71,23 @@ namespace :push_feeds do
           co.primary_topic_pm = topic.pm
         end
       end
-      co.save
+
+      # update the response count
+      if ['Video', 'Picture', 'Link'].include?(co.class.name)
+        responses = Talk.where(:root_id => co.id).to_a
+        if responses
+          co.response_count = responses.length
+        else
+          co.response_count = 0
+        end
+      end
+
+      co.save!
 
       FeedUserItem.post_create(co)
       FeedTopicItem.post_create(co) unless co.class.name == 'Talk' || co.topic_mentions.empty?
       FeedContributeItem.create(co)
+
     end
   end
 

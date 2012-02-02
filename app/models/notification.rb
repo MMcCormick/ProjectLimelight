@@ -19,11 +19,12 @@ class Notification
 
   index(
     [
-      [ :user_id, Mongo::ASCENDING ],
-      [ :created_at, Mongo::DESCENDING ]
+      [ :user_id, Mongo::DESCENDING ],
+      [ :updated_at, Mongo::DESCENDING ]
     ]
   )
-  index [[ :type, Mongo::ASCENDING ]]
+  index "object_user"
+  index "triggered_by"
 
   belongs_to :user
 

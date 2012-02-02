@@ -18,6 +18,8 @@ class TopicConnection
 
   attr_accessible :name, :reverse_name, :pull_from, :reverse_pull_from, :inline
 
+  index [[ :name, Mongo::ASCENDING ]]
+
   # Return the topic slug instead of its ID
   def to_param
     self.name.to_url
@@ -71,7 +73,7 @@ class TopicConnection
 
         topic1.save
         topic2.save
-        TopicConSug.destroy_all(conditions: { con_id: connection.id, topic1_id: topic1.id, topic2_id: topic2.id })
+        TopicConSug.destroy_all(conditions: { topic1_id: topic1.id, topic2_id: topic2.id, con_id: connection.id })
         Neo4j.update_affinity(topic1.id.to_s, topic2.id.to_s, node1, node2, 10, true, true)
         ActionConnection.create(action_log)
         true

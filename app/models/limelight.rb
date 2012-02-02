@@ -463,7 +463,7 @@ module Limelight #:nodoc:
 
       topic_slugs = new_topic_mentions.map {|data| data[1]}
       # topics with matching aliases that are NOT already typed
-      topics = Topic.where("aliases.slug" => {'$in' => topic_slugs}, "primary_type" => {"$exists" => false}).to_a
+      topics = Topic.where("aliases.slug" => {'$in' => topic_slugs}, "primary_type_id" => {"$exists" => false}).to_a
 
       new_topic_mentions.each do |topic_mention|
         found_topic = false

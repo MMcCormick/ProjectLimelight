@@ -104,15 +104,13 @@ class User
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
-  index :slug
+  index [[ :slug, Mongo::ASCENDING ]]
+  index [[ :public_id, Mongo::DESCENDING ]]
+  index [[ :score, Mongo::DESCENDING ]]
   index :email
-  index "social_connects.uid"
+  index :following_topics
   index :following_users
-  index :ph
-  index :pd
-  index :pw
-  index :pm
-  index :pt
+  index "social_connects"
 
   # Return the users slug instead of their ID
   def to_param
@@ -422,7 +420,7 @@ class User
         connect.token = omniauth['credentials']['token']
 
       # If an invite code is in the session, create a new user with a stub password.
-      elsif invite = InviteCode.first(conditions: {code: invite_code})
+      elsif invite = InviteCode.where(code: invite_code).first
         if invite.usable?
           new_user = true
           if extra["gender"] && !extra["gender"].blank?

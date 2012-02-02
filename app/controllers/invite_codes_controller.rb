@@ -21,7 +21,7 @@ class InviteCodesController < ApplicationController
   end
 
   def check
-    invite = InviteCode.first(conditions: {:code => params[:invite_code][:code]})
+    invite = InviteCode.where(:code => params[:invite_code][:code]).first
     if invite
       if invite.usable?
         session[:invite_code] = params[:invite_code][:code]

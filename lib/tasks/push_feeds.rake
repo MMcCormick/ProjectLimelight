@@ -42,11 +42,14 @@ namespace :push_feeds do
     end
 
     # Create likes from pop actions
-    used_ids = []
+    used_ids = {}
     PopularityAction.all.each do |pa|
-      next if used_ids.include?(pa.object_id.to_s) || pa.type == 'flw'
+      next if pa.type == 'flw' || used_ids.detect{|d| d[:post_id] == pa.object_id.to_s && d[:user_id] == pa.user_id.to_s}
 
-      used_ids << pa.object_id.to_s
+      used_ids << {
+              :post_id => pa.object_id.to_s,
+              :user_id => pa.user_id.to_s
+      }
       object = CoreObject.find(pa.object_id)
       user = User.find(pa.user_id)
       if object && user

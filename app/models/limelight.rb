@@ -562,10 +562,6 @@ module Limelight #:nodoc:
       amt
     end
 
-    def pop_new_action
-
-    end
-
     # secondary boolean means the function is being called on the parent of the object which actually had the action
     def add_pop_action(type, subtype, current_user, secondary=false)
       amt = 0

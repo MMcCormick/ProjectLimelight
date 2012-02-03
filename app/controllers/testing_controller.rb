@@ -3,19 +3,20 @@ class TestingController < ApplicationController
   def test
 
     map    = "function() {
-      var hours = this.et;
+      var hours = (#{Time.now.to_i} - this.et) / 3600;
+      if (hours < 1) { hours = 1 }
       this.pop_snippets.forEach(function(snippet) {
         if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {
-          emit(snippet._id, {amount: snippet.a, type: snippet.ot, temp_time: hours});
+          emit(snippet._id, {amount: snippet.a / Math.pow(hours, 0.15), type: snippet.ot});
         }
         if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Talk')
         {
-          emit(snippet.rid, {amount: snippet.a, type: snippet.rt, temp_time: hours});
+          emit(snippet.rid, {amount: snippet.a / Math.pow(hours, 0.15), type: snippet.rt});
         }
       });
     };"
     reduce = "function(key, values) {
-      var result = {amount: 0, type: values[0].type, temp_time: values[0].temp_time}
+      var result = {amount: 0, type: values[0].type}
 
       values.forEach(function(doc) {
         result.amount += doc.amount
@@ -26,10 +27,6 @@ class TestingController < ApplicationController
 
     @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:et => {'$gte' => Chronic.parse("three months ago").utc.to_i}}, :out => "popularity_results")
 
-  end
-
-  # temporarily excluded for faster testing of above
-  def testrest
     ###############################
     # AVERAGES
 

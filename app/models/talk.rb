@@ -13,7 +13,7 @@ class Talk < CoreObject
   end
 
   def talk_is_cheap
-    if !is_popular && score > 100
+    if !is_popular && score > 1 && status == 'active'
       FeedUserItem.post_create(self, true)
       FeedTopicItem.post_create(self) unless !response_to || topic_mentions.empty?
       self.is_popular = true

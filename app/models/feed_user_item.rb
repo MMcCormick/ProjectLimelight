@@ -78,7 +78,7 @@ class FeedUserItem
             strength = 0
             strength -= (post.topic_mentions.map{|tm| tm.id} & u.following_topics).length unless unpopular_talk
             strength -= 1 if u.is_following_user?(post.user_snippet.id)
-            strength -= 1 if post.user_mentions.detect{ |us| us.id == user.id }
+            strength -= 1 if post.user_mentions.detect{ |us| us.id == u.id }
             strength -= 1 if post.likes.detect{ |l| u.is_following_user?(l.id) }
 
             updates = {"$inc" => { :strength => strength, :ds => strength }}
@@ -116,7 +116,7 @@ class FeedUserItem
       if target.class.name == 'Topic'
         core_objects = CoreObject.where('topic_mentions._id' => target.id)
       else
-        core_objects = CoreObject.any_of(:user_id => target.id, 'likes._id' => target.id)
+        core_objects = CoreObject.any_of({:user_id => target.id}, {'likes._id' => target.id})
       end
       core_objects.each do |post|
         unless user.id == post.user_snippet.id

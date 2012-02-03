@@ -42,7 +42,7 @@ namespace :push_feeds do
     end
 
     # Create likes from pop actions
-    used_ids = {}
+    used_ids = []
     PopularityAction.all.each do |pa|
       next if pa.type == 'flw' || used_ids.detect{|d| d[:post_id] == pa.object_id.to_s && d[:user_id] == pa.user_id.to_s}
 
@@ -103,7 +103,7 @@ namespace :push_feeds do
       co.save!
 
       FeedUserItem.post_create(co)
-      FeedTopicItem.post_create(co) unless co.class.name == 'Talk' || co.topic_mentions.empty?
+      FeedTopicItem.post_create(co) unless co.response_to || co.topic_mentions.empty?
       FeedContributeItem.create(co)
 
     end

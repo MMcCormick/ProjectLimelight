@@ -130,10 +130,6 @@ class TestingController < ApplicationController
 
     # loop through all core objects and push to feeds
     CoreObject.all.each do |co|
-      if co.id.to_s == '4f0b420ebb30bd000500011e'
-        foo = 'bar'
-      end
-
       # set the primary topic mention
       mentions = Topic.where(:_id => {'$in' => co.topic_mentions.map{|t| t.id}}).to_a
       mentions.each do |topic|

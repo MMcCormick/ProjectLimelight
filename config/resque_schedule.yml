@@ -6,13 +6,13 @@
 #  description: "This job calls the scout executable to send log data to scout."
 
 recalculate_popularity:
-  every: 1m
+  every: 10m
   class: RecalculatePopularity
   args:
   description: "This job recalculates popularity scores"
 
-recalculate_popularity:
-  every: 2m
+recalculate_averages:
+  every: 1h
   class: RecalculateAverages
   args:
   description: "This job recalculates popularity averages for each root type"

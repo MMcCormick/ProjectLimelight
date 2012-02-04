@@ -46,7 +46,7 @@ class CoreObject
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :send_tweet, :set_response_to, :set_root
-  after_create :neo4j_create, :update_response_count, :push_to_feeds, :action_log_create, :add_initial_pop
+  after_create :neo4j_create, :update_response_count, :feed_post_create, :action_log_create, :add_initial_pop
   after_update :expire_caches
   after_destroy :remove_from_feeds
 
@@ -189,6 +189,7 @@ class CoreObject
       add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
       ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
+      #Resque.enqueue(FeedsLike, )
       FeedUserItem.like(user, self)
       FeedLikeItem.create(user, self)
       true
@@ -240,11 +241,14 @@ class CoreObject
     ActionPost.create(:action => 'delete', :from_id => user_snippet.id, :to_id => id, :to_type => self.class.name)
   end
 
+  def feed_post_create
+    Resque.enqueue(FeedsPostCreate, id.to_s)
+  end
+
   def push_to_feeds
     FeedUserItem.post_create(self)
     FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
     FeedContributeItem.create(self)
-    #Resque.enqueue(FeedsPostCreate, id.to_s)
   end
 
   def set_root
@@ -382,7 +386,8 @@ class CoreObject
         item_ids << i.root_id
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
         item_ids += user_i.responses.last(2) if user_i && user_i.responses
-        overlap = (i.root_mentions & feed_ids).first
+        #TODO: fix this overlap thing, was failing so i added a conditional but doesnt seem to work
+        overlap = (i.root_mentions & feed_ids) ? (i.root_mentions & feed_ids).first : false
 
         # if we are not on a topic feed mentioned in root mentions, show the latest object that mentions this topic feed
         if !overlap && i.responses
@@ -398,7 +403,8 @@ class CoreObject
         root = objects.detect{|o| o.id == i.root_id}
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
         user_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
-        overlap = (i.root_mentions & feed_ids).first
+        #TODO: fix this overlap thing, was failing so i added a conditional but doesnt seem to work
+        overlap = (i.root_mentions & feed_ids) ? (i.root_mentions & feed_ids).first : false
         if !overlap && i.responses
           overlap = (i.responses.keys & feed_ids.map{|f| f.to_s}).first
           topic_responses = objects.select{ |o| i.responses[overlap] == o.id }

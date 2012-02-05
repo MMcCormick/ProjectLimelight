@@ -13,7 +13,7 @@ class Talk < CoreObject
   end
 
   def talk_is_cheap
-    if !is_popular && score > 0.1 && status == 'active'
+    if !is_popular && score > 3 && status == 'active'
       Resque.enqueue(FeedsPopularTalk, id.to_s)
     end
   end

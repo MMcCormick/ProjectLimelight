@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     @description = "A feed containing all posts submitted by " + @user.username
     page = params[:p] ? params[:p].to_i : 1
     @right_sidebar = true if current_user != @user
-    @more_path = user_feed_path :p => page + 1
+    @more_path = user_path :p => page + 1
     @core_objects = CoreObject.contribute_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
     respond_to do |format|
       format.js {
@@ -133,7 +133,7 @@ class UsersController < ApplicationController
     not_found("User not found") unless @user
 
     @site_style = 'narrow'
-    @title = (current_user.id == @user.id ? 'Your' : @user.username) + "'s followers"
+    @title = (current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
     @description = "A list of all users who are following" + @user.username
     @right_sidebar = true if current_user != @user
 

@@ -23,11 +23,11 @@ recalculate_clout:
   args:
   description: "This job recalculates user clout"
 
-weekly_email:
-  cron: "0 15 * * fri"
-  class: WeeklyEmail
-  args:
-  description: "This job sends users a periodic content-you-might-like email"
+#weekly_email:
+#  cron: "0 15 * * fri"
+#  class: WeeklyEmail
+#  args:
+#  description: "This job sends users a periodic content-you-might-like email"
 
 daily_notifications:
   cron: "0 14 * * *"

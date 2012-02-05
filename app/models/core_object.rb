@@ -298,7 +298,11 @@ class CoreObject
         display_types << 'Topic'
       end
 
-      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:rel, :desc).skip((page-1)*20).limit(20)
+      if order_by == 'newest'
+        items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc).skip((page-1)*20).limit(20)
+      else
+        items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:rel, :desc).skip((page-1)*20).limit(20)
+      end
 
       build_feed(items)
 
@@ -361,7 +365,11 @@ class CoreObject
         display_types << 'Topic'
       end
 
-      items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
+      if order_by == 'newest'
+        items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc).skip((page-1)*20).limit(20)
+      else
+        items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:p, :desc).skip((page-1)*20).limit(20)
+      end
       build_feed(items)
     end
 
@@ -370,12 +378,20 @@ class CoreObject
         display_types << 'Topic'
       end
 
-      items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).skip((page-1)*20).limit(20)
+      if order_by == 'newest'
+        items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc).skip((page-1)*20).limit(20)
+      else
+        items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:p, :desc).skip((page-1)*20).limit(20)
+      end
       build_feed(items)
     end
 
     def topic_feed(feed_ids, user_id, display_types, order_by, page)
-      items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions.in => feed_ids).skip((page-1)*20).limit(20).to_a
+      if order_by == 'newest'
+        items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions.in => feed_ids).order_by(:last_response_time, :desc).skip((page-1)*20).limit(20)
+      else
+        items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions.in => feed_ids).order_by(:p, :desc).skip((page-1)*20).limit(20)
+      end
       user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
       build_topic_feed(items, user_items, feed_ids)
     end

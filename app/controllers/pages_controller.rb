@@ -2,23 +2,6 @@ class PagesController < ApplicationController
 
   caches_page :splash
 
-  def everything
-    @title = 'Everything'
-    @description = "The Everything page. This is a feed of all posts submitted to the site, which can be customized" +
-        "by filtering, sorting, and changing the feed style."
-    page = params[:p] ? params[:p].to_i : 1
-    @more_path = everything_path :p => page + 1
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {:page => page})
-
-    respond_to do |format|
-      format.js {
-        response = reload_feed(@core_objects, @more_path, page)
-        render json: response
-      }
-      format.html
-    end
-    end
-
   def admin
     authorize! :manage, :all
     @title = 'Admin'

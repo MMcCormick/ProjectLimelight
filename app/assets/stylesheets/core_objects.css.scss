@@ -661,18 +661,20 @@ $teaser-padding: 10px;
 
   .root {
     .topic-head {
+      @include clearfix();
       position: relative;
-      padding: 7px 10px 0 60px;
-      min-height: 44px;
+      padding: 0;
 
       img {
         @include border-radius(0px);
-        position: absolute;
-        background: #999;
         height: 50px;
         width: 50px;
-        top: 0px;
-        left: 0px;
+        float: left;
+      }
+      .c {
+        float: left;
+        width: 173px;
+        padding: 7px 0 10px 7px;
       }
     }
     .actions {

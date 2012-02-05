@@ -11,6 +11,8 @@ var resizeLayout = function(rightSidebarAdjust) {
   var h = $(window).height() - header.height() - footer.height() - 50;
 
   $('#colmask,#colmid,#page,#page_content,#page_inside').css('min-height', h);
+  didScroll = true;
+  handleScroll();
 };
 
 // Check if something is visible on the screen

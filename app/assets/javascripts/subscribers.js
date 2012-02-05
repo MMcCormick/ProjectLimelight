@@ -237,8 +237,8 @@ $(function() {
       $('body').removeClass('narrow')
     }
 
-    resizeLayout();
     rearrange_feed_columns();
+    resizeLayout();
   });
 
   /*

@@ -1,5 +1,15 @@
 <div id="feed-filters">
-  <%= render :partial => "core_objects/feed_sort_main" %>
+  <div class="feed-sort">
+    <h5>SORT</h5>
+    <ul>
+      <li class="btn">
+        <div data-d='newest' title="Sort by the newest posts" class="feed-newest opt <%= session[:feed_filters][:sort] == 'newest' ? 'on' : '' %>">Newest</div>
+      </li>
+      <li class="btn">
+        <div data-d='popular' title="Sort by the most popular posts" class="feed-popular opt <%= session[:feed_filters][:sort] != 'newest' ? 'on' : '' %>">Popular</div>
+      </li>
+    </ul>
+  </div>
 
   <div class="feed-display">
     <h5>SHOW</h5>

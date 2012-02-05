@@ -188,12 +188,21 @@ class CoreObject
       user.likes_count += 1
       add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
-      ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
-      #Resque.enqueue(FeedsLike, )
-      FeedUserItem.like(user, self)
-      FeedLikeItem.create(user, self)
+      Resque.enqueue(FeedsLike, id.to_s)
       true
     end
+  end
+
+  def push_like
+    ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
+    FeedUserItem.like(user, self)
+    FeedLikeItem.create(user, self)
+  end
+
+  def push_unlike
+    ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
+    FeedUserItem.unlike(user, self)
+    FeedLikeItem.create(user, self)
   end
 
   def remove_from_likes(user)
@@ -203,9 +212,7 @@ class CoreObject
       user.likes_count -= 1
       add_pop_action(:lk, :r, user)
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
-      ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
-      FeedUserItem.unlike(user, self)
-      FeedLikeItem.create(user, self)
+      Resque.enqueue(FeedsUnlike, id.to_s)
       true
     else
       false
@@ -270,6 +277,10 @@ class CoreObject
 
   def disable
     self.status = 'disabled'
+    Resque.enqueue(FeedsPostDisable, id.to_s)
+  end
+
+  def push_disable
     FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
     FeedTopicItem.post_disable(self) unless self.class.name == 'Talk' && !is_popular
     FeedContributeItem.disable(self)
@@ -298,66 +309,15 @@ class CoreObject
         display_types << 'Topic'
       end
 
+      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
       if order_by == 'newest'
-        items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc).skip((page-1)*20).limit(20)
+        items = items.order_by(:last_response_time, :desc)
       else
-        items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:rel, :desc).skip((page-1)*20).limit(20)
+        items = items.order_by(:rel, :desc)
       end
+      items = items.skip((page-1)*20).limit(20)
 
       build_feed(items)
-
-      #or_criteria = []
-      #or_criteria << {:_id.in => options[:includes_ids]} if options[:includes_ids]
-      #or_criteria << {:user_id.in => options[:created_by_users]} if options[:created_by_users] && !options[:created_by_users].empty?
-      #or_criteria << {"likes._id" => {"$in" => options[:liked_by_users]}} if options[:liked_by_users] && !options[:liked_by_users].empty?
-      #or_criteria << {"topic_mentions._id" => {"$in" => options[:mentions_topics]}} if options[:mentions_topics] && !options[:mentions_topics].empty?
-      #or_criteria << {"user_mentions._id" => {"$in" => options[:mentions_users]}} if options[:mentions_users] && !options[:mentions_users].empty?
-      #or_criteria << {"parent_id" => options[:parent_id]} if options[:parent_id]
-      #
-      ##page length also hard-coded in views/core_object
-      #page_length = options[:limit]? options[:limit] - 1 : 20
-      #page_number = options[:page]? options[:page] : 1
-      #num_to_skip = page_length * (page_number - 1)
-      #
-      #core_objects = self.only(:id, :_type, :parent_type, :parent_id)
-      #
-      ## page_length + 1 is used below so that one extra object is returned, allowing the views to check if there are more objects
-      #if or_criteria.length > 0
-      #  core_objects = core_objects.where(:status => "active", :parent_type => {'$in' => display_types}).any_of(or_criteria).skip(num_to_skip).limit(page_length + 1)
-      #else
-      #  core_objects = core_objects.where(:status => "active", :parent_type => {'$in' => display_types}).skip(num_to_skip).limit(page_length + 1)
-      #end
-      #
-      ## if we are exluding some parent ids
-      #if options[:not_parent_ids]
-      #  core_objects = core_objects.where(:id => {'$nin' => options[:not_parent_ids]}, :parent_id => {'$nin' => options[:not_parent_ids]})
-      #end
-      #
-      #if order_by[:target] != 'created_at'
-      #  core_objects = core_objects.order_by([[order_by[:target], order_by[:order]], [:created_at, :desc]])
-      #else
-      #  core_objects = core_objects.order_by([[order_by[:target], order_by[:order]]])
-      #end
-      #
-      ## get the link data in one query
-      #root_ids = []
-      #core_objects.each do |core_object|
-      #  if core_object.parent_id
-      #    root_ids << core_object.parent_id
-      #  elsif !core_object._type == 'Talk'
-      #    root_ids << core_object.id
-      #  end
-      #end
-      #roots = CoreObject.where(:_id => {'$in' => root_ids}).to_a
-      #
-      ## build the structure
-      #return_objects = []
-      #core_objects.each do |core_object|
-      #  root = roots.detect{|l| l.id == core_object.id || l.id == core_object.parent_id}
-      #  return_objects << {:root => root, :original => core_object}
-      #end
-      #
-      #return_objects
     end
 
     def contribute_feed(feed_id, display_types, order_by, page)
@@ -365,11 +325,14 @@ class CoreObject
         display_types << 'Topic'
       end
 
+      items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
       if order_by == 'newest'
-        items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc).skip((page-1)*20).limit(20)
+        items = items.order_by(:last_response_time, :desc)
       else
-        items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:p, :desc).skip((page-1)*20).limit(20)
+        items = items.order_by(:p, :desc)
       end
+      items = items.skip((page-1)*20).limit(20)
+
       build_feed(items)
     end
 
@@ -378,20 +341,26 @@ class CoreObject
         display_types << 'Topic'
       end
 
+      items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
       if order_by == 'newest'
-        items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc).skip((page-1)*20).limit(20)
+        items = items.order_by(:last_response_time, :desc)
       else
-        items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:p, :desc).skip((page-1)*20).limit(20)
+        items = items.order_by(:p, :desc)
       end
+      items = items.skip((page-1)*20).limit(20)
+
       build_feed(items)
     end
 
     def topic_feed(feed_ids, user_id, display_types, order_by, page)
+      items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions.in => feed_ids)
       if order_by == 'newest'
-        items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions.in => feed_ids).order_by(:last_response_time, :desc).skip((page-1)*20).limit(20)
+        items = items.order_by(:last_response_time, :desc)
       else
-        items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions.in => feed_ids).order_by(:p, :desc).skip((page-1)*20).limit(20)
+        items = items.order_by(:p, :desc)
       end
+      items = items.skip((page-1)*20).limit(20)
+
       user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
       build_topic_feed(items, user_items, feed_ids)
     end
@@ -402,7 +371,7 @@ class CoreObject
         item_ids << i.root_id
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
         item_ids += user_i.responses.last(2) if user_i && user_i.responses
-        #TODO: fix this overlap thing, was failing so i added a conditional but doesnt seem to work
+
         overlap = (i.root_mentions & feed_ids) ? (i.root_mentions & feed_ids).first : false
 
         # if we are not on a topic feed mentioned in root mentions, show the latest object that mentions this topic feed
@@ -419,7 +388,7 @@ class CoreObject
         root = objects.detect{|o| o.id == i.root_id}
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
         user_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
-        #TODO: fix this overlap thing, was failing so i added a conditional but doesnt seem to work
+
         overlap = (i.root_mentions & feed_ids) ? (i.root_mentions & feed_ids).first : false
         if !overlap && i.responses
           overlap = (i.responses.keys & feed_ids.map{|f| f.to_s}).first

@@ -14,21 +14,22 @@ class FeedUserItem
   field :rel, :default => 0
 
   index [[ :root_id, Mongo::DESCENDING ]]
+  index :responses
   index(
     [
       [ :feed_id, Mongo::DESCENDING ],
-      [ :root_id, Mongo::DESCENDING ]
-    ],
-    unique: true
+      [ :root_id, Mongo::DESCENDING ],
+      [ :rel, Mongo::DESCENDING ]
+    ]
   )
   index(
     [
       [ :feed_id, Mongo::DESCENDING ],
       [ :root_type, Mongo::DESCENDING ],
-      [ :rel, Mongo::DESCENDING ]
+      [ :last_response_time, Mongo::DESCENDING ]
     ]
   )
-  index :responses
+
 
   class << self
     def post_create(post, popular_talk=false)

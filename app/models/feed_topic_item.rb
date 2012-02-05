@@ -13,7 +13,15 @@ class FeedTopicItem
   index(
     [
       [ :root_type, Mongo::ASCENDING ],
-      [ :mentions, Mongo::DESCENDING ]
+      [ :mentions, Mongo::DESCENDING ],
+      [ :p, Mongo::DESCENDING ]
+    ]
+  )
+  index(
+    [
+      [ :root_type, Mongo::DESCENDING ],
+      [ :mentions, Mongo::DESCENDING ],
+      [ :last_response_time, Mongo::DESCENDING ]
     ]
   )
 

@@ -4,7 +4,7 @@ class RecalculateClout
   @queue = :popularity
 
   def self.perform
-    users = User.all.asc(:pt)
+    users = User.all.asc(:score)
     num_users = User.count
 
     users.each_with_index do |user, i|

@@ -18,7 +18,7 @@ recalculate_averages:
   description: "This job recalculates popularity averages for each root type"
 
 recalculate_clout:
-  every: 30m
+  every: 45m
   class: RecalculateClout
   args:
   description: "This job recalculates user clout"

@@ -13,11 +13,8 @@ class Talk < CoreObject
   end
 
   def talk_is_cheap
-    if !is_popular && score > 1 && status == 'active'
-      #TODO: can't fix this to work in a background job!
-      FeedUserItem.post_create(self, true)
-      FeedTopicItem.post_create(self) unless !response_to || topic_mentions.empty?
-      #Resque.enqueue(FeedsPopularTalk, id.to_s)
+    if !is_popular && score > 0.1 && status == 'active'
+      Resque.enqueue(FeedsPopularTalk, id.to_s)
     end
   end
 

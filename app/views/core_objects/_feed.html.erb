@@ -5,7 +5,7 @@
         <%= render_cell :core_object, "teaser_root_#{session[:feed_filters][:layout]}", current_user, core_object[:root] %>
 
         <% unless core_object[:root].class.name == 'Talk' %>
-          <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:topic_responses], 'topic-related' if core_object[:topic_responses]%>
+          <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:topic_responses], 'topic-related' if core_object[:topic_responses] %>
           <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:responses] %>
           <%= render_cell :core_object, "teaser_public_#{session[:feed_filters][:layout]}", current_user, core_object[:root] %>
         <% end %>

@@ -1009,43 +1009,21 @@ $teaser-padding: 10px;
   }
 
   .feed-sort {
-    width: 220px;
+    float: left;
+    margin-right: 0;
 
-    .feed-sort-select {
-      border-left: 1px solid #CCC;
-      border-right: 1px solid #CCC;
-      border-bottom: 1px solid #9F9F9F;
-      min-height: 16px;
-      margin: 0;
-      padding: 5px 0;
-      cursor: pointer;
-      position: absolute;
-      top: 0px;
-      left: 70px;
-      background: #FFF;
-
-      .btn {
-        cursor: pointer;
-      }
-      &.closed {
-        border-left-color: transparent;
-        border-right-color: transparent;
-        border-bottom-color: transparent;
-        background: transparent;
-      }
-      .opt {
-        width: 115px;
-      }
-      .opt:hover {
-        color: #444;
-      }
+    ul {
+      margin: 0 0 0 10px;
     }
-    .arrow-small {
-      position: absolute;
-      top: 7px;
-      right: 6px;
-      z-index: 10;
-      cursor: pointer;
+    li {
+      float: left;
+    }
+    .opt {
+      padding-top: 5px;
+      height: 21px;
+      &.on {
+        font-weight: bold;
+      }
     }
   }
 

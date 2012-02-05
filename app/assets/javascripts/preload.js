@@ -157,7 +157,11 @@ $('.response').livequery(function() {
   $(this).each(function(i,val) {
     if ($('.response[data-id="'+$(val).data('id')+'"]').length > 1)
     {
-      $(this).parents('.teaser:first').find('.public,.topic-related').hide();
+      $(this).parents('.teaser:first').find('.public').remove();
+      if ($('.response[data-id="'+$(val).data('id')+'"]').length > 1)
+      {
+        $(this).parents('.teaser:first').find('.topic-related').remove();
+      }
     }
   })
 })

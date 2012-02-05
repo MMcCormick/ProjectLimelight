@@ -17,6 +17,20 @@ class FeedContributeItem
     ],
     unique: true
   )
+  index(
+    [
+      [ :feed_id, Mongo::DESCENDING ],
+      [ :root_type, Mongo::DESCENDING ],
+      [ :last_response_time, Mongo::DESCENDING ]
+    ]
+  )
+  index(
+    [
+      [ :feed_id, Mongo::DESCENDING ],
+      [ :root_type, Mongo::DESCENDING ],
+      [ :p, Mongo::DESCENDING ]
+    ]
+  )
 
   class << self
     def create(post)

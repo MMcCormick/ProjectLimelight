@@ -1,14 +1,13 @@
 require 'json'
 
 class FeedsLike
-  include Resque::Plugins::UniqueJob
-
   @queue = :feeds
 
-  def self.perform(post_id)
+  def self.perform(post_id, user_id)
 
     post = CoreObject.find(post_id)
-    post.push_like if post
+    user = User.find(user_id)
+    post.push_like(user) if post && user
 
   end
 

@@ -1,8 +1,6 @@
 require 'json'
 
 class FeedsPostDisable
-  include Resque::Plugins::UniqueJob
-
   @queue = :feeds
 
   def self.perform(post_id)

@@ -44,7 +44,7 @@ namespace :push_feeds do
     # Create likes from pop actions
     used_ids = []
     PopularityAction.all.each do |pa|
-      next if pa.type == 'flw' || used_ids.detect{|d| d[:post_id] == pa.object_id.to_s && d[:user_id] == pa.user_id.to_s}
+      next if pa.type == 'flw' || pa.type == 'new' || used_ids.detect{|d| d[:post_id] == pa.object_id.to_s && d[:user_id] == pa.user_id.to_s}
 
       used_ids << {
               :post_id => pa.object_id.to_s,

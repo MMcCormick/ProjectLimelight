@@ -2,109 +2,111 @@ class TestingController < ApplicationController
 
   def test
 
-    map    = "function() {
-      var hours = (#{Time.now.to_i} - this.et) / 3600;
-      if (hours < 1) { hours = 1 }
-      this.pop_snippets.forEach(function(snippet) {
-        if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {
-          emit(snippet._id, {amount: snippet.a / Math.pow(hours, 0.15), type: snippet.ot});
-        }
-        if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Talk')
-        {
-          emit(snippet.rid, {amount: snippet.a / Math.pow(hours, 0.15), type: snippet.rt});
-        }
-      });
-    };"
-    reduce = "function(key, values) {
-      var result = {amount: 0, type: values[0].type}
+    # get all objects
+    CoreObject.all.each do |co|
 
-      values.forEach(function(doc) {
-        result.amount += doc.amount
-      });
-
-      return result;
-    };"
-
-    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:et => {'$gte' => Chronic.parse("three months ago").utc.to_i}}, :out => "popularity_results")
-
-    ###############################
-    # AVERAGES
-
-    map2    = "function() {
-      emit(this.value.type, {amount: this.value.amount});
-    };"
-    reduce2 = "function(key, values) {
-      var sum = 0;
-      var count = 0;
-      var average = 0;
-      values.forEach(function(doc) {
-        sum += doc.amount;
-        count += 1;
-      });
-      if (count > 0)
-        average = sum/count;
-      return {amount: average};
-    };"
-
-    @results2 = PopularityResults.collection.map_reduce(map2, reduce2, :out => "popularity_averages")
-
-    averages2 = SiteData.where(:name => 'object_averages').first
-    averages2 = SiteData.new(:name => 'object_averages') unless averages2
-    @results2.find().each do |doc|
-      averages2.data[doc['_id']] = doc['value']['amount']
-    end
-    averages2.save
-
-    # END AVERAGES
-
-    averages = SiteData.where(:name => 'object_averages').first
-    if averages
-      averages.data.delete('User')
-      normalized_average = averages.data.values.inject{ |sum, el| sum + el }.to_f / averages.data.size
-      normalized = {
-              :topic => normalized_average/averages.data['Topic'],
-              :link => normalized_average/averages.data['Link'],
-              :picture => normalized_average/averages.data['Picture'],
-              :video => normalized_average/averages.data['Video'],
-              :talk => normalized_average/averages.data['Talk']
-      }
-    else
-      normalized = {
-              :topic => 1,
-              :link => 1,
-              :picture => 1,
-              :video => 1,
-              :talk => 1
-      }
-    end
-
-    @results.find().each do |doc|
-      # Normalize the popularity
-      normalized_value = doc["value"]["amount"]
-      case doc["value"]["type"]
-        when 'Topic'
-          normalized_value = normalized[:topic] * normalized_value
-        when 'Link'
-          normalized_value = normalized[:link] * normalized_value
-        when 'Picture'
-          normalized_value = normalized[:picture] * normalized_value
-        when 'Video'
-          normalized_value = normalized[:video] * normalized_value
-        when 'Talk'
-          normalized_value = normalized[:talk] * normalized_value
+      # do we need to split a link into a talk?
+      if co._type != 'Talk' && !co.content.blank?
+        Talk.create(
+          :content => co.content,
+          :content_raw => co.content,
+          :user_id => co.user_id,
+          :parent => co
+        )
+        co.content = ''
       end
 
-      FeedTopicItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
-      FeedLikeItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
-      FeedContributeItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
+      # Set the primary topic mention
+      if co.topic_mentions && co.topic_mentions.length > 0
+        topics = Topic.where(:_id => {'$in' => co.topic_mentions.map{|m| m.id}})
+        primary_mention_score = -9999
+        primary_topic_mention = nil
+        topics.each do |t|
+          if t.score > primary_mention_score
+            primary_mention_score = t.score
+            primary_topic_mention = t.id
+          end
+        end
 
-      FeedUserItem.where(:root_id => doc["_id"]).each do |item|
-        item.ds = item.ds * (1 - (Time.now - item.dt) / 360000) if item.dt
-        item.p = normalized_value
-        item.rel = item.p * item.ds
-        item.dt = Time.now
-        item.save
+        co.primary_topic_mention = primary_topic_mention if primary_topic_mention
       end
+
+      co.set_root
+      co.save!
+    end
+
+    # Reset clout
+    User.all.each do |u|
+      u.clout = 1
+      u.save
+    end
+
+    # Create likes from pop actions
+    used_ids = []
+    PopularityAction.all.each do |pa|
+      found = used_ids.detect{|d| d[:post_id] == pa.object_id.to_s && d[:user_id] == pa.user_id.to_s}
+      next if pa.type == 'flw' || pa.type == 'new' || pa.type == 'v_down' || found
+
+      used_ids << {
+              :post_id => pa.object_id.to_s,
+              :user_id => pa.user_id.to_s
+      }
+      object = CoreObject.find(pa.object_id)
+      user = User.find(pa.user_id)
+      if object && user
+        object.add_to_likes(user)
+        object.save
+        user.save
+      end
+    end
+
+    # Remove old pop actions
+    PopularityAction.delete_all(:conditions => {:t => {'$ne' => 'lk'}})
+
+    # Refollow all users/topics for each user
+    User.all.each do |u|
+      u.following_users.each do |f|
+        fol = User.find(f)
+        fol.add_pop_action(:flw, :a, u)
+        fol.save
+      end
+
+      u.following_topics.each do |f|
+        fol = Topic.find(f)
+        fol.add_pop_action(:flw, :a, u)
+        fol.save
+      end
+      u.save
+    end
+
+    # loop through all core objects and push to feeds + some other things
+    CoreObject.all.each do |co|
+
+      # set the primary topic mention
+      mentions = Topic.where(:_id => {'$in' => co.topic_mentions.map{|t| t.id}})
+      mentions.each do |topic|
+        if !co.primary_topic_pm || topic.pt > co.primary_topic_pm
+          co.primary_topic_mention = topic.id
+          co.primary_topic_pm = topic.pm
+        end
+      end
+
+      # update the response count
+      if ['Video', 'Picture', 'Link'].include?(co.class.name)
+        responses = Talk.where(:root_id => co.id).to_a
+        if responses
+          co.response_count = responses.length
+        else
+          co.response_count = 0
+        end
+      end
+
+      co.save!
+
+      FeedUserItem.post_create(co)
+      FeedTopicItem.post_create(co) unless co.response_to || co.topic_mentions.empty?
+      FeedContributeItem.create(co)
+
     end
 
   end

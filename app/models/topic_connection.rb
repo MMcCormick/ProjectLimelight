@@ -112,7 +112,7 @@ class TopicConnection
           topic1.primary_type = nil
         end
         topic1.save
-        Resque.enqueue(SmCreateTopic, topic1.id.to_s)
+        #Resque.enqueue(SmCreateTopic, topic1.id.to_s)
       end
 
       Neo4j.update_affinity(topic1.id.to_s, topic2.id.to_s, nil, nil, -10, true, false)

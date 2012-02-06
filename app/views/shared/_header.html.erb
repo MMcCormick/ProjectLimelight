@@ -10,7 +10,7 @@
 
       <% if signed_in? && current_user.role?('admin') %>
         <%= link_to 'Admin', admin_dashboard_path, :id => 'admin_link' %>
-        <%= link_to 'Resque', '/resque', :id => 'resque_link' %>
+        <%#= link_to 'Resque', '/resque', :id => 'resque_link' %>
       <% end %>
 
       <% if signed_in? %>

@@ -27,12 +27,12 @@ namespace :limelight_neo4j do
 
       # add following users relationships
       u.following_users.each do |f|
-        Resque.enqueue(Neo4jFollowCreate, u.id.to_s, f.to_s, 'users', 'users')
+        #Resque.enqueue(Neo4jFollowCreate, u.id.to_s, f.to_s, 'users', 'users')
       end
 
       # add following topics relationships
       u.following_topics.each do |f|
-        Resque.enqueue(Neo4jFollowCreate, u.id.to_s, f.to_s, 'users', 'topics')
+        #Resque.enqueue(Neo4jFollowCreate, u.id.to_s, f.to_s, 'users', 'topics')
       end
 
       print "Loaded #{u.username} user\n"
@@ -41,7 +41,7 @@ namespace :limelight_neo4j do
     # move posts over
     posts = CoreObject.all
     posts.each do |p|
-      Resque.enqueue(Neo4jPostCreate, p.id.to_s)
+      #Resque.enqueue(Neo4jPostCreate, p.id.to_s)
     end
     print "Loaded #{posts.length} posts\n"
 

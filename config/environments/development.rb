@@ -31,6 +31,9 @@ ProjectLimelight::Application.configure do
   # Enable threaded mode
   #config.threadsafe!
 
+  # Use a different cache store in development
+  config.cache_store = :torque_box_store
+
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   #config.active_record.auto_explain_threshold_in_seconds = 0.5

@@ -6,16 +6,16 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
 require "sprockets/railtie"
-#require "compass"
-#require 'coffee_script'
-#require "sass-rails"
-#require 'uri'
-#require 'open-uri'
+require "compass"
+require 'coffee_script'
+require "sass-rails"
+require 'uri'
+require 'open-uri'
 #require 'embedly'
 #require 'resque-loner'
-#require 'chronic'
-#require 'pusher'
-#require 'ken' # Freebase API for Ruby
+require 'chronic'
+require 'pusher'
+require 'ken' # Freebase API for Ruby
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line

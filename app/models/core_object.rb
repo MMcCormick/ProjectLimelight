@@ -154,7 +154,7 @@ class CoreObject
       self.favorites << user.id
       self.favorites_count += 1
       user.add_to_favorites(self)
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 2)
+      #Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 2)
       true
     end
   end
@@ -164,7 +164,7 @@ class CoreObject
       self.favorites.delete(user.id)
       self.favorites_count -= 1
       user.remove_from_favorites(self)
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -2)
+      #Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -2)
       true
     else
       false
@@ -187,8 +187,8 @@ class CoreObject
       like.id = user.id
       user.likes_count += 1
       add_pop_action(:lk, :a, user)
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
-      Resque.enqueue(FeedsLike, id.to_s, user.id.to_s)
+      #Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
+      #Resque.enqueue(FeedsLike, id.to_s, user.id.to_s)
       true
     end
   end
@@ -211,8 +211,8 @@ class CoreObject
       like.destroy
       user.likes_count -= 1
       add_pop_action(:lk, :r, user)
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
-      Resque.enqueue(FeedsUnlike, id.to_s, user.id.to_s)
+      #Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
+      #Resque.enqueue(FeedsUnlike, id.to_s, user.id.to_s)
       true
     else
       false
@@ -237,7 +237,7 @@ class CoreObject
   end
 
   def neo4j_create
-    Resque.enqueue(Neo4jPostCreate, id.to_s)
+    #Resque.enqueue(Neo4jPostCreate, id.to_s)
   end
 
   def action_log_create
@@ -249,7 +249,7 @@ class CoreObject
   end
 
   def feed_post_create
-    Resque.enqueue(FeedsPostCreate, id.to_s)
+    #Resque.enqueue(FeedsPostCreate, id.to_s)
   end
 
   def push_to_feeds
@@ -277,7 +277,7 @@ class CoreObject
 
   def disable
     self.status = 'disabled'
-    Resque.enqueue(FeedsPostDisable, id.to_s)
+    #Resque.enqueue(FeedsPostDisable, id.to_s)
   end
 
   def push_disable

@@ -14,7 +14,7 @@ class Talk < CoreObject
 
   def talk_is_cheap
     if !is_popular && score > 3 && status == 'active'
-      Resque.enqueue(FeedsPopularTalk, id.to_s)
+      #Resque.enqueue(FeedsPopularTalk, id.to_s)
     end
   end
 

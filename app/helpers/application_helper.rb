@@ -176,7 +176,7 @@ module ApplicationHelper
             :getSugsUrl => list_topic_con_sugs_path,
             :mentionSuggestionUrl => mention_suggestion_path
     }
-    Yajl::Encoder.encode(data)
+    data.to_json
   end
 
 end

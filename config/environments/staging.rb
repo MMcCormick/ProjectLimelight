@@ -58,7 +58,10 @@ ProjectLimelight::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-# ActionMailer Config
+  # Enable threaded mode
+  config.threadsafe!
+
+  # ActionMailer Config
   # Setup for production - deliveries, no errors raised
   ActionMailer::Base.register_interceptor(StagingMailInterceptor)
   config.action_mailer.delivery_method = :smtp

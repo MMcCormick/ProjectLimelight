@@ -59,10 +59,10 @@ ProjectLimelight::Application.routes.draw do
   post '/share/create' => 'core_object_shares#create', :as => :create_share
 
   # Resque admin
-  mount Resque::Server, :at => "resque"
+  #mount Resque::Server, :at => "resque"
 
   # Soulmate api
-  mount Soulmate::Server, :at => "/soul-data"
+  #mount Soulmate::Server, :at => "/soul-data"
 
   # Uploads
   match "/upload" => "uploads#create", :as => :upload_tmp
@@ -88,7 +88,7 @@ ProjectLimelight::Application.routes.draw do
   get 'finder/topics' => 'users#topic_finder', :as => :topic_finder
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks", :registrations => :registrations }
   resources :users, :only => [:show, :edit, :update]
-  # omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
+  #omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
   scope 'sentiment' do

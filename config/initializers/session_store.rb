@@ -1,8 +1,8 @@
-# Be sure to restart your server when you modify this file.
-
-ProjectLimelight::Application.config.session_store :cookie_store, key: '_ProjectLimelight_session'
-
-# Use the database for sessions instead of the cookie-based default,
-# which shouldn't be used to store highly confidential information
-# (create the session table with "rails generate session_migration")
-# ProjectLimelight::Application.config.session_store :active_record_store
+# Configure the TorqueBox Servlet-based session store.
+# Provides for server-based, in-memory, cluster-compatible sessions
+ProjectLimelight::Application.config.session_store :torquebox_store
+if ENV['TORQUEBOX_APP_NAME']
+  ProjectLimelight::Application.config.session_store :torquebox_store
+else
+  ProjectLimelight::Application.config.session_store :cookie_store, :key => '_limelight'
+end  

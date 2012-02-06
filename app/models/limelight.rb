@@ -379,19 +379,19 @@ module Limelight #:nodoc:
       parse_mentions(@title_raw) if @title_raw
       parse_mentions(@content_raw) if @content_raw
 
-      @ooc_mentions = Yajl::Parser.parse(@ooc_mentions) if @ooc_mentions
-      if @ooc_mentions
-        save_topic_mentions(@ooc_mentions['existing'], true) if @ooc_mentions['existing'].length > 0
-
-        if @ooc_mentions['new'].length > 0
-          new_mentions = @ooc_mentions['new'].map do |topic|
-            cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
-            [cleaned, topic.to_url, true]
-          end
-
-          save_new_topic_mentions(new_mentions)
-        end
-      end
+      #@ooc_mentions = Yajl::Parser.parse(@ooc_mentions) if @ooc_mentions
+      #if @ooc_mentions
+      #  save_topic_mentions(@ooc_mentions['existing'], true) if @ooc_mentions['existing'].length > 0
+      #
+      #  if @ooc_mentions['new'].length > 0
+      #    new_mentions = @ooc_mentions['new'].map do |topic|
+      #      cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
+      #      [cleaned, topic.to_url, true]
+      #    end
+      #
+      #    save_new_topic_mentions(new_mentions)
+      #  end
+      #end
     end
 
     def parse_mentions(text)

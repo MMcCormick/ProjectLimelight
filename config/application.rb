@@ -1,21 +1,21 @@
 require File.expand_path('../boot', __FILE__)
 
 # Pick the frameworks you want:
+#require "rails/all"
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
 require "sprockets/railtie"
-require "compass"
-require 'coffee_script'
-require "sass-rails"
-require 'uri'
-require 'open-uri'
-require 'embedly'
-require 'resque-loner'
-require 'chronic'
-require 'yajl'
-require 'pusher'
-require 'ken' # Freebase API for Ruby
+#require "compass"
+#require 'coffee_script'
+#require "sass-rails"
+#require 'uri'
+#require 'open-uri'
+#require 'embedly'
+#require 'resque-loner'
+#require 'chronic'
+#require 'pusher'
+#require 'ken' # Freebase API for Ruby
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -41,7 +41,7 @@ module ProjectLimelight
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**}')]
     config.autoload_paths += %W(#{config.root}/lib)
-    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    #config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.

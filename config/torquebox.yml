@@ -1,0 +1,41 @@
+ruby:
+  version: 1.9
+  compile_mode: jit
+  debug: false
+  interactive: false
+  profile_api: false
+
+web:
+  rackup: config.ru
+  host: localhost
+  static: public
+  session-timeout: 30m
+
+environment:
+  RAILS_ENV: production
+  RACK_ENV: production
+  BUNDLE_WITHOUT: development:test
+  MONGOID_DATABASE: heroku_app2036400
+  MONGOID_HOST: ds029177.mongolab.com
+  MONGOID_PASSWORD: bscun6son1c7q539jasfq3r85n
+  MONGOID_PORT: 29177
+  MONGOID_USERNAME: heroku_app2036400
+  MONGOLAB_URI: mongodb://heroku_app2036400:bscun6son1c7q539jasfq3r85n@ds029177.mongolab.com:29177/heroku_app2036400
+  FACEBOOK_APP_ID: 185721368181340
+  FACEBOOK_APP_SECRET: d0208e44fc533e792d4a0c72741abdcc
+  NEO4J_HOST: 354ec9e81.hosted.neo4j.org
+  NEO4J_INSTANCE: 354ec9e81
+  NEO4J_LOGIN: 844073081
+  NEO4J_PASSWORD: b1e8dce4d
+  NEO4J_PORT: 7002
+  NEO4J_REST_URL: http://844073081:b1e8dce4d@354ec9e81.hosted.neo4j.org:7002/db/data
+  NEO4J_URL: http://844073081:b1e8dce4d@354ec9e81.hosted.neo4j.org:7002
+  PUSHER_SOCKET_URL: ws://ws.pusherapp.com:80/app/586b654f03a2af1a9af3
+  PUSHER_URL: http://586b654f03a2af1a9af3:6d59dee5d04d017a3d58@api.pusherapp.com/apps/12085
+  REDISTOGO_URL: redis://redistogo:9354096ecac21eedbc24ea30a0f174d9@stingfish.redistogo.com:9365/
+  S3_KEY: AKIAIQDM2Y5J44SJILXA
+  S3_SECRET: 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
+  SENDGRID_PASSWORD: vlcoadia
+  SENDGRID_USERNAME: app2036400@heroku.com
+  TWITTER_KEY: 9AP3per8JyDGu8kvIO2g
+  TWITTER_SECRET: RPE1HguOwDwuTYmcFDlH8YoOShCvcR9HNtQaFEwgpw

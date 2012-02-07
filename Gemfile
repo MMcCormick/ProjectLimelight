@@ -7,7 +7,7 @@ gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
-gem 'cells' # Components
+gem 'cells', '3.8.0' # Components
 gem 'json' # json processing
 #gem 'redcarpet', '1.17.2' # Markdown
 gem 'fog' # Cloud support (amazon s3, etc)

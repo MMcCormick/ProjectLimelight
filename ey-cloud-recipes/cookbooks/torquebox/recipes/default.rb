@@ -32,22 +32,22 @@ template "/etc/profile.d/torquebox.sh" do
 end
 
 execute "create symbolic link to new torquebox" do
-  command "ln -s #{prefix} #{current}"
+  command "rm #{current}; ln -s #{prefix} #{current}"
 end
 
 # install upstart
-execute "torquebox-upstart" do
-  command "cd #{current}; rake torquebox:upstart:install"
+#execute "torquebox-upstart" do
+  #command "cd #{current}; rake torquebox:upstart:install"
   #command "rake torquebox:upstart:install"
   #creates "/etc/init/torquebox.conf"
   #cwd current
   #action :run
-  environment ({
-    'TORQUEBOX_HOME'=> current,
-    'JBOSS_HOME'=> "#{current}/jboss",
-    'JRUBY_HOME'=> "#{current}jruby",
-    'PATH' => "#{ENV['PATH']}:#{current}/jruby/bin"
-  })
-end
+  #environment({
+  #  'TORQUEBOX_HOME'=> current,
+  #  'JBOSS_HOME'=> "#{current}/jboss",
+  #  'JRUBY_HOME'=> "#{current}jruby",
+  #  'PATH' => "#{ENV['PATH']}:#{current}/jruby/bin"
+  #})
+#end
 
 

@@ -259,7 +259,7 @@ class Topic
 
   def set_primary_type(primary_name, primary_id)
     update_health('type')
-    if !primary_type
+    if !primary_type || !primary_type_id
       self.primary_type = primary_name
       self.primary_type_id = primary_id
       Resque.enqueue(SmCreateTopic, id.to_s)

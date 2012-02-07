@@ -8,11 +8,11 @@
 
 <% if !@followers.empty? %>
   <ul class="alt-list">
-      <li class="labels">
-        <div>User</div>
-        <div>Popularity</div>
-        <div>Followers</div>
-      </li>
+    <li class="labels">
+      <div>User</div>
+      <div>Popularity</div>
+      <div>Followers</div>
+    </li>
     <%= render 'users/std_list', :users => @followers %>
   </ul>
 <% else %>

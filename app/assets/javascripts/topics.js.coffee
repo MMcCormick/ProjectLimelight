@@ -55,6 +55,7 @@ jQuery ->
     $(@).parent().next('.tc-auto-id').val(id)
     img_url = if data.data then '/'+data.data.slug+'/picture?h=150&w=150&m=fillcropmid' else '/assets/images/topic-default-150-150.gif'
     pickTopic($(@), img_url, data.term)
+    repaint()
     getSugs()
 
   #
@@ -67,7 +68,6 @@ jQuery ->
   pickTopic = (ac, img_url, name) ->
     ac.val(name)
     ac.parent().nextAll('.topic-pic:first').html('<img src="'+img_url+'">')
-    repaint()
 
   repaint = () ->
     form = $("#new_topic_con_sug")
@@ -91,8 +91,8 @@ jQuery ->
 
     $('#con-description .t1').html($('#topic_con_sug_topic1_name').val())
     $('#con-description .t2').html($('#topic_con_sug_topic2_name').val())
-    $('#sugs-title .t1').html("")
-    $('#sugs-title .t2').html("")
+    $('#sugs-title .t1, #sugs-title .t2').html("")
+    $('#sugs-title .for, #sugs-title .and').addClass('hide')
     $('#sugs-title .t1').html("'"+$('#topic_con_sug_topic1_name').val()+"'") if $('#topic_con_sug_topic1_id').val() != ""
     $('#sugs-title .t2').html("'"+$('#topic_con_sug_topic2_name').val()+"'") if $('#topic_con_sug_topic2_id').val() != ""
     $('#sugs-title .for').removeClass('hide') if ($('#sugs-title .t1').html() != "" || $('#sugs-title .t2').html() != "")
@@ -121,6 +121,7 @@ jQuery ->
     t1_id = $('#topic_con_sug_topic1_id').val()
     $('#topic_con_sug_topic1_id').val($('#topic_con_sug_topic2_id').val())
     $('#topic_con_sug_topic2_id').val(t1_id)
+    repaint()
 
   $('.sug-a.one, .sug-a-label.one').live 'click', (e) ->
     value = if $("#topic_con_sug_pull_from").val() == "false" then true else false

@@ -41,14 +41,4 @@ class PagesController < ApplicationController
     @site_style = 'narrow'
     @feedback_topic = Topic.find(Topic.limelight_feedback_id)
   end
-
-  def splash
-    @title = 'Welcome to Limelight!'
-    @description = "The Limelight splash page, where users are directed to sign in"
-    @show = params[:show] ? params[:show].to_sym : false
-    @topics = Topic.where(:health_index.gte => 2).order_by([[:score, :desc]]).limit(450).to_a
-    @topics.shuffle!
-
-    render :layout => false
-  end
 end

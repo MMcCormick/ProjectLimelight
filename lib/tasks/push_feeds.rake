@@ -41,6 +41,14 @@ namespace :push_feeds do
       u.save
     end
 
+    # Set primary_type_id for topics with a primary type
+    Topic.where(:primary_type.exists => true, :primary_type.ne => nil).each do |t|
+      if !t.primary_type_id && type_t = Topic.where('aliases.slug' => t.primary_type.to_url).first
+        t.primary_type_id = type_t.id
+        t.save
+      end
+    end
+
     # Create likes from pop actions
     used_ids = []
     PopularityAction.all.each do |pa|
@@ -80,16 +88,6 @@ namespace :push_feeds do
 
     # loop through all core objects and push to feeds + some other things
     CoreObject.all.each do |co|
-
-      # set the primary topic mention
-      mentions = Topic.where(:_id => {'$in' => co.topic_mentions.map{|t| t.id}})
-      mentions.each do |topic|
-        if !co.primary_topic_pm || topic.pt > co.primary_topic_pm
-          co.primary_topic_mention = topic.id
-          co.primary_topic_pm = topic.pm
-        end
-      end
-
       # update the response count
       if ['Video', 'Picture', 'Link'].include?(co.class.name)
         responses = Talk.where(:root_id => co.id).to_a

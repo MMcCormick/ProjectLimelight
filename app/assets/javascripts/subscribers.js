@@ -138,11 +138,12 @@ $(function() {
     })
   })
 
-  // When a new page in an alt-list is loaded
-  amplify.subscribe("loaded_alt_list", function (data) {
+  // When a new page in an alt-list or health-list is loaded
+  amplify.subscribe("loaded_topic_list loaded_user_list", function (data) {
     $('#load-more').remove()
-    var content = $(data.content)
-    $('.alt-list').append(content)
+    if(data.status == 'ok') {
+      $('.alt-list, .health-list').append(data.content)
+    }
   });
 
   // Fetching google images for a topic

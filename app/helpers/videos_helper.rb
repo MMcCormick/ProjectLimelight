@@ -13,10 +13,10 @@ module VideosHelper
   end
 
   def video_embed(source, w, h, provider=nil, video_id=nil, embed_html=nil, autoplay=nil)
+    autoplay = autoplay ? '&autoplay=1' : ''
     if (source && source.video_id) || (provider && video_id)
       provider = source.name.downcase unless provider
       video_id = source.video_id unless video_id
-      autoplay = autoplay ? '&autoplay=1' : ''
       case provider.downcase
         when 'youtube'
           "<iframe class='media video-embed' width='#{w}' height='#{h}' src='http://www.youtube.com/embed/#{video_id}?wmode=transparent&rel=0#{autoplay}' frameborder='0' allowfullscreen></iframe>".html_safe
@@ -32,7 +32,8 @@ module VideosHelper
       end
     else
       if embed_html && ((embed_html =~ /width/i) != nil)
-        embed_html.gsub(/(width)="\d+"/, '\1="'+w.to_s+'"').gsub(/(height)="\d+"/, '\1="'+h.to_s+'"').html_safe
+
+        embed_html.gsub(/(width)="\d+"/, '\1="'+w.to_s+'"').gsub(/(height)="\d+"/, '\1="'+h.to_s+'"').gsub(/(src)="([^'"]*)"/, '\1="\2'+autoplay+'"').gsub('"', "'").html_safe
       else
         "<p>Embed not available.</p>".html_safe
       end

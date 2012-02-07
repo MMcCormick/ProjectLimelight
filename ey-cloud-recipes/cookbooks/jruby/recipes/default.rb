@@ -2,121 +2,54 @@
 # Cookbook Name:: jruby
 # Recipe:: default
 #
-
-package "dev-java/sun-jdk" do
-  action :install
-end
-
-package "dev-java/jruby-bin" do
-  action :install
-end
-
-execute "install-glassfish" do
-  command "/usr/bin/jruby -S gem install glassfish"
-end
-
-#####
+# Copyright 2011, Heavy Water Software Inc.
 #
-# Edit this to point to YOUR app's directory
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#####
-
-APP_DIRECTORY = '/data/hello_world/current'
-
-#####
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-# These are generic tuning parameters for each instance size; you may want to further tune them for
-# your application's specific needs if they prove inadequate.
-# In particular, if you have a thread-safe application, you will _definitely_ only want a single
-# runtime.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
-#####
 
-size = `curl -s http://instance-data.ec2.internal/latest/meta-data/instance-type`
-case size
-when /t1.micro/ # 0.6G RAM, 1 ECU, 32- or 64-bit  ## should never use micros but set defaults just in case 
-  JVM_CONFIG = '-server -Xmx512m -Xms512m -XX:MaxPermSize=128m -XX:PermSize=128m -XX:NewRatio=2 -XX:+DisableExplicitGC'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 1
-when /m1.small/ # 1.7G RAM, 1 ECU, 32-bit
-  JVM_CONFIG = '-server -Xmx1g -Xms512m -XX:MaxPermSize=256m -XX:PermSize=256m -XX:NewRatio=2 -XX:+DisableExplicitGC'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 1
-when /m1.large/ # 7.5G RAM, 4 ECU, 64-bit
-  JVM_CONFIG = '-server -Xmx2g -Xms512m -XX:MaxPermSize=256m -XX:PermSize=256m -XX:NewRatio=2 -XX:+DisableExplicitGC'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 4
-when /m1.xlarge/ # 15G RAM, 8 ECU, 64-bit
-  JVM_CONFIG = '-server -Xmx2.5g -Xms512m -XX:MaxPermSize=378m -XX:PermSize=378m =XX:NewRatio=2'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 8
-when /c1.medium/ # 1.7G RAM, 5 ECU, 32-bit
-  JVM_CONFIG = '-server -Xmx1g -Xms512m -XX:MaxPermSize=256m -XX:PermSize=256m =XX:NewRatio=2'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 5
-when /c1.xlarge/ # 7.0G RAM, 20 ECU, 64-bit
-  JVM_CONFIG = '-server -Xmx4g -Xms512m -XX:MaxPermSize=1024m -XX:PermSize=512m =XX:NewRatio=2'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 20
-when /m2.xlarge/ # 17.1G RAM, 6.5 ECU, 64-bit
-  JVM_CONFIG = '-server -Xmx4g -Xms512m -XX:MaxPermSize=1024m -XX:PermSize=512m =XX:NewRatio=2'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 8
-when /m2.2xlarge/ # 34.2G RAM, 13 ECU, 64-bit
-  JVM_CONFIG = '-server -Xmx4g -Xms512m -XX:MaxPermSize=1024m -XX:PermSize=512m =XX:NewRatio=2'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 8
-when /m2.4xlarge/ # 68G RAM, 26 ECU, 64-bit
-  JVM_CONFIG = '-server -Xmx4g -Xms512m -XX:MaxPermSize=1024m -XX:PermSize=512m =XX:NewRatio=2'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 8
-else # This shouldn't happen, but do something rational if it does.
-  JVM_CONFIG = '-server -Xmx1g -Xms1g -XX:MaxPermSize=256m -XX:PermSize=256m -XX:NewRatio=2 -XX:+DisableExplicitGC'
-  JRUBY_RUNTIME_POOL_INITIAL = 1
-  JRUBY_RUNTIME_POOL_MIN = 1
-  JRUBY_RUNTIME_POOL_MAX = 1
+include_recipe "java"
+
+version = node[:jruby][:version]
+
+remote_file "/usr/src/jruby-bin-#{version}.tar.gz" do
+  source "http://jruby.org.s3.amazonaws.com/downloads/#{version}/jruby-bin-#{version}.tar.gz"
+  checksum node[:jruby][:checksum]
 end
 
-  require 'yaml'
-  File.open('/tmp/node.out','w+') {|fh| fh.puts node.to_yaml }
-
-# Install the glassfish configuration file.
-template File.join([APP_DIRECTORY],'config','glassfish.yml') do
-  owner node[:owner_name]
-  group node[:owner_name]
-  source 'glassfish.yml.erb'
-  variables({
-    :environment => 'development',
-    :port => 3000,
-    :contextroot => '/',
-    :log_level => 3,
-    :jruby_runtime_pool_initial => JRUBY_RUNTIME_POOL_INITIAL,
-    :jruby_runtime_pool_min => JRUBY_RUNTIME_POOL_MIN,
-    :jruby_runtime_pool_max => JRUBY_RUNTIME_POOL_MAX,
-    :daemon_enable => 'false', # It will be daemonized, but leave this as false for now.
-    :jvm_options => JVM_CONFIG
-  })
+execute "untar jruby" do
+  command "tar xzf /usr/src/jruby-bin-#{version}.tar.gz "
+  cwd "/usr/local/lib"
+  creates "/usr/local/lib/jruby-#{version}"
 end
 
-# Install the glassfish start/stop script.
-template '/etc/init.d/glassfish' do
-  owner 'root'
-  group 'root'
-  mode 0755
-  source 'init.d-glassfish.erb'
+link "/usr/local/jruby" do
+  to "/usr/local/lib/jruby-#{version}"
 end
 
-execute "ensure-glassfish-is-running" do
-    command %Q{
-      /etc/init.d/glassfish start --config /data/hello_world/current/config/glassfish.yml  /data/hello_world/current
-    }
+%w( jruby jirb jgem ).each do |b|
+  link "/usr/local/bin/#{b}" do
+    to "/usr/local/jruby/bin/#{b}"
+  end
+end
+
+execute "configure nailgun" do
+  command "./configure"
+  cwd "/usr/local/jruby/tool/nailgun"
+  creates "/usr/local/jruby/tool/nailgun/Makefile"
+end
+
+execute "build nailgun" do
+  command "make"
+  cwd "/usr/local/jruby/tool/nailgun"
+  creates "/usr/local/jruby/tool/nailgun/ng"
 end

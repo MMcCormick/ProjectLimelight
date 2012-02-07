@@ -1,6 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
-## monkey patch for jruby 1.6.5.1
+## monkey patch for jruby 1.6.5.1 'fiber' bug
 if defined?(JRUBY_VERSION) && JRUBY_VERSION == "1.6.5.1"
   require 'jruby'
   JRuby.runtime.getLoadService.removeBuiltinLibrary("fiber.rb")
@@ -24,8 +24,6 @@ require 'coffee_script'
 require "sass-rails"
 require 'uri'
 require 'open-uri'
-#require 'embedly'
-#require 'resque-loner'
 require 'chronic'
 require 'pusher'
 require 'ken' # Freebase API for Ruby
@@ -57,7 +55,7 @@ module ProjectLimelight
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**}')]
     config.autoload_paths += %W(#{config.root}/lib)
-    #config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.

@@ -127,61 +127,57 @@ jQuery ->
           parentForm.find('#talk_content').parents('.lClear:first').find('label').text('Talk about this '+data.limelight_post.type+'...')
           response.fadeIn(250)
         else
-          if data.embedly.oembed.type == 'video'
+          if data.type == 'video'
             clone = parentForm.find('.new_video').find('.shared').clone()
             clone.addClass('with-preview')
-            provider = data.embedly.provider_name
-            video_id = data.video_id
-            html = data.video_html
             target = clone.find('.preview')
 
-            if html
-              target.html(html)
-              clone.find('#video_embed_html').val(html)
+            if data.video
+              target.html(data.video)
+              clone.find('#video_embed_html').val(data.video)
             else
               target.html('<div class="none">Sorry, no video embed available.')
 
-            clone.find('#video_source_url').val(data.embedly.url)
+            clone.find('#video_source_url').val(data.url)
 
-            clone.find('#video_source_name').val(provider)
-            clone.find('#video_source_video_id').val(video_id)
-            if data.embedly.images.length > 0
-              clone.find('.remote_image_url').val(data.embedly.images[0].url)
+            clone.find('#video_source_name').val(data.provider_name)
+            if data.images.length > 0
+              clone.find('.remote_image_url').val(data.images[0].url)
             setContributeToVideo(parentForm)
 
-          else if data.embedly.oembed.type == 'photo'
+          else if data.type == 'photo'
             clone = parentForm.find('.new_picture').find('.shared').clone()
             clone.removeClass('with-preview')
-            clone.find('#picture_source_url').val(data.embedly.url)
-            clone.find('#picture_source_name').val(data.embedly.provider_name)
+            clone.find('#picture_source_url').val(data.url)
+            clone.find('#picture_source_name').val(data.provider_name)
             setContributeToPicture(parentForm)
           else
             clone = parentForm.find('.new_link').find('.shared').clone()
             clone.removeClass('with-preview')
-            clone.find('#link_source_url').val(data.embedly.url)
-            clone.find('#link_source_name').val(data.embedly.provider_name)
+            clone.find('#link_source_url').val(data.url)
+            clone.find('#link_source_name').val(data.provider_name)
             setContributeToLink(parentForm)
 
-          clone.find('.mention,.data').val(data.embedly.title)
+          clone.find('.mention,.data').val(data.title)
           parentForm.find('.main_content').prepend(clone)
           clone.fadeIn 150
 
-          if data.embedly.oembed.type != 'video' && data.embedly.images.length > 0
+          if data.type != 'video' && data.images.length > 0
             clone.addClass('with-preview')
             target = clone.find('.preview .images')
             target.html('')
 
-            for image in data.embedly.images
+            for image in data.images
               target.append("<img src='"+image.url+"' />")
 
             target.find('img:not(:first)').hide()
 
             clone.find('.remote_image_url').val(target.find('img:first').attr('src'))
 
-            if data.embedly.images.length > 1
+            if data.images.length > 1
               clone.find('.switcher').removeClass('hide')
 
-          if data.embedly.title.length > 0
+          if data.title.length > 0
             suggestMentions(clone.find('.mention'))
 
         self.val('').blur().parent().fadeOut 150

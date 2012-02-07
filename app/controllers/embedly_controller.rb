@@ -13,34 +13,40 @@ class EmbedlyController < ApplicationController
     # convert JSON data into a hash
     result = JSON.parse(buffer)
 
-    if result['object']
+    response = {
+            :type => 'link',
+            :video => nil,
+            :photo => nil,
+            :images => result['images'],
+            :provider_name => result['provider_name'],
+            :url => result['url'],
+            :title => result['title'],
+            :limelight_post => nil
+    }
 
+    if result['object']
+      if result['object']['type'] == 'video'
+        response[:type] = 'video'
+        response[:video] = video_embed(nil, 120, 120, result['provider_name'], nil, result['object']['html'])
+      elsif result['object']['type'] == 'photo'
+        response[:type] = 'photo'
+        response[:photo] = result['object']['url']
+      end
     end
 
-    #video_id = video_id(obj[:provider_name], obj)
-    #
-    #post = obj[:url] ? CoreObject.where('sources.url' => obj[:url]).first : nil
-    #if post
-    #  img = default_image_url(post, 50, 50, 'fillcropmid', true, true)
-    #  limelight_post = {
-    #          :id => post.id.to_s,
-    #          :title => post.title_clean,
-    #          :image => img ? img.image_url : nil,
-    #          :created_at => time_ago_in_words(post.created_at),
-    #          :type => post._type
-    #  }
-    #else
-    #  limelight_post = nil
-    #end
-    #
-    #response = {
-    #        :embedly => obj,
-    #        :video_id => video_id,
-    #        :video_html => video_embed(nil, 120, 120, obj[:provider_name], video_id, obj[:oembed][:html]),
-    #        :limelight_post => limelight_post
-    #}
+    post = result['url'] ? CoreObject.where('sources.url' => result['url']).first : nil
+    if post
+      img = default_image_url(post, 50, 50, 'fillcropmid', true, true)
+      response[:limelight_post] = {
+              :id => post.id.to_s,
+              :title => post.title_clean,
+              :image => img ? img.image_url : nil,
+              :created_at => time_ago_in_words(post.created_at),
+              :type => post._type
+      }
+    end
 
-    render json: result
+    render json: response
 
   end
 

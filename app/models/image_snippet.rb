@@ -1,4 +1,3 @@
-require 'RMagick'
 include Magick
 
 # Embeddable image snippet that holds useful (denormalized) image info

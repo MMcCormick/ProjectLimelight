@@ -12,7 +12,7 @@
         <%= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "", :alt => "#{topic.name}" %>
         <div class='stats'>
           <div class='f'><%= topic.followers_count.to_i %> followers</div>
-          <div class='l'><%= topic.pt.to_i %> score</div>
+          <div class='l'><%= topic.score.to_i %> score</div>
         </div>
       </div>
     </div>

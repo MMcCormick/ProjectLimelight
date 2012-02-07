@@ -5,9 +5,13 @@ ruby:
   interactive: false
   profile_api: false
 
+application:
+  root: /data/ProjectLimelight/current
+
 web:
   rackup: config.ru
-  host: localhost
+  host: http://ec2-50-17-25-59.compute-1.amazonaws.com/
+#  host: localhost
   static: public
   session-timeout: 30m
 

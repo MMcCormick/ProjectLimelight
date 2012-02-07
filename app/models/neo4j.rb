@@ -1,11 +1,98 @@
 class Neo4j
 
   class << self
+
+    include TorqueBox::Messaging::Backgroundable
+
     def neo
       @neo ||= ENV['NEO4J_URL'] ? Neography::Rest.new(ENV['NEO4J_URL']) : Neography::Rest.new
     end
 
+    # called for post actions (like, favorite, etc)
+    always_background :post_action
+    def post_action(user_id, post_id, change)
+      node1 = Neo4j.neo.get_node_index('users', 'uuid', user_id)
+      post = CoreObject.find(post_id)
+
+      if node1 && post
+        # increase affinity to the post creator
+        node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
+        Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, change*2, false, nil) if node2
+
+        # increase affinity to mentioned users
+        post.user_mentions.each do |m|
+          node2 = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
+          Neo4j.update_affinity(user_id, m.id.to_s, node1, node2, change, false, nil) if node2
+        end
+
+        # increase affinity to mentioned topics
+        post.topic_mentions.each do |m|
+          node2 = Neo4j.neo.get_node_index('topics', 'uuid', m.id.to_s)
+          Neo4j.update_affinity(user_id, m.id.to_s, node1, node2, change, false, nil) if node2
+        end
+      end
+    end
+
+    always_background :post_create
+    def post_create(post)
+      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
+
+      post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s)
+      unless post_node
+        post_node = Neo4j.neo.create_node(
+                'uuid' => post.id.to_s,
+                'type' => 'post',
+                'subtype' => post.class.name,
+                'public_id' => post.public_id
+        )
+        Neo4j.neo.add_node_to_index('posts', 'uuid', post.id.to_s, post_node)
+      end
+
+      rel1 = Neo4j.neo.create_relationship('created', creator_node, post_node)
+      Neo4j.neo.add_relationship_to_index('users', 'created', "#{post.user_id.to_s}-#{post.id.to_s}", rel1)
+
+      post.user_mentions.each do |m|
+        # connect the post to it's mentioned users
+        mention_node = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
+        rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
+        Neo4j.neo.set_relationship_properties(rel2, {"type" => 'user'})
+        Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
+
+        # increase the creators affinity to these users
+        Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 10, false, false)
+      end
+
+      topics = []
+      post.topic_mentions.each do |m|
+        # connect the post to it's mentioned topics
+        mention_node = Neo4j.neo.get_node_index('topics', 'uuid', m.id.to_s)
+        rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
+        Neo4j.neo.set_relationship_properties(rel2, {"type" => 'topic'})
+        Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
+
+        # increase the creators affinity to these topics
+        Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 10, false, false)
+
+        topics << {:node => mention_node, :node_id => m.id.to_s}
+      end
+
+      if post.response_to
+        parent_node = Neo4j.neo.get_node_index('posts', 'uuid', post.response_to.id.to_s)
+        if parent_node
+          talk_rel = Neo4j.neo.create_relationship('talked', creator_node, parent_node)
+          Neo4j.neo.set_relationship_properties(talk_rel, {"created_at" => Time.now})
+          Neo4j.neo.add_relationship_to_index('users', 'talked', "#{post.user_id.to_s}-#{post.response_to.id.to_s}", talk_rel)
+        end
+      end
+
+      # increase the mentioned topics affinities towards each other
+      topics.combination(2).to_a.each do |t|
+        Neo4j.update_affinity(t[0][:node_id], t[1][:node_id], t[0][:node], t[1][:node], 2, true, nil)
+      end
+    end
+
     # creates a follow relationship between two nodes
+    always_background :follow_create
     def follow_create(node1_id, node2_id, node1_index, node2_index)
       #nodes = self.neo.batch [:get_node_by_index, node1_index, "uuid", node1_id], [:get_node_by_index, node2_index, "uuid", node2_id]
       #self.neo.batch [:create_relationship, "follow", nodes[0]['body'].first['self'].split('/').last, nodes[1]['body'].first['self'].split('/').last],
@@ -18,6 +105,15 @@ class Neo4j
         self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", follow) if follow
         self.update_affinity(node1_id, node2_id, node1, node2, 50, false, nil, 'positive', false) if follow
       end
+    end
+
+    always_background :follow_destroy
+    def follow_destroy(node1_id, node2_id)
+      rel1 = Neo4j.neo.get_relationship_index('users', 'follow', "#{node1_id}-#{node2_id}")
+      Neo4j.neo.delete_relationship(rel1)
+      Neo4j.neo.remove_relationship_from_index('users', rel1)
+
+      Neo4j.update_affinity(node1_id, node2_id, nil, nil, -50, false, nil, nil, false)
     end
 
     # updates the affinity between two nodes

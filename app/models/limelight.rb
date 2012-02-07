@@ -127,35 +127,37 @@ module Limelight #:nodoc:
 
       if image && image.original && image.original.first
         original = image.original.first.image.file
-        new_image = Image.from_blob(original.read).first
+        if original.path && File.exists?(original.path)
+          new_image = Image.from_blob(original.read).first
 
-        width = dimensions[0] == 0 ? 999999 : dimensions[0]
-        height = dimensions[1] == 0 ? 999999 : dimensions[1]
+          width = dimensions[0] == 0 ? 999999 : dimensions[0]
+          height = dimensions[1] == 0 ? 999999 : dimensions[1]
 
-        case mode
-          when 'fillcropmid'
-            new_image = new_image.resize_to_fill(width, height)
-          when 'fit'
-            new_image = new_image.resize_to_fit(width, height)
+          case mode
+            when 'fillcropmid'
+              new_image = new_image.resize_to_fill(width, height)
+            when 'fit'
+              new_image = new_image.resize_to_fit(width, height)
+            else
+              new_image = new_image.resize_to_fit(width, height)
+          end
+
+          upload_type = original.class.name
+          if upload_type.include? 'Fog'
+            filename = original.attributes[:key].split('/')
+            filename = filename[-1]
           else
-            new_image = new_image.resize_to_fit(width, height)
-        end
+            filename = original.filename
+          end
 
-        upload_type = original.class.name
-        if upload_type.include? 'Fog'
-          filename = original.attributes[:key].split('/')
-          filename = filename[-1]
-        else
-          filename = original.filename
+          tmp_location = "/tmp/d#{dimensions[0]}x#{dimensions[1]}_#{filename}"
+          new_image.write tmp_location
+          version = AssetImage.new(:isOriginal => false, :resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :mode => mode, :width => new_image.columns, :height => new_image.rows)
+          version.id = image.id
+          version.image.store!(File.open(tmp_location))
+          image.versions << version
+          version.save
         end
-
-        tmp_location = "/tmp/d#{dimensions[0]}x#{dimensions[1]}_#{filename}"
-        new_image.write tmp_location
-        version = AssetImage.new(:isOriginal => false, :resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :mode => mode, :width => new_image.columns, :height => new_image.rows)
-        version.id = image.id
-        version.image.store!(File.open(tmp_location))
-        image.versions << version
-        version.save
       end
     end
 
@@ -232,7 +234,7 @@ module Limelight #:nodoc:
         end
       end
       user.recalculate_vote_ratio
-      #Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, net)
+      Neo4j.post_action(user.id.to_s, id.to_s, net)
       net
     end
 
@@ -251,7 +253,7 @@ module Limelight #:nodoc:
         self.votes_count -= vote.amount
         vote.destroy
       end
-      #Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, net)
+      Neo4j.post_action(user.id.to_s, id.to_s, net)
       net
     end
   end
@@ -421,9 +423,9 @@ module Limelight #:nodoc:
           unless existing
             payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
             self.topic_mentions.build(payload)
-            if topic.pm > primary_topic_pm
+            if topic.score > primary_topic_pm
               self.primary_topic_mention = topic.id
-              self.primary_topic_pm = topic.pm
+              self.primary_topic_pm = topic.score
             end
           end
         end
@@ -449,9 +451,9 @@ module Limelight #:nodoc:
         unless existing
           payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
           self.topic_mentions.build(payload.merge!(:ooc => ooc))
-          if topic.pm > primary_topic_pm
+          if topic.score > primary_topic_pm
             self.primary_topic_mention = topic.id
-            self.primary_topic_pm = topic.pm
+            self.primary_topic_pm = topic.score
           end
         end
       end
@@ -490,9 +492,9 @@ module Limelight #:nodoc:
           payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug, :ooc => topic_mention[2]}
           if !topic_mentions.detect{|mention| mention.id == payload[:id]}
             self.topic_mentions.build(payload)
-            if found_topic.pm > primary_topic_pm
+            if found_topic.score > primary_topic_pm
               self.primary_topic_mention = found_topic.id
-              self.primary_topic_pm = found_topic.pm
+              self.primary_topic_pm = found_topic.score
             end
           end
         else

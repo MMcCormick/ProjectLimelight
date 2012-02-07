@@ -129,7 +129,7 @@ class Topic
         return "The '#{existing.name}' topic has a one of a kind alias with this name."
       else
         self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :hash => new_alias.to_url.gsub('-', ''), :ooac => ooac)
-        #Resque.enqueue(SmCreateTopic, id.to_s)
+        LLSoulmate.create_topic(self)
         return true
       end
     else
@@ -246,11 +246,11 @@ class Topic
   #
 
   def add_to_soulmate
-    #Resque.enqueue(SmCreateTopic, id.to_s)
+    LLSoulmate.create_topic(self)
   end
 
   def remove_from_soulmate
-    #Resque.enqueue(SmDestroyTopic, id.to_s)
+    LLSoulmate.destroy_topic(id)
   end
 
   #
@@ -262,14 +262,14 @@ class Topic
     if !primary_type
       self.primary_type = primary_name
       self.primary_type_id = primary_id
-      #Resque.enqueue(SmCreateTopic, id.to_s)
+      LLSoulmate.create_topic(self)
     end
   end
 
   def unset_primary_type
     self.primary_type = nil
     self.primary_type_id = nil
-    #Resque.enqueue(SmCreateTopic, id.to_s)
+    LLSoulmate.create_topic(self)
     remove_health('type')
   end
 
@@ -357,8 +357,8 @@ class Topic
       follower.save
     end
 
-    #Resque.enqueue(SmCreateTopic, id.to_s)
-    #Resque.enqueue(SmDestroyTopic, aliased_topic.id.to_s)
+    LLSoulmate.create_topic(self)
+    LLSoulmate.destroy_topic(aliased_topic.id)
   end
 
   def raw_image(w,h,m)
@@ -572,7 +572,7 @@ class Topic
 
     if soulmate
       neo4j_update
-      #Resque.enqueue(SmCreateTopic, id.to_s)
+      LLSoulmate.create_topic(self)
     end
   end
 end

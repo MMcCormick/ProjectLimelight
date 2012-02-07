@@ -5,7 +5,7 @@ module SoulmateHelper
     nugget = {
               'id' => user.id.to_s,
               'term' => user.username,
-              'score' => user.pt,
+              'score' => user.score,
               'data' => {
               }
     }
@@ -17,7 +17,7 @@ module SoulmateHelper
     nugget = {
               'id' => topic.id.to_s,
               'term' => topic.name,
-              'score' => topic.pt,
+              'score' => topic.score,
               'data' => {
                       'slug' => topic.slug
               }

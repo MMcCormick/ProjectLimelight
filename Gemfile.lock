@@ -291,6 +291,7 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake
+  bundler
   cancan
   carrierwave
   carrierwave-mongoid

@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'bundler'
 gem 'rails', '3.2.1'
 #gem 'thin'
 gem 'jquery-rails'

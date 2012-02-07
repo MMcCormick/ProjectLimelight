@@ -29,7 +29,7 @@ ProjectLimelight::Application.configure do
   #config.active_record.mass_assignment_sanitizer = :strict
 
   # Enable threaded mode
-  #config.threadsafe!
+  config.threadsafe!
 
   # Use a different cache store in development
   config.cache_store = :torque_box_store

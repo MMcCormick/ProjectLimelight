@@ -1,5 +1,18 @@
 require File.expand_path('../boot', __FILE__)
 
+## monkey patch for jruby 1.6.5.1
+if defined?(JRUBY_VERSION) && JRUBY_VERSION == "1.6.5.1"
+  require 'jruby'
+  JRuby.runtime.getLoadService.removeBuiltinLibrary("fiber.rb")
+  JRuby.runtime.addLazyBuiltin("fiber.rb", "fiber", "org.jruby.ext.fiber.FiberExtLibrary")
+
+  class Fiber
+    def alive?
+      JRuby.reference(self).state != org.jruby.ext.fiber.ThreadFiberState::FINISHED
+    end
+  end
+end
+
 # Pick the frameworks you want:
 #require "rails/all"
 require "action_controller/railtie"

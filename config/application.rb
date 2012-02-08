@@ -21,6 +21,7 @@ require "sprockets/railtie"
 require "compass"
 require 'coffee_script'
 require "sass-rails"
+require 'resque-loner'
 require 'uri'
 require 'open-uri'
 require 'chronic'

@@ -233,9 +233,9 @@ class User
       self.following_users << user.id
       self.following_users_count += 1
       user.followers_count += 1
-      LLSoulmate.user_follow_user(id, user)
-      Neo4j.follow_create(id.to_s, user.id.to_s, 'users', 'users')
-      self.push_follow_user(user)
+      Resque.enqueue(Neo4jFollowCreate, id.to_s, user.id.to_s, 'users', 'users')
+      Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
+      Resque.enqueue(PushFollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => user.id, :to_type => 'User')
       user.add_pop_action(:flw, :a, self)
       user.save
@@ -247,7 +247,6 @@ class User
   def push_follow_user(user)
     FeedUserItem.follow(self, user)
   end
-  #always_background :push_follow_user
 
 
   def unfollow_user(user)
@@ -255,9 +254,9 @@ class User
       self.following_users.delete(user.id)
       self.following_users_count -= 1
       user.followers_count -= 1
-      Neo4j.follow_destroy(id.to_s, user.id.to_s)
-      LLSoulmate.user_follow_user(id, user)
-      self.push_unfollow_user(user)
+      Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
+      Resque.enqueue(SmUserUnfollowUser, id.to_s, user.id.to_s)
+      Resque.enqueue(PushUnfollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
 
       user.add_pop_action(:flw, :r, self)
@@ -272,7 +271,6 @@ class User
   def push_unfollow_user(user)
     FeedUserItem.unfollow(self, user)
   end
-  #always_background :push_unfollow_user
 
   def is_following_topic?(topic_id)
     self.following_topics.include? topic_id
@@ -285,8 +283,8 @@ class User
       self.following_topics << topic.id
       self.following_topics_count += 1
       topic.followers_count += 1
-      Neo4j.follow_create(id.to_s, topic.id.to_s, 'users', 'topics')
-      self.push_follow_topic(topic)
+      Resque.enqueue(Neo4jFollowCreate, id.to_s, topic.id.to_s, 'users', 'topics')
+      Resque.enqueue(PushFollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       FeedUserItem.follow(self, topic)
       topic.add_pop_action(:flw, :a, self)
@@ -299,15 +297,14 @@ class User
   def push_follow_topic(topic)
     FeedUserItem.follow(self, topic)
   end
-  #always_background :push_follow_topic
 
   def unfollow_topic(topic)
     if self.following_topics.include?(topic.id)
       self.following_topics.delete(topic.id)
       self.following_topics_count -= 1
       topic.followers_count -= 1
-      Neo4j.follow_destroy(id.to_s, topic.id.to_s)
-      self.push_unfollow_topic(topic)
+      Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s)
+      Resque.enqueue(PushUnfollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       topic.add_pop_action(:flw, :r, self)
       topic.save
@@ -321,7 +318,6 @@ class User
   def push_unfollow_topic(topic)
     FeedUserItem.unfollow(self, topic)
   end
-  #always_background :push_unfollow_topic
 
   ###
   # FAVORITING
@@ -358,11 +354,11 @@ class User
   end
 
   def add_to_soulmate
-    LLSoulmate.create_user(self)
+    Resque.enqueue(SmCreateUser, id.to_s)
   end
 
   def remove_from_soulmate
-    LLSoulmate.destroy_user(id)
+    Resque.enqueue(SmDestroyUser, id.to_s)
   end
 
   def send_welcome_email
@@ -539,7 +535,7 @@ class User
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
       neo4j_update
       expire_caches
-      LLSoulmate.create_user(self)
+      Resque.enqueue(SmCreateUser, id.to_s)
     end
   end
 

@@ -4,7 +4,6 @@ class LLSoulmate
 
     include Rails.application.routes.url_helpers
     include SoulmateHelper
-    #always_background :create_topic, :destroy_topic, :create_user, :destroy_user, :user_follow_user, :user_unfollow_user
 
     def create_topic(topic)
       Soulmate::Loader.new("topic").add(topic_nugget(topic))

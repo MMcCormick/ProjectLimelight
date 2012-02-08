@@ -9,7 +9,7 @@ module PopularityHelper
       object["p"+timeframe[0,1]+"c"] = false if pop_amount == 0
 
       if object.class.name == "Topic" && timeframe == "day"
-        LLSoulmate.create_topic(object)
+        Resque.enqueue(SmCreateTopic, object.id.to_s)
       end
 
       object.save!

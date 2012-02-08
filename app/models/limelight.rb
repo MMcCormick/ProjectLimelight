@@ -234,7 +234,7 @@ module Limelight #:nodoc:
         end
       end
       user.recalculate_vote_ratio
-      Neo4j.post_action(user.id.to_s, id.to_s, net)
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, net)
       net
     end
 
@@ -253,7 +253,7 @@ module Limelight #:nodoc:
         self.votes_count -= vote.amount
         vote.destroy
       end
-      Neo4j.post_action(user.id.to_s, id.to_s, net)
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, net)
       net
     end
   end

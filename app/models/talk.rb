@@ -14,11 +14,10 @@ class Talk < CoreObject
 
   def talk_is_cheap
     if !is_popular && score > 3 && status == 'active'
-      self.push_popular_talk
+      Resque.enqueue(PushPopularTalk, id.to_s)
     end
   end
 
-  #always_background :push_popular_talk
   def push_popular_talk
     FeedUserItem.post_create(self, true)
     FeedTopicItem.post_create(self) unless !response_to || topic_mentions.empty?

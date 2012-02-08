@@ -21,10 +21,10 @@ gem 'koala' # facebook graph api support
 gem 'twitter' # twitter api support
 #gem 'embedly'
 #gem 'heroku'
-#gem 'resque', :require => 'resque/server'
+gem 'resque'
 #gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
-#gem 'resque-scheduler', '2.0.0.e' # scheduled resque jobs
-#gem 'resque-loner' # Unique resque jobs
+gem 'resque-scheduler', '2.0.0.g' # scheduled resque jobs
+gem 'resque-loner' # Unique resque jobs
 #gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization

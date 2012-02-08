@@ -6,11 +6,11 @@ ruby:
   profile_api: false
 
 application:
-  root: /data/ProjectLimelight/current
+  root: /data/ProjectLimelight
 
 web:
   rackup: config.ru
-  host: http://ec2-50-17-25-59.compute-1.amazonaws.com/
+  host: http://ec2-23-20-4-67.compute-1.amazonaws.com
 #  host: localhost
   static: public
   session-timeout: 30m

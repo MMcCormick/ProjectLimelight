@@ -154,7 +154,7 @@ class CoreObject
       self.favorites << user.id
       self.favorites_count += 1
       user.add_to_favorites(self)
-      Neo4j.post_action(user.id.to_s, id.to_s, 2)
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 2)
       true
     end
   end
@@ -164,7 +164,7 @@ class CoreObject
       self.favorites.delete(user.id)
       self.favorites_count -= 1
       user.remove_from_favorites(self)
-      Neo4j.post_action(user.id.to_s, id.to_s, -2)
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -2)
       true
     else
       false
@@ -187,13 +187,13 @@ class CoreObject
       like.id = user.id
       user.likes_count += 1
       add_pop_action(:lk, :a, user)
-      Neo4j.post_action(user.id.to_s, id.to_s, 1)
-      self.push_like(user)
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
+      Resque.enqueue(PushLike, id.to_d, user.id.to_s)
+
       true
     end
   end
 
-  #always_background :push_like
   def push_like(user)
     ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
     FeedUserItem.like(user, self)
@@ -206,15 +206,15 @@ class CoreObject
       like.destroy
       user.likes_count -= 1
       add_pop_action(:lk, :r, user)
-      Neo4j.post_action(user.id.to_s, id.to_s, -1)
-      self.push_unlike(user)
+      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
+      Resque.enqueue(PushUnlike, id.to_d, user.id.to_s)
+
       true
     else
       false
     end
   end
 
-  #always_background :push_unlike
   def push_unlike(user)
     ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
     FeedUserItem.unlike(user, self)
@@ -239,7 +239,7 @@ class CoreObject
   end
 
   def neo4j_create
-    Neo4j.post_create(self)
+    Resque.enqueue(Neo4jPostCreate, id.to_s)
   end
 
   def action_log_create
@@ -251,10 +251,9 @@ class CoreObject
   end
 
   def feed_post_create
-    self.push_to_feeds
+    Resque.enqueue(PushPostToFeeds, id.to_s)
   end
 
-  #always_background :push_to_feeds
   def push_to_feeds
     FeedUserItem.post_create(self)
     FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
@@ -280,10 +279,9 @@ class CoreObject
 
   def disable
     self.status = 'disabled'
-    self.push_disable
+    Resque.enqueue(PushPostDisable, id.to_s)
   end
 
-  #always_background :push_disable
   def push_disable
     FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
     FeedTopicItem.post_disable(self) unless self.class.name == 'Talk' && !is_popular

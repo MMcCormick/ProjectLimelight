@@ -235,7 +235,7 @@ class User
       user.followers_count += 1
       Resque.enqueue(Neo4jFollowCreate, id.to_s, user.id.to_s, 'users', 'users')
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
-      Resque.enqueue(FeedsFollowUser, id.to_s, user.id.to_s)
+      Resque.enqueue(PushFollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => user.id, :to_type => 'User')
       user.add_pop_action(:flw, :a, self)
       user.save
@@ -248,14 +248,15 @@ class User
     FeedUserItem.follow(self, user)
   end
 
+
   def unfollow_user(user)
     if self.following_users.include?(user.id)
       self.following_users.delete(user.id)
       self.following_users_count -= 1
       user.followers_count -= 1
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
-      Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
-      Resque.enqueue(FeedsUnfollowUser, id.to_s, user.id.to_s)
+      Resque.enqueue(SmUserUnfollowUser, id.to_s, user.id.to_s)
+      Resque.enqueue(PushUnfollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
 
       user.add_pop_action(:flw, :r, self)
@@ -283,7 +284,7 @@ class User
       self.following_topics_count += 1
       topic.followers_count += 1
       Resque.enqueue(Neo4jFollowCreate, id.to_s, topic.id.to_s, 'users', 'topics')
-      Resque.enqueue(FeedsFollowTopic, id.to_s, topic.id.to_s)
+      Resque.enqueue(PushFollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       FeedUserItem.follow(self, topic)
       topic.add_pop_action(:flw, :a, self)
@@ -303,7 +304,7 @@ class User
       self.following_topics_count -= 1
       topic.followers_count -= 1
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s)
-      Resque.enqueue(FeedsUnfollowTopic, id.to_s, topic.id.to_s)
+      Resque.enqueue(PushUnfollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       topic.add_pop_action(:flw, :r, self)
       topic.save
@@ -438,7 +439,7 @@ class User
         connect.token = omniauth['credentials']['token']
 
       # If an invite code is in the session, create a new user with a stub password.
-      elsif invite = InviteCode.where(code: invite_code).first
+      elsif invite = InviteCode.where(:code => invite_code).first
         if invite.usable?
           new_user = true
           if extra["gender"] && !extra["gender"].blank?
@@ -455,9 +456,9 @@ class User
           #end
 
           user = User.new(
-                  username: username, invite_code_id: invite.id,
-                  first_name: extra["first_name"], last_name: extra["last_name"],
-                  gender: gender, email: info["email"], password: Devise.friendly_token[0,20]
+                  :username => username, :invite_code_id => invite.id,
+                  :first_name => extra["first_name"], :last_name => extra["last_name"],
+                  :gender => gender, :email => info["email"], :password => Devise.friendly_token[0,20]
           )
           user.username_reset = true
           user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]
@@ -534,7 +535,7 @@ class User
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
       neo4j_update
       expire_caches
-      Resque.enqueue(SmCreateUser, id)
+      Resque.enqueue(SmCreateUser, id.to_s)
     end
   end
 

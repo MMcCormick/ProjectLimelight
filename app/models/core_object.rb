@@ -7,7 +7,6 @@ class CoreObject
   include Limelight::Acl
   include Limelight::Mentions
   include Limelight::Popularity
-  include TorqueBox::Messaging::Backgroundable
 
   cache
 
@@ -30,10 +29,10 @@ class CoreObject
 
   auto_increment :public_id
 
-  embeds_one :user_snippet, as: :user_assignable, :class_name => 'UserSnippet'
-  embeds_one :response_to, as: :core_object_assignable, :class_name => 'CoreObjectSnippet'
+  embeds_one :user_snippet, :as => :user_assignable, :class_name => 'UserSnippet'
+  embeds_one :response_to, :as => :core_object_assignable, :class_name => 'CoreObjectSnippet'
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
-  embeds_many :likes, as: :user_assignable, :class_name => 'UserSnippet'
+  embeds_many :likes, :as => :user_assignable, :class_name => 'UserSnippet'
 
   belongs_to :user
 
@@ -194,7 +193,7 @@ class CoreObject
     end
   end
 
-  always_background :push_like
+  #always_background :push_like
   def push_like(user)
     ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
     FeedUserItem.like(user, self)
@@ -215,7 +214,7 @@ class CoreObject
     end
   end
 
-  always_background :push_unlike
+  #always_background :push_unlike
   def push_unlike(user)
     ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
     FeedUserItem.unlike(user, self)
@@ -255,7 +254,7 @@ class CoreObject
     self.push_to_feeds
   end
 
-  always_background :push_to_feeds
+  #always_background :push_to_feeds
   def push_to_feeds
     FeedUserItem.post_create(self)
     FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
@@ -284,7 +283,7 @@ class CoreObject
     self.push_disable
   end
 
-  always_background :push_disable
+  #always_background :push_disable
   def push_disable
     FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
     FeedTopicItem.post_disable(self) unless self.class.name == 'Talk' && !is_popular
@@ -444,7 +443,7 @@ class CoreObject
 
   # Set some denormilized user data
   def set_user_snippet
-    self.build_user_snippet({public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.build_user_snippet({:public_id => user.public_id, :username => user.username, :first_name => user.first_name, :last_name => user.last_name})
     self.user_snippet.id = user.id
   end
 

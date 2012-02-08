@@ -32,7 +32,7 @@ ProjectLimelight::Application.configure do
   config.threadsafe!
 
   # Use a different cache store in development
-  config.cache_store = :torque_box_store
+  #config.cache_store = :torque_box_store
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)

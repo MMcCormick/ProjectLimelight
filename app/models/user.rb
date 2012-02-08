@@ -5,7 +5,6 @@ class User
   include Mongoid::Slug
   include Limelight::Images
   include Limelight::Popularity
-  include TorqueBox::Messaging::Backgroundable
 
   cache
 
@@ -248,7 +247,7 @@ class User
   def push_follow_user(user)
     FeedUserItem.follow(self, user)
   end
-  always_background :push_follow_user
+  #always_background :push_follow_user
 
 
   def unfollow_user(user)
@@ -273,7 +272,7 @@ class User
   def push_unfollow_user(user)
     FeedUserItem.unfollow(self, user)
   end
-  always_background :push_unfollow_user
+  #always_background :push_unfollow_user
 
   def is_following_topic?(topic_id)
     self.following_topics.include? topic_id
@@ -300,7 +299,7 @@ class User
   def push_follow_topic(topic)
     FeedUserItem.follow(self, topic)
   end
-  always_background :push_follow_topic
+  #always_background :push_follow_topic
 
   def unfollow_topic(topic)
     if self.following_topics.include?(topic.id)
@@ -322,7 +321,7 @@ class User
   def push_unfollow_topic(topic)
     FeedUserItem.unfollow(self, topic)
   end
-  always_background :push_unfollow_topic
+  #always_background :push_unfollow_topic
 
   ###
   # FAVORITING
@@ -444,7 +443,7 @@ class User
         connect.token = omniauth['credentials']['token']
 
       # If an invite code is in the session, create a new user with a stub password.
-      elsif invite = InviteCode.where(code: invite_code).first
+      elsif invite = InviteCode.where(:code => invite_code).first
         if invite.usable?
           new_user = true
           if extra["gender"] && !extra["gender"].blank?
@@ -461,9 +460,9 @@ class User
           #end
 
           user = User.new(
-                  username: username, invite_code_id: invite.id,
-                  first_name: extra["first_name"], last_name: extra["last_name"],
-                  gender: gender, email: info["email"], password: Devise.friendly_token[0,20]
+                  :username => username, :invite_code_id => invite.id,
+                  :first_name => extra["first_name"], :last_name => extra["last_name"],
+                  :gender => gender, :email => info["email"], :password => Devise.friendly_token[0,20]
           )
           user.username_reset = true
           user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]

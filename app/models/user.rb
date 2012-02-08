@@ -255,7 +255,7 @@ class User
       user.followers_count -= 1
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
-      Resque.enqueue(FeedsUnollowUser, id.to_s, user.id.to_s)
+      Resque.enqueue(FeedsUnfollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
 
       user.add_pop_action(:flw, :r, self)

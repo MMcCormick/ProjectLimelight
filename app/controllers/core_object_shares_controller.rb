@@ -1,7 +1,7 @@
 class CoreObjectSharesController < ApplicationController
 
   def create
-    receiver_slugs = params[:core_object_share][:receiver_slugs].split(%r{,\s*}).map! { |elem| elem.strip }
+    receiver_slugs = params[:core_object_share][:receiver_slugs].downcase.split(%r{,\s*}).map! { |elem| elem.strip }
     included_poster = !!receiver_slugs.delete(current_user.slug)
     receivers = User.where(:slug.in => receiver_slugs)
     object = CoreObject.find(params[:core_object_share][:core_object_id])

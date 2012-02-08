@@ -9,7 +9,7 @@ class UserSnippet
 
   embedded_in :user_assignable, polymorphic: true
 
-  attr_accessible :username, :first_name, :last_name, :public_id
+  attr_accessible :username, :first_name, :last_name, :public_id, :_id
 
   # Return the users username instead of their ID
   def to_param

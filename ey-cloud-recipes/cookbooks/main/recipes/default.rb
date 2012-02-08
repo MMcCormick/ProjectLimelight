@@ -4,8 +4,7 @@
 #  }
 #end
 
-#require_recipe "jruby"
-require_recipe "torquebox"
+#require_recipe "torquebox"
 
 # uncomment to turn on thinking sphinx/ultra sphinx. Remember to edit cookbooks/sphinx/recipes/default.rb first!
 # require_recipe "sphinx"

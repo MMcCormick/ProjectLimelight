@@ -2,14 +2,12 @@ class Neo4j
 
   class << self
 
-    include TorqueBox::Messaging::Backgroundable
-
     def neo
       @neo ||= ENV['NEO4J_URL'] ? Neography::Rest.new(ENV['NEO4J_URL']) : Neography::Rest.new
     end
 
     # called for post actions (like, favorite, etc)
-    always_background :post_action
+    #always_background :post_action
     def post_action(user_id, post_id, change)
       node1 = Neo4j.neo.get_node_index('users', 'uuid', user_id)
       post = CoreObject.find(post_id)
@@ -33,7 +31,7 @@ class Neo4j
       end
     end
 
-    always_background :post_create
+    #always_background :post_create
     def post_create(post)
       creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
 
@@ -92,7 +90,7 @@ class Neo4j
     end
 
     # creates a follow relationship between two nodes
-    always_background :follow_create
+    #always_background :follow_create
     def follow_create(node1_id, node2_id, node1_index, node2_index)
       #nodes = self.neo.batch [:get_node_by_index, node1_index, "uuid", node1_id], [:get_node_by_index, node2_index, "uuid", node2_id]
       #self.neo.batch [:create_relationship, "follow", nodes[0]['body'].first['self'].split('/').last, nodes[1]['body'].first['self'].split('/').last],
@@ -107,7 +105,7 @@ class Neo4j
       end
     end
 
-    always_background :follow_destroy
+    #always_background :follow_destroy
     def follow_destroy(node1_id, node2_id)
       rel1 = Neo4j.neo.get_relationship_index('users', 'follow', "#{node1_id}-#{node2_id}")
       Neo4j.neo.delete_relationship(rel1)

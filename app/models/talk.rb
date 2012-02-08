@@ -18,7 +18,7 @@ class Talk < CoreObject
     end
   end
 
-  always_background :push_popular_talk
+  #always_background :push_popular_talk
   def push_popular_talk
     FeedUserItem.post_create(self, true)
     FeedTopicItem.post_create(self) unless !response_to || topic_mentions.empty?

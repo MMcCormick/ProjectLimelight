@@ -3,20 +3,20 @@
   <%= render "users/auth_box", :show => @show %>
 </div>
 
-<div class='topic-wall'>
-  <% @topics.each do |topic| %>
-    <% group = topic.primary_type ? topic.primary_type : 'Random' %>
-    <div class='tile <%= group.to_url %>' data-group='<%= group.to_url %>' data-name='<%= group.pluralize %>'>
-      <div class='s'>
-        <div class='name'><%= topic.name %></div>
-        <%= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "", :alt => "#{topic.name}" %>
-        <div class='stats'>
-          <div class='f'><%= topic.followers_count.to_i %> followers</div>
-          <div class='l'><%= topic.score.to_i %> score</div>
-        </div>
-      </div>
-    </div>
-  <% end %>
-</div>
+<!--<div class='topic-wall'>-->
+  <!--<%# @topics.each do |topic| %>-->
+    <!--<%# group = topic.primary_type ? topic.primary_type : 'Random' %>-->
+    <!--<div class='tile <%#= group.to_url %>' data-group='<%#= group.to_url %>' data-name='<%#= group.pluralize %>'>-->
+      <!--<div class='s'>-->
+        <!--<div class='name'><%#= topic.name %></div>-->
+        <!--<%#= image_tag topic.raw_image(100, 100, 'fillcropmid'), :class => "", :alt => "#{topic.name}" %>-->
+        <!--<div class='stats'>-->
+          <!--<div class='f'><%#= topic.followers_count.to_i %> followers</div>-->
+          <!--<div class='l'><%#= topic.score.to_i %> score</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--<%# end %>-->
+<!--</div>-->
 
-<div class='topic-wall-type hide'><h3></h3></div>
+<!--<div class='topic-wall-type hide'><h3></h3></div>-->

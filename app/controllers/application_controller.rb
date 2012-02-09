@@ -82,10 +82,7 @@ class ApplicationController < ActionController::Base
 
   # Redirect after sign in / sign up
   def after_sign_in_path_for(resource)
-     back_or_default_path root_path
-  end
-  def after_sign_up_path_for(resource)
-    root_path
+    back_or_default_path root_path
   end
 
   def back_or_default_path(default)
@@ -145,7 +142,8 @@ class ApplicationController < ActionController::Base
   end
 
   def require_sign_in
-    if request.get? && !signed_in? && !(["feed", "facebook", "splash"].include?(params[:action]) && params[:id].blank?)
+    if request.get? && !signed_in? && !(["feed", "facebook", "splash"].include?(params[:action]) && params[:id].blank?) &&
+                       params[:controller] != "confirmations" && request.fullpath != "/assets"
       session[:return_to] = request.fullpath
       redirect_to (root_path)
     end

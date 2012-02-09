@@ -616,6 +616,18 @@
       position: absolute;
       top: 200px;
       z-index: 55;
+
+      #confirm-account {
+        text-align: center;
+        position: relative;
+        color: #444;
+        font-size: 14px;
+        padding: 10px 0 20px;
+        margin: 0 0 20px -175px;
+        left: 50%;
+        top: 20px;
+        width: 350px;
+      }
     }
   }
   .topic-wall {

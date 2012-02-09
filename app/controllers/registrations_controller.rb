@@ -24,4 +24,14 @@ class RegistrationsController < Devise::RegistrationsController
       end
     end
   end
+
+  protected
+
+  def after_sign_up_path_for(resource)
+    root_path
+  end
+  def after_inactive_sign_up_path_for(resource)
+    root_path :show => 'confirm'
+  end
+
 end

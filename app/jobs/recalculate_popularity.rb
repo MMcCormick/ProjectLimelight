@@ -1,7 +1,9 @@
 class RecalculatePopularity
   include PopularityHelper
 
-  def run
+  @queue = :popularity
+
+  def self.perform
     map    = "function() {
       var hours = (#{Time.now.to_i} - this.et) / 3600;
       if (hours < 1) { hours = 1 }

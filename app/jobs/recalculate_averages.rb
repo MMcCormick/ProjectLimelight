@@ -1,6 +1,8 @@
 class RecalculateAverages
 
-  def run
+  @queue = :popularity
+
+  def self.perform
     map    = "function() {
       emit(this.value.type, {amount: this.value.amount});
     };"

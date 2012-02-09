@@ -1,6 +1,8 @@
 class SendUserNotification
 
-  def run
+  @queue = :notifications
+
+  def self.perform
     users = User.all
     users.each do |user|
       if user.notify_email

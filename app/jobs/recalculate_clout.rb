@@ -1,5 +1,8 @@
 class RecalculateClout
-  def run
+
+  @queue = :popularity
+
+  def self.perform
     users = User.all.asc(:score)
     num_users = User.count
 

@@ -75,7 +75,6 @@ end
 
 platforms :ruby do
   group :development do
-    gem 'ruby-debug-base19x'
     gem "foreman"
   end
 

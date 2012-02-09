@@ -78,7 +78,7 @@ platforms :ruby do
     gem "foreman"
   end
 
-  gem 'rmagick' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
+  gem 'rmagick', '2.12.2' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
 end
 
 platforms :jruby do

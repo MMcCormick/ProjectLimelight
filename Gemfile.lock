@@ -212,7 +212,7 @@ GEM
       redis (>= 2.0.1)
       resque (>= 1.19.0)
       rufus-scheduler
-    rmagick (2.13.1)
+    rmagick (2.12.2)
     rmagick4j (0.3.7)
     rspec (2.8.0)
       rspec-core (~> 2.8.0)
@@ -317,7 +317,7 @@ DEPENDENCIES
   resque
   resque-loner
   resque-scheduler (= 2.0.0.g)
-  rmagick
+  rmagick (= 2.12.2)
   rmagick4j
   rspec-rails
   sass-rails (~> 3.2.3)

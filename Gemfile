@@ -74,8 +74,11 @@ group :test do
 end
 
 platforms :ruby do
-  gem "foreman"
-  gem 'ruby-debug-base19x'
+  group :development do
+    gem 'ruby-debug-base19x'
+    gem "foreman"
+  end
+
   gem 'rmagick' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
 end
 

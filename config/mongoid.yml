@@ -1,3 +1,16 @@
+production:
+  host: <%= ENV['MONGOID_HOST'] %>
+  port: <%= ENV['MONGOID_PORT'] %>
+  username: <%= ENV['MONGOID_USERNAME'] %>
+  password: <%= ENV['MONGOID_PASSWORD'] %>
+  database: <%= ENV['MONGOID_DATABASE'] %>
+  raise_not_found_error: false
+  # slaves:
+  #   - host: slave1.local
+  #     port: 27018
+  #   - host: slave2.local
+  #     port: 27019
+
 development:
   host: localhost
   database: limelight_development
@@ -17,16 +30,3 @@ staging:
   password: <%= ENV['MONGOID_PASSWORD'] %>
   database: <%= ENV['MONGOID_DATABASE'] %>
   raise_not_found_error: false
-
-production:
-  host: ds029177.mongolab.com
-  port: 29177
-  username: heroku_app2036400
-  password: bscun6son1c7q539jasfq3r85n
-  database: heroku_app2036400
-  raise_not_found_error: false
-  # slaves:
-  #   - host: slave1.local
-  #     port: 27018
-  #   - host: slave2.local
-  #     port: 27019

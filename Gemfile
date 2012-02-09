@@ -77,13 +77,14 @@ platforms :ruby do
   group :development do
     gem "foreman"
   end
-
+  gem 'bson_ext'
   gem 'rmagick', '2.12.2' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
 end
 
 platforms :jruby do
   gem 'jruby-openssl'
   gem 'trinidad'
+  gem 'bson'
   gem 'rmagick4j' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
 end
 

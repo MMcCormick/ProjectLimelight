@@ -38,6 +38,8 @@ GEM
     bouncy-castle-java (1.5.0146.1)
     bson (1.5.2)
     bson (1.5.2-java)
+    bson_ext (1.5.2)
+      bson (= 1.5.2)
     builder (3.0.0)
     cancan (1.6.7)
     carrierwave (0.5.8)
@@ -288,6 +290,8 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake
+  bson
+  bson_ext
   bundler
   cancan
   carrierwave

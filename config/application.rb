@@ -28,7 +28,7 @@ require 'chronic'
 require 'pusher'
 require 'ken' # Freebase API for Ruby
 
-gem PLATFORM == 'java' ? 'rmagick4j' : 'rmagick'
+gem defined?(JRUBY_VERSION) ? 'rmagick4j' : 'rmagick'
 require 'RMagick'
 
 if defined?(Bundler)

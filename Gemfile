@@ -54,12 +54,6 @@ group :production do
 end
 
 group :development do
-  #gem "pry", '0.1'
-  #gem 'rspec-cells'
-  #gem 'guard-rspec'
-  #gem "rails-footnotes"
-  #gem "foreman"
-  #gem 'ruby-debug'
 end
 
 group :development, :test do
@@ -79,9 +73,15 @@ group :test do
   # gem 'mocha'
 end
 
+platforms :ruby do
+  gem "foreman"
+  gem 'ruby-debug-base19x'
+  gem 'rmagick' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
+end
+
 platforms :jruby do
   gem 'jruby-openssl'
   gem 'trinidad'
+  gem 'rmagick4j' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
 end
 
-gem 'rmagick4j' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol

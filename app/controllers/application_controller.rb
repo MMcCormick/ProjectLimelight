@@ -36,13 +36,13 @@ class ApplicationController < ActionController::Base
   # Build a topic list response
   def topic_list_response(partial, topics, more_path)
     html = render_to_string :partial => partial, :locals => { :topics => topics, :more_path => more_path }
-    build_ajax_response(:ok, nil, nil, nil, :content => html, :event => "loaded_alt_list")
+    build_ajax_response(:ok, nil, nil, nil, :content => html, :event => "loaded_topic_list")
   end
 
   # Build a user list response
   def user_list_response(partial, users, more_path)
     html = render_to_string :partial => partial, :locals => { :users => users, :more_path => more_path }
-    build_ajax_response(:ok, nil, nil, nil, :content => html, :event => "loaded_alt_list")
+    build_ajax_response(:ok, nil, nil, nil, :content => html, :event => "loaded_user_list")
   end
 
   def set_request_type
@@ -82,11 +82,18 @@ class ApplicationController < ActionController::Base
 
   # Redirect after sign in / sign up
   def after_sign_in_path_for(resource)
-    root_path
+     back_or_default_path root_path
   end
   def after_sign_up_path_for(resource)
     root_path
   end
+
+  def back_or_default_path(default)
+    path = session[:return_to] ? session[:return_to] : default
+    session[:return_to] = nil
+    path
+  end
+
 
 
   # Used to test error messages as they would be shown in production
@@ -139,6 +146,7 @@ class ApplicationController < ActionController::Base
 
   def require_sign_in
     if request.get? && !signed_in? && !(["feed", "facebook", "splash"].include?(params[:action]) && params[:id].blank?)
+      session[:return_to] = request.fullpath
       redirect_to (root_path)
     end
   end

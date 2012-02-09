@@ -331,7 +331,7 @@ class TopicsController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     @more_path = topic_followers_path :p => page + 1
-    per_page = 50
+    per_page = 10
     @followers = User.where(:following_topics => @topic.id).limit(per_page).skip((page - 1) * per_page)
     @more_path = nil if @followers.count(true) < per_page
 

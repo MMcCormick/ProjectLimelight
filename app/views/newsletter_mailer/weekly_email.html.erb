@@ -15,9 +15,9 @@
 
 <p>Hi <%= @user.first_or_username %>,</p>
 
-<p style="max-width: 432px;">Here are a few new posts we thought you might like. Enjoy!</p>
+<p style="max-width: 432px;">Here are a few posts we thought you might like. Enjoy!</p>
 
-<% if !@pictures.empty? %>
+<% unless @pictures.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #7BA821; margin-bottom: 20px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #7BA821; padding: 5px 5px 0;">
@@ -33,57 +33,61 @@
     </tr>
     <tr>
       <% @pictures.each do |picture| %>
-        <td width="120" style="padding: 5px 10px">
+        <td align="center" width="120" style="padding: 5px 10px">
           <% img = default_image_url(picture, 120, 120, 'fillcropmid') %>
           <a target="_blank" href="<%= picture_url picture %>">
-            <%= image_tag img, :style => 'max-width: 120px; max-height: 120px;' if img %>
+            <%= img ? image_tag(base + img, :style => 'max-width: 120px; max-height: 120px;', :alt => 'click here') : 'click here' %>
           </a>
-          <span style="font-size: 10px;">
-            by <%= link_to picture.user_snippet.username, user_url(picture.user_snippet), :style => "text-decoration: none;" %>
-            , score: <%= sprintf "%.1f", picture.pt %>
-          </span>
+        </td>
+      <% end %>
+    </tr>
+    <tr>
+      <% @pictures.each do |picture| %>
+        <td align="center" width="120" style="font-size: 10px; padding-bottom: 5px;">
+          by <%= link_to picture.user_snippet.username, user_url(picture.user_snippet), :style => "text-decoration: none;" %>
+          , score: <%= sprintf "%.1f", picture.score %>
         </td>
       <% end %>
     </tr>
   </table>
 <% end %>
 
-<% if !@link.empty? %>
+<% unless @links.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #C52828; margin-bottom: 20px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #C52828; padding: 5px 5px 0;">
-        Link
+        Links
       </td>
     </tr>
     <tr>
-      <% @link.each do |link| %>
+      <% @links.each do |link| %>
         <td align="center" width="120" style="padding: 5px 5px 0; overflow: hidden;">
           <%= link_to link.title_clean, link_url(link), :style => "text-decoration: none;" %>
         </td>
       <% end %>
     </tr>
     <tr>
-      <% @link.each do |link| %>
-        <td width="120" style="padding: 5px 10px">
+      <% @links.each do |link| %>
+        <td align="center" width="120" style="padding: 5px 10px">
           <% img = default_image_url(link, 120, 120, 'fillcropmid') %>
-          <% if img %>
-            <a target="_blank" href="<%= link_url link %>">
-              <%= image_tag img, :style => 'max-width: 120px; max-height: 120px;' if img %>
-            </a>
-          <% else %>
-            <%= "<p>#{parse_mentions(link.content, link, true)}</p>".html_safe %>
-          <% end %>
-          <span style="font-size: 10px;">
-            by <%= link_to link.user_snippet.username, user_url(link.user_snippet), :style => "text-decoration: none;" %>
-            , score: <%= sprintf "%.1f", link.pt %>
-          </span>
+          <a target="_blank" href="<%= link_url link %>">
+            <%= img ? image_tag(base + img, :style => 'max-width: 120px; max-height: 120px;', :alt => 'click here') : 'click here' %>
+          </a>
+        </td>
+      <% end %>
+    </tr>
+    <tr>
+      <% @links.each do |link| %>
+        <td align="center" width="120" style="font-size: 10px; padding-bottom: 5px;">
+          by <%= link_to link.user_snippet.username, user_url(link.user_snippet), :style => "text-decoration: none;" %>
+          , score: <%= sprintf "%.1f", link.score %>
         </td>
       <% end %>
     </tr>
   </table>
 <% end %>
 
-<% if !@videos.empty? %>
+<% unless @videos.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #51A2CC; margin-bottom: 20px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #51A2CC; padding: 5px 5px 0;">
@@ -99,19 +103,26 @@
     </tr>
     <tr>
       <% @videos.each do |video| %>
-        <td width="120" style="padding: 5px 10px">
-          <%= "<p>#{parse_mentions(video.content, video, true)}</p>".html_safe %>
-          <span style="font-size: 10px;">
-            by <%= link_to video.user_snippet.username, user_url(video.user_snippet), :style => "text-decoration: none;" %>
-            , score: <%= sprintf "%.1f", video.pt %>
-          </span>
+        <td align="center" width="120" style="padding: 5px 10px">
+          <% img = default_image_url(video, 120, 120, 'fillcropmid') %>
+          <a target="_blank" href="<%= video_url video %>">
+            <%= img ? image_tag(base + img, :style => 'max-width: 120px; max-height: 120px;', :alt => 'click here') : 'click here' %>
+          </a>
+        </td>
+      <% end %>
+    </tr>
+    <tr>
+      <% @videos.each do |video| %>
+        <td align="center" width="120" style="font-size: 10px; padding-bottom: 5px;">
+          by <%= link_to video.user_snippet.username, user_url(video.user_snippet), :style => "text-decoration: none;" %>
+          , score: <%= sprintf "%.1f", video.score %>
         </td>
       <% end %>
     </tr>
   </table>
 <% end %>
 
-<% if !@talks.empty? %>
+<% unless @talks.empty? %>
   <table cellpadding="0" style="font-size: 12px; border: 2px solid #D88E00; margin-bottom: 10px;">
     <tr>
       <td align="center" colspan="3" style="font-size: 16px; color: #D88E00; padding: 5px 5px 0;">
@@ -122,10 +133,14 @@
       <% @talks.each do |talk| %>
         <td width="120" style="padding: 5px 10px">
           <%= "<p>#{parse_mentions(talk.content, talk, true)}</p>".html_safe %>
-          <span style="font-size: 10px;">
-            by <%= link_to talk.user_snippet.username, user_url(talk.user_snippet), :style => "text-decoration: none;" %>,
-            score: <%= sprintf "%.1f", talk.pt %>
-          </span>
+        </td>
+      <% end %>
+    </tr>
+    <tr>
+      <% @talks.each do |talk| %>
+        <td align="center" width="120" style="font-size: 10px; padding-bottom: 5px;">
+          by <%= link_to talk.user_snippet.username, user_url(talk.user_snippet), :style => "text-decoration: none;" %>
+          , score: <%= sprintf "%.1f", talk.score %>
         </td>
       <% end %>
     </tr>

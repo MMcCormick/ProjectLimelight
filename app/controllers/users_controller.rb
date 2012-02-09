@@ -193,6 +193,7 @@ class UsersController < ApplicationController
         format.html
       end
     else
+      foo = session
       @title = 'Welcome to Limelight!'
       @description = "The Limelight splash page, where users are directed to sign in"
       @show = params[:show] ? params[:show].to_sym : false

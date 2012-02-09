@@ -37,7 +37,7 @@ group :assets do
   gem 'coffee-rails', "~> 3.2.1"
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  gem 'therubyrhino'
+  #gem 'therubyrhino'
 
   gem 'uglifier', '>= 1.0.3'
 end
@@ -69,7 +69,7 @@ end
 platforms :ruby do
   gem 'thin'
   gem 'bson_ext'
-  gem 'rmagick', '2.12.2' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
+  gem 'rmagick' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
   gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
   gem 'heroku'
   gem 'rpm_contrib', '2.1.7' # extra instrumentation for the new relic rpm agent
@@ -81,9 +81,9 @@ platforms :ruby do
 end
 
 platforms :jruby do
-  gem 'jruby-openssl'
-  gem 'trinidad'
-  gem 'bson'
-  gem 'rmagick4j' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
+  #gem 'jruby-openssl'
+  #gem 'trinidad'
+  #gem 'bson'
+  #gem 'rmagick4j' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
 end
 

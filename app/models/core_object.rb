@@ -188,7 +188,7 @@ class CoreObject
       user.likes_count += 1
       add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
-      Resque.enqueue(PushLike, id.to_d, user.id.to_s)
+      Resque.enqueue(PushLike, id.to_s, user.id.to_s)
 
       true
     end
@@ -207,7 +207,7 @@ class CoreObject
       user.likes_count -= 1
       add_pop_action(:lk, :r, user)
       Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
-      Resque.enqueue(PushUnlike, id.to_d, user.id.to_s)
+      Resque.enqueue(PushUnlike, id.to_s, user.id.to_s)
 
       true
     else

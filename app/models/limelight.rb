@@ -1,5 +1,5 @@
-require 'RMagick'
-include Magick
+#require 'RMagick'
+#include Magick
 
 # encoding: utf-8
 module Limelight #:nodoc:

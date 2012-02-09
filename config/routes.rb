@@ -97,6 +97,11 @@ ProjectLimelight::Application.routes.draw do
     get 'connections' => 'topic_con_sugs#new', :as => :moderate_connections
   end
 
+  # blitz.io
+  get '/mu-1234-cafe-5678-babe' do
+    '42'
+  end
+
   # Topics
   resources :topics, :except => [:edit, :show, :update, :index, :destroy]
   get '/topics/by_health' => 'topics#by_health', :as => :topics_by_health

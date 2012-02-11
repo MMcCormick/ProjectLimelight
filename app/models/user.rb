@@ -14,7 +14,7 @@ class User
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   # Denormilized:
@@ -100,7 +100,7 @@ class User
     record.errors.add attr, "Please enter correct invite code" unless invite && invite.usable?
   end
 
-  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :send_welcome_email, :invite_stuff
+  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff
   after_update :update_denorms, :expire_caches
   before_destroy :remove_from_soulmate
 
@@ -439,42 +439,38 @@ class User
         connect.token = omniauth['credentials']['token']
 
       # If an invite code is in the session, create a new user with a stub password.
-      elsif invite = InviteCode.where(:code => invite_code).first
-        if invite.usable?
-          new_user = true
-          if extra["gender"] && !extra["gender"].blank?
-            gender = extra["gender"] == 'male' || extra["gender"] == 'm' ? 'm' : 'f'
-          else
-            gender = nil
-          end
-
-          username = ""
-          #username = info['nickname'].gsub(/[^a-zA-Z0-9]/, '')
-          #existing_username = User.where(:slug => username).first
-          #if existing_username
-          #  username += Random.rand(99).to_s
-          #end
-
-          user = User.new(
-                  :username => username, :invite_code_id => invite.id,
-                  :first_name => extra["first_name"], :last_name => extra["last_name"],
-                  :gender => gender, :email => info["email"], :password => Devise.friendly_token[0,20]
-          )
-          user.username_reset = true
-          user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]
-          connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
-          connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
-          user.social_connects << connect
+      elsif invite = InviteCode.where(:code => invite_code).first && invite.usable?
+        new_user = true
+        if extra["gender"] && !extra["gender"].blank?
+          gender = extra["gender"] == 'male' || extra["gender"] == 'm' ? 'm' : 'f'
         else
-          no_code = true
+          gender = nil
         end
 
-      # If no user found + error code provided
-      else
-        no_code = true
+        username = ""
+        #username = info['nickname'].gsub(/[^a-zA-Z0-9]/, '')
+        #existing_username = User.where(:slug => username).first
+        #if existing_username
+        #  username += Random.rand(99).to_s
+        #end
+
+        user = User.new(
+                :username => username, :invite_code_id => invite.id,
+                :first_name => extra["first_name"], :last_name => extra["last_name"],
+                :gender => gender, :email => info["email"], :password => Devise.friendly_token[0,20]
+        )
+        user.username_reset = true
+        user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]
+        connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
+        connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
+        user.social_connects << connect
       end
 
-      user.save :validate => false unless no_code
+      if user && !user.confirmed?
+        enduser.confirm!
+        user.send_welcome_email
+      end
+      user.save :validate => false if user
 
       if new_user == true
         user.slug = user.id.to_s # set a temporary slug

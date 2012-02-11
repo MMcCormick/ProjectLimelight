@@ -43,7 +43,7 @@ group :assets do
 end
 
 group :production do
-
+  gem 'thin'
 end
 
 group :development do
@@ -67,7 +67,6 @@ group :test do
 end
 
 platforms :ruby do
-  gem 'thin'
   gem 'bson_ext'
   gem 'rmagick' # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
   gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com

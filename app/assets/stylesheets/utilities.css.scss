@@ -17,24 +17,6 @@
 .clear-left { clear: left; }
 .clear-right { clear: right; }
 
-#ajax-loading {
-    @include border-radius(2px);
-    display:  none;
-    padding: 3px 10px;
-    font-weight: bold;
-    background: #FFF;
-    color: #1A5199;
-    position: fixed;
-    top: 6px;
-    left: 50%;
-    z-index: 175;
-    margin:  0 0 0 -5px;
-
-    &.floating {
-        top: 12px;
-    }
-}
-
 .tip {
   color: orange;
   font-weight: bold;

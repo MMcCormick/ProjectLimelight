@@ -1,0 +1,5 @@
+<div class='tutorial-c'>
+  <div class='tutorial-<%= current_user.tutorial_step %>'>
+    <%= render_cell :user, "tutorial_#{current_user.tutorial_step}", current_user %>
+  </div>
+</div>

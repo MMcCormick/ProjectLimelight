@@ -88,7 +88,7 @@ $(function() {
   /*
    * DRAG BARS
    */
-  $('.tlink, .topic-name, .topic-card').livequery(function() {
+  $('.tlink, .topic-name, .topic-card, .topic-card-small').livequery(function() {
     var $self = $(this);
     $self.draggable({
       revert: true,

@@ -36,4 +36,29 @@ class UserCell < Cell::Rails
     render
   end
 
+  def tutorial_1(current_user)
+    @current_user = current_user
+    render
+  end
+
+  def tutorial_2(current_user)
+    @current_user = current_user
+    render
+  end
+
+  def tutorial_3(current_user)
+    @current_user = current_user
+    suggestions = Neo4j.user_topic_suggestions(@current_user.id.to_s, 4)
+    @suggestions = []
+    suggestions.each do |s|
+      @suggestions << TopicSnippet.new(s)
+    end
+    render
+  end
+
+  def tutorial_4(current_user)
+    @current_user = current_user
+    render
+  end
+
 end

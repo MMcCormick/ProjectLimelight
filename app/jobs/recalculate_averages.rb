@@ -1,4 +1,5 @@
 class RecalculateAverages
+  include Resque::Plugins::UniqueJob
 
   @queue = :popularity
 

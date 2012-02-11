@@ -432,3 +432,62 @@ jQuery ->
     $(window).stopTime('resize-column-feed')
     $(window).oneTime 500, "resize-column-feed", ->
       rearrange_feed_columns()
+
+  # follow search bar (follow something from a search bar)
+  $('.search-follow-topic').livequery ->
+    $self = $(@)
+    $self.autocomplete $('#static-data').data('d').autocomplete,
+      width: 300,
+      multiple: true,
+      matchContains: true,
+      autoFill: false,
+      searchKey: 'name',
+      minChars: 2,
+      matchSubset: false,
+      selectFirst: false,
+      mustMatch: false,
+      max: 10,
+      buckets: [['topic', 'topic', 'TOPICS']],
+      extraParams: {"types":['topic']},
+      allowNew: false,
+      dataType: 'json',
+      delay: 100,
+      formatItem: (row, i, max) ->
+        return row.formattedItem
+      formatMatch: (row, i, max) ->
+        return row.username
+      formatResult: (row) ->
+        return row.username
+
+    $self.result (event, data, formatted) ->
+      doAction($self.data('url'), 'POST', {id: data.id, type: 'Topic'}, null, null)
+      $self.val('')
+
+  $('.search-follow-user').livequery ->
+    $self = $(@)
+    $self.autocomplete $('#static-data').data('d').autocomplete,
+      width: 300,
+      multiple: true,
+      matchContains: true,
+      autoFill: false,
+      searchKey: 'name',
+      minChars: 2,
+      matchSubset: false,
+      selectFirst: false,
+      mustMatch: false,
+      max: 10,
+      buckets: [['user', 'user', 'USERS']],
+      extraParams: {"types":['user']},
+      allowNew: false,
+      dataType: 'json',
+      delay: 100,
+      formatItem: (row, i, max) ->
+        return row.formattedItem
+      formatMatch: (row, i, max) ->
+        return row.username
+      formatResult: (row) ->
+        return row.username
+
+    $self.result (event, data, formatted) ->
+      doAction($self.data('url'), 'POST', {id: data.id, type: 'User'}, null, null)
+      $self.val('')

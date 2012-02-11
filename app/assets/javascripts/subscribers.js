@@ -47,11 +47,11 @@ $(function() {
 
   // Listens for follow button on topic cards in the topic finder.
   amplify.subscribe("follows_create sentiments_create", function(data) {
-    var topicCard = $currentTarget ? $currentTarget.parents('.topic-card:first') : null;
+    var topicCard = $currentTarget ? $currentTarget.parents('.topic-card:first,.topic-card-small:first') : null;
     if (topicCard && topicCard.length > 0)
     {
       used_ids = []
-      $('.topic-card').each(function(i, val) {
+      topicCard.siblings().each(function(i, val) {
         used_ids.push($(val).data('id'));
       })
       $.ajax({
@@ -59,11 +59,12 @@ $(function() {
         type: 'get',
         dataType: 'json',
         data: { u: used_ids },
+        beforeSend: function() {
+          topicCard.append('<div class="ajax-loader"><div class="icon"></div></div>');
+        },
         success: function(data) {
           if (data.card != '')
           {
-            console.log(data.card);
-            console.log($(data.card));
             topicCard.fadeTo(150, .01, function() {
               topicCard.replaceWith($(data.card)).fadeTo(150, .75);
             })
@@ -269,6 +270,12 @@ $(function() {
   /*
    * USER
    */
+
+  amplify.subscribe("users_tutorial", function (data) {
+    $('.tutorial-c').fadeOut(300, function() {
+      $('#topic-wall-container').html(data.html);
+    })
+  })
 
   /*
    * SHARING

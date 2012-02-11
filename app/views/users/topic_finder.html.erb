@@ -6,7 +6,7 @@
   </div>
 <% end %>
 
-<div class='topic-cards' data-url='<%= topic_finder_path %>'>
+<div class='topic-cards' data-url='<%= topic_finder_path :theme => 'normal' %>'>
   <% @suggestions.each do |suggestion| %>
     <%= render 'topics/card', :current_user => current_user, :topic => TopicSnippet.new(suggestion) %>
   <% end %>

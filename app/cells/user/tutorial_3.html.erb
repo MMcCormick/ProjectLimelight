@@ -1,0 +1,19 @@
+<h2>
+  Right now, you're only following the "Limelight" topic.
+  Unless Limelight is the only thing you're interested in (which is cool with us),
+  maybe you should try following some other topics below.
+</h2>
+
+<div class='topic-cards' data-url='<%= topic_finder_path :theme => 'card_small' %>'>
+  <% @suggestions.each do |topic| %>
+    <%= render "topics/card_small", :topic => topic, :current_user => @current_user %>
+  <% end %>
+</div>
+
+<div class='clear'></div>
+<div class='search'>
+  <h4>Search Topics</h4>
+  <input class='search-follow-topic' data-url='<%= create_follow_path %> ' autocomplete='off' />
+</div>
+
+<div class='next ac' data-url='<%= user_tutorial_path :step => 4 %>' data-m='get'>Next - Friends</div>

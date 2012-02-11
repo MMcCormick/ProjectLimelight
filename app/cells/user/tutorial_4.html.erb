@@ -1,0 +1,16 @@
+<h2>
+  You can also follow users!
+  Limelight organizes itself around the topics and users you're following.
+  Discuss the things that matter with the people that matter.
+</h2>
+
+<div class='topic-cards' data-url='<%= topic_finder_path :theme => 'card_small' %>'>
+</div>
+
+<div class='clear'></div>
+<div class='search'>
+  <h4>Search Users</h4>
+  <input class='search-follow-user' data-url='<%= create_follow_path %> ' autocomplete='off' />
+</div>
+
+<div class='next ac' data-url='<%= user_tutorial_path :step => 4 %>' data-m='get'>Next</div>

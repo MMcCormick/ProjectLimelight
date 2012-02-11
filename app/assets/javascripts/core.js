@@ -80,7 +80,9 @@
       dataType: 'json',
       data: params,
       success: function(data) {
-        $currentTarget.data('processing', false);
+        if ($currentTarget)
+          $currentTarget.data('processing', false);
+
         appUpdate(data);
         if (success) {
           success(params, data);

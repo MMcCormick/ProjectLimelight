@@ -65,7 +65,7 @@ class User
   field :clout, :default => 1
   field :bio
   field :invite_code_id
-
+  field :tutorial_step, :default => 1
   field :shares_email, :default => true
   field :notify_email, :default => true
   field :weekly_email, :default => true

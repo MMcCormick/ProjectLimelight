@@ -1,4 +1,5 @@
 class SendUserNotification
+  include Resque::Plugins::UniqueJob
 
   @queue = :notifications
 

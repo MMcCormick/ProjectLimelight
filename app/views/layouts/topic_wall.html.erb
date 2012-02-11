@@ -8,12 +8,24 @@
   </head>
 
   <body id="<%= params[:controller].parameterize %>-c" class="blank">
-    <%= yield %>
+    <div id="topic-wall-container">
+      <%= yield %>
+    </div>
+
+    <%#= render_cell :topic, :wall %>
 
     <!-- HIDDEN TOOLS -->
     <div id="form-submitting">Form submitting...</div>
     <div style="display: none">
       <div id="static-data" data-d='<%= static_data %>' <%= "data-push='#{current_user.id}_private'" if signed_in? %>></div>
+    </div>
+
+    <div class='sentiment-bar'>
+      <div class='bar topics'>
+        <div class='positive' data-url='<%= sentiment_create_path(:positive) %>'>LIKE</div>
+        <div class='negative' data-url='<%= sentiment_create_path(:negative) %>'>DISLIKE</div>
+        <div class='neutral' data-url='<%= sentiment_create_path(:neutral) %>'>DON'T CARE</div>
+      </div>
     </div>
 
     <%= render 'shared/layout_js' %>

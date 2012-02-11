@@ -248,3 +248,22 @@
   width: 24px;
   height: 24px;
 }
+.ajax-loader {
+  @include opacity(.8);
+  background: #FFF;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+
+  .icon {
+    background: image-url("icon/ajax-loader.gif");
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    margin-left: -15px;
+  }
+}

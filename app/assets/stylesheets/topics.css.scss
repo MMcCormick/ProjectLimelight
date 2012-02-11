@@ -440,6 +440,56 @@
   }
 }
 
+.topic-card-small {
+  @include background-clip();
+  @include border-radius(5px);
+  background-color:rgba(0,0,0,0.4);
+  float: left;
+  position: relative;
+  margin: 70px 20px 0 0;
+  padding: 10px;
+
+  img {
+    @include border-radius(3px);
+    width: 100px;
+    height: 100px;
+    display: block;
+    background: #FFF;
+  }
+  .name {
+    position: absolute;
+    bottom: 125px;
+    left: 5px;
+  }
+  .followB,
+  .unfollowB {
+    @include border-radius(2px);
+    position: absolute;
+    top: 0px;
+    left: -5px;
+    font-size: 11px;
+    height: auto;
+    padding: 3px 10px;
+    border: 1px solid #FFF;
+  }
+  .cancel {
+    @include border-radius(2px);
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 11px;
+    padding: 1px 4px;
+    color: #FFF;
+    background: #BA7362;
+    border: 1px solid #FFF;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  &:hover {
+    background-color:rgba(0,0,0,0.6);
+  }
+}
+
 .topic-cards {
   .topic-card {
     margin: 10px 25px;

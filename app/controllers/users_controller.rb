@@ -180,35 +180,56 @@ class UsersController < ApplicationController
       @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
       not_found("User not found") unless @user
 
-      @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
-      page = params[:p] ? params[:p].to_i : 1
-      @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
-      @right_sidebar = true if current_user != @user
-      @core_objects = CoreObject.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
-      respond_to do |format|
-        format.js {
-          response = reload_feed(@core_objects, @more_path, page)
-          render json: response
-        }
-        format.html
+      if @user.tutorial_step == 0
+        @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
+        page = params[:p] ? params[:p].to_i : 1
+        @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
+        @right_sidebar = true if current_user != @user
+        @core_objects = CoreObject.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+        respond_to do |format|
+          format.js {
+            response = reload_feed(@core_objects, @more_path, page)
+            render json: response
+          }
+          format.html
+        end
+      else
+        redirect_to user_tutorial_path
       end
     else
-      foo = session
       @title = 'Welcome to Limelight!'
       @description = "The Limelight splash page, where users are directed to sign in"
       @show = params[:show] ? params[:show].to_sym : false
-      @topics = Topic.order_by([[:score, :desc], [:health_index, :desc]]).limit(375).to_a
-      @topics.shuffle!
 
-      render "splash", :layout => "blank"
+      render "splash", :layout => "topic_wall"
+    end
+  end
+
+  def tutorial
+    @title = 'Limelight Tutorial'
+
+    if params[:step]
+      current_user.tutorial_step = params[:step]
+      current_user.save
+    end
+
+    respond_to do |format|
+      format.js {
+        html =  render_to_string :action => "tutorial", :locals => { :current_user => current_user }
+        response = build_ajax_response(:ok, nil, nil, nil, {:html => html})
+        render :json => response
+      }
+      format.html {
+        render :layout => "topic_wall"
+      }
     end
   end
 
   def topic_finder
     @site_style = 'narrow'
     @title = "Topic Finder"
-    pull = 16
-    pull = pull + 1 if params[:u]
+    pull = params[:limit] ? params[:limit] : 16
+    pull = 20 if pull > 20
     @suggestions = Neo4j.user_topic_suggestions(current_user.id.to_s, pull)
 
     respond_to do |format|
@@ -218,7 +239,8 @@ class UsersController < ApplicationController
           chosen = s unless params[:u].include?(s['id'])
         end
         if chosen
-          html =  render_to_string :partial => "topics/card", :locals => { :current_user => current_user, :topic => TopicSnippet.new(chosen) }
+          theme = params[:theme] ? "topics/#{params[:theme]}" : "topics/card"
+          html =  render_to_string :partial => theme, :locals => { :current_user => current_user, :topic => TopicSnippet.new(chosen) }
         else
           html = ''
         end

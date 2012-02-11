@@ -22,7 +22,7 @@ class FollowsController < ApplicationController
             Notification.add(target, :follow, true, current_user)
           end
           current_user.save
-          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
+          response = build_ajax_response(:ok, nil, "You're following #{target.name}", nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
           status = 201
         else
           response = build_ajax_response(:error, nil, "You're already following that!")

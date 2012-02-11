@@ -1,4 +1,4 @@
-class Neo4jFollowCreate
+class Neo4jFollowDestroy
 
   @queue = :neo4j
 

@@ -600,22 +600,68 @@
     }
   }
   /* Splash Page styling */
-  #splash_content {
+  #topic-wall-container {
+    @include single-box-shadow(#333, 2px, 2px, 4px);
+    border: 5px solid #333;
+    margin-left: -310px;
+    left: 50%;
+    position: absolute;
+    top: 120px;
+    z-index: 55;
+    background: #FFF;
+
     .logo {
       position: absolute;
       left: 50%;
-      margin-left: -153px;
-      top: 50px;
+      margin-left: -203px;
+      top: -125px;
       z-index: 55;
     }
     #auth_box {
-      @include single-box-shadow(#333, 2px, 2px, 4px);
-      border: 5px solid #333;
-      margin-left: -310px;
-      left: 50%;
-      position: absolute;
-      top: 200px;
-      z-index: 55;
+    }
+    .tutorial-c {
+      @include clearfix();
+      width: 560px;
+      padding: 20px;
+
+      h1 {
+        font-size: 20px;
+      }
+      h2 {
+        font-size: 16px;
+      }
+      .search {
+        margin: 10px 0 15px 0;
+        clear: both;
+
+        h4 {
+          margin: 0 0 0 2px;
+        }
+        input {
+          @include border-radius(3px);
+          margin: 3px 0 0 0;
+          border: 5px solid #999;
+          width: 234px;
+          padding: 6px 8px;
+
+          &:hover,
+          &:focus {
+            border: 5px solid #666;
+          }
+        }
+      }
+      .next {
+        @include grey-rollover(18px);
+        cursor: pointer;
+        display: inline-block;
+        padding: 5px 15px 7px 15px;
+        margin: 20px 0 0 0;
+      }
+      .footnote {
+        font-size: 12px;
+        color: #999;
+        margin: 20px 0 -10px 0;
+      }
     }
   }
   .topic-wall {

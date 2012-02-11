@@ -1,4 +1,5 @@
 class RecalculateClout
+  include Resque::Plugins::UniqueJob
 
   @queue = :popularity
 

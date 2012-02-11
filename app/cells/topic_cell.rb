@@ -35,6 +35,12 @@ class TopicCell < Cell::Rails
     render
   end
 
+  def wall
+    @topics = Topic.order_by([[:score, :desc], [:health_index, :desc]]).limit(375).to_a
+    @topics.shuffle!
+    render
+  end
+
   def trending(topic=nil)
     if topic
       pull_ids = Neo4j.pull_from_ids(topic.id)

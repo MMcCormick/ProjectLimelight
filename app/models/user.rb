@@ -467,7 +467,7 @@ class User
       end
 
       if user && !user.confirmed?
-        enduser.confirm!
+        user.confirm!
         user.send_welcome_email
       end
       user.save :validate => false if user

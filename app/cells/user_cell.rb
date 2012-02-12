@@ -48,6 +48,11 @@ class UserCell < Cell::Rails
 
   def tutorial_3(current_user)
     @current_user = current_user
+    render
+  end
+
+  def tutorial_4(current_user)
+    @current_user = current_user
     suggestions = Neo4j.user_topic_suggestions(@current_user.id.to_s, 4)
     @suggestions = []
     suggestions.each do |s|
@@ -56,7 +61,29 @@ class UserCell < Cell::Rails
     render
   end
 
-  def tutorial_4(current_user)
+  def tutorial_5(current_user)
+    @current_user = current_user
+    @registeredFriends = []
+
+    fb = current_user.facebook
+    if fb
+      friends = fb.get_connections("me", "friends")
+      friends_uids = friends.map{|friend| friend['id']}
+      @registeredFriends += User.where("social_connects.uid" => {"$in" => friends_uids}, 'social_connects.provider' => 'facebook').to_a
+    end
+
+    twitter = current_user.twitter
+    if twitter
+      friends = twitter.friend_ids
+      @registeredFriends += User.where("social_connects.uid" => {"$in" => friends.ids}, 'social_connects.provider' => 'twitter').to_a
+    end
+
+    @registeredFriends.uniq! {|e| e.id}
+
+    render
+  end
+
+  def tutorial_6(current_user)
     @current_user = current_user
     render
   end

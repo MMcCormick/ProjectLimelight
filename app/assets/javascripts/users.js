@@ -149,7 +149,6 @@ $(function() {
   })
 
   // Topic wall
-
   if ($('.topic-wall').length > 0)
   {
     var tile_count = $('.tile').length;

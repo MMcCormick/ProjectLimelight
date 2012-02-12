@@ -27,16 +27,16 @@ $page_content_color: #000;
 
 $footer_height: 34px;
 
-$picture-color: #7BA821;
-$link-color: #C52828;
-$video-color: #51A2CC;
-$talk-color: #D88E00;
+$picture-color: #D88E00;
+$link-color: #51A2CC;
+$video-color: #C52828;
+$talk-color: #7BA821;
 
 @mixin link {
     color: $url-color;
     cursor: pointer;
     &:hover {
-        text-decoration: underline;
+      text-decoration: underline;
     }
 }
 

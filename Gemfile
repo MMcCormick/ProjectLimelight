@@ -10,6 +10,7 @@ gem 'devise' # Authentication
 gem 'cells', '3.8.0' # Components
 gem 'json' # json processing
 #gem 'redcarpet', '1.17.2' # Markdown
+gem 'yajl-ruby' # json
 gem 'fog' # Cloud support (amazon s3, etc)
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'

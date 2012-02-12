@@ -8,7 +8,7 @@
   </head>
 
   <body id="<%= params[:controller].parameterize %>-c" class="blank">
-    <div id="topic-wall-container">
+    <div id="topic-wall-container" class="<%= params[:action].parameterize %>">
       <%= yield %>
     </div>
 

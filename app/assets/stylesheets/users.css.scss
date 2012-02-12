@@ -10,6 +10,7 @@
   position: relative;
   width: 620px;
   .top {
+    @include border-radius(7px 7px 0 0);
     @include single-box-shadow(#999, 1px, 1px, 2px);
     position: relative;
     height: 110px;
@@ -24,6 +25,7 @@
     }
   }
   .bottom {
+    @include border-radius(0 0 7px 7px);
     position: relative;
     width: 100%;
     background: #FAFAFA;
@@ -36,7 +38,7 @@
     cursor: default;
   }
   .switch {
-    @include link;
+    @include link();
   }
   .left {
     margin-top: 25px;
@@ -602,13 +604,20 @@
   /* Splash Page styling */
   #topic-wall-container {
     @include single-box-shadow(#333, 2px, 2px, 4px);
-    border: 5px solid #333;
-    margin-left: -310px;
+    @include background-clip();
+    @include border-radius(10px);
+    background-color:rgba(0,0,0,0.3);
+    padding: 10px;
+    margin-left: -313px;
     left: 50%;
     position: absolute;
     top: 120px;
     z-index: 55;
-    background: #FFF;
+
+    &.tutorial {
+      top: 50px;
+      margin-left: -345px;
+    }
 
     .logo {
       position: absolute;
@@ -617,18 +626,30 @@
       top: -125px;
       z-index: 55;
     }
-    #auth_box {
-    }
     .tutorial-c {
+      @include border-radius(7px);
       @include clearfix();
-      width: 560px;
+      width: 650px;
       padding: 20px;
+      background: #FFF;
 
       h1 {
         font-size: 20px;
       }
       h2 {
         font-size: 16px;
+        .talk {
+          color: $talk-color;
+        }
+        .link {
+          color: $link-color;
+        }
+        .picture {
+          color: $picture-color;
+        }
+        .video {
+          color: $video-color;
+        }
       }
       .search {
         margin: 10px 0 15px 0;
@@ -650,6 +671,44 @@
           }
         }
       }
+      .social-connect {
+        height: 60px;
+        position: relative;
+
+        .facebook,
+        .twitter {
+          position: absolute;
+          top: 27px;
+          img {
+            cursor: pointer;
+          }
+          .completed {
+            position: relative;
+            padding: 2px 0 0 25px;
+            cursor: default;
+            .square {
+              @include border-radius(2px);
+              position: absolute;
+              top: 5px;
+              left: 0px;
+              width: 12px;
+              height: 12px;
+              background: #7BA821;
+            }
+          }
+        }
+        .facebook {
+          left: 0px;
+        }
+        .twitter {
+          left: 200px;
+        }
+      }
+
+      .user-cards {
+        overflow: auto;
+        max-height: 315px;
+      }
       .next {
         @include grey-rollover(18px);
         cursor: pointer;
@@ -661,6 +720,14 @@
         font-size: 12px;
         color: #999;
         margin: 20px 0 -10px 0;
+      }
+    }
+    .tutorial-5 {
+
+    }
+    .tutorial-6 {
+      .post-anatomy {
+        margin: 15px 0 0 -2px;
       }
     }
   }
@@ -757,6 +824,46 @@
     padding: 8px 12px;
     color: #444;
     z-index: 65;
+  }
+}
+
+.user-card {
+  @include background-clip();
+  @include border-radius(5px);
+  background-color:rgba(0,0,0,0.4);
+  float: left;
+  position: relative;
+  margin: 35px 15px 0 0;
+  padding: 10px;
+
+  img {
+    @include border-radius(3px);
+    width: 100px;
+    height: 100px;
+    display: block;
+    background: #FFF;
+  }
+  .name {
+    position: absolute;
+    bottom: 125px;
+    left: 5px;
+  }
+  .followB,
+  .unfollowB {
+    @include border-radius(2px);
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    font-size: 13px;
+    height: auto;
+    padding: 3px 10px;
+    border: 2px solid #FFF;
+  }
+  .unfollowB {
+    left: 10px;
+  }
+  &:hover {
+    background-color:rgba(0,0,0,0.6);
   }
 }
 

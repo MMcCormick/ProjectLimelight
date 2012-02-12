@@ -465,12 +465,12 @@
   .unfollowB {
     @include border-radius(2px);
     position: absolute;
-    top: 0px;
-    left: -5px;
-    font-size: 11px;
+    bottom: 12px;
+    left: 16px;
+    font-size: 13px;
     height: auto;
     padding: 3px 10px;
-    border: 1px solid #FFF;
+    border: 2px solid #FFF;
   }
   .cancel {
     @include border-radius(2px);
@@ -484,6 +484,9 @@
     border: 1px solid #FFF;
     font-weight: bold;
     cursor: pointer;
+  }
+  .unfollowB {
+    left: 10px;
   }
   &:hover {
     background-color:rgba(0,0,0,0.6);

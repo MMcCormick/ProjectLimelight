@@ -180,7 +180,9 @@ class UsersController < ApplicationController
       @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
       not_found("User not found") unless @user
 
-      if @user.tutorial_step == 0
+      if current_user.id == @user.id && @user.tutorial_step.to_i != 0
+        redirect_to user_tutorial_path
+      else
         @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
         page = params[:p] ? params[:p].to_i : 1
         @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
@@ -193,8 +195,6 @@ class UsersController < ApplicationController
           }
           format.html
         end
-      else
-        redirect_to user_tutorial_path
       end
     else
       @title = 'Welcome to Limelight!'
@@ -209,18 +209,26 @@ class UsersController < ApplicationController
     @title = 'Limelight Tutorial'
 
     if params[:step]
-      current_user.tutorial_step = params[:step]
+      current_user.tutorial_step = params[:step].to_i
       current_user.save
     end
 
     respond_to do |format|
       format.js {
-        html =  render_to_string :action => "tutorial", :locals => { :current_user => current_user }
-        response = build_ajax_response(:ok, nil, nil, nil, {:html => html})
+        if current_user.tutorial_step == 0
+          response = build_ajax_response(:ok, root_path, nil, nil, nil)
+        else
+          html =  render_to_string :action => "tutorial", :locals => { :current_user => current_user }
+          response = build_ajax_response(:ok, nil, nil, nil, {:html => html})
+        end
         render :json => response
       }
       format.html {
-        render :layout => "topic_wall"
+        if current_user.tutorial_step == 0
+          redirect_to root_path
+        else
+          render :layout => "topic_wall"
+        end
       }
     end
   end

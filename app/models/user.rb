@@ -65,7 +65,7 @@ class User
   field :clout, :default => 1
   field :bio
   field :invite_code_id
-  field :tutorial_step, :default => 1
+  field :tutorial_step, :default => 1, :type => Integer
   field :shares_email, :default => true
   field :notify_email, :default => true
   field :weekly_email, :default => true
@@ -345,6 +345,10 @@ class User
     end
   end
 
+  def name
+    username
+  end
+
   def first_or_username
     if first_name then first_name else username end
   end
@@ -373,7 +377,12 @@ class User
   end
 
   def facebook
-    #TODO
+    connection = social_connects.detect{|connection| connection.provider == 'facebook'}
+    if connection
+      @fb_user ||= Koala::Facebook::API.new(connection.token)
+    else
+      nil
+    end
   end
 
   def twitter

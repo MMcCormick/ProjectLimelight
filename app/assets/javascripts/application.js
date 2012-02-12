@@ -19,6 +19,7 @@
 //= require jquery.label
 //= require jquery.charCount
 //= require jquery.gritter
+//= require jquery.oauthpopup
 //= require plupload/plupload.full
 //= require help
 //= require pusher

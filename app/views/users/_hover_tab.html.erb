@@ -7,7 +7,7 @@
     <div class="summary"><%= truncate(@user.bio, :length => 150, :ommision => '...') %></div>
   </div>
   <div class='footer'>
-    <div class="folC"><%= @user.followers_count %> followers</div>
+    <div class="folC"><%= @user.followers_count.to_i %> followers</div>
     <%= render 'follows/btn', :target => @user %>
   </div>
 </div>

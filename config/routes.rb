@@ -1,5 +1,8 @@
 ProjectLimelight::Application.routes.draw do
 
+  # redirect to www.example.com if user goes to example.com
+  match '(*any)' => redirect { |p, req| req.url.sub('www.', '') }, :constraints => { :host => /^www\./ }
+
   # Testing
   get 'testing' => 'testing#test', :as => :test
 

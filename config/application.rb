@@ -18,7 +18,6 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
 require "sprockets/railtie"
-require 'devise'
 require "compass"
 require 'coffee_script'
 require "sass-rails"

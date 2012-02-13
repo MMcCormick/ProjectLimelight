@@ -1,6 +1,6 @@
 <%= form_for InviteCode.new, :url => :check_invite_code, :html => { :class => 'ajax' } do |f| %>
   <% if flash[:register_fail] %>
-    <div class="errors showem">
+    <div class="invite-errors errors showem">
       <div class="error"><%= flash[:register_fail] %></div>
     </div>
   <% end %>

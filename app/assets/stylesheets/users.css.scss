@@ -144,6 +144,11 @@
     margin: 0 0 10px 0;
     width: 282px;
   }
+  .invite-errors {
+    margin: 0 0 10px 0;
+    width: 273px;
+  }
+
   .invite {
     position: relative;
     width: 287px;
@@ -167,9 +172,6 @@
         font-size: 22px;
         text-align: center;
         border: 2px solid #666;
-      }
-      .errors {
-        width: 205px;
       }
     }
   }

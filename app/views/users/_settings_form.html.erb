@@ -1,30 +1,37 @@
 <form action="<%= update_settings_path %>" id="freebase-update-form" method="PUT" class="ajax">
 
   <div class="field check-label">
-    <% if user.shares_email %>
-      <%= check_box_tag "shares_email", "1", true %>
-    <% else %>
-      <%= check_box_tag "shares_email", "0", false %>
-    <% end %>
-    <%= label_tag "shares_email", "Email me when someone shares something with me directly" %>
+    <%= check_box_tag "email_follow", "1", (user.email_follow ? true : false ) %>
+    <%= label_tag "email_follow", "When someone follows me" %>
   </div>
 
   <div class="field check-label">
-    <% if user.notify_email %>
-      <%= check_box_tag "notify_email", "1", true %>
-    <% else %>
-      <%= check_box_tag "notify_email", "0", false %>
-    <% end %>
-    <%= label_tag "use_summary", "Email me daily with any new notifications" %>
+    <%= check_box_tag "email_share", "1", (user.email_share ? true : false ) %>
+    <%= label_tag "email_share", "When someone shares a post with me" %>
   </div>
 
   <div class="field check-label">
-    <% if user.weekly_email %>
-      <%= check_box_tag "weekly_email", "1", true %>
-    <% else %>
-      <%= check_box_tag "weekly_email", "0", false %>
-    <% end %>
-    <%= label_tag "use_summary", "Email me weekly with sweet recommendations on topics I like" %>
+    <%= check_box_tag "email_comment", "1", (user.email_comment ? true : false ) %>
+    <%= label_tag "email_comment", "When someone comments" %>
+  </div>
+
+  <div class="field check-label">
+    <%= check_box_tag "email_mention", "1", (user.email_mention ? true : false ) %>
+    <%= label_tag "email_mention", "When someone mentions me in a post" %>
+  </div>
+
+  <div class="field check-label">
+    <%= label_tag nil, "Frequency of emails about follows, shares, comments, and mentions" %>
+    <br>
+    <%= radio_button_tag "notify_email", "1", (user.notify_email ? true : false) %>
+    <%= label_tag nil, "Immediately" %>
+    <%= radio_button_tag "notify_email", "0", (user.notify_email ? false : true) %>
+    <%= label_tag nil, "Once a day" %>
+  </div>
+
+  <div class="field check-label">
+    <%= check_box_tag "weekly_email", "1", (user.weekly_email ? true : false ) %>
+    <%= label_tag "weekly_email", "Email me weekly with sweet recommendations on topics I like" %>
   </div>
 
   <div class="actions">

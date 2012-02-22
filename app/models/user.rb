@@ -66,8 +66,11 @@ class User
   field :bio
   field :invite_code_id
   field :tutorial_step, :default => 1, :type => Integer
-  field :shares_email, :default => true
-  field :notify_email, :default => true
+  field :email_share, :default => true
+  field :email_follow, :default => true
+  field :email_comment, :default => true
+  field :email_mention, :default => true
+  field :notify_email, :default => true # true = immediate email, false = digest
   field :weekly_email, :default => true
 
   auto_increment :public_id
@@ -491,6 +494,15 @@ class User
 
   def expire_caches
     User.expire_caches(id.to_s)
+  end
+
+  def notification_types
+    types = []
+    types << "follow" if email_follow
+    types << "mention" if email_mention
+    types << "share" if email_share
+    types = types + ["also", "reply"] if email_comment
+    types
   end
 
   protected

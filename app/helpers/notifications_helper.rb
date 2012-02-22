@@ -30,7 +30,7 @@ module NotificationsHelper
           "replied to your #{notification.object.type.downcase} <a href='#{base+core_object_url(notification.object)}'>#{notification.object.name}</a>".html_safe
         end
       when :share
-        "shared #{notification.object.type.downcase} <a href='#{base+core_object_url(notification.object)}'>#{notification.object.name}</a>".html_safe
+        "shared a #{notification.object.type.downcase}: <a href='#{base+core_object_url(notification.object)}'>#{notification.object.name}</a>".html_safe
       else
         "did something weird... this is a mistake and the Limelight team has been notified to fix it!"
     end

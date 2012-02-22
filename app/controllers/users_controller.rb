@@ -92,8 +92,11 @@ class UsersController < ApplicationController
   end
 
   def update_settings
-    current_user.shares_email = !!params[:shares_email]
-    current_user.notify_email = !!params[:notify_email]
+    current_user.email_share = !!params[:email_share]
+    current_user.email_comment = !!params[:email_comment]
+    current_user.email_mention = !!params[:email_mention]
+    current_user.email_follow = !!params[:email_follow]
+    current_user.notify_email = params[:notify_email] == "0" ? false : true
     current_user.weekly_email = !!params[:weekly_email]
 
     if current_user.save

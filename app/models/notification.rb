@@ -103,7 +103,7 @@ class Notification
     # Creates and optionally sends a notification for a user
     # target_user = the user object we are adding the notification for
     # type = the type of notification (string)
-    # notify = bool wether to send the notification or not via email and/or push message
+    # notify = bool whether to send the notification or not via email and/or push message
     # triggered_by_user = the user object that triggered this notification, if there is one
     # date_range_aggregate = array[from, to]. If specified, will attempt to only create one notification of a given type between this range
     # message = optional message
@@ -183,6 +183,15 @@ class Notification
               :message => (message ? message : "#{triggered_by_user.username} #{notification.notification_text(1)}"),
               :url => ''
       })
+
+      if target_user.notify_email &&
+            (type.to_s == "follow" && target_user.email_follow ||
+            type.to_s == "mention" && target_user.email_mention ||
+            type.to_s == "share" && target_user.email_share ||
+            %w(reply also).include?(type.to_s) && target_user.email_comment)
+        NotifyNowMailer.notify(triggered_by_user, target_user, notification).deliver
+        notification.set_emailed
+      end
 
       if notification.save && (!notification.read || new_trigger || !trigger_notified)
         if new_notification

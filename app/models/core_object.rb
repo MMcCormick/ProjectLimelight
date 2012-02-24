@@ -21,8 +21,8 @@ class CoreObject
   field :favorites, :default => []
   field :favorites_count, :default => 0
   field :user_id
-  field :response_count, :default => 0
-  field :talking_ids, :default => [] # ids of users talking about this
+  field :response_count, :default => 0 # for talks, number of comments. for link/vid/pics, number of unique users talking / commenting
+  field :talking_ids, :default => [] # ids of users talking about / commenting on this (not used for talks)
   field :tweet_id
   field :root_type
   field :root_id, :type => BSON::ObjectId
@@ -46,7 +46,7 @@ class CoreObject
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :send_tweet, :set_response_to, :set_root
-  after_create :neo4j_create, :update_response_count, :feed_post_create, :action_log_create, :add_initial_pop
+  after_create :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop
   after_update :expire_caches
   after_destroy :remove_from_feeds
 
@@ -221,6 +221,10 @@ class CoreObject
     FeedLikeItem.create(user, self)
   end
 
+  ##
+  # RESPONSES
+  ##
+
   def set_response_to
     if parent
       self.response_to = CoreObjectSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
@@ -228,12 +232,32 @@ class CoreObject
     end
   end
 
-  def update_response_count
-    if parent
-      unless parent.talking_ids.include?(user_snippet.id)
-        parent.talking_ids << user_snippet.id
-        parent.response_count += 1
-        parent.save
+  #TODO: background these response count functions
+
+  def update_response_counts(u_id=nil)
+    u_id ||= user_snippet.id
+    if response_to
+      parent ||= CoreObject.find(response_to.id)
+      parent.register_response(u_id)
+    end
+    register_topic_responses(u_id) if standalone_talk?
+  end
+
+  def register_response(u_id)
+    unless talking_ids.include?(u_id)
+      self.talking_ids << u_id
+      self.response_count += 1
+      self.save
+      register_topic_responses(u_id)
+    end
+  end
+
+  def register_topic_responses(u_id)
+    mentioned_topics.each do |topic|
+      unless topic.talking_ids.include?(u_id)
+        topic.talking_ids << u_id
+        topic.response_count += 1
+        topic.save
       end
     end
   end
@@ -275,6 +299,10 @@ class CoreObject
 
   def is_root?
     id == root_id
+  end
+
+  def standalone_talk?
+    _type == "Talk" && !response_to
   end
 
   def disable

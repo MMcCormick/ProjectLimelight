@@ -514,6 +514,10 @@ module Limelight #:nodoc:
       self.topic_mentions.delete_all(conditions: {id: topic_id})
       save
     end
+
+    def mentioned_topics
+      Topic.where(:_id.in => topic_mentions.map{|t| t.id})
+    end
   end
 
   module Popularity

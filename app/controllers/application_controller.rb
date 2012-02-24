@@ -50,6 +50,10 @@ class ApplicationController < ActionController::Base
     request.format = :html if request.format == "*/*"
   end
 
+  def json?
+    request.format == 'application/json'
+  end
+
   # Exception Throwers
 
   # Not Found (404)

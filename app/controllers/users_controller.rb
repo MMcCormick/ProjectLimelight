@@ -199,10 +199,11 @@ class UsersController < ApplicationController
         @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
 
         page = params[:p] ? params[:p].to_i : 1
-
         @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
-        @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
-        @posts = Post.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+        if json?
+          @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
+          @posts = Post.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+        end
       end
     else
       @title = 'Welcome to Limelight!'

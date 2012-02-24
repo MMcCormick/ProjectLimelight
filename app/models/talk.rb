@@ -1,4 +1,4 @@
-class Talk < CoreObject
+class Talk < Post
 
   field :is_popular, :default => false
 

@@ -23,7 +23,7 @@ describe FavoritesController do
         let(:talk) { mock('talk') }
         before(:each) do
           User.should_receive(:find_by_slug).with("foobar").and_return(user)
-          CoreObject.should_receive(:feed).and_return(talk)
+          Post.should_receive(:feed).and_return(talk)
         end
 
         it "should set the user, more_path, and core_objects variables" do
@@ -53,7 +53,7 @@ describe FavoritesController do
       before(:each) { sign_in user }
 
       it "should respond with a 404 + json error object if the object is not found" do
-        CoreObject.should_receive(:find).with("fooid").and_return(nil)
+        Post.should_receive(:find).with("fooid").and_return(nil)
         xhr :post, :create, :id => "fooid"
         JSON.parse(response.body)['status'].should == "error"
         response.response_code.should == 404
@@ -61,7 +61,7 @@ describe FavoritesController do
 
       context "when object is found" do
         let(:object) { mock('object').as_null_object }
-        before(:each) { CoreObject.should_receive(:find).with("fooid").and_return(object) }
+        before(:each) { Post.should_receive(:find).with("fooid").and_return(object) }
 
         it "should call add_to_favorites on the object" do
           object.should_receive(:add_to_favorites).with(user)
@@ -94,7 +94,7 @@ describe FavoritesController do
       before(:each) { sign_in user }
 
       it "should respond with a 404 + json error object if the object is not found" do
-        CoreObject.should_receive(:find).with("fooid").and_return(nil)
+        Post.should_receive(:find).with("fooid").and_return(nil)
         xhr :delete, :destroy, :id => "fooid"
         JSON.parse(response.body)['status'].should == "error"
         response.response_code.should == 404
@@ -102,7 +102,7 @@ describe FavoritesController do
 
       context "when object is found" do
         let(:object) { mock('object').as_null_object }
-        before(:each) { CoreObject.should_receive(:find).with("fooid").and_return(object) }
+        before(:each) { Post.should_receive(:find).with("fooid").and_return(object) }
 
         it "should call remove_from_favorites on the object" do
           object.should_receive(:remove_from_favorites).with(user)

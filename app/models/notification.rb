@@ -14,7 +14,7 @@ class Notification
   field :user_id
   field :triggered_by_emailed, :default => []
   embeds_many :triggered_by, as: :user_assignable, :class_name => 'UserSnippet'
-  embeds_one :object, :as => :core_object_assignable, :class_name => 'CoreObjectSnippet'
+  embeds_one :object, :as => :core_object_assignable, :class_name => 'PostSnippet'
   embeds_one :object_user, :as => :user_assignable, :class_name => 'UserSnippet'
 
   index(
@@ -140,7 +140,7 @@ class Notification
                 :message => message
         )
         if object
-          notification.object = CoreObjectSnippet.new(
+          notification.object = PostSnippet.new(
                   :name => object.name,
                   :type => object.class.name.demodulize,
                   :public_id => object.public_id

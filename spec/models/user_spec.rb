@@ -359,7 +359,7 @@ describe User do
   describe "update_denorms" do
     let(:user) { FactoryGirl.create(:user) }
 
-    it "should update CoreObject.user_snippets when attributes are updated" do
+    it "should update Post.user_snippets when attributes are updated" do
       talk = FactoryGirl.create(:talk, :user => user)
       talk.user_snippet.username.should == user.username
       user.update_attributes(:username => "jamie", :first_name => "james", :last_name => "michaels")
@@ -368,7 +368,7 @@ describe User do
       updated_talk.user_snippet.first_name.should == "james"
       updated_talk.user_snippet.last_name.should == "michaels"
     end
-    it "should update CoreObject.user_mentions when attributes are updated" do
+    it "should update Post.user_mentions when attributes are updated" do
       talk = FactoryGirl.create(:talk, :content_raw => "mentioning @[#{user.id}##{user.username}]")
       talk.user_mentions[0].username.should == user.username
       user.update_attributes(:username => "jamie", :first_name => "james", :last_name => "michaels")

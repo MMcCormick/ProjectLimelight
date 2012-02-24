@@ -1,5 +1,5 @@
 # Embeddable core object snippet that holds useful (denormalized) core object info
-class CoreObjectSnippet
+class PostSnippet
   include Mongoid::Document
 
   field :name

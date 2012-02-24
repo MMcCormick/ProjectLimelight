@@ -23,7 +23,7 @@ describe Topic do
   describe "update_denorms" do
     let(:topic) { FactoryGirl.create(:topic) }
 
-    it "should update CoreObject.topic_mentions slug when name is updated" do
+    it "should update Post.topic_mentions slug when name is updated" do
       talk = FactoryGirl.create(:talk, :content_raw => "mentioning #[#{topic.id}##{topic.name}]")
       talk.topic_mentions[0].name.should == topic.name
       topic.update_attributes(:name => "new name")

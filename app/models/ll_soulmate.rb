@@ -1,4 +1,4 @@
-class LLSoulmate
+class LlSoulmate
 
   class << self
 

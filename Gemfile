@@ -8,8 +8,7 @@ gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
 gem 'cells', '3.8.0' # Components
-gem 'json' # json processing
-#gem 'redcarpet', '1.17.2' # Markdown
+gem 'rabl', "~> 0.5.4"
 gem 'yajl-ruby' # json
 gem 'fog' # Cloud support (amazon s3, etc)
 gem 'carrierwave' # File uploads
@@ -31,6 +30,7 @@ gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby
 gem 'neography' # neo4j graph database
 #gem 'active_cache' # conditional caching
+gem 'backbone-on-rails'
 
 group :assets do
   gem 'compass', '0.12.alpha.4'

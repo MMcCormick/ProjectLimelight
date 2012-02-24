@@ -18,24 +18,24 @@ class User
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   # Denormilized:
-  # CoreObject.user_snippet.username
-  # CoreObject.user_mentions.username
+  # Post.user_snippet.username
+  # Post.user_mentions.username
   # Notification.object_user.username
   # Notification.triggered_by.username
   # Comment.user_snippet.username
   field :username
 
   # Denormilized:
-  # CoreObject.user_snippet.first_name
-  # CoreObject.user_mentions.first_name
+  # Post.user_snippet.first_name
+  # Post.user_mentions.first_name
   # Notification.object_user.first_name
   # Notification.triggered_by.first_name
   # Comment.user_snippet.first_name
   field :first_name
 
   # Denormilized:
-  # CoreObject.user_snippet.last_name
-  # CoreObject.user_mentions.last_name
+  # Post.user_snippet.last_name
+  # Post.user_mentions.last_name
   # Notification.object_user.last_name
   # Notification.triggered_by.last_name
   # Comment.user_snippet.last_name
@@ -74,7 +74,7 @@ class User
 
   embeds_many :social_connects
 
-  has_many :core_objects
+  has_many :posts
   has_many :links
   has_many :videos
   has_many :talks
@@ -101,7 +101,7 @@ class User
   end
 
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff
-  after_update :update_denorms, :expire_caches
+  after_update :update_denorms#, :expire_caches
   before_destroy :remove_from_soulmate
 
   index [[ :slug, Mongo::ASCENDING ]]
@@ -489,9 +489,10 @@ class User
     end
   end
 
-  def expire_caches
-    User.expire_caches(id.to_s)
-  end
+  # BETA REMOVE
+  #def expire_caches
+  #  User.expire_caches(id.to_s)
+  #end
 
   protected
 
@@ -501,11 +502,12 @@ class User
       self.any_of({ :slug => login.downcase.strip }, { :email => login.downcase.strip }).first
     end
 
-    def expire_caches(target_id)
-      ActionController::Base.new.expire_cell_state UserCell, :sidebar, target_id
-      ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-mine"
-      ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-following"
-    end
+    # BETA REMOVE
+    #def expire_caches(target_id)
+    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, target_id
+    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-mine"
+    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-following"
+    #end
   end
 
   def update_denorms
@@ -532,9 +534,9 @@ class User
       triggered_by_updates["triggered_by.$.last_name"] = self.last_name
     end
     unless user_snippet_updates.empty?
-      CoreObject.where(:user_id => id).update_all(user_snippet_updates)
-      CoreObject.where("user_mentions._id" => id).update_all(user_mention_updates)
-      CoreObject.where("likes._id" => id).update_all(user_mention_updates)
+      Post.where(:user_id => id).update_all(user_snippet_updates)
+      Post.where("user_mentions._id" => id).update_all(user_mention_updates)
+      Post.where("likes._id" => id).update_all(user_mention_updates)
       Comment.where(:user_id => id).update_all(user_snippet_updates)
       Notification.where("object_user._id" => id).update_all(object_user_updates)
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)

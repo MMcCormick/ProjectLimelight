@@ -11,7 +11,7 @@ class FavoritesController < ApplicationController
     @more_path = user_favorites_path :p => page + 1
     @right_sidebar = true if current_user != @user
 
-    @core_objects = CoreObject.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
+    @core_objects = Post.feed(session[:feed_filters][:display], session[:feed_filters][:sort], {
             :includes_ids => @user.favorites,
             :page => page
     })
@@ -25,7 +25,7 @@ class FavoritesController < ApplicationController
   end
 
   def create
-    object = CoreObject.find(params[:id])
+    object = Post.find(params[:id])
     if object
       if object.add_to_favorites(current_user)
         object.add_pop_action(:fav, :a, current_user) if object.user_id != current_user.id
@@ -48,7 +48,7 @@ class FavoritesController < ApplicationController
   end
 
   def destroy
-    object = CoreObject.find(params[:id])
+    object = Post.find(params[:id])
     if object
       if object.remove_from_favorites(current_user)
         object.add_pop_action(:fav, :r, current_user) if object.user_id != current_user.id

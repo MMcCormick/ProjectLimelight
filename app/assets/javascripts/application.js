@@ -6,6 +6,17 @@
 //
 //= require jquery_ujs
 //= require json2
+//= require underscore
+//= require backbone
+//= require limelight
+//= require_tree ../templates
+//= require_tree ./models
+//= require_tree ./collections
+//= require_tree ./views
+//= require_tree ./routers
+//
+//
+//
 //= require jquery.livequery
 //= require preload
 //= require jquery-ui.min

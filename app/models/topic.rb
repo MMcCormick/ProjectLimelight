@@ -34,7 +34,7 @@ class Topic
   class << self; attr_accessor :type_of_id, :instances_id, :limelight_id, :limelight_feedback_id, :stop_words end
 
   # Denormilized:
-  # CoreObject.topic_mentions.name
+  # Post.topic_mentions.name
   # TopicConnectionSnippet.topic_name
   field :name
 
@@ -77,8 +77,8 @@ class Topic
   before_create :init_alias, :text_health
   after_create :neo4j_create, :add_to_soulmate
   before_update :update_name_alias, :text_health
-  after_update :update_denorms, :expire_caches
-  before_destroy :remove_from_soulmate, :disconnect, :expire_caches
+  after_update :update_denorms#, :expire_caches
+  before_destroy :remove_from_soulmate, :disconnect#, :expire_caches
 
   index [[ :slug, Mongo::ASCENDING ]]
   index [[ :public_id, Mongo::DESCENDING ]]
@@ -290,7 +290,7 @@ class Topic
     end
 
     # Update topic mentions
-    objects = CoreObject.where("topic_mentions._id" => aliased_topic.id)
+    objects = Post.where("topic_mentions._id" => aliased_topic.id)
     objects.each do |object|
       # if an object mentions both, delete the old one
       if object.mentions?(aliased_topic.id) && object.mentions?(id)
@@ -307,7 +307,7 @@ class Topic
     topic_mention_updates["topic_mentions.$.slug"] = slug
     topic_mention_updates["topic_mentions.$._id"] = id
     topic_mention_updates["topic_mentions.$.public_id"] = public_id
-    CoreObject.where("topic_mentions._id" => aliased_topic.id).update_all(topic_mention_updates)
+    Post.where("topic_mentions._id" => aliased_topic.id).update_all(topic_mention_updates)
 
     # NEO4J: Move Connections
     rels = Neo4j.get_topic_relationships aliased_topic.id
@@ -365,18 +365,19 @@ class Topic
     default_image_url(self, w, h, m, true)
   end
 
-  def expire_caches
-    Topic.expire_caches(id.to_s)
-
-    # if name/slug changed clear any cached thing with links to this topic
-    if name_changed? || slug_changed? || short_name_changed?
-      objects = CoreObject.where('topic_mentions._id' => id)
-      objects.each do |object|
-        object.expire_caches
-      end
-      ActionController::Base.new.expire_cell_state TopicCell, :trending
-    end
-  end
+  # BETA REMOVE
+  #def expire_caches
+  #  Topic.expire_caches(id.to_s)
+  #
+  #  # if name/slug changed clear any cached thing with links to this topic
+  #  if name_changed? || slug_changed? || short_name_changed?
+  #    objects = Post.where('topic_mentions._id' => id)
+  #    objects.each do |object|
+  #      object.expire_caches
+  #    end
+  #    ActionController::Base.new.expire_cell_state TopicCell, :trending
+  #  end
+  #end
 
   def neo4j_create
     node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'slug' => slug, 'public_id' => public_id)
@@ -390,7 +391,7 @@ class Topic
 
   def disconnect
     # remove mentions of this topic
-    CoreObject.where("topic_mentions._id" => id).each do |object|
+    Post.where("topic_mentions._id" => id).each do |object|
       object.remove_topic_mentions_of(id)
     end
 
@@ -401,7 +402,7 @@ class Topic
     # reset primary types
     Topic.where('primary_type_id' => id).each do |topic|
       topic.unset_primary_type
-      topic.expire_caches
+      #topic.expire_caches BETA REMOVE
       topic.save
     end
   end
@@ -524,13 +525,14 @@ class Topic
       response
     end
 
-    def expire_caches(target_id)
-      # topic right sidebar
-      ActionController::Base.new.expire_cell_state TopicCell, :sidebar, target_id.to_s
-      ['-following', '-manage', '-following-manage'].each do |key|
-        ActionController::Base.new.expire_cell_state TopicCell, :sidebar, target_id.to_s+key
-      end
-    end
+    # BETA REMOVE
+    #def expire_caches(target_id)
+    #  # topic right sidebar
+    #  ActionController::Base.new.expire_cell_state TopicCell, :sidebar, target_id.to_s
+    #  ['-following', '-manage', '-following-manage'].each do |key|
+    #    ActionController::Base.new.expire_cell_state TopicCell, :sidebar, target_id.to_s+key
+    #  end
+    #end
   end
 
   protected
@@ -551,7 +553,7 @@ class Topic
     end
     if short_name_changed?
       soulmate = true
-      objects = CoreObject.where('topic_mentions.id' => id)
+      objects = Post.where('topic_mentions.id' => id)
       objects.each do |object|
         object.name.gsub!(/\##{short_name_was}/, "##{short_name}")
         object.content.gsub!(/\##{short_name_was}/, "##{short_name}")
@@ -564,7 +566,7 @@ class Topic
     end
 
     unless topic_mention_updates.empty?
-      CoreObject.where("topic_mentions._id" => id).update_all(topic_mention_updates)
+      Post.where("topic_mentions._id" => id).update_all(topic_mention_updates)
     end
     unless primary_type_updates.empty?
       Topic.where("primary_type_id" => id).update_all(primary_type_updates)

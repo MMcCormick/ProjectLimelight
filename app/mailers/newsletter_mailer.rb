@@ -18,7 +18,7 @@ class NewsletterMailer < ActionMailer::Base
     [talks, links, pictures, videos].each do |objs|
       obj_ids = obj_ids + objs.map{ |obj| obj.root_id }
     end
-    objects = CoreObject.where(:_id.in => obj_ids)
+    objects = Post.where(:_id.in => obj_ids)
 
     talks = objects.select{|o| o._type == 'Talk'}
     links = objects.select{|o| o._type == 'Link'}

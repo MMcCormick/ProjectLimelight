@@ -1,4 +1,4 @@
-class Link < CoreObject
+class Link < Post
   include Limelight::Images
 
   validate :has_valid_url

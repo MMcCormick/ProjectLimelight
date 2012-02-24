@@ -1,0 +1,2 @@
+<p><%= @talk.get('content') %></p>
+Posted by <a href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>

@@ -9,4 +9,6 @@
   <% end %>
 <% end %>
 
-<%= render "core_objects/feed", :core_objects => @core_objects, :more_path => @more_path %>
+<div id='posts-feed' data-posts='<%= render(template: "users/feed.json.rabl") %>'></div>
+
+<%#= render "core_objects/feed", :core_objects => @core_objects, :more_path => @more_path %>

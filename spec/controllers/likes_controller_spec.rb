@@ -9,7 +9,7 @@ describe LikesController do
       before(:each) { sign_in user }
 
       it "should respond with a 404 + json error object if the object is not found" do
-        CoreObject.should_receive(:find).with("fooid").and_return(nil)
+        Post.should_receive(:find).with("fooid").and_return(nil)
         xhr :post, :create, :id => "fooid"
         JSON.parse(response.body)['status'].should == "error"
         response.response_code.should == 404
@@ -17,7 +17,7 @@ describe LikesController do
 
       context "when object is found" do
         let(:object) { mock('object').as_null_object }
-        before(:each) { CoreObject.should_receive(:find).with("fooid").and_return(object) }
+        before(:each) { Post.should_receive(:find).with("fooid").and_return(object) }
 
         it "should call add_to_likes on the object" do
           object.should_receive(:add_to_likes).with(user)
@@ -50,7 +50,7 @@ describe LikesController do
       before(:each) { sign_in user }
 
       it "should respond with a 404 + json error object if the object is not found" do
-        CoreObject.should_receive(:find).with("fooid").and_return(nil)
+        Post.should_receive(:find).with("fooid").and_return(nil)
         xhr :delete, :destroy, :id => "fooid"
         JSON.parse(response.body)['status'].should == "error"
         response.response_code.should == 404
@@ -58,7 +58,7 @@ describe LikesController do
 
       context "when object is found" do
         let(:object) { mock('object').as_null_object }
-        before(:each) { CoreObject.should_receive(:find).with("fooid").and_return(object) }
+        before(:each) { Post.should_receive(:find).with("fooid").and_return(object) }
 
         it "should call remove_from_likes on the object" do
           object.should_receive(:remove_from_likes).with(user)

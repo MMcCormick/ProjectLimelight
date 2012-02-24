@@ -2,7 +2,7 @@ class TestingController < ApplicationController
 
   def test
     # get all objects
-    CoreObject.all.each do |co|
+    Post.all.each do |co|
 
       # do we need to split a link into a talk?
       if co._type != 'Talk' && !co.content.blank?
@@ -57,7 +57,7 @@ class TestingController < ApplicationController
               :post_id => pa.object_id.to_s,
               :user_id => pa.user_id.to_s
       }
-      object = CoreObject.find(pa.object_id)
+      object = Post.find(pa.object_id)
       user = User.find(pa.user_id)
       if object && user
         object.add_to_likes(user)
@@ -86,7 +86,7 @@ class TestingController < ApplicationController
     end
 
     # loop through all core objects and push to feeds + some other things
-    CoreObject.all.each do |co|
+    Post.all.each do |co|
       # update the response count
       if ['Video', 'Picture', 'Link'].include?(co.class.name)
         responses = Talk.where(:root_id => co.id).to_a
@@ -108,7 +108,7 @@ class TestingController < ApplicationController
 
   def foobar
     # get all objects
-    CoreObject.all.each do |co|
+    Post.all.each do |co|
 
       # do we need to split a link into a talk?
       if co._type != 'Talk' && !co.content.blank?
@@ -156,7 +156,7 @@ class TestingController < ApplicationController
               :post_id => pa.object_id.to_s,
               :user_id => pa.user_id.to_s
       }
-      object = CoreObject.find(pa.object_id)
+      object = Post.find(pa.object_id)
       user = User.find(pa.user_id)
       if object && user
         object.add_to_likes(user)
@@ -185,7 +185,7 @@ class TestingController < ApplicationController
     end
 
     # loop through all core objects and push to feeds + some other things
-    CoreObject.all.each do |co|
+    Post.all.each do |co|
 
       # set the primary topic mention
       mentions = Topic.where(:_id => {'$in' => co.topic_mentions.map{|t| t.id}})
@@ -218,7 +218,7 @@ class TestingController < ApplicationController
 
   def foo
     # get all objects
-    CoreObject.all.each do |co|
+    Post.all.each do |co|
 
       # do we need to split a link into a talk?
       if co._type != 'Talk' && !co.content.blank?
@@ -236,7 +236,7 @@ class TestingController < ApplicationController
     end
 
     # loop through all core objects and push to feeds
-    CoreObject.all.each do |co|
+    Post.all.each do |co|
       # set the primary topic mention
       mentions = Topic.where(:_id => {'$in' => co.topic_mentions.map{|t| t.id}}).to_a
       mentions.each do |topic|

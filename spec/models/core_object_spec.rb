@@ -3,7 +3,7 @@ require 'spec_helper'
 # Used talk, since core objects are never instantiated directly
 # and talk is the least complex core object
 
-describe CoreObject do
+describe Post do
 
   describe "core object creation" do
     it "should require a user_id" do

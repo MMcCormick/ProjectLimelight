@@ -3,7 +3,7 @@ namespace :push_feeds do
   desc "Create initial push feeds from the old architecture"
   task :migrate => :environment do
     # get all objects
-    CoreObject.all.each do |co|
+    Post.all.each do |co|
 
       # do we need to split a link into a talk?
       if co._type != 'Talk' && !co.content.blank?
@@ -58,7 +58,7 @@ namespace :push_feeds do
               :post_id => pa.object_id.to_s,
               :user_id => pa.user_id.to_s
       }
-      object = CoreObject.find(pa.object_id)
+      object = Post.find(pa.object_id)
       user = User.find(pa.user_id)
       if object && user
         object.add_to_likes(user)
@@ -87,7 +87,7 @@ namespace :push_feeds do
     end
 
     # loop through all core objects and push to feeds + some other things
-    CoreObject.all.each do |co|
+    Post.all.each do |co|
       # update the response count
       if ['Video', 'Picture', 'Link'].include?(co.class.name)
         responses = Talk.where(:root_id => co.id).to_a

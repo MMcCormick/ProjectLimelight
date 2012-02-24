@@ -39,7 +39,7 @@ namespace :limelight_neo4j do
     end
 
     # move posts over
-    posts = CoreObject.all
+    posts = Post.all
     posts.each do |p|
       #Resque.enqueue(Neo4jPostCreate, p.id.to_s)
     end

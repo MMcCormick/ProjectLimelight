@@ -2,26 +2,35 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings, :topic_finder]
   include ImageHelper
 
+  respond_to :html, :json
+
   caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
-  caches_action :feed, :if => Proc.new { |c| !signed_in? }, :cache_path => Proc.new { |c| c.params }
+  #caches_action :feed, :if => Proc.new { |c| !signed_in? }, :cache_path => Proc.new { |c| c.params }
 
   def show
-    @user = User.find_by_slug(params[:id])
+    @user = params[:id] && params[:id].to_i != 0 ? User.find_by_slug(params[:id]) : current_user
+
     not_found("User not found") unless @user
 
-    @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Contributions"
-    @description = "A feed containing all posts submitted by " + @user.username
     page = params[:p] ? params[:p].to_i : 1
-    @right_sidebar = true if current_user != @user
-    @more_path = user_path :p => page + 1
-    @core_objects = CoreObject.contribute_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
-    respond_to do |format|
-      format.js {
-        response = reload_feed(@core_objects, @more_path, page)
-        render json: response
-      }
-      format.html # index.html.erb
-    end
+
+    @title = (current_user.id == @user.id ? 'Your2' : @user.username+"'s") + " Feed"
+    @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
+    @posts = Post.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+
+    #@title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Contributions"
+    #@description = "A feed containing all posts submitted by " + @user.username
+    #page = params[:p] ? params[:p].to_i : 1
+    #@right_sidebar = true if current_user != @user
+    #@more_path = user_path :p => page + 1
+    #@core_objects = Post.contribute_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    #respond_to do |format|
+    #  format.js {
+    #    response = reload_feed(@core_objects, @more_path, page)
+    #    render json: response
+    #  }
+    #  format.html # index.html.erb
+    #end
   end
 
   def update
@@ -177,24 +186,20 @@ class UsersController < ApplicationController
   # Includes core objects mentioning this user
   def feed
     if signed_in?
-      @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
+      @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+
       not_found("User not found") unless @user
 
       if current_user.id == @user.id && @user.tutorial_step.to_i != 0
         redirect_to user_tutorial_path
       else
         @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
+
         page = params[:p] ? params[:p].to_i : 1
+
+        @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
         @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
-        @right_sidebar = true if current_user != @user
-        @core_objects = CoreObject.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
-        respond_to do |format|
-          format.js {
-            response = reload_feed(@core_objects, @more_path, page)
-            render json: response
-          }
-          format.html
-        end
+        @posts = Post.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
       end
     else
       @title = 'Welcome to Limelight!'

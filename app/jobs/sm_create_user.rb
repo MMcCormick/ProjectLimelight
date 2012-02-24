@@ -4,6 +4,6 @@ class SmCreateUser
 
   def self.perform(user_id)
     user = User.find(user_id)
-    LLSoulmate.create_user(user) if user
+    LlSoulmate.create_user(user) if user
   end
 end

@@ -642,7 +642,7 @@ module Limelight #:nodoc:
 
           # Removed because popularity for push feeds is aggregated around the root
           #if response_to
-          #  object = CoreObject.find(response_to.id)
+          #  object = Post.find(response_to.id)
           #  object.add_pop_action(type, subtype, current_user, true) if object
           #end
         end

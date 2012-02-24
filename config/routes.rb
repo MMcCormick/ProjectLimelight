@@ -1,7 +1,23 @@
 ProjectLimelight::Application.routes.draw do
 
-  # redirect to www.example.com if user goes to example.com
+  # redirect to example.com if user goes to www.example.com
   match '(*any)' => redirect { |p, req| req.url.sub('www.', '') }, :constraints => { :host => /^www\./ }
+
+  # API
+  scope 'api' do
+    resources :posts
+
+    scope 'users' do
+      get 'feed' => 'users#feed'
+    end
+  end
+
+
+
+
+
+
+
 
   # Testing
   get 'testing' => 'testing#test', :as => :test
@@ -87,7 +103,7 @@ ProjectLimelight::Application.routes.draw do
     get ':id/following/users' => 'users#following_users', :as => :user_following_users
     get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
     get ':id/followers' => 'users#followers', :as => :user_followers
-    get ':id/feed' => 'users#feed', :as => :user_feed
+    get ':id' => 'users#feed', :as => :user_feed
     get ':id/hover' => 'users#hover' , :as => :user_hover
     get ':id/picture' => 'users#default_picture', :as => :user_default_picture
   end

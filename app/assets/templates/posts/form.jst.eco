@@ -1,0 +1,84 @@
+<div class="bg"></div>
+<form>
+  <div class="errors"></div>
+
+  <div class='response hide'>
+    <div class='image'></div>
+    <div class='title'></div>
+    <div class='created_at'></div>
+  </div>
+
+  <div class="main_content">
+    <label for="post-form-content">What do you want to talk about?</label>
+    <textarea id="post-form-content" spellcheck="false" autocomplete="off" name="content"></textarea>
+    <%#= render "shared/mention_box", :f => f %>
+    <%#= render "shared/mention_suggestions", :f => f %>
+  </div>
+
+  <!--<div class="tweet_content hide">-->
+    <!--<div class="head">tweet</div>-->
+    <%#= f.text_area :tweet_content, :spellcheck => false, :autocomplete => :off %>
+  <!--</div>-->
+
+  <div>
+    <label for="post-form-fetch-url">Fetch URL</label>
+    <input id="post-form-fetch-url" type="text" class="" />
+  </div>
+
+  <div class="shared with-preview hide">
+    <div class="preview">
+      <div class="images"></div>
+    </div>
+    <div class="info">
+      <div class="title required lClear">
+        <label for="post-form-title"></label>
+        <textarea id="post-form-title" spellcheck="false" autocomplete="off" name="title"></textarea>
+      </div>
+      <div class="switcher hide">
+        <div class="left"><</div>
+        <div class="right">></div>
+        <div class="help">choose an image</div>
+      </div>
+    </div>
+    <div class="cancel">X</div>
+  </div>
+
+  <div class="mentions">
+    <div>
+      <label for="post-form-mention1">Add Topic...</label>
+      <input type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention1" />
+    </div>
+    <div>
+      <label for="post-form-mention2">Add Topic...</label>
+      <input type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention2" />
+    </div>
+  </div>
+
+  <div class="actions">
+    <input type="submit" class="submit" value="Submit" />
+
+    <!--<%# unless signed_in? && current_user.get_social_connect('twitter') %>-->
+      <!--<div class="connect_twitter" data-auth='<%#= user_omniauth_authorize_path(:twitter) %>'>-->
+        <!--Connect Twitter-->
+        <!--<div class="twitter-bird-small"></div>-->
+      <!--</div>-->
+    <!--<%# else %>-->
+      <!--<div class="tweet">-->
+        <!--<%#= f.check_box :tweet, :autocomplete => :off %>-->
+        <!--tweet this-->
+      <!--</div>-->
+    <!--<%# end %>-->
+
+    <div class="cancel">cancel</div>
+  </div>
+
+  <input type="hidden" id="post-form-source-url" name="source_url" />
+  <input type="hidden" id="post-form-source-name" name="source_name" />
+  <input type="hidden" id="post-form-source-vid" name="source_video_id" />
+  <input type="hidden" id="post-form-embed" name="embed_html" />
+  <input type="hidden" id="post-form-type" name="type" value="Talk" />
+  <input type="hidden" id="post-form-parent-id" name="parent_id" />
+  <input type="hidden" id="post-form-remote-image-url" name="remote_image_url" autocomplete="off" />
+  <input type="hidden" id="post-form-image-cache" name="image_cache" autocomplete="off" />
+  <div id="picture_pupB"></div>
+</form>

@@ -26,7 +26,7 @@ class TopicsController < ApplicationController
     @more_path = topic_path @topic, :p => page + 1
     @topic_ids = Neo4j.pull_from_ids(@topic.id.to_s).to_a
 
-    @core_objects = CoreObject.topic_feed(@topic_ids << @topic.id, current_user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    @core_objects = Post.topic_feed(@topic_ids << @topic.id, current_user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
 
     respond_to do |format|
       format.js {
@@ -165,7 +165,7 @@ class TopicsController < ApplicationController
       topic.update_health('image')
 
       if image && topic.save
-        topic.expire_caches
+        #topic.expire_caches BETA REMOVE
         topic.available_dimensions.each do |dimension|
           topic.available_modes.each do |mode|
             expire_fragment("#{topic.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
@@ -309,7 +309,7 @@ class TopicsController < ApplicationController
     end
 
     if topic.save
-      topic.expire_caches
+      #topic.expire_caches BETA REMOVE
       response = build_ajax_response(:ok, nil, "Topic updated!")
       status = 200
     else

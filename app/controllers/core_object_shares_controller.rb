@@ -4,7 +4,7 @@ class CoreObjectSharesController < ApplicationController
     receiver_slugs = params[:core_object_share][:receiver_slugs].downcase.split(%r{,\s*}).map! { |elem| elem.strip }
     included_poster = !!receiver_slugs.delete(current_user.slug)
     receivers = User.where(:slug.in => receiver_slugs)
-    object = CoreObject.find(params[:core_object_share][:core_object_id])
+    object = Post.find(params[:core_object_share][:core_object_id])
 
     if receivers.empty?
       response = build_ajax_response(:error, nil, (included_poster ? "You cannot share with yourself! Silly goose" : "That user could not be found!"))

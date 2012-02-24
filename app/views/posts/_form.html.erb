@@ -1,0 +1,65 @@
+<%= form_for post, :html => { :class => 'new_post ajax' } do |f| %>
+
+  <div class="errors"></div>
+
+  <div class='response'>
+    <div class='image'></div>
+    <div class='title'>Some Limelight Post</div>
+    <div class='created_at'>link originally submitted 20 minutes ago</div>
+  </div>
+  <div class="main_content">
+    <%= f.label :content, "What do you want to talk about?" %>
+    <%= f.text_area :content, :spellcheck => false, :autocomplete => :off %>
+      <%#= render "shared/mention_box", :f => f %>
+      <%#= render "shared/mention_suggestions", :f => f %>
+  </div>
+  <!--<div class="tweet_content hide">-->
+    <!--<div class="head">tweet</div>-->
+    <%#= f.text_area :tweet_content, :spellcheck => false, :autocomplete => :off %>
+  <!--</div>-->
+  <div class="shared with-preview hide">
+    <div class="preview">
+      <div class="images"></div>
+    </div>
+    <div class="info">
+      <div class="title required lClear">
+        <%= f.label :title, "Picture title..." %>
+        <%= f.text_area :title, :spellcheck => false, :autocomplete => :off %>
+      </div>
+      <div class="switcher hide">
+        <div class="left"><</div>
+        <div class="right">></div>
+        <div class="help">choose an image</div>
+      </div>
+    </div>
+    <div class="cancel">X</div>
+
+    <%= f.hidden_field :source_name %>
+    <%= f.hidden_field :source_video_id %>
+    <%= f.hidden_field :source_url %>
+    <%= f.hidden_field :embed_html %>
+    <%= render 'shared/asset_image_field', :f => f %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Submit", :class => 'submit' %>
+    <!--<% unless signed_in? && current_user.get_social_connect('twitter') %>-->
+      <!--<div class="connect_twitter" data-auth='<%= user_omniauth_authorize_path(:twitter) %>'>-->
+        <!--Connect Twitter-->
+        <!--<div class="twitter-bird-small"></div>-->
+      <!--</div>-->
+    <!--<% else %>-->
+      <!--<div class="tweet">-->
+        <!--<%#= f.check_box :tweet, :autocomplete => :off %>-->
+        <!--tweet this-->
+      <!--</div>-->
+    <!--<% end %>-->
+    <div class="cancel">cancel</div>
+  </div>
+
+  <%= f.hidden_field :type, :value => 'Talk' %>
+  <%= f.hidden_field :parent_id %>
+<% end %>
+
+<% content_for :js do %>
+  <%= render "pictures/upload_js" %>
+<% end %>

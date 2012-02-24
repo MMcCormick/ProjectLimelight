@@ -34,7 +34,7 @@ class EmbedlyController < ApplicationController
       end
     end
 
-    post = result['url'] ? CoreObject.where('sources.url' => result['url']).first : nil
+    post = result['url'] ? Post.where('sources.url' => result['url']).first : nil
     if post
       img = default_image_url(post, 50, 50, 'fillcropmid', true, true)
       response[:limelight_post] = {

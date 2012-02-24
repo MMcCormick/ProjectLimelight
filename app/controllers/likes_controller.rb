@@ -11,7 +11,7 @@ class LikesController < ApplicationController
     @more_path = user_likes_path :p => page + 1
     @right_sidebar = true if current_user != @user
 
-    @core_objects = CoreObject.like_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    @core_objects = Post.like_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
     respond_to do |format|
       format.js {
         response = reload_feed(@core_objects, @more_path, page)
@@ -22,7 +22,7 @@ class LikesController < ApplicationController
   end
 
   def create
-    object = CoreObject.find(params[:id])
+    object = Post.find(params[:id])
     if object
       like_success = object.add_to_likes(current_user)
       if like_success
@@ -47,7 +47,7 @@ class LikesController < ApplicationController
   end
 
   def destroy
-    object = CoreObject.find(params[:id])
+    object = Post.find(params[:id])
     if object
       if object.remove_from_likes(current_user)
         current_user.save if object.save

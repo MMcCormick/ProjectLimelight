@@ -9,7 +9,7 @@ class Neo4j
     # called for post actions (like, favorite, etc)
     def post_action(user_id, post_id, change)
       node1 = Neo4j.neo.get_node_index('users', 'uuid', user_id)
-      post = CoreObject.find(post_id)
+      post = Post.find(post_id)
 
       if node1 && post
         # increase affinity to the post creator

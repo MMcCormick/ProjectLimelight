@@ -1,0 +1,1 @@
+class LL.Models.Post extends Backbone.Model

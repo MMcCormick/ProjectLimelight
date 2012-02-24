@@ -1,0 +1,1 @@
+class LL.Models.Topic extends Backbone.Model

@@ -57,8 +57,8 @@ class TopicConSugsController < ApplicationController
                     :pull_from => params[:topic_con_sug][:pull_from],
                     :reverse_pull_from => params[:topic_con_sug][:reverse_pull_from]
             )
-            topic1.expire_caches
-            topic2.expire_caches
+            #topic1.expire_caches BETA REMOVE
+            #topic2.expire_caches BETA REMOVE
             html = render_to_string :partial => 'teaser', :locals => { :sug => sug }
             response = build_ajax_response(:ok, nil, "Your connection has been submitted!", nil, :teaser => html)
             status = 201

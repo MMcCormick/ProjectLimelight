@@ -1,4 +1,4 @@
-class Picture < CoreObject
+class Picture < Post
   include Limelight::Images
 
   validates :title, :presence => true

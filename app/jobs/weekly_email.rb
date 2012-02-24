@@ -13,7 +13,7 @@ class WeeklyEmail
     [talks, links, pictures, videos].each do |objs|
       obj_ids = obj_ids + objs.map{ |obj| obj.root_id }
     end
-    objects = CoreObject.where(:_id.in => obj_ids)
+    objects = Post.where(:_id.in => obj_ids)
 
     pop_talks = objects.select{|o| o._type == 'Talk'}
     pop_links = objects.select{|o| o._type == 'Link'}

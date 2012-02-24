@@ -1,12 +1,8 @@
-class Video < CoreObject
+class Video < Post
   include Limelight::Images
-
-  field :embed_html
 
   validate :has_valid_url
   validates :title, :presence => true
-
-  attr_accessible :embed_html
 
   def name
     title_clean

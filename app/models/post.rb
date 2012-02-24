@@ -1,6 +1,6 @@
 require "limelight"
 
-class CoreObject
+class Post
   include Mongoid::Document
   include Mongoid::Paranoia
   include Mongoid::Timestamps
@@ -25,12 +25,13 @@ class CoreObject
   field :talking_ids, :default => [] # ids of users talking about this
   field :tweet_id
   field :root_type
+  field :embed_html # video embeds
   field :root_id, :type => BSON::ObjectId
 
   auto_increment :public_id
 
   embeds_one :user_snippet, :as => :user_assignable, :class_name => 'UserSnippet'
-  embeds_one :response_to, :as => :core_object_assignable, :class_name => 'CoreObjectSnippet'
+  embeds_one :response_to, :as => :core_object_assignable, :class_name => 'PostSnippet'
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
   embeds_many :likes, :as => :user_assignable, :class_name => 'UserSnippet'
 
@@ -39,15 +40,15 @@ class CoreObject
   validates :user_id, :status, :presence => true
   validate :title_length, :content_length, :unique_source
 
-  attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet, :tweet_id
+  attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :embed_html, :tweet_content, :tweet, :tweet_id
   attr_accessor :parent, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
   default_scope where('status' => 'active')
 
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :send_tweet, :set_response_to, :set_root
-  after_create :neo4j_create, :update_response_count, :feed_post_create, :action_log_create, :add_initial_pop
-  after_update :expire_caches
+  after_create :neo4j_create, :update_response_count, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
+  #after_update :expire_caches BETA REMOVE
   after_destroy :remove_from_feeds
 
   # MBM: hot damn lots of indexes. can we do this better? YES WE CAN
@@ -75,6 +76,16 @@ class CoreObject
     public_id.to_i.to_s(36)
   end
 
+  # After a root post create, if there is content then create a linked talk for the user
+  def add_first_talk
+    unless self.class.name == 'Talk' || content.blank?
+      user.talks.create(
+              :content => content,
+              :parent => self
+      )
+    end
+  end
+
   def set_source_snippet
     if @source_name || @source_url || @source_video_id
       source = SourceSnippet.new
@@ -96,15 +107,16 @@ class CoreObject
     end
   end
 
-  def expire_caches
-    ['list', 'grid', 'column'].each do |view|
-      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}")
-      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top-response") # talk list view includes response on feeds but not on show pages.
-      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom-response") # talk list view includes response on feeds but not on show pages.
-      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top")
-      ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom")
-    end
-  end
+  # BETA REMOVE
+  #def expire_caches
+  #  ['list', 'grid', 'column'].each do |view|
+  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}")
+  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top-response") # talk list view includes response on feeds but not on show pages.
+  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom-response") # talk list view includes response on feeds but not on show pages.
+  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top")
+  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom")
+  #  end
+  #end
 
   # if required, checks that the given post URL is valid
   def has_valid_url
@@ -129,10 +141,12 @@ class CoreObject
   end
 
   def unique_source
-    if sources.length > 0 && !self.persisted?
-      if CoreObject.where('sources.url' => sources.first.url).first
+    if sources.length > 0 && !sources.first.url.blank? && !self.persisted?
+      if Post.where('sources.url' => sources.first.url).first
         errors.add('Link', "has already been added to Limelight")
       end
+    elsif sources.length > 0 && sources.first.url.blank?
+      sources = nil
     end
   end
 
@@ -142,34 +156,34 @@ class CoreObject
     end
   end
 
-  # Favorites
-  def favorited_by?(user_id)
-    favorites.include? user_id
-  end
-
-  def add_to_favorites(user)
-    if favorited_by? user.id
-      false
-    else
-      self.favorites << user.id
-      self.favorites_count += 1
-      user.add_to_favorites(self)
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 2)
-      true
-    end
-  end
-
-  def remove_from_favorites(user)
-    if favorited_by? user.id
-      self.favorites.delete(user.id)
-      self.favorites_count -= 1
-      user.remove_from_favorites(self)
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -2)
-      true
-    else
-      false
-    end
-  end
+  # Favorites BETA REMOVE
+  #def favorited_by?(user_id)
+  #  favorites.include? user_id
+  #end
+  #
+  #def add_to_favorites(user)
+  #  if favorited_by? user.id
+  #    false
+  #  else
+  #    self.favorites << user.id
+  #    self.favorites_count += 1
+  #    user.add_to_favorites(self)
+  #    Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 2)
+  #    true
+  #  end
+  #end
+  #
+  #def remove_from_favorites(user)
+  #  if favorited_by? user.id
+  #    self.favorites.delete(user.id)
+  #    self.favorites_count -= 1
+  #    user.remove_from_favorites(self)
+  #    Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -2)
+  #    true
+  #  else
+  #    false
+  #  end
+  #end
 
   # Likes
   def liked_by?(user_id)
@@ -223,7 +237,7 @@ class CoreObject
 
   def set_response_to
     if parent
-      self.response_to = CoreObjectSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
+      self.response_to = PostSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
       self.response_to.id = parent.id
     end
   end
@@ -293,14 +307,29 @@ class CoreObject
       where(:public_id => id.to_i(36)).first
     end
 
+    # Build and return a post based on params (does not save)
+    def post(params, user_id)
+      if params[:type] && ['Video', 'Picture', 'Link', 'Talk'].include?(params[:type])
+        post = Kernel.const_get(params[:type]).new(params)
+        post.user_id = user_id
+        unless post.class.name == 'Talk'
+          post.save_original_image
+          post.save_images
+        end
+      else
+        post = Post.new
+      end
+      post
+    end
+
     def for_show_page(parent_id)
-      CoreObject.where(:root_id => parent_id).order_by(:created_at, :desc)
+      Post.where(:root_id => parent_id).order_by(:created_at, :desc)
     end
 
     # @example Fetch the core_objects for a feed with the given criteria
-    #   CoreObject.feed
+    #   Post.feed
     #
-    # @param [ display_types ] Array of CoreObject types to fetch for the feed
+    # @param [ display_types ] Array of Post types to fetch for the feed
     # @param { order_by } Array of format { 'target' => 'field', 'order' => 'direction' } to sort the feed
     # @param { options } Options TODO: Fill out these options
     #
@@ -383,7 +412,7 @@ class CoreObject
         end
       end
 
-      objects = CoreObject.where(:_id => {'$in' => item_ids})
+      objects = Post.where(:_id => {'$in' => item_ids})
 
       return_objects = []
       items.each do |i|
@@ -408,7 +437,6 @@ class CoreObject
     def build_feed(items)
       topic_ids = []
       item_ids = []
-      response_ids = {}
       items.each do |i|
         if i.root_type == 'Topic'
           topic_ids << i.root_id
@@ -419,18 +447,20 @@ class CoreObject
       end
 
       topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
-      objects = CoreObject.where(:_id => {'$in' => item_ids})
+      objects = Post.where(:_id => {'$in' => item_ids})
 
       return_objects = []
       items.each do |i|
+        root_post = RootPost.new
         if i.root_type == 'Topic'
-          root = topics.detect{|t| t.id == i.root_id}
+          root_post.root = topics.detect{|t| t.id == i.root_id}
         else
-          root = objects.detect{|o| o.id == i.root_id}
+          root_post.root = objects.detect{|o| o.id == i.root_id}
         end
 
-        responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
-        return_objects << { :root => root, :responses => responses.reverse }
+        root_post.responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+
+        return_objects << root_post
       end
 
       return_objects

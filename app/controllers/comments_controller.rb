@@ -10,7 +10,7 @@ class CommentsController < ApplicationController
       comment.send_notifications(current_user)
       #comment.send_mention_notifications
 
-      talk.expire_caches
+      #talk.expire_caches BETA REMOVE
       html = render_to_string :partial => "comments/comment", :locals => { :comment => comment }
       response = build_ajax_response(:ok, nil, "Comment posted!", nil, { :parent_id => comment.parent_id, :talk_id => comment.talk_id, :comment => html })
       render json: response, :status => 201

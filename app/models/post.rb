@@ -251,7 +251,7 @@ class Post
   def update_response_counts(u_id=nil)
     u_id ||= user_snippet.id
     if response_to
-      parent ||= CoreObject.find(response_to.id)
+      parent ||= Post.find(response_to.id)
       parent.register_response(u_id)
     end
     register_topic_responses(u_id) if standalone_talk?
@@ -361,7 +361,7 @@ class Post
     # @param { order_by } Array of format { 'target' => 'field', 'order' => 'direction' } to sort the feed
     # @param { options } Options TODO: Fill out these options
     #
-    # @return [ CoreObjects ]
+    # @return [ Posts ]
     def feed(feed_id, display_types, order_by, page)
 
       if display_types.include?('Talk')

@@ -10,10 +10,10 @@ task :confirm_all => :environment do
 end
 
 task :topic_response_counts => :environment do
-  CoreObject.update_all(:response_count => 0, :talking_ids => [])
+  Post.update_all(:response_count => 0, :talking_ids => [])
   Topic.update_all(:response_count => 0, :talking_ids => [])
 
-  CoreObject.where(:response_to => { "$exists" => false }).each do |obj|
+  Post.where(:response_to => { "$exists" => false }).each do |obj|
     obj.update_response_counts
     if obj._type == "Talk"
       obj.comments.each do |comment|

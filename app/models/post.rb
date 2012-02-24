@@ -240,9 +240,12 @@ class Post
   ##
 
   def set_response_to
-    if parent
-      self.response_to = PostSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
-      self.response_to.id = parent.id
+    if parent || parent_id
+      parent = Post.find(parent_id) unless parent
+      if parent
+        self.response_to = PostSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
+        self.response_to.id = parent.id
+      end
     end
   end
 
@@ -337,6 +340,13 @@ class Post
 
     # Build and return a post based on params (does not save)
     def post(params, user_id)
+
+      # set the image
+      params[:asset_image] = {
+              :remote_image_url => params[:remote_image_url],
+              :image_cache => params[:image_cache]
+      }
+
       if params[:type] && ['Video', 'Picture', 'Link', 'Talk'].include?(params[:type])
         post = Kernel.const_get(params[:type]).new(params)
         post.user_id = user_id

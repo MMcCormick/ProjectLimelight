@@ -23,15 +23,21 @@ class LL.Views.PostFormPreview extends Backbone.View
         $(@el).insertAfter(@target)
         @loaded = true
 
-      @post_form.set({
-        'type': model.get('type'),
-        'source_url': model.get('url'),
-        'title': model.get('title'),
-        'provider_name': model.get('provider_name')
-      })
+      if model.get('limelight_post')
+        @post_form.set({
+          'type': 'Talk',
+          'parent_id': model.get('limelight_post').id
+        })
+      else
+        @post_form.set({
+          'type': model.get('type'),
+          'source_url': model.get('url'),
+          'title': model.get('title'),
+          'provider_name': model.get('provider_name')
+        })
 
       # initialize images
-      if model.get('type') != 'Video' && model.get('images').length > 0
+      if !model.get('limelight_post') && model.get('type') != 'Video' && model.get('images').length > 0
         @post_form.set('remote_image_url', model.get('images')[0].url)
         if model.get('images').length > 1
           $(@el).find('.media img:gt(0)').hide() # hide all images but the first one

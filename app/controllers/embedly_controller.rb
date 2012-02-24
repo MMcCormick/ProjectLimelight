@@ -41,6 +41,7 @@ class EmbedlyController < ApplicationController
               :id => post.id.to_s,
               :title => post.title_clean,
               :image => img ? img.image_url : nil,
+              :embed => post.embed_html,
               :created_at => time_ago_in_words(post.created_at),
               :type => post._type
       }

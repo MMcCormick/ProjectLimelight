@@ -7,8 +7,8 @@ class LL.Views.PostsFeed extends Backbone.View
 
     self = @
 
-    @collection.on('reset', @render, this)
-    @collection.on('add', @appendPost, this)
+    @collection.on('reset', @render, @)
+    @collection.on('add', @appendPost, @)
 
     # Always start on page 1
     @.page = 1

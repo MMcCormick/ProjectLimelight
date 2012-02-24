@@ -22,25 +22,7 @@
 
   <div>
     <label for="post-form-fetch-url">Fetch URL</label>
-    <input id="post-form-fetch-url" type="text" class="" />
-  </div>
-
-  <div class="shared with-preview hide">
-    <div class="preview">
-      <div class="images"></div>
-    </div>
-    <div class="info">
-      <div class="title required lClear">
-        <label for="post-form-title"></label>
-        <textarea id="post-form-title" spellcheck="false" autocomplete="off" name="title"></textarea>
-      </div>
-      <div class="switcher hide">
-        <div class="left"><</div>
-        <div class="right">></div>
-        <div class="help">choose an image</div>
-      </div>
-    </div>
-    <div class="cancel">X</div>
+    <input id="post-form-fetch-url" type="text" />
   </div>
 
   <div class="mentions">

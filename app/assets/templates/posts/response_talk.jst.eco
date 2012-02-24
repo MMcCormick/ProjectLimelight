@@ -1,1 +1,2 @@
-Talk Response by <a href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>
+<p><%= @talk.get('content') %></p>
+Posted by <a href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>

@@ -60,9 +60,20 @@
     top: 50%;
     left: 50%;
     width: 500px;
-    height: 250px;
+    min-height: 250px;
     margin: -125px 0 0 -250px;
     background: #CCC;
+
+    .preview {
+      border-top: 1px solid #FFF;
+      border-bottom: 1px solid #FFF;
+      .media {
+        display: block;
+        img {
+          max-width: 120px;
+        }
+      }
+    }
   }
 }
 

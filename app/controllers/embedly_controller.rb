@@ -14,7 +14,7 @@ class EmbedlyController < ApplicationController
     result = JSON.parse(buffer)
 
     response = {
-            :type => 'link',
+            :type => 'Link',
             :video => nil,
             :photo => nil,
             :images => result['images'],
@@ -26,10 +26,10 @@ class EmbedlyController < ApplicationController
 
     if result['object']
       if result['object']['type'] == 'video'
-        response[:type] = 'video'
+        response[:type] = 'Video'
         response[:video] = video_embed(nil, 120, 120, result['provider_name'], nil, result['object']['html'])
       elsif result['object']['type'] == 'photo'
-        response[:type] = 'photo'
+        response[:type] = 'Picture'
         response[:photo] = result['object']['url']
       end
     end

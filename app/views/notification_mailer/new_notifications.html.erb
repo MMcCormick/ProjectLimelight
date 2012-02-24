@@ -8,10 +8,6 @@
  end
 %>
 
-<div align="center"><a href="<%= base %>">
-  <%= image_tag base + image_path('logo_black.gif'), :style => 'max-width: 259px; max-height: 61px;', :alt => "" %>
-</a></div>
-
 <p>Hi <%= @user.first_or_username %>, you have some new notifications:</p>
 
 <% @notifications.each_with_index do |notification,i| %>
@@ -23,5 +19,3 @@
     <%= render "notifications/#{notification.type.to_s.underscore}_notification", :notification => notification, :is_first => nil, :base => base %>
   </div>
 <% end %>
-
-<p>If you wish to change the frequency of these emails, please log in and click "Settings" on the left panel.</p>

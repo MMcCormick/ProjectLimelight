@@ -3,7 +3,7 @@ class NewsletterMailer < ActionMailer::Base
   helper ImageHelper
   helper UsersHelper
   default :from => "Limelight <support@projectlimelight.com>"
-  layout 'email'
+  layout 'email_no_logo'
 
   def weekly_email(user, pop_talks, pop_links, pop_pics, pop_vids)
     interests = Neo4j.user_interests(user.id, 20)

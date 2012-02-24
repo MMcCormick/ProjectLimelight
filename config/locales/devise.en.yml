@@ -15,9 +15,9 @@ en:
     failure:
       already_authenticated: 'You are already signed in.'
       unauthenticated: 'You need to sign in or sign up before continuing.'
-      unconfirmed: 'You have to confirm your account before continuing.'
+      unconfirmed: 'You must confirm your account before continuing. Please check your email.'
       locked: 'Your account is locked.'
-      invalid: 'Invalid email / username or password.'
+      invalid: 'Email/Username or password invalid. If you are having trouble logging in, please let us know at support@projectlimelight.com'
       invalid_token: 'Invalid authentication token.'
       timeout: 'Your session expired, please sign in again to continue.'
       inactive: 'Your account was not activated yet.'

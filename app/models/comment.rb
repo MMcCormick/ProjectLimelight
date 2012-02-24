@@ -69,6 +69,12 @@ class Comment
     end
   end
 
+  def add_to_count
+    talk.response_count += 1
+    talk.update_response_counts(user_snippet.id)
+    talk.save
+  end
+
   class << self
     # Based on Newsmonger: https://github.com/banker/newsmonger
     # Return an array of comments, threaded, from highest to lowest votes.
@@ -127,6 +133,7 @@ class Comment
 
   def set_user_snippet
     self.build_user_snippet({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.user_snippet.id = user.id
   end
 
   def set_path
@@ -136,11 +143,6 @@ class Comment
       self.depth    = parent.depth + 1
       self.path     = parent.path + ":" + parent.id.to_s
     end
-  end
-
-  def add_to_count
-    talk.response_count += 1
-    talk.save
   end
 
   def action_log_create

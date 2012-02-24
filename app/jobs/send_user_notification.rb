@@ -6,13 +6,14 @@ class SendUserNotification
   def self.perform
     users = User.all
     users.each do |user|
-      if user.notify_email
+      if !user.notify_email
         notifications = Notification.where(
                 :user_id => user.id,
                 :active => true,
                 :read => false,
                 :notify => true,
-                :emailed => false)
+                :emailed => false,
+                :type => {"$in" => user.notification_types})
 
         if notifications && notifications.length > 0
           NotificationMailer.new_notifications(user, notifications).deliver

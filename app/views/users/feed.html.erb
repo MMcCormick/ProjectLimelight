@@ -3,12 +3,10 @@
   <%= render 'core_objects/feed_filters' %>
 <% end %>
 
-<% if current_user != @user %>
-  <% content_for :sidebar_right do %>
-    <%= render_cell(:user, :sidebar, @user, current_user, '') %>
-  <% end %>
-<% end %>
-
-<div id='posts-feed' data-posts='<%= render(template: "users/feed.json.rabl") %>'></div>
+<%# if current_user != @user %>
+  <%# content_for :sidebar_right do %>
+    <%#= render_cell(:user, :sidebar, @user, current_user, '') %>
+  <%# end %>
+<%# end %>
 
 <%#= render "core_objects/feed", :core_objects => @core_objects, :more_path => @more_path %>

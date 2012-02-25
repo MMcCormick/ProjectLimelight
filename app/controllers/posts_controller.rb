@@ -3,7 +3,6 @@ class PostsController < ApplicationController
   respond_to :html, :json
 
   def index
-
   end
 
   def show
@@ -32,15 +31,12 @@ class PostsController < ApplicationController
   end
 
   def edit
-
   end
 
   def update
-
   end
 
   def destroy
-
   end
 
   def disable
@@ -61,6 +57,12 @@ class PostsController < ApplicationController
       status = 404
     end
     render json: response, :status => status
+  end
+
+  def user_feed
+    @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    page = params[:p] ? params[:p].to_i : 1
+    @posts = Post.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
   end
 
 end

@@ -50,6 +50,18 @@ class LL.Views.PostsFeed extends Backbone.View
   appendPost: (root_post) =>
     column = @chooseColumn()
     column.appendPost(new LL.Views.RootPost(model: root_post))
+
+    if root_post.get('root').get('type') != 'Talk'
+      root_id = root_post.get('root').get('id')
+      channel = pusher.subscribe(root_id)
+      console.log LL.App.Posts
+
+      channel.bind 'new_response', (data) ->
+        root = LL.App.Posts.get(root_id)
+        if root
+          post = LL.App.Posts.findOrCreate(data.id, new LL.Models.Post(data))
+          root.trigger('new_response', post)
+
     @
 
   loadMore: (e) ->

@@ -21,9 +21,11 @@ class PostsController < ApplicationController
     @post = Post.post(params, current_user.id)
 
     if @post.save
-      extras = { :type => @post.class.name }
-      response = build_ajax_response(:ok, nil, nil, nil, extras)
-      render json: response, status: :created
+      if @post.response_to
+        Pusher[@post.response_to.id.to_s].trigger('new_response', render_to_string(:template => 'posts/show'))
+      end
+
+      render :template => 'posts/show'
     else
       response = build_ajax_response(:error, nil, "#{@post.class.name} could not be created", @post.errors)
       render json: response, status: :unprocessable_entity

@@ -10,7 +10,8 @@ class LL.Collections.Posts extends Backbone.Collection
     unless model
       model = new LL.Models.Post
       model.fetch({data: {id: id}})
-      @add(model)
+
+    @add(model) unless @get(model.get('id'))
 
     model
 

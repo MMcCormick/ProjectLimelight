@@ -10,6 +10,7 @@ class LL.Collections.Topics extends Backbone.Collection
     unless model
       model = new LL.Models.Topic
       model.fetch({data: {id: id}})
-      @add(model)
+
+    @add(model) unless @get(model.get('id'))
 
     model

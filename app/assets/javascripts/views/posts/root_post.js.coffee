@@ -30,7 +30,7 @@ class LL.Views.RootPost extends Backbone.View
       $(@el).append(root_view.render().el)
 
     if @model.get('responses')
-      responses_view = new LL.Views.RootResponses(model: @model.get('responses'))
+      responses_view = new LL.Views.RootResponses(model: @model.get('responses'), root: @model.get('root'))
       $(@el).append(responses_view.render().el)
 
     @

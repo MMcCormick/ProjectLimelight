@@ -32,7 +32,7 @@ class LL.Views.PostForm extends Backbone.View
     self = @
     @collection.create attributes,
       wait: true
-      success: ->
+      success: (post) ->
         self.destroyForm()
       error: @handleError
 

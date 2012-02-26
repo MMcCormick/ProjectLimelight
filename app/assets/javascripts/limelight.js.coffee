@@ -12,3 +12,4 @@ window.LL =
 
 jQuery ->
   LL.init()
+

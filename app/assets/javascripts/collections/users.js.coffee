@@ -10,6 +10,7 @@ class LL.Collections.Users extends Backbone.Collection
     unless model
       model = new LL.Models.User
       model.fetch({data: {id: id}})
-      @add(model)
+
+    @add(model) unless @get(model.get('id'))
 
     model

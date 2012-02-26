@@ -290,7 +290,7 @@ class Neo4j
       if ids
         ids['data'].each do |n|
           n[0]['data']['id'] = n[0]['data']['uuid']
-          suggestions << n[0]['data']
+          suggestions << TopicSnippet.new(n[0]['data'])
         end
       end
       suggestions

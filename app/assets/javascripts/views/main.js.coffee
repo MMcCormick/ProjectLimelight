@@ -1,9 +1,9 @@
 class LL.Views.Main extends Backbone.View
-  el: $('body')
+  el: $('#page_inside')
 
-  events:
-    "click .post-form": "loadPostForm"
+  initialize: ->
+    LL.App.UserFeed.on('reset', @renderFeed)
 
-  loadPostForm: ->
-    view = new LL.Views.PostForm()
-    $(@el).append(view.render().el)
+  renderFeed: =>
+    view = new LL.Views.PostsFeed(collection: LL.App.UserFeed)
+    view.render()

@@ -5,14 +5,19 @@ ProjectLimelight::Application.routes.draw do
 
   # API
   scope 'api' do
+    scope 'users' do
+      get '' => 'users#show'
+    end
+
     scope 'posts' do
       post '' => 'posts#create'
       get 'user_feed' => 'posts#user_feed'
-      put ':id/disable' => 'posts#disable'
-      get ':id' => 'posts#show'
+      put 'disable' => 'posts#disable'
+      get '' => 'posts#show'
     end
-    scope 'users' do
 
+    scope 'topics' do
+      get 'suggestions' => 'topics#suggestions'
     end
   end
 

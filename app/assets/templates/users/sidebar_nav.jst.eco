@@ -1,0 +1,14 @@
+<div class="user-panel">
+  <h4>
+    <a href="/users/<%= @user.get('id') %>"><%= @user.get('username') %></a>
+  </h4>
+</div>
+
+<a href="#"><%= @user.get('unread_notification_count') %> Notifications</a><br />
+<a href="#">Feed</a><br />
+<a href="#">Likes</a><br />
+<a href="#">Talks</a><br />
+
+<% if LL.App.current_user.get('id') == @user.get('id'): %>
+ <a href="#">Settings</a>
+<% end %>

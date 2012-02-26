@@ -8,15 +8,9 @@ class UsersController < ApplicationController
   #caches_action :feed, :if => Proc.new { |c| !signed_in? }, :cache_path => Proc.new { |c| c.params }
 
   def show
-    @user = params[:id] && params[:id].to_i != 0 ? User.find_by_slug(params[:id]) : current_user
+    @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
 
     not_found("User not found") unless @user
-
-    page = params[:p] ? params[:p].to_i : 1
-
-    @title = (current_user.id == @user.id ? 'Your2' : @user.username+"'s") + " Feed"
-    @more_path = params[:id] ? user_feed_path(:id => @user.slug, :p => page + 1) : root_path(:p => page + 1)
-    @posts = Post.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
 
     #@title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Contributions"
     #@description = "A feed containing all posts submitted by " + @user.username
@@ -24,13 +18,6 @@ class UsersController < ApplicationController
     #@right_sidebar = true if current_user != @user
     #@more_path = user_path :p => page + 1
     #@core_objects = Post.contribute_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
-    #respond_to do |format|
-    #  format.js {
-    #    response = reload_feed(@core_objects, @more_path, page)
-    #    render json: response
-    #  }
-    #  format.html # index.html.erb
-    #end
   end
 
   def update

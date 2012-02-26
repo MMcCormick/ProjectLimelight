@@ -32,17 +32,17 @@
           </div>
 
           <div class="sidebar left">
-            <%= render_cell :user, :sidebar, current_user, current_user, '' %>
+            <%#= render_cell :user, :sidebar, current_user, current_user, '' %>
 
-            <div id="static-links">
-              <a href="/pages/about">About</a> <span class="dot">.</span>
-              <a href="/pages/contact">Contact</a> <span class="dot">.</span>
-              <a href="/pages/privacy">Privacy</a>
-              <br>
-              <a href="/pages/terms">Terms</a> <span class="dot">.</span>
-              <a href="/pages/help">Help</a> <span class="dot">.</span>
-              <span data-m="put" data-url="/help/tutorials/on" class="tutorial-start <%= signed_in? ? 'ac' : 'auth' %>">Tutorials</span>
-            </div>
+            <!--<div id="static-links">-->
+              <!--<a href="/pages/about">About</a> <span class="dot">.</span>-->
+              <!--<a href="/pages/contact">Contact</a> <span class="dot">.</span>-->
+              <!--<a href="/pages/privacy">Privacy</a>-->
+              <!--<br>-->
+              <!--<a href="/pages/terms">Terms</a> <span class="dot">.</span>-->
+              <!--<a href="/pages/help">Help</a> <span class="dot">.</span>-->
+              <!--<span data-m="put" data-url="/help/tutorials/on" class="tutorial-start <%#= signed_in? ? 'ac' : 'auth' %>">Tutorials</span>-->
+            <!--</div>-->
           </div>
           
           <div class="sidebar right">
@@ -96,5 +96,9 @@
     <%= render 'shared/layout_js' %>
 
     <%= render :partial => 'shared/social_tools' %>
+
+    <% @user = current_user %>
+    <div id='me' data-user='<%= render(template: "users/show.json.rabl") %>'></div>
+
   </body>
 </html>

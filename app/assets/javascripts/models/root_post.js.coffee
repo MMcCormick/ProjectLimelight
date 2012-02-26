@@ -5,11 +5,11 @@ class LL.Models.RootPost extends Backbone.Model
     if resp.root.type == 'Topic'
       data['root'] = new LL.Models.Topic(resp.root)
     else
-      data['root'] = new LL.Models.Post(resp.root)
+      data['root'] = LL.App.Posts.findOrCreate(resp.id, new LL.Models.Post(resp.root))
 
     responses = []
     for response in resp.responses
-      responses.push(new LL.Models.Post(response))
+      responses.push(LL.App.Posts.findOrCreate(response.id, new LL.Models.Post(response)))
 
     data['responses'] = responses
     data

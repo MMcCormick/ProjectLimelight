@@ -1,0 +1,3 @@
+<div>
+  <%= @topic.get('name') %>
+</div>

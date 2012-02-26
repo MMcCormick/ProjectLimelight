@@ -1,0 +1,1 @@
+class LL.Models.Sidebar extends Backbone.Model

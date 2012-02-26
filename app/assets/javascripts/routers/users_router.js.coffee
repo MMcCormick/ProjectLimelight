@@ -4,12 +4,13 @@ class LL.Routers.Users extends Backbone.Router
     'users/:id': 'feed'
 
   initialize: ->
-    @collection = new LL.Collections.UserFeed()
-#    @collection.reset($('#posts-feed').data('posts'))
 
   feed: (id=0) ->
-    @collection.fetch({data: {id: id}})
-    @collection.id = id
-    @collection.page = 1
-    view = new LL.Views.PostsFeed(collection: @collection)
-    $('#page_header').after(view.render().el)
+    user = if id == 0 then LL.App.current_user else LL.App.Users.findOrCreate(id)
+
+    sidebar = new LL.Views.UserSidebar(model: user)
+    sidebar.render() if id == 0
+
+    LL.App.UserFeed.id = id
+    LL.App.UserFeed.page = 1
+    LL.App.UserFeed.fetch({data: {id: id}})

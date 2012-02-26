@@ -4,10 +4,11 @@ window.LL =
   Views: {}
   Routers: {}
   init: ->
-    new LL.Routers.Users()
-    new LL.Routers.Posts()
+    @App =  new LL.Views.App()
+    @Main = new LL.Views.Main()
+
+    user_router = new LL.Routers.Users()
     Backbone.history.start(pushState: true)
 
-$(document).ready ->
+jQuery ->
   LL.init()
-  main = new LL.Views.Main()

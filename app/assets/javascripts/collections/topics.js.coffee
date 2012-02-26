@@ -1,5 +1,5 @@
-class LL.Collections.Users extends Backbone.Collection
-  model: LL.Models.User
+class LL.Collections.Topics extends Backbone.Collection
+  model: LL.Models.Topic
 
   findOrCreate: (id, data=null) ->
     model = @get(id)
@@ -8,7 +8,7 @@ class LL.Collections.Users extends Backbone.Collection
     model = data unless model
 
     unless model
-      model = new LL.Models.User
+      model = new LL.Models.Topic
       model.fetch({data: {id: id}})
       @add(model)
 

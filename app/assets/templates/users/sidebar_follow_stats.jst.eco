@@ -1,0 +1,3 @@
+<a href="#">Following <%= @user.get('following_topics_count') %> Topics</a><br />
+<a href="#">Following <%= @user.get('following_users_count') %> Users</a><br />
+<a href="#"><%= @user.get('followers_count') %> Followers</a>

@@ -99,6 +99,24 @@ class TopicsController < ApplicationController
     render json: response, status: status
   end
 
+
+
+  # NEW BACKBONE API
+  def suggestions
+    @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
+
+    not_found("User not found") unless @user
+
+    @topics = Neo4j.user_topic_suggestions(@user.id.to_s, 20)
+  end
+  # END BACKBONE
+
+
+
+
+
+
+
   def by_health
     authorize! :manage, :all
     @site_style = 'narrow'

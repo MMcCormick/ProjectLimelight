@@ -1,0 +1,1 @@
+class LL.Models.App extends Backbone.Model

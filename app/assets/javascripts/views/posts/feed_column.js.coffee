@@ -3,11 +3,8 @@ class LL.Views.FeedColumn extends Backbone.View
   className: 'column-temporary'
 
   initialize: ->
-    @.height = 0
-
-  addHeight: (amount) ->
-    @.height += amount
+    @height = 0
 
   appendPost: (view) ->
-    $(@.el).append(view.render().el)
-    @.height = $(@.el).height()
+    $(@el).append(view.render().el)
+    @height = $(@el).height()

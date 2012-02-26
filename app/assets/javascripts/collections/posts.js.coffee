@@ -1,6 +1,18 @@
 class LL.Collections.Posts extends Backbone.Collection
-  url: '/api/posts'
   model: LL.Models.Post
+
+  findOrCreate: (id, data=null) ->
+    model = @get(id)
+
+    # set it to data if we're passing in a model
+    model = data unless model
+
+    unless model
+      model = new LL.Models.Post
+      model.fetch({data: {id: id}})
+      @add(model)
+
+    model
 
   parse: (resp, xhr) ->
     _(resp).map (attrs) ->

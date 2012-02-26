@@ -1,14 +1,12 @@
 class LL.Views.PostsFeed extends Backbone.View
   template: JST['posts/feed']
-  id: 'posts-feed'
+  el: $('#feed')
 
   initialize: ->
-    $('#posts-feed').remove()
-
     self = @
 
-    @collection.on('reset', @render, @)
-    @collection.on('add', @appendPost, @)
+    @collection.on('reset', @render)
+    @collection.on('add', @appendPost)
 
     # Always start on page 1
     @.page = 1
@@ -17,7 +15,7 @@ class LL.Views.PostsFeed extends Backbone.View
     $(window).bind 'scroll', (e) ->
       self.loadMore(e)
 
-  render: ->
+  render: =>
     $(@el).html(@template())
 
     # we start with no columns
@@ -34,11 +32,12 @@ class LL.Views.PostsFeed extends Backbone.View
     @
 
   arrangeColumns: =>
-    column_count = Math.floor($(@.el).width() / 240)
+    column_count = Math.floor($('#feed').width() / 240)
+
     for num in [1..column_count]
       column = new LL.Views.FeedColumn()
-      $(@.el).append(column.render().el)
-      @.columns.push(column)
+      $(@el).append(column.render().el)
+      @columns.push(column)
 
   chooseColumn: =>
     min_height = 9999999999999
@@ -49,14 +48,12 @@ class LL.Views.PostsFeed extends Backbone.View
     chosen
 
   appendPost: (root_post) =>
-    view = new LL.Views.RootPost(model: root_post)
     column = @chooseColumn()
-    column.appendPost(view)
+    column.appendPost(new LL.Views.RootPost(model: root_post))
     @
 
   loadMore: (e) ->
     if @collection.page == @.page && @collection.length * @collection.page == 20 * @collection.page && $(window).scrollTop()+$(window).height() > $(@.el).height()-$(@.el).offset().top
-      console.log 'test'
       @.page += 1
       @collection.fetch({add: true, data: {id: @collection.id, p: @.page}, success: @incrementPage})
 

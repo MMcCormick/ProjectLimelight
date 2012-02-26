@@ -3,6 +3,9 @@ class LL.Views.RootPost extends Backbone.View
   tagName: 'li'
   className: 'root-post teaser column'
 
+  events:
+    "click .talk-form": "loadPostForm"
+
   initialize: ->
 
   showEntry: ->
@@ -31,3 +34,8 @@ class LL.Views.RootPost extends Backbone.View
       $(@el).append(responses_view.render().el)
 
     @
+
+  loadPostForm: =>
+    view = new LL.Views.PostForm()
+    view.render().el
+    view.embedly.setResponse(@model.get('root'))

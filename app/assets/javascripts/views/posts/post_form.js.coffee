@@ -19,7 +19,7 @@ class LL.Views.PostForm extends Backbone.View
     @embedly.post_form = @model
 
   render: ->
-    $(@el).html(@template())
+    $('body').append($(@el).html(@template()))
     @
 
   createPost: (e) ->
@@ -57,7 +57,6 @@ class LL.Views.PostForm extends Backbone.View
 
   fetchEmbedly: ->
     self = @
-    @embedly.target = $(@el).find('#post-form-fetch-url')
 
     # Need to use a timeout to wait until the paste content is in the input
     setTimeout ->

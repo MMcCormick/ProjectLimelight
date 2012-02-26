@@ -19,4 +19,4 @@ class LL.Views.App extends Backbone.View
 
   loadPostForm: ->
     view = new LL.Views.PostForm()
-    $(@el).append(view.render().el)
+    view.render().el

@@ -1,5 +1,4 @@
 <% if @model.get('limelight_post'): %>
-
   <% if @model.get('limelight_post').embed: %>
     <div class="media">
       <%- @model.get('limelight_post').embed %>
@@ -42,6 +41,5 @@
       <div class="help">choose an image</div>
     </div>
   <% end %>
-  
 </div>
 <div class="cancel-preview">X</div>

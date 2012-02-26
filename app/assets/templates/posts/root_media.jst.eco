@@ -1,7 +1,11 @@
 <h2><%= @post.get('title') %></h2>
 
+<% if @post.get('image'): %>
+  <img src='<%= @post.get('image') %>' alt='' />
+<% end %>
+
 <div class='actions'>
-  <span class='talk-response'>+Talk</span>
+  <span class='talk-form'>+Talk</span>
   <%#= render 'likes/btn', :current_user => @current_user, :object => @root %>
   <%#= render 'core_object_shares/share_btn', :current_user => @current_user, :object => @root %>
 </div>

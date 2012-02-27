@@ -12,8 +12,6 @@ class LL.Views.RootPost extends Backbone.View
   showEntry: ->
     Backbone.history.navigate("posts/#{@model.get('id')}", true)
 
-  highlightWinner: ->
-
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
   render: ->

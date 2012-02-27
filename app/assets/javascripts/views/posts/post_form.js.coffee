@@ -1,6 +1,7 @@
 class LL.Views.PostForm extends Backbone.View
   template: JST['posts/form']
   id: 'post-form'
+  className: 'modal'
 
   events:
       "submit form": "createPost"
@@ -17,6 +18,7 @@ class LL.Views.PostForm extends Backbone.View
     @embedly_collection = new LL.Collections.Embedly
     @embedly = new LL.Views.PostFormPreview({collection: @embedly_collection, post_form: @model})
     @embedly.post_form = @model
+    @embedly.target = $(@el).find('#post-form-fetch-url')
 
   render: ->
     $('body').append($(@el).html(@template()))

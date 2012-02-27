@@ -5,6 +5,7 @@ class LL.Views.RootPost extends Backbone.View
 
   events:
     "click .talk-form": "loadPostForm"
+    "click .root h2, .root img, .talking": "postShow"
 
   initialize: ->
 
@@ -39,3 +40,6 @@ class LL.Views.RootPost extends Backbone.View
     view = new LL.Views.PostForm()
     view.render().el
     view.embedly.setResponse(@model.get('root'))
+
+  postShow: =>
+    LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)

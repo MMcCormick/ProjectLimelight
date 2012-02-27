@@ -273,7 +273,7 @@ var fields = [];
   Array.prototype.remove = function(i) {
     var rest = this.slice(i + 1 || this.length);
     this.length = i < 0 ? this.length + i : i;
-    return this.push.apply(this, rest);
+    return this.push.Apply(this, rest);
   };
 
   // Represents a mention

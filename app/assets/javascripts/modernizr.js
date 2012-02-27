@@ -193,8 +193,8 @@ window.Modernizr = function(a, b, c) {
     }
   },r.webworkers = function() {
     return!!a.Worker
-  },r.applicationcache = function() {
-    return!!a.applicationCache
+  },r.Applicationcache = function() {
+    return!!a.ApplicationCache
   },r.svg = function() {
     return!!b.createElementNS && !!b.createElementNS(q.svg, "svg").createSVGRect
   },r.inlinesvg = function() {
@@ -461,5 +461,5 @@ window.Modernizr = function(a, b, c) {
     b.removeEventListener("DOMContentLoaded", G, 0),b.readyState = "complete"
   }, 0)),a.yepnope = d()
 }(this, this.document),Modernizr.load = function() {
-  yepnope.apply(window, [].slice.call(arguments, 0))
+  yepnope.Apply(window, [].slice.call(arguments, 0))
 };

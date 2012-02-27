@@ -360,6 +360,10 @@ class Post
       post
     end
 
+    def friend_responses(id, user)
+      Post.where(:root_id => id, "user_snippet._id" => {"$in" => user.following_users})
+    end
+
     def for_show_page(parent_id)
       Post.where(:root_id => parent_id).order_by(:created_at, :desc)
     end

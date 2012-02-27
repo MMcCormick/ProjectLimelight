@@ -7,7 +7,7 @@ window.LL =
     @App =  new LL.Views.App()
     @Main = new LL.Views.Main()
 
-    user_router = new LL.Routers.Users()
+    @Router = new LL.Router()
     Backbone.history.start(pushState: true)
 
 jQuery ->

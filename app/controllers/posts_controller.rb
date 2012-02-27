@@ -61,10 +61,21 @@ class PostsController < ApplicationController
     render json: response, :status => status
   end
 
+  # The main user feed
   def user_feed
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
     page = params[:p] ? params[:p].to_i : 1
     @posts = Post.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+  end
+
+  # Post responses from a users friends
+  def friend_responses
+    @posts = Post.friend_responses(params[:id], current_user)
+    render :template => 'posts/responses'
+  end
+
+  def public_responses
+
   end
 
 end

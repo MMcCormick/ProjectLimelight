@@ -12,6 +12,8 @@ ProjectLimelight::Application.routes.draw do
     scope 'posts' do
       post '' => 'posts#create'
       get 'user_feed' => 'posts#user_feed'
+      get 'friend_responses' => 'posts#friend_responses'
+      get 'public_responses' => 'posts#public_responses'
       put 'disable' => 'posts#disable'
       get '' => 'posts#show'
     end
@@ -105,6 +107,12 @@ ProjectLimelight::Application.routes.draw do
   get 'tutorial' => 'users#tutorial', :as => :user_tutorial
 
   # Users
+  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",
+                                       :registrations => :registrations,
+                                       :confirmations => :confirmations }
+  resources :users, :only => [:show, :edit, :update]
+  #omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
+  get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
   scope 'users' do
     get 'settings' => 'users#settings', :as => :user_settings
     put 'picture' => "users#picture_update", :as => :user_picture_update
@@ -117,12 +125,6 @@ ProjectLimelight::Application.routes.draw do
     get ':id/picture' => 'users#default_picture', :as => :user_default_picture
   end
   get 'finder/topics' => 'users#topic_finder', :as => :topic_finder
-  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",
-                                       :registrations => :registrations,
-                                       :confirmations => :confirmations }
-  resources :users, :only => [:show, :edit, :update]
-  #omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
-  get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
   scope 'sentiment' do
     post ':sentiment' => 'sentiments#create', :as => :sentiment_create

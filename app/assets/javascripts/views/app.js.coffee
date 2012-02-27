@@ -13,6 +13,8 @@ class LL.Views.App extends Backbone.View
     @Topics = new LL.Collections.Topics
     @Posts = new LL.Collections.Posts
     @TopicSuggestions = new LL.Collections.TopicSuggestions
+    @PostFriendResponses = new LL.Collections.PostFriendResponses
+    @PostPublicResponses = new LL.Collections.PostPublicResponses()
 
     # set the current user
     @current_user = @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user')))

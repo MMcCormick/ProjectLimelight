@@ -12,6 +12,8 @@ class LL.Router extends Backbone.Router
 #    _gaq.push(['_trackPageview', "/#{url}"])
 
   userFeed: (id=0) ->
+    return unless LL.App.current_user
+
     @hideModal()
 
     user = if id == 0 then LL.App.current_user else LL.App.Users.findOrCreate(id)

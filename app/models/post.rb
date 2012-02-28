@@ -350,6 +350,8 @@ class Post
       if params[:type] && ['Video', 'Picture', 'Link', 'Talk'].include?(params[:type])
         post = Kernel.const_get(params[:type]).new(params)
         post.user_id = user_id
+
+        # Is the post an original root?
         unless post.class.name == 'Talk'
           post.save_original_image
           post.save_images

@@ -17,7 +17,7 @@ class LL.Views.App extends Backbone.View
     @PostPublicResponses = new LL.Collections.PostPublicResponses()
 
     # set the current user
-    @current_user = @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user')))
+    @current_user = if $('#me').length > 0 then @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user'))) else null
 
   loadPostForm: ->
     view = new LL.Views.PostForm()

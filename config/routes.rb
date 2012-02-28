@@ -103,7 +103,6 @@ ProjectLimelight::Application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",
                                        :registrations => :registrations,
                                        :confirmations => :confirmations }
-
   #omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
   scope 'users' do

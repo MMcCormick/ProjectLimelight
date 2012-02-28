@@ -18,7 +18,6 @@ class LL.Views.PostForm extends Backbone.View
     @embedly_collection = new LL.Collections.Embedly
     @embedly = new LL.Views.PostFormPreview({collection: @embedly_collection, post_form: @model})
     @embedly.post_form = @model
-    @embedly.target = $(@el).find('#post-form-fetch-url')
 
   render: ->
     $('body').append($(@el).html(@template()))
@@ -57,8 +56,10 @@ class LL.Views.PostForm extends Backbone.View
     $(@el).find('#post-form-remote-image-url').val(@model.get('remote_image_url'))
     $(@el).find('#post-form-image-cache').val(@model.get('image_cache'))
 
-  fetchEmbedly: ->
+  fetchEmbedly: =>
     self = @
+
+    @embedly.target = $(@el).find('#post-form-fetch-url')
 
     # Need to use a timeout to wait until the paste content is in the input
     setTimeout ->

@@ -23,13 +23,6 @@ ProjectLimelight::Application.routes.draw do
     end
   end
 
-
-
-
-
-
-
-
   # Testing
   get 'testing' => 'testing#test', :as => :test
 

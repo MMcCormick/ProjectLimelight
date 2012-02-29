@@ -296,10 +296,10 @@ module Limelight #:nodoc:
       embeds_many :user_mentions, as: :user_mentionable
       embeds_many :topic_mentions, as: :topic_mentionable
 
-      before_create :set_mentions
+      attr_accessible :mention1, :mention2, :mention1_id, :mention2_id, :first_response
+      attr_accessor :primary_topic_pm
 
-      attr_accessible :title_raw, :content_raw, :ooc_mentions
-      attr_accessor :title_raw, :content_raw, :ooc_mentions, :primary_topic_pm
+      before_create :set_mentions
     end
 
     def title_clean
@@ -348,24 +348,22 @@ module Limelight #:nodoc:
 
       set_user_mentions
       set_topic_mentions
-
-      self.title = @title_raw && !@title_raw.blank? ? @title_raw : title
-      self.content = @content_raw && !@content_raw.blank? ? @content_raw : content
     end
 
     # Checks @content_raw for user mentions
     def set_user_mentions
-      return unless @content_raw
+      return unless content
       found_users = Array.new
-      # Searches for strings contained between @[uid#username] delimiters. Returns an array of arrays of format [[uid,username],[uid,username]...].
-      @content_raw.scan(/\@\[([0-9a-zA-Z]*)#([\w]*)\]/).map do |user|
+
+      # Searches for strings following @username. Returns an array of usernames.
+      content.scan(/\@([0-9a-zA-Z]*)/).each do |user|
         unless found_users.include? user[0]
-          found_users << user[0]
+          found_users << user[0].to_url
         end
       end
 
       # Find the users
-      users = User.where(:_id.in => found_users)
+      users = User.where(:slug.in => found_users)
 
       users.each do |user|
         self.user_mentions.build({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
@@ -375,93 +373,40 @@ module Limelight #:nodoc:
     # Checks @content_raw for topic mentions
     # Checks @ooc_mentions for out of context mentions
     def set_topic_mentions
-      return unless @title_raw || @content_raw || @ooc_mentions
-
-      # Important that these are called before ooc_mentions are saved so that new in-context mentions get preference over matching new ooc mentions
-      parse_mentions(@title_raw) if @title_raw
-      parse_mentions(@content_raw) if @content_raw
-
-      #@ooc_mentions = Yajl::Parser.parse(@ooc_mentions) if @ooc_mentions
-      #if @ooc_mentions
-      #  save_topic_mentions(@ooc_mentions['existing'], true) if @ooc_mentions['existing'].length > 0
-      #
-      #  if @ooc_mentions['new'].length > 0
-      #    new_mentions = @ooc_mentions['new'].map do |topic|
-      #      cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
-      #      [cleaned, topic.to_url, true]
-      #    end
-      #
-      #    save_new_topic_mentions(new_mentions)
-      #  end
-      #end
-    end
-
-    def parse_mentions(text)
-      # Search for regular topic mentions
-      found_topics = Array.new
-      # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
-      text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/).map do |topic|
-        unless found_topics.include? topic[0]
-          found_topics << topic[0]
-        end
-      end
-      save_topic_mentions(found_topics, false) if found_topics.length > 0
-
-      # Search for topic short name mentions
-      short_names = Array.new
-      # Searches for short names in format #ShortName
-      text.scan(/\#([a-zA-Z0-9]*)/).map do |short_name|
-        unless short_names.include?(short_name) || short_name[0].blank?
-          short_names << short_name[0]
-        end
-      end
-      # Add short name mentions
-      if short_names && short_names.length > 0
-        mentions = Topic.where(:short_name => {'$in' => short_names}).to_a
-        mentions.each do |topic|
-          existing = topic_mentions.detect{|mention| mention.id == topic.id}
-          unless existing
-            payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
-            self.topic_mentions.build(payload)
-            if topic.score > primary_topic_pm
-              self.primary_topic_mention = topic.id
-              self.primary_topic_pm = topic.score
+      existing_ids = []
+      new_names = []
+      [[mention1, mention1_id], [mention2, mention2_id]].each do |m|
+        unless m[0].blank?
+          if m[1] == "0"
+            new_names << m[0]
+          elsif m[1].blank?
+            existing = Topic.where("aliases.slug" => m[0].to_url).order_by(:score, :desc).first
+            if existing
+              existing_ids << existing.id
+            else
+              new_names << m[0]
             end
+          else
+            existing_ids << m[1]
           end
         end
       end
-
-      # Search for new topic mentions
-      # Explodes the string. Returns an array of arrays containing
-      # [string, slugified string] without duplicates.
-      new_topic_mentions = text.scan(/\#\[([a-zA-Z0-9,!\-_:'&\?\$ ]*[^#])\]/).flatten(1).map do |topic|
-        # strip of disallowed characters
-        cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
-        text.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
-        [cleaned, topic.to_url, false]
-      end.uniq
-      save_new_topic_mentions(new_topic_mentions)
+      save_topic_mentions(existing_ids)
+      save_new_topic_mentions(new_names)
     end
 
-    def save_topic_mentions(found_topics, ooc=false)
+    def save_topic_mentions(found_topics)
       # Add the found topics as snippets
       mentions = Topic.where(:_id.in => found_topics)
       mentions.each do |topic|
-        existing = topic_mentions.detect{|mention| mention.id == topic.id}
-        unless existing
-          payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
-          self.topic_mentions.build(payload.merge!(:ooc => ooc))
-          if topic.score > primary_topic_pm
-            self.primary_topic_mention = topic.id
-            self.primary_topic_pm = topic.score
-          end
-        end
+        save_topic_mention(topic)
       end
     end
 
-    # takes an array of format [name, slug, out-of-context?]
-    def save_new_topic_mentions(new_topic_mentions)
+    # takes an array of new topic names
+    def save_new_topic_mentions(topic_mention_names)
       # See if any of the new topic slugs are already in the DB. Check through topic aliases! Only connect to topics without a type assigned.
+      new_topic_mentions = topic_mention_names.map {|name| [name, name.to_url]}
 
       topic_slugs = new_topic_mentions.map {|data| data[1]}
       # topics with matching aliases that are NOT already typed
@@ -475,8 +420,8 @@ module Limelight #:nodoc:
             found_topic = topic
           end
         end
-        # If we did not find the topic, create it and save it if it is valid
-        if found_topic == false
+        unless found_topic
+          # If we did not find the topic, create it and save it if it is valid
           found_topic = user.topics.build({name: topic_mention[0]})
           if found_topic.valid?
             found_topic.save
@@ -484,22 +429,19 @@ module Limelight #:nodoc:
             found_topic = false
           end
         end
-        if found_topic
-          # add the new ID to the topic mention
-          @title_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]") if @title_raw
-          @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#[#{found_topic.id.to_s}##{topic_mention[0]}]") if @content_raw
 
-          payload = {id: found_topic.id, public_id: found_topic.public_id, name: found_topic.name, slug: found_topic.slug, :ooc => topic_mention[2]}
-          if !topic_mentions.detect{|mention| mention.id == payload[:id]}
-            self.topic_mentions.build(payload)
-            if found_topic.score > primary_topic_pm
-              self.primary_topic_mention = found_topic.id
-              self.primary_topic_pm = found_topic.score
-            end
-          end
-        else
-          @title_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#{topic_mention[0]}") if @title_raw
-          @content_raw.gsub!(/\#\[#{topic_mention[0]}\]/, "#{topic_mention[0]}") if @content_raw
+        save_topic_mention(found_topic) if found_topic
+      end
+    end
+
+    def save_topic_mention(topic)
+      existing = topic_mentions.detect{|mention| mention.id == topic.id}
+      unless existing
+        payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
+        self.topic_mentions.build(payload)
+        if topic.score > primary_topic_pm
+          self.primary_topic_mention = topic.id
+          self.primary_topic_pm = topic.score
         end
       end
     end
@@ -518,6 +460,58 @@ module Limelight #:nodoc:
     def mentioned_topics
       Topic.where(:_id.in => topic_mentions.map{|t| t.id})
     end
+
+    def mentioned_ids
+      topic_mentions.map{|m| m.id}
+    end
+
+    # BETA REMOVE
+    #def parse_mentions(text)
+    #  # Search for regular topic mentions
+    #  found_topics = Array.new
+    #  # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
+    #  text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/).map do |topic|
+    #    unless found_topics.include? topic[0]
+    #      found_topics << topic[0]
+    #    end
+    #  end
+    #  save_topic_mentions(found_topics, false) if found_topics.length > 0
+    #
+    #  # Search for topic short name mentions
+    #  short_names = Array.new
+    #  # Searches for short names in format #ShortName
+    #  text.scan(/\#([a-zA-Z0-9]*)/).map do |short_name|
+    #    unless short_names.include?(short_name) || short_name[0].blank?
+    #      short_names << short_name[0]
+    #    end
+    #  end
+    #  # Add short name mentions
+    #  if short_names && short_names.length > 0
+    #    mentions = Topic.where(:short_name => {'$in' => short_names}).to_a
+    #    mentions.each do |topic|
+    #      existing = topic_mentions.detect{|mention| mention.id == topic.id}
+    #      unless existing
+    #        payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
+    #        self.topic_mentions.build(payload)
+    #        if topic.score > primary_topic_pm
+    #          self.primary_topic_mention = topic.id
+    #          self.primary_topic_pm = topic.score
+    #        end
+    #      end
+    #    end
+    #  end
+    #
+    #  # Search for new topic mentions
+    #  # Explodes the string. Returns an array of arrays containing
+    #  # [string, slugified string] without duplicates.
+    #  new_topic_mentions = text.scan(/\#\[([a-zA-Z0-9,!\-_:'&\?\$ ]*[^#])\]/).flatten(1).map do |topic|
+    #    # strip of disallowed characters
+    #    cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
+    #    text.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
+    #    [cleaned, topic.to_url, false]
+    #  end.uniq
+    #  save_new_topic_mentions(new_topic_mentions)
+    #end
   end
 
   module Popularity
@@ -534,8 +528,7 @@ module Limelight #:nodoc:
         :share => 0.5,
 
         # Modifiers
-        :ooc => 0.3,
-        :ic => 0.5,
+        :mention => 0.5,
         :user => 0.5
       }
 
@@ -611,20 +604,11 @@ module Limelight #:nodoc:
 
           # Update mentioned topics if applicable
           if defined? topic_mentions
-            ooc_amt = amt * @@pop_amounts[:ooc]
-            ic_amt = amt * @@pop_amounts[:ic]
-            ooc_ids, ic_ids = [], []
+            mention_amt = amt * @@pop_amounts[:mention]
 
             topic_mentions.each do |t_mention|
-              if t_mention.ooc
-                ooc_ids << t_mention.id
-                action.pop_snippets.new(:amount => ooc_amt, :id => t_mention.id, :object_type => "Topic")
-                Pusher[t_mention.id.to_s].trigger('popularity_changed', {:id => id.to_s, :change => ooc_amt})
-              else
-                ic_ids << t_mention.id
-                action.pop_snippets.new(:amount => ic_amt, :id => t_mention.id, :object_type => "Topic")
-                Pusher[t_mention.id.to_s].trigger('popularity_changed', {:id => id.to_s, :change => ic_amt})
-              end
+              action.pop_snippets.new(:amount => mention_amt, :id => t_mention.id, :object_type => "Topic")
+              Pusher[t_mention.id.to_s].trigger('popularity_changed', {:id => id.to_s, :change => mention_amt})
             end
 
             # Update the popularities on affected objects

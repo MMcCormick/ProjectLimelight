@@ -36,6 +36,17 @@
     </div>
   </div>
 
+  <div class="mention-ids">
+    <div>
+      <label for="post-form-mention1-id">Add Topic 1 ID...</label>
+      <input type="text" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention1_id" />
+    </div>
+    <div>
+      <label for="post-form-mention2-id">Add Topic 2 ID...</label>
+      <input type="text" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention2_id" />
+    </div>
+  </div>
+
   <div class="actions">
     <input type="submit" class="submit" value="Submit" />
 

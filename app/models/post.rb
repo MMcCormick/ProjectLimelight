@@ -81,7 +81,8 @@ class Post
     unless self.class.name == 'Talk' || content.blank?
       user.talks.create(
               :content => content,
-              :parent => self
+              :parent => self,
+              :first_talk => true
       )
     end
   end

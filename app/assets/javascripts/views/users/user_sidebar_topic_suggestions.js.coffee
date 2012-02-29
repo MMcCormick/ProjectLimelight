@@ -1,6 +1,6 @@
 class LL.Views.UserSidebarTopicSuggestions extends Backbone.View
   template: JST['users/sidebar_topic_suggestions']
-  className: 'section'
+  tagName: 'section'
 
   initialize: ->
     LL.App.TopicSuggestions.on('reset', @render, @)

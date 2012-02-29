@@ -1,5 +1,5 @@
 class LL.Views.Main extends Backbone.View
-  el: $('#page_inside')
+  el: $('body .wrapper .content')
 
   initialize: ->
     LL.App.UserFeed.on('reset', @renderFeed)

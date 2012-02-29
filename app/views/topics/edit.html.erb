@@ -1,5 +1,5 @@
 <% content_for :sidebar_right do %>
-  <%= render_cell(:topic, :sidebar, current_user, @topic, @connections) %>
+  <%#= render_cell(:topic, :sidebar, current_user, @topic, @connections) %>
 <% end %>
 
 <% content_for :head do %>
@@ -46,7 +46,7 @@
 
 <div class="section">
   <h3>Edit Topic Connections</h3>
-  <%= render_cell :topic, :add_connection, @topic %>
+  <%#= render_cell :topic, :add_connection, @topic %>
   <div class="clear-left"></div>
   <div class="topic-connections">
     <% @connections.each do |type, data| %>

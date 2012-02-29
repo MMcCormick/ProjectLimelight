@@ -1,6 +1,6 @@
 <% if @talk.status == "active" %>
   <% content_for :sidebar_right do %>
-    <%= render_cell(:core_object, :sidebar, current_user, @talk) %>
+    <%#= render_cell(:core_object, :sidebar, current_user, @talk) %>
   <% end %>
 
   <% content_for :page_header do %>
@@ -51,7 +51,7 @@
   <% end %>
 
   <%= render "comments/comment_header", :object => @talk %>
-  <%= render_cell :comment, :thread, @talk.id, true %>
+  <%#= render_cell :comment, :thread, @talk.id, true %>
 
 <% else %>
   <div class="empty">This talk has been removed</div>

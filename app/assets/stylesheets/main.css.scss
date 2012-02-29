@@ -1,0 +1,131 @@
+$lightGrey: #F9F9F9;
+
+body {
+  background: #B8CFD6;
+}
+
+.wrapper {
+  @include clearfix();
+  margin: 0 auto;
+  width: 1000px;
+
+  .sidebar {
+    @include border-radius(5px);
+    float: left;
+    width: 220px;
+    padding: 10px 10px 0 10px;
+    margin: 0 0 0 10px;
+    background-color: rgba(255,255,255,0.4);
+
+    section {
+      @include border-radius(3px);
+      background: $lightGrey;
+      border: 1px solid #E6E6E6;
+      margin: 0 0 10px 0;
+    }
+  }
+  .content {
+    float: left;
+    width: 730px;
+  }
+}
+
+header {
+  .container {
+    width: 1000px;
+    margin: auto;
+    position: relative;
+
+    .brand {
+      padding-left: 65px;
+      font-size: 23px;
+      position: relative;
+      margin-left: 20px;
+
+      img {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+    }
+    .talk {
+      position: absolute;
+      top: 0px;
+      left: 260px;
+      font-size: 18px;
+      padding: 6px 14px 7px 12px;
+    }
+  }
+}
+
+#header-user-nav {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  font-size: 16px;
+
+  .profile-img {
+    @include border-radius(3px);
+    background: $lightGrey;
+    padding: 2px;
+    float: right;
+    margin: 4px 5px 0 0;
+
+    img {
+      @include border-radius(2px);
+      width: 30px;
+      height: 30px;
+      display: block;
+    }
+  }
+  .numbers {
+    @include border-radius(3px);
+    float: right;
+    background: $lightGrey;
+    height: 34px;
+    margin: 4px 5px 0 0;
+    padding: 0 10px;
+    line-height: 34px;
+    cursor: default;
+
+    .notifications {
+      margin: 0 10px 0 0;
+      font-weight: bold;
+    }
+    .score-pts {
+      span {
+        font-size: 12px;
+      }
+    }
+  }
+  .username {
+    float: right;
+    color: $lightGrey;
+    cursor: pointer;
+    height: 32px;
+    padding: 11px 10px 0 12px;
+    
+    i {
+      margin: 3px 0 0 4px;
+    }
+  }
+}
+
+#feed {
+  @include clearfix();
+
+  .column {
+    width: 230px;
+    margin: 0 10px 0 0;
+    float: left;
+  }
+}
+
+.score-pts {
+  font-weight: bold;
+
+  span {
+    font-weight: normal;
+    margin: 0 0 0 2px;
+  }
+}

@@ -1,7 +1,7 @@
 class LL.Views.RootPost extends Backbone.View
   template: JST['posts/root_post']
   tagName: 'li'
-  className: 'root-post teaser column'
+  className: 'root-post'
 
   events:
     "click .talk-form": "loadPostForm"

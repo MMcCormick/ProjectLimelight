@@ -1,6 +1,6 @@
 class LL.Views.FeedColumn extends Backbone.View
   tagName: 'ul'
-  className: 'column-temporary'
+  className: 'column unstyled'
 
   initialize: ->
     @height = 0

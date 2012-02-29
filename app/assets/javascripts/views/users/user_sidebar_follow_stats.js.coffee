@@ -1,6 +1,6 @@
 class LL.Views.UserSidebarFollowStats extends Backbone.View
   template: JST['users/sidebar_follow_stats']
-  className: 'section'
+  tagName: 'section'
 
   initialize: ->
 

@@ -1,1 +1,1 @@
-Cell::Base.append_view_path('app/views')
+#Cell::Base.append_view_path('app/views')

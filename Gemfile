@@ -7,14 +7,12 @@ gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
-gem 'cells', '3.8.0' # Components
 gem 'rabl', "~> 0.5.4"
 gem 'yajl-ruby' # json
 gem 'fog' # Cloud support (amazon s3, etc)
 gem 'carrierwave' # File uploads
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'omniauth-facebook'
-gem 'omniauth-google-oauth2'
 gem 'omniauth-twitter'
 gem 'koala' # facebook graph api support
 gem 'twitter' # twitter api support
@@ -41,6 +39,8 @@ group :assets do
   #gem 'therubyrhino'
 
   gem 'uglifier', '>= 1.0.3'
+
+  gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
 
 group :production do

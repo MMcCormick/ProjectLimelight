@@ -1,6 +1,6 @@
 class LL.Views.UserSidebarNav extends Backbone.View
   template: JST['users/sidebar_nav']
-  className: 'section'
+  tagName: 'section'
 
   initialize: ->
 

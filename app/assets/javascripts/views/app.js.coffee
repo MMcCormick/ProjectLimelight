@@ -2,7 +2,7 @@ class LL.Views.App extends Backbone.View
   el: $('body')
 
   events:
-    "click .post-form": "loadPostForm"
+    "click .talk": "loadPostForm"
 
   initialize: ->
     @model = new LL.Models.App()

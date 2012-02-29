@@ -2,12 +2,12 @@
   <% core_objects.each_with_index do |core_object, i| %>
     <% if i < 20 && core_object[:root] %>
       <div class='teaser <%= "#{session[:feed_filters][:layout]} #{core_object[:root].class.name.downcase}" %>' data-push='<%= "#{core_object[:root].id}_#{session[:feed_filters][:layout]}" %>'>
-        <%= render_cell :core_object, "teaser_root_#{session[:feed_filters][:layout]}", current_user, core_object[:root] %>
+        <%#= render_cell :core_object, "teaser_root_#{session[:feed_filters][:layout]}", current_user, core_object[:root] %>
 
         <% unless core_object[:root].class.name == 'Talk' %>
-          <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:topic_responses], 'topic-related' if core_object[:topic_responses] %>
-          <%= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:responses] %>
-          <%= render_cell :core_object, "teaser_public_#{session[:feed_filters][:layout]}", current_user, core_object[:root] %>
+          <%#= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:topic_responses], 'topic-related' if core_object[:topic_responses] %>
+          <%#= render_cell :core_object, "teaser_personal_#{session[:feed_filters][:layout]}", current_user, core_object[:root], core_object[:responses] %>
+          <%#= render_cell :core_object, "teaser_public_#{session[:feed_filters][:layout]}", current_user, core_object[:root] %>
         <% end %>
       </div>
     <% end %>

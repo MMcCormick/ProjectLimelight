@@ -1,14 +1,11 @@
 class LL.Views.UserSidebar extends Backbone.View
-  el: $('.sidebar.left')
-  template: JST['users/sidebar']
+  el: $('.sidebar')
   id: 'user-sidebar'
 
   initialize: ->
     @model.on('change', @render)
 
   render: =>
-    $(@el).html(@template())
-
     # Main top nav
     nav = new LL.Views.UserSidebarNav(model: @model)
     $(@el).append(nav.render().el)

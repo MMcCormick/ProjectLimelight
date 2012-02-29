@@ -435,14 +435,14 @@ class Post
     end
 
     def topic_feed(feed_ids, user_id, display_types, order_by, page)
-      items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions.in => feed_ids)
+      items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions => {'$in' => feed_ids})
       if order_by == 'newest'
         items = items.order_by(:last_response_time, :desc)
       else
         items = items.order_by(:p, :desc)
       end
       items = items.skip((page-1)*20).limit(20)
-
+      items = items.to_a
       user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
       build_topic_feed(items, user_items, feed_ids)
     end
@@ -467,19 +467,20 @@ class Post
 
       return_objects = []
       items.each do |i|
-        root = objects.detect{|o| o.id == i.root_id}
+        root_post = RootPost.new
+        root_post.root = objects.detect{|o| o.id == i.root_id}
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
-        user_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
+        root_post.responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
 
-        overlap = (i.root_mentions & feed_ids) ? (i.root_mentions & feed_ids).first : false
-        if !overlap && i.responses
-          overlap = (i.responses.keys & feed_ids.map{|f| f.to_s}).first
-          topic_responses = objects.select{ |o| i.responses[overlap] == o.id }
-        else
-          topic_responses = []
-        end
+        #overlap = (i.root_mentions & feed_ids) ? (i.root_mentions & feed_ids).first : false
+        #if !overlap && i.responses
+        #  overlap = (i.responses.keys & feed_ids.map{|f| f.to_s}).first
+        #  topic_responses = objects.select{ |o| i.responses[overlap] == o.id }
+        #else
+        #  topic_responses = []
+        #end
 
-        return_objects << { :root => root, :responses => user_responses, :topic_responses => topic_responses }
+        return_objects << root_post
       end
 
       return_objects

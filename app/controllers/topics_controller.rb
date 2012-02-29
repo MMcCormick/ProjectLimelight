@@ -19,22 +19,22 @@ class TopicsController < ApplicationController
     not_found("Topic not found") unless @topic
     authorize! :read, @topic
 
-    @title = @topic.name
-    @description = @topic.summary
-    @right_sidebar = true
-    page = params[:p] ? params[:p].to_i : 1
-    @more_path = topic_path @topic, :p => page + 1
-    @topic_ids = Neo4j.pull_from_ids(@topic.id.to_s).to_a
-
-    @core_objects = Post.topic_feed(@topic_ids << @topic.id, current_user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
-
-    respond_to do |format|
-      format.js {
-        response = reload_feed(@core_objects, @more_path, page)
-        render json: response
-      }
-      format.html # index.html.erb
-    end
+    #@title = @topic.name
+    #@description = @topic.summary
+    #@right_sidebar = true
+    #page = params[:p] ? params[:p].to_i : 1
+    #@more_path = topic_path @topic, :p => page + 1
+    #@topic_ids = Neo4j.pull_from_ids(@topic.id.to_s).to_a
+    #
+    #@core_objects = Post.topic_feed(@topic_ids << @topic.id, current_user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    #
+    #respond_to do |format|
+    #  format.js {
+    #    response = reload_feed(@core_objects, @more_path, page)
+    #    render json: response
+    #  }
+    #  format.html # index.html.erb
+    #end
   end
 
   def new

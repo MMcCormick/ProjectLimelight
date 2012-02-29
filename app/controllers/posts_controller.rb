@@ -63,9 +63,16 @@ class PostsController < ApplicationController
 
   # The main user feed
   def user_feed
-    @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    user_id = params[:id] && params[:id] != "0" ? params[:id] : current_user.id.to_s
     page = params[:p] ? params[:p].to_i : 1
-    @posts = Post.feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    @posts = Post.feed(user_id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+  end
+
+  # Topic feeds...
+  def topic_feed
+    page = params[:p] ? params[:p].to_i : 1
+    topic_ids = Neo4j.pull_from_ids(params[:id]).to_a
+    @posts = Post.topic_feed(topic_ids << params[:id], current_user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
   end
 
   # Post responses from a users friends

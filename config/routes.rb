@@ -9,9 +9,14 @@ ProjectLimelight::Application.routes.draw do
       get '' => 'users#show'
     end
 
+    scope 'topics' do
+      get '' => 'topics#show'
+    end
+
     scope 'posts' do
       post '' => 'posts#create'
       get 'user_feed' => 'posts#user_feed'
+      get 'topic_feed' => 'posts#topic_feed'
       get 'friend_responses' => 'posts#friend_responses'
       get 'public_responses' => 'posts#public_responses'
       put 'disable' => 'posts#disable'

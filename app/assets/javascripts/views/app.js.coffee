@@ -9,6 +9,7 @@ class LL.Views.App extends Backbone.View
 
     # set the global collections
     @UserFeed = new LL.Collections.UserFeed
+    @TopicFeed = new LL.Collections.TopicFeed
     @Users = new LL.Collections.Users
     @Topics = new LL.Collections.Topics
     @Posts = new LL.Collections.Posts

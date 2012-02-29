@@ -296,8 +296,8 @@ module Limelight #:nodoc:
       embeds_many :user_mentions, as: :user_mentionable
       embeds_many :topic_mentions, as: :topic_mentionable
 
+      attr_accessor :primary_topic_pm, :mention1, :mention2, :mention1_id, :mention2_id, :first_response
       attr_accessible :mention1, :mention2, :mention1_id, :mention2_id, :first_response
-      attr_accessor :primary_topic_pm
 
       before_create :set_mentions
     end
@@ -346,8 +346,12 @@ module Limelight #:nodoc:
     def set_mentions
       self.primary_topic_pm = -1
 
-      set_user_mentions
-      set_topic_mentions
+      if first_response
+        self.topic_mentions = parent.topic_mentions
+      else
+        set_user_mentions
+        set_topic_mentions
+      end
     end
 
     # Checks @content_raw for user mentions
@@ -464,54 +468,6 @@ module Limelight #:nodoc:
     def mentioned_ids
       topic_mentions.map{|m| m.id}
     end
-
-    # BETA REMOVE
-    #def parse_mentions(text)
-    #  # Search for regular topic mentions
-    #  found_topics = Array.new
-    #  # Searches for strings contained between #[uid#topic_name] delimiters. Returns an array of arrays of format [[uid,topic_name],[uid,topic_name]...].
-    #  text.scan(/\#\[([0-9a-zA-Z]*)#([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/).map do |topic|
-    #    unless found_topics.include? topic[0]
-    #      found_topics << topic[0]
-    #    end
-    #  end
-    #  save_topic_mentions(found_topics, false) if found_topics.length > 0
-    #
-    #  # Search for topic short name mentions
-    #  short_names = Array.new
-    #  # Searches for short names in format #ShortName
-    #  text.scan(/\#([a-zA-Z0-9]*)/).map do |short_name|
-    #    unless short_names.include?(short_name) || short_name[0].blank?
-    #      short_names << short_name[0]
-    #    end
-    #  end
-    #  # Add short name mentions
-    #  if short_names && short_names.length > 0
-    #    mentions = Topic.where(:short_name => {'$in' => short_names}).to_a
-    #    mentions.each do |topic|
-    #      existing = topic_mentions.detect{|mention| mention.id == topic.id}
-    #      unless existing
-    #        payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug, ooc: false, short_name: topic.short_name }
-    #        self.topic_mentions.build(payload)
-    #        if topic.score > primary_topic_pm
-    #          self.primary_topic_mention = topic.id
-    #          self.primary_topic_pm = topic.score
-    #        end
-    #      end
-    #    end
-    #  end
-    #
-    #  # Search for new topic mentions
-    #  # Explodes the string. Returns an array of arrays containing
-    #  # [string, slugified string] without duplicates.
-    #  new_topic_mentions = text.scan(/\#\[([a-zA-Z0-9,!\-_:'&\?\$ ]*[^#])\]/).flatten(1).map do |topic|
-    #    # strip of disallowed characters
-    #    cleaned = topic.strip.chomp(',').chomp('.').chomp('!').chomp('-').chomp('_')
-    #    text.gsub!(/\#\[#{topic}\]/, "#[#{cleaned}]")
-    #    [cleaned, topic.to_url, false]
-    #  end.uniq
-    #  save_new_topic_mentions(new_topic_mentions)
-    #end
   end
 
   module Popularity
@@ -561,8 +517,7 @@ module Limelight #:nodoc:
       amt
     end
 
-    # secondary boolean means the function is being called on the parent of the object which actually had the action
-    def add_pop_action(type, subtype, current_user, secondary=false)
+    def add_pop_action(type, subtype, current_user)
       amt = 0
       if subtype == :a
         amt = @@pop_amounts[type]
@@ -571,10 +526,6 @@ module Limelight #:nodoc:
       end
 
       amt = amt * current_user.clout
-      if defined? topic_mentions
-        amt = 2 * amt / topic_mentions.length if topic_mentions.length > 2
-      end
-      amt = amt / 10 if secondary
 
       if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
@@ -613,26 +564,12 @@ module Limelight #:nodoc:
 
             # Update the popularities on affected objects
             Topic.collection.update(
-              {:_id => {"$in" => ooc_ids}},
+              {:_id => {"$in" => mentioned_ids}},
               {
-                "$inc" => { :score => ooc_amt }
+                "$inc" => { :score => mention_amt }
               }
             )
-            ooc_ids.each {|target| Topic.expire_caches(target.to_s)}
-            Topic.collection.update(
-              {:_id => {"$in" => ic_ids}},
-              {
-                "$inc" => { :score => ic_amt }
-              }
-            )
-            ic_ids.each {|target| Topic.expire_caches(target.to_s)}
           end
-
-          # Removed because popularity for push feeds is aggregated around the root
-          #if response_to
-          #  object = Post.find(response_to.id)
-          #  object.add_pop_action(type, subtype, current_user, true) if object
-          #end
         end
 
         action.save!

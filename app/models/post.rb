@@ -82,7 +82,11 @@ class Post
       user.talks.create(
               :content => content,
               :parent => self,
-              :first_talk => true
+              :first_talk => true,
+              :mention1 => mention1,
+              :mention2 => mention2,
+              :mention1_id => mention1_id,
+              :mention2_id => mention2_id,
       )
     end
   end
@@ -241,8 +245,10 @@ class Post
   ##
 
   def set_response_to
-    if parent || parent_id
-      parent = Post.find(parent_id) unless parent
+    if parent || !parent_id.blank?
+      unless parent
+        self.parent = Post.find(parent_id)
+      end
       if parent
         self.response_to = PostSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
         self.response_to.id = parent.id

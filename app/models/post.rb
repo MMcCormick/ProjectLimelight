@@ -308,6 +308,17 @@ class Post
     FeedContributeItem.create(self)
   end
 
+  def disable
+    self.status = 'disabled'
+    Resque.enqueue(PushPostDisable, id.to_s)
+  end
+
+  def push_disable
+    FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
+    FeedTopicItem.post_disable(self) unless response_to || topic_mentions.empty?
+    FeedContributeItem.disable(self)
+  end
+
   def set_root
     if response_to
       self.root_id = response_to.id
@@ -327,17 +338,6 @@ class Post
 
   def standalone_talk?
     _type == "Talk" && !response_to
-  end
-
-  def disable
-    self.status = 'disabled'
-    Resque.enqueue(PushPostDisable, id.to_s)
-  end
-
-  def push_disable
-    FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
-    FeedTopicItem.post_disable(self) unless self.class.name == 'Talk' && !is_popular
-    FeedContributeItem.disable(self)
   end
 
   class << self

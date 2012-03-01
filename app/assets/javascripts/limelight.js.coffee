@@ -16,4 +16,5 @@ jQuery ->
   # Start up Backbone
   LL.init()
 
+  # Bootstrap tooltips
   $('[rel="tooltip"]').tooltip()

@@ -129,3 +129,113 @@ header {
     margin: 0 0 0 2px;
   }
 }
+
+#post-form {
+  .main-content {
+    @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+    $transition: border linear .2s, box-shadow linear .2s;
+    @include transition($transition);
+    @include border-radius(3px);
+    border: 1px solid #CCCCCC;
+    width: 400px;
+    margin: 0 0 30px 0;
+    position: relative;
+
+    .icons {
+      position: absolute;
+      bottom: -19px;
+      left: 9px;
+
+      .icon {
+        float: left;
+        margin: 0 10px 0 0;
+        cursor: pointer;
+        height: 12px;
+
+        &:on {
+          cursor: default;
+        }
+      }
+      .cancel-preview {
+        display: none;
+      }
+    }
+    textarea,
+    input {
+      @include box-shadow(none);
+      border: none;
+      resize: none;
+      margin: 0px;
+      padding: 8px;
+    }
+    #post-form-content {
+      height: 84px;
+      width: 384px;
+    }
+    #post-form-fetch-url {
+      width: 384px;
+      display: none;
+      border-top: 1px dashed #CCC;
+    }
+    .preview {
+    }
+    .preview-data {
+      position: relative;
+      padding: 0 0 14px 0;
+      border-top: 1px dashed #CCC;
+
+      .media {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        right: 7px;
+        top: 7px;
+
+        img {
+          max-width: 100px;
+        }
+      }
+      #post-form-title {
+        width: 270px;
+        height: 84px;
+      }        
+      .title {
+        min-height: 84px;
+        padding: 8px;
+        width: 270px;
+
+        p {
+          font-size: 16px;
+          margin: 0;
+        }
+        div {
+          font-size: 12px;
+          color: #999;
+        }
+      }
+      .switcher {
+        background: rgba(255,255,255,.9);
+        position: absolute;
+        top: 85px;
+        right: 7px;
+        width: 100px;
+
+        .left {
+          margin: 0 0 0 1px;
+          cursor: pointer;
+        }
+        .right {
+          margin: 0px;
+          cursor: pointer;
+        }
+        .help {
+          color: #444;
+          font-size: 10px;
+          position: relative;
+          top: -2px;
+          cursor: default;
+        }
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@
 //= require_tree ./views
 //= require_tree ./routers
 //= require bootstrap
-//= require jquery.livequery
+//= require soulmate
 //
 //
 //

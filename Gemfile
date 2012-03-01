@@ -22,7 +22,7 @@ gem 'resque-loner' # Unique resque jobs
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
 gem 'airbrake' # Exception notification
-gem 'soulmate' # Redis based autocomplete storage
+gem 'soulmate', :require => 'soulmate/server' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby

@@ -1,10 +1,8 @@
 class LL.Views.PostFormPreview extends Backbone.View
   template: JST['posts/post_form_preview']
-  tagName: 'div'
-  className: 'preview'
+  className: 'preview-data'
 
   events:
-    "click .cancel-preview": "destroyForm"
     "click .switcher .left": "rotateImageLeft"
     "click .switcher .right": "rotateImageRight"
 
@@ -20,20 +18,21 @@ class LL.Views.PostFormPreview extends Backbone.View
       @remove()
     @
 
-  setData: (model) ->
+  setData: (model) =>
     $(@el).html(@template(model: model))
 
     if !@loaded
-      $(@el).insertAfter($('#post-form-fetch-url'))
+      $(@el).insertAfter(@target)
+      $('#post-form-fetch-url').hide()
       @loaded = true
 
     if model.get('limelight_post')
-      @post_form.set({
+      @post_form_model.set({
         'type': 'Talk',
         'parent_id': model.get('limelight_post').id
       })
     else
-      @post_form.set({
+      @post_form_model.set({
         'type': model.get('type'),
         'source_url': model.get('url'),
         'title': model.get('title'),
@@ -42,16 +41,16 @@ class LL.Views.PostFormPreview extends Backbone.View
 
     # initialize images
     if !model.get('limelight_post') && model.get('type') != 'Video' && model.get('images').length > 0
-      @post_form.set('remote_image_url', model.get('images')[0].url)
+      @post_form_model.set('remote_image_url', model.get('images')[0].url)
       if model.get('images').length > 1
         $(@el).find('.media img:gt(0)').hide() # hide all images but the first one
         $(@el).find('.switcher').show() # show the switcher
 
     # initialize video
     if model.get('type') == 'Video'
-      @post_form.set('embed', model.get('video'))
+      @post_form_model.set('embed', model.get('video'))
       if model.get('images').length > 0
-        @post_form.set('remote_image_url', model.get('images')[0].url)
+        @post_form_model.set('remote_image_url', model.get('images')[0].url)
 
   setResponse: (model) ->
     embedly = new LL.Models.Embedly()
@@ -67,11 +66,10 @@ class LL.Views.PostFormPreview extends Backbone.View
     })
     @setData(embedly)
 
-  destroyForm: ->
+  cancelPreview: =>
     # clear the url field and the preview fields. reset to talk
-    @target.val('')
-    @post_form.clear()
-    @post_form.set('type', 'Talk')
+    @post_form_model.clear()
+    @post_form_model.set('type', 'Talk')
     $(@el).remove()
     @loaded = false
 
@@ -80,11 +78,11 @@ class LL.Views.PostFormPreview extends Backbone.View
     prev = if visible.prev().length then visible.prev() else $(@el).find('.media img:last')
     visible.hide()
     prev.show()
-    @post_form.set('remote_image_url', prev.attr('src'))
+    @post_form_model.set('remote_image_url', prev.attr('src'))
 
   rotateImageRight: =>
     visible = $(@el).find('.media img:visible')
     next = if visible.next().length then visible.next() else $(@el).find('.media img:first')
     visible.hide()
     next.show()
-    @post_form.set('remote_image_url', next.attr('src'))
+    @post_form_model.set('remote_image_url', next.attr('src'))

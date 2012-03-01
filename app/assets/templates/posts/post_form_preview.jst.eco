@@ -9,17 +9,11 @@
     </div>
   <% end %>
 <% else: %>
-  <% if @model.get('type') != 'Video' && @model.get('images').length > 0: %>
+  <% if @model.get('images').length > 0: %>
     <div class="media">
       <% for image in @model.get('images'): %>
         <img src="<%= image.url %>" alt="" />
       <% end %>
-    </div>
-  <% end %>
-
-  <% if @model.get('type') == 'Video': %>
-    <div class="media">
-      <%- @model.get('video') %>
     </div>
   <% end %>
 <% end %>
@@ -31,15 +25,11 @@
       <div>Originally posted to limelight <%= @model.get('limelight_post').created_at %> ago</div>
     </div>
   <% else: %>
-    <div class="title required lClear">
-      <label for="post-form-title">Title</label>
-      <textarea id="post-form-title" spellcheck="false" autocomplete="off" name="title"><%= @model.get('title') %></textarea>
-    </div>
-    <div class="switcher hide">
-      <div class="left"><</div>
-      <div class="right">></div>
-      <div class="help">choose an image</div>
-    </div>
+    <textarea id="post-form-title" spellcheck="false" autocomplete="off" name="title" placeholder='Title...'><%= @model.get('title') %></textarea>
   <% end %>
 </div>
-<div class="cancel-preview">X</div>
+<div class="switcher hide">
+  <i class="icon-chevron-left left"></i>
+  <span class="help">choose image</span>
+  <i class="icon-chevron-right right"></i>
+</div>

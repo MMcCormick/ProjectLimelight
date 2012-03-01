@@ -1,54 +1,39 @@
-<div class="bg"></div>
 <form>
-  <div class="errors"></div>
-
-  <div class='response hide'>
-    <div class='image'></div>
-    <div class='title'></div>
-    <div class='created_at'></div>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>+Talk</h3>
   </div>
+  <div class="modal-body">
+    <div class="errors"></div>
 
-  <div class="main_content">
-    <label for="post-form-content">What do you want to talk about?</label>
-    <textarea id="post-form-content" spellcheck="false" autocomplete="off" name="content"></textarea>
-    <%#= render "shared/mention_box", :f => f %>
-    <%#= render "shared/mention_suggestions", :f => f %>
-  </div>
-
-  <!--<div class="tweet_content hide">-->
-    <!--<div class="head">tweet</div>-->
-    <%#= f.text_area :tweet_content, :spellcheck => false, :autocomplete => :off %>
-  <!--</div>-->
-
-  <div>
-    <label for="post-form-fetch-url">Fetch URL</label>
-    <input id="post-form-fetch-url" type="text" />
-  </div>
-
-  <div class="mentions">
-    <div>
-      <label for="post-form-mention1">Add Topic...</label>
-      <input type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention1" />
+    <div class="main-content">
+      <textarea id="post-form-content" spellcheck="false" autocomplete="off" name="content" placeholder="What do you want to talk about?"></textarea>
+      <div class='preview'>
+        <input id="post-form-fetch-url" type="text" placeholder='Paste URL to fetch...' />
+      </div>
+      <div class='icons'>
+        <div class="icon ll-icon-link" rel='tooltip' title='Add Link' data-type='Link'></div>
+        <div class="icon ll-icon-picture" rel='tooltip' title='Add Picture' data-type='Picture'></div>
+        <div class="icon ll-icon-video" rel='tooltip' title='Add Video' data-type='Video'></div>
+        <i class="cancel-preview icon icon-remove" rel='tooltip' title='Cancel Link'></i>
+      </div>
     </div>
-    <div>
-      <label for="post-form-mention2">Add Topic...</label>
-      <input type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention2" />
-    </div>
-  </div>
 
-  <div class="mention-ids">
-    <div>
-      <label for="post-form-mention1-id">Add Topic 1 ID...</label>
-      <input type="text" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention1_id" />
-    </div>
-    <div>
-      <label for="post-form-mention2-id">Add Topic 2 ID...</label>
-      <input type="text" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention2_id" />
-    </div>
-  </div>
+    <!--<div class="tweet_content hide">-->
+      <!--<div class="head">tweet</div>-->
+      <%#= f.text_area :tweet_content, :spellcheck => false, :autocomplete => :off %>
+    <!--</div>-->
 
-  <div class="actions">
-    <input type="submit" class="submit" value="Submit" />
+    <div class="mentions">
+      <div>
+        <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention1" placeholder="Add topic..." />
+        <input type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention1_id" />
+      </div>
+      <div>
+        <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention2" placeholder="Add topic..." />
+        <input type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention2_id" />
+      </div>
+    </div>
 
     <!--<%# unless signed_in? && current_user.get_social_connect('twitter') %>-->
       <!--<div class="connect_twitter" data-auth='<%#= user_omniauth_authorize_path(:twitter) %>'>-->
@@ -62,16 +47,19 @@
       <!--</div>-->
     <!--<%# end %>-->
 
-    <div class="cancel">cancel</div>
+    <input type="hidden" id="post-form-source-url" name="source_url" />
+    <input type="hidden" id="post-form-source-name" name="source_name" />
+    <input type="hidden" id="post-form-source-vid" name="source_video_id" />
+    <input type="hidden" id="post-form-embed" name="embed_html" />
+    <input type="hidden" id="post-form-type" name="type" value="Talk" />
+    <input type="hidden" id="post-form-parent-id" name="parent_id" />
+    <input type="hidden" id="post-form-remote-image-url" name="remote_image_url" autocomplete="off" />
+    <input type="hidden" id="post-form-image-cache" name="image_cache" autocomplete="off" />
+    <div id="picture_pupB"></div>
+  </div>
+  <div class="modal-footer">
+    <input type='submit' value='Submit Post' class="btn btn-success" />
+    <span class="cancel btn">Cancel</span>
   </div>
 
-  <input type="hidden" id="post-form-source-url" name="source_url" />
-  <input type="hidden" id="post-form-source-name" name="source_name" />
-  <input type="hidden" id="post-form-source-vid" name="source_video_id" />
-  <input type="hidden" id="post-form-embed" name="embed_html" />
-  <input type="hidden" id="post-form-type" name="type" value="Talk" />
-  <input type="hidden" id="post-form-parent-id" name="parent_id" />
-  <input type="hidden" id="post-form-remote-image-url" name="remote_image_url" autocomplete="off" />
-  <input type="hidden" id="post-form-image-cache" name="image_cache" autocomplete="off" />
-  <div id="picture_pupB"></div>
 </form>

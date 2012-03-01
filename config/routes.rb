@@ -28,6 +28,12 @@ ProjectLimelight::Application.routes.draw do
     end
   end
 
+  # Resque admin
+  mount Resque::Server, :at => "resque"
+
+  # Soulmate api
+  mount Soulmate::Server, :at => "autocomplete"
+
   # Testing
   get 'testing' => 'testing#test', :as => :test
 
@@ -85,12 +91,6 @@ ProjectLimelight::Application.routes.draw do
 
   # Core Object Shares
   post '/share/create' => 'core_object_shares#create', :as => :create_share
-
-  # Resque admin
-  mount Resque::Server, :at => "/resque"
-
-  # Soulmate api
-  mount Soulmate::Server, :at => "/soul-data"
 
   # Uploads
   match "/upload" => "uploads#create", :as => :upload_tmp

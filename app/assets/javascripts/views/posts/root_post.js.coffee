@@ -37,7 +37,8 @@ class LL.Views.RootPost extends Backbone.View
   loadPostForm: =>
     view = new LL.Views.PostForm()
     view.render().el
-    view.embedly.setResponse(@model.get('root'))
+    view.preview.setResponse(@model.get('root'))
+    $(view.el).find('.icons').remove()
 
   postShow: =>
     LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)

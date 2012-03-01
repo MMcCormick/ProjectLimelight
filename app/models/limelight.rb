@@ -294,7 +294,8 @@ module Limelight #:nodoc:
       field :primary_topic_mention
 
       embeds_many :user_mentions, as: :user_mentionable
-      embeds_many :topic_mentions, as: :topic_mentionable
+      embeds_many :topic_mentions, as: :topic_mentionable, :class_name => "TopicMention"
+      embeds_many :pre_mentions, as: :topic_mentionable, :class_name => "TopicMention"
 
       attr_accessor :primary_topic_pm, :mention1, :mention2, :mention1_id, :mention2_id, :first_response
       attr_accessible :mention1, :mention2, :mention1_id, :mention2_id, :first_response
@@ -332,6 +333,14 @@ module Limelight #:nodoc:
       !!topic_mentions.detect{|mention| mention.id == id}
     end
 
+    def mentioned_topics
+      Topic.where(:_id.in => topic_mentions.map{|t| t.id})
+    end
+
+    def mentioned_ids
+      topic_mentions.map{|m| m.id}
+    end
+
     def send_mention_notifications
       sent = []
       self.user_mentions.each do |mentioned_user|
@@ -342,6 +351,10 @@ module Limelight #:nodoc:
         end
       end
     end
+
+    #
+    # SETTING MENTIONS
+    #
 
     def set_mentions
       self.primary_topic_pm = -1
@@ -374,8 +387,6 @@ module Limelight #:nodoc:
       end
     end
 
-    # Checks @content_raw for topic mentions
-    # Checks @ooc_mentions for out of context mentions
     def set_topic_mentions
       existing_ids = []
       new_names = []
@@ -450,6 +461,34 @@ module Limelight #:nodoc:
       end
     end
 
+    def bubble_up
+      if response_to
+        root_post = Post.where(:_id => response_to.id).first
+        topic_mentions.each do |mention|
+          root_post.suggest_mention(mention)
+        end
+        root_post.save
+      end
+    end
+
+    def suggest_mention(mention)
+      root_mention = topic_mentions.find(mention.id)
+      if root_mention
+        root_mention.score += 1
+      else
+        root_pre_mention = pre_mentions.find(mention.id)
+        if root_pre_mention
+          root_pre_mention.score += 1
+          if root_pre_mention.score >= TopicMention.threshold
+            self.topic_mentions.build(root_pre_mention.attributes)
+            root_pre_mention.destroy
+          end
+        else
+          self.pre_mentions.build(mention.attributes)
+        end
+      end
+    end
+
     def remove_topic_mentions_of(topic_id)
       # Loop through all of the topic mentions with the given id
       self.content.scan(/\#\[#{topic_id.to_s}#([a-zA-Z0-9,!\-_:'&\?\$ ]+)\]/).each do |topic|
@@ -459,14 +498,6 @@ module Limelight #:nodoc:
 
       self.topic_mentions.delete_all(conditions: {id: topic_id})
       save
-    end
-
-    def mentioned_topics
-      Topic.where(:_id.in => topic_mentions.map{|t| t.id})
-    end
-
-    def mentioned_ids
-      topic_mentions.map{|m| m.id}
     end
   end
 

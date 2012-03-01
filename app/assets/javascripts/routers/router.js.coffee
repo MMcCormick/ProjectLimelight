@@ -1,6 +1,7 @@
 class LL.Router extends Backbone.Router
   routes:
     '': 'userFeed'
+    ':id': 'topicFeed'
     'users/:id': 'userFeed'
     'posts/:id': 'postShow'
 
@@ -26,6 +27,19 @@ class LL.Router extends Backbone.Router
       LL.App.UserFeed.id = id
       LL.App.UserFeed.page = 1
       LL.App.UserFeed.fetch({data: {id: id}})
+
+  topicFeed: (id) ->
+    @hideModal()
+
+    topic = LL.App.Topics.findOrCreate(id)
+
+    # Only load the feed if it's new
+    if LL.App.TopicFeed.id != id
+      sidebar = new LL.Views.TopicSidebar(model: topic)
+
+      LL.App.TopicFeed.id = id
+      LL.App.TopicFeed.page = 1
+      LL.App.TopicFeed.fetch({data: {id: id}})
 
   postShow: (id) ->
     post = LL.App.Posts.findOrCreate(id)

@@ -22,6 +22,7 @@ class PostsController < ApplicationController
 
     if @post.save
       if @post.response_to
+        @post.bubble_up
         Pusher[@post.response_to.id.to_s].trigger('new_response', render_to_string(:template => 'posts/show'))
       end
 

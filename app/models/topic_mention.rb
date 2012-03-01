@@ -2,10 +2,15 @@
 class TopicMention
   include Mongoid::Document
 
+  @threshold = 2
+  class << self; attr_accessor :threshold end
+
+
   field :name
   field :slug
   field :public_id
   field :short_name
+  field :score, :default => 1
 
   embedded_in :topic_mentionable, polymorphic: true
 

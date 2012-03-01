@@ -482,6 +482,7 @@ module Limelight #:nodoc:
           if root_pre_mention.score >= TopicMention.threshold
             self.topic_mentions.build(root_pre_mention.attributes)
             root_pre_mention.destroy
+            FeedTopicItem.post_create(self)
           end
         else
           self.pre_mentions.build(mention.attributes)

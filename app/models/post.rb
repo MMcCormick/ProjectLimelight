@@ -453,14 +453,6 @@ class Post
         item_ids << i.root_id
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
         item_ids += user_i.responses.last(2) if user_i && user_i.responses
-
-        overlap = (i.root_mentions & feed_ids) ? (i.root_mentions & feed_ids).first : false
-
-        # if we are not on a topic feed mentioned in root mentions, show the latest object that mentions this topic feed
-        if !overlap && i.responses
-          overlap = (i.responses.keys & feed_ids.map{|f| f.to_s}).first
-          item_ids << i.responses[overlap] if overlap
-        end
       end
 
       objects = Post.where(:_id => {'$in' => item_ids})

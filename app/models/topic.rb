@@ -290,7 +290,7 @@ class Topic
     objects = Post.where("topic_mentions._id" => aliased_topic.id)
     objects.each do |object|
       # if an object mentions both, delete the old one
-      if object.mentions?(aliased_topic.id) && object.mentions?(id)
+      if object.mentions_topic?(aliased_topic.id) && object.mentions_topic?(id)
         object.topic_mentions.destroy_all(conditions: { id: aliased_topic.id })
       end
       object.root_id = id if object.root_id == aliased_topic.id

@@ -57,16 +57,36 @@ class Suggestion
     $('#' + @id)
 
 class SuggestionCollection
-  constructor: (@renderCallback, @selectCallback) ->
+  constructor: (@renderCallback, @selectCallback, @allowNew) ->
     @focusedIndex = -1
     @suggestions = []
 
-  update: (results) ->
+  update: (results, query) ->
     @suggestions = []
     i = 0
 
     for type, typeResults of results
+
+      # sort the results by term length
+      typeResults = _.sortBy(typeResults, (result) -> result.term.length)
+
+      # add the create a new topic option
+      if @allowNew && type == 'topic'
+        # check to see if there is an untyped topic with this name already
+        found = false
+        for result in typeResults
+          break if result['data'] && result['data']['type'] # skip if it has a type
+          found == true if query.toLowerCase() == result.term.toLowerCase()
+          unless found || !result['aliases'] || result['aliases'].length == 0 # check aliases
+            aliases = _.map(result.aliases, (alias) -> alias.toLowerCase()) # gather lower case versions
+            found = true if _.include(aliases, query.toLowerCase())
+
+        unless found
+          @suggestions.push( new Suggestion(i, "Create a new topic: #{query}", {term: query, id: 0}, 'create') )
+          i += 1
+
       for result in typeResults
+        console.log result
         @suggestions.push( new Suggestion(i, result.term, result, type) )
         i += 1
 
@@ -119,6 +139,9 @@ class SuggestionCollection
   focusPrevious: ->
     @focus( @focusedIndex - 1 )
 
+  focusFirst: ->
+    @focus( 0 )
+
   selectFocused: ->
     if @focusedIndex >= 0
       @suggestions[@focusedIndex].select( @selectCallback )
@@ -152,16 +175,18 @@ class Soulmate
 
     that = this
 
-    {url, types, renderCallback, selectCallback, maxResults, minQueryLength, timeout} = options
+    {url, types, renderCallback, selectCallback, maxResults, minQueryLength, timeout, allowNew, selectFirst} = options
 
     @url              = url
     @types            = types
     @maxResults       = maxResults
-    @timeout          = timeout || 500
+    @allowNew         = allowNew || false
+    @timeout          = timeout || 1500
+    @selectFirst      = selectFirst || false
 
     @xhr              = null
 
-    @suggestions      = new SuggestionCollection( renderCallback, selectCallback )
+    @suggestions      = new SuggestionCollection( renderCallback, selectCallback, allowNew )
     @query            = new Query( minQueryLength )
 
     if ($('ul#soulmate').length > 0)
@@ -199,15 +224,16 @@ class Soulmate
         @hideContainer()
 
       when 'tab'
-        event.preventDefault()
         @suggestions.selectFocused()
+        unless @container.is(':visible')
+          killEvent = false
 
       when 'enter'
-        event.preventDefault()
         @suggestions.selectFocused()
+        @hideContainer()
         # Submit the form if no input is focused.
-        if @suggestions.allBlured()
-          killEvent = false
+#        if @suggestions.allBlured()
+#          killEvent = false
 
       when 'up'
         @suggestions.focusPrevious()
@@ -223,6 +249,8 @@ class Soulmate
       event.preventDefault()
 
   handleKeyup: (event) =>
+    return if KEYCODES[event.keyCode] == 'enter' || KEYCODES[event.keyCode] == 'tab'
+
     @query.setValue( @input.val() )
 
     if @query.hasChanged()
@@ -245,6 +273,7 @@ class Soulmate
 
   showContainer: ->
     @container.show()
+    @suggestions.focusFirst() if @selectFirst
 
     # Hide the container if the user clicks outside of it.
     $(document).bind('click.soulmate', (event) =>
@@ -270,7 +299,7 @@ class Soulmate
     })
 
   update: (results) ->
-    @suggestions.update(results)
+    @suggestions.update(results, @query.getValue())
 
     if @suggestions.count() > 0
       @container.html( $(@suggestions.render()) )

@@ -35,12 +35,13 @@ class LL.Views.PostForm extends Backbone.View
           types:          ['topic'],
           minQueryLength: 2,
           maxResults:     10,
+          allowNew:       true,
+          selectFirst:    true,
           renderCallback: (term, data, type) ->
             term
-          selectCallback: (term, data, type, input) ->
-            $(val).val(term).next().val(data.id)
-            $('#soulmate').hide()
-    , 1000
+          selectCallback: (term, data, type) ->
+            $(val).val(data.term).next().val(data.id)
+    , 1200
 
     @
 

@@ -329,7 +329,7 @@ module Limelight #:nodoc:
       clean
     end
 
-    def mentions?(id)
+    def mentions_topic?(id)
       !!topic_mentions.detect{|mention| mention.id == id}
     end
 
@@ -337,7 +337,7 @@ module Limelight #:nodoc:
       Topic.where(:_id.in => topic_mentions.map{|t| t.id})
     end
 
-    def mentioned_ids
+    def mentioned_topic_ids
       topic_mentions.map{|m| m.id}
     end
 
@@ -482,6 +482,7 @@ module Limelight #:nodoc:
           if root_pre_mention.score >= TopicMention.threshold
             self.topic_mentions.build(root_pre_mention.attributes)
             root_pre_mention.destroy
+            FeedTopicItem.post_create(self)
           end
         else
           self.pre_mentions.build(mention.attributes)
@@ -595,7 +596,7 @@ module Limelight #:nodoc:
 
             # Update the popularities on affected objects
             Topic.collection.update(
-              {:_id => {"$in" => mentioned_ids}},
+              {:_id => {"$in" => mentioned_topic_ids}},
               {
                 "$inc" => { :score => mention_amt }
               }

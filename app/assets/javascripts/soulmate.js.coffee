@@ -86,7 +86,6 @@ class SuggestionCollection
           i += 1
 
       for result in typeResults
-        console.log result
         @suggestions.push( new Suggestion(i, result.term, result, type) )
         i += 1
 
@@ -193,10 +192,7 @@ class Soulmate
       @container = $('ul#soulmate')
     else
       @container = $('<ul id="soulmate">').appendTo('body')
-
-      @container.css
-        top: @input.offset().top + @input.height() + 15
-        left: @input.offset().left - 10
+      @repositionContainer()
 
     @container.delegate('.soulmate-suggestion',
       mouseover: -> that.suggestions.focusElement( this )
@@ -214,6 +210,11 @@ class Soulmate
       mouseover( ->
         that.suggestions.blurAll()
       )
+
+  repositionContainer: ->
+    @container.css
+      top: @input.offset().top + @input.height() + 15
+      left: @input.offset().left - 10
 
   handleKeydown: (event) =>
     killEvent = true
@@ -272,6 +273,7 @@ class Soulmate
     $(document).unbind('click.soulmate')
 
   showContainer: ->
+    @repositionContainer()
     @container.show()
     @suggestions.focusFirst() if @selectFirst
 

@@ -6,9 +6,11 @@ class LL.Views.PostForm extends Backbone.View
   events:
       "submit form": "createPost"
       "click .cancel": "destroyForm"
-      "paste #post-form-fetch-url": "fetchEmbedly"
       "click .icons .icon:not(.cancel-preview)": "activateType"
       "click .icons .cancel-preview": "removeEmbedly"
+      "keyup #post-form-content": "monitorUrl"
+      "paste #post-form-fetch-url": "fetchEmbedly"
+      "keyup #post-form-fetch-url": "preFetchEmbedly"
 
   initialize: ->
     @collection = new LL.Collections.Posts()
@@ -38,7 +40,10 @@ class LL.Views.PostForm extends Backbone.View
           allowNew:       true,
           selectFirst:    true,
           renderCallback: (term, data, type) ->
-            term
+            html = term
+            if data.data && data.data.type
+              html += "<div class='topic-type'>#{data.data.type}</div>"
+            html
           selectCallback: (term, data, type) ->
             $(val).val(data.term).next().val(data.id)
     , 1200
@@ -107,6 +112,16 @@ class LL.Views.PostForm extends Backbone.View
 
   removeEmbedly: =>
     @preview.cancelPreview()
+
+  monitorUrl: =>
+
+
+  preFetchEmbedly: (e) =>
+    urlRegex = /^(?=www\.)?[A-Za-z0-9_-]+\.+[A-Za-z0-9.\/%&=\?_:;-]+$/ig
+    url = $(e.target).val().match(urlRegex)
+    console.log url
+    if url && url.length > 0
+      @.embedly_collection.fetch({data: {url: url[0]}})
 
   fetchEmbedly: =>
     self = @

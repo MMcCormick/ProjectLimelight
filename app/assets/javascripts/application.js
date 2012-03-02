@@ -16,6 +16,7 @@
 //= require_tree ./routers
 //= require bootstrap
 //= require soulmate
+//= require jquery.timer
 //
 //
 //
@@ -24,7 +25,6 @@
 // require jquery-ui.min
 // require amplify
 // require jquery.colorbox
-// require jquery.timer
 // require jquery.qtip
 // require jquery.autocomplete
 // require jquery.scroll

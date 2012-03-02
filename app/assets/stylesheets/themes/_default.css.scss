@@ -1,127 +1,127 @@
-/*
-    Document   : _default
-    Created on : Mar 30, 2011, 4:06:21 PM
-    Author     : Marc MacLeod
-    Description:
-        Default theme variables.
-*/
-
-$url-color: #2A3B9D;
-
-$sidebar_background-color: #E4E4E4;
-$sidebar_border_width: 1px;
-$sidebar_width: 210px + $sidebar_border_width;
-$sidebar-minimized-width: 40px + $sidebar_border_width;
-$sidebar-margin: 5px;
-
-$sidebar_right_border_width: 1px;
-$sidebar_right_width: 200px;
-
-$min-width: 1000px;
-
-$page_header_background-color: #FFF;
-$page_header_color: #000;
-
-$page_content_background-color: #FFF;
-$page_content_color: #000;
-
-$footer_height: 34px;
-
-$picture-color: #D88E00;
-$link-color: #51A2CC;
-$video-color: #C52828;
-$talk-color: #7BA821;
-
-@mixin link {
-    color: $url-color;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
-}
-
-@mixin green-button($radius, $font-size) {
-    @include border-radius($radius);
-    background-color: #99CA33;
-    @include background-image(linear-gradient(#8DBC2C, #94C62E 25%, #8DBC2C 75%, #84B129));
-    color: #FFF;
-    font-weight: bold;
-    font-size: $font-size;
-    position: relative;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    
-    &:hover {
-        text-decoration: none;
-    }
-}
-
-@mixin blue-button($radius, $font-size) {
-    @include border-radius($radius);
-    background-color: #2061B6;
-    /*@include background-image(linear-gradient(#1B59AE, #1C62C0 25%, #1B59AE 75%, #1551A5));*/
-    color: #FFF;
-    font-weight: bold;
-    font-size: $font-size;
-    position: relative;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    
-    a {
-        color: #FFF;
-        text-decoration: none;
-    }
-    &:hover {
-        text-decoration: none;
-    }
-}
-
-@mixin green-conservative-button($font-size, $radius, $border-width) {
-    @include border-radius($radius);
-    background-color: #94C530;
-    border: $border-width solid #90C399;
-    color: #FFF;
-    font-weight: bold;
-    font-size: $font-size;
-    position: relative;
-    text-decoration: none;
-    cursor: pointer;
-
-    &:hover {
-        text-decoration: none;
-        background-color: #85B229;
-    }
-}
-
-@mixin grey-rollover($font-size) {
-  @include border-radius(0px);
-  @include single-box-shadow(#BBB, 0px, 1px, 1px);
-  background: #F1F1F1;
-  @include background-image(linear-gradient(#FDFDFD, #F1F1F1 25%, #EFEFEF 75%, #F1F1F1));
-  font-size: $font-size;
-  font-weight: bold;
-  color: #333;
-  border: 1px solid #888;
-  border-bottom: 1px solid #838383;
-  &:hover {
-    color: #FFF;
-    background: #88B42C;
-  }
-}
-
-@mixin list-teaser($column-width) {
-  @include clearfix();
-  &.odd { background: transparent; }
-  font-size: 13px;
-
-  > a,
-  > div {
-      display: block;
-      float: left;
-      width: $column-width;
-      overflow: hidden;
-      padding: 7px 0;
-  }
-}
+///*
+//    Document   : _default
+//    Created on : Mar 30, 2011, 4:06:21 PM
+//    Author     : Marc MacLeod
+//    Description:
+//        Default theme variables.
+//*/
+//
+//$url-color: #2A3B9D;
+//
+//$sidebar_background-color: #E4E4E4;
+//$sidebar_border_width: 1px;
+//$sidebar_width: 210px + $sidebar_border_width;
+//$sidebar-minimized-width: 40px + $sidebar_border_width;
+//$sidebar-margin: 5px;
+//
+//$sidebar_right_border_width: 1px;
+//$sidebar_right_width: 200px;
+//
+//$min-width: 1000px;
+//
+//$page_header_background-color: #FFF;
+//$page_header_color: #000;
+//
+//$page_content_background-color: #FFF;
+//$page_content_color: #000;
+//
+//$footer_height: 34px;
+//
+//$picture-color: #D88E00;
+//$link-color: #51A2CC;
+//$video-color: #C52828;
+//$talk-color: #7BA821;
+//
+//@mixin link {
+//    color: $url-color;
+//    cursor: pointer;
+//    &:hover {
+//      text-decoration: underline;
+//    }
+//}
+//
+//@mixin green-button($radius, $font-size) {
+//    @include border-radius($radius);
+//    background-color: #99CA33;
+//    @include background-image(linear-gradient(#8DBC2C, #94C62E 25%, #8DBC2C 75%, #84B129));
+//    color: #FFF;
+//    font-weight: bold;
+//    font-size: $font-size;
+//    position: relative;
+//    text-decoration: none;
+//    cursor: pointer;
+//    border: none;
+//
+//    &:hover {
+//        text-decoration: none;
+//    }
+//}
+//
+//@mixin blue-button($radius, $font-size) {
+//    @include border-radius($radius);
+//    background-color: #2061B6;
+//    /*@include background-image(linear-gradient(#1B59AE, #1C62C0 25%, #1B59AE 75%, #1551A5));*/
+//    color: #FFF;
+//    font-weight: bold;
+//    font-size: $font-size;
+//    position: relative;
+//    text-decoration: none;
+//    cursor: pointer;
+//    border: none;
+//
+//    a {
+//        color: #FFF;
+//        text-decoration: none;
+//    }
+//    &:hover {
+//        text-decoration: none;
+//    }
+//}
+//
+//@mixin green-conservative-button($font-size, $radius, $border-width) {
+//    @include border-radius($radius);
+//    background-color: #94C530;
+//    border: $border-width solid #90C399;
+//    color: #FFF;
+//    font-weight: bold;
+//    font-size: $font-size;
+//    position: relative;
+//    text-decoration: none;
+//    cursor: pointer;
+//
+//    &:hover {
+//        text-decoration: none;
+//        background-color: #85B229;
+//    }
+//}
+//
+//@mixin grey-rollover($font-size) {
+//  @include border-radius(0px);
+//  @include single-box-shadow(#BBB, 0px, 1px, 1px);
+//  background: #F1F1F1;
+//  @include background-image(linear-gradient(#FDFDFD, #F1F1F1 25%, #EFEFEF 75%, #F1F1F1));
+//  font-size: $font-size;
+//  font-weight: bold;
+//  color: #333;
+//  border: 1px solid #888;
+//  border-bottom: 1px solid #838383;
+//  &:hover {
+//    color: #FFF;
+//    background: #88B42C;
+//  }
+//}
+//
+//@mixin list-teaser($column-width) {
+//  @include clearfix();
+//  &.odd { background: transparent; }
+//  font-size: 13px;
+//
+//  > a,
+//  > div {
+//      display: block;
+//      float: left;
+//      width: $column-width;
+//      overflow: hidden;
+//      padding: 7px 0;
+//  }
+//}

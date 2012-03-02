@@ -1,13 +1,41 @@
 <div class="user-panel">
-  <h4>
+  <h3>
     <a href="/users/<%= @user.get('id') %>"><%= @user.get('username') %></a>
-  </h4>
+  </h3>
 </div>
 
-<a href="#"><%= @user.get('unread_notification_count') %> Notifications</a><br />
-<a href="#">Feed</a><br />
-<a href="#">Likes</a><br />
-<a href="#">Talks</a><br />
+<ul class="dropdown-menu right">
+  <li>
+    <a href="#">0 Notifications</a>
+  </li>
+  <li class="divider"></li>
+  <li>
+    <a href="#">Feed</a>
+  </li>
+  <li>
+    <a href="#">Likes</a>
+  </li>
+  <li>
+    <a href="#">Talks</a>
+  </li>
+  <li>
+    <a href="#">Settings</a>
+  </li>
+  <li class="divider"></li>
+  <li>
+    <a href="#">Following <%= @user.get('following_topics_count') %> Topics</a>
+  </li>
+  <li>
+    <a href="#">Following <%= @user.get('following_users_count') %> Users</a>
+  </li>
+  <li>
+    <a href="#"><%= @user.get('followers_count') %> Followers</a>
+  </li>
+  <li class="divider"></li>
+  <li>
+    <a href="#">Logout</a>
+  </li>
+</ul>
 
 <% if LL.App.current_user.get('id') == @user.get('id'): %>
  <a href="#">Settings</a>

@@ -1,0 +1,20 @@
+$lightGrey: #F9F9F9;
+
+.tile {
+  background-color: $grayLighter;
+  padding: 5px;
+
+  &:hover {
+    &.link { background-color: $link-color; }
+    &.picture { background-color: $picture-color; }
+    &.video { background-color: $video-color; }
+    &.talk { background-color: $talk-color; }
+    &.topic { background-color: $topic-color; }
+  }
+  .root {
+    background-color: #FFF;
+  }
+  .responses {
+    background-color: #FBFBFB;
+  }
+}

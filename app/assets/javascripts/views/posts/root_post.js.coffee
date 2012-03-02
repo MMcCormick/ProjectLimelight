@@ -18,6 +18,7 @@ class LL.Views.RootPost extends Backbone.View
     $(@el).html(@template())
 
     if @model.get('root')
+      $(@el).addClass(@model.get('root').get('type').toLowerCase())
       switch @model.get('root').get('type')
         when 'Topic'
           root_view = new LL.Views.RootTopic(model: @model.get('root'))

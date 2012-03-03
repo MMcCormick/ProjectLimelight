@@ -5,8 +5,8 @@
     <%= @talk.get('content') %>
   </div>
   <div class="actions">
-    <div class="score"><%= @talk.get('score') %> pts</div>
-    <div class="like">Like</div>
-    <div class="comment-form">+Comment</div>
+    <span class="score"><%= @talk.get('score') %> pts</span>
+    <span class="like">Like</span>
+    <span class="comment-form">+Comment</span>
   </div>
 </div>

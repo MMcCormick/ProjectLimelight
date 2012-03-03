@@ -6,6 +6,13 @@ $feedFontColor: $grayDark;
   margin-bottom: 10px;
 
   &:hover {
+    .actions {
+      .like,
+      .talk-form,
+      .comment-form {
+        color: $green;
+      }
+    }
     &.link { background-color: $link; }
     &.picture { background-color: $picture; }
     &.video { background-color: $video; }
@@ -75,6 +82,7 @@ $feedFontColor: $grayDark;
           line-height: 14px;
         }
         .actions {
+          padding-top: 4px;
           font-size: 11px;
           display: none;
         }
@@ -87,14 +95,13 @@ $feedFontColor: $grayDark;
     }
   }
   .actions {
-    >div {
-      float: left;
+    >span {
       margin-right: 10px;
     }
     .like,
     .talk-form,
     .comment-form {
-      color: $green;
+      color: $grayLight;
       font-weight: bold;
       cursor: pointer;
     }

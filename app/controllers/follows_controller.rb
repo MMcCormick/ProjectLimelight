@@ -2,27 +2,15 @@ class FollowsController < ApplicationController
   before_filter :authenticate_user!
 
   def create
-    if ['User', 'UserSnippet', 'Topic', 'TopicSnippet'].include? params[:type]
-      targets = {
-              'User' => 'User',
-              'UserSnippet' => 'User',
-              'Topic' => 'Topic',
-              'TopicSnippet' => 'Topic'
-      }
-      indexes = {
-              'User' => 'users',
-              'UserSnippet' => 'users',
-              'Topic' => 'topics',
-              'TopicSnippet' => 'topics'
-      }
-      target = Kernel.const_get(targets[params[:type]]).find(params[:id])
-      if target && target.id
+    if ['User', 'Topic'].include? params[:type]
+      target = Kernel.const_get(params[:type]).find(params[:id])
+      if current_user && target
         if current_user.follow_object(target)
           if params[:type] == 'User'
             Notification.add(target, :follow, true, current_user)
           end
           current_user.save
-          response = build_ajax_response(:ok, nil, "You're following #{target.name}", nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
+          response = build_ajax_response(:ok, nil, "You're following #{target.name}", nil, { })
           status = 201
         else
           response = build_ajax_response(:error, nil, "You're already following that!")
@@ -43,22 +31,16 @@ class FollowsController < ApplicationController
   end
 
   def destroy
-    if ['User', 'UserSnippet', 'Topic', 'TopicSnippet'].include? params[:type]
-      targets = {
-              'User' => 'User',
-              'UserSnippet' => 'User',
-              'Topic' => 'Topic',
-              'TopicSnippet' => 'Topic'
-      }
-      target = Kernel.const_get(targets[params[:type]]).find(params[:id])
-      if target
+    if ['User', 'Topic'].include? params[:type]
+      target = Kernel.const_get(params[:type]).find(params[:id])
+      if current_user && target
         if current_user.unfollow_object(target)
           current_user.save
           if params[:type] == 'User'
             Notification.remove(target, :follow, current_user)
           end
 
-          response = build_ajax_response(:ok, nil, nil, nil, { :target => '.fol_'+target.id.to_s, :toggle_classes => ['followB', 'unfollowB']})
+          response = build_ajax_response(:ok, nil, nil, nil, { })
           status = 201
          else
           response = build_ajax_response(:error, nil, "You're not following that!")

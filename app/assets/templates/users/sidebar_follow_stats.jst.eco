@@ -1,3 +1,20 @@
-<a href="#">Following <%= @user.get('following_topics_count') %> Topics</a><br />
-<a href="#">Following <%= @user.get('following_users_count') %> Users</a><br />
-<a href="#"><%= @user.get('followers_count') %> Followers</a>
+<ul class='menu unstyled'>
+  <li>
+    <a class='first' href="<%= "/users/#{@user.get('slug')}/following/topics" %>">
+      Following <%= @user.get('following_topics_count') %> Topics
+      <i class="icon icon-chevron-right"></i>
+    </a>
+  </li>
+  <li>
+    <a href="<%= "/users/#{@user.get('slug')}/following/users" %>">
+      Following <%= @user.get('following_users_count') %> Users
+      <i class="icon icon-chevron-right"></i>
+    </a>
+  </li>
+  <li>
+    <a href="<%= "/users/#{@user.get('slug')}/followers" %>">
+      <%= @user.get('followers_count') %> Followers
+      <i class="icon icon-chevron-right"></i>
+    </a>
+  </li>
+</ul>

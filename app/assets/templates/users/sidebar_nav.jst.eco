@@ -1,42 +1,28 @@
 <div class="user-panel">
-  <h3>
-    <a href="/users/<%= @user.get('id') %>"><%= @user.get('username') %></a>
-  </h3>
+  <img src='/users/<%= @user.get('slug') %>/picture?h=50&w=50&m=fillcropmid' />
+  <h3><%= @user.get('username') %></h3>
+  <div>
+    <span class='score-pts'><%= @user.get('score_pretty') %><span>pts</span></span>
+  </div>
 </div>
 
-<ul class="dropdown-menu right">
+<ul class='menu unstyled'>
   <li>
-    <a href="#">0 Notifications</a>
-  </li>
-  <li class="divider"></li>
-  <li>
-    <a href="#">Feed</a>
-  </li>
-  <li>
-    <a href="#">Likes</a>
+    <a class='first on' href="<%= if LL.App.current_user.get('id') == @user.get('id') then '/' else "/users/#{@user.get('slug')}" %>">
+      Feed
+      <i class="icon icon-chevron-right"></i>
+    </a>
   </li>
   <li>
-    <a href="#">Talks</a>
+    <a href="<%= "/users/#{@user.get('slug')}/likes" %>">
+      Likes
+      <i class="icon icon-chevron-right"></i>
+    </a>
   </li>
   <li>
-    <a href="#">Settings</a>
-  </li>
-  <li class="divider"></li>
-  <li>
-    <a href="#">Following <%= @user.get('following_topics_count') %> Topics</a>
-  </li>
-  <li>
-    <a href="#">Following <%= @user.get('following_users_count') %> Users</a>
-  </li>
-  <li>
-    <a href="#"><%= @user.get('followers_count') %> Followers</a>
-  </li>
-  <li class="divider"></li>
-  <li>
-    <a href="#">Logout</a>
+    <a href="<%= "/users/#{@user.get('slug')}/talks" %>">
+      Talks
+      <i class="icon icon-chevron-right"></i>
+    </a>
   </li>
 </ul>
-
-<% if LL.App.current_user.get('id') == @user.get('id'): %>
- <a href="#">Settings</a>
-<% end %>

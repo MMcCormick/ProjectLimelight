@@ -1,11 +1,27 @@
-<h2><%= @post.get('title') %></h2>
+<h4>
+  <% if @post.get('primarySource'): %>
+    <a href="<%= @post.get('primarySource').url %>">
+      <span class="title-with-source"><%= @post.get('title') %></span>
+      <span class="source"><%= @post.get('primarySource').name %></span>
+    </a>
+  <% else: %>
+    <%= @post.get('title') %>
+  <% end %>
+</h4>
 
 <% if @post.get('image'): %>
   <img src='<%= @post.get('image') %>' alt='' />
 <% end %>
 
+<div class="mentions">
+  <% for mention, i in @post.get('topic_mentions'): %>
+    <a class="mention" href="/<%= mention.slug %>"><%= mention.name %></a><%= "," if i + 1 < @post.get('topic_mentions').length %>
+  <% end %>
+</div>
+
 <div class='actions'>
-  <span class='talk-form'>+Talk</span>
+  <div class='score'><%= @post.get('score') %> pts</div>
+  <div class='talk-form'>+Talk</span>
   <%#= render 'likes/btn', :current_user => @current_user, :object => @root %>
   <%#= render 'core_object_shares/share_btn', :current_user => @current_user, :object => @root %>
 </div>

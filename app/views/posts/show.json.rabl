@@ -1,5 +1,5 @@
 object @post
-attributes :id, :content
+attributes :id, :content, :topic_mentions, :score
 attributes :response_count => :talking_count
 
 node :title do |post|
@@ -22,6 +22,10 @@ node(:image) do |post|
   end
 
   img ? img.image_url : ''
+end
+
+node :primarySource do |post|
+  post.sources.first
 end
 
 child :user_snippet => :user do |post|

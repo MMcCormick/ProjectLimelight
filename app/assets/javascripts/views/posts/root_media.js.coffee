@@ -6,5 +6,5 @@ class LL.Views.RootMedia extends Backbone.View
   initialize: ->
 
   render: ->
-    $(@el).html(@template(post: @model))
+    $(@el).addClass(@model.get('type').toLowerCase()).html(@template(post: @model))
     @

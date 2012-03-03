@@ -1,1 +1,1 @@
-Topic: <%= @topic.name %>
+<h4><%= @topic.get('name') %></h4>

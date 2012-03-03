@@ -1,2 +1,12 @@
-<p><%= @talk.get('content') %></p>
-Posted by <a href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>
+<img src="/users/<%= @talk.get('user').id %>/picture?h=30&w=30&m=fillcropmid">
+<div class="right">
+  <div class="talk-text">
+    <a class="ulink" href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>
+    <%= @talk.get('content') %>
+  </div>
+  <div class="actions">
+    <div class="score"><%= @talk.get('score') %> pts</div>
+    <div class="like">Like</div>
+    <div class="comment-form">+Comment</div>
+  </div>
+</div>

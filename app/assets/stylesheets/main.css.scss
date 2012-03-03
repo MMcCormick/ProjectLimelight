@@ -140,9 +140,7 @@ header {
     }
     h3 {
       margin: 0 0 3px 0;
-      a {
-        color: $greyDarker;
-      }
+      cursor: default;
     }
     .score-pts {
       font-size: 16px;
@@ -201,6 +199,7 @@ header {
 
 .score-pts {
   font-weight: bold;
+  cursor: default;
 
   span {
     font-weight: normal;

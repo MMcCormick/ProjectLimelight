@@ -17,9 +17,11 @@ class LL.Views.UserSidebar extends Backbone.View
     $(@el).append(follow.render().el)
 
     # Topic suggestions
-    topic_suggestions = new LL.Views.UserSidebarTopicSuggestions(model: @model)
-    $(@el).append(topic_suggestions.el)
-    LL.App.TopicSuggestions.fetch({data: {id: @model.id}})
+    if LL.App.current_user == @model
+      topic_suggestions = new LL.Views.UserSidebarTopicSuggestions(model: @model)
+      $(@el).append(topic_suggestions.el)
+      LL.App.TopicSuggestions.fetch({data: {id: @model.id}})
+
 
     @loaded = true
 

@@ -1,8 +1,6 @@
 <div class="user-panel">
   <img src='/users/<%= @user.get('slug') %>/picture?h=50&w=50&m=fillcropmid' />
-  <h3>
-    <a href="/users/<%= @user.get('id') %>"><%= @user.get('username') %></a>
-  </h3>
+  <h3><%= @user.get('username') %></h3>
   <div>
     <span class='score-pts'><%= @user.get('score_pretty') %><span>pts</span></span>
   </div>

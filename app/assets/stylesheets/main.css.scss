@@ -1,7 +1,22 @@
-$lightGrey: #F9F9F9;
-
 body {
   background: #B8CFD6;
+  color: $greyDarker;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+
+  &:active {
+    color: $linkColor;
+  }
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+ul,ol {
+  margin: 0px;
 }
 
 .wrapper {
@@ -51,7 +66,7 @@ header {
 
   .profile-img {
     @include border-radius(3px);
-    background: $lightGrey;
+    background: $greyLight;
     padding: 2px;
     float: right;
     margin: 4px 5px 0 0;
@@ -66,7 +81,7 @@ header {
   .numbers {
     @include border-radius(3px);
     float: right;
-    background: $lightGrey;
+    background: $greyLight;
     height: 34px;
     margin: 4px 5px 0 0;
     padding: 0 10px;
@@ -85,7 +100,7 @@ header {
   }
   .username {
     float: right;
-    color: $lightGrey;
+    color: $greyLight;
     cursor: pointer;
     height: 32px;
     padding: 11px 10px 0 12px;
@@ -106,9 +121,71 @@ header {
 
   section {
     @include border-radius(3px);
-    background: $lightGrey;
+    background: $greyLight;
     border: 1px solid #E6E6E6;
     margin: 0 0 10px 0;
+  }
+  .user-panel {
+    padding: 10px 10px 10px 70px;
+    position: relative;
+    border-bottom: 1px solid #EEEEEE;
+
+    img {
+      @include border-radius(3px);
+      position: absolute;
+      top: 7px;
+      left: 10px;
+      width: 50px;
+      height: 50px;
+    }
+    h3 {
+      margin: 0 0 3px 0;
+      a {
+        color: $greyDarker;
+      }
+    }
+    .score-pts {
+      font-size: 16px;
+      vertical-align: middle;
+      span {
+        font-size: 13px;
+      }
+    }
+    .follow {
+      font-size: 13px;
+      padding: 2px 9px;
+      margin: 0 7px 0 0;
+    }
+  }
+  .menu {
+    a {
+      display: block;
+      padding: 5px 10px;
+      border-top: 1px solid #EEEEEE;
+      font-size: 16px;
+      position: relative;
+
+      i {
+        display: none;
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        margin-top: -7px;
+      }
+      &.first {
+        border-top: none;
+      }
+      &:hover,
+      &.on {
+        i {
+          display: block;
+        }
+      }
+      &.on {
+        color: $linkColorHover;
+        cursor: default;
+      }
+    }
   }
 }
 

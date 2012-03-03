@@ -6,10 +6,21 @@ ProjectLimelight::Application.routes.draw do
   # API
   scope 'api' do
     scope 'users' do
+      scope 'follows' do
+        post '' => 'follows#create', :type => 'User'
+        delete '' => 'follows#destroy', :type => 'User'
+      end
+
       get '' => 'users#show'
     end
 
     scope 'topics' do
+      scope 'follows' do
+        post '' => 'follows#create', :type => 'Topic'
+        delete '' => 'follows#destroy', :type => 'Topic'
+      end
+
+      get 'suggestions' => 'topics#suggestions'
       get '' => 'topics#show'
     end
 
@@ -21,10 +32,6 @@ ProjectLimelight::Application.routes.draw do
       get 'public_responses' => 'posts#public_responses'
       put 'disable' => 'posts#disable'
       get '' => 'posts#show'
-    end
-
-    scope 'topics' do
-      get 'suggestions' => 'topics#suggestions'
     end
   end
 

@@ -5,14 +5,16 @@ class LL.Views.App extends Backbone.View
     @model = new LL.Models.App()
 
     # set the global collections
-    @UserFeed = new LL.Collections.UserFeed
-    @TopicFeed = new LL.Collections.TopicFeed
     @Users = new LL.Collections.Users
-    @Topics = new LL.Collections.Topics
+    @UserFeed = new LL.Collections.UserFeed
+
     @Posts = new LL.Collections.Posts
-    @TopicSuggestions = new LL.Collections.TopicSuggestions
     @PostFriendResponses = new LL.Collections.PostFriendResponses
-    @PostPublicResponses = new LL.Collections.PostPublicResponses()
+    @PostPublicResponses = new LL.Collections.PostPublicResponses
+
+    @Topics = new LL.Collections.Topics
+    @TopicFeed = new LL.Collections.TopicFeed
+    @TopicSuggestions = new LL.Collections.TopicSuggestions
 
     # set the current user
     @current_user = if $('#me').length > 0 then @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user'))) else null

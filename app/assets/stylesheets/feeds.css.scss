@@ -2,9 +2,14 @@ $feedFontColor: $grayDark;
 
 .tile {
   @include border-radius(2px);
-  background-color: rgba(136,136,136,0.2);
   padding: 5px;
   margin-bottom: 10px;
+
+  &.link { background-color: $link10RGBA; }
+  &.picture { background-color: $picture10RGBA; }
+  &.video { background-color: $video10RGBA; }
+  &.talk { background-color: $talk10RGBA; }
+  &.topic { background-color: $topic10RGBA; }
 
   &:hover {
     .actions {
@@ -14,11 +19,11 @@ $feedFontColor: $grayDark;
         color: $greenDarker;
       }
     }
-    &.link { background-color: $link; }
-    &.picture { background-color: $picture; }
-    &.video { background-color: $video; }
-    &.talk { background-color: $talk; }
-    &.topic { background-color: $topic; }
+    &.link { background-color: $link50RGBA; }
+    &.picture { background-color: $picture50RGBA; }
+    &.video { background-color: $video50RGBA; }
+    &.talk { background-color: $talk50RGBA; }
+    &.topic { background-color: $topic50RGBA; }
 
     .root,
     .responses {

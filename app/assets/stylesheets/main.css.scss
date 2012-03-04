@@ -1,6 +1,66 @@
 body {
+  $sidebarWidth: 250px;
+  $baseWidth: 745px;
+  $columnWidth: 240px;
+
   background: #B8CFD6;
   color: $greyDarker;
+
+  &.two {
+    .wrapper {
+      width: $baseWidth;
+      .content {
+        width: $baseWidth - $sidebarWidth - 20;
+      }
+    }
+    header {
+      .container {
+        width: $baseWidth;
+      }
+    }
+  }
+  &.three {
+    $baseWidthThree: $baseWidth + $columnWidth;
+    .wrapper {
+      width: $baseWidthThree;
+      .content {
+        width: $baseWidthThree - $sidebarWidth - 20;
+      }
+    }
+    header {
+      .container {
+        width: $baseWidthThree;
+      }
+    }
+  }
+  &.four {
+    $baseWidthFour: $baseWidth + $columnWidth * 2;
+    .wrapper {
+      width: $baseWidthFour;
+      .content {
+        width: $baseWidthFour - $sidebarWidth - 20;
+      }
+    }
+    header {
+      .container {
+        width: $baseWidthFour;
+      }
+    }
+  }
+  &.five {
+    $baseWidthFive: $baseWidth + $columnWidth * 3;
+    .wrapper {
+      width: $baseWidthFive;
+      .content {
+        width: $baseWidthFive - $sidebarWidth - 20;
+      }
+    }
+    header {
+      .container {
+        width: $baseWidthFive;
+      }
+    }
+  }
 }
 
 a {
@@ -22,17 +82,14 @@ ul,ol,p {
 .wrapper {
   @include clearfix();
   margin: 0 auto;
-  width: 1000px;
 
   .content {
     float: left;
-    width: 730px;
   }
 }
 
 header {
   .container {
-    width: 1000px;
     margin: auto;
     position: relative;
 
@@ -198,6 +255,9 @@ header {
     width: 230px;
     margin: 0 10px 0 0;
     float: left;
+    &.last {
+      margin-right: 0px;
+    }
   }
 }
 

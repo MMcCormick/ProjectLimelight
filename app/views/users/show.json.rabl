@@ -21,7 +21,3 @@ end
 node(:url) do |user|
   user_url user
 end
-
-node(:score_pretty) do |user|
-  user.score.to_i if user.class.name == 'User'
-end

@@ -1,0 +1,2 @@
+<span><%= @model.scorePretty() %></span>
+pts

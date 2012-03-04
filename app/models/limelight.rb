@@ -581,8 +581,7 @@ module Limelight #:nodoc:
                 "$inc" => { :score => user_amt }
               }
             )
-            Pusher[user_id.to_s].trigger('popularity_changed', {:id => user_id.to_s, :change => user_amt})
-            User.expire_caches(user_id.to_s)
+            Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => user_amt})
           end
 
           # Update mentioned topics if applicable
@@ -591,7 +590,7 @@ module Limelight #:nodoc:
 
             topic_mentions.each do |t_mention|
               action.pop_snippets.new(:amount => mention_amt, :id => t_mention.id, :object_type => "Topic")
-              Pusher[t_mention.id.to_s].trigger('popularity_changed', {:id => id.to_s, :change => mention_amt})
+              Pusher[t_mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => mention_amt})
             end
 
             # Update the popularities on affected objects
@@ -615,6 +614,7 @@ module Limelight #:nodoc:
 
     def change_pop(amt)
       self.score += amt
+      Pusher[id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
     end
   end
 end

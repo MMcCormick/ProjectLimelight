@@ -56,7 +56,7 @@ class LL.Views.PostFormPreview extends Backbone.View
     embedly = new LL.Models.Embedly()
     embedly.set({
       limelight_post: {
-        id: model.get('id')
+        id: model.get('_id')
         title: model.get('title')
         type: model.get('type')
         embed: model.get('embed_html')

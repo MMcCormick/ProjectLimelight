@@ -12,3 +12,6 @@ class LL.Models.User extends Backbone.Model
       _.include(@get('following_topics'), model.get('_id'))
     else
       false
+
+  scorePretty: ->
+    parseInt @get('score')

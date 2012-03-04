@@ -1,6 +1,7 @@
 $feedFontColor: $grayDark;
 
 .tile {
+  @include border-radius(2px);
   background-color: rgba(136,136,136,0.2);
   padding: 5px;
   margin-bottom: 10px;
@@ -10,7 +11,7 @@ $feedFontColor: $grayDark;
       .like,
       .talk-form,
       .comment-form {
-        color: $green;
+        color: $greenDarker;
       }
     }
     &.link { background-color: $link; }
@@ -53,6 +54,12 @@ $feedFontColor: $grayDark;
     img {
       margin-bottom: 6px;
     }
+    .score-pts {
+      font-size: 11px;
+      span {
+        font-size: 13px;
+      }
+    }
     &.link,
     &.video,
     &.picture {
@@ -62,41 +69,9 @@ $feedFontColor: $grayDark;
       }
     }
   }
-  .responses {
-    background-color: #FBFBFB;
-    padding: 10px 15px 0;
-    margin-top: 3px;
-    .response-talk {
-      position: relative;
-      img {
-        position: absolute;
-        height: 30px;
-        width: 30px;
-        background-color: #444;
-      }
-      .right {
-        padding: 0 0 10px 40px;
-        min-height: 30px;
-        font-size: 12px;
-        .talk-text {
-          line-height: 14px;
-        }
-        .actions {
-          padding-top: 4px;
-          font-size: 11px;
-          display: none;
-        }
-      }
-      &:hover {
-        .actions {
-          display: block;
-        }
-      }
-    }
-  }
   .actions {
-    >span {
-      margin-right: 10px;
+    > span {
+      margin-right: 15px;
     }
     .like,
     .talk-form,
@@ -109,5 +84,49 @@ $feedFontColor: $grayDark;
   .ulink {
     font-weight: bold;
     color: $feedFontColor;
+  }
+  .responses {
+    background-color: #FBFBFB;
+    padding: 10px 15px 0;
+    margin-top: 3px;
+
+    .response-talk {
+      position: relative;
+      padding: 0 0 10px 40px;
+      min-height: 30px;
+      font-size: 12px;
+
+      img {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 30px;
+        width: 30px;
+        background-color: #444;
+      }
+      p {
+        line-height: 14px;
+      }
+      .score-pts {
+        font-size: 10px;
+        span {
+          font-size: 11px;
+        }
+      }
+      .actions {
+        padding-top: 2px;
+        font-size: 11px;
+        display: none;
+        > span {
+          margin-right: 5px;
+          font-weight: normal;
+        }
+      }
+      &:hover {
+        .actions {
+          display: block;
+        }
+      }
+    }
   }
 }

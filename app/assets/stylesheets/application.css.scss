@@ -6,6 +6,10 @@
  * require_tree .
 */
 
+// Import compass mixins
+@import "compass";
+@import "compass/utilities";
+
 @import "sprites";
 @import "jquery.gritter";
 @import "app_bootstrap";
@@ -13,11 +17,9 @@
 // Default theme variables
 @import "themes/_default";
 
-// Import compass mixins
-@import "compass";
-@import "compass/utilities";
-
+@import "buttons";
 @import "soulmate";
+@import "library";
 @import "main";
 @import "feeds";
 

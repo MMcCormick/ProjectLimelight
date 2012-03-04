@@ -1,9 +1,7 @@
 <div class="user-panel">
   <img src='/users/<%= @user.get('slug') %>/picture?h=50&w=50&m=fillcropmid' />
   <h3><%= @user.get('username') %></h3>
-  <div>
-    <span class='score-pts'><%= @user.get('score_pretty') %><span>pts</span></span>
-  </div>
+  <div class='actions'></div>
 </div>
 
 <ul class='menu unstyled'>

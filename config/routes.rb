@@ -33,6 +33,11 @@ ProjectLimelight::Application.routes.draw do
       put 'disable' => 'posts#disable'
       get '' => 'posts#show'
     end
+
+    scope 'likes' do
+      post '' => 'likes#create'
+      delete '' => 'likes#destroy'
+    end
   end
 
   # Resque admin

@@ -15,7 +15,7 @@ a {
   }
 }
 
-ul,ol {
+ul,ol,p {
   margin: 0px;
 }
 
@@ -89,12 +89,15 @@ header {
     cursor: default;
 
     .notifications {
-      margin: 0 10px 0 0;
+      margin: 0 3px 0 0;
+      padding: 0 9px 0 0;
       font-weight: bold;
+      border-right: 1px solid #E3E3E3;
     }
     .score-pts {
+      font-size: 12px;
       span {
-        font-size: 12px;
+        font-size: 16px;
       }
     }
   }
@@ -143,10 +146,10 @@ header {
       cursor: default;
     }
     .score-pts {
-      font-size: 16px;
+      font-size: 13px;
       vertical-align: middle;
       span {
-        font-size: 13px;
+        font-size: 16px;
       }
     }
     .follow {
@@ -158,7 +161,7 @@ header {
   .menu {
     a {
       display: block;
-      padding: 5px 10px;
+      padding: 7px 10px;
       border-top: 1px solid #EEEEEE;
       font-size: 16px;
       position: relative;
@@ -199,12 +202,10 @@ header {
 }
 
 .score-pts {
-  font-weight: bold;
   cursor: default;
 
   span {
-    font-weight: normal;
-    margin: 0 0 0 2px;
+    font-weight: bold;
   }
 }
 

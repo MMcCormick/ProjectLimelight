@@ -20,13 +20,5 @@
 </div>
 
 <div class='actions'>
-  <span class='score'><%= @post.get('score') %> pts</span>
-  <span class='like'>Like</span>
   <span class='talk-form'>+Talk</span>
-  <%#= render 'likes/btn', :current_user => @current_user, :object => @root %>
-  <%#= render 'core_object_shares/share_btn', :current_user => @current_user, :object => @root %>
 </div>
-
-<!--<a href="#" class="talking">-->
-  <!--<span><%#= @post.get('talking_count') %></span> talking-->
-<!--</a>-->

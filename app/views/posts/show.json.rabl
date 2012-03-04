@@ -1,6 +1,14 @@
 object @post
-attributes :id, :content, :topic_mentions, :score
+attributes :content, :topic_mentions, :score
 attributes :response_count => :talking_count
+
+node :id do |post|
+  post.to_param
+end
+
+node :_id do |post|
+  post.id.to_s
+end
 
 node :title do |post|
   post.title_clean
@@ -8,6 +16,10 @@ end
 
 node :type do |post|
   post.class.name
+end
+
+node :liked do |post|
+  post.liked_by?(current_user.id) ? true : false
 end
 
 node(:url) do |post|

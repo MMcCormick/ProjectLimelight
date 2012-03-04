@@ -16,6 +16,7 @@
 //= require_tree ./routers
 //= require bootstrap
 //= require soulmate
+//= require jquery.gritter
 //= require jquery.timer
 //
 //
@@ -31,7 +32,6 @@
 // require jquery.typing
 // require jquery.label
 // require jquery.charCount
-// require jquery.gritter
 // require jquery.oauthpopup
 // require plupload/plupload.full
 // require help

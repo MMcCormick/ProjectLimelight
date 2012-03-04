@@ -7,4 +7,11 @@ class LL.Views.ResponseTalk extends Backbone.View
 
   render: ->
     $(@el).html(@template(talk: @model))
+
+    like = new LL.Views.LikeButton(model: @model)
+    $(@el).find('.actions').prepend(like.render().el)
+
+    score = new LL.Views.Score(model: @model)
+    $(@el).find('.actions').prepend(score.render().el)
+
     @

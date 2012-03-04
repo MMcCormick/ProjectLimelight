@@ -29,7 +29,7 @@ class LL.Views.RootPost extends Backbone.View
 
       $(@el).append(root_view.render().el)
 
-    if @model.get('responses')
+    if @model.get('responses') && @model.get('responses').length > 0
       responses_view = new LL.Views.RootResponses(model: @model.get('responses'), root: @model.get('root'))
       $(@el).append(responses_view.render().el)
 

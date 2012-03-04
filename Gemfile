@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'bundler'
-gem 'rails', '3.2.1'
+gem 'rails', '3.2.2'
 gem 'jquery-rails'
 gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
@@ -27,7 +27,6 @@ gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby
 gem 'neography' # neo4j graph database
-#gem 'active_cache' # conditional caching
 gem 'backbone-on-rails'
 
 group :assets do

@@ -5,7 +5,7 @@ body {
 
 a {
   text-decoration: none;
-  outline: none;
+  outline: 0;
 
   &:active {
     color: $linkColor;
@@ -181,6 +181,7 @@ header {
       }
       &.on {
         color: $linkColorHover;
+        background: #FFF;
         cursor: default;
       }
     }

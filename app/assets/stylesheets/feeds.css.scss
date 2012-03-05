@@ -123,54 +123,67 @@ $feedFontColor: $grayDark;
     font-weight: bold;
     color: $feedFontColor;
   }
+
+  // Talks (root and responses)
+  .root-talk,
+  .response-talk {
+    position: relative;
+    padding: 0 0 11px 40px;
+    min-height: 30px;
+    font-size: 12px;
+
+    img {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      height: 30px;
+      width: 30px;
+      background-color: #444;
+      z-index: 100;
+    }
+    p {
+      position: relative;
+      line-height: 14px;
+      .actions {
+        position: absolute;
+        background: #FBFBFB;
+        bottom: -23px;
+        left: -55px;
+        padding: 0 0 2px 55px;
+        z-index: 105;
+      //border-bottom: 1px solid #777777;
+      width: 165px;
+
+        .score-pts,
+        .comment-form,
+        .like {
+          font-size: 11px;
+          margin-right: 5px;
+          font-weight: normal;
+        }
+      }
+    }
+    .score-pts {
+      font-size: 10px;
+      span {
+        font-size: 11px;
+      }
+    }
+  }
+  .root.talk {
+    padding: 10px 15px 0;
+    img {
+      z-index: 110;
+    }
+  }
   .responses {
     background-color: #FBFBFB;
     padding: 10px 15px 0;
     margin-top: 3px;
 
-    .response-talk {
-      position: relative;
-      padding: 0 0 11px 40px;
-      min-height: 30px;
-      font-size: 12px;
-
-      img {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        height: 30px;
-        width: 30px;
-        background-color: #444;
-        z-index: 100;
-      }
-      p {
-        position: relative;
-        line-height: 14px;
-        .actions {
-          display: none;
-          position: absolute;
-          background: #FBFBFB;
-          bottom: -23px;
-          left: -55px;
-          padding: 0 0 2px 55px;
-          z-index: 105;
-          //border-bottom: 1px solid #777777;
-          width: 165px;
-
-          .score-pts,
-          .comment-form,
-          .like {
-            font-size: 11px;
-            margin-right: 5px;
-            font-weight: normal;
-          }
-        }
-      }
-      .score-pts {
-        font-size: 10px;
-        span {
-          font-size: 11px;
-        }
+    .response-talk {       
+      p .actions {
+        display: none;
       }
       &:hover {
         .actions {

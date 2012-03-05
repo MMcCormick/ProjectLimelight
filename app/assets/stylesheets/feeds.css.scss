@@ -32,6 +32,15 @@ $feedFontColor: $grayDark;
     }
   }
 
+  .mentions {
+    color: $grayLight;
+
+    .mention {
+      color: $grayLight;
+      cursor: pointer;
+    }
+  }
+
   .root {
     background-color: #FFF;
     padding: 10px 15px 10px;
@@ -55,10 +64,6 @@ $feedFontColor: $grayDark;
         }
       }
     }
-    .mention {
-      color: $grayLight;
-      cursor: pointer;
-    }
     img {
       margin-bottom: 6px;
     }
@@ -73,7 +78,6 @@ $feedFontColor: $grayDark;
     &.picture {
       .mentions {
         margin-bottom: 8px;
-        color: $grayLight;
       }
     }
     &.topic {
@@ -143,17 +147,9 @@ $feedFontColor: $grayDark;
     }
     p {
       position: relative;
-      line-height: 14px;
+      line-height: 16px;
       .actions {
-        position: absolute;
-        background: #FBFBFB;
-        bottom: -23px;
-        left: -55px;
-        padding: 0 0 2px 55px;
-        z-index: 105;
-      //border-bottom: 1px solid #777777;
-      width: 165px;
-
+        display: block;
         .score-pts,
         .comment-form,
         .like {
@@ -187,13 +183,31 @@ $feedFontColor: $grayDark;
       margin: -3px 0 7px 0;
       cursor: default;
     }
-    .response-talk {       
-      p .actions {
+    .response-talk {
+      p {
+        .response-float {
+          background: #FBFBFB;
+          position: absolute;
+          top: 100%;
+          left: -55px;
+          padding: 0 0 2px 55px;
+          z-index: 105;
+          border-bottom: 1px solid #777777;
+          width: 165px;
+          .actions {
+            padding-bottom: 2px;
+          }
+        }
+      }
+      .response-float {
         display: none;
       }
       &:hover {
-        .actions {
+        .response-float {
           display: block;
+          >span {
+            display: block;
+          }
         }
         img {
           z-index: 110;

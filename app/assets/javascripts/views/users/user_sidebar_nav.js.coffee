@@ -5,7 +5,7 @@ class LL.Views.UserSidebarNav extends Backbone.View
   initialize: ->
 
   render: ->
-    $(@el).html(@template(user: @model))
+    $(@el).html(@template(user: @model, page: @page))
 
     score = new LL.Views.Score(model: @model)
     $(@el).find('.actions').append(score.render().el)

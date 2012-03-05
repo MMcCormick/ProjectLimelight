@@ -6,6 +6,10 @@ child :root => :root do
   extends "posts/root"
 end
 
+child :like_responses => :like_responses do
+  extends "posts/show"
+end
+
 child :public_responses => :public_responses do
   extends "posts/show"
 end

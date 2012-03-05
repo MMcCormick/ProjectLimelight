@@ -23,4 +23,10 @@ class LL.Models.RootPost extends Backbone.Model
 
     data['personal_responses'] = personal_responses
 
+    like_responses = []
+    for response in resp.like_responses
+      like_responses.push(LL.App.Posts.findOrCreate(response.id, new LL.Models.Post(response)))
+
+    data['like_responses'] = like_responses
+
     data

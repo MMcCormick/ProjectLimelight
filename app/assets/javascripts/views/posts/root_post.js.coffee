@@ -47,6 +47,14 @@ class LL.Views.RootPost extends Backbone.View
     LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
 
   renderResponses: (post) =>
+    if !@like_responses
+      like_responses_view = new LL.Views.RootResponses(model: @model)
+      like_responses_view.type = 'like'
+      like_responses_view.target = $(@el)
+      @like_responses = like_responses_view
+
+    @like_responses.render()
+
     if !@personal_responses
       personal_responses_view = new LL.Views.RootResponses(model: @model)
       personal_responses_view.type = 'personal'

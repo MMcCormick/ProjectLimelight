@@ -399,7 +399,7 @@ class Post
       end
       items = items.skip((page-1)*20).limit(20)
 
-      build_feed(items)
+      build_user_feed(items)
     end
 
     def contribute_feed(feed_id, display_types, order_by, page)
@@ -415,10 +415,11 @@ class Post
       end
       items = items.skip((page-1)*20).limit(20)
 
-      build_feed(items)
+      build_user_feed(items)
     end
 
     def like_feed(feed_id, display_types, order_by, page)
+
       if display_types.include?('Talk')
         display_types << 'Topic'
       end
@@ -431,7 +432,7 @@ class Post
       end
       items = items.skip((page-1)*20).limit(20)
 
-      build_feed(items)
+      build_like_feed(items)
     end
 
     def topic_feed(feed_ids, user_id, display_types, order_by, page)
@@ -478,8 +479,7 @@ class Post
       return_objects
     end
 
-    # build a user feed
-    def build_feed(items)
+    def build_user_feed(items)
       topic_ids = []
       item_ids = []
       items.each do |i|
@@ -518,6 +518,38 @@ class Post
             end
           end
         end
+
+        return_objects << root_post
+      end
+
+      return_objects
+    end
+
+    def build_like_feed(items)
+      topic_ids = []
+      item_ids = []
+      items.each do |i|
+        if i.root_type == 'Topic'
+          topic_ids << i.root_id
+        else
+          item_ids << i.root_id
+        end
+        item_ids += i.responses if i.responses
+      end
+
+      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      objects = Post.where(:_id => {'$in' => item_ids})
+
+      return_objects = []
+      items.each do |i|
+        root_post = RootPost.new
+        if i.root_type == 'Topic'
+          root_post.root = topics.detect{|t| t.id == i.root_id}
+        else
+          root_post.root = objects.detect{|o| o.id == i.root_id}
+        end
+
+        root_post.like_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
 
         return_objects << root_post
       end

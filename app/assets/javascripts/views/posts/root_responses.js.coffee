@@ -6,17 +6,20 @@ class LL.Views.RootResponses extends Backbone.View
   initialize: ->
 
   render: =>
-    console.log @model
     if @type == 'personal'
       responses = @model.get('personal_responses')
-      className = 'personal'
+      className = 'personal-responses'
       if @model.get('personal_talking') == 0
         talking = null
       else
         talking = "#{@model.get('personal_talking')} Friend#{(if @model.get('personal_talking') > 1 then 's' else '')} Talking"
+    else if @type == 'like'
+      responses = @model.get('like_responses')
+      className = 'like-responses'
+      talking = "#{@model.get('like_responses').length} #{(if @model.get('like_responses').length > 1 then 'Likes' else 'Like')}"
     else
       responses = @model.get('public_responses')
-      className = 'public'
+      className = 'public-responses'
       if @model.get('public_talking') == 0
         talking = ''
       else
@@ -30,10 +33,10 @@ class LL.Views.RootResponses extends Backbone.View
       for post in responses
         @appendResponse(post)
 
-      if @type == 'personal'
-        @target.find('.root').after($(@el))
-      else
+      if @type == 'public'
         @target.append($(@el))
+      else
+        @target.find('.root').after($(@el))
 
     @
 

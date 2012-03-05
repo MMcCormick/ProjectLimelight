@@ -10,6 +10,7 @@ class LL.Views.UserSidebar extends Backbone.View
 
     # Main top nav
     nav = new LL.Views.UserSidebarNav(model: @model)
+    nav.page = @page
     $(@el).append(nav.render().el)
 
     # Follow stats

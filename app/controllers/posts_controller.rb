@@ -72,6 +72,13 @@ class PostsController < ApplicationController
     @posts = Post.feed(user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
   end
 
+  # The main user feed
+  def like_feed
+    user = User.find_by_slug(params[:id])
+    page = params[:p] ? params[:p].to_i : 1
+    @posts = Post.like_feed(user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+  end
+
   # Topic feeds...
   def topic_feed
     topic = Topic.unscoped.where(slug: params[:id]).first

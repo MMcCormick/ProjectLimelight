@@ -6,19 +6,19 @@
 
 <ul class='menu unstyled'>
   <li>
-    <a class='first on' href="<%= if LL.App.current_user.get('id') == @user.get('id') then '/' else "/users/#{@user.get('slug')}" %>">
+    <a class='first <%= 'on' if @page == 'feed' %>' href="<%= if LL.App.current_user.get('id') == @user.get('id') then '/' else "/users/#{@user.get('slug')}" %>">
       Feed
       <i class="icon icon-chevron-right"></i>
     </a>
   </li>
   <li>
-    <a href="<%= "/users/#{@user.get('slug')}/likes" %>">
+    <a class=' <%= 'on' if @page == 'likes' %>' href="<%= "/users/#{@user.get('slug')}/likes" %>">
       Likes
       <i class="icon icon-chevron-right"></i>
     </a>
   </li>
   <li>
-    <a href="<%= "/users/#{@user.get('slug')}/talks" %>">
+    <a class='<%= 'on' if @page == 'activity' %>' href="<%= "/users/#{@user.get('slug')}/talks" %>">
       Talks
       <i class="icon icon-chevron-right"></i>
     </a>

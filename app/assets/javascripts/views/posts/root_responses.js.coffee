@@ -3,10 +3,29 @@ class LL.Views.RootResponses extends Backbone.View
   tagName: 'div'
   className: 'responses'
 
-  render: ->
-    $(@el).html(@template())
-    for post in @model
-      @appendResponse(post)
+  initialize: ->
+
+  render: =>
+    if @type == 'personal'
+      responses = @model.get('personal_responses')
+      className = 'personal'
+    else
+      responses = @model.get('public_responses')
+      className = 'public'
+
+    $(@el).remove()
+
+    if responses.length > 0
+      $(@el).addClass(className).html(@template())
+
+      for post in responses
+        @appendResponse(post)
+
+      if @type == 'personal'
+        @target.find('.root').after($(@el))
+      else
+        @target.append($(@el))
+
     @
 
   appendResponse: (post) =>

@@ -11,7 +11,7 @@ class LL.Views.RootPost extends Backbone.View
     @public_responses = null
     @personal_responses = null
 
-    @model.get('root').on('new_response', @appendResponse)
+    @model.get('root').on('new_response', @renderResponses)
 
   showEntry: ->
     Backbone.history.navigate("posts/#{@model.get('id')}", true)
@@ -33,15 +33,7 @@ class LL.Views.RootPost extends Backbone.View
 
       $(@el).append(root_view.render().el)
 
-    if @model.get('personal_responses') && @model.get('personal_responses').length > 0
-      personal_responses_view = new LL.Views.RootResponses(model: @model.get('personal_responses'))
-      $(@el).append(personal_responses_view.render().el)
-      @personal_responses = personal_responses_view
-
-    if @model.get('public_responses') && @model.get('public_responses').length > 0
-      public_responses_view = new LL.Views.RootResponses(model: @model.get('public_responses'))
-      $(@el).append(public_responses_view.render().el)
-      @public_responses = public_responses_view
+    @renderResponses()
 
     @
 
@@ -54,17 +46,20 @@ class LL.Views.RootPost extends Backbone.View
   postShow: =>
     LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
 
-  appendResponse: (post) =>
-    if LL.App.current_user.get('_id') == post.get('user')._id || LL.App.current_user.following(post.get('user')._id)
-      unless @personal_responses
-        personal_responses_view = new LL.Views.RootResponses(model: [])
-        $(@el).find('.root').after(personal_responses_view.render().el)
-        @personal_responses = personal_responses_view
-      @personal_responses.appendResponse(post)
+  renderResponses: (post) =>
+    if !@personal_responses
+      personal_responses_view = new LL.Views.RootResponses(model: @model)
+      personal_responses_view.type = 'personal'
+      personal_responses_view.target = $(@el)
+      @personal_responses = personal_responses_view
 
-    else
-      unless @public_responses
-        public_responses_view = new LL.Views.RootResponses(model: [])
-        $(@el).append(public_responses_view.render().el)
-        @public_responses = public_responses_view
-      @public_responses.appendResponse(post)
+    @personal_responses.render()
+
+    if !@public_responses
+      public_responses_view = new LL.Views.RootResponses(model: @model)
+      public_responses_view.type = 'public'
+      public_responses_view.target = $(@el)
+      console.log public_responses_view
+      @public_responses = public_responses_view
+
+    @public_responses.render()

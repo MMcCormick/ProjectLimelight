@@ -3,9 +3,6 @@ class LL.Views.RootResponses extends Backbone.View
   tagName: 'div'
   className: 'responses'
 
-  initialize: ->
-    @options.root.on('new_response', @appendResponse)
-
   render: ->
     $(@el).html(@template())
     for post in @model

@@ -8,6 +8,10 @@ class LL.Views.RootPost extends Backbone.View
     "click .root h2, .root img, .talking": "postShow"
 
   initialize: ->
+    @public_responses = null
+    @personal_responses = null
+
+    @model.get('root').on('new_response', @appendResponse)
 
   showEntry: ->
     Backbone.history.navigate("posts/#{@model.get('id')}", true)
@@ -29,9 +33,15 @@ class LL.Views.RootPost extends Backbone.View
 
       $(@el).append(root_view.render().el)
 
-    if @model.get('responses') && @model.get('responses').length > 0
-      responses_view = new LL.Views.RootResponses(model: @model.get('responses'), root: @model.get('root'))
-      $(@el).append(responses_view.render().el)
+    if @model.get('personal_responses') && @model.get('personal_responses').length > 0
+      personal_responses_view = new LL.Views.RootResponses(model: @model.get('personal_responses'))
+      $(@el).append(personal_responses_view.render().el)
+      @personal_responses = personal_responses_view
+
+    if @model.get('public_responses') && @model.get('public_responses').length > 0
+      public_responses_view = new LL.Views.RootResponses(model: @model.get('public_responses'))
+      $(@el).append(public_responses_view.render().el)
+      @public_responses = public_responses_view
 
     @
 
@@ -43,3 +53,18 @@ class LL.Views.RootPost extends Backbone.View
 
   postShow: =>
     LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
+
+  appendResponse: (post) =>
+    if LL.App.current_user.get('_id') == post.get('user')._id || LL.App.current_user.following(post.get('user')._id)
+      unless @personal_responses
+        personal_responses_view = new LL.Views.RootResponses(model: [])
+        $(@el).find('.root').after(personal_responses_view.render().el)
+        @personal_responses = personal_responses_view
+      @personal_responses.appendResponse(post)
+
+    else
+      unless @public_responses
+        public_responses_view = new LL.Views.RootResponses(model: [])
+        $(@el).append(public_responses_view.render().el)
+        @public_responses = public_responses_view
+      @public_responses.appendResponse(post)

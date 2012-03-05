@@ -478,6 +478,7 @@ class Post
       return_objects
     end
 
+    # build a user feed
     def build_feed(items)
       topic_ids = []
       item_ids = []
@@ -502,14 +503,33 @@ class Post
           root_post.root = objects.detect{|o| o.id == i.root_id}
         end
 
-        root_post.responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
-        root_post.personal_talking = i.responses ? i.responses.length : 0
+        root_post.personal_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        root_post.personal_talking = root_post.personal_responses ? root_post.personal_responses.length : 0
         root_post.public_talking = root_post.root.response_count
+
+        # get the public responses
+        root_post.public_responses = []
+        unless i.root_type == 'Talk' || root_post.public_talking == 0
+          responses = Post.public_responses(root_post.root.id, 2)
+          responses.each do |response|
+            found = root_post.personal_responses.detect{|p| p.id == response.id}
+            unless found
+              root_post.public_responses.push(response)
+            end
+          end
+          root_post.public_responses.reverse!
+        end
 
         return_objects << root_post
       end
 
       return_objects
+    end
+
+    # get the public responses for a root, with a limit
+    # TODO: Cache this
+    def public_responses(root_id, limit)
+      Post.where(:root_id => root_id, :_type => 'Talk').order_by(:created_at, :desc).limit(limit).to_a
     end
   end
 

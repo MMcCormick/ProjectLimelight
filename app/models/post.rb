@@ -478,6 +478,7 @@ class Post
       return_objects
     end
 
+    # build a user feed
     def build_feed(items)
       topic_ids = []
       item_ids = []
@@ -511,11 +512,12 @@ class Post
         unless i.root_type == 'Talk' || root_post.public_talking == 0
           responses = Post.public_responses(root_post.root.id, 2)
           responses.each do |response|
-            foo = root_post.personal_responses.detect{|p| p.id == response.id}
-            unless foo
-              root_post.public_responses << response
+            found = root_post.personal_responses.detect{|p| p.id == response.id}
+            unless found
+              root_post.public_responses.push(response)
             end
           end
+          root_post.public_responses.reverse!
         end
 
         return_objects << root_post

@@ -4,5 +4,5 @@
   <%= @talk.get('content') %>
 </p>
 <div class="actions">
-  <span class="comment-form">+Comment</span>
+  <span class="comment">+Comment</span>
 </div>

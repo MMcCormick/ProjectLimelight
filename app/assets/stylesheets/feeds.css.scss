@@ -13,9 +13,10 @@ $feedFontColor: $grayDark;
 
   &:hover {
     .actions {
-      .like,
-      .talk-form,
-      .comment-form {
+      .talk,
+      .follow,
+      .comment,
+      .like {
         color: $greenDarker;
       }
     }
@@ -30,9 +31,11 @@ $feedFontColor: $grayDark;
       @include single-box-shadow(#666, 1px, 1px, 3px);
     }
   }
+
   .root {
     background-color: #FFF;
     padding: 10px 15px 10px;
+    position: relative;
 
     h4 {
       margin-bottom: 8px;
@@ -73,17 +76,47 @@ $feedFontColor: $grayDark;
         color: $grayLight;
       }
     }
+    &.topic {
+      .top {
+        margin-bottom: 10px;
+        display: table;
+      }
+      img {
+        width: 50px;
+        height: 50px;
+        background-color: #444;
+        display: table-cell;
+      }
+      h4 {
+        display: table-cell;
+        margin: 0px;
+        padding: 0 0 0 10px;
+        vertical-align: middle;
+      }
+    }
   }
+
   .actions {
     > span {
+      vertical-align: middle;
+    }
+    .score-pts {
       margin-right: 15px;
     }
-    .like,
-    .talk-form,
-    .comment-form {
+
+    .talk,
+    .follow,
+    .comment,
+    .like {
+      padding: 0;
+      margin: 0 15px 0 0;
+      font-size: 13px;
       color: $grayLight;
       font-weight: bold;
       cursor: pointer;
+      border: none;
+      background: none;
+      text-shadow: none;
     }
   }
   .ulink {
@@ -97,7 +130,7 @@ $feedFontColor: $grayDark;
 
     .response-talk {
       position: relative;
-      padding: 0 0 10px 40px;
+      padding: 0 0 11px 40px;
       min-height: 30px;
       font-size: 12px;
 
@@ -119,10 +152,19 @@ $feedFontColor: $grayDark;
         }
       }
       .actions {
-        padding-top: 2px;
-        font-size: 11px;
         display: none;
-        > span {
+        position: absolute;
+        bottom: -1px;
+        left: 40px;
+        padding: 0 3px 2px 7px;
+        z-index: 100;
+        background: #FFF;
+        border: 1px solid #777777;
+
+        .score-pts,
+        .comment,
+        .like {
+          font-size: 11px;
           margin-right: 5px;
           font-weight: normal;
         }

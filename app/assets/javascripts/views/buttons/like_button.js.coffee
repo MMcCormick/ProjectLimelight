@@ -1,7 +1,7 @@
 class LL.Views.LikeButton extends Backbone.View
   template: JST['buttons/like']
   className: 'like'
-  tagName: 'span'
+  tagName: 'button'
 
   events:
     'click': 'updateLike'

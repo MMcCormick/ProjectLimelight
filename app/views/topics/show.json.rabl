@@ -1,6 +1,7 @@
 object @topic
 attributes :name,
-           :slug
+           :slug,
+           :score
 
 node :type do |t|
   "Topic"

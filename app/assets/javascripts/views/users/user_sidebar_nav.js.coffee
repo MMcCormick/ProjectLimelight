@@ -8,10 +8,10 @@ class LL.Views.UserSidebarNav extends Backbone.View
     $(@el).html(@template(user: @model))
 
     score = new LL.Views.Score(model: @model)
-    $(@el).find('.actions').html(score.render().el)
+    $(@el).find('.actions').append(score.render().el)
 
     if LL.App.current_user != @model
       follow = new LL.Views.FollowButton(model: @model)
-      $(@el).find('.score-pts').before(follow.render().el)
+      $(@el).find('.actions').prepend(follow.render().el)
 
     @

@@ -1,5 +1,10 @@
-<h4><%= @topic.get('name') %></h4>
-<div class='actions'>
-
+<div class='top'>
+  <img src='/topics/<%= @topic.get('slug') %>/picture?h=50&w=50&m=fillcropmid' />
+  <h4>
+    <a href="/<%= @topic.get('slug') %>"><%= @topic.get('name') %></a>
+  </h4>
 </div>
-<img src='/topics/<%= @topic.get('slug') %>/picture?h=50&w=50&m=fillcropmid' />
+
+<div class='actions'>
+  <span class='talk'>+Talk</span>
+</div>

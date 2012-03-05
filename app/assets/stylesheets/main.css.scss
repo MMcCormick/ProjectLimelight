@@ -79,6 +79,10 @@ ul,ol,p {
   margin: 0px;
 }
 
+.c {
+  clear: both;
+}
+
 .wrapper {
   @include clearfix();
   margin: 0 auto;

@@ -79,7 +79,7 @@ class LL.Views.PostsFeed extends Backbone.View
           if LL.App.current_user.get('_id') == post.get('user')._id || LL.App.current_user.following(post.get('user')._id)
             root_post.get('personal_responses').push(post)
           else
-            root_post.get('public_responses').push(post)
+            root_post.get('public_responses').unshift(post)
           root_post.get('root').trigger('new_response')
 
     @

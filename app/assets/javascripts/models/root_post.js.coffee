@@ -1,7 +1,11 @@
 class LL.Models.RootPost extends Backbone.Model
 
   parse: (resp, xhr) ->
-    data = {}
+    data = {
+      'public_talking': resp.public_talking
+      'personal_talking': resp.personal_talking
+    }
+
     if resp.root.type == 'Topic'
       data['root'] = new LL.Models.Topic(resp.root)
     else

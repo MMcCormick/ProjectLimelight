@@ -181,6 +181,12 @@ $feedFontColor: $grayDark;
     padding: 10px 15px 0;
     margin-top: 3px;
 
+    .talking {
+      font-weight: bold;
+      font-size: 11px;
+      margin: -3px 0 7px 0;
+      cursor: default;
+    }
     .response-talk {       
       p .actions {
         display: none;

@@ -24,6 +24,9 @@ class LL.Router extends Backbone.Router
       sidebar = new LL.Views.UserSidebar(model: user)
       sidebar.render() if id == 0
 
+      feed_header = new LL.Views.UserFeedHeader(model: user)
+      feed_header.render()
+
       LL.App.UserFeed.id = id
       LL.App.UserFeed.page = 1
       LL.App.UserFeed.fetch({data: {id: id}})

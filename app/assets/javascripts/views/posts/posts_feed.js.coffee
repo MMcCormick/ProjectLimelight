@@ -21,7 +21,7 @@ class LL.Views.PostsFeed extends Backbone.View
       self.loadMore(e)
 
   render: =>
-    $(@el).html(@template())
+    $(@el).append(@template())
 
     # we start with no columns
     @.columns = []

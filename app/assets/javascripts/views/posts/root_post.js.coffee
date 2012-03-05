@@ -4,7 +4,7 @@ class LL.Views.RootPost extends Backbone.View
   className: 'tile'
 
   events:
-    "click .talk": "loadPostForm"
+    "click .talk-form": "loadPostForm"
     "click .root h2, .root img, .talking": "postShow"
 
   initialize: ->

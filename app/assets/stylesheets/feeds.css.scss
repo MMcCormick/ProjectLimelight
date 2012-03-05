@@ -13,9 +13,9 @@ $feedFontColor: $grayDark;
 
   &:hover {
     .actions {
-      .talk,
+      .talk-form,
       .follow,
-      .comment,
+      .comment-form,
       .like {
         color: $greenDarker;
       }
@@ -104,9 +104,9 @@ $feedFontColor: $grayDark;
       margin-right: 15px;
     }
 
-    .talk,
+    .talk-form,
     .follow,
-    .comment,
+    .comment-form,
     .like {
       padding: 0;
       margin: 0 15px 0 0;
@@ -141,9 +141,30 @@ $feedFontColor: $grayDark;
         height: 30px;
         width: 30px;
         background-color: #444;
+        z-index: 100;
       }
       p {
+        position: relative;
         line-height: 14px;
+        .actions {
+          display: none;
+          position: absolute;
+          background: #FBFBFB;
+          bottom: -23px;
+          left: -55px;
+          padding: 0 0 2px 55px;
+          z-index: 105;
+          //border-bottom: 1px solid #777777;
+          width: 165px;
+
+          .score-pts,
+          .comment-form,
+          .like {
+            font-size: 11px;
+            margin-right: 5px;
+            font-weight: normal;
+          }
+        }
       }
       .score-pts {
         font-size: 10px;
@@ -151,27 +172,12 @@ $feedFontColor: $grayDark;
           font-size: 11px;
         }
       }
-      .actions {
-        display: none;
-        position: absolute;
-        bottom: -1px;
-        left: 40px;
-        padding: 0 3px 2px 7px;
-        z-index: 100;
-        background: #FFF;
-        border: 1px solid #777777;
-
-        .score-pts,
-        .comment,
-        .like {
-          font-size: 11px;
-          margin-right: 5px;
-          font-weight: normal;
-        }
-      }
       &:hover {
         .actions {
           display: block;
+        }
+        img {
+          z-index: 110;
         }
       }
     }

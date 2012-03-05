@@ -121,7 +121,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_session
-    session[:sidebar] = :full unless session[:sidebar]
     unless session[:feed_filters]
       session[:feed_filters] =
               {

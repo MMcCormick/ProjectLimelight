@@ -29,9 +29,13 @@ class LL.Views.RootPost extends Backbone.View
 
       $(@el).append(root_view.render().el)
 
-    if @model.get('responses') && @model.get('responses').length > 0
-      responses_view = new LL.Views.RootResponses(model: @model.get('responses'), root: @model.get('root'))
-      $(@el).append(responses_view.render().el)
+    if @model.get('personal_responses') && @model.get('personal_responses').length > 0
+      personal_responses_view = new LL.Views.RootResponses(model: @model.get('personal_responses'), root: @model.get('root'))
+      $(@el).append(personal_responses_view.render().el)
+
+    if @model.get('public_responses') && @model.get('public_responses').length > 0
+      public_responses_view = new LL.Views.RootResponses(model: @model.get('public_responses'), root: @model.get('root'))
+      $(@el).append(public_responses_view.render().el)
 
     @
 

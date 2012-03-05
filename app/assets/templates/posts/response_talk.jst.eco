@@ -2,7 +2,7 @@
 <p>
   <a class="ulink" href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>
   <%= @talk.get('content') %>
+  <span class="actions">
+    <span class="comment-form">+Comment</span>
+  </span>
 </p>
-<div class="actions">
-  <span class="comment">+Comment</span>
-</div>

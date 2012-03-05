@@ -13,9 +13,9 @@ $feedFontColor: $grayDark;
 
   &:hover {
     .actions {
-      .talk,
+      .talk-form,
       .follow,
-      .comment,
+      .comment-form,
       .like {
         color: $greenDarker;
       }
@@ -104,9 +104,9 @@ $feedFontColor: $grayDark;
       margin-right: 15px;
     }
 
-    .talk,
+    .talk-form,
     .follow,
-    .comment,
+    .comment-form,
     .like {
       padding: 0;
       margin: 0 15px 0 0;
@@ -123,55 +123,74 @@ $feedFontColor: $grayDark;
     font-weight: bold;
     color: $feedFontColor;
   }
-  .responses {
-    background-color: #FBFBFB;
-    padding: 10px 15px 0;
-    margin-top: 3px;
 
-    .response-talk {
+  // Talks (root and responses)
+  .root-talk,
+  .response-talk {
+    position: relative;
+    padding: 0 0 11px 40px;
+    min-height: 30px;
+    font-size: 12px;
+
+    img {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      height: 30px;
+      width: 30px;
+      background-color: #444;
+      z-index: 100;
+    }
+    p {
       position: relative;
-      padding: 0 0 11px 40px;
-      min-height: 30px;
-      font-size: 12px;
-
-      img {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        height: 30px;
-        width: 30px;
-        background-color: #444;
-      }
-      p {
-        line-height: 14px;
-      }
-      .score-pts {
-        font-size: 10px;
-        span {
-          font-size: 11px;
-        }
-      }
+      line-height: 14px;
       .actions {
-        display: none;
         position: absolute;
-        bottom: -1px;
-        left: 40px;
-        padding: 0 3px 2px 7px;
-        z-index: 100;
-        background: #FFF;
-        border: 1px solid #777777;
+        background: #FBFBFB;
+        bottom: -23px;
+        left: -55px;
+        padding: 0 0 2px 55px;
+        z-index: 105;
+      //border-bottom: 1px solid #777777;
+      width: 165px;
 
         .score-pts,
-        .comment,
+        .comment-form,
         .like {
           font-size: 11px;
           margin-right: 5px;
           font-weight: normal;
         }
       }
+    }
+    .score-pts {
+      font-size: 10px;
+      span {
+        font-size: 11px;
+      }
+    }
+  }
+  .root.talk {
+    padding: 10px 15px 0;
+    img {
+      z-index: 110;
+    }
+  }
+  .responses {
+    background-color: #FBFBFB;
+    padding: 10px 15px 0;
+    margin-top: 3px;
+
+    .response-talk {       
+      p .actions {
+        display: none;
+      }
       &:hover {
         .actions {
           display: block;
+        }
+        img {
+          z-index: 110;
         }
       }
     }

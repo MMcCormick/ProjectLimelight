@@ -22,5 +22,5 @@
 <% end %>
 
 <div class='actions'>
-  <span class='talk'>+Talk</span>
+  <span class='talk-form'>+Talk</span>
 </div>

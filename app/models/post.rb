@@ -518,7 +518,6 @@ class Post
               root_post.public_responses.push(response)
             end
           end
-          root_post.public_responses.reverse!
         end
 
         return_objects << root_post

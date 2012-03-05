@@ -21,7 +21,7 @@ class LL.Views.PostsFeed extends Backbone.View
       self.loadMore(e)
 
   render: =>
-    $(@el).html(@template())
+    $(@el).append(@template())
 
     # we start with no columns
     @.columns = []
@@ -76,7 +76,11 @@ class LL.Views.PostsFeed extends Backbone.View
       channel.bind 'new_response', (data) ->
         if root_post.get('root')
           post = LL.App.Posts.findOrCreate(data.id, new LL.Models.Post(data))
-          root_post.get('root').trigger('new_response', post)
+          if LL.App.current_user.get('_id') == post.get('user')._id || LL.App.current_user.following(post.get('user')._id)
+            root_post.get('personal_responses').push(post)
+          else
+            root_post.get('public_responses').unshift(post)
+          root_post.get('root').trigger('new_response')
 
     @
 

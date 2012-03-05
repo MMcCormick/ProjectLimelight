@@ -1,5 +1,6 @@
 object @topic
-attributes :name
+attributes :name,
+           :slug
 
 node :type do |t|
   "Topic"

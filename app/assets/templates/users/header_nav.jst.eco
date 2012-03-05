@@ -14,7 +14,7 @@
 
 <ul class="dropdown-menu right">
   <li>
-    <a href="#">0 Notifications</a>
+    <a href="#"><%= @user.get('unread_notification_count') %> Notification<%= 's' if @user.get('unread_notification_count') == 0 || @user.get('unread_notification_count') > 1 %> </a>
   </li>
   <li class="divider"></li>
   <li>

@@ -8,10 +8,13 @@ class LL.Views.PostsFeed extends Backbone.View
     # Always start on page 1
     @.page = 1
 
+    # A tile is the backbone view representing one tile on the feed
+    @tiles = []
+
     @collection.on('reset', @render)
     @collection.on('add', @appendPost)
 
-    LL.App.on('rearrange_columns', @render)
+    LL.App.on('rearrange_columns', @rearrangeColumns)
 
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).bind 'scroll', (e) ->
@@ -33,6 +36,16 @@ class LL.Views.PostsFeed extends Backbone.View
 
     @
 
+  rearrangeColumns: =>
+    @.columns = []
+    @.minColumnHeight = 0
+    @arrangeColumns()
+
+    for tile in @tiles
+      column = @chooseColumn()
+      $(column.el).append(tile.el)
+      column.height = $(column.el).height()
+
   arrangeColumns: =>
     column_count = Math.floor($('#feed').width() / 230)
 
@@ -52,7 +65,9 @@ class LL.Views.PostsFeed extends Backbone.View
 
   appendPost: (root_post) =>
     column = @chooseColumn()
-    column.appendPost(new LL.Views.RootPost(model: root_post))
+    tile = new LL.Views.RootPost(model: root_post)
+    column.appendPost tile
+    @tiles.push tile
 
     if root_post.get('root').get('type') != 'Talk'
       root_id = root_post.get('root').get('_id')

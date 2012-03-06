@@ -75,8 +75,8 @@ ProjectLimelight::Application.routes.draw do
   #  get ':id/hover' => 'users#hover' , :as => :user_hover
   #  get ':id/picture' => 'users#default_picture', :as => :user_default_picture
   #end
-  #resources :users, :only => [:show, :edit, :update]
-  #
+  resources :users, :only => [:show, :edit, :update]
+
   #scope 'sentiment' do
   #  post ':sentiment' => 'sentiments#create', :as => :sentiment_create
   #end
@@ -131,8 +131,8 @@ ProjectLimelight::Application.routes.draw do
   #root :to => 'users#feed'
   
   # Invites
-  #resources :invite_codes, :only => [:create, :new]
-  #post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
+  resources :invite_codes, :only => [:create, :new]
+  post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
 
   root :to => 'users#feed'
   match '*path' => 'users#feed'

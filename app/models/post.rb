@@ -461,7 +461,6 @@ class Post
       return_objects = []
       items.each do |i|
         root_post = RootPost.new
-        root_post.public_responses = []
         root_post.root = objects.detect{|o| o.id == i.root_id}
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
         root_post.personal_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }

@@ -48,19 +48,20 @@ $feedFontColor: $grayDark;
 
     h4 {
       margin-bottom: 8px;
-
-      a {
-        color: $feedFontColor;
-
-        .title-with-source {
-          margin-right: 5px;
-        }
-        .source {
-          position: relative;
-          bottom: 1px;
-          font-size: 11px;
-          color: $grayLight;
-          font-weight: normal;
+      .title {
+        cursor: pointer;
+      }
+      .title-with-source {
+        margin-right: 5px;
+      }
+      .source {
+        position: relative;
+        bottom: 1px;
+        font-size: 11px;
+        color: $grayLight;
+        font-weight: normal;
+        &:hover {
+          text-decoration: underline;
         }
       }
     }

@@ -1,0 +1,25 @@
+$postFontColor: $grayDark;
+
+
+#post-show {
+  h1 {
+    font-color: $postFontColor;
+    .title {
+      color: $feedFontColor;
+      cursor: pointer;
+    }
+    .title-with-source {
+      margin-right: 5px;
+    }
+    .source {
+      position: relative;
+      bottom: 1px;
+      font-size: 12px;
+      color: $grayLight;
+      font-weight: normal;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

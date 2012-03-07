@@ -504,7 +504,6 @@ class Post
         end
 
         root_post.personal_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
-        root_post.personal_talking = root_post.personal_responses ? root_post.personal_responses.length : 0
         root_post.public_talking = root_post.root.response_count
 
         # get the public responses

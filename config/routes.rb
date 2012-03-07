@@ -11,6 +11,7 @@ ProjectLimelight::Application.routes.draw do
         delete '' => 'follows#destroy', :type => 'User'
       end
 
+      get 'influence_increases' => 'users#influence_increases'
       get '' => 'users#show'
     end
 

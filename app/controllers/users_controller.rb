@@ -251,7 +251,9 @@ class UsersController < ApplicationController
   end
 
   def influence_increases
-    @increases = current_user.influence_increases
+    @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    @increases = @user.influence_increases
+    foo = "bar"
   end
 
 end

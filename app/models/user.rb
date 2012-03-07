@@ -415,14 +415,19 @@ class User
 
   def influence_increases
     increases = []
-    actions = PopularityAction.where("pop_snippets._id" => id, :type.ne => "new", "pop_snippets.ot" => "Topic", "pop_snippets.a" => {"$gt" => 0}).order_by(:et, :desc).limit(30)
+    actions = PopularityAction.where("pop_snippets._id" => id).order_by(:et, :desc).limit(30)
     actions.each do |action|
       action.pop_snippets.each do |snip|
-        increases << { :amount => action.pop_snippets[0].a, :topic_id => snip.id } if snip.ot == "Topic"
+        if snip.ot == "Topic" && action.t != "new" && snip.a > 0
+          inc = InfluenceIncrease.new()
+          inc.amount = action.pop_snippets[0].a
+          inc.topic_id = snip.id
+          increases << inc
+        end
       end
     end
-    topics = Topic.where(:_id.in => increases.map{|i| i[:topic_id]})
-    increases.each { |increase| increase[:topic] = topics.detect {|t| t.id == increase[:topic_id]} }
+    topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
+    increases.each { |increase| increase.topic = topics.detect {|t| t.id == increase.topic_id} }
   end
 
   class << self

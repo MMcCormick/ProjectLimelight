@@ -10,7 +10,7 @@
     <% end %>
   </h1>
 
-  <div>
+  <div class="created">
     Originally posted by 
     <a class="ulink" href="/users/<%= @post.get('user').slug %>"><%= @post.get('user').username %></a>
   </div>

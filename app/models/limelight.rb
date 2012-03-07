@@ -576,21 +576,9 @@ module Limelight #:nodoc:
           topic_mentions.each do |mention|
             action.pop_snippets.new(:amount => amt, :id => mention.id, :object_type => "Topic")
             Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
-            #if mention.score >= 100 && mention.influencers.length >= 10
+            if mention.score >= 100 && mention.influencers.length >= 10
               Resque.enqueue_in(2.seconds, RecalculateInfluence, mention.id.to_s)
-            #end
-            #topic_id = mention.id.to_s
-            #topic = Topic.find(BSON::ObjectId(topic_id))
-            #
-            #array = topic.influencers.dup.to_a
-            #array = array.sort{ |a,b| a[1]["influence"] <=> b[1]["influence"] }
-            #
-            ##length = array.length
-            #array.each_with_index do |a, i|
-            #  topic.influencers[a[0]]["percentile"] = (i+1) * 100 / array.length
-            #end
-            #
-            #topic.save!
+            end
           end
 
           # Update the popularities on affected objects

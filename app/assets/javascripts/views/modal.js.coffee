@@ -32,5 +32,6 @@ class LL.Views.Modal extends Backbone.View
     @activeScreen = @get(id)
     @
 
-  navBack: ->
-    history.back()
+  navBack: (e) ->
+    if $(e.target).hasClass('ll-modal')
+      history.back()

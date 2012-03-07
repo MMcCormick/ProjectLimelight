@@ -5,8 +5,13 @@ class LL.Views.UserLikeHeader extends Backbone.View
   className: 'feed-header'
 
   initialize: ->
+    @model.on('change', @render)
+    @loaded = null
 
   render: =>
+    return if @loaded
+    @loaded = true
+
     $(@el).prepend(@template(user: @model))
 
     @

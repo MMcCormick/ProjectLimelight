@@ -5,16 +5,13 @@ class LL.Views.RootPost extends Backbone.View
 
   events:
     "click .talk-form": "loadPostForm"
-    "click .root h2, .root img, .talking": "postShow"
+    "click .root .img, .talking": "postShow"
 
   initialize: ->
     @public_responses = null
     @personal_responses = null
 
     @model.get('root').on('new_response', @renderResponses)
-
-  showEntry: ->
-    Backbone.history.navigate("posts/#{@model.get('id')}", true)
 
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any

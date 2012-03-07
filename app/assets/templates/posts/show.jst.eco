@@ -1,4 +1,32 @@
-<div class='bg'></div>
-<div class='section'>
-  <h1><%= @post.get('title') %></h1>
-</div>
+<section>
+  <h1>
+    <% if @post.get('primarySource'): %>
+      <a href="<%= @post.get('primarySource').url %>">
+        <span class="title-with-source"><%= @post.get('title') %></span>
+        <span class="source"><%= @post.get('primarySource').name %></span>
+      </a>
+    <% else: %>
+      <%= @post.get('title') %>
+    <% end %>
+  </h1>
+
+  <div>
+    Originally posted by 
+    <a class="ulink" href="/users/<%= @post.get('user').slug %>"><%= @post.get('user').username %></a>
+  </div>
+
+  <% if @post.get('video'): %>
+    <div class='media'>
+      <% if LL.App.Feed: %>
+        <%- @post.get('video_autoplay') %>
+      <% else: %>
+        <%- @post.get('video') %>
+      <% end %>
+    </div>
+  <% else if @post.get('image_show'): %>
+    <div class='media'>
+      <img src='<%= @post.get('image_show') %>' />
+    </div>
+  <% end %>
+
+</section>

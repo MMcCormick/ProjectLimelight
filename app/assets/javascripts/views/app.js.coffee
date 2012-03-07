@@ -6,6 +6,9 @@ class LL.Views.App extends Backbone.View
 
     @model = new LL.Models.App()
 
+    # The currently active feed
+    @Feed = null
+
     # set the global collections
     @Users = new LL.Collections.Users
     @UserFeed = new LL.Collections.UserFeed
@@ -19,6 +22,8 @@ class LL.Views.App extends Backbone.View
     @TopicFeed = new LL.Collections.TopicFeed
     @TopicSuggestions = new LL.Collections.TopicSuggestions
 
+    @Modal = new LL.Views.Modal
+
     # set the current user
     @current_user = if $('#me').length > 0 then @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user'))) else null
 
@@ -28,6 +33,8 @@ class LL.Views.App extends Backbone.View
       self.calculateSiteWidth(false)
 
   calculateSiteWidth: (first) =>
+    return unless $('#feed .column').length != 0
+
     width = $(window).width()
 
 #    if width >= 1475

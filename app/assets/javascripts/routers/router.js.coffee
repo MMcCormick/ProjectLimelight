@@ -84,4 +84,4 @@ class LL.Router extends Backbone.Router
 
   hideModal: ->
     LL.App.Modal.hide()
-    $('.modal').remove()
+    $('.modal, .content-tile').remove()

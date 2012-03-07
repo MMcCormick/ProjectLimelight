@@ -8,9 +8,11 @@ class LL.Collections.Topics extends Backbone.Collection
     model = data unless model
 
     unless model
-      model = new LL.Models.Topic
+      model = new LL.Models.Topic()
       model.fetch({data: {id: id}})
 
-    @add(model)
+    return unless model.constructor.name == 'Topic'
+
+    @add(model) unless @get(model.get('id'))
 
     model

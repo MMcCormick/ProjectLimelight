@@ -15,8 +15,6 @@ class LL.Views.App extends Backbone.View
     @LikeFeed = new LL.Collections.LikeFeed
 
     @Posts = new LL.Collections.Posts
-    @PostFriendResponses = new LL.Collections.PostFriendResponses
-    @PostPublicResponses = new LL.Collections.PostPublicResponses
 
     @Topics = new LL.Collections.Topics
     @TopicFeed = new LL.Collections.TopicFeed
@@ -28,13 +26,10 @@ class LL.Views.App extends Backbone.View
     @current_user = if $('#me').length > 0 then @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user'))) else null
 
     # needs to be in an initializer to bind it to the window instead of this collection element
-    @calculateSiteWidth(true)
     $(window).resize ->
       self.calculateSiteWidth(false)
 
-  calculateSiteWidth: (first) =>
-    return unless $('#feed .column').length != 0
-
+  calculateSiteWidth: =>
     width = $(window).width()
 
 #    if width >= 1475
@@ -48,4 +43,4 @@ class LL.Views.App extends Backbone.View
 
     unless $('body').hasClass(className)
       $('body').removeClass('two three four five').addClass(className)
-      @trigger('rearrange_columns') unless first == true
+      @trigger('rearrange_columns')

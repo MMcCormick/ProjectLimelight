@@ -41,6 +41,6 @@ class LL.Views.RootResponses extends Backbone.View
     @
 
   appendResponse: (post) =>
-    response_view = new LL.Views.ResponseTalk(model: post)
-    $(@.el).append(response_view.render().el)
+    response_view = new LL.Views.RootResponseTalk(model: post)
+    $(@el).append(response_view.render().el)
     @

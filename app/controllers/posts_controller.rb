@@ -91,12 +91,17 @@ class PostsController < ApplicationController
 
   # Post responses from a users friends
   def friend_responses
-    @posts = Post.friend_responses(params[:id], current_user)
+    post = Post.find_by_encoded_id(params[:id])
+    page = params[:p] ? params[:p].to_i : 1
+    @posts = Post.friend_responses(post.id, current_user, page, 20)
     render :template => 'posts/responses'
   end
 
   def public_responses
-
+    post = Post.find_by_encoded_id(params[:id])
+    page = params[:p] ? params[:p].to_i : 1
+    @posts = Post.public_responses(post.id, page, 20)
+    render :template => 'posts/responses'
   end
 
 end

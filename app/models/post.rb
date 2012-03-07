@@ -369,8 +369,18 @@ class Post
       post
     end
 
-    def friend_responses(id, user)
-      Post.where(:root_id => id, "user_snippet._id" => {"$in" => user.following_users})
+    def friend_responses(id, user, page, limit)
+      Post.where(:root_id => id, :_type => 'Talk', "user_snippet._id" => {"$in" => user.following_users})
+          .order_by(:created_at, :desc)
+          .skip((page-1)*limit).limit(limit)
+    end
+
+    # get the public responses for a root, with a limit
+    # TODO: Cache this
+    def public_responses(id, page, limit)
+      Post.where(:root_id => id, :_type => 'Talk')
+          .order_by(:created_at, :desc)
+          .skip((page-1)*limit).limit(limit)
     end
 
     def for_show_page(parent_id)
@@ -509,7 +519,7 @@ class Post
         # get the public responses
         root_post.public_responses = []
         unless i.root_type == 'Talk' || root_post.public_talking == 0
-          responses = Post.public_responses(root_post.root.id, 2)
+          responses = Post.public_responses(root_post.root.id, 1, 2)
           responses.each do |response|
             found = root_post.personal_responses.detect{|p| p.id == response.id}
             unless found
@@ -554,12 +564,6 @@ class Post
       end
 
       return_objects
-    end
-
-    # get the public responses for a root, with a limit
-    # TODO: Cache this
-    def public_responses(root_id, limit)
-      Post.where(:root_id => root_id, :_type => 'Talk').order_by(:created_at, :desc).limit(limit).to_a
     end
   end
 

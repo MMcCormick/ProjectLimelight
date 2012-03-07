@@ -1,4 +1,4 @@
-<img src="/users/<%= @talk.get('user').id %>/picture?h=50&w=50&m=fillcropmid">
+<img src="/users/<%= @talk.get('user').id %>/picture?h=30&w=30&m=fillcropmid">
 <p>
   <a class="ulink" href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>
   <%= @talk.get('content') %>

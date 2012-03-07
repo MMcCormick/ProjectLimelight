@@ -5,16 +5,24 @@ class LL.Views.PostShow extends Backbone.View
 
   initialize: ->
     @model.on('change', @render)
-    @friendResponses = new LL.Views.PostShowResponses(collection: LL.PostFriendResponses)
-    @publicResponses = new LL.Views.PostShowResponses(collection: LL.PostPublicResponses)
+    @friendResponsesCollection = new LL.Collections.PostFriendResponses()
+    @publicResponsesCollection = new LL.Collections.PostPublicResponses()
+    @friendResponses = new LL.Views.PostShowResponses(collection: @friendResponsesCollection)
+    @publicResponses = new LL.Views.PostShowResponses(collection: @publicResponsesCollection)
+    @loaded = null
 
   render: =>
     $(@el).html(@template(post: @model))
-    $(@el).append(@friendResponses.render().el)
-    $(@el).append(@publicResponses.render().el)
+    $(@el).append(@friendResponses.el)
+    $(@el).append(@publicResponses.el)
+
+    unless @loaded
+      @friendResponsesCollection.fetch({data: {id: @model.get('id')}})
+      @publicResponsesCollection.fetch({data: {id: @model.get('id')}})
+
+    @loaded = true
 
     if LL.App.Feed
       $(@el).addClass('modal')
 
-    console.log @model
     @

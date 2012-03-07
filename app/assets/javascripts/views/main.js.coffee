@@ -10,13 +10,16 @@ class LL.Views.Main extends Backbone.View
     view = new LL.Views.PostsFeed(collection: LL.App.UserFeed)
     LL.App.Feed = view
     view.render()
+    LL.App.calculateSiteWidth()
 
   renderLikeFeed: =>
     view = new LL.Views.PostsFeed(collection: LL.App.LikeFeed)
     LL.App.Feed = view
     view.render()
+    LL.App.calculateSiteWidth()
 
   renderTopicFeed: =>
     view = new LL.Views.PostsFeed(collection: LL.App.TopicFeed)
     LL.App.Feed = view
     view.render()
+    LL.App.calculateSiteWidth()

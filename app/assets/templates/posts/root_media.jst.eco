@@ -1,11 +1,11 @@
 <h4>
   <% if @post.get('primarySource'): %>
-    <a href="<%= @post.get('primarySource').url %>">
-      <span class="title-with-source"><%= @post.get('title') %></span>
+    <span class="title title-with-source"><%= @post.get('title') %></span>
+    <a target="_blank" href="<%= @post.get('primarySource').url %>">
       <span class="source"><%= @post.get('primarySource').name %></span>
     </a>
   <% else: %>
-    <%= @post.get('title') %>
+    <span class="title"><%= @post.get('title') %></span>
   <% end %>
 </h4>
 

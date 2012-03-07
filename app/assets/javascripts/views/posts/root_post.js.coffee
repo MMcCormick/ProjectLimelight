@@ -5,7 +5,7 @@ class LL.Views.RootPost extends Backbone.View
 
   events:
     "click .talk-form": "loadPostForm"
-    "click .root .img, .talking": "postShow"
+    "click .root .img, .talking, .title": "postShow"
 
   initialize: ->
     @public_responses = null

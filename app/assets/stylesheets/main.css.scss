@@ -4,7 +4,7 @@ body {
   $columnWidth: 240px;
 
   background: #B8CFD6;
-  color: $greyDarker;
+  color: $grayDark;
 
   &.two {
     .wrapper {
@@ -84,6 +84,33 @@ ul,ol,p {
   margin: 0px;
 }
 
+h1 {
+  font-size: 26px;
+  line-height: 30px;
+}
+h2 {
+  font-size: 22px;
+  line-height: 26px;
+}
+h3 {
+  font-size: 18px;
+  line-height: 22px;
+}
+h4 {
+  font-size: 14px;
+  line-height: 18px;
+}         
+
+h1, h2, h3, h4, h5, h6 {
+  color: $grayDark;
+  a {
+    color: $grayDark;
+    &:hover {
+      color: $grayDark;
+    }
+  }
+}
+
 .c {
   clear: both;
 }
@@ -133,7 +160,7 @@ header {
 
   .profile-img {
     @include border-radius(3px);
-    background: $greyLight;
+    background: $grayLightest;
     padding: 2px;
     float: right;
     margin: 4px 5px 0 0;
@@ -148,7 +175,7 @@ header {
   .numbers {
     @include border-radius(3px);
     float: right;
-    background: $greyLight;
+    background: $grayLightest;
     height: 34px;
     margin: 4px 5px 0 0;
     padding: 0 10px;
@@ -170,7 +197,7 @@ header {
   }
   .username {
     float: right;
-    color: $greyLight;
+    color: $grayLightest;
     cursor: pointer;
     height: 32px;
     padding: 11px 10px 0 12px;
@@ -190,7 +217,7 @@ header {
 
   section {
     @include border-radius(3px);
-    background: $greyLight;
+    background: $grayLightest;
     border: 1px solid #E6E6E6;
     margin: 10px;
   }

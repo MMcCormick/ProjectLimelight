@@ -506,20 +506,6 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      @@pop_amounts = {
-        :v_up => 1.0,
-        :v_down => -1.0,
-        :lk => 1.0,
-        :new => 0.5,
-        :fav => 0,
-        :flw => 2.0,
-        :share => 0.5,
-
-        # Modifiers
-        :mention => 0.5,
-        :user => 0.5
-      }
-
       field :score, :default => 0.0
     end
 
@@ -528,79 +514,94 @@ module Limelight #:nodoc:
       if subtype == :a
         case net
           when 1
-            amt = add_pop_action :v_up, :a, current_user
+            amt = add_pop_action :v_up, :a, current_user, 1.0
           when 2
-            amt = add_pop_action :v_down, :r, current_user
-            amt += add_pop_action :v_up, :a, current_user
+            amt = add_pop_action :v_down, :r, current_user, -1.0
+            amt += add_pop_action :v_up, :a, current_user, 1.0
           when -1
-            amt = add_pop_action :v_down, :a, current_user
+            amt = add_pop_action :v_down, :a, current_user, -1.0
           when -2
-            amt = add_pop_action :v_up, :r, current_user
-            amt += add_pop_action :v_down, :a, current_user
+            amt = add_pop_action :v_up, :r, current_user, 1.0
+            amt += add_pop_action :v_down, :a, current_user, -1.0
         end
       elsif subtype == :r
         case net
           when 1
-            amt = add_pop_action :v_down, :r, current_user
+            amt = add_pop_action :v_down, :r, current_user, -1.0
           when -1
-            amt = add_pop_action :v_up, :r, current_user
+            amt = add_pop_action :v_up, :r, current_user, 1.0
         end
       end
       amt
     end
 
-    def add_pop_action(type, subtype, current_user)
-      amt = 0
-      if subtype == :a
-        amt = @@pop_amounts[type]
-      elsif subtype == :r
-        amt = @@pop_amounts[type] * -1
-      end
-
+    def add_pop_action(type, subtype, current_user, amount=nil)
+      amt = if amount then amount elsif subtype == :a then 1 else -1 end
       amt = amt * current_user.clout
+
+      if defined?(topic_mentions) && !topic_mentions.empty?
+        mentioned_topics = Topic.where(:_id.in => mentioned_topic_ids)
+        sum = 0
+        mentioned_topics.each { |t| sum += t.user_percentile(current_user.id) ? t.user_percentile(current_user.id) : 0 }
+        if type == :new
+          amt += amt > 1 ? (sum / (8 * topic_mentions.length)) : -(sum / (8 * topic_mentions.length))
+        else
+          amt += amt > 1 ? (sum / (30 * topic_mentions.length)) : -(sum / (30 * topic_mentions.length))
+        end
+      end
 
       if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
         snippet_attrs = {:amount => amt, :id => id, :object_type => self.class.name}
 
-        if ["User", "Topic"].include? self.class.name
-          action.pop_snippets.new(snippet_attrs)
-        else
-          snippet_attrs[:root_id] = root_id if root_id
-          snippet_attrs[:root_type] = root_type if root_id
-          action.pop_snippets.new(snippet_attrs)
 
-          # Update user if not a link, video, or picture and this is not a :new action
-          unless type == :new || ["Link", "Video", "Picture"].include?(self.class.name)
-            user_amt = amt * @@pop_amounts[:user]
+        snippet_attrs[:root_id] = root_id if root_id
+        snippet_attrs[:root_type] = root_type if root_id
+        action.pop_snippets.new(snippet_attrs)
 
-            action.pop_snippets.new(:amount => user_amt, :id => user_id, :object_type => "User")
+        # Update user if not a link, video, or picture and this is not a :new action
+        unless type == :new || ["Link", "Video", "Picture"].include?(self.class.name)
+          action.pop_snippets.new(:amount => amt, :id => user_id, :object_type => "User")
             User.collection.update(
               {:_id => user_id},
               {
-                "$inc" => { :score => user_amt }
+                "$inc" => { :score => amt }
               }
             )
-            Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => user_amt})
+            Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => amt})
+        end
+
+        # Update mentioned topics if applicable
+        if type != :new && defined?(topic_mentions) && !topic_mentions.empty?
+          topic_mentions.each do |mention|
+            action.pop_snippets.new(:amount => amt, :id => mention.id, :object_type => "Topic")
+            Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
+            #if mention.score >= 100 && mention.influencers.length >= 10
+              Resque.enqueue_in(2.seconds, RecalculateInfluence, mention.id.to_s)
+            #end
+            #topic_id = mention.id.to_s
+            #topic = Topic.find(BSON::ObjectId(topic_id))
+            #
+            #array = topic.influencers.dup.to_a
+            #array = array.sort{ |a,b| a[1]["influence"] <=> b[1]["influence"] }
+            #
+            ##length = array.length
+            #array.each_with_index do |a, i|
+            #  topic.influencers[a[0]]["percentile"] = (i+1) * 100 / array.length
+            #end
+            #
+            #topic.save!
           end
 
-          # Update mentioned topics if applicable
-          if defined? topic_mentions
-            mention_amt = amt * @@pop_amounts[:mention]
-
-            topic_mentions.each do |t_mention|
-              action.pop_snippets.new(:amount => mention_amt, :id => t_mention.id, :object_type => "Topic")
-              Pusher[t_mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => mention_amt})
-            end
-
-            # Update the popularities on affected objects
-            Topic.collection.update(
-              {:_id => {"$in" => mentioned_topic_ids}},
-              {
-                "$inc" => { :score => mention_amt }
-              }
-            )
-          end
+          # Update the popularities on affected objects
+          Topic.collection.update(
+            {:_id => {"$in" => mentioned_topic_ids}},
+            {
+              "$inc" => { :score => amt,
+                          "influencers."+user_id.to_s+".influence" => amt }
+            },
+            {:upsert => true}
+          )
         end
 
         action.save!

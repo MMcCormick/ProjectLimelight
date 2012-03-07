@@ -4,7 +4,6 @@ class User
   include Mongoid::Timestamps
   include Mongoid::Slug
   include Limelight::Images
-  include Limelight::Popularity
 
   cache
 
@@ -70,6 +69,7 @@ class User
   field :email_mention, :default => true
   field :notify_email, :default => true # true = immediate email, false = digest
   field :weekly_email, :default => true
+  field :score, :default => 0.0
 
   auto_increment :public_id
 
@@ -238,7 +238,6 @@ class User
       Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
       Resque.enqueue(PushFollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => user.id, :to_type => 'User')
-      user.add_pop_action(:flw, :a, self)
       user.save
 
       true
@@ -260,7 +259,6 @@ class User
       Resque.enqueue(PushUnfollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
 
-      user.add_pop_action(:flw, :r, self)
       user.save
 
       true
@@ -288,7 +286,6 @@ class User
       Resque.enqueue(PushFollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       FeedUserItem.follow(self, topic)
-      topic.add_pop_action(:flw, :a, self)
       topic.save
 
       true
@@ -307,7 +304,6 @@ class User
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s)
       Resque.enqueue(PushUnfollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
-      topic.add_pop_action(:flw, :r, self)
       topic.save
 
       true

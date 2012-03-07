@@ -7,7 +7,6 @@ class Topic
   include Mongoid::Timestamps
   include Limelight::Acl
   include Limelight::Images
-  include Limelight::Popularity
   include ImageHelper
 
   cache
@@ -54,6 +53,8 @@ class Topic
   field :primary_type_id
   field :talking_ids, :default => []
   field :response_count, :default => 0
+  field :influencers, :default => {}
+  field :score, :default => 0.0
 
   auto_increment :public_id
 
@@ -402,6 +403,13 @@ class Topic
       #topic.expire_caches BETA REMOVE
       topic.save
     end
+  end
+
+  def user_influence(id)
+    influencers[id.to_s]["influence"] if influencers[id.to_s]
+  end
+  def user_percentile(id)
+    influencers[id.to_s]["percentile"] if influencers[id.to_s]
   end
 
   class << self

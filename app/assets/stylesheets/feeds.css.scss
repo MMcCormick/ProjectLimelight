@@ -147,6 +147,7 @@ $feedFontColor: $grayDark;
     }
     p {
       position: relative;
+      top: -1px;
       line-height: 16px;
       .actions {
         display: block;

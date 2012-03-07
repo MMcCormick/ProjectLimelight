@@ -1,6 +1,11 @@
 class TestingController < ApplicationController
 
   def test
+    @increases = current_user.influence_increases
+    foo = "bar"
+  end
+
+  def foo2
     talks = FeedTopicItem.where(:root_type => 'Talk').order_by([[:p, :desc]]).limit(3).to_a
     links = FeedTopicItem.where(:root_type => 'Link').order_by([[:p, :desc]]).limit(3).to_a
     pictures = FeedTopicItem.where(:root_type => 'Picture').order_by([[:p, :desc]]).limit(3).to_a

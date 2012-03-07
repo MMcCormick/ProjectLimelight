@@ -413,6 +413,18 @@ class User
     invite.redeem
   end
 
+  def influence_increases
+    increases = []
+    actions = PopularityAction.where("pop_snippets._id" => id, :type.ne => "new", "pop_snippets.ot" => "Topic", "pop_snippets.a" => {"$gt" => 0}).order_by(:et, :desc).limit(30)
+    actions.each do |action|
+      action.pop_snippets.each do |snip|
+        increases << { :amount => action.pop_snippets[0].a, :topic_id => snip.id } if snip.ot == "Topic"
+      end
+    end
+    topics = Topic.where(:_id.in => increases.map{|i| i[:topic_id]})
+    increases.each { |increase| increase[:topic] = topics.detect {|t| t.id == increase[:topic_id]} }
+  end
+
   class << self
     # Omniauth providers
     def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil)

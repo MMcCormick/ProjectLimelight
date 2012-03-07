@@ -248,7 +248,10 @@ class UsersController < ApplicationController
       }
       format.html
     end
+  end
 
+  def influence_increases
+    @increases = current_user.influence_increases
   end
 
 end

@@ -75,7 +75,9 @@ ProjectLimelight::Application.routes.draw do
   #  get ':id/hover' => 'users#hover' , :as => :user_hover
   #  get ':id/picture' => 'users#default_picture', :as => :user_default_picture
   #end
-  resources :users, :only => [:show, :edit, :update]
+
+  resources :users, :only => [:show]
+  resources :posts, :only => [:show]
 
   #scope 'sentiment' do
   #  post ':sentiment' => 'sentiments#create', :as => :sentiment_create

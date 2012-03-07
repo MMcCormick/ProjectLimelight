@@ -77,6 +77,9 @@
 
     <% @user = current_user %>
     <div id='me' data-user='<%= render(template: "users/show_extra.json.rabl") %>'></div>
+    <% if defined? @this %>
+      <div id='this' data-this='<%= render(template: "#{@this[:group]}/#{@this[:template]}.json.rabl") %>'></div>
+    <% end %>
 
   </body>
 </html>

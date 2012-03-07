@@ -64,7 +64,6 @@ class LL.Views.RootPost extends Backbone.View
       public_responses_view = new LL.Views.RootResponses(model: @model)
       public_responses_view.type = 'public'
       public_responses_view.target = $(@el)
-      console.log public_responses_view
       @public_responses = public_responses_view
 
     @public_responses.render()

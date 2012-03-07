@@ -67,18 +67,20 @@ class LL.Router extends Backbone.Router
       LL.App.TopicFeed.fetch({data: {id: id}})
 
   postShow: (id) ->
+    post = LL.App.Posts.findOrCreate(id, new LL.Models.Post($('#this').data('this')))
+
     if LL.App.Feed
       if LL.App.Modal.get(id)
         LL.App.Modal.setActive(id).show()
       else
-        post = LL.App.Posts.findOrCreate(id)
         view = new LL.Views.PostShow(model: post)
         LL.App.Modal.add(id, view).setActive(id).show()
     else
-      post = LL.App.Posts.findOrCreate(id)
       view = new LL.Views.PostShow(model: post)
       $('body').addClass('no-sidebar')
       $('#feed').html(view.el)
+
+    view.render()
 
   hideModal: ->
     LL.App.Modal.hide()

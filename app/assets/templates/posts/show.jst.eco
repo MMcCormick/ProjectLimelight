@@ -10,10 +10,12 @@
     <% end %>
   </h1>
 
-  <div>
+  <div class='who'>
     Originally posted by 
     <a class="ulink" href="/users/<%= @post.get('user').slug %>"><%= @post.get('user').username %></a>
   </div>
+
+  <div class='actions'></div>
 
   <% if @post.get('video'): %>
     <div class='media'>

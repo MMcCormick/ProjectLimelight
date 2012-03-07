@@ -10,7 +10,14 @@
 </h4>
 
 <% if @post.get('image'): %>
-  <img src='<%= @post.get('image') %>' alt='' />
+  <div class='img'>
+    <img src='<%= @post.get('image') %>' alt='' />
+
+    <% if @post.get('video'): %>
+      <div class='ll-video-play'></div>
+    <% end %>
+    <div class='bg'></div>
+  </div>
 <% end %>
 
 <% if @post.get('topic_mentions').length > 0: %>

@@ -27,7 +27,7 @@ class LL.Router extends Backbone.Router
       sidebar.render() if id == 0
 
       feed_header = new LL.Views.UserFeedHeader(model: user)
-      feed_header.render()
+      feed_header.render() if id == 0
 
       LL.App.UserFeed.id = id
       LL.App.UserFeed.page = 1
@@ -47,7 +47,7 @@ class LL.Router extends Backbone.Router
       sidebar.render() if id == LL.App.current_user.get('id')
 
       feed_header = new LL.Views.UserLikeHeader(model: user)
-      feed_header.render()
+      feed_header.render() if id == LL.App.current_user.get('id')
 
       LL.App.LikeFeed.id = id
       LL.App.LikeFeed.page = 1
@@ -67,10 +67,19 @@ class LL.Router extends Backbone.Router
       LL.App.TopicFeed.fetch({data: {id: id}})
 
   postShow: (id) ->
-    post = LL.App.Posts.findOrCreate(id)
-
-    view = new LL.Views.PostShow(model: post)
-    view.render()
+    if LL.App.Feed
+      if LL.App.Modal.get(id)
+        LL.App.Modal.setActive(id).show()
+      else
+        post = LL.App.Posts.findOrCreate(id)
+        view = new LL.Views.PostShow(model: post)
+        LL.App.Modal.add(id, view).setActive(id).show()
+    else
+      post = LL.App.Posts.findOrCreate(id)
+      view = new LL.Views.PostShow(model: post)
+      $('body').addClass('no-sidebar')
+      $('#feed').html(view.el)
 
   hideModal: ->
+    LL.App.Modal.hide()
     $('.modal').remove()

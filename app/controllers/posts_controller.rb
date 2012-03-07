@@ -9,12 +9,9 @@ class PostsController < ApplicationController
     @post = Post.unscoped.find_by_encoded_id(params[:id])
     not_found("Post not found") unless @post
 
-    @site_style = 'narrow'
-    @right_sidebar = true
     @title = @post.name
     @description = @post.content_clean
-
-    @responses = Post.for_show_page(@post.id)
+    @this = {:group => 'posts', :template => 'show'}
   end
 
   def create

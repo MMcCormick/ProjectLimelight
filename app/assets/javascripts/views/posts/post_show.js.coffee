@@ -4,7 +4,6 @@ class LL.Views.PostShow extends Backbone.View
   className: 'content-tile'
 
   initialize: ->
-    @model.on('change', @render)
     @friendResponsesCollection = new LL.Collections.PostFriendResponses()
     @publicResponsesCollection = new LL.Collections.PostPublicResponses()
     @friendResponses = new LL.Views.PostShowResponses(collection: @friendResponsesCollection)
@@ -13,6 +12,13 @@ class LL.Views.PostShow extends Backbone.View
 
   render: =>
     $(@el).html(@template(post: @model))
+
+    like = new LL.Views.LikeButton(model: @model)
+    $(@el).find('.actions').prepend(like.render().el)
+
+    score = new LL.Views.Score(model: @model)
+    $(@el).find('.actions').prepend(score.render().el)
+
     $(@el).append(@friendResponses.el)
     $(@el).append(@publicResponses.el)
 

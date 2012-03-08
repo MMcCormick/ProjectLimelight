@@ -10,7 +10,7 @@ class LL.Views.PostShowResponses extends Backbone.View
       if @collection.constructor.name == 'PostFriendResponses'
         $(@el).prepend('<h2>Friends Talking</h2>')
       else
-        $(@el).prepend('<h2>People Talking</h2>')
+        $(@el).prepend("<h2>Other People Talking</h2>")
 
       for post in @collection.models
         @appendResponse(post)

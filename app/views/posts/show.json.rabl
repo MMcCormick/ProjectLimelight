@@ -1,5 +1,5 @@
 object @post
-attributes :content, :topic_mentions, :score
+attributes :content, :topic_mentions, :score, :created_at
 attributes :response_count => :talking_count
 
 node :id do |post|
@@ -23,8 +23,11 @@ node :liked do |post|
 end
 
 node(:url) do |post|
-  "foo"
-  #post_url post
+  post_url post
+end
+
+node(:created_at_pretty) do |post|
+  pretty_time(post.created_at)
 end
 
 # Thumbnail image for feeds

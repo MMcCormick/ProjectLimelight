@@ -8,6 +8,7 @@ class LL.Views.PostShow extends Backbone.View
     @publicResponsesCollection = new LL.Collections.PostPublicResponses()
     @friendResponses = new LL.Views.PostShowResponses(collection: @friendResponsesCollection)
     @publicResponses = new LL.Views.PostShowResponses(collection: @publicResponsesCollection)
+    @publicResponses.post = @model
     @loaded = null
 
   render: =>

@@ -1,16 +1,16 @@
 <% content_for :page_header do %>
   <h1><%= @title %></h1>
 <% end %>
-
+                               
 <div class="static-page">
   <% if !@notifications.empty? %>
     <% current_time = nil %>
     <% @notifications.each_with_index do |notification,i| %>
       <% is_first = nil %>
-      <% if pretty_time(notification.updated_at) != current_time %>
-        <% current_time = pretty_time(notification.updated_at) %>
+      <% if pretty_day(notification.updated_at) != current_time %>
+        <% current_time = pretty_day(notification.updated_at) %>
         <% is_first = 'first' %>
-        <h4><%= pretty_time(notification.updated_at) %></h4>
+        <h4><%= pretty_day(notification.updated_at) %></h4>
       <% end %>
       <%= render "notifications/#{notification.type.to_s.underscore}_notification", :notification => notification, :is_first => is_first, :base => '' %>
     <% end %>

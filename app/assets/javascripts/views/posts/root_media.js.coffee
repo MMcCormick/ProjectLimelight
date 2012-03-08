@@ -23,5 +23,10 @@ class LL.Views.RootMedia extends Backbone.View
     view.modal = true
     view.placeholder_text = "Talk about this #{@model.get('type')}..."
     view.render().el
+    i = 1
+    for topic in @model.get('topic_mentions')
+      view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.name, topic._id)
+      break if i == 2
+      i++
     view.preview.setResponse(@model)
     $(view.el).find('.icons').remove()

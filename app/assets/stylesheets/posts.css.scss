@@ -3,23 +3,24 @@ $postFontColor: $grayDark;
 
 #post-show {
   h1 {
-    font-color: $postFontColor;
-    .title {
-      color: $feedFontColor;
-      cursor: pointer;
-    }
+
     .title-with-source {
       margin-right: 5px;
     }
     .source {
       position: relative;
-      bottom: 1px;
-      font-size: 12px;
+      bottom: 3px;
+      font-size: 16px;
       color: $grayLight;
       font-weight: normal;
       &:hover {
         text-decoration: underline;
       }
     }
+  }
+
+  .created-at {
+    font-size: 16px;
+    margin-bottom: 10px;
   }
 }

@@ -34,11 +34,13 @@ $feedFontColor: $grayDark;
 
   .mentions {
     color: $grayLight;
-
-    .mention {
+    .tlink {
       color: $grayLight;
-      cursor: pointer;
     }
+  }
+  .ulink {
+    font-weight: bold;
+    color: $feedFontColor;
   }
 
   .root {
@@ -146,10 +148,6 @@ $feedFontColor: $grayDark;
       background: none;
       text-shadow: none;
     }
-  }
-  .ulink {
-    font-weight: bold;
-    color: $feedFontColor;
   }
 
   // Talks (root and responses)

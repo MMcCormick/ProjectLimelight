@@ -23,6 +23,11 @@ class LL.Views.PostShow extends Backbone.View
     $(@el).append(@publicResponses.el)
 
     unless @loaded
+      view = new LL.Views.PostForm()
+      $(@el).find('.talk').html(view.render().el)
+      view.model.set('parent_id', @model.get('_id'))
+      $(view.el).find('.icons').remove()
+
       @friendResponsesCollection.fetch({data: {id: @model.get('id')}})
       @publicResponsesCollection.fetch({data: {id: @model.get('id')}})
 

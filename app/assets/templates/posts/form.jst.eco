@@ -1,6 +1,8 @@
 <form>
   <div class="modal-header">
-    <a class="close" data-dismiss="modal">×</a>
+    <% if @modal: %>
+      <a class="close" data-dismiss="modal">×</a>
+    <% end %>
     <h3>+Talk</h3>
   </div>
   <div class="modal-body">
@@ -59,7 +61,9 @@
   </div>
   <div class="modal-footer">
     <input type='submit' value='Submit Post' class="btn btn-success" />
-    <span class="cancel btn">Cancel</span>
+    <% if @modal: %>
+      <span class="cancel btn">Cancel</span>
+    <% end %>
   </div>
 
 </form>

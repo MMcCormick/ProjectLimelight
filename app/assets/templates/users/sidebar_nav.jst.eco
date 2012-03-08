@@ -1,6 +1,6 @@
 <div class="user-panel">
   <img src='/users/<%= @user.get('slug') %>/picture?h=50&w=50&m=fillcropmid' />
-  <h3><%= @user.get('username') %></h3>
+  <h4><%= @user.get('username') %></h4>
   <div class='actions'></div>
 </div>
 

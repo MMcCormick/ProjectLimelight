@@ -3,6 +3,9 @@ class LL.Views.RootMedia extends Backbone.View
   tagName: 'div'
   className: 'root'
 
+  events:
+    "click .talk-form": "loadPostForm"
+
   initialize: ->
 
   render: ->
@@ -14,3 +17,11 @@ class LL.Views.RootMedia extends Backbone.View
     score = new LL.Views.Score(model: @model)
     $(@el).find('.actions').prepend(score.render().el)
     @
+
+  loadPostForm: =>
+    view = new LL.Views.PostForm()
+    view.modal = true
+    view.placeholder_text = "Talk about this #{@model.get('type')}..."
+    view.render().el
+    view.preview.setResponse(@model)
+    $(view.el).find('.icons').remove()

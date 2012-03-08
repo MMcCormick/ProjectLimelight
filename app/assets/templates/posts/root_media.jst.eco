@@ -1,4 +1,4 @@
-<h4>
+<h5>
   <% if @post.get('primarySource'): %>
     <span class="title title-with-source"><%= @post.get('title') %></span>
     <a target="_blank" href="<%= @post.get('primarySource').url %>">
@@ -7,7 +7,7 @@
   <% else: %>
     <span class="title"><%= @post.get('title') %></span>
   <% end %>
-</h4>
+</h5>
 
 <% if @post.get('image'): %>
   <div class='img'>

@@ -1,10 +1,8 @@
 class LL.Views.RootPost extends Backbone.View
-  template: JST['posts/root_post']
   tagName: 'li'
   className: 'tile'
 
   events:
-    "click .talk-form": "loadPostForm"
     "click .root .img, .talking, .title": "postShow"
 
   initialize: ->
@@ -16,8 +14,6 @@ class LL.Views.RootPost extends Backbone.View
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
   render: ->
-    $(@el).html(@template())
-
     if @model.get('root')
       $(@el).addClass(@model.get('root').get('type').toLowerCase())
       switch @model.get('root').get('type')
@@ -33,13 +29,6 @@ class LL.Views.RootPost extends Backbone.View
     @renderResponses()
 
     @
-
-  loadPostForm: =>
-    view = new LL.Views.PostForm()
-    view.modal = true
-    view.render().el
-    view.preview.setResponse(@model.get('root'))
-    $(view.el).find('.icons').remove()
 
   postShow: =>
     LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)

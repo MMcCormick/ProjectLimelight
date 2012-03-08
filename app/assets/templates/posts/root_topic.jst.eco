@@ -1,8 +1,8 @@
 <div class='top'>
   <img src='/topics/<%= @topic.get('slug') %>/picture?h=50&w=50&m=fillcropmid' />
-  <h4>
+  <h5>
     <a class="tlink" href="/<%= @topic.get('slug') %>"><%= @topic.get('name') %></a>
-  </h4>
+  </h5>
 </div>
 
 <div class='actions'>

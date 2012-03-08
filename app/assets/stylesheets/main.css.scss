@@ -97,8 +97,16 @@ h3 {
   line-height: 22px;
 }
 h4 {
+  font-size: 16px;
+  line-height: 20px;
+}
+h5 {
   font-size: 14px;
   line-height: 18px;
+}
+h6 {
+  font-size: 12px;
+  line-height: 16px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -238,6 +246,11 @@ header {
     background: $grayLightest;
     border: 1px solid #E6E6E6;
     margin: 10px;
+    > h4 {
+      margin: 7px 0 10px 10px;
+      font-weight: normal;
+      cursor: default;
+    }
   }
   .user-panel {
     padding: 10px 10px 10px 70px;
@@ -252,7 +265,7 @@ header {
       width: 50px;
       height: 50px;
     }
-    h3 {
+    h4 {
       margin: 0 0 3px 0;
       cursor: default;
     }
@@ -298,6 +311,12 @@ header {
         background: #FFF;
         cursor: default;
       }
+    }
+  }
+  .sidebar-talk-form {
+    input {
+      width: 168px;
+      margin: 0 0 10px 10px;
     }
   }
 }

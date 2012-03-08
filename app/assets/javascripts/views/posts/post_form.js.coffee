@@ -16,6 +16,7 @@ class LL.Views.PostForm extends Backbone.View
 
     @modal = false
     @initial_text = ''
+    @placeholder_text = 'What do you want to talk about?'
 
     @model = new LL.Models.PostForm()
     @model.on('change', @updateFields)
@@ -26,7 +27,7 @@ class LL.Views.PostForm extends Backbone.View
     @preview.post_form_model = @model
 
   render: ->
-    $(@el).html(@template(modal: @modal, initial_text: @initial_text))
+    $(@el).html(@template(modal: @modal, initial_text: @initial_text, placeholder_text: @placeholder_text))
     @preview.target = $(@el).find('#post-form-fetch-url')
 
     # setTimeout to wait for the modal animation so that the autocomplete can position itself correctly
@@ -51,7 +52,7 @@ class LL.Views.PostForm extends Backbone.View
               html += "<div class='topic-type'>#{data.data.type}</div>"
             html
           selectCallback: (term, data, type) ->
-            $(val).val(data.term).next().val(data.id)
+            self.addTopic($(val), data.term, data.id)
     , 1200
 
     @
@@ -87,6 +88,9 @@ class LL.Views.PostForm extends Backbone.View
     $(@el).find('#post-form-parent-id').val(@model.get('parent_id'))
     $(@el).find('#post-form-remote-image-url').val(@model.get('remote_image_url'))
     $(@el).find('#post-form-image-cache').val(@model.get('image_cache'))
+
+  addTopic: (target, name, id) =>
+    target.val(name).next().val(id)
 
   updateType: =>
     $(@el).find('#post-form-type').val(@model.get('type'))

@@ -8,6 +8,10 @@ class LL.Views.UserSidebar extends Backbone.View
   render: =>
     return if @loaded == true
 
+    # User talk form
+    talk = new LL.Views.UserSidebarTalk(model: @model)
+    $(@el).append(talk.render().el)
+
     # Main top nav
     nav = new LL.Views.UserSidebarNav(model: @model)
     nav.page = @page
@@ -23,6 +27,9 @@ class LL.Views.UserSidebar extends Backbone.View
       $(@el).append(topic_suggestions.el)
       LL.App.TopicSuggestions.fetch({data: {id: @model.id}})
 
+    # Follow stats
+    footer = new LL.Views.SidebarFooter()
+    $(@el).append(footer.render().el)
 
     @loaded = true
 

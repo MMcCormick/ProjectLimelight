@@ -36,6 +36,7 @@ class LL.Views.RootPost extends Backbone.View
 
   loadPostForm: =>
     view = new LL.Views.PostForm()
+    view.modal = true
     view.render().el
     view.preview.setResponse(@model.get('root'))
     $(view.el).find('.icons').remove()

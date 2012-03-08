@@ -1,7 +1,6 @@
 class LL.Views.PostForm extends Backbone.View
   template: JST['posts/form']
   id: 'post-form'
-  className: 'modal fade'
 
   events:
       "submit form": "createPost"
@@ -15,6 +14,8 @@ class LL.Views.PostForm extends Backbone.View
   initialize: ->
     @collection = new LL.Collections.Posts()
 
+    @modal = false
+
     @model = new LL.Models.PostForm()
     @model.on('change', @updateFields)
     @model.on('change:type', @updateType)
@@ -24,12 +25,16 @@ class LL.Views.PostForm extends Backbone.View
     @preview.post_form_model = @model
 
   render: ->
-    $(@el).html(@template())
+    $(@el).html(@template(modal: @modal))
     @preview.target = $(@el).find('#post-form-fetch-url')
-    $(@el).modal()
 
     # setTimeout to wait for the modal animation so that the autocomplete can position itself correctly
     self = @
+
+    if @modal
+      $(@el).addClass('modal fade')
+      $(@el).modal()
+
     setTimeout ->
       $(self.el).find('input.topic-mention').each (i,val) ->
         $(val).soulmate
@@ -74,7 +79,6 @@ class LL.Views.PostForm extends Backbone.View
     $(@el).modal('hide')
 
   updateFields: =>
-
     $(@el).find('#post-form-source-url').val(@model.get('source_url'))
     $(@el).find('#post-form-source-name').val(@model.get('provider_name'))
     $(@el).find('#post-form-source-vid').val(@model.get('source_vid'))

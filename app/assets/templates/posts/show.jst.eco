@@ -32,4 +32,6 @@
     </div>
   <% end %>
 
+  <div class='talk'></div>
+
 </section>

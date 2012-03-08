@@ -13,6 +13,8 @@ class LL.Views.PostShow extends Backbone.View
 
   render: =>
     $(@el).html(@template(post: @model))
+    console.log(@model.get('topic_mentions'))
+
 
     like = new LL.Views.LikeButton(model: @model)
     $(@el).find('.actions').prepend(like.render().el)

@@ -54,18 +54,11 @@ $postFontColor: $grayDark;
     position: relative;
     padding: 0 0 10px 60px;
     min-height: 50px;
-    &:hover {
-      .actions {
-        .like,
-        .comment-form {
-          color: $greenDarker;
-        }
-      }
-    }
     .actions-created {
       display: block;
       font-size: 12px;
       line-height: 16px;
+      margin: 2px 0 0 0;
       .actions {
         .score-pts,
         .comment-form,
@@ -76,7 +69,7 @@ $postFontColor: $grayDark;
           color: $grayLight;
         }
       }
-      .created {
+      .created-at {
         font-size: 13px;
         color: $grayLight;
       }
@@ -103,6 +96,14 @@ $postFontColor: $grayDark;
       color: $grayLight;
       .tlink {
         color: $grayLight;
+      }
+    }
+    &:hover {
+      .actions {
+        .like,
+        .comment-form {
+          color: $greenDarker;
+        }
       }
     }
   }

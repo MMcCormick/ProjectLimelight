@@ -1,1 +1,2 @@
-<%= @influence.get('topic').get('name') %> - <%= parseInt(@influence.get('amount')) %>
+<%= @influence.get('topic').get('name') %> -
+<div class="amount"><%= parseInt(@influence.get('amount')) %></div>

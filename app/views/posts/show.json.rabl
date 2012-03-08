@@ -1,5 +1,5 @@
 object @post
-attributes :content, :topic_mentions, :score, :created_at
+attributes :content, :score, :created_at
 attributes :response_count => :talking_count
 
 node :id do |post|
@@ -64,6 +64,10 @@ end
 
 node :primarySource do |post|
   post.sources.first
+end
+
+node :topic_mentions do |post|
+  post.topic_mentions.sort {|x,y| y.score <=> x.score }
 end
 
 child :user_snippet => :user do |post|

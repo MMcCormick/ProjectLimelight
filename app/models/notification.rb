@@ -197,7 +197,6 @@ class Notification
         if new_notification
           target_user.unread_notification_count += 1
           target_user.save
-          target_user.expire_caches
         end
         if notification.notify
           #Resque.enqueue_in(30.minutes, SendUserNotification, target_user.id.to_s)

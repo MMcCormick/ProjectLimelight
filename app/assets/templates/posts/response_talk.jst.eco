@@ -15,6 +15,6 @@
     <span class="actions">
       <span class="comment-form">+Comment</span>
     </span>
-    <span class="created-at"><%= @talk.get('created_at') %></span>
+    <span class="created-at"><%= @talk.get('created_at_pretty') %></span>
   </span>
 </p>

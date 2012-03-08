@@ -1,9 +1,12 @@
 $postFontColor: $grayDark;
 
-
 #post-show {
+  .ulink {
+    color: $postFontColor;
+    font-weight: bold;
+  }
   h1 {
-
+    margin-bottom: 10px;
     .title-with-source {
       margin-right: 5px;
     }
@@ -19,8 +22,28 @@ $postFontColor: $grayDark;
     }
   }
 
-  .created-at {
+  .actions-created {
+    margin-bottom: 20px;
+  }
+  .created-at, .actions {
     font-size: 16px;
-    margin-bottom: 10px;
+  }
+  .actions {
+    .score-pts {
+      margin-right: 15px;
+    }
+
+    .like {
+      padding: 0;
+      font-size: 16px;
+      margin: 0 15px 0 0;
+      color: $greenDarker;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      background: none;
+      text-shadow: none;
+      vertical-align: top;
+    }
   }
 }

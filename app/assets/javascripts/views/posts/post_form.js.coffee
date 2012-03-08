@@ -15,6 +15,7 @@ class LL.Views.PostForm extends Backbone.View
     @collection = new LL.Collections.Posts()
 
     @modal = false
+    @initial_text = ''
 
     @model = new LL.Models.PostForm()
     @model.on('change', @updateFields)
@@ -25,7 +26,7 @@ class LL.Views.PostForm extends Backbone.View
     @preview.post_form_model = @model
 
   render: ->
-    $(@el).html(@template(modal: @modal))
+    $(@el).html(@template(modal: @modal, initial_text: @initial_text))
     @preview.target = $(@el).find('#post-form-fetch-url')
 
     # setTimeout to wait for the modal animation so that the autocomplete can position itself correctly
@@ -134,3 +135,8 @@ class LL.Views.PostForm extends Backbone.View
     setTimeout ->
       self.embedly_collection.fetch({data: {url: self.preview.target.val()}})
     , 0
+
+  focusTalk: =>
+    $(@el).find('#post-form-content').focus()
+    v = $(@el).find('#post-form-content').val()
+    $(@el).find('#post-form-content').val('').val(v)

@@ -9,7 +9,7 @@
     <div class="errors"></div>
 
     <div class="main-content">
-      <textarea id="post-form-content" spellcheck="false" autocomplete="off" name="content" placeholder="What do you want to talk about?"><%= @initial_text %></textarea>
+      <textarea id="post-form-content" spellcheck="false" autocomplete="off" name="content" placeholder="<%= @placeholder_text %>"><%= @initial_text %></textarea>
       <div class='preview'>
         <input id="post-form-fetch-url" type="text" placeholder='Paste URL to fetch...' />
       </div>

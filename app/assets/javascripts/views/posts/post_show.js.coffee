@@ -24,6 +24,7 @@ class LL.Views.PostShow extends Backbone.View
     $(@el).append(@publicResponses.el)
 
     view = new LL.Views.PostForm()
+    view.placeholder_text = "Talk about this #{@model.get('type')}..."
     $(@el).find('.talk').html(view.render().el)
     view.model.set('parent_id', @model.get('_id'))
     $(view.el).find('.icons').remove()

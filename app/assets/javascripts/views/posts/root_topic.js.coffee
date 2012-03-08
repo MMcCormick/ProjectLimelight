@@ -3,6 +3,9 @@ class LL.Views.RootTopic extends Backbone.View
   tagName: 'div'
   className: 'root topic'
 
+  events:
+    "click .talk-form": "loadPostForm"
+
   initialize: ->
 
   render: ->
@@ -15,3 +18,11 @@ class LL.Views.RootTopic extends Backbone.View
     $(@el).find('.actions').prepend(score.render().el)
 
     @
+
+  loadPostForm: =>
+    view = new LL.Views.PostForm()
+    view.modal = true
+    view.placeholder_text = "Talk about #{@model.get('name')}..."
+    view.render().el
+    view.addTopic($(view.el).find('#post-form-mention1'), @model.get('name'), @model.get('_id'))
+    $(view.el).find('.icons').remove()

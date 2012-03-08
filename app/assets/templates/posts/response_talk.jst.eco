@@ -2,17 +2,15 @@
 <p>
   <a class="ulink" href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>
   <%= @talk.get('content') %>
-  <span class="response-float">
-    <% if @talk.get('topic_mentions').length > 0: %>
-      <span class="mentions">
-        --
-        <% for mention, i in @talk.get('topic_mentions'): %>
-          <a class="tlink" href="/<%= mention.slug %>"><%= mention.name %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
-        <% end %>
-      </span>
-    <% end %>
-    <span class="actions">
-      <span class="comment-form">+Comment</span>
+  <% if @talk.get('topic_mentions').length > 0: %>
+    <span class="mentions">
+      --
+      <% for mention, i in @talk.get('topic_mentions'): %>
+        <a class="tlink" href="/<%= mention.slug %>"><%= mention.name %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
+      <% end %>
     </span>
+  <% end %>
+  <span class="actions">
+    <span class="comment-form">+Comment</span>
   </span>
 </p>

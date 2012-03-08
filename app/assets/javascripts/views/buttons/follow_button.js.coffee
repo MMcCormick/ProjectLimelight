@@ -1,7 +1,7 @@
 class LL.Views.FollowButton extends Backbone.View
   template: JST['buttons/follow']
   className: 'follow btn btn-success'
-  tagName: 'button'
+  tagName: 'span'
 
   events:
     'click': 'updateFollow'

@@ -5,6 +5,9 @@ class LL.Views.TopicSidebarNav extends Backbone.View
   initialize: ->
 
   render: ->
-    $(@el).html(@template(user: @model))
+    $(@el).html(@template(topic: @model))
+
+    follow = new LL.Views.FollowButton(model: @model)
+    $(@el).find('.actions').prepend(follow.render().el)
 
     @

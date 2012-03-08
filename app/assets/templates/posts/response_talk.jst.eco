@@ -10,7 +10,13 @@
       <% end %>
     </span>
   <% end %>
-  <span class="actions">
-    <span class="comment-form">+Comment</span>
+
+  <span class="actions-created">
+    <span class="actions">
+      <span class="comment-form">+Comment</span>
+    </span>
+    <span class="created">
+
+    </span>
   </span>
 </p>

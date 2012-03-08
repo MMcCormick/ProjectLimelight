@@ -22,7 +22,7 @@ $postFontColor: $grayDark;
     }
   }
   h2 {
-    margin-bottom: 15px;
+    margin: 5px 0 15px;
   }
   .like,
   .comment-form {
@@ -62,16 +62,22 @@ $postFontColor: $grayDark;
         }
       }
     }
-    .actions {
+    .actions-created {
       display: block;
       font-size: 12px;
       line-height: 16px;
-      .score-pts,
-      .comment-form,
-      .like {
+      .actions {
+        .score-pts,
+        .comment-form,
+        .like {
+          font-size: 13px;
+          margin-right: 10px;
+          font-weight: normal;
+          color: $grayLight;
+        }
+      }
+      .created {
         font-size: 13px;
-        margin-right: 5px;
-        font-weight: normal;
         color: $grayLight;
       }
     }

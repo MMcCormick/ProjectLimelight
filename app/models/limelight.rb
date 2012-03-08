@@ -483,6 +483,7 @@ module Limelight #:nodoc:
             self.topic_mentions.build(root_pre_mention.attributes)
             root_pre_mention.destroy
             FeedTopicItem.post_create(self)
+            FeedUserItem.add_mention(self, mention.id)
           end
         else
           self.pre_mentions.build(mention.attributes)

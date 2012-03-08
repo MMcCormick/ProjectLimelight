@@ -148,8 +148,6 @@ class FeedUserItem
       updates["$inc"] = { :strength => 1, :ds => 1 }
 
       # add a like to any feed items including this post
-
-
       user_feed_users.each do |u|
         unless u.id == post.user_snippet.id
           FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
@@ -178,6 +176,19 @@ class FeedUserItem
         end
       end
       FeedUserItem.destroy_all(conditions: { :root_id => post.root_id, :strength => {"$lte" => 0} })
+    end
+
+    def add_mention(post, topic_id)
+      user_feed_users = User.only(:id).where(:following_topics => topic_id)
+
+      updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
+      updates["$inc"] = { :strength => 1, :ds => 1 }
+
+      user_feed_users.each do |u|
+        unless u.id == post.user_snippet.id
+          FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
+        end
+      end
     end
   end
 end

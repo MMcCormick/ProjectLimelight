@@ -154,7 +154,6 @@ $feedFontColor: $grayDark;
   .root-talk,
   .response-talk {
     position: relative;
-    padding: 0 0 11px 40px;
     min-height: 30px;
     font-size: 12px;
 
@@ -189,6 +188,9 @@ $feedFontColor: $grayDark;
       }
     }
   }
+  .root-talk {
+    padding: 0 0 5px 40px;
+  }
   .root.talk {
     padding: 10px 15px 0;
     img {
@@ -198,7 +200,7 @@ $feedFontColor: $grayDark;
   .responses {
     background-color: #FBFBFB;
     padding: 10px 15px 0;
-    margin-top: 3px;
+    margin-top: 2px;
 
     .talking {
       font-weight: bold;
@@ -207,18 +209,19 @@ $feedFontColor: $grayDark;
       cursor: default;
     }
     .response-talk {
+      padding: 0 0 11px 40px;
       p {
         .response-float {
           background: #FBFBFB;
           position: absolute;
           top: 100%;
           left: -55px;
-          padding: 0 0 2px 55px;
+          padding: 4px 0 2px 55px;
           z-index: 105;
           border-bottom: 1px solid #777777;
           width: 165px;
           .actions {
-            padding-bottom: 2px;
+            padding: 3px 0;
           }
         }
       }

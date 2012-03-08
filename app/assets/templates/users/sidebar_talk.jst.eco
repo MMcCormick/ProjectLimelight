@@ -1,1 +1,2 @@
-Talk Form...
+<h4>+Talk</h4>
+<input type="text" spellcheck="false" autocomplete="off" placeholder="<%= @placeholder %>" />

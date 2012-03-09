@@ -18,7 +18,7 @@
     </a>
   </li>
   <li>
-    <a class='<%= 'on' if @page == 'activity' %>' href="<%= "/users/#{@user.get('slug')}/talks" %>">
+    <a class='<%= 'on' if @page == 'activity' %>' href="<%= "/users/#{@user.get('slug')}/activity" %>">
       Talks
       <i class="icon icon-chevron-right"></i>
     </a>

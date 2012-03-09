@@ -11,6 +11,7 @@ ProjectLimelight::Application.routes.draw do
         delete '' => 'follows#destroy', :type => 'User'
       end
 
+      get 'followers' => 'users#followers'
       get 'influence_increases' => 'users#influence_increases'
       get '' => 'users#show'
     end
@@ -65,7 +66,12 @@ ProjectLimelight::Application.routes.draw do
   #omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
-  resources :users, :only => [:show]
+  scope 'users' do
+    get ':id/following/users' => 'users#show'
+    get ':id/following/topics' => 'users#show'
+    get ':id/followers' => 'users#show'
+    get ':id' => 'users#show'
+  end
   resources :posts, :only => [:show]
   get ':id' => 'topics#show', :as => :topic_show
 

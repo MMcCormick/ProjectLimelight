@@ -52,7 +52,7 @@ class LL.Views.PostForm extends Backbone.View
               html += "<div class='topic-type'>#{data.data.type}</div>"
             html
           selectCallback: (term, data, type) ->
-            self.addTopic($(val), data.term, data.id)
+            self.addTopic($(val), data.term, data.id, data.data.slug)
     , 1200
 
     @
@@ -67,9 +67,15 @@ class LL.Views.PostForm extends Backbone.View
     self = @
     @collection.create attributes,
       wait: true
-      success: (post) ->
+      beforeSend: ->
+        $(self.el).find('.btn-success').attr('disabled', 'disabled')
+      success: (data) ->
         self.destroyForm()
-      error: @handleError
+      error: (jqXHR, textStatus, errorThrown) ->
+        $(self.el).find('.btn-success').removeAttr('disabled')
+        globalError(textStatus, $(self.el))
+      complete: ->
+        $(self.el).removeClass('disabled')
 
   handleError: (entry, response) ->
     if response.status == 422
@@ -89,8 +95,9 @@ class LL.Views.PostForm extends Backbone.View
     $(@el).find('#post-form-remote-image-url').val(@model.get('remote_image_url'))
     $(@el).find('#post-form-image-cache').val(@model.get('image_cache'))
 
-  addTopic: (target, name, id) =>
+  addTopic: (target, name, id, slug) =>
     target.val(name).next().val(id)
+    target.prev().attr('src', "/#{slug}/picture?h=30&w=30&m=fillcropmid")
 
   updateType: =>
     $(@el).find('#post-form-type').val(@model.get('type'))

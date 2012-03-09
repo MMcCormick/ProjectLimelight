@@ -141,6 +141,14 @@ h1, h2, h3, h4, h5, h6 {
   clear: both;
 }
 
+form {
+  padding: 5px;
+
+  .alert-error {
+    margin: 0 0 15px 0;
+  }
+}
+
 .wrapper {
   @include clearfix();
   margin: 0 auto;
@@ -389,8 +397,6 @@ header {
       display: none;
       border-top: 1px dashed #CCC;
     }
-    .preview {
-    }
     .preview-data {
       position: relative;
       padding: 0 0 14px 0;
@@ -449,6 +455,34 @@ header {
         }
       }
     }
+  }
+  .mentions {
+    > div {
+      position: relative;
+    }
+    img {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+    }
+    .topic-mention {
+      @include box-shadow(none);
+      margin: 0px;
+      padding: 6px 5px 6px 37px;
+      &:focus {
+        border-color: #CCC;
+      }
+    }
+    #post-form-mention1 {
+      @include border-radius(3px 3px 0 0);
+      border-bottom: none;
+    }
+    #post-form-mention2 {
+      @include border-radius(0 0 3px 3px);
+    }
+  }
+  .btn-success {
+    padding: 5px 10px;
   }
 }
 

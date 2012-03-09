@@ -20,10 +20,20 @@ jQuery ->
   $('[rel="tooltip"]').tooltip()
 
   # Global error function
-  window.globalError = (jqXHR) ->
+  window.globalError = (jqXHR, target=null) ->
+    console.log jqXHR
     data = $.parseJSON(jqXHR.responseText)
     if data.flash
       createGrowl false, data.flash, 'Error', 'red'
+
+    switch jqXHR.status
+      when 422
+        if target && data && data.errors
+          target.find('.alert-error').remove()
+          errors = $('<div/>').addClass('alert alert-error').prepend('<a class="close" data-dismiss="alert">x</a>')
+          for key,error of data.errors
+            errors.append("<div>#{key} #{error}</div>")
+          target.find('.errors').prepend(errors)
 
   # Use gritter to create 'growl' notifications.
   # @param bool persistent Are the growl notifications persistent or do they fade after time?

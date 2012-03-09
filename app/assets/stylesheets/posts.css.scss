@@ -50,16 +50,22 @@ $postFontColor: $grayDark;
         }
       }
     }
+    .media {
+      margin-bottom: 10px;
+    }
     .existing-mentions {
       float: left;
-      width: 200px;
+      width: 235px;
+      height: 245px;
+      overflow-y: auto;
 
       h3 {
-        margin: 10px 0 10px 0;
+        margin: 0 0 10px 0;
       }
       .tlink {
         display: table;
         height: 40px;
+        margin-bottom: 10px;
         img {
           display: table-cell;
           height: 40px;
@@ -80,22 +86,23 @@ $postFontColor: $grayDark;
       }
     }
     .talk {
-      width: 450px;
-      float: left;
-      #post-form {
-        border: 1px solid $grayLighter;
-      }
+      width: 400px;
+      margin-bottom: 10px;
+      float: right;
       .modal-header {
         padding: 0 0 10px 0;
+        border: none;
       }            
       .modal-body {
-        padding: 0;
+        padding: 0px 0 10px;
         .main-content {
-          margin-bottom: 20px;
+          margin-bottom: 10px;
         }
       }
       .modal-footer {
         padding: 0;
+        background: transparent;
+        border: none;
       }
     }
   }

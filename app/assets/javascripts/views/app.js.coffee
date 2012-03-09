@@ -14,6 +14,7 @@ class LL.Views.App extends Backbone.View
     @UserFeed = new LL.Collections.UserFeed
     @LikeFeed = new LL.Collections.LikeFeed
     @UserFollowers = new LL.Collections.UserFollowers
+    @UserFollowingUsers = new LL.Collections.UserFollowingUsers
 
     @Posts = new LL.Collections.Posts
 
@@ -28,9 +29,11 @@ class LL.Views.App extends Backbone.View
 
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).resize ->
-      self.calculateSiteWidth(false)
+      self.calculateSiteWidth()
 
   calculateSiteWidth: =>
+    return unless $('#feed > .column').length > 0
+
     width = $(window).width()
 
 #    if width >= 1475

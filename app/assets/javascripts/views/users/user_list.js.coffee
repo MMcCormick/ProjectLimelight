@@ -1,4 +1,4 @@
-class LL.Views.UserFollowers extends Backbone.View
+class LL.Views.UserList extends Backbone.View
   template: JST['users/list']
   tagName: 'div'
   className: 'content-tile user-list'
@@ -14,13 +14,14 @@ class LL.Views.UserFollowers extends Backbone.View
     $(@el).html(@template())
     $('#feed').html(@el)
 
-    for user in @collection.models
-      @appendUser(user)
+    for user,i in @collection.models
+      @appendUser(user, i%2)
 
     @
 
-  appendUser: (user) =>
+  appendUser: (user, odd) =>
     view = new LL.Views.UserListItem(model: user)
+    view.odd = odd
     $(@el).find('ul').append(view.render().el)
 
     @

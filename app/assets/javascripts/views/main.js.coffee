@@ -6,6 +6,7 @@ class LL.Views.Main extends Backbone.View
     LL.App.LikeFeed.on('reset', @renderLikeFeed)
     LL.App.TopicFeed.on('reset', @renderTopicFeed)
     LL.App.UserFollowers.on('reset', @renderUserFollowers)
+    LL.App.UserFollowingUsers.on('reset', @renderUserFollowingUsers)
 
   renderUserFeed: =>
     view = new LL.Views.PostsFeed(collection: LL.App.UserFeed)
@@ -26,6 +27,11 @@ class LL.Views.Main extends Backbone.View
     LL.App.calculateSiteWidth()
 
   renderUserFollowers: =>
-    view = new LL.Views.UserFollowers(collection: LL.App.UserFollowers)
+    view = new LL.Views.UserList(collection: LL.App.UserFollowers)
+    LL.App.Feed = view
+    view.render()
+
+  renderUserFollowingUsers: =>
+    view = new LL.Views.UserList(collection: LL.App.UserFollowingUsers)
     LL.App.Feed = view
     view.render()

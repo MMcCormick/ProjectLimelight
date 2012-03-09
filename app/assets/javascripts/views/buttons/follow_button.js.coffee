@@ -18,17 +18,19 @@ class LL.Views.FollowButton extends Backbone.View
     @
 
   updateFollow: =>
+    return if $(@el).hasClass('disabled')
+
     self = @
 
     options = {
       data: {id: @model.get('_id')}
       dataType: 'json'
       beforeSend: ->
-        $(self.el).attr('disabled', 'disabled')
+        $(self.el).addClass('disabled')
       success: (data) ->
         self.model.set('following', !self.model.get('following'))
       complete: ->
-        $(self.el).removeAttr('disabled')
+        $(self.el).removeClass('disabled')
     }
 
     if @model.constructor.name == 'User'

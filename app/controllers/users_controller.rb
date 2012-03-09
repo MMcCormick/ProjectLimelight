@@ -11,6 +11,9 @@ class UsersController < ApplicationController
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
 
     not_found("User not found") unless @user
+    @title = @user.username
+    @description = "Everything #{@user.username} on Limelight."
+    @this = {:group => 'users', :template => 'show'}
   end
 
   def default_picture
@@ -49,22 +52,9 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     not_found("User not found") unless @user
 
-    @site_style = 'narrow'
     @title = "Users " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all users who are being followed by" + @user.username
-    @right_sidebar = true if current_user != @user
     @following_users = User.where(:_id.in => @user.following_users)
-
-    page = params[:p] ? params[:p].to_i : 1
-    @more_path = user_following_users_path :p => page + 1
-    per_page = 50
-    @following_users = User.where(:_id.in => @user.following_users).limit(per_page).skip((page - 1) * per_page)
-    @more_path = nil if @following_users.count(true) < per_page
-
-    respond_to do |format|
-      format.js { render json: user_list_response("users/std_list", @following_users, @more_path), status: :ok }
-      format.html
-    end
   end
 
 

@@ -15,9 +15,9 @@ class LL.Views.LikeButton extends Backbone.View
     @
 
   updateLike: =>
-    self = @
-
     return if $(@el).hasClass('disabled')
+
+    self = @
 
     options = {
       data: {id: @model.get('_id')}

@@ -1,17 +1,18 @@
 $feedFontColor: $grayDark;
 
 .feed-header {
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   h2 {
     display: inline-block;
-    margin-left: 5px;
+    margin-right: 20px;
+    cursor: default;
   }
   .stat {
     position: relative;
     display: inline-block;
     bottom: 3px;
-    font-size: 14px;
-    margin-left: 15px
+    font-size: 13px;
+    margin-right: 10px;
   }
 }
 
@@ -40,11 +41,6 @@ $feedFontColor: $grayDark;
     &.video { background-color: $video50RGBA; }
     &.talk { background-color: $talk50RGBA; }
     &.topic { background-color: $topic50RGBA; }
-
-    .root,
-    .responses {
-      @include single-box-shadow(#666, 1px, 1px, 3px);
-    }
   }
 
   .mentions {

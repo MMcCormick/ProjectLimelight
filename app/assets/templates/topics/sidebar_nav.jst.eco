@@ -1,2 +1,15 @@
-Topic Sidebar Nav
-<div class="actions"></div>
+<div class="topic-panel">
+  <h4><%= @topic.get('name') %></h4>
+  <div class='actions'></div>
+  <div class='img'>
+    <img src='/<%= @topic.get('slug') %>/picture?h=0&w=165&m=fit' />
+  </div>
+</div>
+
+<p>Foo efoia seofin aseofin aseoi nfasoei nfaosien faosine f</p>
+
+<h4>Also Known As</h4>
+<ul class='unstyled'>
+  <li>Foo</li>
+  <li>Bar</li>
+</ul>

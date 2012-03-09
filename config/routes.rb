@@ -65,6 +65,10 @@ ProjectLimelight::Application.routes.draw do
   #omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
+  resources :users, :only => [:show]
+  resources :posts, :only => [:show]
+  get ':id' => 'topics#show', :as => :topic_show
+
   #scope 'users' do
   #  get 'settings' => 'users#settings', :as => :user_settings
   #  put 'picture' => "users#picture_update", :as => :user_picture_update
@@ -76,9 +80,6 @@ ProjectLimelight::Application.routes.draw do
   #  get ':id/hover' => 'users#hover' , :as => :user_hover
   #  get ':id/picture' => 'users#default_picture', :as => :user_default_picture
   #end
-
-  resources :users, :only => [:show]
-  resources :posts, :only => [:show]
 
   #scope 'sentiment' do
   #  post ':sentiment' => 'sentiments#create', :as => :sentiment_create

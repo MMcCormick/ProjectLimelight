@@ -56,11 +56,12 @@ class LL.Router extends Backbone.Router
   topicFeed: (id) ->
     @hideModal()
 
-    topic = LL.App.Topics.findOrCreate(id)
+    topic = LL.App.Topics.findOrCreate(id, new LL.Models.Topic($('#this').data('this')))
 
     # Only load the feed if it's new
     if LL.App.TopicFeed.id != id
       sidebar = new LL.Views.TopicSidebar(model: topic)
+      sidebar.render()
 
       LL.App.TopicFeed.id = id
       LL.App.TopicFeed.page = 1

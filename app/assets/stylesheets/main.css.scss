@@ -123,6 +123,14 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+form {
+  padding: 5px;
+
+  .alert-error {
+    margin: 0 0 15px 0;
+  }
+}
+
 .ulink {
   cursor: pointer;
   &:hover {
@@ -141,12 +149,9 @@ h1, h2, h3, h4, h5, h6 {
   clear: both;
 }
 
-form {
-  padding: 5px;
-
-  .alert-error {
-    margin: 0 0 15px 0;
-  }
+.disabled {
+  @include opacity(60);
+  cursor: default !important;
 }
 
 .wrapper {
@@ -255,7 +260,7 @@ header {
     border: 1px solid #E6E6E6;
     margin: 10px;
     > h4 {
-      margin: 7px 0 10px 10px;
+      margin: 10px 0 7px 10px;
       font-weight: normal;
       cursor: default;
     }
@@ -290,7 +295,49 @@ header {
       margin: 0 7px 0 0;
     }
   }
+  .topic-panel {
+    padding: 10px 10px 0 10px;
+    position: relative;
+
+    h4 {
+      margin: 0 0 7px 0;
+      cursor: default;
+    }
+    .actions {
+      margin: 0 0 10px 0;
+    }
+    .score-pts {
+      font-size: 13px;
+      vertical-align: middle;
+      span {
+        font-size: 16px;
+      }
+    }
+    .follow {
+      font-size: 13px;
+      padding: 2px 9px;
+      margin: 0 7px 0 0;
+    }
+    .img {
+      @include border-radius(2px);
+      padding: 5px;
+      background: #FFF;
+      margin: 0 0 10px 0;
+      border: 1px solid $grayLighter;
+      img {
+        background: #999;
+        width: 165px;
+      }
+    }    
+  }
+  p {
+    margin: 0 0 10px 10px;
+  }
+  ul {
+    margin: 0 0 10px 10px;
+  }
   .menu {
+    margin: 0px;
     a {
       display: block;
       padding: 7px 10px;

@@ -1,9 +1,9 @@
-<div class='top'>
+<a class="tlink top" href="/<%= @topic.get('slug') %>">
   <img src='/topics/<%= @topic.get('slug') %>/picture?h=50&w=50&m=fillcropmid' />
   <h5>
-    <a class="tlink" href="/<%= @topic.get('slug') %>"><%= @topic.get('name') %></a>
+    <%= @topic.get('name') %>
   </h5>
-</div>
+</a>
 
 <div class='actions'>
   <span class='talk-form'>+Talk</span>

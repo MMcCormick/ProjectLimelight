@@ -1,4 +1,4 @@
-<section>
+<section class="post-root">
   <h1>
     <% if @post.get('primarySource'): %>
       <a target="_blank" href="<%= @post.get('primarySource').url %>">
@@ -33,6 +33,20 @@
     </div>
   <% end %>
 
+  <% if @post.get('topic_mentions').length > 0: %>
+    <div class="existing-mentions">
+      <h3>Topics</h3>
+      <% for mention in @post.get('topic_mentions'): %>
+        <a class="tlink" href="/<%= mention.slug %>">
+          <img src='/topics/<%= mention.slug %>/picture?h=50&w=50&m=fillcropmid' />
+          <h5>
+            <%= mention.name %>
+          </h5>
+        </a>
+      <% end %>
+    </div>
+  <% end %>
   <div class='talk'></div>
+  <div class="c"></div>
 
 </section>

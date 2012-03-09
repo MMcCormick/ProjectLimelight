@@ -28,28 +28,77 @@ $postFontColor: $grayDark;
   .comment-form {
     cursor: pointer;
   }
-  .actions-created {
-    margin-bottom: 20px;
-    font-size: 16px;
+  .post-root {
+    .actions-created {
+      margin-bottom: 20px;
+      font-size: 16px;
 
-    .actions {
-      .score-pts {
-        margin-right: 15px;
+      .actions {
+        .score-pts {
+          margin-right: 15px;
+        }
+
+        .like {
+          padding: 0;
+          font-size: 16px;
+          margin: 0 15px 0 0;
+          color: $greenDarker;
+          font-weight: bold;
+          border: none;
+          background: none;
+          text-shadow: none;
+        }
       }
+    }
+    .existing-mentions {
+      float: left;
+      width: 200px;
 
-      .like {
+      h3 {
+        margin: 10px 0 10px 0;
+      }
+      .tlink {
+        display: table;
+        height: 40px;
+        img {
+          display: table-cell;
+          height: 40px;
+          width: 40px;
+          background-color: $gray;
+        }
+        h5 {
+          display: table-cell;
+          margin: 0px;                
+          padding: 0 10px;
+          vertical-align: middle;
+        }
+        .mention {
+          display: table-cell;
+          vertical-align: middle;
+          padding: 0 0 0 10px;
+        }
+      }
+    }
+    .talk {
+      width: 450px;
+      float: left;
+      #post-form {
+        border: 1px solid $grayLighter;
+      }
+      .modal-header {
+        padding: 0 0 10px 0;
+      }            
+      .modal-body {
         padding: 0;
-        font-size: 16px;
-        margin: 0 15px 0 0;
-        color: $greenDarker;
-        font-weight: bold;
-        border: none;
-        background: none;
-        text-shadow: none;
+        .main-content {
+          margin-bottom: 20px;
+        }
+      }
+      .modal-footer {
+        padding: 0;
       }
     }
   }
-
   .response-talk {
     position: relative;
     padding: 0 0 10px 60px;
@@ -84,7 +133,7 @@ $postFontColor: $grayDark;
     }
     p {
       position: relative;
-      font-size: 16px;
+      font-size: 15px;
       line-height: 20px;
       .mentions {
         font-size: 12px;

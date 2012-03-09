@@ -5,6 +5,14 @@ class LL.Views.UserListItem extends Backbone.View
   initialize: ->
 
   render: =>
+    $(@el).addClass('odd') if @odd
     $(@el).append(@template(user: @model))
+
+    if LL.App.current_user != @model
+      follow = new LL.Views.FollowButton(model: @model)
+      $(@el).find('.follow-c').html(follow.render().el)
+
+    score = new LL.Views.Score(model: @model)
+    $(@el).append(score.render().el)
 
     @

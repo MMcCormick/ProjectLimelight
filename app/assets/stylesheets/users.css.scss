@@ -6,1127 +6,1166 @@
         Purpose of the stylesheet follows.
 */
 
-#auth_box {
-  position: relative;
-  width: 620px;
-  .top {
-    @include border-radius(7px 7px 0 0);
-    @include single-box-shadow(#999, 1px, 1px, 2px);
-    position: relative;
-    height: 110px;
-    width: 100%;
-    background: image-url("bg_textured.jpg") repeat;
-    border-bottom: 3px solid #BFCBAD;
-    z-index: 20;
-    img {
-      position: absolute;
-      top: 4px;
-      left: 8px;
-    }
-  }
-  .bottom {
-    @include border-radius(0 0 7px 7px);
-    position: relative;
-    width: 100%;
-    background: #FAFAFA;
-    z-index: 10;
-    padding: 0 0 10px 0;
-  }
-  .head {
-    font-size: 14px;
-    color: #444;
-    cursor: default;
-  }
-  .switch {
-    @include link();
-  }
-  .left {
-    margin-top: 25px;
-    float: left;
-    width: 300px;
-    position: relative;
-    height: 155px;
+.user-list {
+  li {
+    height: 50px;
+    margin: 5px 0;
 
-    .head {
-      margin: 0 0 0 25px;
+    &.odd {
+      background: $grayLightest;
     }
-    .option {
-      position: absolute;
-      top: 33px;
-      .log {
-        position: absolute;
-        left: 5px;
-        top: 2px;
-        font-size: 11px;
-        color: #999;
-      }
-      .google-l-icon {
+    .ulink {
+      padding: 16px 0 0 60px;
+      position: relative;
+      display: inline-block;
 
-      }
-      .facebook-l-icon {
-
-      }
-      &.one {
-        left: 26px;
-      }
-      &.two {
-        left: 140px;
-      }
-      &:hover {
-        @include single-box-shadow(#999, 1px, 1px, 2px);
-        cursor: pointer;
-      }
-    }
-    .foot1,
-    .foot2 {
-      position: absolute;
-      font-size: 11px;
-      color: #666;
-      left: 26px;
-      width: 190px;
-      cursor: default;
-    }
-    .foot1 {
-      top: 73px;
-    }
-    .foot2 {
-      top: 93px;
-    }
-  }
-  .right {
-    margin-top: 25px;
-    float: left;
-    position: relative;
-
-    .head {
-      margin: 0 0 15px 9px;
-    }
-    .lClear {
-      label {
+      img {
         position: absolute;
         top: 0;
         left: 0;
-        font-size: 14px;
-        font-style: normal;
-        color: #999;
-        padding: 7px 0 7px 8px;
-        text-align: left;
-        width: 100%;
-      }
-      input {
-        @include border-radius(2px);
-        font-size: 16px;
-        width: 280px;
-        border-color: #999;
-        color: #444;
+        width: 50px;
+        height: 50px;
+        background: #999;
+        display: block;
       }
     }
-    .submit {
-      @include green-button(2px, 17px);
-      font-weight: normal;
-      padding: 2px 8px 4px;
+    h5 {
+      vertical-align: middle;
     }
-    .switch {
-      position: absolute;
-      bottom: 6px;
-      left: 85px;
-      font-size: 10px;
+    .score-pts {
+      float: right;
+      margin: 16px 0 0 0;
     }
-  }
-  .sig {
-    text-align: center;
-    font-size: 11px;
-    margin: 13px 0 -9px 0;
-    color: #555;
-    cursor: default;
-  }
-  .errors {
-    margin: 0 0 10px 0;
-    width: 282px;
-  }
-  .invite-errors {
-    margin: 0 0 10px 0;
-    width: 273px;
-  }
-
-  .invite {
-    position: relative;
-    width: 287px;
-    left: -144px;
-    margin-left: 50%;
-    margin-bottom: 10px;
-    padding-top: 30px;
-    #new_invite_code {
-      position: relative;
-      label {
-        font-size: 14px;
-        top: 12px;
-        left: 30px;
-        color: #777;
-        width: 240px;
-      }
-      #invite_code_code {
-        @include single-box-shadow(#999, 1px, 1px, 2px);
-        width: 270px;
-        float: left;
-        font-size: 22px;
-        text-align: center;
-        border: 2px solid #666;
-      }
-    }
-  }
-  .switch-c {
-    text-align: center;
-    margin-top: 10px;
-  }
-}
-
-#username_reset_box {
-  padding: 10px;
-  width: 310px;
-  h2 {
-
-  }
-  .help {
-    font-size: 13px;
-    margin: 5px 0 8px 0;
-    span {
-      color: #990000;
-    }
-  }
-  .errors {
-    margin: 0 0 8px 0;
-    width: 280px;
-  }
-  .field {
-    input {
-      width: 130px;
-    }
-  }
-  .submit {
-    @include green-conservative-button(14px, 2px, 1px);
-    font-weight: normal;
-    padding: 4px 8px;
-    margin: 8px 0 0 0;
-  }
-}
-
-// User profile images
-.profileImage {
-    @include border-radius(3px);
-    background: #FFF;
-    float: left;
-}
-
-// User tags.
-.tag.user {
-    position: relative;
-    z-index: 100;
-    padding: 2px 0;
-
-    .drag-handleC {
-        position: absolute;
-        top: 50%;
-        margin-top: -7px;
-        right: 2px;
-        cursor: move;
-        display: none;
-    }
-    &:hover {
-        padding-right: 21px;
-        /*margin-left: -12px;*/
-        .drag-handleC {
-            display: block;
-        }
-    }
-    a {
-        text-decoration: none;
-    }
-}
-
-// User hover tabs
-.userHover {
-  .ui-tooltip-content {
-    background-color: #F2F8E4;
-    border-color: #CAE09D;
-  }
-  .name {
-    font-size: 14px;
-  }
-  .followB,
-  .unfollowB {
-    margin: 5px 0px;
-  }
-}
-
-// The user panel, either left or right sidebar
-.user-panel {
-    padding: 40px 0 0 0;
-
-    .profile-image {
-      @include border-radius(2px);
-      position: absolute;
-      top: 6px;
-      left: 6px;
-    }
-    h3 {
-      max-width: 138px;
-      overflow: hidden;
-      position: absolute;
-      left: 42px;
-      top: 11px;
-    }
-    .stats {
-      position: relative;
-      height: 62px;
-      margin: 0 5px;
-
-      .label {
-        position: absolute;
-        color: #999;
-        font-size: 9px;
-        cursor: default;
-
-        &.followers {
-          top: 4px;
-          left: 4px;
-          color: #666;
-        }
-        &.following {
-          top: 4px;
-          left: 79px;
-          color: #666;
-        }
-        &.users {
-          bottom: 6px;
-          left: 62px;
-        }
-        &.topics {
-          bottom: 6px;
-          left: 111px;
-        }
-      }
-      .btn {
-        @include border-radius(2px);
-        position: absolute;
-        top: 17px;
-        padding: 5px 0;
-        text-align: center;
-        width: 45px;
-        font-size: 12px;
-        background: #F9F9F9;
-        border: 1px solid #CCC;
-
-        &.users1 {
-          left: 0px;
-        }
-        &.users2 {
-          left: 50px;
-        }
-        &.topics2 {
-          left: 100px;
-        }
-      }
-      .pop {
-        font-size: 22px;
-        cursor: default;
-        color: #666;
-        position: absolute;
-        top: 17px;
-        right: -2px;
-        width: 53px;
-        text-align: center;
-      }
-    }
-    .links {
-        @include clearfix();
-        margin: 5px 5px 0 5px;
-        clear: both;
-                
-        a {
-            float: left;
-            color: #666;
-            font-size: 12px;
-            position: relative;
-            background: #F9F9F9;
-            border:  1px solid #CCC;
-            padding: 4px 7px 4px 26px;
-            
-            .icon {
-                position: absolute; left: 4px; top: 50%;
-                margin-top: -8px;
-            }
-        }
-        .settings,
-        .badge {
-            width: 50px;
-        }
-        .user-notifications,
-        .user-favorites {
-            width: 80px;
-            left: -1px;
-        }
-        .badge,
-        .user-favorites {
-            top: -1px;
-            @include border-bottom-left-radius(2px);
-        }
-        .settings {
-            @include border-top-left-radius(2px);
-        }
-        .user-notifications {
-            @include border-top-right-radius(2px);
-            .icon {
-                font-weight: bold;
-                font-size: 14px;
-                left: 3px;
-                margin-top: -9px;
-                text-align: center;
-                width: 20px;
-            }
-            &.on {
-              color: #990000;
-            }
-        }
-    }
-}
-
-// For the right sidebar only
-.sbrC {
-  .user-panel {
-    .head {
-      position: relative;
-      padding: 5px 5px 0 40px !important;
-      height: 25px;
-      .img {
-        padding: 0 3px 0 0;
-        background: image-url("bg_textured.jpg") repeat;
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
-      h3 {
-        overflow: hidden;
-        font-size: 16px;
-        max-width: none;
-        left: auto;
-        top: auto;
-        position: relative;
-      }
-    }
-    .followB,
-    .unfollowB {
-      margin: 10px 0 10px 0px !important;
-    }
-    .stats {
-      margin: 0;
-    }
-    .bio {
-      margin: 10px 5px 8px 5px;
-      font-size: 12px;
-    }
-  }
-  .sidebarB {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-  .btn {
-    color: #444;
-  }
-  .links {
-    margin: 5px 0 0 0;
-    a {
-      background-color: #E4E4E4;
-      top: 0px !important;
-    }
-    .badge { @include border-top-left-radius(2px); }
-    .user-contributions { @include border-top-right-radius(2px); }
-  }
-}
-    
-
-// Wide buttons for either sidebar
-.sidebarB {
-  @include border-radius(2px);
-  background-color: #FCF9F9;
-  border: 1px solid #CCC;
-  margin: 3px 7px 3px 5px;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 4px 8px 4px 30px;
-  display: block;
-  position: relative;
-  color: #666;
-
-  .icon {
-    position: absolute; top: 50%; left: 7px;
-    margin-top: -8px;
-  }
-}
-// Located in the user sidebar
-#my-feed,
-#my-favorites {
-  &.dragging {
-    background: blue;
-    color: #FFF;
-  }
-  &.dropping {
-    background: green;
-  }
-}
-
-// Confirmation pages
-#confirm {
-  @include clearfix();
-  @include border-radius(10px);
-  background: #E2E8D4;
-  width: 500px;
-  height: 400px;
-  margin-left: 20px;
-  text-align: center;
-  position: relative;
-  .nav {
-    @include clearfix();
-    @include border-radius(5px);
-    background: #F2F8E4;
-    margin: 10px 0 0 28px;
-    width: 440px;
-    font-size: 28px;
-    .stepLabel {
-      float: left;
-      margin: 8px 0 10px 50px;
-      display: block;
-    }
-    .step1, .step2, .step3 {
-      @include green-button(14px, 28px);
-      @include opacity(.5);
-      width: 40px;
-      margin: 10px 0 10px 50px;
-      float: left;
-      &.on {
-        @include opacity(1);
-      }
-    }
-  }
-  #confirmPages {
-    margin-top: 20px;
-    .confirmPage.two,
-    .confirmPage.three {
-      display: none;
-    }
-    .bottomNav {
-      @include border-radius(5px);
-      position: absolute;
-      width: 440px;
-      left: 28px;
-      bottom: 10px;
-      .last, .next {
-        @include green-button(14px, 28px);
-        margin: 10px 0 10px 0;
-        padding: 0 10px;
-      }
-      .last {
-        float: left;
-      }
-      .next {
-        float:right;
-      }
+    .follow-c {
+      float: right;
+      width: 85px;
+      text-align: right;
+      margin: 11px 10px 0 0;
     }
   }
 }
 
-#users-c {
-  .settings-c {
-    .section {
-      padding: 10px 5px;
-      h3 {
-        border-bottom: 1px solid #DDD;
-        padding: 0 0 3px 5px;
-      }
-      .static {
-        @include clearfix();
-        margin: 5px 0 5px 8px;
-        font-size: 13px;
-        .name {
-          float: left;
-          margin: 0 10px 0 0;
-          font-weight: bold;
-        }
-        .value {
-          float: left;
-        }
-      }
-      .check-label {
-        input, label {
-          width: auto;
-        }
-        label {
-          font-weight: normal;
-        }
-      }
-      label {
-        font-weight: bold;
-        padding-left: 8px;
-        font-size: 13px;
-      }
-      input, textarea {
-        width: 250px;
-        margin: 0 0 0 5px;
-      }
-      textarea {
-        height: 100px;
-      }
-      .submit {
-        @include green-button(2px, 12px);
-        padding: 2px 6px;
-        margin: 10px 0 0 5px;
-        float: left;
-        width: auto;
-      }
-      .profile-image {
-        @include border-radius(2px);
-        margin: 10px 5px;
-        float: left;
-      }
-      .upload {
-        @include green-button(2px, 12px);
-        padding: 2px 6px;
-        margin: 10px 0 0 5px;
-        float: left;
-        width: auto;
-      }
-      #user_uploadB-progress {
-        float: left;
-        color: #666;
-        margin: 11px 0 0 13px;
-        font-size: 13px;
-      }
-    }
-  }
-  /* Splash Page styling */
-  #topic-wall-container {
-    @include single-box-shadow(#333, 2px, 2px, 4px);
-    @include background-clip();
-    @include border-radius(10px);
-    background-color:rgba(0,0,0,0.3);
-    padding: 10px;
-    margin-left: -313px;
-    left: 50%;
-    position: absolute;
-    top: 120px;
-    z-index: 55;
-
-    &.tutorial {
-      top: 50px;
-      margin-left: -345px;
-    }
-
-    .logo {
-      position: absolute;
-      left: 50%;
-      margin-left: -203px;
-      top: -125px;
-      z-index: 55;
-    }
-    .tutorial-c {
-      @include border-radius(7px);
-      @include clearfix();
-      width: 650px;
-      padding: 20px;
-      background: #FFF;
-
-      h1 {
-        font-size: 20px;
-      }
-      h2 {
-        font-size: 16px;
-        .talk {
-          color: $talk-color;
-        }
-        .link {
-          color: $link-color;
-        }
-        .picture {
-          color: $picture-color;
-        }
-        .video {
-          color: $video-color;
-        }
-      }
-      .search {
-        margin: 10px 0 15px 0;
-        clear: both;
-
-        h4 {
-          margin: 0 0 0 2px;
-        }
-        input {
-          @include border-radius(3px);
-          margin: 3px 0 0 0;
-          border: 5px solid #999;
-          width: 234px;
-          padding: 6px 8px;
-
-          &:hover,
-          &:focus {
-            border: 5px solid #666;
-          }
-        }
-      }
-      .social-connect {
-        height: 60px;
-        position: relative;
-
-        .facebook,
-        .twitter {
-          position: absolute;
-          top: 27px;
-          img {
-            cursor: pointer;
-          }
-          .completed {
-            position: relative;
-            padding: 2px 0 0 25px;
-            cursor: default;
-            .square {
-              @include border-radius(2px);
-              position: absolute;
-              top: 5px;
-              left: 0px;
-              width: 12px;
-              height: 12px;
-              background: #7BA821;
-            }
-          }
-        }
-        .facebook {
-          left: 0px;
-        }
-        .twitter {
-          left: 200px;
-        }
-      }
-
-      .user-cards {
-        overflow: auto;
-        max-height: 315px;
-      }
-      .next {
-        @include grey-rollover(18px);
-        cursor: pointer;
-        display: inline-block;
-        padding: 5px 15px 7px 15px;
-        margin: 20px 0 0 0;
-      }
-      .footnote {
-        font-size: 12px;
-        color: #999;
-        margin: 20px 0 -10px 0;
-      }
-    }
-    .tutorial-5 {
-
-    }
-    .tutorial-6 {
-      .post-anatomy {
-        margin: 15px 0 0 -2px;
-      }
-    }
-  }
-  #confirm-account {
-    text-align: center;
-    position: relative;
-    color: #444;
-    font-size: 14px;
-    padding: 10px 0 20px;
-    margin: 0 0 20px -175px;
-    left: 50%;
-    top: 20px;
-    width: 350px;
-  }
-  .topic-wall {
-    width: 110%;
-    height: 110%;
-    .tile {
-      @include opacity(.1);
-      float: left;
-      background: #FFF;
-      position: relative;
-      width: 100px;
-      height: 100px;
-
-      .s {
-        display: relative;
-
-        .name {
-          @include opacity(.85);
-          cursor: default;
-          display: none;
-          position: absolute;
-          top: 0px;
-          left: 0px;
-          width: 90px;
-          background: #000;
-          color: #FFF;
-          font-size: 11px;
-          padding: 2px 5px;
-          overflow: hidden;
-          white-space: nowrap;
-        }
-        .stats {
-          display: none;
-          cursor: default;
-          .f,
-          .l {
-            padding: 2px 5px;
-            background: #F9F9F9;
-            font-size: 10px;
-            color: #444;
-            border-top: 1px solid #F3F3F3;
-          }
-          .f {
-            border-bottom: 1px solid #DCDFD4;
-          }
-        }
-      }
-      &.hover,&:hover {
-        .s {
-          @include single-box-shadow(#333, 2px, 2px, 4px);
-          border: 1px solid #000;
-          position: absolute;
-          z-index: 50;
-          background: #FFF;
-          top: -1px;
-          left: -1px;
-          width: 100px;
-          min-height: 100px;
-        }
-      }
-      &:hover {
-        @include opacity(1);
-        .s {
-          z-index: 60;
-        }
-        .name {
-          display: block;
-        }
-        .stats {
-          display: block;
-        }
-      }
-    }
-  }
-  .topic-wall-type {
-    @include single-box-shadow(#333, 2px, 2px, 4px);
-    border: 1px solid #333;
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: #FFF;
-    padding: 8px 12px;
-    color: #444;
-    z-index: 65;
-  }
-}
-
-.user-card {
-  @include background-clip();
-  @include border-radius(5px);
-  background-color:rgba(0,0,0,0.4);
-  float: left;
-  position: relative;
-  margin: 35px 15px 0 0;
-  padding: 10px;
-
-  img {
-    @include border-radius(3px);
-    width: 100px;
-    height: 100px;
-    display: block;
-    background: #FFF;
-  }
-  .name {
-    position: absolute;
-    bottom: 125px;
-    left: 5px;
-  }
-  .followB,
-  .unfollowB {
-    @include border-radius(2px);
-    position: absolute;
-    bottom: 12px;
-    left: 16px;
-    font-size: 13px;
-    height: auto;
-    padding: 3px 10px;
-    border: 2px solid #FFF;
-  }
-  .unfollowB {
-    left: 10px;
-  }
-  &:hover {
-    background-color:rgba(0,0,0,0.6);
-  }
-}
-
-#devise-sessions-c,
-#devise-registrations-c {
-  #auth_box {
-    @include single-box-shadow(#999, 1px, 1px, 2px);
-    margin: 10px auto;
-    border: 1px solid #333;
-  }
-}
-
-#twitter-c {
-  .welcome {
-    padding: 0 0 10px 0;
-    border-bottom: 2px solid #999;
-    h1 {
-
-    }
-    .help {
-      font-size: 13px;
-      color: #888;
-      width: 520px;
-      line-height: 1.6;
-      margin: 7px 0 0 10px;
-    }
-    .choose-all {
-      @include green-conservative-button(14px, 2px, 0px);
-      padding: 5px 8px;
-      position: absolute;
-      top: 47px;
-      right: 20px;
-    }
-    .submit {
-      @include green-conservative-button(14px, 2px, 0px);
-      padding: 5px 8px;
-      position: absolute;
-      top: 80px;
-      right: 20px;
-      &.off {
-        @include opacity(.6);
-        background: #CCC;
-        color: #777;
-        cursor: default;
-      }
-    }
-  }
-  .suggestions {
-    @include clearfix();
-    padding: 5px;
-    margin: 7px;
-    max-height: 175px;
-    overflow: auto;
-    border-bottom: 1px solid #999;
-
-    .head {
-      margin: 0 0 5px 0;
-    }
-    .suggestion {
-      @include clearfix();
-      float: left;
-      margin: 0 10px 0 0;
-      .tag,
-      .followB,
-      .unfollowB {
-        float: left;
-      }
-      .tag {
-        margin: 7px 0 0 0;
-        width: 155px;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-      .followB,
-      .unfollowB {
-        margin-left: 0px;
-        width: 80px;
-      }
-    }
-  }
-  .tweets {
-    .previous {
-      span {
-        font-size: 10px;
-        color: #666;
-        width: 155px;
-        display: inline-block;
-        cursor: default;
-      }
-    }
-    .tweet {
-      border-bottom: 1px solid #999;
-      padding: 7px;
-      position: relative;
-      margin: 0 6px 0 6px;
-
-      .top {
-        @include clearfix();
-        margin: 0 0 10px 0;
-        .type {
-          font-size: 14px;
-          font-weight: bold;
-          width: 58px;
-          text-align: right;
-          float: left;
-        }
-        .link {
-          float: left;
-          font-size: 11px;
-          color: #888;
-          margin: 3px 0 0 8px;
-          white-space: nowrap;
-          overflow: hidden;
-          width: 650px;
-        }
-      }
-      .head,
-      .head {
-        font-size: 11px;
-        color: #888;
-        position: absolute;
-        left: 3px;
-        cursor: default;
-        text-align: right;
-        width: 55px;
-        top: 3px;
-      }
-      .autocomplete {
-        margin: 20px 0 0 65px;
-      }
-      .mention-box {
-        width: 530px;
-      }
-      .mention,
-      .under {
-        position: absolute;
-        font-size: 13px;
-        width: 347px;
-        border: none;
-        width: 400px;
-        border-color: #CCC;
-        resize: none;
-        padding: 3px 6px;
-        margin: 0;
-        margin-left: 65px;
-        margin-bottom: 10px;
-        border: 1px solid #CCC;
-
-        &:hover,
-        &:focus {
-          border-color: #999;
-        }
-      }
-      .under {
-        border-color: transparent;
-      }
-      .title-c {
-        position: relative;
-        height: 53px;
-        .mention,
-        .under {
-          height: 40px;
-        }
-      }
-      .content-c {
-        position: relative;
-        height: 65px;
-        .mention,
-        .under {
-          height: 51px;
-        }
-      }
-      .info {
-        @include border-radius(2px);
-        position: absolute;
-        top: 36px;
-        left: 490px;
-        padding: 2px;
-        border: 1px solid #CCC;
-        background: #FFF;
-        img {
-          max-height: 110px;
-          max-width: 110px;
-        }
-      }
-      .include {
-        @include border-radius(2px);
-        border: 2px solid #CCC;
-        font-size: 14px;
-        font-weight: bold;
-        position: absolute;
-        right: 9px;
-        top: 50%;
-        margin-top: -25px;
-        width: 88px;
-        text-align: center;
-        padding: 5px;
-        color: #666;
-        cursor: pointer;
-        &:hover {
-          background: $picture-color;
-          color: #FFF;
-          border-color: $picture-color;
-        }
-      }
-      .mentions {
-        font-size: 11px;
-        color: #888;
-        margin: 5px 0 0 66px;
-        width: 460px;
-        cursor: default;
-      }
-      &.on {
-        .include {
-          background: $picture-color;
-          color: #FFF;
-          border-color: $picture-color;
-        }
-      }
-      &.Talk {
-        .type {
-          color: $talk-color;
-        }
-      }
-      &.Video {
-        .type {
-          color: $video-color;
-        }
-      }
-      &.Link {
-        .type {
-          color: $link-color;
-        }
-      }
-      &.Picture {
-        .type {
-          color: $picture-color;
-        }
-      }
-    }
-  }
-}
-
-.sidebar {
-  .interests,
-  .suggestions {
-    padding: 5px 6px;
-    img {
-      @include opacity(.8);
-      margin: 1px;
-      &:hover {
-        @include opacity(1);
-      }
-    }
-  }
-  .invites {
-    div {
-      padding: 4px 11px 7px;
-      .code {
-        color: #709721;
-      }
-    }
-  }
-}
+//#auth_box {
+//  position: relative;
+//  width: 620px;
+//  .top {
+//    @include border-radius(7px 7px 0 0);
+//    @include single-box-shadow(#999, 1px, 1px, 2px);
+//    position: relative;
+//    height: 110px;
+//    width: 100%;
+//    background: image-url("bg_textured.jpg") repeat;
+//    border-bottom: 3px solid #BFCBAD;
+//    z-index: 20;
+//    img {
+//      position: absolute;
+//      top: 4px;
+//      left: 8px;
+//    }
+//  }
+//  .bottom {
+//    @include border-radius(0 0 7px 7px);
+//    position: relative;
+//    width: 100%;
+//    background: #FAFAFA;
+//    z-index: 10;
+//    padding: 0 0 10px 0;
+//  }
+//  .head {
+//    font-size: 14px;
+//    color: #444;
+//    cursor: default;
+//  }
+//  .switch {
+//    @include link();
+//  }
+//  .left {
+//    margin-top: 25px;
+//    float: left;
+//    width: 300px;
+//    position: relative;
+//    height: 155px;
+//
+//    .head {
+//      margin: 0 0 0 25px;
+//    }
+//    .option {
+//      position: absolute;
+//      top: 33px;
+//      .log {
+//        position: absolute;
+//        left: 5px;
+//        top: 2px;
+//        font-size: 11px;
+//        color: #999;
+//      }
+//      .google-l-icon {
+//
+//      }
+//      .facebook-l-icon {
+//
+//      }
+//      &.one {
+//        left: 26px;
+//      }
+//      &.two {
+//        left: 140px;
+//      }
+//      &:hover {
+//        @include single-box-shadow(#999, 1px, 1px, 2px);
+//        cursor: pointer;
+//      }
+//    }
+//    .foot1,
+//    .foot2 {
+//      position: absolute;
+//      font-size: 11px;
+//      color: #666;
+//      left: 26px;
+//      width: 190px;
+//      cursor: default;
+//    }
+//    .foot1 {
+//      top: 73px;
+//    }
+//    .foot2 {
+//      top: 93px;
+//    }
+//  }
+//  .right {
+//    margin-top: 25px;
+//    float: left;
+//    position: relative;
+//
+//    .head {
+//      margin: 0 0 15px 9px;
+//    }
+//    .lClear {
+//      label {
+//        position: absolute;
+//        top: 0;
+//        left: 0;
+//        font-size: 14px;
+//        font-style: normal;
+//        color: #999;
+//        padding: 7px 0 7px 8px;
+//        text-align: left;
+//        width: 100%;
+//      }
+//      input {
+//        @include border-radius(2px);
+//        font-size: 16px;
+//        width: 280px;
+//        border-color: #999;
+//        color: #444;
+//      }
+//    }
+//    .submit {
+//      @include green-button(2px, 17px);
+//      font-weight: normal;
+//      padding: 2px 8px 4px;
+//    }
+//    .switch {
+//      position: absolute;
+//      bottom: 6px;
+//      left: 85px;
+//      font-size: 10px;
+//    }
+//  }
+//  .sig {
+//    text-align: center;
+//    font-size: 11px;
+//    margin: 13px 0 -9px 0;
+//    color: #555;
+//    cursor: default;
+//  }
+//  .errors {
+//    margin: 0 0 10px 0;
+//    width: 282px;
+//  }
+//  .invite-errors {
+//    margin: 0 0 10px 0;
+//    width: 273px;
+//  }
+//
+//  .invite {
+//    position: relative;
+//    width: 287px;
+//    left: -144px;
+//    margin-left: 50%;
+//    margin-bottom: 10px;
+//    padding-top: 30px;
+//    #new_invite_code {
+//      position: relative;
+//      label {
+//        font-size: 14px;
+//        top: 12px;
+//        left: 30px;
+//        color: #777;
+//        width: 240px;
+//      }
+//      #invite_code_code {
+//        @include single-box-shadow(#999, 1px, 1px, 2px);
+//        width: 270px;
+//        float: left;
+//        font-size: 22px;
+//        text-align: center;
+//        border: 2px solid #666;
+//      }
+//    }
+//  }
+//  .switch-c {
+//    text-align: center;
+//    margin-top: 10px;
+//  }
+//}
+//
+//#username_reset_box {
+//  padding: 10px;
+//  width: 310px;
+//  h2 {
+//
+//  }
+//  .help {
+//    font-size: 13px;
+//    margin: 5px 0 8px 0;
+//    span {
+//      color: #990000;
+//    }
+//  }
+//  .errors {
+//    margin: 0 0 8px 0;
+//    width: 280px;
+//  }
+//  .field {
+//    input {
+//      width: 130px;
+//    }
+//  }
+//  .submit {
+//    @include green-conservative-button(14px, 2px, 1px);
+//    font-weight: normal;
+//    padding: 4px 8px;
+//    margin: 8px 0 0 0;
+//  }
+//}
+//
+//// User profile images
+//.profileImage {
+//    @include border-radius(3px);
+//    background: #FFF;
+//    float: left;
+//}
+//
+//// User tags.
+//.tag.user {
+//    position: relative;
+//    z-index: 100;
+//    padding: 2px 0;
+//
+//    .drag-handleC {
+//        position: absolute;
+//        top: 50%;
+//        margin-top: -7px;
+//        right: 2px;
+//        cursor: move;
+//        display: none;
+//    }
+//    &:hover {
+//        padding-right: 21px;
+//        /*margin-left: -12px;*/
+//        .drag-handleC {
+//            display: block;
+//        }
+//    }
+//    a {
+//        text-decoration: none;
+//    }
+//}
+//
+//// User hover tabs
+//.userHover {
+//  .ui-tooltip-content {
+//    background-color: #F2F8E4;
+//    border-color: #CAE09D;
+//  }
+//  .name {
+//    font-size: 14px;
+//  }
+//  .followB,
+//  .unfollowB {
+//    margin: 5px 0px;
+//  }
+//}
+//
+//// The user panel, either left or right sidebar
+//.user-panel {
+//    padding: 40px 0 0 0;
+//
+//    .profile-image {
+//      @include border-radius(2px);
+//      position: absolute;
+//      top: 6px;
+//      left: 6px;
+//    }
+//    h3 {
+//      max-width: 138px;
+//      overflow: hidden;
+//      position: absolute;
+//      left: 42px;
+//      top: 11px;
+//    }
+//    .stats {
+//      position: relative;
+//      height: 62px;
+//      margin: 0 5px;
+//
+//      .label {
+//        position: absolute;
+//        color: #999;
+//        font-size: 9px;
+//        cursor: default;
+//
+//        &.followers {
+//          top: 4px;
+//          left: 4px;
+//          color: #666;
+//        }
+//        &.following {
+//          top: 4px;
+//          left: 79px;
+//          color: #666;
+//        }
+//        &.users {
+//          bottom: 6px;
+//          left: 62px;
+//        }
+//        &.topics {
+//          bottom: 6px;
+//          left: 111px;
+//        }
+//      }
+//      .btn {
+//        @include border-radius(2px);
+//        position: absolute;
+//        top: 17px;
+//        padding: 5px 0;
+//        text-align: center;
+//        width: 45px;
+//        font-size: 12px;
+//        background: #F9F9F9;
+//        border: 1px solid #CCC;
+//
+//        &.users1 {
+//          left: 0px;
+//        }
+//        &.users2 {
+//          left: 50px;
+//        }
+//        &.topics2 {
+//          left: 100px;
+//        }
+//      }
+//      .pop {
+//        font-size: 22px;
+//        cursor: default;
+//        color: #666;
+//        position: absolute;
+//        top: 17px;
+//        right: -2px;
+//        width: 53px;
+//        text-align: center;
+//      }
+//    }
+//    .links {
+//        @include clearfix();
+//        margin: 5px 5px 0 5px;
+//        clear: both;
+//
+//        a {
+//            float: left;
+//            color: #666;
+//            font-size: 12px;
+//            position: relative;
+//            background: #F9F9F9;
+//            border:  1px solid #CCC;
+//            padding: 4px 7px 4px 26px;
+//
+//            .icon {
+//                position: absolute; left: 4px; top: 50%;
+//                margin-top: -8px;
+//            }
+//        }
+//        .settings,
+//        .badge {
+//            width: 50px;
+//        }
+//        .user-notifications,
+//        .user-favorites {
+//            width: 80px;
+//            left: -1px;
+//        }
+//        .badge,
+//        .user-favorites {
+//            top: -1px;
+//            @include border-bottom-left-radius(2px);
+//        }
+//        .settings {
+//            @include border-top-left-radius(2px);
+//        }
+//        .user-notifications {
+//            @include border-top-right-radius(2px);
+//            .icon {
+//                font-weight: bold;
+//                font-size: 14px;
+//                left: 3px;
+//                margin-top: -9px;
+//                text-align: center;
+//                width: 20px;
+//            }
+//            &.on {
+//              color: #990000;
+//            }
+//        }
+//    }
+//}
+//
+//// For the right sidebar only
+//.sbrC {
+//  .user-panel {
+//    .head {
+//      position: relative;
+//      padding: 5px 5px 0 40px !important;
+//      height: 25px;
+//      .img {
+//        padding: 0 3px 0 0;
+//        background: image-url("bg_textured.jpg") repeat;
+//        position: absolute;
+//        left: 0;
+//        top: 0;
+//      }
+//      h3 {
+//        overflow: hidden;
+//        font-size: 16px;
+//        max-width: none;
+//        left: auto;
+//        top: auto;
+//        position: relative;
+//      }
+//    }
+//    .followB,
+//    .unfollowB {
+//      margin: 10px 0 10px 0px !important;
+//    }
+//    .stats {
+//      margin: 0;
+//    }
+//    .bio {
+//      margin: 10px 5px 8px 5px;
+//      font-size: 12px;
+//    }
+//  }
+//  .sidebarB {
+//    margin-left: 0px;
+//    margin-right: 0px;
+//  }
+//  .btn {
+//    color: #444;
+//  }
+//  .links {
+//    margin: 5px 0 0 0;
+//    a {
+//      background-color: #E4E4E4;
+//      top: 0px !important;
+//    }
+//    .badge { @include border-top-left-radius(2px); }
+//    .user-contributions { @include border-top-right-radius(2px); }
+//  }
+//}
+//
+//
+//// Wide buttons for either sidebar
+//.sidebarB {
+//  @include border-radius(2px);
+//  background-color: #FCF9F9;
+//  border: 1px solid #CCC;
+//  margin: 3px 7px 3px 5px;
+//  font-size: 14px;
+//  font-weight: bold;
+//  padding: 4px 8px 4px 30px;
+//  display: block;
+//  position: relative;
+//  color: #666;
+//
+//  .icon {
+//    position: absolute; top: 50%; left: 7px;
+//    margin-top: -8px;
+//  }
+//}
+//// Located in the user sidebar
+//#my-feed,
+//#my-favorites {
+//  &.dragging {
+//    background: blue;
+//    color: #FFF;
+//  }
+//  &.dropping {
+//    background: green;
+//  }
+//}
+//
+//// Confirmation pages
+//#confirm {
+//  @include clearfix();
+//  @include border-radius(10px);
+//  background: #E2E8D4;
+//  width: 500px;
+//  height: 400px;
+//  margin-left: 20px;
+//  text-align: center;
+//  position: relative;
+//  .nav {
+//    @include clearfix();
+//    @include border-radius(5px);
+//    background: #F2F8E4;
+//    margin: 10px 0 0 28px;
+//    width: 440px;
+//    font-size: 28px;
+//    .stepLabel {
+//      float: left;
+//      margin: 8px 0 10px 50px;
+//      display: block;
+//    }
+//    .step1, .step2, .step3 {
+//      @include green-button(14px, 28px);
+//      @include opacity(.5);
+//      width: 40px;
+//      margin: 10px 0 10px 50px;
+//      float: left;
+//      &.on {
+//        @include opacity(1);
+//      }
+//    }
+//  }
+//  #confirmPages {
+//    margin-top: 20px;
+//    .confirmPage.two,
+//    .confirmPage.three {
+//      display: none;
+//    }
+//    .bottomNav {
+//      @include border-radius(5px);
+//      position: absolute;
+//      width: 440px;
+//      left: 28px;
+//      bottom: 10px;
+//      .last, .next {
+//        @include green-button(14px, 28px);
+//        margin: 10px 0 10px 0;
+//        padding: 0 10px;
+//      }
+//      .last {
+//        float: left;
+//      }
+//      .next {
+//        float:right;
+//      }
+//    }
+//  }
+//}
+//
+//#users-c {
+//  .settings-c {
+//    .section {
+//      padding: 10px 5px;
+//      h3 {
+//        border-bottom: 1px solid #DDD;
+//        padding: 0 0 3px 5px;
+//      }
+//      .static {
+//        @include clearfix();
+//        margin: 5px 0 5px 8px;
+//        font-size: 13px;
+//        .name {
+//          float: left;
+//          margin: 0 10px 0 0;
+//          font-weight: bold;
+//        }
+//        .value {
+//          float: left;
+//        }
+//      }
+//      .check-label {
+//        input, label {
+//          width: auto;
+//        }
+//        label {
+//          font-weight: normal;
+//        }
+//      }
+//      label {
+//        font-weight: bold;
+//        padding-left: 8px;
+//        font-size: 13px;
+//      }
+//      input, textarea {
+//        width: 250px;
+//        margin: 0 0 0 5px;
+//      }
+//      textarea {
+//        height: 100px;
+//      }
+//      .submit {
+//        @include green-button(2px, 12px);
+//        padding: 2px 6px;
+//        margin: 10px 0 0 5px;
+//        float: left;
+//        width: auto;
+//      }
+//      .profile-image {
+//        @include border-radius(2px);
+//        margin: 10px 5px;
+//        float: left;
+//      }
+//      .upload {
+//        @include green-button(2px, 12px);
+//        padding: 2px 6px;
+//        margin: 10px 0 0 5px;
+//        float: left;
+//        width: auto;
+//      }
+//      #user_uploadB-progress {
+//        float: left;
+//        color: #666;
+//        margin: 11px 0 0 13px;
+//        font-size: 13px;
+//      }
+//    }
+//  }
+//  /* Splash Page styling */
+//  #topic-wall-container {
+//    @include single-box-shadow(#333, 2px, 2px, 4px);
+//    @include background-clip();
+//    @include border-radius(10px);
+//    background-color:rgba(0,0,0,0.3);
+//    padding: 10px;
+//    margin-left: -313px;
+//    left: 50%;
+//    position: absolute;
+//    top: 120px;
+//    z-index: 55;
+//
+//    &.tutorial {
+//      top: 50px;
+//      margin-left: -345px;
+//    }
+//
+//    .logo {
+//      position: absolute;
+//      left: 50%;
+//      margin-left: -203px;
+//      top: -125px;
+//      z-index: 55;
+//    }
+//    .tutorial-c {
+//      @include border-radius(7px);
+//      @include clearfix();
+//      width: 650px;
+//      padding: 20px;
+//      background: #FFF;
+//
+//      h1 {
+//        font-size: 20px;
+//      }
+//      h2 {
+//        font-size: 16px;
+//        .talk {
+//          color: $talk-color;
+//        }
+//        .link {
+//          color: $link-color;
+//        }
+//        .picture {
+//          color: $picture-color;
+//        }
+//        .video {
+//          color: $video-color;
+//        }
+//      }
+//      .search {
+//        margin: 10px 0 15px 0;
+//        clear: both;
+//
+//        h4 {
+//          margin: 0 0 0 2px;
+//        }
+//        input {
+//          @include border-radius(3px);
+//          margin: 3px 0 0 0;
+//          border: 5px solid #999;
+//          width: 234px;
+//          padding: 6px 8px;
+//
+//          &:hover,
+//          &:focus {
+//            border: 5px solid #666;
+//          }
+//        }
+//      }
+//      .social-connect {
+//        height: 60px;
+//        position: relative;
+//
+//        .facebook,
+//        .twitter {
+//          position: absolute;
+//          top: 27px;
+//          img {
+//            cursor: pointer;
+//          }
+//          .completed {
+//            position: relative;
+//            padding: 2px 0 0 25px;
+//            cursor: default;
+//            .square {
+//              @include border-radius(2px);
+//              position: absolute;
+//              top: 5px;
+//              left: 0px;
+//              width: 12px;
+//              height: 12px;
+//              background: #7BA821;
+//            }
+//          }
+//        }
+//        .facebook {
+//          left: 0px;
+//        }
+//        .twitter {
+//          left: 200px;
+//        }
+//      }
+//
+//      .user-cards {
+//        overflow: auto;
+//        max-height: 315px;
+//      }
+//      .next {
+//        @include grey-rollover(18px);
+//        cursor: pointer;
+//        display: inline-block;
+//        padding: 5px 15px 7px 15px;
+//        margin: 20px 0 0 0;
+//      }
+//      .footnote {
+//        font-size: 12px;
+//        color: #999;
+//        margin: 20px 0 -10px 0;
+//      }
+//    }
+//    .tutorial-5 {
+//
+//    }
+//    .tutorial-6 {
+//      .post-anatomy {
+//        margin: 15px 0 0 -2px;
+//      }
+//    }
+//  }
+//  #confirm-account {
+//    text-align: center;
+//    position: relative;
+//    color: #444;
+//    font-size: 14px;
+//    padding: 10px 0 20px;
+//    margin: 0 0 20px -175px;
+//    left: 50%;
+//    top: 20px;
+//    width: 350px;
+//  }
+//  .topic-wall {
+//    width: 110%;
+//    height: 110%;
+//    .tile {
+//      @include opacity(.1);
+//      float: left;
+//      background: #FFF;
+//      position: relative;
+//      width: 100px;
+//      height: 100px;
+//
+//      .s {
+//        display: relative;
+//
+//        .name {
+//          @include opacity(.85);
+//          cursor: default;
+//          display: none;
+//          position: absolute;
+//          top: 0px;
+//          left: 0px;
+//          width: 90px;
+//          background: #000;
+//          color: #FFF;
+//          font-size: 11px;
+//          padding: 2px 5px;
+//          overflow: hidden;
+//          white-space: nowrap;
+//        }
+//        .stats {
+//          display: none;
+//          cursor: default;
+//          .f,
+//          .l {
+//            padding: 2px 5px;
+//            background: #F9F9F9;
+//            font-size: 10px;
+//            color: #444;
+//            border-top: 1px solid #F3F3F3;
+//          }
+//          .f {
+//            border-bottom: 1px solid #DCDFD4;
+//          }
+//        }
+//      }
+//      &.hover,&:hover {
+//        .s {
+//          @include single-box-shadow(#333, 2px, 2px, 4px);
+//          border: 1px solid #000;
+//          position: absolute;
+//          z-index: 50;
+//          background: #FFF;
+//          top: -1px;
+//          left: -1px;
+//          width: 100px;
+//          min-height: 100px;
+//        }
+//      }
+//      &:hover {
+//        @include opacity(1);
+//        .s {
+//          z-index: 60;
+//        }
+//        .name {
+//          display: block;
+//        }
+//        .stats {
+//          display: block;
+//        }
+//      }
+//    }
+//  }
+//  .topic-wall-type {
+//    @include single-box-shadow(#333, 2px, 2px, 4px);
+//    border: 1px solid #333;
+//    position: fixed;
+//    bottom: 20px;
+//    left: 20px;
+//    background: #FFF;
+//    padding: 8px 12px;
+//    color: #444;
+//    z-index: 65;
+//  }
+//}
+//
+//.user-card {
+//  @include background-clip();
+//  @include border-radius(5px);
+//  background-color:rgba(0,0,0,0.4);
+//  float: left;
+//  position: relative;
+//  margin: 35px 15px 0 0;
+//  padding: 10px;
+//
+//  img {
+//    @include border-radius(3px);
+//    width: 100px;
+//    height: 100px;
+//    display: block;
+//    background: #FFF;
+//  }
+//  .name {
+//    position: absolute;
+//    bottom: 125px;
+//    left: 5px;
+//  }
+//  .followB,
+//  .unfollowB {
+//    @include border-radius(2px);
+//    position: absolute;
+//    bottom: 12px;
+//    left: 16px;
+//    font-size: 13px;
+//    height: auto;
+//    padding: 3px 10px;
+//    border: 2px solid #FFF;
+//  }
+//  .unfollowB {
+//    left: 10px;
+//  }
+//  &:hover {
+//    background-color:rgba(0,0,0,0.6);
+//  }
+//}
+//
+//#devise-sessions-c,
+//#devise-registrations-c {
+//  #auth_box {
+//    @include single-box-shadow(#999, 1px, 1px, 2px);
+//    margin: 10px auto;
+//    border: 1px solid #333;
+//  }
+//}
+//
+//#twitter-c {
+//  .welcome {
+//    padding: 0 0 10px 0;
+//    border-bottom: 2px solid #999;
+//    h1 {
+//
+//    }
+//    .help {
+//      font-size: 13px;
+//      color: #888;
+//      width: 520px;
+//      line-height: 1.6;
+//      margin: 7px 0 0 10px;
+//    }
+//    .choose-all {
+//      @include green-conservative-button(14px, 2px, 0px);
+//      padding: 5px 8px;
+//      position: absolute;
+//      top: 47px;
+//      right: 20px;
+//    }
+//    .submit {
+//      @include green-conservative-button(14px, 2px, 0px);
+//      padding: 5px 8px;
+//      position: absolute;
+//      top: 80px;
+//      right: 20px;
+//      &.off {
+//        @include opacity(.6);
+//        background: #CCC;
+//        color: #777;
+//        cursor: default;
+//      }
+//    }
+//  }
+//  .suggestions {
+//    @include clearfix();
+//    padding: 5px;
+//    margin: 7px;
+//    max-height: 175px;
+//    overflow: auto;
+//    border-bottom: 1px solid #999;
+//
+//    .head {
+//      margin: 0 0 5px 0;
+//    }
+//    .suggestion {
+//      @include clearfix();
+//      float: left;
+//      margin: 0 10px 0 0;
+//      .tag,
+//      .followB,
+//      .unfollowB {
+//        float: left;
+//      }
+//      .tag {
+//        margin: 7px 0 0 0;
+//        width: 155px;
+//        overflow: hidden;
+//        white-space: nowrap;
+//      }
+//      .followB,
+//      .unfollowB {
+//        margin-left: 0px;
+//        width: 80px;
+//      }
+//    }
+//  }
+//  .tweets {
+//    .previous {
+//      span {
+//        font-size: 10px;
+//        color: #666;
+//        width: 155px;
+//        display: inline-block;
+//        cursor: default;
+//      }
+//    }
+//    .tweet {
+//      border-bottom: 1px solid #999;
+//      padding: 7px;
+//      position: relative;
+//      margin: 0 6px 0 6px;
+//
+//      .top {
+//        @include clearfix();
+//        margin: 0 0 10px 0;
+//        .type {
+//          font-size: 14px;
+//          font-weight: bold;
+//          width: 58px;
+//          text-align: right;
+//          float: left;
+//        }
+//        .link {
+//          float: left;
+//          font-size: 11px;
+//          color: #888;
+//          margin: 3px 0 0 8px;
+//          white-space: nowrap;
+//          overflow: hidden;
+//          width: 650px;
+//        }
+//      }
+//      .head,
+//      .head {
+//        font-size: 11px;
+//        color: #888;
+//        position: absolute;
+//        left: 3px;
+//        cursor: default;
+//        text-align: right;
+//        width: 55px;
+//        top: 3px;
+//      }
+//      .autocomplete {
+//        margin: 20px 0 0 65px;
+//      }
+//      .mention-box {
+//        width: 530px;
+//      }
+//      .mention,
+//      .under {
+//        position: absolute;
+//        font-size: 13px;
+//        width: 347px;
+//        border: none;
+//        width: 400px;
+//        border-color: #CCC;
+//        resize: none;
+//        padding: 3px 6px;
+//        margin: 0;
+//        margin-left: 65px;
+//        margin-bottom: 10px;
+//        border: 1px solid #CCC;
+//
+//        &:hover,
+//        &:focus {
+//          border-color: #999;
+//        }
+//      }
+//      .under {
+//        border-color: transparent;
+//      }
+//      .title-c {
+//        position: relative;
+//        height: 53px;
+//        .mention,
+//        .under {
+//          height: 40px;
+//        }
+//      }
+//      .content-c {
+//        position: relative;
+//        height: 65px;
+//        .mention,
+//        .under {
+//          height: 51px;
+//        }
+//      }
+//      .info {
+//        @include border-radius(2px);
+//        position: absolute;
+//        top: 36px;
+//        left: 490px;
+//        padding: 2px;
+//        border: 1px solid #CCC;
+//        background: #FFF;
+//        img {
+//          max-height: 110px;
+//          max-width: 110px;
+//        }
+//      }
+//      .include {
+//        @include border-radius(2px);
+//        border: 2px solid #CCC;
+//        font-size: 14px;
+//        font-weight: bold;
+//        position: absolute;
+//        right: 9px;
+//        top: 50%;
+//        margin-top: -25px;
+//        width: 88px;
+//        text-align: center;
+//        padding: 5px;
+//        color: #666;
+//        cursor: pointer;
+//        &:hover {
+//          background: $picture-color;
+//          color: #FFF;
+//          border-color: $picture-color;
+//        }
+//      }
+//      .mentions {
+//        font-size: 11px;
+//        color: #888;
+//        margin: 5px 0 0 66px;
+//        width: 460px;
+//        cursor: default;
+//      }
+//      &.on {
+//        .include {
+//          background: $picture-color;
+//          color: #FFF;
+//          border-color: $picture-color;
+//        }
+//      }
+//      &.Talk {
+//        .type {
+//          color: $talk-color;
+//        }
+//      }
+//      &.Video {
+//        .type {
+//          color: $video-color;
+//        }
+//      }
+//      &.Link {
+//        .type {
+//          color: $link-color;
+//        }
+//      }
+//      &.Picture {
+//        .type {
+//          color: $picture-color;
+//        }
+//      }
+//    }
+//  }
+//}
+//
+//.sidebar {
+//  .interests,
+//  .suggestions {
+//    padding: 5px 6px;
+//    img {
+//      @include opacity(.8);
+//      margin: 1px;
+//      &:hover {
+//        @include opacity(1);
+//      }
+//    }
+//  }
+//  .invites {
+//    div {
+//      padding: 4px 11px 7px;
+//      .code {
+//        color: #709721;
+//      }
+//    }
+//  }
+//}

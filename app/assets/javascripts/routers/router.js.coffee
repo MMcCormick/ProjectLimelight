@@ -17,24 +17,21 @@ class LL.Router extends Backbone.Router
   #######
 
   userFeed: (id=0) ->
-    return unless LL.App.current_user
-
     @hideModal()
 
     user = if id == 0 then LL.App.current_user else LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
 
     # Only load the feed if it's new
-    if LL.App.UserFeed.id != id
-      sidebar = new LL.Views.UserSidebar(model: user)
-      sidebar.page = 'feed'
-      sidebar.render()
+    sidebar = new LL.Views.UserSidebar(model: user)
+    sidebar.page = 'feed'
+    sidebar.render()
 
-      feed_header = new LL.Views.UserFeedHeader(model: user)
-      feed_header.render()
+    feed_header = new LL.Views.UserFeedHeader(model: user)
+    feed_header.render()
 
-      LL.App.UserFeed.id = id
-      LL.App.UserFeed.page = 1
-      LL.App.UserFeed.fetch({data: {id: id}})
+    LL.App.UserFeed.id = id
+    LL.App.UserFeed.page = 1
+    LL.App.UserFeed.fetch({data: {id: id}})
 
   likeFeed: (id) ->
     user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
@@ -64,6 +61,20 @@ class LL.Router extends Backbone.Router
     LL.App.UserFollowers.id = id
     LL.App.UserFollowers.page = 1
     LL.App.UserFollowers.fetch({data: {id: id}})
+
+  userFollowingUsers: (id) ->
+    user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+
+    sidebar = new LL.Views.UserSidebar(model: user)
+    sidebar.page = 'following_users'
+    sidebar.render()
+
+#    feed_header = new LL.Views.UserLikeHeader(model: user)
+#    feed_header.render()
+
+    LL.App.UserFollowingUsers.id = id
+    LL.App.UserFollowingUsers.page = 1
+    LL.App.UserFollowingUsers.fetch({data: {id: id}})
 
   #######
   # TOPICS

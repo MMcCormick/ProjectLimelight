@@ -5,6 +5,6 @@ class LL.Views.UserSidebarFollowStats extends Backbone.View
   initialize: ->
 
   render: ->
-    $(@el).html(@template(user: @model))
+    $(@el).html(@template(user: @model, page: @page))
 
     @

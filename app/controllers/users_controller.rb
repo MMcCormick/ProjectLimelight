@@ -11,33 +11,6 @@ class UsersController < ApplicationController
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
 
     not_found("User not found") unless @user
-
-    #@title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Contributions"
-    #@description = "A feed containing all posts submitted by " + @user.username
-    #page = params[:p] ? params[:p].to_i : 1
-    #@right_sidebar = true if current_user != @user
-    #@more_path = user_path :p => page + 1
-    #@core_objects = Post.contribute_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
-  end
-
-  def update
-    @user = User.find_by_slug(params[:id])
-
-    if !signed_in? || @user.id != current_user.id
-      redirect_to root_path
-    end
-
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        format.html { redirect_to user_settings_path @user }
-        response = build_ajax_response(:ok, user_settings_path(@user), "Settings updated!")
-        format.json { render json: response, status: :created }
-      else
-        format.html { redirect_to user_settings_path @user }
-        response = build_ajax_response(:error, nil, "Settings could not be updated", @user.errors)
-        format.json { render json: response, status: :unprocessable_entity }
-      end
-    end
   end
 
   def default_picture
@@ -58,51 +31,18 @@ class UsersController < ApplicationController
     end
   end
 
-  # Update a users default picture
-  def picture_update
-    image = current_user.add_image(current_user.id, params[:image_location])
-    current_user.set_default_image(image.id) if image
-    if current_user.save
-      current_user.available_dimensions.each do |dimension|
-        current_user.available_modes.each do |mode|
-          expire_fragment("#{current_user.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
-        end
-      end
-    end
-
-    render :json => {:status => 'ok'}
+  def influence_increases
+    @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    @increases = @user.influence_increases
   end
 
-  def hover
+  def followers
     @user = User.find_by_slug(params[:id])
-    render :partial => 'hover_tab', :user => @user
-  end
+    not_found("User not found") unless @user
 
-  def settings
-    @site_style = 'narrow'
-    @title = 'Settings'
-    @description = "Here a user can edit their settings: personal info, profile picture, and email notification settings"
-    unless signed_in?
-      redirect_to root_path
-    end
-  end
-
-  def update_settings
-    current_user.email_share = !!params[:email_share]
-    current_user.email_comment = !!params[:email_comment]
-    current_user.email_mention = !!params[:email_mention]
-    current_user.email_follow = !!params[:email_follow]
-    current_user.notify_email = params[:notify_email] == "0" ? false : true
-    current_user.weekly_email = !!params[:weekly_email]
-
-    if current_user.save
-      response = build_ajax_response(:ok, nil, "Email Settings updated")
-      status = 200
-    else
-      response = build_ajax_response(:error, nil, "Email Settings could not be updated", current_user.errors)
-      status = :unprocessable_entity
-    end
-    render json: response, :status => status
+    @title = (current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
+    @description = "A list of all users who are following" + @user.username
+    @followers = User.where(:following_users => @user.id)
   end
 
   def following_users
@@ -127,26 +67,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def followers
-    @user = User.find_by_slug(params[:id])
-    not_found("User not found") unless @user
-
-    @site_style = 'narrow'
-    @title = (current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
-    @description = "A list of all users who are following" + @user.username
-    @right_sidebar = true if current_user != @user
-
-    page = params[:p] ? params[:p].to_i : 1
-    @more_path = user_followers_path :p => page + 1
-    per_page = 50
-    @followers = User.where(:following_users => @user.id).limit(per_page).skip((page - 1) * per_page)
-    @more_path = nil if @followers.count(true) < per_page
-
-    respond_to do |format|
-      format.js { render json: user_list_response("users/std_list", @followers, @more_path), status: :ok }
-      format.html
-    end
-  end
 
   def following_topics
     @user = User.find_by_slug(params[:id])
@@ -195,6 +115,113 @@ class UsersController < ApplicationController
 
       render "splash", :layout => "topic_wall"
     end
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  def update
+    @user = User.find_by_slug(params[:id])
+
+    if !signed_in? || @user.id != current_user.id
+      redirect_to root_path
+    end
+
+    respond_to do |format|
+      if @user.update_attributes(params[:user])
+        format.html { redirect_to user_settings_path @user }
+        response = build_ajax_response(:ok, user_settings_path(@user), "Settings updated!")
+        format.json { render json: response, status: :created }
+      else
+        format.html { redirect_to user_settings_path @user }
+        response = build_ajax_response(:error, nil, "Settings could not be updated", @user.errors)
+        format.json { render json: response, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # Update a users default picture
+  def picture_update
+    image = current_user.add_image(current_user.id, params[:image_location])
+    current_user.set_default_image(image.id) if image
+    if current_user.save
+      current_user.available_dimensions.each do |dimension|
+        current_user.available_modes.each do |mode|
+          expire_fragment("#{current_user.slug}-#{dimension[0]}-#{dimension[1]}-#{mode}")
+        end
+      end
+    end
+
+    render :json => {:status => 'ok'}
+  end
+
+  def hover
+    @user = User.find_by_slug(params[:id])
+    render :partial => 'hover_tab', :user => @user
+  end
+
+  def settings
+    @site_style = 'narrow'
+    @title = 'Settings'
+    @description = "Here a user can edit their settings: personal info, profile picture, and email notification settings"
+    unless signed_in?
+      redirect_to root_path
+    end
+  end
+
+  def update_settings
+    current_user.email_share = !!params[:email_share]
+    current_user.email_comment = !!params[:email_comment]
+    current_user.email_mention = !!params[:email_mention]
+    current_user.email_follow = !!params[:email_follow]
+    current_user.notify_email = params[:notify_email] == "0" ? false : true
+    current_user.weekly_email = !!params[:weekly_email]
+
+    if current_user.save
+      response = build_ajax_response(:ok, nil, "Email Settings updated")
+      status = 200
+    else
+      response = build_ajax_response(:error, nil, "Email Settings could not be updated", current_user.errors)
+      status = :unprocessable_entity
+    end
+    render json: response, :status => status
   end
 
   def tutorial
@@ -248,12 +275,6 @@ class UsersController < ApplicationController
       }
       format.html
     end
-  end
-
-  def influence_increases
-    @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
-    @increases = @user.influence_increases
-    foo = "bar"
   end
 
 end

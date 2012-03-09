@@ -1,4 +1,4 @@
-class LL.Views.UserSidebarTalk extends Backbone.View
+class LL.Views.TopicSidebarTalk extends Backbone.View
   template: JST['widgets/sidebar_talk']
   tagName: 'section'
   className: 'sidebar-talk-form'
@@ -9,16 +9,16 @@ class LL.Views.UserSidebarTalk extends Backbone.View
   initialize: ->
 
   render: ->
-    placeholder = if LL.App.current_user == @model then 'Talk about something!' else "Talk with @#{@model.get('username')}!"
+    placeholder = "Talk about #{@model.get('name')}!"
     $(@el).html(@template(user: @model, placeholder: placeholder))
     @
 
   loadPostForm: =>
     view = new LL.Views.PostForm()
     view.modal = true
-    unless LL.App.current_user == @model
-      view.initial_text = "@#{@model.get('username')} "
-    view.render()
+    view.placeholder_text = "Talk about #{@model.get('name')}..."
+    view.render().el
+    view.addTopic($(view.el).find('#post-form-mention1'), @model.get('name'), @model.get('_id'), @model.get('id'))
     setTimeout ->
       view.focusTalk()
     , 500

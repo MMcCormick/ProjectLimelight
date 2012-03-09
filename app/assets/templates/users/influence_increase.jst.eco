@@ -1,2 +1,2 @@
-<%= @influence.get('topic').get('name') %> -
-<div class="amount"><%= parseInt(@influence.get('amount')) %></div>
+<img src="<%= @influence.get('topic').get('id') %>/picture?h=30&w=30&m=fillcropmid">
+<div class="amount">+<%= parseInt(@influence.get('amount')) %></div>

@@ -385,6 +385,10 @@ header {
   @include clearfix();
   margin: 0 0 0 5px;
 
+  > h2 {
+    margin: 0 0 15px 0;
+    cursor: default;
+  }
   .column {
     width: 230px;
     margin: 0 10px 0 0;

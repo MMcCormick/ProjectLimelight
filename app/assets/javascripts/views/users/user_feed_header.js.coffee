@@ -4,12 +4,9 @@ class LL.Views.UserFeedHeader extends Backbone.View
   className: 'feed-header'
 
   initialize: ->
-    @loaded = null
+    $('#user-feed-header').remove()
 
   render: =>
-    return if @loaded
-    @loaded = true
-
     $(@el).html(@template(user: @model))
     $('#feed').prepend($(@el))
 

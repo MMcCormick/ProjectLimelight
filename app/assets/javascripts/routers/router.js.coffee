@@ -55,12 +55,12 @@ class LL.Router extends Backbone.Router
     sidebar.page = 'followers'
     sidebar.render()
 
-#    feed_header = new LL.Views.UserLikeHeader(model: user)
-#    feed_header.render()
-
-    LL.App.UserFollowers.id = id
-    LL.App.UserFollowers.page = 1
-    LL.App.UserFollowers.fetch({data: {id: id}})
+    collection = new LL.Collections.UserFollowers()
+    view = new LL.Views.UserList(collection: collection, model: user)
+    view.pageTitle = "#{user.get('username')}'s Followers"
+    collection.id = id
+    collection.page = 1
+    collection.fetch({data: {id: id}})
 
   userFollowingUsers: (id) ->
     user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
@@ -69,12 +69,12 @@ class LL.Router extends Backbone.Router
     sidebar.page = 'following_users'
     sidebar.render()
 
-#    feed_header = new LL.Views.UserLikeHeader(model: user)
-#    feed_header.render()
-
-    LL.App.UserFollowingUsers.id = id
-    LL.App.UserFollowingUsers.page = 1
-    LL.App.UserFollowingUsers.fetch({data: {id: id}})
+    collection = new LL.Collections.UserFollowingUsers()
+    view = new LL.Views.UserList(collection: collection, model: user)
+    view.pageTitle = "Users #{user.get('username')} is Following"
+    collection.id = id
+    collection.page = 1
+    collection.fetch({data: {id: id}})
 
   #######
   # TOPICS

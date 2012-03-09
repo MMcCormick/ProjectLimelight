@@ -1,5 +1,20 @@
 $feedFontColor: $grayDark;
 
+.feed-header {
+  margin-bottom: 5px;
+  h2 {
+    display: inline-block;
+    margin-left: 5px;
+  }
+  .stat {
+    position: relative;
+    display: inline-block;
+    bottom: 3px;
+    font-size: 14px;
+    margin-left: 15px
+  }
+}
+
 .tile {
   @include border-radius(2px);
   padding: 5px;

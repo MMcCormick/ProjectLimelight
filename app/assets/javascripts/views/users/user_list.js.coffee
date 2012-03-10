@@ -13,6 +13,7 @@ class LL.Views.UserList extends Backbone.View
   render: =>
     $(@el).html(@template())
     $('#feed').html(@el)
+    $(@el).before("<h2>#{@pageTitle}</h2>")
 
     for user,i in @collection.models
       @appendUser(user, i%2)

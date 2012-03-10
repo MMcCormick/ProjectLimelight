@@ -1,7 +1,7 @@
 $feedFontColor: $grayDark;
 
 .feed-header {
-  margin-bottom: 3px;
+  margin-bottom: 6px;
   h2 {
     display: inline-block;
     margin-right: 20px;
@@ -149,6 +149,7 @@ $feedFontColor: $grayDark;
     .follow,
     .comment-form,
     .like {
+      box-shadow: none;
       padding: 0;
       margin: 0 15px 0 0;
       font-size: 13px;

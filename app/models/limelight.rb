@@ -574,23 +574,38 @@ module Limelight #:nodoc:
 
         # Update mentioned topics if applicable
         if type != :new && defined?(topic_mentions) && !topic_mentions.empty?
-          topic_mentions.each do |mention|
-            action.pop_snippets.new(:amount => amt, :id => mention.id, :object_type => "Topic")
-            Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
-            if mention.score >= 100 && mention.influencers.length >= 10
-              Resque.enqueue_in(2.seconds, RecalculateInfluence, mention.id.to_s)
-            end
-          end
-
           # Update the popularities on affected objects
           Topic.collection.update(
             {:_id => {"$in" => mentioned_topic_ids}},
             {
-              "$inc" => { :score => amt,
-                          "influencers."+user_id.to_s+".influence" => amt }
+              "$inc" => {
+                      :score => amt,
+                      "influencers."+user_id.to_s+".influence" => amt
+              }
             },
             {:upsert => true}
           )
+
+          topic_mentions.each do |mention|
+            action.pop_snippets.new(:amount => amt, :id => mention.id, :object_type => "Topic")
+            Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
+            if amt > 0 && self.class.name == 'Talk'
+              Pusher[user_id.to_s].trigger('influence_change', {
+                      :topic_id => mention.id.to_s,
+                      :amount => amt,
+                      :topic => {
+                        :id => mention.name,
+                        :_id => mention.id.to_s,
+                        :name => mention.name,
+                        :public_id => mention.public_id,
+                        :slug => mention.slug
+                      }
+              })
+            end
+            if mention.score >= 100 && mention.influencers.length >= 10
+              Resque.enqueue_in(2.seconds, RecalculateInfluence, mention.id.to_s)
+            end
+          end
         end
 
         action.save!

@@ -6,869 +6,870 @@
         Purpose of the stylesheet follows.
 */
 
+
 // Topic tags.
-.tag.topic {
-  position: relative;
-  a {
-    color: #709721;
-  }
-  img {
-    @include border-radius(2px);
-    position: absolute;
-    top: 0px;
-    left: 0px;
-  }
-  &:hover {
-    img {
-      @include single-box-shadow(#CCC, 1px, 1px, 3px);
-    }
-  }
-  &.with-image {
-    padding: 6px 0 8px 37px;
-  }
-}
-
-// Health Navigation
-#health-nav {
-  a {
-    margin: 0 5px;
-  }
-}
-
-#topic-panel {
-  h1 {
-    font-size: 20px;
-    font-weight: normal;
-  }
-  .topic-types {
-    @include clearfix();
-    margin: 5px 0 0 5px;
-    li {
-      font-size: 12px;
-      float: left;
-      color: #444;
-    }
-    a {
-      color: #444;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-  .sn {
-    margin: 0 0 0 5px;
-    position: relative;
-    float: left;
-    color: #444;
-    font-size: 12px;
-    .tip {
-      position: absolute;
-      top: 1px;
-      right: -13px;
-      font-size: 11px;
-    }
-  }
-  .image {
-    position: relative;
-    min-height: 100px;
-    margin: 5px 0 0 0;
-    width: 200px;
-    text-align: center;
-  }
-  .pop {
-    @include single-box-shadow(#333, 1px, 1px, 2px);
-    @include border-radius(2px);
-    font-size: 20px;
-    cursor: default;
-    color: #555;
-    position: absolute;
-    top: 0px;
-    left: -1px;
-    border: 1px solid #888;
-    background: #FFF;
-    padding: 1px 7px;
-  }
-  .edit-topic-b {
-    position: absolute;
-    padding: 1px 3px;
-    background: #FFF;
-    top: 4px;
-    right: 3px;
-    font-size: 10px;
-  }
-  .stats {
-    position: relative;
-    height: 27px;
-  }
-  .label {
-    position: absolute;
-    color: #999;
-    font-size: 9px;
-    cursor: default;
-
-    &.followers {
-      top: 0px;
-      left: 4px;
-      color: #666;
-    }
-  }
-  .btn {
-    @include border-radius(2px);
-    padding: 1px 7px;
-    margin: 5px 0 0 0;
-    background: #F9F9F9;
-    border: 1px solid #CCC;
-    float: left;
-    display: block;
-    height: 18px;
-    font-size: 13px;
-  }
-  .profile-image {
-    margin: 3px 0 0 0;
-  }
-  .followB,
-  .unfollowB {
-    float: left;
-    margin: 5px 10px 0 0;
-  }
-  .also {
-    margin: 8px 0 0 0;
-    div {
-      font-size: 11px;
-    }
-  }
-  .summary {
-    font-size: 12px;
-    margin: 7px 0 0 0;
-  }
-  .topic-connections {
-    .connection {
-      @include clearfix();
-      position: relative;
-      .view-all {
-        position: absolute;
-        top: 4px;
-        right: 5px;
-        font-size: 12px;
-      }
-      .tag {
-        margin: 3px 0 0 0;
-        font-size: 12px;
-      }
-    }
-  }
-}
-
-.pull-from-c {
-  padding: 10px;
-  h2 {
-    padding: 0 5px 5px 5px;
-    border-bottom: 1px solid #999;
-  }          
-  .help {
-    font-size: 11px;
-    color: #666;
-    padding: 7px 5px;
-  }
-  .topics {
-    margin: 10px 0 0 0;
-    a {
-      margin: 5px 10px;
-    }
-  }
-}
-
-#topics-c {
-  .show-c {
-    .pull-from {
-      @include border-radius(2px);
-      font-size: 12px;
-      padding: 4px 6px;
-      margin: 10px 0 0 10px;
-      float: left;
-      border: 1px solid transparent;
-      color: #000;
-
-      &:hover {
-        background: #FFF;
-        border-color: #CCC;
-        cursor: pointer;
-      }
-    }
-  }
-  .new-c {
-    #created-topics {
-      position: absolute;
-      top: 59px;
-      left: 290px;
-      a {
-        display: block;
-        font-size: 14px;
-        margin-bottom: 5px;
-      }
-    }
-  }
-  .edit-c,
-  .new-c {
-    .section {
-      position: relative;
-      padding: 10px 5px;
-      h3 {
-        border-bottom: 1px solid #999;
-        padding: 0 0 3px 5px;
-      }
-      h5 {
-        padding: 5px 0 2px 7px;
-        font-size: 13px;
-      }
-      .field {
-        margin-top: 5px;
-      }
-      .lClear {
-        margin-top: 5px;
-        label {
-          font-weight: normal;
-          padding: 0 0 0 5px;
-          top: 7px;
-        }
-      }
-      #freebase-lookup-id {
-        font-size: 11px;
-        cursor: default;
-        margin: 5px 0 0 8px;
-        span {
-          @include link();
-          cursor: pointer;
-        }
-      }
-      #add-alias-form textarea {
-        height: 75px;
-      }
-      input,
-      textarea {
-        width: 250px;
-        margin: 0 0 0 5px;
-      }
-      .tag {
-        margin: 0 10px 5px 7px;
-      }
-      .unprimaryB,
-      .primaryB,
-      .ooacB,
-      .unooacB,
-      .delete {
-        @include link();
-        float: left;
-        font-size: 10px;
-        margin: 5px 5px 0 0;
-        cursor: pointer;
-      }
-      .alias-ooac {
-        input {
-          width: auto;
-          margin: 3px 5px;
-        }
-        label {
-          font-size: 10px;
-        }
-      }
-      .alias {
-        @include clearfix();
-        .name {
-          margin: 2px 10px 0 7px;
-          float: left;
-        }
-        .ac {
-          @include link();
-          font-size: 10px;
-          margin: 5px 0 0 0;
-          float: left;
-        }
-      }
-      .fb-connection {
-        margin: 0 0 0 7px;
-      }
-      textarea {
-        height: 100px;
-        width: 500px;
-      }
-      select {
-        margin: 5px 0 0 5px;
-        font-size: 13px;
-        width: 266px;
-      }
-      .check-label {
-        margin: 5px 0 0 0;
-        input, label {
-          width: auto;
-        }
-        label {
-          font-weight: normal;
-        }
-      }
-      .submit {
-        @include green-button(2px, 12px);
-        padding: 2px 6px;
-        margin: 5px 0 0 5px;
-        float: left;
-        width: auto;
-      }
-      .topic-image {
-        @include border-radius(2px);
-        margin: 10px 5px;
-        float: left;
-      }
-      .upload {
-        @include green-button(2px, 12px);
-        padding: 2px 6px;
-        margin: 10px 0 0 5px;
-        float: left;
-        width: auto;
-      }
-      .con-topic {
-        .tag {
-          float: left;
-        }
-      }
-      #freebase-update-form {
-        .image-preview {
-          max-height: 150px;
-          max-width: 150px;
-          margin: 0 5px;
-        }
-        #summary {
-          height: 180px;
-        }
-      }
-      #user_uploadB-progress {
-        float: left;
-        color: #666;
-        margin: 11px 0 0 13px;
-        font-size: 13px;
-      }
-    }
-  }
-}
-
-.topic-con-full {
-  margin: auto;
-
-  h4 {
-    @include border-radius(2px);
-    display: inline-block;
-    margin: 10px 0 5px 15px;
-    padding: 2px 7px;
-    background: #B0D751;
-    color: white;
-  }
-}
-
-.ac_results {
-  .auto-topic
-  {
-    .types {
-      position: absolute;
-      background-color: white;
-      bottom: -2px;
-      right: 81px;
-      padding: 4px 10px 5px;
-      font-size: 11px;
-      font-style: italic;
-    }
-  }
-  .ac_over {
-    .auto-topic {
-      .types {
-        color: white;
-        background: #1551A5;
-        @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1551A5));
-      }
-    }
-  }
-}
-
-.topic-card {
-  @include opacity(.75);
-  float: left;
-  background: #FFF;
-  border: 1px solid #999;
-  height: 196px;
-
-  .name {
-    padding: 4px 7px;
-    background: #444;
-    color: #fff;
-    cursor: default;
-    position: relative;
-    width: 136px;
-    overflow: hidden;
-    white-space: nowrap;
-
-    .cancel {
-      position: absolute;
-      top: 50%;
-      right: 4px;
-      margin: -10px 0 0 0;
-      background: #a1271d;
-      color: #FFF;
-      font-weight: bold;
-      padding: 1px 5px;
-      font-size: 11px;
-      border: 1px solid #FFF;
-      cursor: pointer;
-      display: none;
-    }
-  }
-  .actions {
-  }
-  .followB,
-  .unfollowB {
-    @include border-radius(0px);
-    margin: 0px;
-
-  }
-  img {
-    background: #FFF;
-  }
-
-  &:hover {
-    @include opacity(1);
-
-    .cancel {
-      display: block;
-    }
-  }
-}
-
-.topic-card-small {
-  @include background-clip();
-  @include border-radius(5px);
-  background-color:rgba(0,0,0,0.4);
-  float: left;
-  position: relative;
-  margin: 70px 20px 0 0;
-  padding: 10px;
-
-  img {
-    @include border-radius(3px);
-    width: 100px;
-    height: 100px;
-    display: block;
-    background: #FFF;
-  }
-  .name {
-    position: absolute;
-    bottom: 125px;
-    left: 5px;
-  }
-  .followB,
-  .unfollowB {
-    @include border-radius(2px);
-    position: absolute;
-    bottom: 12px;
-    left: 16px;
-    font-size: 13px;
-    height: auto;
-    padding: 3px 10px;
-    border: 2px solid #FFF;
-  }
-  .cancel {
-    @include border-radius(2px);
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 11px;
-    padding: 1px 4px;
-    color: #FFF;
-    background: #BA7362;
-    border: 1px solid #FFF;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .unfollowB {
-    left: 10px;
-  }
-  &:hover {
-    background-color:rgba(0,0,0,0.6);
-  }
-}
-
-.topic-cards {
-  .topic-card {
-    margin: 10px 25px;
-  }
-}
-
-#topic_con_sugs-c {
-  h2 {
-    margin: 15px 0 0 10px;
-    font-weight: normal;
-  }
-  .subheader {
-    font-size: 12px;
-    margin: 5px 0 0 12px;
-  }
-  #new_topic_con_sug {
-    position: relative;
-    /*TODO: why does everything mess up if i remove this padding*/
-    padding: 1px;
-    margin: 10px 10px 0px 55px;
-    width: 707px;
-
-    .topic1,
-    .topic2 {
-      position: absolute;
-      input {
-        width: 140px;
-        font-size: 13px;
-      }
-    }
-    .errors {
-      left: 186px;
-      position: absolute;
-      top: 30px;
-    }
-    .topic1,
-    .topic-pic.two {
-      left: 0px;
-    }
-    .topic2,
-    .topic-pic.two {
-      left: 551px;
-    }
-    .connection-select {
-      position: absolute;
-      left: 186px;
-      select {
-        font-size: 13px;
-        width: 335px;
-        color: #666;
-        padding: 4px 6px;
-      }
-    }
-    .topic-pic {
-      padding: 2px;
-      background: #FFF;
-      border: 1px solid #999;
-      position: absolute;
-      top: 50px;
-      width: 150px;
-      height: 150px;
-      div, img {
-        width: 150px;
-        height: 150px;
-      }
-      div {
-        background: #BBB;
-      }
-    }
-    #reverse-b {
-      @include border-radius(2px);
-      position: absolute;
-      left: 325px;
-      top: 113px;
-      padding: 0 5px 3px;
-      font-weight: bold;
-      cursor: pointer;
-      color: #FFF;
-      background: #666
-    }
-    .sug-a-label {
-      position: absolute;
-      top: 71px;
-      width: 335px;
-      left: 186px;
-      text-align: center;
-      font-size: 11px;
-      cursor: pointer;
-      &.two {
-        top: 161px;
-      }
-    }
-    .sug-a {
-      position: absolute;
-      background: image-url("connection-suggestion-arrows.png");
-      cursor: pointer;
-      width: 335px;
-      height: 13px;
-      left: 186px;
-      &.one {
-        top: 85px;
-        &.bi {
-          top: 115px;
-        }
-      }
-      &.two {
-        top: 150px;
-      }
-      &.pull {
-        background-position: 0px -13px;
-      }
-      &.rev {
-        background-position: 0px -26px;
-      }
-      &.rev.pull {
-        background-position: 0px -39px;
-      }
-      &.bi {
-        background-position: 0px -52px;
-      }
-      &.bi.pull {
-        background-position: 0px -65px;
-      }
-    }
-    #con-description {
-      position: absolute;
-      left: 3px;
-      top: 215px;
-      width: 700px;
-      font-size: 11px;
-      text-align: center;
-
-      .inline,
-      .inline-pull,
-      .inline-rev {
-        color: #000;
-      }
-    }
-    .actions {
-      padding-top: 270px;
-      text-align: center;
-    }
-    .submit {
-      @include green-button(3px, 18px);
-    }
-  }
-  #sug-list {
-    margin: 10px 10px 0 55px;
-
-    .empty {
-      font-style: italic;
-      padding: 2px 0 5px 4px;
-    }
-    .teaser {
-      position: relative;
-      margin: 10px 0;
-      background: transparent;
-      border: none;
-
-      .topic1,
-      .topic2 {
-        >div {
-          display: table-cell;
-          vertical-align: middle;
-          width: 100px;
-          height: 58px;
-          text-align: center;
-        }
-      }
-      .topic1 {
-
-      }
-      .topic2 {
-        position: absolute;
-        left: 410px;
-        top: 0px;
-      }
-      .inline {
-        left: 130px;
-        position: absolute;
-        text-align: center;
-        top: 10px;
-        width: 250px;
-        z-index: 20;
-        span {
-          background: #FFF;
-          color: #444;
-          border: 1px solid #444;
-          padding: 0px 5px;
-        }
-      }
-      .sug-a-small {
-        position: absolute;
-        background: image-url("connection-suggestion-arrows-small.png");
-        width: 250px;
-        height: 10px;
-        left: 130px;
-        &.one {
-          top: 14px;
-          z-index: 10;
-        }
-        &.two {
-          top: 37px;
-        }
-        &.pull {
-          background-position: 0px -10px;
-        }
-        &.rev {
-          background-position: 0px -20px;
-        }
-        &.rev.pull {
-          background-position: 0px -30px;
-        }
-        &.bi {
-          background-position: 0px -40px;
-        }
-        &.bi.pull {
-          background-position: 0px -50px;
-        }
-      }
-      .con-description {
-        position: absolute;
-        left: 0px;
-        top: 26px;
-        left: 250px;
-        font-size: 11px;
-        padding: 0 3px;
-        color: #666;
-      }
-      .scoreC {
-        position: absolute;
-        top: 7px;
-        left: 530px;
-        button {
-          display: block;
-          padding: 4px 10px 3px;
-          margin: 2px;
-          width: 130px;
-          color: #FFF;
-          &.voteB {
-            background: transparent;
-            color: #000;
-          }
-          &.up.voteB {
-            border: 1px solid #709721;
-          }
-          &.up.unvoteB {
-            background: #709721;
-          }
-          &.down.voteB {
-            border: 1px solid #990000;
-          }
-          &.down.unvoteB {
-            background: #990000;
-          }
-        }
-      }
-    }
-  }
-}
-
-.mod-connections {
-  font-size: 12px;
-  padding: 5px 7px;
-  border-bottom: 1px solid #CCC;
-  display: block;
-  margin-top: -3px;
-
-  .first {
-
-  }
-  .second {
-    font-style: italic;
-    font-size: 11px;
-  }
-  &:hover {
-    background: $picture-color;
-    color: #FFF;
-  }
-}
-
-#topic_connections-c {
-  .new-c {
-    form {
-      padding: 10px;
-    }
-    .float {
-      float: left;
-      margin: 0 5px;
-    }
-    .topic {
-      padding-top: 5px;
-      float: left;
-    }
-    input {
-      margin-bottom: 0px;
-    }
-    .field {
-      margin-bottom: 10px;
-    }
-  }
-}
-
-.g-images {
-  @include clearfix();
-  position: relative;
-  padding: 5px 25px 3px 25px;
-  float: left;
-  text-align: center;
-
-  .left,
-  .right {
-    position: absolute;
-    font-weight: bold;
-    font-size: 11px;
-    cursor: pointer;
-  }
-  .left {
-    left: 3px;
-  }
-  .right {
-    right: 3px;
-  }
-  .image {
-    float: left;
-    width: 150px;
-
-    img {
-      max-width: 150px;
-      max-height: 150px;
-    }
-    .original-size {
-      font-size: 11px;
-      margin: 2px 0 0 0;
-    }
-  }
-  .submit {
-    @include green-button(2px, 11px);
-    margin: 0 auto !important;
-  }
-}
-
-.fetch-google-images {
-  @include link();
-}
-
-.topic-health-teaser {
-  @include clearfix();
-  position: relative;
-  min-height: 100px;
-  border-bottom: 1px solid #999;
-  padding: 0 0 0 110px;
-  background: #FFF;
-  margin-left: 1px;
-
-  .profile-image {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-  }
-  h3 {
-    padding: 5px 0 0 0;
-  }
-  .google {
-    float: left;
-    text-align: center;
-    min-height: 50px;
-
-    h4 {
-      width: 150px;
-    }
-  }
-  .connections {
-    float: left;
-    min-height: 50px;
-    margin: 0 0 0 50px;
-  }
-  .disable {}
-}
+//.tag.topic {
+//  position: relative;
+//  a {
+//    color: #709721;
+//  }
+//  img {
+//    @include border-radius(2px);
+//    position: absolute;
+//    top: 0px;
+//    left: 0px;
+//  }
+//  &:hover {
+//    img {
+//      @include single-box-shadow(#CCC, 1px, 1px, 3px);
+//    }
+//  }
+//  &.with-image {
+//    padding: 6px 0 8px 37px;
+//  }
+//}
+//
+//// Health Navigation
+//#health-nav {
+//  a {
+//    margin: 0 5px;
+//  }
+//}
+//
+//#topic-panel {
+//  h1 {
+//    font-size: 20px;
+//    font-weight: normal;
+//  }
+//  .topic-types {
+//    @include clearfix();
+//    margin: 5px 0 0 5px;
+//    li {
+//      font-size: 12px;
+//      float: left;
+//      color: #444;
+//    }
+//    a {
+//      color: #444;
+//      &:hover {
+//        text-decoration: underline;
+//      }
+//    }
+//  }
+//  .sn {
+//    margin: 0 0 0 5px;
+//    position: relative;
+//    float: left;
+//    color: #444;
+//    font-size: 12px;
+//    .tip {
+//      position: absolute;
+//      top: 1px;
+//      right: -13px;
+//      font-size: 11px;
+//    }
+//  }
+//  .image {
+//    position: relative;
+//    min-height: 100px;
+//    margin: 5px 0 0 0;
+//    width: 200px;
+//    text-align: center;
+//  }
+//  .pop {
+//    @include single-box-shadow(#333, 1px, 1px, 2px);
+//    @include border-radius(2px);
+//    font-size: 20px;
+//    cursor: default;
+//    color: #555;
+//    position: absolute;
+//    top: 0px;
+//    left: -1px;
+//    border: 1px solid #888;
+//    background: #FFF;
+//    padding: 1px 7px;
+//  }
+//  .edit-topic-b {
+//    position: absolute;
+//    padding: 1px 3px;
+//    background: #FFF;
+//    top: 4px;
+//    right: 3px;
+//    font-size: 10px;
+//  }
+//  .stats {
+//    position: relative;
+//    height: 27px;
+//  }
+//  .label {
+//    position: absolute;
+//    color: #999;
+//    font-size: 9px;
+//    cursor: default;
+//
+//    &.followers {
+//      top: 0px;
+//      left: 4px;
+//      color: #666;
+//    }
+//  }
+//  .btn {
+//    @include border-radius(2px);
+//    padding: 1px 7px;
+//    margin: 5px 0 0 0;
+//    background: #F9F9F9;
+//    border: 1px solid #CCC;
+//    float: left;
+//    display: block;
+//    height: 18px;
+//    font-size: 13px;
+//  }
+//  .profile-image {
+//    margin: 3px 0 0 0;
+//  }
+//  .followB,
+//  .unfollowB {
+//    float: left;
+//    margin: 5px 10px 0 0;
+//  }
+//  .also {
+//    margin: 8px 0 0 0;
+//    div {
+//      font-size: 11px;
+//    }
+//  }
+//  .summary {
+//    font-size: 12px;
+//    margin: 7px 0 0 0;
+//  }
+//  .topic-connections {
+//    .connection {
+//      @include clearfix();
+//      position: relative;
+//      .view-all {
+//        position: absolute;
+//        top: 4px;
+//        right: 5px;
+//        font-size: 12px;
+//      }
+//      .tag {
+//        margin: 3px 0 0 0;
+//        font-size: 12px;
+//      }
+//    }
+//  }
+//}
+//
+//.pull-from-c {
+//  padding: 10px;
+//  h2 {
+//    padding: 0 5px 5px 5px;
+//    border-bottom: 1px solid #999;
+//  }
+//  .help {
+//    font-size: 11px;
+//    color: #666;
+//    padding: 7px 5px;
+//  }
+//  .topics {
+//    margin: 10px 0 0 0;
+//    a {
+//      margin: 5px 10px;
+//    }
+//  }
+//}
+//
+//#topics-c {
+//  .show-c {
+//    .pull-from {
+//      @include border-radius(2px);
+//      font-size: 12px;
+//      padding: 4px 6px;
+//      margin: 10px 0 0 10px;
+//      float: left;
+//      border: 1px solid transparent;
+//      color: #000;
+//
+//      &:hover {
+//        background: #FFF;
+//        border-color: #CCC;
+//        cursor: pointer;
+//      }
+//    }
+//  }
+//  .new-c {
+//    #created-topics {
+//      position: absolute;
+//      top: 59px;
+//      left: 290px;
+//      a {
+//        display: block;
+//        font-size: 14px;
+//        margin-bottom: 5px;
+//      }
+//    }
+//  }
+//  .edit-c,
+//  .new-c {
+//    .section {
+//      position: relative;
+//      padding: 10px 5px;
+//      h3 {
+//        border-bottom: 1px solid #999;
+//        padding: 0 0 3px 5px;
+//      }
+//      h5 {
+//        padding: 5px 0 2px 7px;
+//        font-size: 13px;
+//      }
+//      .field {
+//        margin-top: 5px;
+//      }
+//      .lClear {
+//        margin-top: 5px;
+//        label {
+//          font-weight: normal;
+//          padding: 0 0 0 5px;
+//          top: 7px;
+//        }
+//      }
+//      #freebase-lookup-id {
+//        font-size: 11px;
+//        cursor: default;
+//        margin: 5px 0 0 8px;
+//        span {
+//          @include link();
+//          cursor: pointer;
+//        }
+//      }
+//      #add-alias-form textarea {
+//        height: 75px;
+//      }
+//      input,
+//      textarea {
+//        width: 250px;
+//        margin: 0 0 0 5px;
+//      }
+//      .tag {
+//        margin: 0 10px 5px 7px;
+//      }
+//      .unprimaryB,
+//      .primaryB,
+//      .ooacB,
+//      .unooacB,
+//      .delete {
+//        @include link();
+//        float: left;
+//        font-size: 10px;
+//        margin: 5px 5px 0 0;
+//        cursor: pointer;
+//      }
+//      .alias-ooac {
+//        input {
+//          width: auto;
+//          margin: 3px 5px;
+//        }
+//        label {
+//          font-size: 10px;
+//        }
+//      }
+//      .alias {
+//        @include clearfix();
+//        .name {
+//          margin: 2px 10px 0 7px;
+//          float: left;
+//        }
+//        .ac {
+//          @include link();
+//          font-size: 10px;
+//          margin: 5px 0 0 0;
+//          float: left;
+//        }
+//      }
+//      .fb-connection {
+//        margin: 0 0 0 7px;
+//      }
+//      textarea {
+//        height: 100px;
+//        width: 500px;
+//      }
+//      select {
+//        margin: 5px 0 0 5px;
+//        font-size: 13px;
+//        width: 266px;
+//      }
+//      .check-label {
+//        margin: 5px 0 0 0;
+//        input, label {
+//          width: auto;
+//        }
+//        label {
+//          font-weight: normal;
+//        }
+//      }
+//      .submit {
+//        @include green-button(2px, 12px);
+//        padding: 2px 6px;
+//        margin: 5px 0 0 5px;
+//        float: left;
+//        width: auto;
+//      }
+//      .topic-image {
+//        @include border-radius(2px);
+//        margin: 10px 5px;
+//        float: left;
+//      }
+//      .upload {
+//        @include green-button(2px, 12px);
+//        padding: 2px 6px;
+//        margin: 10px 0 0 5px;
+//        float: left;
+//        width: auto;
+//      }
+//      .con-topic {
+//        .tag {
+//          float: left;
+//        }
+//      }
+//      #freebase-update-form {
+//        .image-preview {
+//          max-height: 150px;
+//          max-width: 150px;
+//          margin: 0 5px;
+//        }
+//        #summary {
+//          height: 180px;
+//        }
+//      }
+//      #user_uploadB-progress {
+//        float: left;
+//        color: #666;
+//        margin: 11px 0 0 13px;
+//        font-size: 13px;
+//      }
+//    }
+//  }
+//}
+//
+//.topic-con-full {
+//  margin: auto;
+//
+//  h4 {
+//    @include border-radius(2px);
+//    display: inline-block;
+//    margin: 10px 0 5px 15px;
+//    padding: 2px 7px;
+//    background: #B0D751;
+//    color: white;
+//  }
+//}
+//
+//.ac_results {
+//  .auto-topic
+//  {
+//    .types {
+//      position: absolute;
+//      background-color: white;
+//      bottom: -2px;
+//      right: 81px;
+//      padding: 4px 10px 5px;
+//      font-size: 11px;
+//      font-style: italic;
+//    }
+//  }
+//  .ac_over {
+//    .auto-topic {
+//      .types {
+//        color: white;
+//        background: #1551A5;
+//        @include background-image(linear-gradient(#3077CE, #2B6FC6 25%, #1551A5));
+//      }
+//    }
+//  }
+//}
+//
+//.topic-card {
+//  @include opacity(.75);
+//  float: left;
+//  background: #FFF;
+//  border: 1px solid #999;
+//  height: 196px;
+//
+//  .name {
+//    padding: 4px 7px;
+//    background: #444;
+//    color: #fff;
+//    cursor: default;
+//    position: relative;
+//    width: 136px;
+//    overflow: hidden;
+//    white-space: nowrap;
+//
+//    .cancel {
+//      position: absolute;
+//      top: 50%;
+//      right: 4px;
+//      margin: -10px 0 0 0;
+//      background: #a1271d;
+//      color: #FFF;
+//      font-weight: bold;
+//      padding: 1px 5px;
+//      font-size: 11px;
+//      border: 1px solid #FFF;
+//      cursor: pointer;
+//      display: none;
+//    }
+//  }
+//  .actions {
+//  }
+//  .followB,
+//  .unfollowB {
+//    @include border-radius(0px);
+//    margin: 0px;
+//
+//  }
+//  img {
+//    background: #FFF;
+//  }
+//
+//  &:hover {
+//    @include opacity(1);
+//
+//    .cancel {
+//      display: block;
+//    }
+//  }
+//}
+//
+//.topic-card-small {
+//  @include background-clip();
+//  @include border-radius(5px);
+//  background-color:rgba(0,0,0,0.4);
+//  float: left;
+//  position: relative;
+//  margin: 70px 20px 0 0;
+//  padding: 10px;
+//
+//  img {
+//    @include border-radius(3px);
+//    width: 100px;
+//    height: 100px;
+//    display: block;
+//    background: #FFF;
+//  }
+//  .name {
+//    position: absolute;
+//    bottom: 125px;
+//    left: 5px;
+//  }
+//  .followB,
+//  .unfollowB {
+//    @include border-radius(2px);
+//    position: absolute;
+//    bottom: 12px;
+//    left: 16px;
+//    font-size: 13px;
+//    height: auto;
+//    padding: 3px 10px;
+//    border: 2px solid #FFF;
+//  }
+//  .cancel {
+//    @include border-radius(2px);
+//    position: absolute;
+//    top: 5px;
+//    right: 5px;
+//    font-size: 11px;
+//    padding: 1px 4px;
+//    color: #FFF;
+//    background: #BA7362;
+//    border: 1px solid #FFF;
+//    font-weight: bold;
+//    cursor: pointer;
+//  }
+//  .unfollowB {
+//    left: 10px;
+//  }
+//  &:hover {
+//    background-color:rgba(0,0,0,0.6);
+//  }
+//}
+//
+//.topic-cards {
+//  .topic-card {
+//    margin: 10px 25px;
+//  }
+//}
+//
+//#topic_con_sugs-c {
+//  h2 {
+//    margin: 15px 0 0 10px;
+//    font-weight: normal;
+//  }
+//  .subheader {
+//    font-size: 12px;
+//    margin: 5px 0 0 12px;
+//  }
+//  #new_topic_con_sug {
+//    position: relative;
+//    /*TODO: why does everything mess up if i remove this padding*/
+//    padding: 1px;
+//    margin: 10px 10px 0px 55px;
+//    width: 707px;
+//
+//    .topic1,
+//    .topic2 {
+//      position: absolute;
+//      input {
+//        width: 140px;
+//        font-size: 13px;
+//      }
+//    }
+//    .errors {
+//      left: 186px;
+//      position: absolute;
+//      top: 30px;
+//    }
+//    .topic1,
+//    .topic-pic.two {
+//      left: 0px;
+//    }
+//    .topic2,
+//    .topic-pic.two {
+//      left: 551px;
+//    }
+//    .connection-select {
+//      position: absolute;
+//      left: 186px;
+//      select {
+//        font-size: 13px;
+//        width: 335px;
+//        color: #666;
+//        padding: 4px 6px;
+//      }
+//    }
+//    .topic-pic {
+//      padding: 2px;
+//      background: #FFF;
+//      border: 1px solid #999;
+//      position: absolute;
+//      top: 50px;
+//      width: 150px;
+//      height: 150px;
+//      div, img {
+//        width: 150px;
+//        height: 150px;
+//      }
+//      div {
+//        background: #BBB;
+//      }
+//    }
+//    #reverse-b {
+//      @include border-radius(2px);
+//      position: absolute;
+//      left: 325px;
+//      top: 113px;
+//      padding: 0 5px 3px;
+//      font-weight: bold;
+//      cursor: pointer;
+//      color: #FFF;
+//      background: #666
+//    }
+//    .sug-a-label {
+//      position: absolute;
+//      top: 71px;
+//      width: 335px;
+//      left: 186px;
+//      text-align: center;
+//      font-size: 11px;
+//      cursor: pointer;
+//      &.two {
+//        top: 161px;
+//      }
+//    }
+//    .sug-a {
+//      position: absolute;
+//      background: image-url("connection-suggestion-arrows.png");
+//      cursor: pointer;
+//      width: 335px;
+//      height: 13px;
+//      left: 186px;
+//      &.one {
+//        top: 85px;
+//        &.bi {
+//          top: 115px;
+//        }
+//      }
+//      &.two {
+//        top: 150px;
+//      }
+//      &.pull {
+//        background-position: 0px -13px;
+//      }
+//      &.rev {
+//        background-position: 0px -26px;
+//      }
+//      &.rev.pull {
+//        background-position: 0px -39px;
+//      }
+//      &.bi {
+//        background-position: 0px -52px;
+//      }
+//      &.bi.pull {
+//        background-position: 0px -65px;
+//      }
+//    }
+//    #con-description {
+//      position: absolute;
+//      left: 3px;
+//      top: 215px;
+//      width: 700px;
+//      font-size: 11px;
+//      text-align: center;
+//
+//      .inline,
+//      .inline-pull,
+//      .inline-rev {
+//        color: #000;
+//      }
+//    }
+//    .actions {
+//      padding-top: 270px;
+//      text-align: center;
+//    }
+//    .submit {
+//      @include green-button(3px, 18px);
+//    }
+//  }
+//  #sug-list {
+//    margin: 10px 10px 0 55px;
+//
+//    .empty {
+//      font-style: italic;
+//      padding: 2px 0 5px 4px;
+//    }
+//    .teaser {
+//      position: relative;
+//      margin: 10px 0;
+//      background: transparent;
+//      border: none;
+//
+//      .topic1,
+//      .topic2 {
+//        >div {
+//          display: table-cell;
+//          vertical-align: middle;
+//          width: 100px;
+//          height: 58px;
+//          text-align: center;
+//        }
+//      }
+//      .topic1 {
+//
+//      }
+//      .topic2 {
+//        position: absolute;
+//        left: 410px;
+//        top: 0px;
+//      }
+//      .inline {
+//        left: 130px;
+//        position: absolute;
+//        text-align: center;
+//        top: 10px;
+//        width: 250px;
+//        z-index: 20;
+//        span {
+//          background: #FFF;
+//          color: #444;
+//          border: 1px solid #444;
+//          padding: 0px 5px;
+//        }
+//      }
+//      .sug-a-small {
+//        position: absolute;
+//        background: image-url("connection-suggestion-arrows-small.png");
+//        width: 250px;
+//        height: 10px;
+//        left: 130px;
+//        &.one {
+//          top: 14px;
+//          z-index: 10;
+//        }
+//        &.two {
+//          top: 37px;
+//        }
+//        &.pull {
+//          background-position: 0px -10px;
+//        }
+//        &.rev {
+//          background-position: 0px -20px;
+//        }
+//        &.rev.pull {
+//          background-position: 0px -30px;
+//        }
+//        &.bi {
+//          background-position: 0px -40px;
+//        }
+//        &.bi.pull {
+//          background-position: 0px -50px;
+//        }
+//      }
+//      .con-description {
+//        position: absolute;
+//        left: 0px;
+//        top: 26px;
+//        left: 250px;
+//        font-size: 11px;
+//        padding: 0 3px;
+//        color: #666;
+//      }
+//      .scoreC {
+//        position: absolute;
+//        top: 7px;
+//        left: 530px;
+//        button {
+//          display: block;
+//          padding: 4px 10px 3px;
+//          margin: 2px;
+//          width: 130px;
+//          color: #FFF;
+//          &.voteB {
+//            background: transparent;
+//            color: #000;
+//          }
+//          &.up.voteB {
+//            border: 1px solid #709721;
+//          }
+//          &.up.unvoteB {
+//            background: #709721;
+//          }
+//          &.down.voteB {
+//            border: 1px solid #990000;
+//          }
+//          &.down.unvoteB {
+//            background: #990000;
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
+//
+//.mod-connections {
+//  font-size: 12px;
+//  padding: 5px 7px;
+//  border-bottom: 1px solid #CCC;
+//  display: block;
+//  margin-top: -3px;
+//
+//  .first {
+//
+//  }
+//  .second {
+//    font-style: italic;
+//    font-size: 11px;
+//  }
+//  &:hover {
+//    background: $picture-color;
+//    color: #FFF;
+//  }
+//}
+//
+//#topic_connections-c {
+//  .new-c {
+//    form {
+//      padding: 10px;
+//    }
+//    .float {
+//      float: left;
+//      margin: 0 5px;
+//    }
+//    .topic {
+//      padding-top: 5px;
+//      float: left;
+//    }
+//    input {
+//      margin-bottom: 0px;
+//    }
+//    .field {
+//      margin-bottom: 10px;
+//    }
+//  }
+//}
+//
+//.g-images {
+//  @include clearfix();
+//  position: relative;
+//  padding: 5px 25px 3px 25px;
+//  float: left;
+//  text-align: center;
+//
+//  .left,
+//  .right {
+//    position: absolute;
+//    font-weight: bold;
+//    font-size: 11px;
+//    cursor: pointer;
+//  }
+//  .left {
+//    left: 3px;
+//  }
+//  .right {
+//    right: 3px;
+//  }
+//  .image {
+//    float: left;
+//    width: 150px;
+//
+//    img {
+//      max-width: 150px;
+//      max-height: 150px;
+//    }
+//    .original-size {
+//      font-size: 11px;
+//      margin: 2px 0 0 0;
+//    }
+//  }
+//  .submit {
+//    @include green-button(2px, 11px);
+//    margin: 0 auto !important;
+//  }
+//}
+//
+//.fetch-google-images {
+//  @include link();
+//}
+//
+//.topic-health-teaser {
+//  @include clearfix();
+//  position: relative;
+//  min-height: 100px;
+//  border-bottom: 1px solid #999;
+//  padding: 0 0 0 110px;
+//  background: #FFF;
+//  margin-left: 1px;
+//
+//  .profile-image {
+//    position: absolute;
+//    top: 0px;
+//    left: 0px;
+//  }
+//  h3 {
+//    padding: 5px 0 0 0;
+//  }
+//  .google {
+//    float: left;
+//    text-align: center;
+//    min-height: 50px;
+//
+//    h4 {
+//      width: 150px;
+//    }
+//  }
+//  .connections {
+//    float: left;
+//    min-height: 50px;
+//    margin: 0 0 0 50px;
+//  }
+//  .disable {}
+//}

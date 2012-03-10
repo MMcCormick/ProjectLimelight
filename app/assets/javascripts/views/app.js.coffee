@@ -1,6 +1,10 @@
 class LL.Views.App extends Backbone.View
   el: $('body')
 
+  events:
+    'mouseover .tlink': 'startTopicHoverTab'
+    'mouseout .tlink': 'stopTopicHoverTab'
+
   initialize: ->
     self = @
 
@@ -46,3 +50,13 @@ class LL.Views.App extends Backbone.View
     unless $('body').hasClass(className)
       $('body').removeClass('two three four five').addClass(className)
       @trigger('rearrange_columns')
+
+  startTopicHoverTab: (e) =>
+    $(e.target).oneTime 500, 'topic-hover', ->
+      topic = LL.App.Topics.findOrCreate($(e.currentTarget).data('id'))
+      view = new LL.Views.TopicHoverTab(model: topic)
+      view.target = $(e.target)
+      view.render()
+
+  stopTopicHoverTab: (e) =>
+    $(e.target).stopTime 'topic-hover'

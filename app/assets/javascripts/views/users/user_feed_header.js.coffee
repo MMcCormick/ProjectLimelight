@@ -12,7 +12,7 @@ class LL.Views.UserFeedHeader extends Backbone.View
 
     # Influence strip
     influences_collection = new LL.Collections.InfluenceIncreases()
-    influences = new LL.Views.InfluenceIncreases(collection: influences_collection)
+    influences = new LL.Views.InfluenceIncreases(collection: influences_collection, model: @model)
     influences_collection.fetch({data: {id: @model.get('slug')}})
     $('#feed').append(influences.el)
 

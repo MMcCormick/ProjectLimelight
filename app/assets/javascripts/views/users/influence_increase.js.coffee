@@ -5,7 +5,6 @@ class LL.Views.InfluenceIncrease extends Backbone.View
   initialize: ->
 
   render: =>
-    console.log @model
-    $(@el).html(@template(influence: @model))
+    $(@el).html(@template(influence: @model)).hide()
 
     @

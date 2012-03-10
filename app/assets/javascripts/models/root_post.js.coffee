@@ -7,9 +7,10 @@ class LL.Models.RootPost extends Backbone.Model
     }
 
     if resp.root.type == 'Topic'
-      data['root'] = new LL.Models.Topic(resp.root)
+      console.log resp
+      data['root'] = LL.App.Topics.findOrCreate(resp.root.id, new LL.Models.Topic(resp.root))
     else
-      data['root'] = LL.App.Posts.findOrCreate(resp.id, new LL.Models.Post(resp.root))
+      data['root'] = LL.App.Posts.findOrCreate(resp.root.id, new LL.Models.Post(resp.root))
 
     public_responses = []
     for response in resp.public_responses

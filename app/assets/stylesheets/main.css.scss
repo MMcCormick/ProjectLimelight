@@ -585,8 +585,19 @@ header {
     margin: 10px 10px 0 10px;
     width: 652px;
   }
-}
+  .static-page {
+    padding-top: 5px;
 
-.static-page {
-
+    h3 {
+      margin: 10px 0 5px 0;
+    }
+    span {
+      font-weight: bold;
+    }
+    p {
+      font-size: 15px;
+      line-height: 18px;
+      padding: 5px 0;
+    }
+  }
 }

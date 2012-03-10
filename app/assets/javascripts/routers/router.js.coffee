@@ -6,6 +6,7 @@ class LL.Router extends Backbone.Router
     'users/:id/likes': 'likeFeed'
     'users/:id': 'userFeed'
     'posts/:id': 'postShow'
+    'pages/:name': 'staticPage'
     ':id': 'topicFeed'
     '': 'userFeed'
 
@@ -125,3 +126,18 @@ class LL.Router extends Backbone.Router
   hideModal: ->
     LL.App.Modal.hide()
     $('.modal, .content-tile').remove()
+
+  staticPage: (name) ->
+    sidebar = new LL.Views.StaticPageSidebar()
+    sidebar.page = name
+    sidebar.render()
+    switch name
+      when "about"
+        foo = "bar"
+      when "contact"
+        foo = "bar"
+      when "help"
+        view = new LL.Views.PostForm()
+        view.placeholder_text = "Suggest something!"
+        $('.content-tile section').append(view.render().el)
+        view.addTopic($(view.el).find('#post-form-mention1'), "Limelight Feedback", 'foo', "limelight-feedback")

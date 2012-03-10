@@ -74,7 +74,18 @@ ProjectLimelight::Application.routes.draw do
     get ':id' => 'users#show'
   end
   resources :posts, :only => [:show]
-  get ':id' => 'topics#show', :as => :topic_show
+
+  # Pages
+  scope 'pages' do
+    get 'about' => 'pages#about', :as => :about_path
+    get 'contact' => 'pages#contact', :as => :contact_path
+    get 'privacy' => 'pages#privacy', :as => :privacy_path
+    get 'terms' => 'pages#terms', :as => :terms_path
+    get 'help' => 'pages#help', :as => :help_path
+  end
+
+  #Topics (catch all)
+  get ':id' => 'topics#show', :as => :topic
 
   #scope 'users' do
   #  get 'settings' => 'users#settings', :as => :user_settings
@@ -133,11 +144,6 @@ ProjectLimelight::Application.routes.draw do
   # Pages
   #get '/pages/everything' => 'pages#everything', :as => :everything
   #get '/pages/admin' => 'pages#admin', :as => :admin_dashboard
-  #get '/pages/about' => 'pages#about', :as => :about_path
-  #get '/pages/contact' => 'pages#contact', :as => :contact_path
-  #get '/pages/privacy' => 'pages#privacy', :as => :privacy_path
-  #get '/pages/terms' => 'pages#terms', :as => :terms_path
-  #get '/pages/help' => 'pages#help', :as => :help_path
   #get '/pages/splash' => 'pages#splash', :as => :splash
   #root :to => 'users#feed'
   

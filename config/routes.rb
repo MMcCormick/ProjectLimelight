@@ -85,7 +85,7 @@ ProjectLimelight::Application.routes.draw do
   end
 
   #Topics (catch all)
-  get ':id' => 'topics#show', :as => :topic_show
+  get ':id' => 'topics#show', :as => :topic
 
   #scope 'users' do
   #  get 'settings' => 'users#settings', :as => :user_settings

@@ -1,0 +1,29 @@
+<section>
+  <ul class='menu unstyled'>
+    <li>
+      <a class='first <%= 'on' if @page == 'about' %>' href="/pages/about">
+        About<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a class='<%= 'on' if @page == 'contact' %>' href="/pages/contact">
+        Contact<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a class='<%= 'on' if @page == 'help' %>' href="/pages/help">
+        Help<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a class='<%= 'on' if @page == 'privacy' %>' href="/pages/privacy">
+        Privacy<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a class='<%= 'on' if @page == 'terms' %>' href="/pages/terms">
+        Terms<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+  </ul>
+</section>

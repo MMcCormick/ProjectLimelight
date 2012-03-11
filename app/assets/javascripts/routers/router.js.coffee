@@ -23,59 +23,102 @@ class LL.Router extends Backbone.Router
     user = if id == 0 then LL.App.current_user else LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
 
     # Only load the feed if it's new
-    sidebar = new LL.Views.UserSidebar(model: user)
-    sidebar.page = 'feed'
-    sidebar.render()
+    if LL.App.findScreen('user_feed', id)
+      LL.App.showScreen('user_feed', id)
+    else
+      screen = LL.App.newScreen('user_feed', id)
 
-    feed_header = new LL.Views.UserFeedHeader(model: user)
-    feed_header.render()
+      sidebar = LL.App.findSidebar('user', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('user', id, user)
+      screen['sidebar'] = sidebar
 
-    LL.App.UserFeed.id = id
-    LL.App.UserFeed.page = 1
-    LL.App.UserFeed.fetch({data: {id: id}})
+      feed_header = new LL.Views.UserFeedHeader(model: user)
+      screen['components'].push(feed_header)
+
+      feed = new LL.Views.PostsFeed(collection: LL.App.UserFeed)
+      LL.App.Feed = feed
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('user_feed', id)
+
+      LL.App.UserFeed.id = id
+      LL.App.UserFeed.page = 1
+      LL.App.UserFeed.fetch({data: {id: id}})
 
   likeFeed: (id) ->
     user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
 
-    # Only load the feed if it's new
-    sidebar = new LL.Views.UserSidebar(model: user)
-    sidebar.page = 'likes'
-    sidebar.render()
+    if LL.App.findScreen('like_feed', id)
+      LL.App.showScreen('like_feed', id)
+    else
+      screen = LL.App.newScreen('like_feed', id)
 
-    feed_header = new LL.Views.UserLikeHeader(model: user)
-    feed_header.render()
+      sidebar = LL.App.findSidebar('user', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('user', id, user)
+      screen['sidebar'] = sidebar
 
-    LL.App.LikeFeed.id = id
-    LL.App.LikeFeed.page = 1
-    LL.App.LikeFeed.fetch({data: {id: id}})
+      feed_header = new LL.Views.UserLikeHeader(model: user)
+      screen['components'].push(feed_header)
+
+      feed = new LL.Views.PostsFeed(collection: LL.App.LikeFeed)
+      LL.App.Feed = feed
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('like_feed', id)
+
+      LL.App.LikeFeed.id = id
+      LL.App.LikeFeed.page = 1
+      LL.App.LikeFeed.fetch({data: {id: id}})
 
   userFollowers: (id) ->
     user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
 
-    sidebar = new LL.Views.UserSidebar(model: user)
-    sidebar.page = 'followers'
-    sidebar.render()
+    if LL.App.findScreen('user_followers', id)
+      LL.App.showScreen('user_followers', id)
+    else
+      screen = LL.App.newScreen('user_followers', id)
 
-    collection = new LL.Collections.UserFollowers()
-    view = new LL.Views.UserList(collection: collection, model: user)
-    view.pageTitle = "#{user.get('username')}'s Followers"
-    collection.id = id
-    collection.page = 1
-    collection.fetch({data: {id: id}})
+      sidebar = LL.App.findSidebar('user', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('user', id, user)
+      screen['sidebar'] = sidebar
+
+      collection = new LL.Collections.UserFollowers()
+      feed = new LL.Views.UserList(collection: collection, model: user)
+      feed.pageTitle = "#{user.get('username')}'s Followers"
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('user_followers', id)
+
+      collection.id = id
+      collection.page = 1
+      collection.fetch({data: {id: id}})
 
   userFollowingUsers: (id) ->
     user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
 
-    sidebar = new LL.Views.UserSidebar(model: user)
-    sidebar.page = 'following_users'
-    sidebar.render()
+    if LL.App.findScreen('user_following_users', id)
+      LL.App.showScreen('user_following_users', id)
+    else
+      screen = LL.App.newScreen('user_following_users', id)
 
-    collection = new LL.Collections.UserFollowingUsers()
-    view = new LL.Views.UserList(collection: collection, model: user)
-    view.pageTitle = "Users #{user.get('username')} is Following"
-    collection.id = id
-    collection.page = 1
-    collection.fetch({data: {id: id}})
+      sidebar = LL.App.findSidebar('user', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('user', id, user)
+      screen['sidebar'] = sidebar
+
+      collection = new LL.Collections.UserFollowingUsers()
+      feed = new LL.Views.UserList(collection: collection, model: user)
+      feed.pageTitle = "Users #{user.get('username')} is Following"
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('user_following_users', id)
+
+      collection.id = id
+      collection.page = 1
+      collection.fetch({data: {id: id}})
 
   #######
   # TOPICS
@@ -86,10 +129,21 @@ class LL.Router extends Backbone.Router
 
     topic = LL.App.Topics.findOrCreate(id, new LL.Models.Topic($('#this').data('this')))
 
-    # Only load the feed if it's new
-    if LL.App.TopicFeed.id != id
-      sidebar = new LL.Views.TopicSidebar(model: topic)
-      sidebar.render()
+    if LL.App.findScreen('topic_feed', id)
+      LL.App.showScreen('topic_feed', id)
+    else
+      screen = LL.App.newScreen('topic_feed', id)
+
+      sidebar = LL.App.findSidebar('topic', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('topic', id, topic)
+      screen['sidebar'] = sidebar
+
+      feed = new LL.Views.PostsFeed(collection: LL.App.TopicFeed)
+      LL.App.Feed = feed
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('topic_feed', id)
 
       LL.App.TopicFeed.id = id
       LL.App.TopicFeed.page = 1

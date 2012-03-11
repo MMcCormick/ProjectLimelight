@@ -68,10 +68,11 @@ ProjectLimelight::Application.routes.draw do
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
   scope 'users' do
-    get ':id/following/users' => 'users#show'
-    get ':id/following/topics' => 'users#show'
-    get ':id/followers' => 'users#show'
-    get ':id' => 'users#show'
+    get ':id/following/users' => 'users#show', :as => :user_following_topics
+    get ':id/following/topics' => 'users#show', :as => :user_following_users
+    get ':id/followers' => 'users#show', :as => :user_followers
+    get ':id/likes' => 'users#show', :as => :user_likes
+    get ':id' => 'users#show', :as => :user
   end
   resources :posts, :only => [:show]
 

@@ -1,5 +1,5 @@
 # encoding: utf-8
-
+# BETA REMOVE THIS FILE
 class ImageUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:

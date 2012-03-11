@@ -31,6 +31,8 @@ class LL.Views.PostsFeed extends Backbone.View
     for root_post in @collection.models
       @appendPost(root_post)
 
+    LL.App.calculateSiteWidth()
+
     # load an extra page if their screen is huge
     @loadMore()
 
@@ -72,8 +74,11 @@ class LL.Views.PostsFeed extends Backbone.View
     if root_post.get('root').get('type') != 'Talk'
       root_id = root_post.get('root').get('_id')
 
-      unless root_post.get('root').subscribed('new_response')
-        channel = pusher.subscribe(root_id)
+      channel = LL.App.get_subscription(root_id)
+      unless channel
+        channel = LL.App.subscribe(root_id)
+
+      unless LL.App.get_event_subscription(root_id, 'new_response')
         channel.bind 'new_response', (data) ->
           if root_post.get('root')
             post = LL.App.Posts.findOrCreate(data.id, new LL.Models.Post(data))
@@ -82,7 +87,7 @@ class LL.Views.PostsFeed extends Backbone.View
             else
               root_post.get('public_responses').unshift(post)
             root_post.get('root').trigger('new_response')
-        root_post.get('root').subscribe('new_response')
+        LL.App.subscribe_event(root_id, 'new_response')
 
     @
 

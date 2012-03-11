@@ -1,18 +1,5 @@
 require File.expand_path('../boot', __FILE__)
 
-## monkey patch for jruby 1.6.5.1 'fiber' bug (torquebox requires 1.6.5.1) Feb 7, 2012
-#if defined?(JRUBY_VERSION) && JRUBY_VERSION == "1.6.5.1"
-#  require 'jruby'
-#  JRuby.runtime.getLoadService.removeBuiltinLibrary("fiber.rb")
-#  JRuby.runtime.addLazyBuiltin("fiber.rb", "fiber", "org.jruby.ext.fiber.FiberExtLibrary")
-#
-#  class Fiber
-#    def alive?
-#      JRuby.reference(self).state != org.jruby.ext.fiber.ThreadFiberState::FINISHED
-#    end
-#  end
-#end
-
 # Pick the frameworks you want:
 require "action_controller/railtie"
 require "action_mailer/railtie"
@@ -54,7 +41,6 @@ module ProjectLimelight
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
-    config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**}')]
     config.autoload_paths += %W(#{config.root}/lib)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 

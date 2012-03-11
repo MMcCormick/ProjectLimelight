@@ -12,8 +12,11 @@ class LL.Views.InfluenceIncreases extends Backbone.View
     for influence in @collection.models
       @prependInfluence(influence)
 
-    unless @model.subscribed('influence_change')
-      channel = pusher.subscribe(@model.get('_id'));
+    channel = LL.App.get_subscription(@model.get('_id'))
+    unless channel
+      channel = LL.App.subscribe(@model.get('_id'))
+
+    unless LL.App.get_event_subscription(@model.get('_id'), 'influence_change')
       channel.bind 'influence_change', (data) ->
         influence = self.collection.get(data.id)
         if influence
@@ -25,7 +28,7 @@ class LL.Views.InfluenceIncreases extends Backbone.View
             topic: LL.App.Topics.findOrCreate(data.topic.id, new LL.Models.Topic(data.topic))
           })
           self.prependInfluence(influence)
-      @model.subscribe('influence_change')
+      LL.App.subscribe_event(@model.get('_id'), 'influence_change')
 
     @
 

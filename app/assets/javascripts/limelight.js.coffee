@@ -5,7 +5,6 @@ window.LL =
   Routers: {}
   init: ->
     @App =  new LL.Views.App()
-    @Main = new LL.Views.Main()
     @Header = new LL.Views.Header()
 
     @Router = new LL.Router()

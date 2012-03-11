@@ -1,18 +1,18 @@
 <ul class='menu unstyled'>
   <li>
-    <a class='first <%= 'on' if @page == 'following_topics' %>' href="<%= "/users/#{@user.get('slug')}/following/topics" %>">
+    <a class='first <%= 'on' if @page == 'user_following_topics' %>' href="<%= "/users/#{@user.get('slug')}/following/topics" %>">
       Following <%= @user.get('following_topics_count') %> Topics
       <i class="icon icon-chevron-right"></i>
     </a>
   </li>
   <li>
-    <a class='<%= 'on' if @page == 'following_users' %>' href="<%= "/users/#{@user.get('slug')}/following/users" %>">
+    <a class='<%= 'on' if @page == 'user_following_users' %>' href="<%= "/users/#{@user.get('slug')}/following/users" %>">
       Following <%= @user.get('following_users_count') %> Users
       <i class="icon icon-chevron-right"></i>
     </a>
   </li>
   <li>
-    <a class='<%= 'on' if @page == 'followers' %>' href="<%= "/users/#{@user.get('slug')}/followers" %>">
+    <a class='<%= 'on' if @page == 'user_followers' %>' href="<%= "/users/#{@user.get('slug')}/followers" %>">
       <%= @user.get('followers_count') %> Followers
       <i class="icon icon-chevron-right"></i>
     </a>

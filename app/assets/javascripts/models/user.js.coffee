@@ -2,7 +2,6 @@ class LL.Models.User extends Backbone.Model
   url: '/api/users'
 
   initialize: ->
-    @subscriptions = []
 
   parse: (resp, xhr) ->
     LL.App.Users.findOrCreate(resp.id, new LL.Models.User(resp))
@@ -17,10 +16,3 @@ class LL.Models.User extends Backbone.Model
 
   scorePretty: ->
     parseInt @get('score')
-
-  subscribed: (event) =>
-    _.include(@subscriptions, event)
-
-  subscribe: (event) =>
-    unless _.include(@subscriptions, event)
-      @subscriptions.push(event)

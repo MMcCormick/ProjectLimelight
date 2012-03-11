@@ -7,6 +7,7 @@ class Post
   include Limelight::Acl
   include Limelight::Mentions
   include Limelight::Popularity
+  include Limelight::Images
 
   cache
 
@@ -347,22 +348,9 @@ class Post
 
     # Build and return a post based on params (does not save)
     def post(params, user_id)
-
-      # set the image
-      params[:asset_image] = {
-              :remote_image_url => params[:remote_image_url],
-              :image_cache => params[:image_cache]
-      }
-
       if params[:type] && ['Video', 'Picture', 'Link', 'Talk'].include?(params[:type])
         post = Kernel.const_get(params[:type]).new(params)
         post.user_id = user_id
-
-        # Is the post an original root?
-        unless post.class.name == 'Talk'
-          post.save_original_image
-          post.save_images
-        end
       else
         post = Post.new
       end

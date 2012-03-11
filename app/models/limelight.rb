@@ -83,12 +83,147 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      embeds_many :images, as: :image_assignable, :class_name => 'ImageSnippet'
+      field :image_versions, :default => 0
+      field :active_image_version, :default => 0
+      field :processing_image, :default => false
 
+      attr_accessible :remote_image_url
+      attr_accessor :remote_image_url
+
+      # DEPRECATED BETA REMOVE (after updating all the DB images)
+      embeds_many :images, as: :image_assignable, :class_name => 'ImageSnippet'
       attr_accessible :asset_image
       attr_accessor :asset_image
     end
 
+    def available_dimensions
+      [[30,30],[50,50],[100,100],[300,300],[165,0],[190,0],[695,0]]
+    end
+
+    def available_modes
+      ['fillcropmid', 'fit']
+    end
+
+    def filepath
+      "#{self.class.name.to_url.pluralize}/#{id.to_s}"
+    end
+
+    def current_filepath
+      "#{filepath}/current"
+    end
+
+    def image_url(w, h, m, version='current')
+      if image_versions == 0
+        nil
+      elsif processing_image
+        "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+      else
+        "#{S3['image_prefix']}/#{filepath}/#{version}/#{w}_#{h}_#{m}.png"
+      end
+    end
+
+    # Saves a new set of images from the remote_image_url currently specified on the model
+    def save_remote_image
+      unless @remote_image_url.blank?
+        target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
+        AWS::S3::S3Object.store(
+          target,
+          open(@remote_image_url).read,
+          S3['image_bucket']
+        )
+
+        AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
+
+        self.image_versions += 1
+        self.active_image_version += image_versions
+        self.processing_image = true
+
+        Resque.enqueue(ProcessImages, id.to_s, self.class.name, active_image_version, true)
+
+        self.save
+      end
+    end
+
+    def process_version(version)
+      i = Magick::Image::read("#{S3['image_prefix']}/#{filepath}/#{version}/original.png").first
+      if i
+        original_w = i.columns
+        original_h = i.rows
+
+        # Generate all the image versions we need
+        available_dimensions.each do |dimensions|
+          available_modes.each do |mode|
+            # when we're not limiting one dimension fillcropmid doesn't make sense
+            next if mode == 'fillcropmid' && dimensions.include?(0)
+
+            # is it already on S3?
+            unless AWS::S3::S3Object.exists? "#{filepath}/#{version}/#{dimensions[0]}_#{dimensions[1]}_#{mode}.png", S3['image_bucket']
+              width = dimensions[0] == 0 ? 999999 : dimensions[0]
+              height = dimensions[1] == 0 ? 999999 : dimensions[1]
+
+              # we don't resize larger than the original image. if the original is smaller, use that max size and mantain the ratio
+              if original_w < width
+                width = original_w
+                unless dimensions[1] == 0
+                  height = original_h
+                end
+              end
+
+              case mode
+                when 'fillcropmid'
+                  new_image = i.resize_to_fill(width, height)
+                when 'fit'
+                  new_image = i.resize_to_fit(width, height)
+                else
+                  new_image = nil
+              end
+
+              # upload to s3
+              if new_image
+                target = "#{filepath}/#{version}/#{dimensions[0]}_#{dimensions[1]}_#{mode}.png"
+                AWS::S3::S3Object.store(
+                  target,
+                  new_image.to_blob,
+                  S3['image_bucket'],
+                  :access => :public_read
+                )
+              end
+            end
+          end
+        end
+        true
+      else
+        nil
+      end
+    end
+
+    def make_image_version_current(version)
+      current_images = AWS::S3::Bucket.objects S3['image_bucket'], :prefix => "#{filepath}/current"
+      current_images.each do |image|
+        image.delete
+      end
+      version_images = AWS::S3::Bucket.objects S3['image_bucket'], :prefix => "#{filepath}/#{version}"
+      version_images.each do |image|
+        filename = image.key.split('/').last
+        AWS::S3::S3Object.copy image.key, "#{current_filepath}/#{filename}", S3['image_bucket']
+      end
+    end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # BETA REMOVE THE REST OF THE IMAGE FUNCTIONS BELOW
     def save_images
       self.images.each do |image|
         image.versions.each do |version|
@@ -102,14 +237,6 @@ module Limelight #:nodoc:
       images.each do |image|
         return image if image.isDefault?
       end
-    end
-
-    def available_dimensions
-      [[30,30],[40,40],[50,50],[60,60],[65,65],[75,75],[100,100],[150,150],[180, 0]]
-    end
-
-    def available_modes
-      ['fillcropmid', 'fit']
     end
 
     def add_image(user_id, image_location)

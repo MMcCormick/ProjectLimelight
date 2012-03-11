@@ -1,0 +1,26 @@
+development: &defaults
+  connection:
+    :access_key_id: 'AKIAIQDM2Y5J44SJILXA'
+    :secret_access_key: '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'
+    :use_ssl: true
+    # :persistent: true
+  image_bucket: "development.img.p-li.me"
+  image_prefix: "http://development.img.p-li.me"
+  max_file_size: 10485760
+  acl: public-read
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+  image_bucket: "staging.img.p-li.me"
+  image_prefix: "http://staging.img.p-li.me"
+
+production:
+  <<: *defaults
+  # prefix is optional. This is where you would put your CloudFront Domain
+  # Name or your CloudFront CNAME if you have one configured.
+  prefix: "http://project.s3.mydomain.com"
+  image_bucket: "img.p-li.me"
+  image_prefix: "http://img.p-li.me"

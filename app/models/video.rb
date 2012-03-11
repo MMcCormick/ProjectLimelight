@@ -1,5 +1,4 @@
 class Video < Post
-  include Limelight::Images
 
   validate :has_valid_url
   validates :title, :presence => true

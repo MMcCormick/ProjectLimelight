@@ -1,3 +1,4 @@
+# BETA REMOVE
 module ImageHelper
   def default_image_url(object, width=0, height=0, mode='fit', createNow=false, returnObject=false)
     # make sure dimensions are integers

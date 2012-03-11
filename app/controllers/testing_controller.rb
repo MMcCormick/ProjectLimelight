@@ -1,8 +1,8 @@
 class TestingController < ApplicationController
 
   def test
-    @increases = current_user.influence_increases
-    foo = "bar"
+    foo = Post.find('4f5bf197cddc7f8226000001')
+    foo.make_image_version_current(1)
   end
 
   def foo2

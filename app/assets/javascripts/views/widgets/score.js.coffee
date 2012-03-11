@@ -6,12 +6,15 @@ class LL.Views.Score extends Backbone.View
   initialize: ->
     self = @
 
-    unless @model.subscribed('score_change')
-      channel = pusher.subscribe(@model.get('_id'));
+    channel = LL.App.get_subscription(@model.get('_id'))
+    unless channel
+      channel = LL.App.subscribe(@model.get('_id'))
+
+    unless LL.App.get_event_subscription(@model.get('_id'), 'score_change')
       channel.bind 'score_change', (data) ->
         self.model.set('score', self.model.get('score') + data.change)
         self.render()
-      @model.subscribe('score_change')
+      LL.App.subscribe_event(@model.get('_id'), 'score_change')
 
   render: =>
     $(@el).html(@template(model: @model))

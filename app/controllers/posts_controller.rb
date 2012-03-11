@@ -18,6 +18,7 @@ class PostsController < ApplicationController
     @post = Post.post(params, current_user.id)
 
     if @post.save
+      @post.save_remote_image
       if @post.response_to
         @post.bubble_up
       end

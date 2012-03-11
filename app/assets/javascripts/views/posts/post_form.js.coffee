@@ -135,7 +135,7 @@ class LL.Views.PostForm extends Backbone.View
   preFetchEmbedly: (e) =>
     urlRegex = /^(?=www\.)?[A-Za-z0-9_-]+\.+[A-Za-z0-9.\/%&=\?_:;-]+$/ig
     url = $(e.target).val().match(urlRegex)
-    console.log url
+
     if url && url.length > 0
       @.embedly_collection.fetch({data: {url: url[0]}})
 

@@ -77,12 +77,6 @@ class LL.Views.PostForm extends Backbone.View
       complete: ->
         $(self.el).removeClass('disabled')
 
-  handleError: (entry, response) ->
-    if response.status == 422
-      errors = $.parseJSON(response.responseText).errors
-      for attribute, messages of errors
-        alert "#{attribute} #{message}" for message in messages
-
   destroyForm: ->
     $(@el).modal('hide')
 

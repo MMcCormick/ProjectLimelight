@@ -16,6 +16,30 @@ class UsersController < ApplicationController
     @this = {:group => 'users', :template => 'show'}
   end
 
+  def create
+    user = User.new_with_session(params, session)
+
+    if user.save
+      if user.active_for_authentication?
+        set_flash_message :notice, :signed_up if is_navigational_format?
+        sign_in(:user, user)
+        render json: build_ajax_response(:ok, after_sign_up_path_for(user)), status: 201
+      else
+        set_flash_message :notice, :inactive_signed_up, :reason => inactive_reason(user) if is_navigational_format?
+        expire_session_data_after_sign_in!
+        render json: build_ajax_response(:ok, after_inactive_sign_up_path_for(user)), status: 201
+      end
+    else
+      user.clean_up_passwords if user.respond_to?(:clean_up_passwords)
+      if user.errors[:invite_code_id].blank?
+        render json: build_ajax_response(:error, nil, nil, user.errors), status: 422
+      else
+        render json: build_ajax_response(status, nil, nil, {"Your invite code" => "is invalid"}), status: 422
+      end
+    end
+  end
+
+  # BETA REMOVE
   def default_picture
     user = User.find_by_slug(params[:id])
 

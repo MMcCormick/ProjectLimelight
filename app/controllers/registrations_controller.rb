@@ -19,8 +19,7 @@ class RegistrationsController < Devise::RegistrationsController
       if resource.errors[:invite_code_id].blank?
         render json: build_ajax_response(:error, nil, nil, resource.errors), status: 422
       else
-        flash[:register_fail] = "Your invite code is invalid!"
-        render json: build_ajax_response(:error, root_path, nil), status: 422
+        render json: build_ajax_response(status, nil, "Your invite code is invalid!"), status: 422
       end
     end
   end

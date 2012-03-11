@@ -18,6 +18,10 @@ class LL.Router extends Backbone.Router
   #######
 
   userFeed: (id=0) ->
+    if id == 0 && !LL.App.current_user
+      @splashPage()
+      return
+
     @hideModal()
 
     user = if id == 0 then LL.App.current_user else LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
@@ -180,6 +184,10 @@ class LL.Router extends Backbone.Router
   hideModal: ->
     LL.App.Modal.hide()
     $('.modal, .content-tile').remove()
+
+  splashPage: ->
+    view = new LL.Views.SplashPage()
+    $('body').prepend(view.render().el)
 
   staticPage: (name) ->
     sidebar = new LL.Views.StaticPageSidebar()

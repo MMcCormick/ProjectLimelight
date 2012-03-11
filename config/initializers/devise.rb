@@ -202,12 +202,6 @@ Devise.setup do |config|
 
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV["FACEBOOK_APP_SECRET"], {:scope => 'email,offline_access'}
 
-  #if Rails.env.development?
-  #  ENV['GOOGLE_KEY'] = '247482894960.apps.googleusercontent.com'
-  #  ENV['GOOGLE_SECRET'] = 'YIbxjJdk3D1hwjHiUCXcZkux'
-  #end
-  #config.omniauth :google_oauth2, ENV['GOOGLE_KEY'], ENV['GOOGLE_SECRET'], { :scope => 'userinfo.email,userinfo.profile' }
-
   if Rails.env.development?
     ENV['TWITTER_KEY'] = 'ZG0pbDrqivgwyBUFRUtmg'
     ENV['TWITTER_SECRET'] = 'XwqiFq1MeFLuM1iw1JQ9ke2Lnu4PH0pXUGIKDM'

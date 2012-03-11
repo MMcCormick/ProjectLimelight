@@ -132,25 +132,15 @@ class User
     hash = Digest::MD5.hexdigest(self.email.downcase)+'.jpeg'
     facebook = get_social_connect 'facebook'
     google = get_social_connect 'google_oath2'
-    image_url = if facebook
-                  "http://graph.facebook.com/#{facebook.uid}/picture?type=large"
-                elsif google
-                  google.image
-                else
-                  "http://www.gravatar.com/avatar/#{hash}?s=500&d=identicon"
-                end
+    @remote_image_url = if facebook
+                          "http://graph.facebook.com/#{facebook.uid}/picture?type=large"
+                        elsif google
+                          google.image
+                        else
+                          "http://www.gravatar.com/avatar/#{hash}?s=500&d=identicon"
+                        end
 
-    write_out = open("/tmp/#{hash}", "wb")
-    write_out.write(open(image_url).read)
-    write_out.close
-
-    image = self.images.create(:user_id => id)
-    version = AssetImage.new(:isOriginal => true)
-    version.id = image.id
-    version.image.store!("/tmp/#{hash}")
-    image.versions << version
-    version.save
-    self.save
+    save_remote_image
   end
 
   def recalculate_vote_ratio

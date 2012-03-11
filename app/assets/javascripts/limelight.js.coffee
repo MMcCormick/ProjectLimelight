@@ -1,3 +1,7 @@
+# hack because facebook login appends stupid things to the url
+if window.location.hash == '#_=_'
+  window.location = '/'
+
 window.LL =
   Models: {}
   Collections: {}

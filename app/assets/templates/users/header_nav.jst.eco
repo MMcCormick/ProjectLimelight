@@ -1,46 +1,50 @@
-<div class='username dropdown-toggle' data-toggle="dropdown" data-target="#header-user-nav">
-  <%= @user.get('username') %>
-  <i class='icon-chevron-down icon-white'></i>
-</div>
+<% if @user: %>
+  <div class='username dropdown-toggle' data-toggle="dropdown" data-target="#header-user-nav">
+    <%= @user.get('username') %>
+    <i class='icon-chevron-down icon-white'></i>
+  </div>
 
-<div class='numbers'>
-  <span class='notifications' rel="tooltip" data-placement='bottom' title='<%= @user.get('unread_notification_count') %> Unread Notifications'><%= @user.get('unread_notification_count') %></span>
-</div>
+  <div class='numbers'>
+    <span class='notifications' rel="tooltip" data-placement='bottom' title='<%= @user.get('unread_notification_count') %> Unread Notifications'><%= @user.get('unread_notification_count') %></span>
+  </div>
 
-<div class='profile-img'>
-  <img src='/users/<%= @user.get('slug') %>/picture?h=30&w=30&m=fillcropmid' />
-</div>
+  <div class='profile-img'>
+    <img src='/users/<%= @user.get('slug') %>/picture?h=30&w=30&m=fillcropmid' />
+  </div>
 
 
-<ul class="dropdown-menu right">
-  <li>
-    <a href="#"><%= @user.get('unread_notification_count') %> Notification<%= 's' if @user.get('unread_notification_count') == 0 || @user.get('unread_notification_count') > 1 %> </a>
-  </li>
-  <li class="divider"></li>
-  <li>
-    <a href="/">Feed</a>
-  </li>
-  <li>
-    <a href="#">Likes</a>
-  </li>
-  <li>
-    <a href="#">Talks</a>
-  </li>
-  <li>
-    <a href="#">Settings</a>
-  </li>
-  <li class="divider"></li>
-  <li>
-    <a href="#">Following <%= @user.get('following_topics_count') %> Topics</a>
-  </li>
-  <li>
-    <a href="#">Following <%= @user.get('following_users_count') %> Users</a>
-  </li>
-  <li>
-    <a href="#"><%= @user.get('followers_count') %> Followers</a>
-  </li>
-  <li class="divider"></li>
-  <li>
-    <a href="/users/sign_out">Logout</a>
-  </li>
-</ul>
+  <ul class="dropdown-menu right">
+    <li>
+      <a href="#"><%= @user.get('unread_notification_count') %> Notification<%= 's' if @user.get('unread_notification_count') == 0 || @user.get('unread_notification_count') > 1 %> </a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="/">Feed</a>
+    </li>
+    <li>
+      <a href="#">Likes</a>
+    </li>
+    <li>
+      <a href="#">Talks</a>
+    </li>
+    <li>
+      <a href="#">Settings</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="#">Following <%= @user.get('following_topics_count') %> Topics</a>
+    </li>
+    <li>
+      <a href="#">Following <%= @user.get('following_users_count') %> Users</a>
+    </li>
+    <li>
+      <a href="#"><%= @user.get('followers_count') %> Followers</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="/users/sign_out">Logout</a>
+    </li>
+  </ul>
+<% else: %>
+  <div>Login</div>
+<% end %>

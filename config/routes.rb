@@ -85,8 +85,14 @@ ProjectLimelight::Application.routes.draw do
     get 'help' => 'pages#help', :as => :help_path
   end
 
+  # Invites
+  resources :invite_codes, :only => [:create, :new]
+  post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
+
   #Topics (catch all)
   get ':id' => 'topics#show', :as => :topic
+
+  root :to => 'users#feed'
 
   #scope 'users' do
   #  get 'settings' => 'users#settings', :as => :user_settings
@@ -147,13 +153,6 @@ ProjectLimelight::Application.routes.draw do
   #get '/pages/admin' => 'pages#admin', :as => :admin_dashboard
   #get '/pages/splash' => 'pages#splash', :as => :splash
   #root :to => 'users#feed'
-  
-  # Invites
-  resources :invite_codes, :only => [:create, :new]
-  post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
-
-  root :to => 'users#feed'
-  match '*path' => 'users#feed'
 
 
 

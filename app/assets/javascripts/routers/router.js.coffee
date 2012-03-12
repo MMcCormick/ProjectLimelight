@@ -40,11 +40,11 @@ class LL.Router extends Backbone.Router
       feed_header = new LL.Views.UserFeedHeader(model: user)
       screen['components'].push(feed_header)
 
+      LL.App.renderScreen('user_feed', id)
+
       feed = new LL.Views.PostsFeed(collection: LL.App.UserFeed)
       LL.App.Feed = feed
       screen['components'].push(feed)
-
-      LL.App.renderScreen('user_feed', id)
 
       LL.App.UserFeed.id = id
       LL.App.UserFeed.page = 1
@@ -66,11 +66,11 @@ class LL.Router extends Backbone.Router
       feed_header = new LL.Views.UserLikeHeader(model: user)
       screen['components'].push(feed_header)
 
+      LL.App.renderScreen('like_feed', id)
+
       feed = new LL.Views.PostsFeed(collection: LL.App.LikeFeed)
       LL.App.Feed = feed
       screen['components'].push(feed)
-
-      LL.App.renderScreen('like_feed', id)
 
       LL.App.LikeFeed.id = id
       LL.App.LikeFeed.page = 1
@@ -147,11 +147,11 @@ class LL.Router extends Backbone.Router
         sidebar = LL.App.createSidebar('topic', id, topic)
       screen['sidebar'] = sidebar
 
+      LL.App.renderScreen('topic_feed', id)
+
       feed = new LL.Views.PostsFeed(collection: LL.App.TopicFeed)
       LL.App.Feed = feed
       screen['components'].push(feed)
-
-      LL.App.renderScreen('topic_feed', id)
 
       LL.App.TopicFeed.id = id
       LL.App.TopicFeed.page = 1

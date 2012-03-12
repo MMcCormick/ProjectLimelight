@@ -1,0 +1,14 @@
+#splash-page {
+  .top {
+    @include single-box-shadow(#666, 0px, 1px, 3px);
+    background: #B8CFD6;
+  }
+  .bottom {
+
+  }
+  .container {
+    width: 710px;
+    padding: 0 20px;
+    margin: auto;
+  }
+}

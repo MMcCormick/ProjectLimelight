@@ -6,6 +6,10 @@ body {
   background: #B8CFD6;
   color: $grayDark;
 
+  &#blank {
+    background: #E9E9E9;
+    padding: 0px;
+  }
   &.two {
     .wrapper {
       width: $baseWidth;

@@ -7,13 +7,9 @@
     <%= render :partial => 'shared/head' %>
   </head>
 
-  <body id="<%= params[:controller].parameterize %>-c" class="blank">
-    <div id="topic-wall-container" class="<%= params[:action].parameterize %>">
-      <%= yield %>
-    </div>
-
+  <body id="blank">
+    <%= yield %>
     <%= render 'shared/layout_js' %>
-
     <%= render :partial => 'shared/social_tools' %>
   </body>
 </html>

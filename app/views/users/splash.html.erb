@@ -1,2 +1,22 @@
-<%#= image_tag "splash-logo.png", :alt => "Limelight", :class => "logo" %>
-<%#= render "users/auth_box", :show => @show %>
+<div id='splash-page'>
+  <div class='top'>
+    <div class='container'>
+      <%= image_tag "splash-logo.png", :alt => "", :class => "logo" %>
+
+      <h1>Limelight</h1>
+      <h2>Tagline</h2>
+
+      <div class='cheeky-buttons <%= 'hide' if @show == :login || @show == :register %>'>
+        <button class='btn btn-success login'>I <b>have</b> an Account</button>
+        <button class='btn btn-success register'>I <b>want</b> an Account</button>
+      </div>
+
+      <%= render "users/auth_box", :show => @show %>
+    </div>
+  </div>
+  <div class='bottom'>
+    <div class='container'>
+      Test Bottom
+    </div>
+  </div>
+</div>

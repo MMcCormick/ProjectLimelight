@@ -1,22 +1,17 @@
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => 'ajax' }) do |f| %>
   <div class="errors"></div>
 
-  <div class="line lClear">
-    <%= f.label :username %>
-    <%= f.text_field :username, :autocomplete => :off %>
+  <div>
+    <%= f.text_field :username, :name => 'username', :id => 'user-username', :autocomplete => :off, :placeholder => 'Username...' %>
   </div>
 
-  <div class="line lClear">
-    <%= f.label :email %>
-    <%= f.email_field :email, :autocomplete => :off %>
+  <div>
+    <%= f.email_field :email, :name => 'email', :id => 'user-email', :autocomplete => :off, :placeholder => 'Email...' %>
   </div>
 
-  <div class="line lClear">
-    <label for="register_password">Password</label>
-    <%= f.password_field :password, :id => 'register_password', :autocomplete => :off %>
+  <div>
+    <%= f.password_field :password, :name => 'password', :id => 'user-password', :autocomplete => :off, :placeholder => 'Password...' %>
   </div>
 
-  <%= f.hidden_field :invite_code_id %>
-
-  <%= f.submit "Sign Up", :class => 'submit' %>
+  <input type="submit" value="Sign Up" class="btn btn-success">
 <% end %>

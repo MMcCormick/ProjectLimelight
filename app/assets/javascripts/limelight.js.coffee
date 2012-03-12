@@ -26,6 +26,7 @@ jQuery ->
   window.globalError = (jqXHR, target=null) ->
     console.log jqXHR
     data = $.parseJSON(jqXHR.responseText)
+
     if data.flash
       createGrowl false, data.flash, 'Error', 'red'
 
@@ -35,7 +36,7 @@ jQuery ->
           target.find('.alert-error').remove()
           errors = $('<div/>').addClass('alert alert-error').prepend('<a class="close" data-dismiss="alert">x</a>')
           for key,error of data.errors
-            errors.append("<div>#{key} #{error}</div>")
+            errors.append("<div>#{error}</div>")
           target.find('.errors').prepend(errors)
 
   # Use gritter to create 'growl' notifications.

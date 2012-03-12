@@ -1,11 +1,8 @@
 <%= form_for InviteCode.new, :url => :check_invite_code, :html => { :class => 'ajax' } do |f| %>
-  <% if flash[:register_fail] %>
-    <div class="invite-errors errors showem">
-      <div class="error"><%= flash[:register_fail] %></div>
-    </div>
-  <% end %>
-  <div class="field lClear">
+  <div class='errors'></div>
+  <div>
     <%= f.label :code, "Type Invite Code And Press Enter" %>
-    <%= f.text_field :code, %>
+    <%= f.text_field :code, :autocomplete => :off, :placeholder => "Paste yo invite code here..." %>
   </div>
+  <input type='submit' value='Use Invite Code' class="btn btn-success" />
 <% end %>

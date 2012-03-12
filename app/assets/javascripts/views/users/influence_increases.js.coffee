@@ -25,7 +25,7 @@ class LL.Views.InfluenceIncreases extends Backbone.View
           influence = new LL.Models.InfluenceIncrease({
             id: data.id
             amount: data.amount
-            topic: LL.App.Topics.findOrCreate(data.topic.id, new LL.Models.Topic(data.topic))
+            topic: LL.App.Topics.findOrCreate(data.topic.id, data.topic)
           })
           self.prependInfluence(influence)
       LL.App.subscribe_event(@model.get('_id'), 'influence_change')

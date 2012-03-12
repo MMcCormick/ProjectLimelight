@@ -1,29 +1,9 @@
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <% if flash[:alert] %>
-    <div class='errors showem'>
-      <div class='error'>
-        <%= flash[:alert] %>
-      </div>
-    </div>
-  <% end %>
-
-  <div class="lClear">
-    <%= f.label :login, 'Email or Username' %>
-    <%= f.text_field :login %>
+  <div>
+    <%= f.text_field :login, :id => 'user-login', :autocomplete => :off, :placeholder => 'Email or Username...' %>
   </div>
-
-  <div class="lClear">
-    <label for="login_password">Password</label>
-    <%= f.password_field :password, :id => 'login_password', :autocomplete => :off %>
+  <div>
+    <%= f.password_field :password, :id => 'user-password', :autocomplete => :off, :placeholder => 'Password...' %>
   </div>
-
-  <%# if devise_mapping.rememberable? %>
-  <% if nil %>
-    <div class="lClear">
-      <%= f.label :remember_me %>
-      <%= f.check_box :remember_me %>
-    </div>
-  <% end %>
-
-  <%= f.submit "Log In", :class => 'submit' %>
+  <input type="submit" value="Log In" class="btn btn-success">
 <% end %>

@@ -4,15 +4,14 @@ class LL.Collections.Topics extends Backbone.Collection
   findOrCreate: (id, data=null) ->
     model = @get(id)
 
-    # set it to data if we're passing in a model
-    model = data unless model
+    return model if model
+
+    model = new LL.Models.Topic(data) unless model
 
     unless model
-      model = new LL.Models.Topic()
+      model = new LL.Models.Topic
       model.fetch({data: {id: id}})
 
-    return unless model.constructor.name == 'Topic'
-
-    @add(model) unless @get(model.get('id'))
+    @add(model)
 
     model

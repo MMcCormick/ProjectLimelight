@@ -145,7 +145,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_sign_in
-    if request.get? && !signed_in? && !(["feed", "facebook", "splash"].include?(params[:action]) && params[:id].blank?) &&
+    if request.get? && !signed_in? && !(["feed", "facebook", "splash", "check"].include?(params[:action]) && params[:id].blank?) &&
                        params[:controller] != "confirmations" && request.fullpath != "/assets"
       session[:return_to] = request.fullpath
       redirect_to (root_path)

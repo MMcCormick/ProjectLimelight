@@ -42,7 +42,5 @@ class InviteCode
   def redeem
     self.used += 1
     save
-    user = User.find(user_id)
-    user.expire_caches
   end
 end

@@ -1,16 +1,36 @@
 class LL.Views.SplashPage extends Backbone.View
-  template: JST['splash_page']
-  id: 'splash-page'
+  el: $('body')
+
+  events:
+    'click .cheeky-buttons .login': 'showLogin'
+    'click .cheeky-buttons .register': 'showInvite'
+    'click .back': 'showCheekyButtons'
 
   initialize: ->
+    login_form = new LL.Views.UserLoginForm()
+    login_form.splash = @
 
-  render: =>
-    $(@el).html(@template())
+    register_form = new LL.Views.UserRegisterForm(collection: LL.App.Users)
+    register_form.splash = @
 
-    login = new LL.Views.UserLoginForm()
-    $(@el).append(login.render().el)
+    invite_form = new LL.Views.UserUseInviteForm()
+    invite_form.splash = @
 
-    register = new LL.Views.UserRegisterForm(collection: LL.App.Users)
-    $(@el).append(register.render().el)
+  hideAll: =>
+    $('.cheeky-buttons,.invite-form,.login-form,.register-form').hide()
 
-    @
+  showLogin: =>
+    @hideAll()
+    $('.login-form').show()
+
+  showRegister: =>
+    @hideAll()
+    $('.register-form').show()
+
+  showInvite: =>
+    @hideAll()
+    $('.invite-form').show()
+
+  showCheekyButtons: =>
+    @hideAll()
+    $('.cheeky-buttons').show()

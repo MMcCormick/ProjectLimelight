@@ -1,0 +1,1 @@
+class LL.Models.InviteCode extends Backbone.Model

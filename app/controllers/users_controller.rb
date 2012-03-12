@@ -18,6 +18,7 @@ class UsersController < ApplicationController
 
   def create
     user = User.new_with_session(params, session)
+    user.invite_code_id = session[:invite_code]
 
     if user.save
       if user.active_for_authentication?
@@ -25,36 +26,16 @@ class UsersController < ApplicationController
         sign_in(:user, user)
         render json: build_ajax_response(:ok, after_sign_up_path_for(user)), status: 201
       else
-        set_flash_message :notice, :inactive_signed_up, :reason => inactive_reason(user) if is_navigational_format?
-        expire_session_data_after_sign_in!
-        render json: build_ajax_response(:ok, after_inactive_sign_up_path_for(user)), status: 201
+        session.keys.grep(/^devise\./).each { |k| session.delete(k) }
+        render json: build_ajax_response(:ok), status: 201
       end
     else
       user.clean_up_passwords if user.respond_to?(:clean_up_passwords)
       if user.errors[:invite_code_id].blank?
         render json: build_ajax_response(:error, nil, nil, user.errors), status: 422
       else
-        render json: build_ajax_response(status, nil, nil, {"Your invite code" => "is invalid"}), status: 422
+        render json: build_ajax_response(status, nil, nil, {"invite_code" => "Your invite code is invalid"}), status: 422
       end
-    end
-  end
-
-  # BETA REMOVE
-  def default_picture
-    user = User.find_by_slug(params[:id])
-
-    url = default_image_url(user, params[:w], params[:h], params[:m], true)
-
-    if Rails.env.development?
-      img = open(Rails.public_path+url)
-      send_data(
-        img.read,
-        :type => 'image/png',
-        :disposition => 'inline'
-      )
-    else
-      redirect_to url
-      #render :nothing => true, :status => 404
     end
   end
 
@@ -114,20 +95,17 @@ class UsersController < ApplicationController
 
       not_found("User not found") unless @user
 
-      if current_user.id == @user.id && @user.tutorial_step.to_i != 0
-        redirect_to user_tutorial_path
-      else
+      #if current_user.id == @user.id && @user.tutorial_step.to_i != 0
+      #  redirect_to user_tutorial_path
+      #else
         @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
-
-        page = params[:p] ? params[:p].to_i : 1
-        @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
-      end
+      #end
     else
       @title = 'Welcome to Limelight!'
       @description = "The Limelight splash page, where users are directed to sign in"
       @show = params[:show] ? params[:show].to_sym : false
 
-      render "splash", :layout => "topic_wall"
+      render "splash", :layout => "blank"
     end
   end
 
@@ -169,7 +147,24 @@ class UsersController < ApplicationController
 
 
 
+  # BETA REMOVE
+  def default_picture
+    user = User.find_by_slug(params[:id])
 
+    url = default_image_url(user, params[:w], params[:h], params[:m], true)
+
+    if Rails.env.development?
+      img = open(Rails.public_path+url)
+      send_data(
+        img.read,
+        :type => 'image/png',
+        :disposition => 'inline'
+      )
+    else
+      redirect_to url
+      #render :nothing => true, :status => 404
+    end
+  end
 
   def update
     @user = User.find_by_slug(params[:id])

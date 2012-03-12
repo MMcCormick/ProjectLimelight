@@ -129,9 +129,13 @@ class LL.Router extends Backbone.Router
   #######
 
   topicFeed: (id) ->
+    if id[0] == '?'
+      @splashPage()
+      return
+
     @hideModal()
 
-    topic = LL.App.Topics.findOrCreate(id, new LL.Models.Topic($('#this').data('this')))
+    topic = LL.App.Topics.findOrCreate(id, $('#this').data('this'))
 
     if LL.App.findScreen('topic_feed', id)
       LL.App.showScreen('topic_feed', id)
@@ -187,7 +191,6 @@ class LL.Router extends Backbone.Router
 
   splashPage: ->
     view = new LL.Views.SplashPage()
-    $('body').prepend(view.render().el)
 
   staticPage: (name) ->
     sidebar = new LL.Views.StaticPageSidebar()

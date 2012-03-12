@@ -9,7 +9,7 @@
   </div>
 
   <div class='profile-img'>
-    <img src='/users/<%= @user.get('slug') %>/picture?h=30&w=30&m=fillcropmid' />
+    <img src='<%= @user.image_url(30, 30, 'fillcropmid') %>' />
   </div>
 
 

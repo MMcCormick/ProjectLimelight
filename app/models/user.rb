@@ -89,17 +89,14 @@ class User
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio, :invite_code_id
 
-  validates :username, :uniqueness => { :case_sensitive => false },
-            :length => { :minimum => 3, :maximum => 15, :message => 'must be between 3 and 15 characters.' },
-            :format => { :with => /\A[a-zA-Z_0-9]+\z/, :message => "can only contain letters, numbers, and underscores." },
-            :format => { :with => /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/, :message => "must start with a letter and end with a letter or number." }
-  validates :email, :uniqueness => { :case_sensitive => false }
-  validates :bio, :length => { :maximum => 150 }
+  validates :username, :uniqueness => { :case_sensitive => false, :message => '' },
+            :length => { :minimum => 3, :maximum => 15, :message => 'Username must be between 3 and 15 characters' },
+            :format => { :with => /\A[a-zA-Z_0-9]+\z/, :message => "Username can only contain letters, numbers, and underscores" },
+            :format => { :with => /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/, :message => "Username must start with a letter and end with a letter or number" }
+  validates :email, :uniqueness => { :case_sensitive => false, :message => 'This email has already been used' }
+  validates :bio, :length => { :maximum => 150, :message => 'Bio has a max length of 150' }
   validate :username_change
-  validates_each :invite_code_id, :on => :create do |record, attr, value|
-    invite = InviteCode.find(value)
-    record.errors.add attr, "Please enter correct invite code" unless invite && invite.usable?
-  end
+  validate :validate_invite_code, :on => :create
 
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff
   after_update :update_denorms#, :expire_caches
@@ -150,10 +147,17 @@ class User
   def username_change
     if username_was && username_changed? && username_was != username
       if username_reset == false && !role?('admin')
-        errors.add(:username, "cannot be changed right now")
+        errors.add(:username, "Username cannot be changed right now")
       else
         self.username_reset = false
       end
+    end
+  end
+
+  def validate_invite_code
+    invite = InviteCode.find(invite_code_id)
+    unless invite && invite.usable?
+      errors.add :invite_code_id, "Please enter a valid invite code"
     end
   end
 
@@ -554,7 +558,6 @@ class User
       Notification.where("object_user._id" => id).update_all(object_user_updates)
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
       neo4j_update
-      expire_caches
       Resque.enqueue(SmCreateUser, id.to_s)
     end
   end

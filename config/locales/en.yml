@@ -8,3 +8,15 @@ en:
       user: "Not allowed to manage other user accounts."
     update:
       link: "You're not allowed to update this link story."
+
+  mongoid:
+    errors:
+      models:
+        user:
+          attributes:
+            username:
+              blank: "Username cannot be blank"
+            email:
+              blank: "Email cannot be blank"
+            password:
+              blank: "Password cannot be blank"

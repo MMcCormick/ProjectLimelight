@@ -44,6 +44,10 @@ ProjectLimelight::Application.routes.draw do
       post '' => 'likes#create'
       delete '' => 'likes#destroy'
     end
+
+    scope 'invite_codes' do
+      post 'check' => 'invite_codes#check'
+    end
   end
 
   # Resque admin

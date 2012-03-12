@@ -1,44 +1,38 @@
-<div id="auth_box">
-  <div class="top">
-    <%= image_tag 'splash_top.gif' %>
+<div class="invite-form hide">
+  <%= render "invite_codes/redeem_form" %>
+  <div class='back'>GO BACK</div>
+</div>
+<div class="login-form <%= 'hide' unless show == :login %>">
+  <div class="left">
+    <div class="head">Use your existing social account.</div>
+    <a href="<%= user_omniauth_authorize_path(:facebook) %>">
+      <div class="option one">
+        <%= image_tag('facebook-login-button.png') %>
+      </div>
+    </a>
+    <div class="foot1">We do not share your information.</div>
+    <div class="foot2">We do not post to your profile without your permission.</div>
+    <div class='back'>GO BACK</div>
   </div>
-  <% if @show == :confirm %>
-    <div class="bottom">
-      <div id="confirm-account">Thank you for signing up! A confirmation link has been sent to the email address you provided.</div>
-    </div>
-  <% else %>
-    <div class="bottom">
-      <div class="invite <%= 'hide' if show == :login || show == :register %>">
-        <%= render "invite_codes/redeem_form" %>
-        <div class="clear"></div>
-        <div class="switch-c">or <span class="switch">Login With Existing Account</span></div>
-
+  <div class="right">
+    <div class="head">... or log in directly with Limelight.</div>
+    <%= render "users/sessions/new" %>
+  </div>
+</div>
+<div class="register-form <%= 'hide' unless show == :register %>">
+  <div class="left">
+    <div class="head">Use your existing social account.</div>
+    <a href="<%= user_omniauth_authorize_path(:facebook) %>">
+      <div class="option one">
+        <%= image_tag('facebook-login-button.png') %>
       </div>
-      <div class="login-reg <%= '' unless show == :login || show == :register %>">
-        <div class="left">
-          <div class="head">Use your existing social account.</div>
-          <a href="<%= user_omniauth_authorize_path(:facebook) %>">
-            <div class="option one">
-              <%= image_tag('facebook-login-button.png') %>
-            </div>
-          </a>
-          <div class="foot1">We do not share your information.</div>
-          <div class="foot2">We do not post to your profile without your permission.</div>
-        </div>
-        <div class="right">
-          <div id="auth-login" class="<%= '' unless show == :login %>">
-            <div class="head">... or log in directly with Limelight.</div>
-            <%= render "users/sessions/new" %>
-            <div class="switch">I don't have a Limelight account.</div>
-          </div>
-          <div id="auth-register" class="<%= '' if show == :login %>">
-            <div class="head">... or register directly with Limelight.</div>
-            <%= render "users/registrations/new" %>
-            <div class="switch">I already have a Limelight account.</div>
-          </div>
-        </div>
-      </div>
-      <div class="clear"></div>
-    </div>
-  <% end %>
+    </a>
+    <div class="foot1">We do not share your information.</div>
+    <div class="foot2">We do not post to your profile without your permission.</div>
+    <div class='back'>GO BACK</div>
+  </div>
+  <div class="right">
+    <div class="head">... or register directly with Limelight.</div>
+    <%= render "users/registrations/new" %>
+  </div>
 </div>

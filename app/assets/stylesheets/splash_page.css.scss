@@ -1,18 +1,20 @@
 #splash-page {
   .container {
+    position: relative;
     width: 750px;
     margin: auto;
   }
   .top {
     @include single-box-shadow(#666, 0px, 1px, 3px);
     background: #B8CFD6;
+    padding-bottom: 30px;
     .container {
       width: 500px;
     }
     .logo-title {
       height: 100px;
       position: relative;
-      margin: 20px 0;
+      margin: 40px 0;
 
       .logo {
         position: absolute;
@@ -20,17 +22,84 @@
       h1 {
         position: absolute;
         left: 120px;
-        top: 20px;
+        top: 15px;
         font-size: 40px;
         font-weight: normal;
       }
       h2 {
         position: absolute;
         left: 120px;
-        top: 70px;
+        top: 61px;
         font-size: 26px;
         font-weight: normal;
       }
+    }
+    .cheeky-buttons {
+      position: relative;
+      padding: 20px 0;
+      left: 50%;
+      margin-left: -200px;
+      width: 400px;
+      height: 40px;
+      .login {
+        float: left;
+      }
+      .register {
+        float: right;
+      }
+      .btn {
+        font-size: 18px;
+        padding: 10px 17px;
+      }
+    }
+    .invite-form {
+      margin-left: 120px;
+      #new_invite_code {
+        margin-bottom: 30px;
+      }
+    }
+    #invite_code_code,
+    #invite_code_email {
+      float: left;
+      margin-right: 10px;
+    }
+    .back {
+      font-size: 12px;
+      margin-top: 30px;
+      cursor: pointer;
+      color: $blue;
+    }
+    .left,
+    .right {
+      .head {
+        font-size: 15px;
+        margin: 0 0 10px;
+      }
+      .option {
+        margin-bottom: 30px;
+      }
+      .foot1,
+      .foot2 {
+        font-size: 12px;
+        line-height: 14px;
+        margin-bottom: 10px;
+      }
+    }
+    .left {
+      float: left;
+      width: 235px;
+    }
+    .right {
+      float: right;
+      width: 245px;
+    }
+    #user-login,
+    #user-password,
+    #user-username,
+    #user-email {
+      padding: 5px;
+      border: 1px solid $grayLight;
+      width: 225px;
     }
   }
   .bottom {

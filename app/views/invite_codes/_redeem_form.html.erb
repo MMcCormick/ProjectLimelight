@@ -1,8 +1,17 @@
 <%= form_for InviteCode.new, :url => :check_invite_code, :html => { :class => 'ajax' } do |f| %>
   <div class='errors'></div>
   <div>
-    <%= f.label :code, "Type Invite Code And Press Enter" %>
-    <%= f.text_field :code, :autocomplete => :off, :placeholder => "Paste yo invite code here..." %>
+    <%= f.label :code, "Have an invite code? Great! Enter it below." %>
+    <%= f.text_field :code, :autocomplete => :off, :placeholder => "Invite code..." %>
   </div>
   <input type='submit' value='Use Invite Code' class="btn btn-success" />
 <% end %>
+
+<form class="c">
+  <div class="errors"></div>
+  <div>
+    <label for="invite_code_email">Want an invite? Enter your email below.</label>
+    <input id="invite_code_email" placeholder="Email..." type="text"/>
+  </div>
+  <input class="btn btn-success" type="submit" value="Send Me One">
+</form>

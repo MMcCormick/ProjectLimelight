@@ -9,8 +9,8 @@
       </div>
 
       <div class='cheeky-buttons <%= 'hide' if @show == :login || @show == :register %>'>
-        <button class='btn btn-success login'>I <b>have</b> an Account</button>
-        <button class='btn btn-success register'>I <b>want</b> an Account</button>
+        <div class='btn btn-success login'>I <b>have</b> an Account</div>
+        <div class='btn btn-success register'>I <b>want</b> an Account</div>
       </div>
 
       <%= render "users/auth_box", :show => @show %>

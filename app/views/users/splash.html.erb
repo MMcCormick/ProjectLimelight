@@ -1,10 +1,12 @@
 <div id='splash-page'>
   <div class='top'>
     <div class='container'>
-      <%= image_tag "splash-logo.png", :alt => "", :class => "logo" %>
+      <div class="logo-title">
+        <%= image_tag "splash-logo.png", :alt => "", :class => "logo" %>
 
-      <h1>Limelight</h1>
-      <h2>Tagline</h2>
+        <h1>Limelight</h1>
+        <h2>It's like tweeting with benefits</h2>
+      </div>
 
       <div class='cheeky-buttons <%= 'hide' if @show == :login || @show == :register %>'>
         <button class='btn btn-success login'>I <b>have</b> an Account</button>

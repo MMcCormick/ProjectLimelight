@@ -603,5 +603,16 @@ header {
       line-height: 18px;
       padding: 5px 0;
     }
+    #post-form {
+      @include border-radius(6px);
+      margin-top: 10px;
+      h3 {
+        margin: 0;
+      }
+      .modal-footer {
+        background-color: transparent;
+        border: none;
+      }
+    }
   }
 }

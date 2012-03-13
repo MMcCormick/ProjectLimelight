@@ -1,14 +1,39 @@
 #splash-page {
+  .container {
+    width: 750px;
+    margin: auto;
+  }
   .top {
     @include single-box-shadow(#666, 0px, 1px, 3px);
     background: #B8CFD6;
+    .container {
+      width: 500px;
+    }
+    .logo-title {
+      height: 100px;
+      position: relative;
+      margin: 20px 0;
+
+      .logo {
+        position: absolute;
+      }
+      h1 {
+        position: absolute;
+        left: 120px;
+        top: 20px;
+        font-size: 40px;
+        font-weight: normal;
+      }
+      h2 {
+        position: absolute;
+        left: 120px;
+        top: 70px;
+        font-size: 26px;
+        font-weight: normal;
+      }
+    }
   }
   .bottom {
 
-  }
-  .container {
-    width: 710px;
-    padding: 0 20px;
-    margin: auto;
   }
 }

@@ -1,5 +1,4 @@
 class LL.Views.PostsFeed extends Backbone.View
-  template: JST['posts/feed']
   el: $('#feed')
 
   initialize: ->
@@ -21,20 +20,23 @@ class LL.Views.PostsFeed extends Backbone.View
       self.loadMore(e)
 
   render: =>
-    $(@el).append(@template())
+    if @collection.models.length == 0
+      $(@el).append("<div class='none'>There are no items in this feed</div>")
+    else
+      $(@el).remove('.none')
 
-    # we start with no columns
-    @.columns = []
-    @.minColumnHeight = 0
-    @arrangeColumns()
+      # we start with no columns
+      @.columns = []
+      @.minColumnHeight = 0
+      @arrangeColumns()
 
-    for root_post in @collection.models
-      @appendPost(root_post)
+      for root_post in @collection.models
+        @appendPost(root_post)
 
-    LL.App.calculateSiteWidth()
+      LL.App.calculateSiteWidth()
 
-    # load an extra page if their screen is huge
-    @loadMore()
+      # load an extra page if their screen is huge
+      @loadMore()
 
     @
 

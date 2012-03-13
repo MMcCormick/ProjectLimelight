@@ -5,6 +5,9 @@
   overflow: hidden;
   background: rgba(255,255,255,0.4);
 
+  .none {
+    margin: 16px 0 0 15px;
+  }
   li {
     display: inline-block !important;
     position: relative;

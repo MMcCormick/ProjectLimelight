@@ -9,6 +9,9 @@ class LL.Views.InfluenceIncreases extends Backbone.View
   render: =>
     self = @
 
+    if @collection.models.length == 0
+      $(@el).html('<li class="none">This bar updates as you gain influence in topics</li>')
+
     for influence in @collection.models
       @prependInfluence(influence)
 
@@ -20,7 +23,7 @@ class LL.Views.InfluenceIncreases extends Backbone.View
       channel.bind 'influence_change', (data) ->
         influence = self.collection.get(data.id)
         if influence
-          foo = 'bar' # deal with influences already on the strip. move them to the front and update them
+          foo = 'bar' # TODO: deal with influences already on the strip. move them to the front and update them
         else
           influence = new LL.Models.InfluenceIncrease({
             id: data.id
@@ -34,4 +37,5 @@ class LL.Views.InfluenceIncreases extends Backbone.View
 
   prependInfluence: (influence) =>
     view = new LL.Views.InfluenceIncrease(model: influence)
+    $(@el).remove('.none')
     $(@el).prepend($(view.render().el).fadeIn(500))

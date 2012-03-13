@@ -157,6 +157,13 @@ form {
   clear: both;
 }
 
+.none {
+  font-size: 13px;
+  font-style: italic;
+  color: #666;
+  cursor: default;
+}
+
 .disabled {
   @include opacity(60);
   cursor: default !important;

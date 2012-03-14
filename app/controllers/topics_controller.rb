@@ -3,14 +3,24 @@ class TopicsController < ApplicationController
 
   caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
 
+  respond_to :html, :json
+
   def index
     @topics = Topic.all
-    authorize! :manage, :all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @topics }
+    if params[:sort]
+      @topics = @topics.order_by(params[:sort][0], params[:sort][1])
     end
+
+    if params[:limit] && params[:limit].to_i < 100
+      @topics = @topics.limit(params[:limit])
+    else
+      @topics = @topics.limit(100)
+    end
+
+    if params[:page]
+      @topics = @topics.skip(params[:limit].to_i * (params[:page].to_i-1))
+    end
+
   end
 
   def show
@@ -95,6 +105,7 @@ class TopicsController < ApplicationController
     not_found("User not found") unless @user
 
     @topics = Neo4j.user_topic_suggestions(@user.id.to_s, 20)
+    render 'topics/index'
   end
   # END BACKBONE
 

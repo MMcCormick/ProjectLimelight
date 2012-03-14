@@ -1,0 +1,16 @@
+<div class='tutorial-head'>
+  <h3>Welcome <%= @user.get('username') %>!</h3>
+  <img src="/assets/images/splash-logo.png" />
+</div>
+<section>
+  <div class="modal-header">
+    <h2></h2>
+  </div>
+  <div class="modal-body"></div>
+  <div class="modal-footer">
+    <div class='btn btn-large btn-success next'>Next</div>
+    <div class='step-count'>
+      step <span><%= @step %></span> of 4
+    </div>
+  </div>
+</section>

@@ -1,4 +1,5 @@
 class LL.Collections.Topics extends Backbone.Collection
+  url: '/api/topics'
   model: LL.Models.Topic
 
   findOrCreate: (id, data=null) ->

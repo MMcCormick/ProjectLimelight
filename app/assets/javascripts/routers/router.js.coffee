@@ -21,6 +21,9 @@ class LL.Router extends Backbone.Router
     if id == 0 && !LL.App.current_user
       @splashPage()
       return
+    else if LL.App.current_user && LL.App.current_user.get('tutorial_step') != 0
+      @tutorials()
+      return
 
     @hideModal()
 
@@ -123,6 +126,12 @@ class LL.Router extends Backbone.Router
       collection.id = id
       collection.page = 1
       collection.fetch({data: {id: id}})
+
+  tutorials: ->
+    view = new LL.Views.UserTutorial(model: LL.App.current_user)
+    view.step = LL.App.current_user.get('tutorial_step')
+    $('.wrapper').html(view.render().el)
+
 
   #######
   # TOPICS

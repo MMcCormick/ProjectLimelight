@@ -4,9 +4,6 @@ class UsersController < ApplicationController
 
   respond_to :html, :json
 
-  caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
-  #caches_action :feed, :if => Proc.new { |c| !signed_in? }, :cache_path => Proc.new { |c| c.params }
-
   def show
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
 
@@ -37,6 +34,13 @@ class UsersController < ApplicationController
         render json: build_ajax_response(status, nil, nil, {"invite_code" => "Your invite code is invalid"}), status: 422
       end
     end
+  end
+
+  def update
+    current_user.tutorial_step = params['tutorial_step'] if params['tutorial_step']
+    current_user.save
+
+    render :nothing => true, status: 200
   end
 
   def influence_increases
@@ -163,26 +167,6 @@ class UsersController < ApplicationController
     else
       redirect_to url
       #render :nothing => true, :status => 404
-    end
-  end
-
-  def update
-    @user = User.find_by_slug(params[:id])
-
-    if !signed_in? || @user.id != current_user.id
-      redirect_to root_path
-    end
-
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        format.html { redirect_to user_settings_path @user }
-        response = build_ajax_response(:ok, user_settings_path(@user), "Settings updated!")
-        format.json { render json: response, status: :created }
-      else
-        format.html { redirect_to user_settings_path @user }
-        response = build_ajax_response(:error, nil, "Settings could not be updated", @user.errors)
-        format.json { render json: response, status: :unprocessable_entity }
-      end
     end
   end
 

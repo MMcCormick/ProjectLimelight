@@ -16,6 +16,7 @@ class LL.Views.RootMedia extends Backbone.View
 
     score = new LL.Views.Score(model: @model)
     $(@el).find('.actions').prepend(score.render().el)
+
     @
 
   loadPostForm: =>

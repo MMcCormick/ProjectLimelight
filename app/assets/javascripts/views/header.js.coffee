@@ -5,8 +5,9 @@ class LL.Views.Header extends Backbone.View
     "click .talk": "loadPostForm"
 
   initialize: ->
-    @model = LL.App.current_user
-    @render()
+    # only show if the user is not doing the tutorial
+    if @model && @model.get('tutorial_step') == 0
+      @render()
 
   render: =>
     header_user_nav = new LL.Views.UserHeaderNav(model: @model)

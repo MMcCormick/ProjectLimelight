@@ -9,7 +9,7 @@ window.LL =
   Routers: {}
   init: ->
     @App =  new LL.Views.App()
-    @Header = new LL.Views.Header()
+    @Header = new LL.Views.Header(model: LL.App.current_user)
 
     @Router = new LL.Router()
     Backbone.history.start(pushState: true)

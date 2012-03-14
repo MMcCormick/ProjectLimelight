@@ -1,13 +1,13 @@
 #splash-page {
   .container {
     position: relative;
-    width: 750px;
+    width: 650px;
     margin: auto;
   }
   .top {
     @include single-box-shadow(#666, 0px, 1px, 3px);
     background: #B8CFD6;
-    padding-bottom: 30px;
+    padding-bottom: 40px;
     .container {
       width: 500px;
     }
@@ -103,6 +103,70 @@
     }
   }
   .bottom {
+    padding-top: 30px;
+    .splash-influence {
+      height: 125px;
+      margin-bottom: 30px;
+      li {
+        width: 100px;
+        position: relative;
+        display: inline-block;
+        margin-right: 5px;
 
+        .user {
+          width: 45px;
+          margin-left: 5px;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+        .score-pts {
+          float: right;
+          font-size: 10px;
+          margin-right: 5px;
+          span {
+            font-weight: bold;
+            font-size: 13px;
+          }
+        }
+        img {
+          display: block;
+          height: 100px;
+          width: 100px;
+          margin-top: 5px;
+          background-color: $grayLight;
+        }
+        .topic {
+          @include opacity(50);
+          background-color: #FFF;
+          position: absolute;
+          bottom: 0px;
+          padding: 5px 7px;
+          font-size: 11px;
+          width: 86px;
+          z-index: 110;
+          line-height: 16px;
+        }
+      }
+    }
+    .left{
+      float: left;
+      width: 315px;
+    }
+    .right {
+      float: right;
+      width: 310px;
+      p { position: relative; }
+      .inf-arrow {
+        position: absolute;
+        bottom: 6px;
+        left: 85%;
+      }
+    }
+    p {
+      font-size: 17px;
+      line-height: 22px;
+      margin-bottom: 30px;
+      margin-top: 7px;
+    }
   }
 }

@@ -7,8 +7,12 @@ attributes :following_users,
            :tutorial_step
 
 node :invite_code do |user|
-  code = InviteCode.find(user.invite_code_id)
-  {:code => code.code, :remaining => code.remaining}
+  if user.invite_code_id
+    code = InviteCode.find(user.invite_code_id)
+    {:code => code.code, :remaining => code.remaining}
+  else
+    {}
+  end
 end
 
 node :facebook_connected do |user|

@@ -461,7 +461,7 @@ module Limelight #:nodoc:
     end
 
     def mentioned_topics
-      Topic.where(:_id.in => topic_mentions.map{|t| t.id})
+      Topic.where(:_id.in => mentioned_topic_ids)
     end
 
     def mentioned_topic_ids
@@ -668,7 +668,6 @@ module Limelight #:nodoc:
       amt = amt * current_user.clout
 
       if defined?(topic_mentions) && !topic_mentions.empty?
-        mentioned_topics = Topic.where(:_id.in => mentioned_topic_ids)
         sum = 0
         mentioned_topics.each { |t| sum += t.user_percentile(current_user.id) ? t.user_percentile(current_user.id) : 0 }
         if type == :new
@@ -678,10 +677,20 @@ module Limelight #:nodoc:
         end
       end
 
+      change_pop(amt) unless type == :new
+
+      #add_pop_action_helper(type, subtype, current_user, amt)
+
+      Resque.enqueue(AddPopAction, id.to_s, type, subtype, user_id.to_s, amt)
+
+      amt
+    end
+
+    def add_pop_action_helper(type, subtype, current_user, amt)
+
       if amt != 0
         action = current_user.popularity_actions.new(:type => type, :subtype => subtype, :object_id => id)
         snippet_attrs = {:amount => amt, :id => id, :object_type => self.class.name}
-
 
         snippet_attrs[:root_id] = root_id if root_id
         snippet_attrs[:root_type] = root_type if root_id
@@ -730,15 +739,12 @@ module Limelight #:nodoc:
               })
             end
             if mention.score >= 100 && mention.influencers.length >= 10
-              Resque.enqueue_in(2.seconds, RecalculateInfluence, mention.id.to_s)
+              Resque.enqueue_in(30.minutes, RecalculateInfluence, mention.id.to_s)
             end
           end
         end
 
         action.save!
-        change_pop(amt)
-
-        amt
       end
     end
 

@@ -48,7 +48,6 @@ class Topic
   field :slug_locked
   field :user_id
   field :followers_count, :default => 0
-  field :response_count
   field :primary_type
   field :primary_type_id
   field :talking_ids, :default => []

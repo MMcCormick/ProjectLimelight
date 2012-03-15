@@ -413,16 +413,24 @@ class User
     actions = PopularityAction.where("pop_snippets._id" => id).order_by(:et, :desc).limit(30)
     actions.each do |action|
       action.pop_snippets.each do |snip|
-        if snip.ot == "Topic" && action.t != "new" && snip.a > 0
+        if snip.ot == "Topic" && snip.a > 0
           inc = InfluenceIncrease.new()
           inc.amount = action.pop_snippets[0].a
           inc.topic_id = snip.id
+          inc.reason = "Someone liked your " + action.pop_snippets[0].ot if action.t == :lk
+          foo = action.t
           increases << inc
         end
       end
     end
     topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
-    increases.each { |increase| increase.topic = topics.detect {|t| t.id == increase.topic_id} }
+    increases.each do |increase|
+      topic = topics.detect {|t| t.id == increase.topic_id}
+      increase.topic = topic
+      if increase.reason.blank?
+        increase.reason = "You posted about " + topic.name + " for the first time"
+      end
+    end
   end
 
   class << self

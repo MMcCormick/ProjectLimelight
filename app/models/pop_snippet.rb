@@ -1,10 +1,11 @@
-class PopSnippet #lawsuit?
+class PopSnippet
   include Mongoid::Document
 
   field :a, :as => :amount
   field :ot, :as => :object_type
   field :rid, :as => :root_id
   field :rt, :as => :root_type
+  field :fm, :as => :first_mention
 
   validates_presence_of :amount, :object_type
 

@@ -1,6 +1,6 @@
 collection @increases
 
-attributes :amount
+attributes :amount, :reason
 
 node :id do |increase|
   increase.topic_id

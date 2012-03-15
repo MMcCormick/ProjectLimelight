@@ -265,7 +265,7 @@ class Post
       parent ||= Post.find(response_to.id)
       parent.register_response(u_id)
     end
-    register_topic_responses(u_id) if standalone_talk?
+    register_topic_responses(u_id)
   end
 
   def register_response(u_id)
@@ -273,7 +273,6 @@ class Post
       self.talking_ids << u_id
       self.response_count += 1
       self.save
-      register_topic_responses(u_id)
     end
   end
 

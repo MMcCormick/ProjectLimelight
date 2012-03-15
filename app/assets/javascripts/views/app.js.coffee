@@ -117,6 +117,7 @@ class LL.Views.App extends Backbone.View
 
     unless $('body').hasClass(className)
       $('body').removeClass('two three four five').addClass(className)
+      $('.qtip').qtip('reposition')
       @trigger('rearrange_columns')
 
 

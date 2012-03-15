@@ -38,6 +38,7 @@ class UsersController < ApplicationController
 
   def update
     current_user.tutorial_step = params['tutorial_step'] if params['tutorial_step']
+    current_user.tutorial1_step = params['tutorial1_step'] if params['tutorial1_step']
     current_user.save
 
     render :nothing => true, status: 200

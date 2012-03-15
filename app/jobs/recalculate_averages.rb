@@ -1,7 +1,7 @@
 class RecalculateAverages
   include Resque::Plugins::UniqueJob
 
-  @queue = :popularity
+  @queue = :slow
 
   def self.perform
     map    = "function() {

@@ -1,6 +1,6 @@
 class PushUnlike
 
-  @queue = :feeds
+  @queue = :medium
 
   def self.perform(object_id, user_id)
     object = Post.find(object_id)

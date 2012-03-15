@@ -1,5 +1,6 @@
 module CoreObjectsHelper
 
+  #BETA REMOVE
   def core_object_url(object, type=nil)
     type = object.type unless type
     case type

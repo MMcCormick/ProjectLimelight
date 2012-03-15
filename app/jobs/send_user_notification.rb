@@ -1,7 +1,7 @@
 class SendUserNotification
   include Resque::Plugins::UniqueJob
 
-  @queue = :notifications
+  @queue = :slow
 
   def self.perform
     users = User.all

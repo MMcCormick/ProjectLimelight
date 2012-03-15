@@ -14,8 +14,9 @@
 //= require_tree ./collections
 //= require_tree ./views
 //= require_tree ./routers
-//= require bootstrap
+//= require app_bootstrap
 //= require soulmate
+//= require jquery.qtip
 //= require jquery.gritter
 //= require jquery.timer
 //

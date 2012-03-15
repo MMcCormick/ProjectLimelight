@@ -4,7 +4,8 @@ extends "users/show"
 
 attributes :following_users,
            :following_topics,
-           :tutorial_step
+           :tutorial_step,
+           :tutorial1_step
 
 node :invite_code do |user|
   if user.invite_code_id

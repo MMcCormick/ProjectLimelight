@@ -63,6 +63,7 @@ class User
   field :bio
   field :invite_code_id
   field :tutorial_step, :default => 1, :type => Integer
+  field :tutorial1_step, :default => 1, :type => Integer # user feed tutorial
   field :email_share, :default => true
   field :email_follow, :default => true
   field :email_comment, :default => true

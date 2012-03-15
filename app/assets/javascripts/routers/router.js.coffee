@@ -27,7 +27,12 @@ class LL.Router extends Backbone.Router
 
     @hideModal()
 
-    user = if id == 0 then LL.App.current_user else LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+    if id == 0
+      user = LL.App.current_user
+      @showTipTutorial('user_feed')
+    else
+      user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+
 
     # Only load the feed if it's new
     if LL.App.findScreen('user_feed', id)
@@ -200,6 +205,14 @@ class LL.Router extends Backbone.Router
 
   splashPage: ->
     view = new LL.Views.SplashPage()
+
+  showTipTutorial: (type) ->
+    switch type
+      when 'user_feed'
+        unless LL.App.current_user.get('tutorial1_step') == 0
+          view = new LL.Views.UserTutorialTips(model: LL.App.current_user)
+          view.page = 'user_feed'
+          view.render()
 
   staticPage: (name) ->
     sidebar = new LL.Views.StaticPageSidebar()

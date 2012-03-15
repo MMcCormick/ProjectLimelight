@@ -1,0 +1,90 @@
+.hover-tab {
+  position: absolute;
+  background: #FFF;
+  border: 1px solid black;
+  padding: 10px;
+
+  &.user-hover {
+
+  }
+  &.topic-hover {
+
+  }
+}
+
+.ui-tooltip-limelight {
+	border: 0;
+
+  .ui-tooltip-tip {
+    background: #666;
+  }
+  .ui-tooltip-titlebar,
+  .ui-tooltip-content {
+    margin: 0px;
+    padding: 0px;
+    border: 2px solid #666;
+  }
+
+  .top {
+    border-bottom: 1px solid #DDD;
+    font-size: 18px;
+    background: #FFF;
+    padding: 12px 10px;
+  }
+  .middle {
+    background: #FFF;
+    padding: 10px 10px;
+    font-size: 13px;
+    line-height: 16px;
+  }
+  .bottom {
+    padding: 7px 10px;
+    background: #F5F5F5;
+    box-shadow: 0 1px 0 white inset;
+    border-top: 1px solid #DDD;
+    text-align: right;
+  }
+}
+
+.tutorial-tip {
+  .middle {
+    width: 225px;
+  }
+}
+
+	/*.ui-tooltip-tipsy .ui-tooltip-titlebar,*/
+	/*.ui-tooltip-tipsy .ui-tooltip-content{*/
+		/*_margin-bottom: 0; *//* IE6 */
+		/*.margin-bottom: 0; *//* IE7 */
+
+		/*background: transparent;*/
+		/*background: rgba(0, 0, 0, .87);*/
+		/*filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000);*/
+		/*-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";*/
+
+		/*color: white;*/
+		/*border: 0px transparent;*/
+
+		/*font-size: 11px;*/
+		/*font-family: 'Lucida Grande', sans-serif;*/
+		/*font-weight: bold;*/
+		/*line-height: 16px;*/
+		/*text-shadow: 0 1px black;*/
+	/*}*/
+
+	/*.ui-tooltip-tipsy .ui-tooltip-titlebar{*/
+		/*padding: 6px 35px 0 10;*/
+	/*}*/
+
+	/*.ui-tooltip-tipsy .ui-tooltip-content{*/
+		/*padding: 6px 10;*/
+	/*}*/
+
+	/*.ui-tooltip-tipsy .ui-tooltip-icon{*/
+		/*border-color: #222;*/
+		/*text-shadow: none;*/
+	/*}*/
+
+	/*.ui-tooltip-tipsy .ui-tooltip-titlebar .ui-state-hover{*/
+		/*border-color: #303030;*/
+	/*}*/

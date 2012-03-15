@@ -13,29 +13,34 @@
 }
 
 .ui-tooltip-limelight {
+  @include single-box-shadow(#333, 1px, 1px, 4px, 1px);
 	border: 0;
+  z-index: 1020 !important;
 
   .ui-tooltip-tip {
-    background: #666;
+    background: #333;
   }
   .ui-tooltip-titlebar,
   .ui-tooltip-content {
     margin: 0px;
     padding: 0px;
-    border: 2px solid #666;
+    border: 1px solid #333;
+    background: #333;
   }
 
   .top {
-    border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #FFF;
     font-size: 18px;
-    background: #FFF;
+    background: #333;
     padding: 12px 10px;
+    color: #FFF;
   }
   .middle {
-    background: #FFF;
+    background: #333;
     padding: 10px 10px;
     font-size: 13px;
     line-height: 16px;
+    color: #FFF;
   }
   .bottom {
     padding: 7px 10px;

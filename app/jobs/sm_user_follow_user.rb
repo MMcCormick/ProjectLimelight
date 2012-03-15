@@ -1,6 +1,6 @@
 class SmUserFollowUser
 
-  @queue = :soulmate
+  @queue = :fast
 
   def self.perform(user1_id, user2_id)
     user2 = User.find(user2_id)

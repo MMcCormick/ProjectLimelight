@@ -361,7 +361,7 @@ DEPENDENCIES
   rpm_contrib (= 2.1.7)
   rspec-rails
   sass-rails (~> 3.2.3)
-  soulmate
+  soulmate (= 0.1.1)
   thin
   twitter
   uglifier (>= 1.0.3)

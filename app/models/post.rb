@@ -207,7 +207,8 @@ class Post
       like.id = user.id
       user.likes_count += 1
       add_pop_action(:lk, :a, user)
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 1)
+      Resque.enqueue(Neo4jPostLike, user.id.to_s, id.to_s)
+      Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
       Resque.enqueue(PushLike, id.to_s, user.id.to_s)
 
       true
@@ -226,7 +227,7 @@ class Post
       like.destroy
       user.likes_count -= 1
       add_pop_action(:lk, :r, user)
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -1)
+      Resque.enqueue(Neo4jPostUnlike, user.id.to_s, id.to_s)
       Resque.enqueue(PushUnlike, id.to_s, user.id.to_s)
 
       true

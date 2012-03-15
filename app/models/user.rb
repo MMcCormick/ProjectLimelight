@@ -312,7 +312,7 @@ class User
   end
 
   ###
-  # FAVORITING
+  # FAVORITING BETA REMOVE
   ###
 
   def has_favorite?(object_id)

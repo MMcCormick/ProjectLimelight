@@ -1,6 +1,6 @@
 class ProcessImages
 
-  @queue = :one
+  @queue = :fast
 
   def self.perform(target_id, target_model, version, set_active=false)
     target = Kernel.const_get(target_model).find(target_id)

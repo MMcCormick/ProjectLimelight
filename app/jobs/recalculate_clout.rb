@@ -1,7 +1,7 @@
 class RecalculateClout
   include Resque::Plugins::UniqueJob
 
-  @queue = :popularity
+  @queue = :slow
 
   def self.perform
     users = User.all.asc(:score)

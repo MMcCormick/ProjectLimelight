@@ -1,6 +1,6 @@
 class PushFollowTopic
 
-  @queue = :feeds
+  @queue = :medium
 
   def self.perform(user_id, topic_id)
     user = User.find(user_id)

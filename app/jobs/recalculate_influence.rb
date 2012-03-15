@@ -1,7 +1,7 @@
 class RecalculateInfluence
   include Resque::Plugins::UniqueJob
 
-  @queue = :popularity
+  @queue = :slow
 
   def self.perform(topic_id)
     topic = Topic.find(BSON::ObjectId(topic_id))

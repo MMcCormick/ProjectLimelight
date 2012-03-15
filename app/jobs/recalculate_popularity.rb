@@ -2,7 +2,7 @@ class RecalculatePopularity
   include Resque::Plugins::UniqueJob
   include PopularityHelper
 
-  @queue = :popularity
+  @queue = :slow
 
   def self.perform
     map    = "function() {

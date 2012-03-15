@@ -1,6 +1,6 @@
 class PushPopularTalk
 
-  @queue = :feeds
+  @queue = :medium
 
   def self.perform(talk_id)
     talk = Post.find(talk_id)

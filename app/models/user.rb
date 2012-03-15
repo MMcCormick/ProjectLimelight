@@ -280,7 +280,6 @@ class User
       Resque.enqueue(Neo4jFollowCreate, id.to_s, topic.id.to_s, 'users', 'topics')
       Resque.enqueue(PushFollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
-      FeedUserItem.follow(self, topic)
       topic.save
 
       true

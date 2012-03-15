@@ -1,6 +1,4 @@
 module SoulmateHelper
-  include Rails.application.routes.url_helpers
-
   def user_nugget(user)
     nugget = {
               'id' => user.id.to_s,

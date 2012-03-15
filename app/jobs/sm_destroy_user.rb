@@ -1,6 +1,6 @@
 class SmDestroyUser
 
-  @queue = :soulmate
+  @queue = :fast
 
   def self.perform(user_id)
     LlSoulmate.destroy_user(user_id)

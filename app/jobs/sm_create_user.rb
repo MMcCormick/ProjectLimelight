@@ -1,6 +1,6 @@
 class SmCreateUser
 
-  @queue = :soulmate
+  @queue = :fast
 
   def self.perform(user_id)
     user = User.find(user_id)

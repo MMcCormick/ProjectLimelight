@@ -1,6 +1,6 @@
 class SmCreateTopic
 
-  @queue = :soulmate
+  @queue = :fast
 
   def self.perform(topic_id)
     topic = Topic.find(topic_id)

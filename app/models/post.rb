@@ -439,11 +439,13 @@ class Post
 
     def topic_feed(feed_ids, user_id, display_types, order_by, page)
       items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions => {'$in' => feed_ids})
+
       if order_by == 'newest'
         items = items.order_by(:last_response_time, :desc)
       else
         items = items.order_by(:p, :desc)
       end
+
       items = items.skip((page-1)*20).limit(20)
       items = items.to_a
       user_items = FeedUserItem.where(:feed_id => user_id, :root_id => {'$in' => items.map{|i| i.root_id}}).to_a
@@ -465,15 +467,21 @@ class Post
         root_post = RootPost.new
         root_post.root = objects.detect{|o| o.id == i.root_id}
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
-        root_post.personal_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
 
-        #overlap = (i.root_mentions & feed_ids) ? (i.root_mentions & feed_ids).first : false
-        #if !overlap && i.responses
-        #  overlap = (i.responses.keys & feed_ids.map{|f| f.to_s}).first
-        #  topic_responses = objects.select{ |o| i.responses[overlap] == o.id }
-        #else
-        #  topic_responses = []
-        #end
+        root_post.personal_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
+        root_post.public_talking = root_post.root.response_count
+
+        # get the public responses
+        root_post.public_responses = []
+        unless i.root_type == 'Talk' || root_post.public_talking == 0
+          responses = Post.public_responses(root_post.root.id, 1, 2)
+          responses.each do |response|
+            found = root_post.personal_responses.detect{|p| p.id == response.id}
+            unless found
+              root_post.public_responses.push(response)
+            end
+          end
+        end
 
         return_objects << root_post
       end

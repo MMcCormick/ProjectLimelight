@@ -149,6 +149,10 @@ class ApplicationController < ActionController::Base
                        params[:controller] != "confirmations" && request.fullpath != "/assets"
       session[:return_to] = request.fullpath
       redirect_to (root_path)
+    elsif request.get? && signed_in? && !(params[:controller] == "topics" && params[:action] == "index")
+      if current_user && current_user.tutorial_step != 0
+        redirect_to (root_path)
+      end
     end
   end
 

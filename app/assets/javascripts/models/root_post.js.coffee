@@ -1,6 +1,8 @@
 class LL.Models.RootPost extends Backbone.Model
 
   parse: (resp, xhr) ->
+    return null unless resp.root
+
     data = {
       'public_talking': resp.public_talking
       'personal_talking': resp.personal_talking

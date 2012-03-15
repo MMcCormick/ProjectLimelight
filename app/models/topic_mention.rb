@@ -11,6 +11,7 @@ class TopicMention
   field :public_id
   field :short_name
   field :score, :default => 1
+  field :first_mention
 
   embedded_in :topic_mentionable, polymorphic: true
 

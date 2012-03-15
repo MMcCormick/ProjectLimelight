@@ -580,6 +580,7 @@ module Limelight #:nodoc:
       existing = topic_mentions.detect{|mention| mention.id == topic.id}
       unless existing
         payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
+        payload["first_mention"] = true if !topic.talking_ids.include?(user.id)
         self.topic_mentions.build(payload)
         if topic.score > primary_topic_pm
           self.primary_topic_mention = topic.id
@@ -679,9 +680,8 @@ module Limelight #:nodoc:
 
       change_pop(amt) unless type == :new
 
-      #add_pop_action_helper(type, subtype, current_user, amt)
-
-      Resque.enqueue(AddPopAction, id.to_s, type, subtype, user_id.to_s, amt)
+      #Resque.enqueue(AddPopAction, id.to_s, type, subtype, user_id.to_s, amt)
+      add_pop_action_helper(type, subtype, current_user, amt)
 
       amt
     end
@@ -696,8 +696,10 @@ module Limelight #:nodoc:
         snippet_attrs[:root_type] = root_type if root_id
         action.pop_snippets.new(snippet_attrs)
 
+        if type == :new
+          action.pop_snippets.new(:amount => 0, :id => user_id, :object_type => "User")
         # Update user if not a link, video, or picture and this is not a :new action
-        unless type == :new || ["Link", "Video", "Picture"].include?(self.class.name)
+        elsif !["Link", "Video", "Picture"].include?(self.class.name)
           action.pop_snippets.new(:amount => amt, :id => user_id, :object_type => "User")
             User.collection.update(
               {:_id => user_id},
@@ -709,38 +711,48 @@ module Limelight #:nodoc:
         end
 
         # Update mentioned topics if applicable
-        if type != :new && defined?(topic_mentions) && !topic_mentions.empty?
-          # Update the popularities on affected objects
-          Topic.collection.update(
-            {:_id => {"$in" => mentioned_topic_ids}},
-            {
-              "$inc" => {
-                      :score => amt,
-                      "influencers."+user_id.to_s+".influence" => amt
-              }
-            },
-            {:upsert => true}
-          )
+        if defined?(topic_mentions) && !topic_mentions.empty?
+          topic_amt = type == :new ? 1 : amt
+          affected_topic_ids = []
 
           topic_mentions.each do |mention|
-            action.pop_snippets.new(:amount => amt, :id => mention.id, :object_type => "Topic")
-            Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
-            if amt > 0 && self.class.name == 'Talk'
-              Pusher[user_id.to_s].trigger('influence_change', {
-                      :topic_id => mention.id.to_s,
-                      :amount => amt,
-                      :topic => {
-                        :id => mention.name,
-                        :_id => mention.id.to_s,
-                        :name => mention.name,
-                        :public_id => mention.public_id,
-                        :slug => mention.slug
-                      }
-              })
+            if type != :new || (type == :new && mention.first_mention)
+              affected_topic_ids << mention.id
+
+              action.pop_snippets.new(:amount => topic_amt, :id => mention.id, :object_type => "Topic")
+              #snip.first_mention = mention.first_mention if mention.first_mention
+              Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
+              if topic_amt > 0 && self.class.name == 'Talk'
+                Pusher[user_id.to_s].trigger('influence_change', {
+                        :topic_id => mention.id.to_s,
+                        :amount => topic_amt,
+                        :topic => {
+                          :id => mention.name,
+                          :_id => mention.id.to_s,
+                          :name => mention.name,
+                          :public_id => mention.public_id,
+                          :slug => mention.slug
+                        }
+                })
+              end
+              topic = mentioned_topics.detect{|t| t.id == mention.id}
+              if topic.score >= 100 && topic.influencers.length >= 10
+                Resque.enqueue_in(30.minutes, RecalculateInfluence, mention.id.to_s)
+              end
             end
-            if mention.score >= 100 && mention.influencers.length >= 10
-              Resque.enqueue_in(30.minutes, RecalculateInfluence, mention.id.to_s)
-            end
+          end
+          # Update the popularities on affected objects
+          unless affected_topic_ids.empty?
+            Topic.collection.update(
+              {:_id => {"$in" => affected_topic_ids}},
+              {
+                "$inc" => {
+                  :score => topic_amt,
+                  "influencers."+user_id.to_s+".influence" => topic_amt
+                }
+              },
+              {:upsert => true}
+            )
           end
         end
 

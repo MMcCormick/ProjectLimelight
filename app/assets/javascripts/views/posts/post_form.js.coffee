@@ -68,14 +68,15 @@ class LL.Views.PostForm extends Backbone.View
     @collection.create attributes,
       wait: true
       beforeSend: ->
-        $(self.el).find('.btn-success').attr('disabled', 'disabled')
+        $(self.el).find('.btn-success').button('loading')
       success: (data) ->
+        $(self.el).find('.btn-success').button('reset')
         self.destroyForm()
       error: (jqXHR, textStatus, errorThrown) ->
-        $(self.el).find('.btn-success').removeAttr('disabled')
+        $(self.el).find('.btn-success').button('reset')
         globalError(textStatus, $(self.el))
       complete: ->
-        $(self.el).removeClass('disabled')
+        $(self.el).find('.btn-success').button('reset')
 
   destroyForm: ->
     $(@el).modal('hide')

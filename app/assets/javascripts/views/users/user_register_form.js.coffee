@@ -17,11 +17,12 @@ class LL.Views.UserRegisterForm extends Backbone.View
     @collection.create attributes,
       wait: true
       beforeSend: ->
-        $(self.el).find('.btn-success').attr('disabled', 'disabled')
+        $(self.el).find('.btn-success').button('loading')
       success: (data) ->
+        $(self.el).find('.btn-success').button('reset')
         $('.register-form').replaceWith("<h4>Thanks for registering! Only one step left. Please check your email for the confirmation link.</h4>")
       error: (jqXHR, textStatus, errorThrown) ->
-        $(self.el).find('.btn-success').removeAttr('disabled')
+        $(self.el).find('.btn-success').button('reset')
         globalError(textStatus, $(self.el))
       complete: ->
-        $(self.el).find('.btn-success').removeAttr('disabled')
+        $(self.el).find('.btn-success').button('reset')

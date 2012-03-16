@@ -90,7 +90,7 @@ class User
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio, :invite_code_id
 
-  validates :username, :uniqueness => { :case_sensitive => false, :message => '' },
+  validates :username, :uniqueness => { :case_sensitive => false, :message => 'Username is already taken' },
             :length => { :minimum => 3, :maximum => 15, :message => 'Username must be between 3 and 15 characters' },
             :format => { :with => /\A[a-zA-Z_0-9]+\z/, :message => "Username can only contain letters, numbers, and underscores" },
             :format => { :with => /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/, :message => "Username must start with a letter and end with a letter or number" }
@@ -414,10 +414,10 @@ class User
       action.pop_snippets.each do |snip|
         if snip.ot == "Topic" && snip.a > 0
           inc = InfluenceIncrease.new()
-          inc.amount = action.pop_snippets[0].a
+          inc.amount = snip.a
           inc.topic_id = snip.id
-          inc.reason = "Someone liked your " + action.pop_snippets[0].ot if action.t == :lk
-          foo = action.t
+          inc.object_type = action.pop_snippets[0].ot
+          inc.action = action.t
           increases << inc
         end
       end
@@ -425,10 +425,7 @@ class User
     topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
     increases.each do |increase|
       topic = topics.detect {|t| t.id == increase.topic_id}
-      increase.topic = topic
-      if increase.reason.blank?
-        increase.reason = "You posted about " + topic.name + " for the first time"
-      end
+      increase.setTopic(topic)
     end
   end
 

@@ -7,7 +7,9 @@ class LL.Collections.InfluenceIncreases extends Backbone.Collection
 
     return model if model
 
-    model = data unless model
+    if data
+      model = new LL.Models.InfluenceIncrease(data)
+      model.id = id
 
     unless model
       model = new LL.Models.InfluenceIncrease

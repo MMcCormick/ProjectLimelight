@@ -2,7 +2,13 @@ class RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    params[:user] = {
+            :username => params[:username],
+            :email => params[:email],
+            :password => params[:password]
+    }
     build_resource
+    resource.invite_code_id = session[:invite_code]
 
     if resource.save
       if resource.active_for_authentication?

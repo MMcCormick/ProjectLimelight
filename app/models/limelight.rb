@@ -723,17 +723,16 @@ module Limelight #:nodoc:
               #snip.first_mention = mention.first_mention if mention.first_mention
               Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
               if topic_amt > 0 && self.class.name == 'Talk'
-                Pusher[user_id.to_s].trigger('influence_change', {
-                        :topic_id => mention.id.to_s,
-                        :amount => topic_amt,
-                        :topic => {
-                          :id => mention.name,
-                          :_id => mention.id.to_s,
-                          :name => mention.name,
-                          :public_id => mention.public_id,
-                          :slug => mention.slug
-                        }
-                })
+                increase = InfluenceIncrease.new()
+                increase.amount = topic_amt
+                increase.topic_id = topic_amt
+                increase.object_type = self.class.name
+                increase.action = type
+                increase.id = mention.name
+                increase.setTopic(mention)
+                increase.reason = increase.reason
+
+                Pusher[user_id.to_s].trigger('influence_change', increase.to_json)
               end
               topic = mentioned_topics.detect{|t| t.id == mention.id}
               if topic.score >= 100 && topic.influencers.length >= 10

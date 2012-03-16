@@ -21,16 +21,10 @@ class LL.Views.InfluenceIncreases extends Backbone.View
 
     unless LL.App.get_event_subscription(@model.get('_id'), 'influence_change')
       channel.bind 'influence_change', (data) ->
-        influence = self.collection.get(data.id)
-        if influence
-          foo = 'bar' # TODO: deal with influences already on the strip. move them to the front and update them
-        else
-          influence = new LL.Models.InfluenceIncrease({
-            id: data.id
-            amount: data.amount
-            topic: LL.App.Topics.findOrCreate(data.topic.id, data.topic)
-          })
-          self.prependInfluence(influence)
+        influence = self.collection.findOrCreate(data.id, data)
+        influence.set('topic', LL.App.Topics.findOrCreate(influence.get('topic').id, influence.get('topic')))
+        self.prependInfluence(influence)
+
       LL.App.subscribe_event(@model.get('_id'), 'influence_change')
 
     @
@@ -42,5 +36,5 @@ class LL.Views.InfluenceIncreases extends Backbone.View
 
   prependInfluence: (influence) =>
     view = new LL.Views.InfluenceIncrease(model: influence)
-    $(@el).remove('.none')
+    $(@el).find('.none').remove()
     $(@el).prepend($(view.render().el).fadeIn(500))

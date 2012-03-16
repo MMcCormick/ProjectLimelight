@@ -13,5 +13,5 @@
   <div>
     <%= f.password_field :password, :id => 'user-password', :autocomplete => :off, :placeholder => 'Password...' %>
   </div>
-  <input type="submit" value="Log In" class="btn btn-success">
+  <input type="submit" data-loading-text='Logging In...' value="Log In" class="btn btn-success" autocomplete='off'>
 <% end %>

@@ -1,11 +1,7 @@
 collection @increases
 
-attributes :amount, :reason
+attributes :id, :amount, :reason, :topic
 
-node :id do |increase|
-  increase.topic_id
-end
-
-child :topic => :topic do
-  extends "topics/show"
-end
+#child :topic => :topic do
+#  extends "topics/show"
+#end

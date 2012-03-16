@@ -20,3 +20,7 @@ en:
               blank: "Email cannot be blank"
             password:
               blank: "Password cannot be blank"
+        talk:
+          attributes:
+            content:
+              blank: "You can't talk about nothing! Talk cannot be blank"

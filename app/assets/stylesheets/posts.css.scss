@@ -52,6 +52,8 @@ $postFontColor: $grayDark;
     }
     .media {
       margin-bottom: 10px;
+      overflow-y: auto;
+      max-height: 750px;
     }
     .existing-mentions {
       float: left;

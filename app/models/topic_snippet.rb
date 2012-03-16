@@ -1,6 +1,7 @@
 # Embeddable topic snippet that holds useful (denormalized) user info
 class TopicSnippet
   include Mongoid::Document
+  include Limelight::Images
 
   field :name
   field :slug

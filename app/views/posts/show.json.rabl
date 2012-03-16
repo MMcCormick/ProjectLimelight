@@ -30,11 +30,6 @@ node(:created_at_pretty) do |post|
   pretty_time(post.created_at)
 end
 
-# Thumbnail image for feeds
-node(:image) do |post|
-  post.image_url(190, 0, 'fit')
-end
-
 # Larger image for show pages and the modal show
 node(:image_show) do |post|
   post.image_url(695, 0, 'fit')
@@ -58,6 +53,26 @@ end
 
 node :topic_mentions do |post|
   post.topic_mentions.sort {|x,y| y.score <=> x.score }
+end
+
+node(:images) do |post|
+  if post.image_versions == 0
+    nil
+  else
+    {
+            :original => post.image_url(0, 0, 'fit', 'current', true),
+            :fit => {
+                    :large => post.image_url(695, 0, 'fit'),
+                    :medium => post.image_url(190, 0, 'fit')
+            },
+            :cropped => {
+                    :large => post.image_url(300, 300, 'fillcropmid'),
+                    :medium => post.image_url(100, 100, 'fillcropmid'),
+                    :small => post.image_url(50, 50, 'fillcropmid'),
+                    :tiny => post.image_url(30, 30, 'fillcropmid')
+            }
+    }
+  end
 end
 
 child :user_snippet => :user do |post|

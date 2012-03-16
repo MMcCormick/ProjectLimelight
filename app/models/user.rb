@@ -424,8 +424,7 @@ class User
     end
     topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
     increases.each do |increase|
-      topic = topics.detect {|t| t.id == increase.topic_id}
-      increase.setTopic(topic)
+      increase.topic = topics.detect {|t| t.id == increase.topic_id}
     end
   end
 

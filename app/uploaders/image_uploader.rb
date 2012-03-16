@@ -18,7 +18,7 @@ class ImageUploader < CarrierWave::Uploader::Base
     if Rails.env.staging? || Rails.env.production?
       directory
     else
-      "uploads/images/#{directory}"
+      "#{directory}"
     end
   end
 

@@ -82,6 +82,8 @@ $feedFontColor: $grayDark;
       margin-bottom: 6px;
       position: relative;
       cursor: pointer;
+      overflow-y: auto;
+      max-height: 300px;
 
       .ll-video-play {
         position: absolute;

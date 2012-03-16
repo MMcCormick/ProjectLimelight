@@ -1,6 +1,7 @@
 # Embeddable topic snippet that holds useful (denormalized) topic info
 class TopicMention
   include Mongoid::Document
+  include Limelight::Images
 
   @threshold = 2
   class << self; attr_accessor :threshold end

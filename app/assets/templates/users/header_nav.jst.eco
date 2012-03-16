@@ -9,7 +9,7 @@
   </div>
 
   <div class='profile-img'>
-    <img src='<%= @user.image_url(30, 30, 'fillcropmid') %>' />
+    <img src='<%= @user.get('images').cropped.tiny %>' />
   </div>
 
 

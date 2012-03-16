@@ -2,7 +2,7 @@
   <h4><%= @topic.get('name') %></h4>
   <div class='actions'></div>
   <div class='img'>
-    <img src='/<%= @topic.get('slug') %>/picture?h=0&w=165&m=fit' />
+    <img src='<%= @topic.get('images').fit.medium %>' />
   </div>
 </div>
 

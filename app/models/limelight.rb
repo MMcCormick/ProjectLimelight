@@ -105,20 +105,41 @@ module Limelight #:nodoc:
     end
 
     def filepath
-      "#{self.class.name.to_url.pluralize}/#{id.to_s}"
+      path = case self.class.name
+        when 'UserSnippet' || 'UserMention' || 'User'
+          'users'
+        'TopicMention' || 'Topic'
+          'topics'
+        else
+          self.class.name.to_url.pluralize
+      end
+
+      "#{path}/#{id.to_s}"
     end
 
     def current_filepath
       "#{filepath}/current"
     end
 
-    def image_url(w, h, m, version='current')
-      if image_versions == 0
-        nil
-      elsif processing_image
-        "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+    def image_url(w, h, m, version='current', original=false)
+      if self.class.name == 'UserMention' || self.class.name == 'UserSnippet'
+        if original
+          "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+        else
+          "#{S3['image_prefix']}/#{filepath}/#{version}/#{w}_#{h}_#{m}.png"
+        end
       else
-        "#{S3['image_prefix']}/#{filepath}/#{version}/#{w}_#{h}_#{m}.png"
+        if image_versions == 0
+          nil
+        elsif processing_image
+          "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+        else
+          if original
+            "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+          else
+            "#{S3['image_prefix']}/#{filepath}/#{version}/#{w}_#{h}_#{m}.png"
+          end
+        end
       end
     end
 

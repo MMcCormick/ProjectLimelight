@@ -1,5 +1,5 @@
 <div class="root-talk">
-  <img src="/users/<%= @talk.get('user').id %>/picture?h=30&w=30&m=fillcropmid">
+  <img src="<%= @talk.get('user').get('images').cropped.tiny %>">
   <p>
     <a class="ulink" href="<%= @talk.get('user').url %>"><%= @talk.get('user').username %></a>
     <%= @talk.get('content') %>

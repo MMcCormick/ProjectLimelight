@@ -1,50 +1,62 @@
 class TestingController < ApplicationController
 
   def test
-    foo = Post.find('4f5bf197cddc7f8226000001')
-    foo.make_image_version_current(1)
-  end
+    PopularityAction.delete_all()
+    FeedUserItem.delete_all()
+    FeedTopicItem.delete_all()
+    FeedLikeItem.delete_all()
 
-  def foo2
-    talks = FeedTopicItem.where(:root_type => 'Talk').order_by([[:p, :desc]]).limit(3).to_a
-    links = FeedTopicItem.where(:root_type => 'Link').order_by([[:p, :desc]]).limit(3).to_a
-    pictures = FeedTopicItem.where(:root_type => 'Picture').order_by([[:p, :desc]]).limit(3).to_a
-    videos = FeedTopicItem.where(:root_type => 'Video').order_by([[:p, :desc]]).limit(3).to_a
+    Post.all().each do |post|
+      if post.class.name != "Talk"
+        post.title = post.title.gsub(/[\#]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
+        post.title = post.title.gsub(/[\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '@\2')
+      end
+      if post.content && !post.content.blank?
+        post.content = post.content.gsub(/[\#]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
+        post.content = post.content.gsub(/[\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '@\2')
+      end
 
-    obj_ids = []
-    [talks, links, pictures, videos].each do |objs|
-      obj_ids = obj_ids + objs.map{ |obj| obj.root_id }
-    end
-    objects = Post.where(:_id.in => obj_ids)
+      post.score = 0
+      post.likes = []
+      post.add_initial_pop
 
-    pop_talks = objects.select{|o| o._type == 'Talk'}
-    pop_links = objects.select{|o| o._type == 'Link'}
-    pop_pics = objects.select{|o| o._type == 'Picture'}
-    pop_vids = objects.select{|o| o._type == 'Video'}
-
-    NewsletterMailer.weekly_email(current_user, pop_talks, pop_links, pop_pics, pop_vids).deliver if current_user.weekly_email
-  end
-
-  def foo
-    user = current_user
-    if !user.notify_email
-      notifications = Notification.where(
-          :user_id => user.id,
-          :active => true,
-          :read => false,
-          :notify => true,
-          :emailed => false,
-          :type => {"$in" => user.notification_types})
-
-      if notifications && notifications.length > 0
-        NotificationMailer.new_notifications(user, notifications).deliver
-        # Set each notification to emailed
-        notifications.each do |notification|
-          notification.set_emailed
-          notification.save
+      image = post.default_image
+      if image
+        image = image.first if image.is_a? Array
+        image = image.original.first if image
+        url = image ? image.image_url : nil
+        if url
+          post.image_versions = 1
+          post.active_image_version = 1
         end
       end
+
+      post.save
+
+      post.push_to_feeds
     end
+    ActionLog.destroy_all(:_type => "ActionLike")
+    User.update_all(:likes_count => 0, :score => 0, :image_versions => 1, :active_image_version => 1)
+
+    Topic.all().each do |topic|
+      image = topic.default_image
+      if image
+        topic.image_versions = 1
+        topic.active_image_version = 1
+      end
+      topic.score = 0
+      topic.save
+    end
+
+    OldPopAction.all().each do |opa|
+      if opa.type.to_s == "lk"
+        object = Post.find(opa.object_id)
+        user = User.find(opa.user_id)
+        object.add_to_likes(user)
+        user.save if object.save
+      end
+    end
+
   end
 
 end

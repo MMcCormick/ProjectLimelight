@@ -56,7 +56,7 @@ $postFontColor: $grayDark;
       max-height: 750px;
     }
     .existing-mentions {
-      float: left;
+      float: right;
       width: 235px;
       height: 245px;
       overflow-y: auto;
@@ -90,7 +90,7 @@ $postFontColor: $grayDark;
     .talk {
       width: 400px;
       margin-bottom: 10px;
-      float: right;
+      float: left;
       .modal-header {
         padding: 0 0 10px 0;
         border: none;

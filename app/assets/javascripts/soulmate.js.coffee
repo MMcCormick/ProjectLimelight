@@ -168,7 +168,7 @@ class SuggestionCollection
 
 class Soulmate
 
-  KEYCODES = {9: 'tab', 13: 'enter', 27: 'escape', 38: 'up', 40: 'down'}
+  KEYCODES = {9: 'tab', 13: 'enter', 89: 'enter', 27: 'escape', 38: 'up', 40: 'down'}
 
   constructor: (@input, options) ->
 

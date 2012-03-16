@@ -14,7 +14,7 @@
     <span class='actions'></span>
     <span class="created-at">
       Originally posted by
-      <a class="ulink" href="/users/<%= @post.get('user').id %>"><%= @post.get('user').username %></a>
+      <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
       <%= @post.get('created_at_pretty') %>
     </span>
   </div>

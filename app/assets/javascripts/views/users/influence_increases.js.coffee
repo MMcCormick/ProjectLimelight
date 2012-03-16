@@ -13,7 +13,7 @@ class LL.Views.InfluenceIncreases extends Backbone.View
       $(@el).html('<li class="none">This bar updates as you gain influence in topics</li>')
 
     for influence in @collection.models
-      @prependInfluence(influence)
+      @appendInfluence(influence)
 
     channel = LL.App.get_subscription(@model.get('_id'))
     unless channel
@@ -34,6 +34,11 @@ class LL.Views.InfluenceIncreases extends Backbone.View
       LL.App.subscribe_event(@model.get('_id'), 'influence_change')
 
     @
+
+  appendInfluence: (influence) =>
+    view = new LL.Views.InfluenceIncrease(model: influence)
+    $(@el).find('.none').remove()
+    $(@el).append($(view.render().el).fadeIn(500))
 
   prependInfluence: (influence) =>
     view = new LL.Views.InfluenceIncrease(model: influence)

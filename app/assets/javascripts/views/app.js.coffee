@@ -4,6 +4,8 @@ class LL.Views.App extends Backbone.View
   events:
     'mouseover .tlink': 'startTopicHoverTab'
     'mouseout .tlink': 'stopTopicHoverTab'
+    'mouseover .ulink': 'startUserHoverTab'
+    'mouseout .ulink': 'stopUserHoverTab'
 
   initialize: ->
     self = @
@@ -34,6 +36,10 @@ class LL.Views.App extends Backbone.View
     # Pusher subscription tracking
     @subscriptions = {}
     @event_subscriptions = {}
+
+    # Hover Tabs
+    @topic_hover_tabs = {}
+    @user_hover_tabs = {}
 
     # set the current user
     @current_user = if $('#me').length > 0 then @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user'))) else null
@@ -123,11 +129,37 @@ class LL.Views.App extends Backbone.View
 
 
   startTopicHoverTab: (e) =>
-    $(e.target).oneTime 500, 'topic-hover', ->
+    self = @
+
+    $(e.target).oneTime 1000, 'topic-hover', ->
       topic = LL.App.Topics.findOrCreate($(e.currentTarget).data('id'))
-      view = new LL.Views.TopicHoverTab(model: topic)
-      view.target = $(e.target)
-      view.render()
+
+      tab = new LL.Views.TopicHoverTab(model: topic)
+
+      target = $(e.currentTarget).find('h1,h2,h3,h4,h5').first()
+      if target.length == 0
+        target = $(e.currentTarget)
+
+      tab.setTarget(target)
+      tab.render()
 
   stopTopicHoverTab: (e) =>
     $(e.target).stopTime 'topic-hover'
+
+  startUserHoverTab: (e) =>
+    self = @
+
+    $(e.target).oneTime 1000, 'user-hover', ->
+      user = LL.App.Users.findOrCreate($(e.currentTarget).data('id'))
+
+      tab = new LL.Views.UserHoverTab(model: user)
+
+      target = $(e.currentTarget).find('h1,h2,h3,h4,h5').first()
+      if target.length == 0
+        target = $(e.currentTarget)
+
+      tab.setTarget(target)
+      tab.render()
+
+  stopUserHoverTab: (e) =>
+    $(e.target).stopTime 'user-hover'

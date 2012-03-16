@@ -6,7 +6,9 @@ class LL.Collections.Users extends Backbone.Collection
 
     return model if model
 
-    model = data unless model
+    if data
+      model = new LL.Models.User(data)
+      model.id = id
 
     unless model
       model = new LL.Models.User

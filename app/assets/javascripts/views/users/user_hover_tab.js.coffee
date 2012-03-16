@@ -1,5 +1,5 @@
-class LL.Views.TopicHoverTab extends Backbone.View
-  template: JST['topics/hover_tab']
+class LL.Views.UserHoverTab extends Backbone.View
+  template: JST['users/hover_tab']
 
   initialize: ->
 
@@ -22,7 +22,7 @@ class LL.Views.TopicHoverTab extends Backbone.View
            $(@).slideUp(150) # "this" refers to the tooltip
       content:
         text: (api) ->
-          $(self.el).html(self.template(topic: self.model))
+          $(self.el).html(self.template(user: self.model))
 
           follow = new LL.Views.FollowButton(model: self.model)
           $(self.el).find('.bottom').append(follow.render().el)

@@ -20,7 +20,8 @@ jQuery ->
   LL.init()
 
   # Bootstrap tooltips
-  $('[rel="tooltip"]').tooltip()
+  $('[rel="tooltip"]').livequery ->
+    $(@).tooltip()
 
   # Global error function
   window.globalError = (jqXHR, target=null) ->

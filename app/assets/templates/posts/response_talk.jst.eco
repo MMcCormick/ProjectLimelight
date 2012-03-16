@@ -6,7 +6,7 @@
     <span class="mentions">
       --
       <% for mention, i in @talk.get('topic_mentions'): %>
-        <a class="tlink" href="/<%= mention.slug %>"><%= mention.name %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
+        <a class="tlink" data-id='<%= mention.slug %>' href="/<%= mention.slug %>"><%= mention.name %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
       <% end %>
     </span>
   <% end %>

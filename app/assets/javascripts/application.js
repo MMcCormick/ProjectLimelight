@@ -16,6 +16,7 @@
 //= require_tree ./routers
 //= require app_bootstrap
 //= require soulmate
+//= require jquery.livequery
 //= require jquery.qtip
 //= require jquery.gritter
 //= require jquery.timer

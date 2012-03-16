@@ -7,7 +7,9 @@ class LL.Collections.Topics extends Backbone.Collection
 
     return model if model
 
-    model = new LL.Models.Topic(data) unless model
+    if data
+      model = new LL.Models.Topic(data)
+      model.id = id
 
     unless model
       model = new LL.Models.Topic

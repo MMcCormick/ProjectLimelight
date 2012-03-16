@@ -1,17 +1,3 @@
-.hover-tab {
-  position: absolute;
-  background: #FFF;
-  border: 1px solid black;
-  padding: 10px;
-
-  &.user-hover {
-
-  }
-  &.topic-hover {
-
-  }
-}
-
 .ui-tooltip-limelight {
   @include single-box-shadow(#333, 1px, 1px, 4px, 1px);
 	border: 0;
@@ -52,6 +38,12 @@
 }
 
 .tutorial-tip {
+  .middle {
+    width: 225px;
+  }
+}
+
+.hover-tab {
   .middle {
     width: 225px;
   }

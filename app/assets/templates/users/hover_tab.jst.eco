@@ -1,0 +1,3 @@
+<div class='top'><%= @user.get('username') %></div>
+<div class='middle'>User Information</div>
+<div class='bottom'></div>

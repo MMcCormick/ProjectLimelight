@@ -9,9 +9,9 @@
   <% end %>
 </h5>
 
-<% if @post.get('image'): %>
+<% if @post.get('images'): %>
   <div class='img'>
-    <img src='<%= @post.get('image') %>' alt='' />
+    <img src='<%= @post.get('images').fit.medium %>' alt='' />
 
     <% if @post.get('video'): %>
       <div class='ll-video-play'></div>

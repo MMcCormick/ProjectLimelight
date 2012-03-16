@@ -16,18 +16,3 @@ class LL.Models.User extends Backbone.Model
 
   scorePretty: ->
     parseInt @get('score')
-
-  bucket: ->
-    switch window.location.hostname
-      when 'localhost'
-        'http://development.img.p-li.me'
-      else
-        'http://img.p-li.me'
-
-  image_url: (w, h, m, version='current') ->
-    if @get('image_versions') == 0
-      null
-    else if @get('processing_image')
-      "#{@bucket()}/users/#{@get('_id')}/#{version}/original.png"
-    else
-      "#{@bucket()}/users/#{@get('_id')}/#{version}/#{w}_#{h}_#{m}.png"

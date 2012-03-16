@@ -1,4 +1,4 @@
-<img src="/users/<%= @talk.get('user').id %>/picture?h=30&w=30&m=fillcropmid">
+<img src="<%= @talk.get('user').get('images').cropped.tiny %>">
 <p>
   <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
   <%= @talk.get('content') %>
@@ -7,7 +7,7 @@
       <span class="mentions">
         --
         <% for mention, i in @talk.get('topic_mentions'): %>
-          <a class="tlink" data-id='<%= mention.slug %>' href="/<%= mention.slug %>"><%= mention.name %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
+          <a class="tlink" data-id='<%= mention.get('slug') %>' href="/<%= mention.get('slug') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
         <% end %>
       </span>
     <% end %>

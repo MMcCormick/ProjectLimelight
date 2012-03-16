@@ -546,15 +546,18 @@ class Topic
     soulmate = nil
     topic_mention_updates = {}
     primary_type_updates = {}
+
     if name_changed?
       soulmate = true
       topic_mention_updates["topic_mentions.$.name"] = self.name
       primary_type_updates["primary_type"] = name
     end
+
     if slug_changed?
       soulmate = true
       topic_mention_updates["topic_mentions.$.slug"] = self.slug
     end
+
     if short_name_changed?
       soulmate = true
       objects = Post.where('topic_mentions.id' => id)
@@ -569,9 +572,15 @@ class Topic
       end
     end
 
+    if image_versions_changed? || active_image_version_changed?
+      topic_mention_updates["topic_mentions.$.image_versions"] = self.image_versions
+      topic_mention_updates["topic_mentions.$.active_image_version"] = self.active_image_version
+    end
+
     unless topic_mention_updates.empty?
       Post.where("topic_mentions._id" => id).update_all(topic_mention_updates)
     end
+
     unless primary_type_updates.empty?
       Topic.where("primary_type_id" => id).update_all(primary_type_updates)
     end

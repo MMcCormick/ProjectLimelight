@@ -1,2 +1,2 @@
-<img src="<%= @influence.get('topic').get('id') %>/picture?h=30&w=30&m=fillcropmid">
+<img src="<%= @influence.get('topic').get('images').cropped.medium %>">
 <div class="amount">+<%= parseInt(@influence.get('amount')) %></div>

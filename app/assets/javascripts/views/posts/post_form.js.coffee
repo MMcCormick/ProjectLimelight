@@ -52,12 +52,15 @@ class LL.Views.PostForm extends Backbone.View
               html += "<div class='topic-type'>#{data.data.type}</div>"
             html
           selectCallback: (term, data, type) ->
-            self.addTopic($(val), data.term, data.id, data.data.slug)
+            name = if data.data then data.data.slug else 'new'
+            self.addTopic($(val), data.term, data.id, name)
     , 1200
 
     @
 
   createPost: (e) ->
+    return if e.keyCode == 13 || e.keyCode == 89
+
     e.preventDefault()
 
     attributes = {}

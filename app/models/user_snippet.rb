@@ -1,6 +1,7 @@
 # Embeddable user snippet that holds useful (denormalized) user info
 class UserSnippet
   include Mongoid::Document
+  include Limelight::Images
 
   field :username
   field :first_name

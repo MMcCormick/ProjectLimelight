@@ -14,7 +14,7 @@
     <span class='actions'></span>
     <span class="created-at">
       Originally posted by
-      <a class="ulink" href="/users/<%= @post.get('user').id %>"><%= @post.get('user').username %></a>
+      <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
       <%= @post.get('created_at_pretty') %>
     </span>
   </div>
@@ -27,9 +27,9 @@
         <%- @post.get('video') %>
       <% end %>
     </div>
-  <% else if @post.get('image_show'): %>
+  <% else if @post.get('images'): %>
     <div class='media'>
-      <img src='<%= @post.get('image_show') %>' />
+      <img src='<%= @post.get('images').fit.large %>' />
     </div>
   <% end %>
 
@@ -38,9 +38,9 @@
       <h3>Topics</h3>
       <% for mention in @post.get('topic_mentions'): %>
         <a class="tlink" href="/<%= mention.slug %>">
-          <img src='/topics/<%= mention.slug %>/picture?h=50&w=50&m=fillcropmid' />
+          <img src='<%= mention.get('images').cropped.medium %>' />
           <h5>
-            <%= mention.name %>
+            <%= mention.get('name') %>
           </h5>
         </a>
       <% end %>

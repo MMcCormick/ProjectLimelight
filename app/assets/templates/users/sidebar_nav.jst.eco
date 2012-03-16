@@ -1,5 +1,5 @@
 <div class="user-panel">
-  <img src='<%= @user.image_url(50, 50, 'fillcropmid') %>' />
+  <img src='<%= @user.get('images').cropped.small %>' />
   <h4><%= @user.get('username') %></h4>
   <div class='actions'></div>
 </div>

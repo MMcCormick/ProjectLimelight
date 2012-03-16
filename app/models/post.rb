@@ -208,7 +208,6 @@ class Post
       user.likes_count += 1
       add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostLike, user.id.to_s, id.to_s)
-      Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
       Resque.enqueue(PushLike, id.to_s, user.id.to_s)
 
       true
@@ -239,7 +238,7 @@ class Post
   def push_unlike(user)
     ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
     FeedUserItem.unlike(user, self)
-    FeedLikeItem.create(user, self)
+    FeedLikeItem.destroy(user, self)
   end
 
   ##

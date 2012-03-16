@@ -720,7 +720,6 @@ module Limelight #:nodoc:
               affected_topic_ids << mention.id
 
               action.pop_snippets.new(:amount => topic_amt, :id => mention.id, :object_type => "Topic")
-              #snip.first_mention = mention.first_mention if mention.first_mention
               Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
               if topic_amt > 0 && self.class.name == 'Talk'
                 increase = InfluenceIncrease.new()

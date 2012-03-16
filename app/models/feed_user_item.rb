@@ -77,7 +77,6 @@ class FeedUserItem
         user_feed_users.each do |u|
           unless u.id == post.user_snippet.id
             strength = 0
-            strength -= (post.topic_mentions.map{|tm| tm.id} & u.following_topics).length unless unpopular_talk
             strength -= 1 if u.is_following_user?(post.user_snippet.id)
             strength -= 1 if post.user_mentions.detect{ |us| us.id == u.id }
             strength -= 1 if post.likes.detect{ |l| u.is_following_user?(l.id) }
@@ -126,7 +125,6 @@ class FeedUserItem
             unless post.is_root?
               keep = true if target.class.name == 'Topic' && user.is_following_user?(post.user_snippet.id) ||
                              post.user_mentions.detect{ |u| u.id == user.id } ||
-                             post.topic_mentions.detect{ |t| t.id != target.id && user.is_following_topic?(t.id) } ||
                              post.likes.detect{ |l| l.id != target.id && user.is_following_user?(l.id) }
             end
 
@@ -166,7 +164,6 @@ class FeedUserItem
           unless post.is_root?
             keep = true if follower.is_following_user?(post.user_snippet.id) ||
                            post.user_mentions.detect{ |u| u.id == follower.id } ||
-                           post.topic_mentions.detect{ |t| follower.is_following_topic?(t.id) } ||
                            post.likes.detect{ |l| u.is_following_user?(l.id) }
           end
 

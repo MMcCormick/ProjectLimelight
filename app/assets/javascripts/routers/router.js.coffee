@@ -4,9 +4,12 @@ class LL.Router extends Backbone.Router
     'users/:id/following/users': 'userFollowingUsers'
     'users/:id/followers': 'userFollowers'
     'users/:id/likes': 'likeFeed'
-    'users/:id': 'userFeed'
+    'users/:id/feed': 'userFeed'
+    'users/:id': 'activityFeed'
     'posts/:id': 'postShow'
     'pages/:name': 'staticPage'
+    'activity': 'activityFeed'
+    'likes': 'likeFeed'
     ':id': 'topicFeed'
     '': 'userFeed'
 
@@ -58,8 +61,44 @@ class LL.Router extends Backbone.Router
       LL.App.UserFeed.page = 1
       LL.App.UserFeed.fetch({data: {id: id}})
 
-  likeFeed: (id) ->
-    user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+  activityFeed: (id=0) ->
+
+    @hideModal()
+
+    if id == 0
+      user = LL.App.current_user
+    else
+      user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+
+    # Only load the feed if it's new
+    if LL.App.findScreen('activity_feed', id)
+      LL.App.showScreen('activity_feed', id)
+    else
+      screen = LL.App.newScreen('activity_feed', id)
+
+      sidebar = LL.App.findSidebar('user', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('user', id, user)
+      screen['sidebar'] = sidebar
+
+      feed_header = new LL.Views.UserActivityHeader(model: user)
+      screen['components'].push(feed_header)
+
+      LL.App.renderScreen('activity_feed', id)
+
+      feed = new LL.Views.PostsFeed(collection: LL.App.ActivityFeed)
+      LL.App.Feed = feed
+      screen['components'].push(feed)
+
+      LL.App.ActivityFeed.id = id
+      LL.App.ActivityFeed.page = 1
+      LL.App.ActivityFeed.fetch({data: {id: id}})
+
+  likeFeed: (id=0) ->
+    if id == 0
+      user = LL.App.current_user
+    else
+      user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
 
     if LL.App.findScreen('like_feed', id)
       LL.App.showScreen('like_feed', id)

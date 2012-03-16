@@ -1,7 +1,7 @@
 $feedFontColor: $grayDark;
 
 .feed-header {
-  margin-bottom: 6px;
+  margin: 0 0 10px 5px;
   h2 {
     display: inline-block;
     margin-right: 20px;
@@ -28,6 +28,8 @@ $feedFontColor: $grayDark;
   &.topic { background-color: $topic10RGBA; }
 
   &:hover {
+    @include single-box-shadow(#777, 1px, 1px, 2px);
+
     .actions {
       .talk-form,
       .follow,

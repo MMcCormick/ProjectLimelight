@@ -2,7 +2,6 @@ class LL.Models.Topic extends Backbone.Model
   url: '/api/topics'
 
   initialize: ->
-    @subscriptions = []
 
   # check if it's in the master identity map
   parse: (resp, xhr) ->
@@ -13,10 +12,3 @@ class LL.Models.Topic extends Backbone.Model
 
   scorePretty: ->
     parseInt @get('score')
-
-  subscribed: (event) =>
-      _.include(@subscriptions, event)
-
-  subscribe: (event) =>
-    unless _.include(@subscriptions, event)
-      @subscriptions.push(event)

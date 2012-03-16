@@ -57,7 +57,7 @@ class LL.Views.PostsFeed extends Backbone.View
       column = new LL.Views.FeedColumn()
       $(@el).append(column.render().el)
       $(column.el).addClass('last') if num == column_count
-      @columns.push(column)
+      @columns.unshift(column)
 
   chooseColumn: =>
     min_height = 9999999999999

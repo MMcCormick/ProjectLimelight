@@ -2,7 +2,15 @@ class LL.Models.Post extends Backbone.Model
   url: '/api/posts'
 
   initialize: ->
-    @subscriptions = []
+    if @get('user')
+      @set('user', LL.App.Users.findOrCreate(@get('user').id, new LL.Models.User(@get('user'))))
+
+    mentions = []
+    if @get('topic_mentions')
+      for mention in @get('topic_mentions')
+        mentions.push(LL.App.Topics.findOrCreate(mention.slug, mention))
+
+    @set('topic_mentions', mentions)
 
   # check if it's in the master identity map
   parse: (resp, xhr) ->
@@ -10,10 +18,3 @@ class LL.Models.Post extends Backbone.Model
 
   scorePretty: ->
     parseInt @get('score')
-
-  subscribed: (event) =>
-    _.include(@subscriptions, event)
-
-  subscribe: (event) =>
-    unless _.include(@subscriptions, event)
-      @subscriptions.push(event)

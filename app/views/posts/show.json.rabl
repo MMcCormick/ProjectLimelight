@@ -30,11 +30,6 @@ node(:created_at_pretty) do |post|
   pretty_time(post.created_at)
 end
 
-# Larger image for show pages and the modal show
-node(:image_show) do |post|
-  post.image_url(695, 0, 'fit')
-end
-
 node(:video) do |post|
   unless post.embed_html.blank?
     video_embed(post.sources[0], 650, 470, nil, nil, post.embed_html, nil)
@@ -51,8 +46,8 @@ node :primarySource do |post|
   post.sources.first
 end
 
-node :topic_mentions do |post|
-  post.topic_mentions.sort {|x,y| y.score <=> x.score }
+child :topic_mentions => :topic_mentions do
+  extends "topics/show"
 end
 
 node(:images) do |post|
@@ -75,6 +70,6 @@ node(:images) do |post|
   end
 end
 
-child :user_snippet => :user do |post|
+child :user_snippet => :user do |user|
   extends "users/show"
 end

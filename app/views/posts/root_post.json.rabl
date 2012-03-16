@@ -10,6 +10,10 @@ child :like_responses => :like_responses do
   extends "posts/show"
 end
 
+child :activity_responses => :activity_responses do
+  extends "posts/show"
+end
+
 child :public_responses => :public_responses do
   extends "posts/show"
 end

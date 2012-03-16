@@ -404,34 +404,24 @@ class Post
       build_user_feed(items)
     end
 
-    def contribute_feed(feed_id, display_types, order_by, page)
+    def activity_feed(feed_id, display_types, page)
       if display_types.include?('Talk')
         display_types << 'Topic'
       end
 
-      items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
-      if order_by == 'newest'
-        items = items.order_by(:last_response_time, :desc)
-      else
-        items = items.order_by(:p, :desc)
-      end
+      items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc)
       items = items.skip((page-1)*20).limit(20)
 
-      build_user_feed(items)
+      build_activity_feed(items)
     end
 
-    def like_feed(feed_id, display_types, order_by, page)
+    def like_feed(feed_id, display_types, page)
 
       if display_types.include?('Talk')
         display_types << 'Topic'
       end
 
-      items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
-      if order_by == 'newest'
-        items = items.order_by(:last_response_time, :desc)
-      else
-        items = items.order_by(:p, :desc)
-      end
+      items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc)
       items = items.skip((page-1)*20).limit(20)
 
       build_like_feed(items)
@@ -527,6 +517,38 @@ class Post
             end
           end
         end
+
+        return_objects << root_post
+      end
+
+      return_objects
+      end
+
+    def build_activity_feed(items)
+      topic_ids = []
+      item_ids = []
+      items.each do |i|
+        if i.root_type == 'Topic'
+          topic_ids << i.root_id
+        else
+          item_ids << i.root_id
+        end
+        item_ids += i.responses if i.responses
+      end
+
+      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      objects = Post.where(:_id => {'$in' => item_ids})
+
+      return_objects = []
+      items.each do |i|
+        root_post = RootPost.new
+        if i.root_type == 'Topic'
+          root_post.root = topics.detect{|t| t.id == i.root_id}
+        else
+          root_post.root = objects.detect{|o| o.id == i.root_id}
+        end
+
+        root_post.activity_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
 
         return_objects << root_post
       end

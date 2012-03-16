@@ -22,10 +22,10 @@
       <a href="/">Feed</a>
     </li>
     <li>
-      <a href="<%= "/users/#{@user.get('slug')}/likes" %>">Likes</a>
+      <a href="<%= "/likes" %>">Likes</a>
     </li>
     <li>
-      <a href="<%= "/users/#{@user.get('slug')}/activity" %>">Talks</a>
+      <a href="<%= "/activity" %>">Activity</a>
     </li>
     <li>
       <a href="/settings">Settings</a>

@@ -6,20 +6,20 @@
 
 <ul class='menu unstyled'>
   <li>
-    <a class='first <%= 'on' if @page == 'user_feed' %>' href="<%= if LL.App.current_user.get('id') == @user.get('id') then '/' else "/users/#{@user.get('slug')}" %>">
+    <a class='first <%= 'on' if @page == 'user_feed' %>' href="<%= if LL.App.current_user.get('id') == @user.get('id') then '/' else "/users/#{@user.get('slug')}/feed" %>">
       Feed
       <i class="icon icon-chevron-right"></i>
     </a>
   </li>
   <li>
-    <a class=' <%= 'on' if @page == 'like_feed' %>' href="<%= "/users/#{@user.get('slug')}/likes" %>">
+    <a class=' <%= 'on' if @page == 'like_feed' %>' href="<%= if LL.App.current_user.get('id') == @user.get('id') then '/likes' else "/users/#{@user.get('slug')}/likes" %>">
       Likes
       <i class="icon icon-chevron-right"></i>
     </a>
   </li>
   <li>
-    <a class='<%= 'on' if @page == 'activity_feed' %>' href="<%= "/users/#{@user.get('slug')}/activity" %>">
-      Talks
+    <a class='<%= 'on' if @page == 'activity_feed' %>' href="<%= if LL.App.current_user.get('id') == @user.get('id') then '/activity' else "/users/#{@user.get('slug')}" %>">
+      Activity
       <i class="icon icon-chevron-right"></i>
     </a>
   </li>

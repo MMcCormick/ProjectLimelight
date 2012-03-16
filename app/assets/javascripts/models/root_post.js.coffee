@@ -54,4 +54,16 @@ class LL.Models.RootPost extends Backbone.Model
 
     data['like_responses'] = like_responses
 
+    activity_responses = []
+    for response in resp.activity_responses
+      response = LL.App.Posts.findOrCreate(response.id, new LL.Models.Post(response))
+      response.set('user', LL.App.Users.findOrCreate(response.get('user').id, new LL.Models.User(response.get('user'))))
+      activity_responses.push(LL.App.Posts.findOrCreate(response.id, new LL.Models.Post(response)))
+      mentions = []
+      for mention in response.get('topic_mentions')
+        mentions.push(LL.App.Topics.findOrCreate(mention.slug, mention))
+      response.set('topic_mentions', mentions)
+
+    data['activity_responses'] = activity_responses
+
     data

@@ -70,11 +70,18 @@ class PostsController < ApplicationController
     @posts = Post.feed(user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
   end
 
-  # The main user feed
+  # The user like feed
   def like_feed
-    user = User.find_by_slug(params[:id])
+    user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
     page = params[:p] ? params[:p].to_i : 1
-    @posts = Post.like_feed(user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    @posts = Post.like_feed(user.id, session[:feed_filters][:display], page)
+  end
+
+  # The user activity feed
+  def activity_feed
+    user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    page = params[:p] ? params[:p].to_i : 1
+    @posts = Post.activity_feed(user.id, session[:feed_filters][:display], page)
   end
 
   # Topic feeds...

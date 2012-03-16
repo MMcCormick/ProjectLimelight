@@ -8,6 +8,8 @@ class LL.Views.RootPost extends Backbone.View
   initialize: ->
     @public_responses = null
     @personal_responses = null
+    @activity_responses = null
+    @like_responses = null
 
     @model.get('root').on('new_response', @renderResponses)
 
@@ -41,6 +43,14 @@ class LL.Views.RootPost extends Backbone.View
       @like_responses = like_responses_view
 
     @like_responses.render()
+
+    if !@activity_responses
+      activity_responses_view = new LL.Views.RootResponses(model: @model)
+      activity_responses_view.type = 'activity'
+      activity_responses_view.target = $(@el)
+      @activity_responses = activity_responses_view
+
+    @activity_responses.render()
 
     if !@personal_responses
       personal_responses_view = new LL.Views.RootResponses(model: @model)

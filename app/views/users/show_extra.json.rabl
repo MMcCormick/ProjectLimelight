@@ -9,7 +9,7 @@ attributes :following_users,
 
 node :invite_code do |user|
   if user.invite_code_id
-    code = InviteCode.find(user.invite_code_id)
+    code = InviteCode.where(:user_id => user.id).first
     {:code => code.code, :remaining => code.remaining}
   else
     {}

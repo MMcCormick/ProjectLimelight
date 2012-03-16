@@ -10,6 +10,15 @@
 #puts 'EMPTY THE MONGODB DATABASE'
 #Mongoid.master.collections.reject { |c| c.name =~ /^system/}.each(&:drop)
 
+puts 'Creating "Limelight" invite code'
+invite_code = InviteCode.where(:code => "Limelight").first
+unless invite_code
+  invite_code = InviteCode.create(
+          :code => "Limelight",
+          :allotted => 10
+  )
+end
+
 puts 'Creating marc'
 marc = User.find(User.marc_id)
 unless marc
@@ -19,11 +28,13 @@ unless marc
           :last_name => 'MacLeod',
           :email => 'marbemac@gmail.com',
           :password => '87yot4',
-          :password_confirmation => '87yot4'
+          :password_confirmation => '87yot4',
+          :invite_code_id => invite_code.id
   )
   marc.grant_role('admin')
   marc.id = User.marc_id
   marc.save!
+  marc.confirm!
   puts 'marc created'
 else
   puts 'marc already in DB'
@@ -38,11 +49,13 @@ unless matt
           :last_name => 'McCormick',
           :email => 'matt.c.mccormick@gmail.com',
           :password => '87yot4',
-          :password_confirmation => '87yot4'
+          :password_confirmation => '87yot4',
+          :invite_code_id => invite_code.id
   )
   matt.grant_role('admin')
   matt.id = User.matt_id
   matt.save!
+  matt.confirm!
   puts 'matt created'
 else
   puts 'matt already in DB'

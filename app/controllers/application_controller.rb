@@ -145,10 +145,17 @@ class ApplicationController < ActionController::Base
   end
 
   def require_sign_in
-    if request.get? && !signed_in? && !(["feed", "facebook", "splash", "check"].include?(params[:action]) && params[:id].blank?) &&
-                       params[:controller] != "confirmations" && request.fullpath != "/assets"
-      session[:return_to] = request.fullpath
-      redirect_to (root_path)
+    if  request.get? &&
+        !(["feed", "facebook", "splash", "check"].include?(params[:action]) && params[:id].blank?) &&
+        params[:controller] != "confirmations" &&
+        request.fullpath != "/assets" &&
+        !(params[:controller] == "topics" && params[:action] == "index")
+      if !signed_in?
+        session[:return_to] = request.fullpath
+        redirect_to (root_path)
+      elsif current_user && current_user.tutorial_step != 0
+        redirect_to (root_path)
+      end
     end
   end
 

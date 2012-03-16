@@ -28,7 +28,7 @@ class LL.Views.PostShow extends Backbone.View
     $(@el).find('.talk').html(view.render().el)
     i = 1
     for topic in @model.get('topic_mentions')
-      view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.name, topic._id)
+      view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.get('name'), topic.get('_id'))
       break if i == 2
       i++
     view.model.set('parent_id', @model.get('_id'))

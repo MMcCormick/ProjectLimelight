@@ -5,6 +5,7 @@ class TestingController < ApplicationController
     FeedUserItem.delete_all()
     FeedTopicItem.delete_all()
     FeedLikeItem.delete_all()
+    FeedContributeItem.delete_all()
 
     Post.all().each do |post|
       if post.class.name != "Talk"

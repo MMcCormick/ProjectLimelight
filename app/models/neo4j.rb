@@ -15,7 +15,7 @@ class Neo4j
       if node1 && post_node && post
         # create like
         like = self.neo.create_relationship('like', node1, post_node)
-        self.neo.add_relationship_to_index('users', 'like', "#{node1_id}-#{post_id}", like) if like
+        self.neo.add_relationship_to_index('users', 'like', "#{user_id}-#{post_id}", like) if like
 
         # increase affinity to the post creator
         node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)

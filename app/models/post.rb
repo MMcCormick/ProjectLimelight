@@ -458,6 +458,8 @@ class Post
         root_post.root = objects.detect{|o| o.id == i.root_id}
         user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
 
+        next unless root_post.root
+
         root_post.personal_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
         root_post.public_talking = root_post.root.response_count
 
@@ -502,6 +504,8 @@ class Post
         else
           root_post.root = objects.detect{|o| o.id == i.root_id}
         end
+
+        next unless root_post.root
 
         root_post.personal_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
         root_post.public_talking = root_post.root.response_count
@@ -548,6 +552,8 @@ class Post
           root_post.root = objects.detect{|o| o.id == i.root_id}
         end
 
+        next unless root_post.root
+
         root_post.activity_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
 
         return_objects << root_post
@@ -579,6 +585,8 @@ class Post
         else
           root_post.root = objects.detect{|o| o.id == i.root_id}
         end
+
+        next unless root_post.root
 
         root_post.like_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
 

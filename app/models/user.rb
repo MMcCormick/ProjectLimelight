@@ -249,7 +249,7 @@ class User
       self.following_users.delete(user.id)
       self.following_users_count -= 1
       user.followers_count -= 1
-      Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s)
+      Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s, 'users', 'users')
       Resque.enqueue(SmUserUnfollowUser, id.to_s, user.id.to_s)
       Resque.enqueue(PushUnfollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
@@ -295,7 +295,7 @@ class User
       self.following_topics.delete(topic.id)
       self.following_topics_count -= 1
       topic.followers_count -= 1
-      Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s)
+      Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s, 'users', 'topics')
       Resque.enqueue(PushUnfollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       topic.save
@@ -392,7 +392,13 @@ class User
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'user', 'username' => username, 'slug' => slug, 'public_id' => public_id)
+    node = Neo4j.neo.create_node(
+            'uuid' => id.to_s,
+            'type' => 'user',
+            'username' => username,
+            'public_id' => public_id,
+            'created_at' => created_at.to_i
+    )
     Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
   end
 

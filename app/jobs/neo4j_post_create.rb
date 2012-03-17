@@ -1,6 +1,6 @@
 class Neo4jPostCreate
 
-  @queue = :slow
+  @queue = :neo4j
 
   def self.perform(post_id)
     post = Post.find(post_id)

@@ -74,7 +74,7 @@ class Neo4j
                 'type' => 'post',
                 'subtype' => post.class.name,
                 'public_id' => post.public_id,
-                'created_at' => post.created_at
+                'created_at' => post.created_at.to_i
         )
         Neo4j.neo.add_node_to_index('posts', 'uuid', post.id.to_s, post_node)
       end
@@ -137,12 +137,15 @@ class Neo4j
       end
     end
 
-    def follow_destroy(node1_id, node2_id)
+    def follow_destroy(node1_id, node2_id, node1_index, node2_index)
       rel1 = Neo4j.neo.get_relationship_index('users', 'follow', "#{node1_id}-#{node2_id}")
       Neo4j.neo.delete_relationship(rel1)
       Neo4j.neo.remove_relationship_from_index('users', rel1)
 
-      Neo4j.update_affinity(node1_id, node2_id, nil, nil, -10, false, nil, nil, false)
+      node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
+      node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
+
+      Neo4j.update_affinity(node1_id, node2_id, node1, node2, -10, false, nil, nil, false)
     end
 
     # updates the affinity between two nodes
@@ -170,10 +173,10 @@ class Neo4j
 
         self.neo.set_relationship_properties(affinity, payload) if payload.length > 0
       else
-        unless node1 && node2
-          node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
-          node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
-        end
+        #unless node1 && node2
+        #  node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
+        #  node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
+        #end
 
         affinity = self.neo.create_relationship('affinity', node1, node2)
         self.neo.set_relationship_properties(affinity, {

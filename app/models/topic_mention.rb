@@ -14,6 +14,8 @@ class TopicMention
   field :score, :default => 1
   field :first_mention
 
+  attr_accessible :name, :slug, :public_id, :short_name, :score, :first_mention
+
   embedded_in :topic_mentionable, polymorphic: true
 
   # Return the slugified name instead of its ID

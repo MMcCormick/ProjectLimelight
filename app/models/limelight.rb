@@ -600,9 +600,10 @@ module Limelight #:nodoc:
     def save_topic_mention(topic)
       existing = topic_mentions.detect{|mention| mention.id == topic.id}
       unless existing
-        payload = {id: topic.id, public_id: topic.public_id, name: topic.name, slug: topic.slug }
+        payload = {public_id: topic.public_id, name: topic.name, slug: topic.slug }
         payload["first_mention"] = true if !topic.talking_ids.include?(user.id)
-        self.topic_mentions.build(payload)
+        mention = self.topic_mentions.build(payload)
+        mention.id = topic.id
         if topic.score > primary_topic_pm
           self.primary_topic_mention = topic.id
           self.primary_topic_pm = topic.score
@@ -629,7 +630,8 @@ module Limelight #:nodoc:
         if root_pre_mention
           root_pre_mention.score += 1
           if root_pre_mention.score >= TopicMention.threshold
-            self.topic_mentions.build(root_pre_mention.attributes)
+            m = self.topic_mentions.build(root_pre_mention.attributes)
+            m.id = mention.id
             root_pre_mention.destroy
             FeedTopicItem.post_create(self)
             FeedUserItem.add_mention(self, mention.id)

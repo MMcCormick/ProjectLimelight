@@ -745,16 +745,16 @@ module Limelight #:nodoc:
               action.pop_snippets.new(:amount => topic_amt, :id => mention.id, :object_type => "Topic")
               Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
               if topic_amt > 0 && self.class.name == 'Talk'
-                increase = InfluenceIncrease.new()
-                increase.amount = topic_amt
-                increase.topic_id = topic_amt
-                increase.object_type = self.class.name
-                increase.action = type
-                increase.id = mention.name
-                increase.setTopic(mention)
-                increase.reason = increase.reason
-
-                Pusher[user_id.to_s].trigger('influence_change', increase.to_json)
+                #increase = InfluenceIncrease.new()
+                #increase.amount = topic_amt
+                #increase.topic_id = topic_amt
+                #increase.object_type = self.class.name
+                #increase.action = type
+                #increase.id = mention.name
+                #increase.setTopic(mention)
+                #increase.reason = increase.reason
+                #
+                #Pusher[user_id.to_s].trigger('influence_change', increase.to_json)
               end
               topic = mentioned_topics.detect{|t| t.id == mention.id}
               if topic.score >= 100 && topic.influencers.length >= 10

@@ -26,6 +26,13 @@ class FeedUserItem
     [
       [ :feed_id, Mongo::DESCENDING ],
       [ :root_type, Mongo::DESCENDING ],
+      [ :rel, Mongo::DESCENDING ]
+    ]
+  )
+  index(
+    [
+      [ :feed_id, Mongo::DESCENDING ],
+      [ :root_type, Mongo::DESCENDING ],
       [ :last_response_time, Mongo::DESCENDING ]
     ]
   )

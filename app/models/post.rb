@@ -57,7 +57,13 @@ class Post
   # MBM: lolz
   # MBM: YES WE DID
   index [[ :public_id, Mongo::DESCENDING ]]
-  index [[ :root_id, Mongo::DESCENDING ]]
+  index (
+    [
+      [ :root_id, Mongo::DESCENDING ],
+      [ :_type, Mongo::DESCENDING ],
+      [ :created_at, Mongo::DESCENDING ]
+    ]
+  )
   index "topic_mentions"
   index "user_mentions"
   index "likes"

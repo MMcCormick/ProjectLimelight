@@ -7,7 +7,7 @@ gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
-gem 'rabl', "~> 0.5.4"
+gem 'rabl', "0.6.0"
 gem 'yajl-ruby' # json
 gem 'fog' # Cloud support (amazon s3, etc) BETA REMOVE after convert old files on s3 to new format / conventions
 gem 'carrierwave' # File uploads BETA REMOVE after convert old files on s3 to new format / conventions

@@ -21,9 +21,10 @@ class LL.Views.InfluenceIncreases extends Backbone.View
 
     unless LL.App.get_event_subscription(@model.get('_id'), 'influence_change')
       channel.bind 'influence_change', (data) ->
-        influence = self.collection.findOrCreate(data.id, data)
-        influence.set('topic', LL.App.Topics.findOrCreate(influence.get('topic').id, influence.get('topic')))
-        self.prependInfluence(influence)
+        $(self.el).oneTime 1500, 'influence', ->
+          influence = self.collection.findOrCreate(data.id, data)
+          influence.set('topic', LL.App.Topics.findOrCreate(influence.get('topic').id, influence.get('topic')))
+          self.prependInfluence(influence, true)
 
       LL.App.subscribe_event(@model.get('_id'), 'influence_change')
 
@@ -34,7 +35,12 @@ class LL.Views.InfluenceIncreases extends Backbone.View
     $(@el).find('.none').remove()
     $(@el).append($(view.render().el).fadeIn(500))
 
-  prependInfluence: (influence) =>
+  prependInfluence: (influence, pulsate=false) =>
     view = new LL.Views.InfluenceIncrease(model: influence)
     $(@el).find('.none').remove()
-    $(@el).prepend($(view.render().el).fadeIn(500))
+    $(@el).prepend($(view.render().el))
+
+    if pulsate == true
+      $(view.el).effect('pulsate', {times: 2}, 500)
+    else
+      $(view.el).fadeIn(500)

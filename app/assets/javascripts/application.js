@@ -15,6 +15,7 @@
 //= require_tree ./views
 //= require_tree ./routers
 //= require app_bootstrap
+//= require jquery-ui
 //= require soulmate
 //= require jquery.livequery
 //= require jquery.qtip

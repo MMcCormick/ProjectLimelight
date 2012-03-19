@@ -21,7 +21,7 @@ node(:images) do |topic|
             :original => "#{S3['image_prefix']}/defaults/topic_original.gif",
             :fit => {
                     :large => "#{S3['image_prefix']}/defaults/topic_large.gif",
-                    :medium => "#{S3['image_prefix']}/defaults/topic_medium.gif",
+                    :medium => "#{S3['image_prefix']}/defaults/topic_large.gif",
             },
             :cropped => {
                     :large => "#{S3['image_prefix']}/defaults/topic_large.gif",

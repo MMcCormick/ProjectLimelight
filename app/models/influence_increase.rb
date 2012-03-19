@@ -8,7 +8,7 @@ class InfluenceIncrease
   def reason
     case @action
       when :lk
-        "Someone liked your #{@object_type}"
+        "#{@topic[:name]}"
       when :new
         "You posted about #{@topic[:name]} for the first time"
     end

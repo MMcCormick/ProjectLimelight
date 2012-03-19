@@ -27,6 +27,21 @@ class PostsController < ApplicationController
         Pusher[@post.root_id.to_s].trigger('new_response', render_to_string(:template => 'posts/show'))
       end
 
+      # send the influence pusher notification
+      @post.topic_mentions.each do |mention|
+        if @post.class.name == 'Talk' && mention.first_mention == true
+          @increase = InfluenceIncrease.new
+          @increase.amount = 1
+          @increase.topic_id = mention.id
+          @increase.object_type = 'Talk'
+          @increase.action = :new
+          @increase.id = mention.name
+          @increase.topic = mention
+
+          Pusher[@post.user_id.to_s].trigger('influence_change', render_to_string(:template => 'users/influence_increase.json.rabl'))
+        end
+      end
+
       render :template => 'posts/show'
     else
       response = build_ajax_response(:error, nil, "#{@post.class.name} could not be created", @post.errors)

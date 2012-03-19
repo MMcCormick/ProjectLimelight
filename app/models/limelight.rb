@@ -89,11 +89,6 @@ module Limelight #:nodoc:
 
       attr_accessible :remote_image_url
       attr_accessor :remote_image_url
-
-      # DEPRECATED BETA REMOVE (after updating all the DB images)
-      embeds_many :images, as: :image_assignable, :class_name => 'ImageSnippet'
-      attr_accessible :asset_image
-      attr_accessor :asset_image
     end
 
     def available_dimensions
@@ -227,105 +222,6 @@ module Limelight #:nodoc:
       version_images.each do |image|
         filename = image.key.split('/').last
         AWS::S3::S3Object.copy image.key, "#{current_filepath}/#{filename}", S3['image_bucket']
-      end
-    end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # BETA REMOVE THE REST OF THE IMAGE FUNCTIONS BELOW
-    def save_images
-      self.images.each do |image|
-        image.versions.each do |version|
-          version.save
-        end
-      end
-    end
-
-    # @return AssetImage
-    def default_image
-      images.each do |image|
-        return image if image.isDefault?
-      end
-    end
-
-    def add_image(user_id, image_location)
-      image = self.images.create(:user_id => user_id)
-      version = AssetImage.new(:isOriginal => true)
-      version.id = image.id
-      version.save_image(image_location)
-      image.versions << version
-      version.save
-      image
-    end
-
-    def add_image_version(image_id, dimensions, mode)
-      image = self.images.find(image_id)
-
-      if image && image.original && image.original.first
-        original = image.original.first.image.file
-        if original.path && File.exists?(original.path)
-          new_image = Image.from_blob(original.read).first
-
-          width = dimensions[0] == 0 ? 999999 : dimensions[0]
-          height = dimensions[1] == 0 ? 999999 : dimensions[1]
-
-          case mode
-            when 'fillcropmid'
-              new_image = new_image.resize_to_fill(width, height)
-            when 'fit'
-              new_image = new_image.resize_to_fit(width, height)
-            else
-              new_image = new_image.resize_to_fit(width, height)
-          end
-
-          upload_type = original.class.name
-          if upload_type.include? 'Fog'
-            filename = original.attributes[:key].split('/')
-            filename = filename[-1]
-          else
-            filename = original.filename
-          end
-
-          tmp_location = "/tmp/d#{dimensions[0]}x#{dimensions[1]}_#{filename}"
-          new_image.write tmp_location
-          version = AssetImage.new(:isOriginal => false, :resizedTo => "#{dimensions[0]}x#{dimensions[1]}", :mode => mode, :width => new_image.columns, :height => new_image.rows)
-          version.id = image.id
-          version.image.store!(File.open(tmp_location))
-          image.versions << version
-          version.save
-        end
-      end
-    end
-
-    def set_default_image(image_id)
-      images.each do |image|
-        if image.id == image_id
-          image.isDefault = true
-        else
-          image.isDefault = false
-        end
-      end
-    end
-
-    def save_original_image
-      if valid? && @asset_image && (!@asset_image[:remote_image_url].blank? || !@asset_image[:image_cache].blank?)
-        # Create/attach the links image
-        image_snippet = ImageSnippet.new
-        image_snippet.user_id = user.id
-        image_snippet.add_uploaded_version(@asset_image, true)
-        self.images << image_snippet
       end
     end
   end

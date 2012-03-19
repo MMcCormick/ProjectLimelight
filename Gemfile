@@ -9,9 +9,6 @@ gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
 gem 'rabl', "0.6.0"
 gem 'yajl-ruby' # json
-gem 'fog' # Cloud support (amazon s3, etc) BETA REMOVE after convert old files on s3 to new format / conventions
-gem 'carrierwave' # File uploads BETA REMOVE after convert old files on s3 to new format / conventions
-gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid' # File uploads BETA REMOVE after convert old files on s3 to new format / conventions
 gem 'aws-s3', :require => 'aws/s3'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'

@@ -584,7 +584,7 @@ class Post
 
         next unless root_post.root
 
-        root_post.personal_responses = activity_responses[root_post.root.id.to_s] ? activity_responses[root_post.root.id.to_s] : []
+        root_post.activity_responses = activity_responses[root_post.root.id.to_s] ? activity_responses[root_post.root.id.to_s] : []
 
         return_objects << root_post
       end

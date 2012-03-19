@@ -1,6 +1,15 @@
 class TestingController < ApplicationController
 
   def test
+    User.all().each do |user|
+      user.email_follow = "2"
+      user.email_comment = "2"
+      user.email_mention = "2"
+      user.save
+    end
+  end
+
+  def convert_for_beta
     PopularityAction.delete_all()
     FeedUserItem.delete_all()
     FeedTopicItem.delete_all()

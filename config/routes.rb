@@ -82,6 +82,7 @@ ProjectLimelight::Application.routes.draw do
     get ':id/feed' => 'users#show', :as => :user_feed
     get ':id' => 'users#show', :as => :user
   end
+  get 'settings' => 'users#settings', :as => :user_settings
   get 'activity' => 'users#show'
   get 'likes' => 'users#show'
   resources :posts, :only => [:show]

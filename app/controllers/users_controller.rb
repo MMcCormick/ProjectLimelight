@@ -39,6 +39,12 @@ class UsersController < ApplicationController
   def update
     current_user.tutorial_step = params['tutorial_step'] if params['tutorial_step']
     current_user.tutorial1_step = params['tutorial1_step'] if params['tutorial1_step']
+    current_user.email_comment = params[:email_comment] if params[:email_comment]
+    current_user.email_mention = params[:email_mention] if params[:email_mention]
+    current_user.email_follow = params[:email_follow] if params[:email_follow]
+
+    current_user.weekly_email = params[:weekly_email] == "true" if params[:weekly_email]
+
     current_user.save
 
     render :nothing => true, status: 200
@@ -114,6 +120,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def settings
+    @title = 'Settings'
+    @description = "Here a user can edit their settings: personal info, profile picture, and notification settings"
+  end
 
 
 
@@ -191,15 +201,7 @@ class UsersController < ApplicationController
     render :partial => 'hover_tab', :user => @user
   end
 
-  def settings
-    @site_style = 'narrow'
-    @title = 'Settings'
-    @description = "Here a user can edit their settings: personal info, profile picture, and email notification settings"
-    unless signed_in?
-      redirect_to root_path
-    end
-  end
-
+  #moved functionality to settings
   def update_settings
     current_user.email_share = !!params[:email_share]
     current_user.email_comment = !!params[:email_comment]

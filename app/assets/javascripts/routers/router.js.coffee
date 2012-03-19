@@ -8,6 +8,7 @@ class LL.Router extends Backbone.Router
     'users/:id': 'activityFeed'
     'posts/:id': 'postShow'
     'pages/:name': 'staticPage'
+    'settings': 'settings'
     'activity': 'activityFeed'
     'likes': 'likeFeed'
     ':id': 'topicFeed'
@@ -122,6 +123,19 @@ class LL.Router extends Backbone.Router
       LL.App.LikeFeed.id = id
       LL.App.LikeFeed.page = 1
       LL.App.LikeFeed.fetch({data: {id: id}})
+
+  settings: ->
+    user = LL.App.current_user
+
+    screen = LL.App.newScreen('settings', 0)
+    sidebar = LL.App.findSidebar('user', 0)
+    unless sidebar
+      sidebar = LL.App.createSidebar('user', 0, user)
+    screen['sidebar'] = sidebar
+
+    LL.App.renderScreen('settings', 0)
+
+    view = new LL.Views.UserSettings()
 
   userFollowers: (id) ->
     user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))

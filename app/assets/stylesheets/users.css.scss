@@ -45,6 +45,37 @@
   }
 }
 
+#user-settings {
+
+  h3 {
+    margin-bottom: 10px;
+  }
+  form {
+    position: relative;
+
+    .field.bio {
+      position: absolute;
+      left: 240px;
+      top: 0px;
+        textarea {
+          height: 150px;
+          width: 400px;
+        }
+    }
+    .value {
+      margin: 10px 0 20px 5px;
+    }
+    .field {
+      input {
+        margin-bottom: 15px;
+      }
+    }
+    .actions {
+      margin: 5px 0 10px;
+    }
+  }
+}
+
 //#auth_box {
 //  position: relative;
 //  width: 620px;

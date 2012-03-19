@@ -185,10 +185,10 @@ class Notification
       })
 
       if target_user.notify_email &&
-            (type.to_s == "follow" && target_user.email_follow ||
-            type.to_s == "mention" && target_user.email_mention ||
-            type.to_s == "share" && target_user.email_share ||
-            %w(reply also).include?(type.to_s) && target_user.email_comment)
+            (type.to_s == "follow" && target_user.email_follow == "2" ||
+            type.to_s == "mention" && target_user.email_mention == "2" ||
+            type.to_s == "share" && target_user.email_share == "2" ||
+            %w(reply also).include?(type.to_s) && target_user.email_comment == "2")
         NotifyNowMailer.notify(triggered_by_user, target_user, notification).deliver
         notification.set_emailed
       end

@@ -1,30 +1,28 @@
-<% content_for :page_header do %>
-  <h1><%= @title %></h1>
-<% end %>
+<div class="content-tile" id="user-settings">
+  <section>
+    <h3>Basic Info</h3>
 
-<div class="section">
-  <h3>Basic</h3>
+    <%= render 'form', :user => current_user %>
+  </section>
 
-  <%= render 'form', :user => current_user %>
-</div>
+  <div class="clear"></div>
 
-<div class="clear"></div>
+  <section>
+    <h3>Profile Image</h3>
+    <%= image_tag current_user.image_url(150, 150, 'fit'), :style => "max-width: 150px;", :class => 'profile-image', :alt => "" %>
+    <% content_for :js do %>
+      <%#= render "users/image_upload_js" %>
+    <% end %>
 
-<div class="section">
-  <h3>Profile Image</h3>
-  <%= image_tag user_default_picture_path(current_user, :w => 150, :h => 150, :m => 'fit'), :style => "max-width: 150px;", :class => 'profile-image', :alt => "" %>
-  <% content_for :js do %>
-    <%= render "users/image_upload_js" %>
-  <% end %>
+    <div class="upload" id="user_uploadB">Change Profile Image</div>
+    <div id="user_uploadB-progress"></div>
+  </section>
 
-  <div class="upload" id="user_uploadB">Change Profile Image</div>
-  <div id="user_uploadB-progress"></div>
-</div>
+  <div class="clear"></div>
 
-<div class="clear"></div>
+  <section>
+    <h3>Emails</h3>
 
-<div class="section">
-  <h3>Emails</h3>
-
-  <%= render 'settings_form', :user => current_user %>
+    <%= render 'settings_form', :user => current_user %>
+  </section>
 </div>

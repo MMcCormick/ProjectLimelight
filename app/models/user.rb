@@ -64,11 +64,10 @@ class User
   field :invite_code_id
   field :tutorial_step, :default => 1, :type => Integer
   field :tutorial1_step, :default => 1, :type => Integer # user feed tutorial
-  field :email_share, :default => true
-  field :email_follow, :default => true
-  field :email_comment, :default => true
-  field :email_mention, :default => true
-  field :notify_email, :default => true # true = immediate email, false = digest
+  # Email settings: 2 = immediate email, 1 = daily digest, 0 = off
+  field :email_follow, :default => "2"
+  field :email_comment, :default => "2"
+  field :email_mention, :default => "2"
   field :weekly_email, :default => true
   field :score, :default => 0.0
 
@@ -506,12 +505,11 @@ class User
   #  User.expire_caches(id.to_s)
   #end
 
-  def notification_types
+  def daily_notification_types
     types = []
-    types << "follow" if email_follow
-    types << "mention" if email_mention
-    types << "share" if email_share
-    types = types + ["also", "reply"] if email_comment
+    types << "follow" if email_follow == "1"
+    types << "mention" if email_mention == "1"
+    types = types + ["also", "reply"] if email_comment == "1"
     types
   end
 

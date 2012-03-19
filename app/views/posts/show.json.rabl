@@ -2,6 +2,10 @@ object @post
 attributes :content, :score, :created_at
 attributes :response_count => :talking_count
 
+node :type do |post|
+  post.class.name
+end
+
 node :id do |post|
   post.to_param
 end
@@ -12,10 +16,6 @@ end
 
 node :title do |post|
   post.title_clean
-end
-
-node :type do |post|
-  post.class.name
 end
 
 node :liked do |post|

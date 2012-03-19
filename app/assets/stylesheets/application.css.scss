@@ -2,12 +2,13 @@
  * This is a manifest file that'll automatically include all the stylesheets available in this directory
  * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
  * the top of the compiled file, but it's generally better to create a new file per style scope.
+ *= require qtip
  *= require_self
  * require_tree .
 */
 
 // Import compass mixins
-@import "compass";
+@import "compass/css3";
 @import "compass/utilities";
 
 @import "sprites";
@@ -16,10 +17,9 @@
 
 @import "app_mixins";
 
-// Default theme variables
+/*// Default theme variables*/
 @import "themes/_default";
 
-@import 'qtip';
 @import "buttons";
 @import "soulmate";
 @import "library";
@@ -32,10 +32,6 @@
 @import "influence_strip";
 @import "splash_page";
 @import "tutorials";
-
-
-
-
 
 
 

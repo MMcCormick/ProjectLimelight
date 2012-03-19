@@ -108,8 +108,9 @@ class LL.Views.App extends Backbone.View
 
 
 
-  calculateSiteWidth: =>
-    return unless $('#feed > .column').length > 0
+  calculateSiteWidth: (force=false) =>
+    if force == false && $('#feed > .column').length == 0
+      return
 
     width = $(window).width()
 

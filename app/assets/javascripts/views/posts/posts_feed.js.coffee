@@ -13,6 +13,8 @@ class LL.Views.PostsFeed extends Backbone.View
     @collection.on('reset', @render)
     @collection.on('add', @appendPost)
 
+    LL.App.calculateSiteWidth(true)
+
     LL.App.on('rearrange_columns', @rearrangeColumns)
 
     # needs to be in an initializer to bind it to the window instead of this collection element

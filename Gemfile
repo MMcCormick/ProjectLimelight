@@ -31,14 +31,14 @@ gem 'neography' # neo4j graph database
 gem 'backbone-on-rails'
 
 group :assets do
-  gem 'compass', '0.12.alpha.4'
   gem 'sass-rails', '~> 3.2.3'
   gem 'coffee-rails', "~> 3.2.1"
+  gem 'compass-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   #gem 'therubyrhino'
 
-  gem 'uglifier', '>= 1.0.3'
+  gem 'closure-compiler'
 
   gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
@@ -55,6 +55,7 @@ group :development, :test do
 end
 
 group :test do
+  #gem 'ruby-prof'
   #gem "capybara"
   #gem "factory_girl_rails"
   #gem 'growl'

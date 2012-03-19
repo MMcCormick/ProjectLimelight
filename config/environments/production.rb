@@ -20,6 +20,9 @@ ProjectLimelight::Application.configure do
   # Generate digets for assets URLs
   config.assets.digest = true
 
+  # use the closure library to minify js
+  config.assets.js_compressor = :closure
+
   # Specifies the header that your server uses for sending files
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
   #config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx

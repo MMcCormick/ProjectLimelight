@@ -1,1 +1,0 @@
-torquebox :version => "torquebox-2.0.0.beta3", :url => "http://torquebox.org/release/org/torquebox/torquebox-dist/2.0.0.beta3/torquebox-dist-2.0.0.beta3-bin.zip", :file_name => "torquebox-dist-2.0.0.beta3-bin", :checksum => "ee4dedca5102566d5f07a9664bab144e775e1dcc"

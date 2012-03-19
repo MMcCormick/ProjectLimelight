@@ -37,7 +37,7 @@
     <div class="existing-mentions">
       <h3>Topics</h3>
       <% for mention in @post.get('topic_mentions'): %>
-        <a class="tlink" href="/<%= mention.slug %>">
+        <a class="tlink" href="/<%= mention.get('slug') %>">
           <img src='<%= mention.get('images').cropped.medium %>' />
           <h5>
             <%= mention.get('name') %>

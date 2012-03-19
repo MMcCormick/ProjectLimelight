@@ -10,6 +10,10 @@ attributes :username,
            :public_id,
            :slug
 
+node(:type) do |user|
+  'User'
+end
+
 node(:id) do |user|
   user.username.downcase
 end

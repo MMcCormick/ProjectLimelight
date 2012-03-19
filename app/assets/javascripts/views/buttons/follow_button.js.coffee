@@ -33,7 +33,7 @@ class LL.Views.FollowButton extends Backbone.View
         $(self.el).removeClass('disabled')
     }
 
-    if @model.constructor.name == 'User'
+    if @model.get('type') == 'User'
       url = '/api/users/follows'
     else
       url = '/api/topics/follows'

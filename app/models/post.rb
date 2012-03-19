@@ -557,21 +557,34 @@ class Post
         item_ids += i.responses if i.responses
       end
 
-      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
-      objects = Post.where(:_id => {'$in' => item_ids})
+      topics = {}
+      posts = {}
+      activity_responses = {}
+      tmp_topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      tmp_posts = Post.where(:_id => {'$in' => item_ids})
+
+      tmp_topics.each {|t| topics[t.id.to_s] = t}
+      tmp_posts.each do |p|
+        if p.root_id != p.id
+          activity_responses[p.root_id.to_s] ||= []
+          activity_responses[p.root_id.to_s] << p
+        else
+          posts[p.id.to_s] = p
+        end
+      end
 
       return_objects = []
       items.each do |i|
         root_post = RootPost.new
         if i.root_type == 'Topic'
-          root_post.root = topics.detect{|t| t.id == i.root_id}
+          root_post.root = topics[i.root_id.to_s]
         else
-          root_post.root = objects.detect{|o| o.id == i.root_id}
+          root_post.root = posts[i.root_id.to_s]
         end
 
         next unless root_post.root
 
-        root_post.activity_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        root_post.personal_responses = activity_responses[root_post.root.id.to_s] ? activity_responses[root_post.root.id.to_s] : []
 
         return_objects << root_post
       end
@@ -591,21 +604,34 @@ class Post
         item_ids += i.responses if i.responses
       end
 
-      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
-      objects = Post.where(:_id => {'$in' => item_ids})
+      topics = {}
+      posts = {}
+      like_responses = {}
+      tmp_topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      tmp_posts = Post.where(:_id => {'$in' => item_ids})
+
+      tmp_topics.each {|t| topics[t.id.to_s] = t}
+      tmp_posts.each do |p|
+        if p.root_id != p.id
+          like_responses[p.root_id.to_s] ||= []
+          like_responses[p.root_id.to_s] << p
+        else
+          posts[p.id.to_s] = p
+        end
+      end
 
       return_objects = []
       items.each do |i|
         root_post = RootPost.new
         if i.root_type == 'Topic'
-          root_post.root = topics.detect{|t| t.id == i.root_id}
+          root_post.root = topics[i.root_id.to_s]
         else
-          root_post.root = objects.detect{|o| o.id == i.root_id}
+          root_post.root = posts[i.root_id.to_s]
         end
 
         next unless root_post.root
 
-        root_post.like_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        root_post.like_responses = like_responses[root_post.root.id.to_s] ? like_responses[root_post.root.id.to_s] : []
 
         return_objects << root_post
       end

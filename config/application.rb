@@ -6,6 +6,8 @@ require "action_mailer/railtie"
 require "active_resource/railtie"
 require "rails/test_unit/railtie"
 require "sprockets/railtie"
+require 'coffee_script'
+require "sass-rails"
 require 'resque-loner'
 require 'uri'
 require 'open-uri'

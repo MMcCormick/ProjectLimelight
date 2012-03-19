@@ -55,7 +55,7 @@ class UsersController < ApplicationController
 
     @title = (current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
     @description = "A list of all users who are following" + @user.username
-    @followers = User.where(:following_users => @user.id)
+    @followers = User.where(:following_users => @user.id).order_by(:slug, :asc)
   end
 
   def following_users
@@ -64,7 +64,7 @@ class UsersController < ApplicationController
 
     @title = "Users " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all users who are being followed by" + @user.username
-    @following_users = User.where(:_id.in => @user.following_users)
+    @following_users = User.where(:_id.in => @user.following_users).order_by(:slug, :asc)
   end
 
 
@@ -72,21 +72,9 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     not_found("User not found") unless @user
 
-    @site_style = 'narrow'
     @title = "Topics " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
-    @description = "A list of all topics which are being followed by" + @user.username
-    @right_sidebar = true if current_user != @user
-
-    page = params[:p] ? params[:p].to_i : 1
-    @more_path = user_following_topics_path :p => page + 1
-    per_page = 50
-    @following_topics = Topic.where(:_id.in => @user.following_topics).limit(per_page).skip((page - 1) * per_page)
-    @more_path = nil if @following_topics.count(true) < per_page
-
-    respond_to do |format|
-      format.js { render json: topic_list_response("topics/std_list", @following_topics, @more_path), status: :ok }
-      format.html
-    end
+    @description = "A list of all topics " + @user.username + " follows"
+    @following_topics = Topic.where(:_id.in => @user.following_topics).order_by(:name, :asc)
   end
 
   # Get a users main feed

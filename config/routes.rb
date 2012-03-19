@@ -12,6 +12,7 @@ ProjectLimelight::Application.routes.draw do
       end
 
       get 'following_users' => 'users#following_users'
+      get 'following_topics' => 'users#following_topics'
       get 'followers' => 'users#followers'
       get 'influence_increases' => 'users#influence_increases'
       post '' => 'users#create'

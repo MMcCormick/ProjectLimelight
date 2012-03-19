@@ -171,6 +171,30 @@ class LL.Router extends Backbone.Router
       collection.page = 1
       collection.fetch({data: {id: id}})
 
+  userFollowingTopics: (id) ->
+    user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+
+    if LL.App.findScreen('user_following_topics', id)
+      LL.App.showScreen('user_following_topics', id)
+    else
+      screen = LL.App.newScreen('user_following_topics', id)
+
+      sidebar = LL.App.findSidebar('user', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('user', id, user)
+      screen['sidebar'] = sidebar
+
+      collection = new LL.Collections.UserFollowingTopics()
+      feed = new LL.Views.TopicList(collection: collection, model: user)
+      feed.pageTitle = "Topics #{user.get('username')} is Following"
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('user_following_topics', id)
+
+      collection.id = id
+      collection.page = 1
+      collection.fetch({data: {id: id}})
+
   tutorials: ->
     view = new LL.Views.UserTutorial(model: LL.App.current_user)
     view.step = LL.App.current_user.get('tutorial_step')

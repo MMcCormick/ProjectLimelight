@@ -95,7 +95,6 @@ class LL.Views.PostForm extends Backbone.View
 
   addTopic: (target, name, id, slug) =>
     target.val(name).next().val(id)
-    target.prev().attr('src', "/#{slug}/picture?h=30&w=30&m=fillcropmid")
 
   updateType: =>
     $(@el).find('#post-form-type').val(@model.get('type'))

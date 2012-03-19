@@ -49,6 +49,10 @@ body { padding-top: 60px; }
 }
 
 .navbar {
+  color: #444;
+  .btn {
+    margin-top: 0px;
+  }
   .dropdown-menu {
     &:after {
       left: auto;

@@ -13,6 +13,8 @@ class LL.Views.PostsFeed extends Backbone.View
     @collection.on('reset', @render)
     @collection.on('add', @appendPost)
 
+    LL.App.calculateSiteWidth(true)
+
     LL.App.on('rearrange_columns', @rearrangeColumns)
 
     # needs to be in an initializer to bind it to the window instead of this collection element
@@ -36,7 +38,7 @@ class LL.Views.PostsFeed extends Backbone.View
       LL.App.calculateSiteWidth()
 
       # load an extra page if their screen is huge
-      @loadMore()
+#      @loadMore()
 
     @
 
@@ -94,7 +96,7 @@ class LL.Views.PostsFeed extends Backbone.View
     @
 
   loadMore: (e) ->
-    if @collection.page == @.page && @collection.length * @collection.page == 20 * @collection.page && $(window).scrollTop()+$(window).height() > $(@.el).height()-$(@.el).offset().top
+    if @collection.page == @page && @collection.length % 20 == 0 && $(window).scrollTop()+$(window).height() > $(@.el).height()-$(@.el).offset().top
       @.page += 1
       @collection.fetch({add: true, data: {id: @collection.id, p: @.page}, success: @incrementPage})
 

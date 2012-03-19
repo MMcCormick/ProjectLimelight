@@ -44,6 +44,7 @@ class LL.Views.App extends Backbone.View
 
     # set the current user
     @current_user = if $('#me').length > 0 then @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user'))) else null
+    console.log @current_user
 
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).resize ->
@@ -108,8 +109,9 @@ class LL.Views.App extends Backbone.View
 
 
 
-  calculateSiteWidth: =>
-    return unless $('#feed > .column').length > 0
+  calculateSiteWidth: (force=false) =>
+    if force == false && $('#feed > .column').length == 0
+      return
 
     width = $(window).width()
 

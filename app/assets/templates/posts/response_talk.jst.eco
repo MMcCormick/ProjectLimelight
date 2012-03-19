@@ -1,6 +1,6 @@
 <img src="<%= @talk.get('user').get('images').cropped.medium %>">
 <p>
-  <a class="ulink" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
+  <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
   <%= @talk.get('content') %>
   <% if @talk.get('topic_mentions').length > 0: %>
     <span class="mentions">

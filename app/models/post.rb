@@ -57,7 +57,13 @@ class Post
   # MBM: lolz
   # MBM: YES WE DID
   index [[ :public_id, Mongo::DESCENDING ]]
-  index [[ :root_id, Mongo::DESCENDING ]]
+  index (
+    [
+      [ :root_id, Mongo::DESCENDING ],
+      [ :_type, Mongo::DESCENDING ],
+      [ :created_at, Mongo::DESCENDING ]
+    ]
+  )
   index "topic_mentions"
   index "user_mentions"
   index "likes"
@@ -206,11 +212,11 @@ class Post
       like = self.likes.new(user.attributes)
       like.id = user.id
       user.likes_count += 1
-      add_pop_action(:lk, :a, user)
+      amount = add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostLike, user.id.to_s, id.to_s)
       Resque.enqueue(PushLike, id.to_s, user.id.to_s)
 
-      true
+      amount
     end
   end
 
@@ -393,7 +399,7 @@ class Post
         display_types << 'Topic'
       end
 
-      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types})
+      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types.uniq})
       if order_by == 'newest'
         items = items.order_by(:last_response_time, :desc)
       else
@@ -402,6 +408,60 @@ class Post
       items = items.skip((page-1)*20).limit(20)
 
       build_user_feed(items)
+    end
+
+    def build_user_feed(items)
+      topic_ids = []
+      item_ids = []
+      items.each do |i|
+        if i.root_type == 'Topic'
+          topic_ids << i.root_id
+        else
+          item_ids << i.root_id
+        end
+        item_ids += i.responses.last(2) if i.responses
+      end
+
+      topics = {}
+      posts = {}
+      personal_responses = {}
+      tmp_topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      tmp_posts = Post.where(:_id => {'$in' => item_ids})
+
+      tmp_topics.each {|t| topics[t.id.to_s] = t}
+      tmp_posts.each do |p|
+        if p.root_id != p.id
+          personal_responses[p.root_id.to_s] ||= []
+          personal_responses[p.root_id.to_s] << p
+        else
+          posts[p.id.to_s] = p
+        end
+      end
+
+      return_objects = []
+      items.each do |i|
+        root_post = RootPost.new
+        if i.root_type == 'Topic'
+          root_post.root = topics[i.root_id.to_s]
+        else
+          root_post.root = posts[i.root_id.to_s]
+        end
+
+        next unless root_post.root
+
+        root_post.personal_responses = personal_responses[root_post.root.id.to_s] ? personal_responses[root_post.root.id.to_s] : []
+        root_post.public_talking = root_post.root.response_count
+
+        #get the public responses
+        root_post.public_responses = []
+        unless i.root_type == 'Talk' || root_post.public_talking == 0
+          root_post.public_responses = Post.public_responses(root_post.root.id, 1, 2)
+        end
+
+        return_objects << root_post
+      end
+
+      return_objects
     end
 
     def activity_feed(feed_id, display_types, page)
@@ -450,27 +510,33 @@ class Post
         item_ids += user_i.responses.last(2) if user_i && user_i.responses
       end
 
-      objects = Post.where(:_id => {'$in' => item_ids})
+      personal_responses = {}
+      posts = {}
+      tmp_posts = Post.where(:_id => {'$in' => item_ids})
+
+      tmp_posts.each do |p|
+        if p.root_id != p.id && p.root_type != 'Topic'
+          personal_responses[p.root_id.to_s] ||= []
+          personal_responses[p.root_id.to_s] << p
+        else
+          posts[p.id.to_s] = p
+        end
+      end
 
       return_objects = []
       items.each do |i|
         root_post = RootPost.new
-        root_post.root = objects.detect{|o| o.id == i.root_id}
-        user_i = user_items.detect{ |ui| ui.root_id == i.root_id }
+        root_post.root = posts[i.root_id.to_s]
 
-        root_post.personal_responses = objects.select{ |o| user_i && user_i.responses && user_i.responses.include?(o.id) }
+        next unless root_post.root
+
+        root_post.personal_responses = personal_responses[root_post.root.id.to_s] ? personal_responses[root_post.root.id.to_s] : []
         root_post.public_talking = root_post.root.response_count
 
         # get the public responses
         root_post.public_responses = []
         unless i.root_type == 'Talk' || root_post.public_talking == 0
-          responses = Post.public_responses(root_post.root.id, 1, 2)
-          responses.each do |response|
-            found = root_post.personal_responses.detect{|p| p.id == response.id}
-            unless found
-              root_post.public_responses.push(response)
-            end
-          end
+          root_post.public_responses = Post.public_responses(root_post.root.id, 1, 2)
         end
 
         return_objects << root_post
@@ -478,51 +544,6 @@ class Post
 
       return_objects
     end
-
-    def build_user_feed(items)
-      topic_ids = []
-      item_ids = []
-      items.each do |i|
-        if i.root_type == 'Topic'
-          topic_ids << i.root_id
-        else
-          item_ids << i.root_id
-        end
-        item_ids += i.responses.last(2) if i.responses
-      end
-
-      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
-      objects = Post.where(:_id => {'$in' => item_ids})
-
-      return_objects = []
-      items.each do |i|
-        root_post = RootPost.new
-        if i.root_type == 'Topic'
-          root_post.root = topics.detect{|t| t.id == i.root_id}
-        else
-          root_post.root = objects.detect{|o| o.id == i.root_id}
-        end
-
-        root_post.personal_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
-        root_post.public_talking = root_post.root.response_count
-
-        # get the public responses
-        root_post.public_responses = []
-        unless i.root_type == 'Talk' || root_post.public_talking == 0
-          responses = Post.public_responses(root_post.root.id, 1, 2)
-          responses.each do |response|
-            found = root_post.personal_responses.detect{|p| p.id == response.id}
-            unless found
-              root_post.public_responses.push(response)
-            end
-          end
-        end
-
-        return_objects << root_post
-      end
-
-      return_objects
-      end
 
     def build_activity_feed(items)
       topic_ids = []
@@ -536,19 +557,34 @@ class Post
         item_ids += i.responses if i.responses
       end
 
-      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
-      objects = Post.where(:_id => {'$in' => item_ids})
+      topics = {}
+      posts = {}
+      activity_responses = {}
+      tmp_topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      tmp_posts = Post.where(:_id => {'$in' => item_ids})
+
+      tmp_topics.each {|t| topics[t.id.to_s] = t}
+      tmp_posts.each do |p|
+        if p.root_id != p.id
+          activity_responses[p.root_id.to_s] ||= []
+          activity_responses[p.root_id.to_s] << p
+        else
+          posts[p.id.to_s] = p
+        end
+      end
 
       return_objects = []
       items.each do |i|
         root_post = RootPost.new
         if i.root_type == 'Topic'
-          root_post.root = topics.detect{|t| t.id == i.root_id}
+          root_post.root = topics[i.root_id.to_s]
         else
-          root_post.root = objects.detect{|o| o.id == i.root_id}
+          root_post.root = posts[i.root_id.to_s]
         end
 
-        root_post.activity_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        next unless root_post.root
+
+        root_post.personal_responses = activity_responses[root_post.root.id.to_s] ? activity_responses[root_post.root.id.to_s] : []
 
         return_objects << root_post
       end
@@ -568,19 +604,34 @@ class Post
         item_ids += i.responses if i.responses
       end
 
-      topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
-      objects = Post.where(:_id => {'$in' => item_ids})
+      topics = {}
+      posts = {}
+      like_responses = {}
+      tmp_topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
+      tmp_posts = Post.where(:_id => {'$in' => item_ids})
+
+      tmp_topics.each {|t| topics[t.id.to_s] = t}
+      tmp_posts.each do |p|
+        if p.root_id != p.id
+          like_responses[p.root_id.to_s] ||= []
+          like_responses[p.root_id.to_s] << p
+        else
+          posts[p.id.to_s] = p
+        end
+      end
 
       return_objects = []
       items.each do |i|
         root_post = RootPost.new
         if i.root_type == 'Topic'
-          root_post.root = topics.detect{|t| t.id == i.root_id}
+          root_post.root = topics[i.root_id.to_s]
         else
-          root_post.root = objects.detect{|o| o.id == i.root_id}
+          root_post.root = posts[i.root_id.to_s]
         end
 
-        root_post.like_responses = objects.select{|o| i.responses && i.responses.include?(o.id)}
+        next unless root_post.root
+
+        root_post.like_responses = like_responses[root_post.root.id.to_s] ? like_responses[root_post.root.id.to_s] : []
 
         return_objects << root_post
       end

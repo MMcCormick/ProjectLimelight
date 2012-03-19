@@ -74,7 +74,7 @@ body {
 
 a {
   text-decoration: none;
-  outline: 0;
+  outline: 0 !important;
 
   &:active {
     color: $linkColor;
@@ -199,10 +199,10 @@ header {
     }
     .talk {
       position: absolute;
-      top: 0px;
+      top: 4px;
       left: 260px;
       font-size: 18px;
-      padding: 6px 14px 7px 12px;
+      padding: 7px 14px 7px 12px;
     }
   }
 }
@@ -544,7 +544,8 @@ header {
     .topic-mention {
       @include box-shadow(none);
       margin: 0px;
-      padding: 6px 5px 6px 37px;
+      padding: 6px 5px 6px 10px;
+      width: 195px;
       &:focus {
         border-color: #CCC;
       }

@@ -1,32 +1,28 @@
 class LikesController < ApplicationController
   before_filter :authenticate_user!
 
-  def index
-    @user = User.find_by_slug(params[:id])
-    not_found("User not found") unless @user
-
-    @title = @user.username + "'s likes"
-    @description = @user.username + "'s liked posts on Limelight."
-    page = params[:p] ? params[:p].to_i : 1
-    @more_path = user_likes_path :p => page + 1
-    @right_sidebar = true if current_user != @user
-
-    @core_objects = Post.like_feed(@user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
-    respond_to do |format|
-      format.js {
-        response = reload_feed(@core_objects, @more_path, page)
-        render json: response
-      }
-      format.html # index.html.erb
-    end
-  end
-
   def create
     object = Post.find(params[:id])
     if object
       like_success = object.add_to_likes(current_user)
       if like_success
         current_user.save if object.save
+
+        # send the influence pusher notification
+        if object.class.name == 'Talk'
+          object.topic_mentions.each do |mention|
+            @increase = InfluenceIncrease.new
+            @increase.amount = like_success
+            @increase.topic_id = mention.id
+            @increase.object_type = 'Talk'
+            @increase.action = :lk
+            @increase.id = mention.name
+            @increase.topic = mention
+
+            Pusher[object.user_id.to_s].trigger('influence_change', render_to_string(:template => 'users/influence_increase.json.rabl'))
+          end
+        end
+
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})
         status = 201
       elsif like_success.nil?

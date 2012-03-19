@@ -40,7 +40,6 @@ class LL.Views.InfluenceIncreases extends Backbone.View
     $(@el).find('.none').remove()
     $(@el).prepend($(view.render().el))
 
-    if pulsate == true
-      $(view.el).effect('pulsate', {times: 2}, 500)
-    else
-      $(view.el).fadeIn(500)
+    $(view.el).effect 'slide', {direction: 'left', mode: 'show'}, 500, ->
+      if pulsate == true
+        $(view.el).effect('pulsate', {times: 2}, 400)

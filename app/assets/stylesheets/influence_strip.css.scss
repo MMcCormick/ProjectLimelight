@@ -11,8 +11,9 @@
     margin: 16px 0 0 15px;
   }
   li {
-    display: inline-block !important;
     position: relative;
+    float: left;
+    margin: 0 0 10px 0;
 
     img {
       @include border-radius(2px);

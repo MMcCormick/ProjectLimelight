@@ -212,11 +212,11 @@ class Post
       like = self.likes.new(user.attributes)
       like.id = user.id
       user.likes_count += 1
-      add_pop_action(:lk, :a, user)
+      amount = add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostLike, user.id.to_s, id.to_s)
       Resque.enqueue(PushLike, id.to_s, user.id.to_s)
 
-      true
+      amount
     end
   end
 

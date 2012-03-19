@@ -2,7 +2,15 @@ class LL.Collections.Topics extends Backbone.Collection
   url: '/api/topics'
   model: LL.Models.Topic
 
+  convertProtected: (id) ->
+    if _.include(['watch'], id)
+      "#{id}-protected"
+    else
+      id
+
   findOrCreate: (id, data=null) ->
+    id = @convertProtected(id)
+
     model = @get(id)
 
     return model if model

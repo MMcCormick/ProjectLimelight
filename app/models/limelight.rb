@@ -100,13 +100,12 @@ module Limelight #:nodoc:
     end
 
     def filepath
-      case self.class.name
-        when 'UserSnippet' || 'UserMention' || 'User'
-          path = 'users'
-        when 'TopicSnippet' || 'TopicMention' || 'Topic'
-          path = 'topics'
-        else
-          path = self.class.name.to_url.pluralize
+      if ['UserSnippet','UserMention','User'].include? self.class.name
+        path = 'users'
+      elsif ['TopicSnippet','TopicMention','Topic'].include? self.class.name
+        path = 'topics'
+      else
+        path = self.class.name.to_url.pluralize
       end
 
       "#{path}/#{id.to_s}"

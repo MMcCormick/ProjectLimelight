@@ -515,7 +515,7 @@ class Post
       tmp_posts = Post.where(:_id => {'$in' => item_ids})
 
       tmp_posts.each do |p|
-        if p.root_id != p.id
+        if p.root_id != p.id && p.root_type != 'Topic'
           personal_responses[p.root_id.to_s] ||= []
           personal_responses[p.root_id.to_s] << p
         else

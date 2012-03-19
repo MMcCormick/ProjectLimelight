@@ -27,12 +27,10 @@
 
     <div class="mentions">
       <div>
-        <img src='/assets/images/grey-square-30.jpg' />
         <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention1" placeholder="Add topic..." />
         <input type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention1_id" />
       </div>
       <div>
-        <img src='/assets/images/grey-square-30.jpg' />
         <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention2" placeholder="Add topic..." />
         <input type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention2_id" />
       </div>

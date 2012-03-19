@@ -544,7 +544,8 @@ header {
     .topic-mention {
       @include box-shadow(none);
       margin: 0px;
-      padding: 6px 5px 6px 37px;
+      padding: 6px 5px 6px 10px;
+      width: 195px;
       &:focus {
         border-color: #CCC;
       }

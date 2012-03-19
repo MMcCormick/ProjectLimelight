@@ -199,6 +199,7 @@ class Soulmate
       click: (event) ->
         event.preventDefault()
         that.suggestions.selectFocused()
+        that.hideContainer()
 
         # Refocus the input field so it remains active after clicking a suggestion.
         that.input.focus()

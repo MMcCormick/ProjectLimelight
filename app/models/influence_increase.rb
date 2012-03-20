@@ -27,7 +27,7 @@ class InfluenceIncrease
   class << self
     def influence_increases
       increases = []
-      actions = PopularityAction.order_by(:et, :desc).limit(50)
+      actions = PopularityAction.order_by(:et, :desc).limit(75)
       actions.each do |action|
         action.pop_snippets.each do |snip|
           if snip.ot == "Topic" && snip.a > 0
@@ -49,10 +49,16 @@ class InfluenceIncrease
       tmp_topics.each {|t| topics[t.id.to_s] = t}
       tmp_users.each {|u| users[u.id.to_s] = u}
 
+      filtered_increases = []
       increases.each do |increase|
-        increase.topic = topics[increase.topic_id.to_s]
-        increase.user = users[increase.user_id.to_s]
+        topic = topics[increase.topic_id.to_s]
+        if topic.active_image_version != 0
+          increase.topic = topics[increase.topic_id.to_s]
+          increase.user = users[increase.user_id.to_s]
+          filtered_increases << increase
+        end
       end
+      filtered_increases
     end
   end
 end

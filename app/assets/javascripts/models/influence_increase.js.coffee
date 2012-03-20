@@ -8,5 +8,6 @@ class LL.Models.InfluenceIncrease extends Backbone.Model
     }
 
     data['topic'] = new LL.Models.Topic(resp.topic)
+    data['user'] = new LL.Models.User(resp.user)
 
     data

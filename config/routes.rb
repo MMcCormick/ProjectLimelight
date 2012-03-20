@@ -14,7 +14,7 @@ ProjectLimelight::Application.routes.draw do
       get 'following_users' => 'users#following_users'
       get 'following_topics' => 'users#following_topics'
       get 'followers' => 'users#followers'
-      get 'influence_increases' => 'users#influence_increases'
+      get 'influence_increases' => 'users#user_influence_increases'
       post '' => 'users#create'
       put '' => 'users#update'
       get '' => 'users#show'
@@ -51,6 +51,8 @@ ProjectLimelight::Application.routes.draw do
     scope 'invite_codes' do
       post 'check' => 'invite_codes#check'
     end
+
+    get 'influence_increases' => 'users#influence_increases'
   end
 
   # Resque admin

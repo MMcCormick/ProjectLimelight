@@ -16,6 +16,10 @@ class LL.Views.SplashPage extends Backbone.View
     invite_form = new LL.Views.UserUseInviteForm()
     invite_form.splash = @
 
+    collection = new LL.Collections.SplashInfluenceIncreases()
+    influences = new LL.Views.SplashInfluenceIncreases(collection: collection)
+    collection.fetch()
+
   hideAll: =>
     $('.cheeky-buttons,.invite-form,.login-form,.register-form').hide()
 

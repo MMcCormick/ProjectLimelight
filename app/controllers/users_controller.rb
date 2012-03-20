@@ -50,9 +50,13 @@ class UsersController < ApplicationController
     render :nothing => true, status: 200
   end
 
-  def influence_increases
+  def user_influence_increases
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
     @increases = @user.influence_increases
+  end
+
+  def influence_increases
+    @increases = InfluenceIncrease.influence_increases
   end
 
   def followers

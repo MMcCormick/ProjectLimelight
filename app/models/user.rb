@@ -427,9 +427,13 @@ class User
         end
       end
     end
-    topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
+
+    topics = {}
+    tmp_topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
+    tmp_topics.each {|t| topics[t.id.to_s] = t}
+
     increases.each do |increase|
-      increase.topic = topics.detect {|t| t.id == increase.topic_id}
+      increase.topic = topics[increase.topic_id.to_s]
     end
   end
 

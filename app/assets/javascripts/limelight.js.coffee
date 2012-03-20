@@ -37,8 +37,11 @@ jQuery ->
           target.find('.alert-error').remove()
           errors_container = $('<div/>').addClass('alert alert-error').prepend('<a class="close" data-dismiss="alert">x</a>')
           for key,errors of data.errors
-            for error in errors
-              errors_container.append("<div>#{error}</div>")
+            if errors instanceof Array
+              for error in errors
+                errors_container.append("<div>#{error}</div>")
+            else
+              errors_container.append("<div>#{errors}</div>")
           target.find('.errors').prepend(errors_container)
 
   # Use gritter to create 'growl' notifications.

@@ -57,11 +57,22 @@
       #new_invite_code {
         margin-bottom: 30px;
       }
-    }
-    #invite_code_code,
-    #invite_code_email {
-      float: left;
-      margin-right: 10px;
+      label {
+        font-size: 16px;
+        margin: 0 0 7px 1px;
+      }
+      #invite_code_code,
+      #invite_code_email{
+        font-size: 18px;
+        padding: 10px;
+        width: 285px;
+        border: 1px solid #999;
+      }
+      .btn-success {
+        display: block;
+        font-size: 14px;
+        padding: 6px 14px;
+      }
     }
     .back {
       font-size: 12px;
@@ -107,11 +118,16 @@
     .splash-influence {
       height: 125px;
       margin-bottom: 30px;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      left: -8px;
+
       li {
         width: 100px;
         position: relative;
-        display: inline-block;
-        margin-right: 5px;
+        float: right;
+        margin-right: 7px;
 
         .user {
           width: 45px;
@@ -133,10 +149,9 @@
           height: 100px;
           width: 100px;
           margin-top: 5px;
-          background-color: $grayLight;
         }
         .topic {
-          @include opacity(50);
+          @include opacity(85);
           background-color: #FFF;
           position: absolute;
           bottom: 0px;
@@ -145,6 +160,12 @@
           width: 86px;
           z-index: 110;
           line-height: 16px;
+          white-space: normal;
+        }
+        &:hover {
+          .topic {
+            @include opacity(100);
+          }
         }
       }
     }

@@ -31,47 +31,6 @@
       </div>
     </div>
 
-    <!--<footer id="footer">-->
-      <!--<div class="interior">-->
-        <!--<%#= render_cell :topic, :trending, @topic %>-->
-        <!--<div id="twitter-footer">-->
-          <!--<a href="https://twitter.com/limelight_team" class="twitter-follow-button" data-button="grey" data-text-color="#FFFFFF" data-link-color="#FFF" data-show-count="false" data-width="160px" data-align="right">Follow @limelight_team</a>-->
-          <!--<script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>-->
-        <!--</div>-->
-        <!--<div id="fb-footer">-->
-          <!--<fb:like href="http://www.facebook.com/pages/Limelight/240530529343415" send="false" layout="button_count" width="90" show_faces="false" font="tahoma"></fb:like>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<%# if signed_in? && current_user.role?('admin') %>-->
-        <!--<div id="plt"><%#= load_time %></div>-->
-      <!--<%# end %>-->
-    <!--</footer>-->
-
-    <!--<div class='sentiment-bar'>-->
-      <!--<div class='bar topics'>-->
-        <!--<div class='positive' data-url='<%#= sentiment_create_path(:positive) %>'>LIKE</div>-->
-        <!--<div class='negative' data-url='<%#= sentiment_create_path(:negative) %>'>DISLIKE</div>-->
-        <!--<div class='neutral' data-url='<%#= sentiment_create_path(:neutral) %>'>DON'T CARE</div>-->
-      <!--</div>-->
-    <!--</div>-->
-
-    <!-- HIDDEN TOOLS -->
-    <!--<div id="mouse-score"></div>-->
-    <!--<div id="form-submitting">Form submitting...</div>-->
-    <!--<div style="display: none">-->
-      <%#= render "shared/contribute", :id => 'blank-contribute' %>
-      <%#= render "comments/form" %>
-      <!--<div id="static-data" data-d='<%#= static_data %>' <%#= "data-push='#{current_user.id}_private'" if signed_in? %>></div>-->
-      <!--<div id="feed-reload" data-url='<%#= request.url %>' class='ac'></div>-->
-      <%#= render "core_object_shares/form" %>
-      <%#= render 'users/auth_box', :show => nil %>
-      <%# if signed_in? && current_user.username_reset %>
-        <%#= render 'users/username_reset_box' %>
-      <%# end %>
-    <!--</div>-->
-
-    <%#= render 'help/panel' %>
-
     <%= render 'shared/layout_js' %>
 
     <%= render :partial => 'shared/social_tools' %>

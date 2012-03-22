@@ -25,7 +25,6 @@ jQuery ->
 
   # Global error function
   window.globalError = (jqXHR, target=null) ->
-    console.log jqXHR
     data = $.parseJSON(jqXHR.responseText)
 
     if data.flash

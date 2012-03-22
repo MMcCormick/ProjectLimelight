@@ -8,8 +8,8 @@ attributes :following_users,
            :tutorial1_step
 
 node :invite_code do |user|
-  if user.invite_code_id
-    code = InviteCode.where(:user_id => user.id).first
+  code = InviteCode.where(:user_id => user.id).first
+  if code
     {:code => code.code, :remaining => code.remaining}
   else
     {}

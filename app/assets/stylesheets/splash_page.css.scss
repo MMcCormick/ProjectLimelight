@@ -87,7 +87,26 @@
         margin: 0 0 10px;
       }
       .option {
+        position: relative;
+        width: 170px;
         margin-bottom: 30px;
+        a {
+          text-decoration: none;
+          cursor: default;
+        }
+        img {
+          @include opacity(20)
+        }
+        span {
+          display: block;
+          position: absolute;
+          width: 100%;
+          left: 0;
+          text-align: center;
+          top: 17px;
+          font-size: 18px;
+          color: $gray;
+        }
       }
       .foot1,
       .foot2 {

@@ -5,11 +5,12 @@
 <div class="login-form <%= 'hide' unless show == :login %>">
   <div class="left">
     <div class="head">Use your existing social account.</div>
-    <a href="<%= user_omniauth_authorize_path(:facebook) %>">
-      <div class="option one">
+    <div class="option one">
+      <a href="<%= user_omniauth_authorize_path(:facebook) %>">
         <%= image_tag('facebook-login-button.gif') %>
-      </div>
-    </a>
+        <span>Coming Soon!</span>
+      </a>
+    </div>
     <div class="foot1">We do not share your information.</div>
     <div class="foot2">
       We do not post to your profile
@@ -25,11 +26,12 @@
 <div class="register-form <%= 'hide' unless show == :register %>">
   <div class="left">
     <div class="head">Use your existing social account.</div>
-    <a href="<%= user_omniauth_authorize_path(:facebook) %>">
-      <div class="option one">
-        <%= image_tag('facebook-login-button.png') %>
-      </div>
-    </a>
+    <div class="option one">
+      <a href="<%= user_omniauth_authorize_path(:facebook) %>">
+        <%= image_tag('facebook-login-button.gif') %>
+        <span>Coming Soon!</span>
+      </a>
+    </div>
     <div class="foot1">We do not share your information.</div>
     <div class="foot2">
       We do not post to your profile

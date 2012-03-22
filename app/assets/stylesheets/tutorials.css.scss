@@ -13,6 +13,9 @@
   .modal-body {
     @include clearfix();
   }
+  .modal-footer {
+    .btn { float: right; }
+  }
   .step-count {
     float: right;
     cursor: default;

@@ -7,12 +7,12 @@ window.LL =
     @App =  new LL.Views.App()
     @Header = new LL.Views.Header(model: LL.App.current_user)
 
-    @Router = new LL.Router()
-    Backbone.history.start(pushState: true)
-
     # hack because facebook login appends stupid things to the url
     if LL.App.current_user && window.location.hash == '#_=_'
       window.location = '/'
+
+    @Router = new LL.Router()
+    Backbone.history.start(pushState: true)
 
     if LL.App.current_user && LL.App.current_user.get('username_reset') == true
       reset = new LL.Views.UsernameReset(model: LL.App.current_user)

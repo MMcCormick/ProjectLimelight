@@ -29,5 +29,7 @@ class LL.Views.RootMedia extends Backbone.View
       view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.name, topic._id)
       break if i == 2
       i++
+
+    console.log @model
     view.preview.setResponse(@model)
     $(view.el).find('.icons').remove()

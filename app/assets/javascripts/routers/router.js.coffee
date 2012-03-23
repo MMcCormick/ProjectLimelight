@@ -37,7 +37,6 @@ class LL.Router extends Backbone.Router
     else
       user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
 
-
     # Only load the feed if it's new
     if LL.App.findScreen('user_feed', id)
       LL.App.showScreen('user_feed', id)
@@ -220,7 +219,7 @@ class LL.Router extends Backbone.Router
   #######
 
   topicFeed: (id) ->
-    if id[0] == '?'
+    if id[0] == '?' || id == '_=_'
       @splashPage()
       return
 

@@ -466,24 +466,38 @@ header {
       height: 84px;
       width: 384px;
     }
-    #post-form-fetch-url {
-      width: 384px;
+    .preview {
+      position: relative;
+      overflow: none;
       display: none;
+    }
+    #post-form-fetch-url {
+      width: 295px;
       border-top: 1px dashed #CCC;
+      padding-right: 90px;
+    }
+    #fetch-url-btn {
+      @include border-radius(0px);
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      padding: 8px 10px;
+      border-right: 0px;
     }
     .preview-data {
       position: relative;
-      padding: 0 0 14px 0;
+      padding: 0 0 20px 0;
       border-top: 1px dashed #CCC;
 
       .media {
         width: 115px;
         height: 100px;
         position: absolute;
-        right: 7px;
-        top: 7px;
-        overflow-y: scroll;
+        right: 10px;
+        top: 10px;
+        overflow-y: auto;
         overflow-x: hidden;
+        text-align: right;
 
         img {
           max-width: 100px;
@@ -494,9 +508,9 @@ header {
         height: 84px;
       }        
       .title {
-        min-height: 84px;
+        min-height: 85px;
         padding: 8px;
-        width: 270px;
+        width: 250px;
 
         p {
           font-size: 16px;

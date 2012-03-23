@@ -8,6 +8,13 @@
         <h2>Shhh, we're in alpha</h2>
       </div>
 
+      <% flash.each do |name, msg| %>
+        <div class="alert alert-<%= name == :notice ? "success" : "error" %>">
+          <a class="close" data-dismiss="alert">×</a>
+          <%= msg %>
+        </div>
+      <% end %>
+
       <div class='cheeky-buttons <%= 'hide' if @show == :login || @show == :register %>'>
         <div class='btn btn-success login'>I <b>have</b> an Account</div>
         <div class='btn btn-success register'>I <b>want</b> an Account</div>

@@ -10,9 +10,9 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "your Facebook"
       sign_in_and_redirect @user, :event => :authentication
     else
-      flash[:register_fail] = "Your invite code is invalid!"
+      flash[:error] = "Your invite code is invalid!"
       session["devise.facebook_data"] = env["omniauth.auth"].except('extra')
-      redirect_to root_path
+      redirect_to root_path, :show => 'login'
     end
   end
 

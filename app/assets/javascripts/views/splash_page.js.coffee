@@ -21,7 +21,7 @@ class LL.Views.SplashPage extends Backbone.View
     collection.fetch()
 
   hideAll: =>
-    $('.cheeky-buttons,.invite-form,.login-form,.register-form').hide()
+    $('.alert,.cheeky-buttons,.invite-form,.login-form,.register-form').hide()
 
   showLogin: =>
     @hideAll()

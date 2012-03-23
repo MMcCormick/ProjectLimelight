@@ -1,11 +1,7 @@
 <% if @model.get('limelight_post'): %>
-  <% if @model.get('limelight_post').embed: %>
+  <% if @model.get('limelight_post').get('images'): %>
     <div class="media">
-      <%- @model.get('limelight_post').embed %>
-    </div>
-  <% else if @model.get('limelight_post').image: %>
-    <div class="media">
-      <img src="<%= @model.get('limelight_post').image %>" alt="" />
+      <img src="<%= @model.get('limelight_post').get('images').cropped.medium %>" alt="" />
     </div>
   <% end %>
 <% else: %>
@@ -21,8 +17,8 @@
 <div class="info">
   <% if @model.get('limelight_post'): %>
     <div class="title">
-      <p><%= @model.get('limelight_post').title %></p>
-      <div>Originally posted to limelight <%= @model.get('limelight_post').created_at_pretty %> ago</div>
+      <p><%= @model.get('limelight_post').get('title') %></p>
+      <div>Originally posted to limelight about <%= @model.get('limelight_post').get('created_at_pretty') %></div>
     </div>
   <% else: %>
     <textarea id="post-form-title" spellcheck="false" autocomplete="off" name="title" placeholder='Title...'><%= @model.get('title') %></textarea>

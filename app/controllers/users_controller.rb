@@ -39,15 +39,23 @@ class UsersController < ApplicationController
   def update
     current_user.tutorial_step = params['tutorial_step'] if params['tutorial_step']
     current_user.tutorial1_step = params['tutorial1_step'] if params['tutorial1_step']
+
     current_user.email_comment = params[:email_comment] if params[:email_comment]
     current_user.email_mention = params[:email_mention] if params[:email_mention]
     current_user.email_follow = params[:email_follow] if params[:email_follow]
-
     current_user.weekly_email = params[:weekly_email] == "true" if params[:weekly_email]
 
-    current_user.save
+    current_user.username = params[:username] if params[:username]
 
-    render :nothing => true, status: 200
+    if current_user.save
+      response = build_ajax_response(:ok)
+      status = 200
+    else
+      response = build_ajax_response(:error, nil, nil, current_user.errors)
+      status = :unprocessable_entity
+    end
+
+    render json: response, status: status
   end
 
   def user_influence_increases

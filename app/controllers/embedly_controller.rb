@@ -1,6 +1,7 @@
 class EmbedlyController < ApplicationController
   include VideosHelper
   include ImageHelper
+  include ApplicationHelper
   include ActionView::Helpers::DateHelper
 
   def show
@@ -34,17 +35,9 @@ class EmbedlyController < ApplicationController
       end
     end
 
-    post = result['url'] ? Post.where('sources.url' => result['url']).first : nil
-    if post
-      img = default_image_url(post, 50, 50, 'fillcropmid', true, true)
-      response[:limelight_post] = {
-              :id => post.id.to_s,
-              :title => post.title_clean,
-              :image => img ? img.image_url : nil,
-              :embed => post.embed_html,
-              :created_at => time_ago_in_words(post.created_at),
-              :type => post._type
-      }
+    @post = result['url'] ? Post.where('sources.url' => result['url']).first : nil
+    if @post
+      response = render_to_string(:template => 'posts/show')
     end
 
     render json: response

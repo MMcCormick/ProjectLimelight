@@ -8,12 +8,17 @@ class LL.Views.PostFormPreview extends Backbone.View
 
   initialize: ->
     @loaded = false
-    @collection.on('reset', @render, @)
+    @collection.on('reset', @render)
 
-  render: ->
+  render: =>
     model = @collection.first()
     if model
-      @setData(model)
+      if model.get('id')
+        embedly = new LL.Models.Embedly()
+        embedly.set('limelight_post', LL.App.Posts.findOrCreate(model.get('id'), new LL.Models.Post(model)))
+        @setData(embedly)
+      else
+        @setData(model)
     else
       @remove()
     @
@@ -21,15 +26,15 @@ class LL.Views.PostFormPreview extends Backbone.View
   setData: (model) =>
     $(@el).html(@template(model: model))
 
+    $('#fetch-url-btn').removeClass('disabled').text('Fetch URL')
     if !@loaded
       $(@el).insertAfter(@target)
-      $('#post-form-fetch-url').hide()
       @loaded = true
 
     if model.get('limelight_post')
       @post_form_model.set({
-        'type': 'Talk',
-        'parent_id': model.get('limelight_post').id
+        'type': model.get('type'),
+        'parent_id': model.get('limelight_post').get('_id')
       })
     else
       @post_form_model.set({
@@ -54,16 +59,7 @@ class LL.Views.PostFormPreview extends Backbone.View
 
   setResponse: (model) ->
     embedly = new LL.Models.Embedly()
-    embedly.set({
-      limelight_post: {
-        id: model.get('_id')
-        title: model.get('title')
-        type: model.get('type')
-        embed: model.get('embed_html')
-        image: model.get('image')
-        created_at: model.get('created_at')
-      }
-    })
+    embedly.set('limelight_post', model)
     @setData(embedly)
 
   cancelPreview: =>

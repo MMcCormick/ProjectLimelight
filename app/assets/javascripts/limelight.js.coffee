@@ -1,7 +1,3 @@
-# hack because facebook login appends stupid things to the url
-if window.location.hash == '#_=_'
-  window.location = '/'
-
 window.LL =
   Models: {}
   Collections: {}
@@ -13,6 +9,17 @@ window.LL =
 
     @Router = new LL.Router()
     Backbone.history.start(pushState: true)
+
+    # hack because facebook login appends stupid things to the url
+    if LL.App.current_user && window.location.hash == '#_=_'
+      window.location = '/'
+
+    if LL.App.current_user && LL.App.current_user.get('username_reset') == true
+      reset = new LL.Views.UsernameReset(model: LL.App.current_user)
+      $(reset.render().el).modal
+        backdrop: 'static'
+        keyboard: false
+        show: true
 
 jQuery ->
 

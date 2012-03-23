@@ -11,6 +11,7 @@
       <textarea id="post-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="<%= @placeholder_text %>"><%= @initial_text %></textarea>
       <div class='preview'>
         <input id="post-form-fetch-url" type="text" placeholder='Paste URL to fetch...' autocomplete='off' />
+        <div class='btn' id='fetch-url-btn'>Fetch URL</div>
       </div>
       <div class='icons'>
         <div class="icon ll-icon-link" rel='tooltip' title='Add Link' data-type='Link'></div>

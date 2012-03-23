@@ -5,7 +5,8 @@ extends "users/show"
 attributes :following_users,
            :following_topics,
            :tutorial_step,
-           :tutorial1_step
+           :tutorial1_step,
+           :username_reset
 
 node :invite_code do |user|
   code = InviteCode.where(:user_id => user.id).first

@@ -456,6 +456,8 @@ class User
         user = User.where(:email => info['email']).first
       end
 
+      invite = invite_code ? InviteCode.find(invite_code) : nil
+
       # If we found the user, update their token
       if user
         connect = user.social_connects.detect{|connection| connection.uid == omniauth['uid'] && connection.provider == omniauth['provider']}
@@ -469,7 +471,7 @@ class User
         connect.token = omniauth['credentials']['token']
 
       # If an invite code is in the session, create a new user with a stub password.
-      elsif invite = InviteCode.where(:code => invite_code).first && invite.usable?
+      elsif invite && invite.usable?
         new_user = true
         if extra["gender"] && !extra["gender"].blank?
           gender = extra["gender"] == 'male' || extra["gender"] == 'm' ? 'm' : 'f'

@@ -7,9 +7,11 @@ class LL.Views.PostForm extends Backbone.View
       "click .cancel": "destroyForm"
       "click .icons .icon:not(.cancel-preview)": "activateType"
       "click .icons .cancel-preview": "removeEmbedly"
-      "keyup #post-form-content": "monitorUrl"
+      "click #fetch-url-btn": "fetchEmbedly"
+      "keyup #post-form-content": "monitorSpacebarUrl"
+      "keypress #post-form-fetch-url": "monitorUrlEnter"
+      "paste #post-form-content": "checkUrl"
       "paste #post-form-fetch-url": "fetchEmbedly"
-      "keyup #post-form-fetch-url": "preFetchEmbedly"
 
   initialize: ->
     @collection = new LL.Collections.Posts()
@@ -28,7 +30,7 @@ class LL.Views.PostForm extends Backbone.View
 
   render: ->
     $(@el).html(@template(modal: @modal, initial_text: @initial_text, placeholder_text: @placeholder_text))
-    @preview.target = $(@el).find('#post-form-fetch-url')
+    @preview.target = $(@el).find('.preview')
 
     # setTimeout to wait for the modal animation so that the autocomplete can position itself correctly
     self = @
@@ -102,7 +104,7 @@ class LL.Views.PostForm extends Backbone.View
 
     if @model.get('type') == 'Talk' && !@model.get('parent_id')
       $(@el).find('.icons').removeClass('on').find('.cancel-preview').hide()
-      $(@el).find('#post-form-fetch-url').hide().val('')
+      $(@el).find('#post-form-fetch-url').val('').parent().hide()
     else
       $(@el).find('.icons .cancel-preview').show()
       switch @model.get('type')
@@ -118,33 +120,58 @@ class LL.Views.PostForm extends Backbone.View
 
   activateType: (e) =>
     # if we have not started a preview
-    if $(@el).find('#post-form-fetch-url:visible,.preview-data').length == 0
-      $(@el).find('#post-form-fetch-url').show()
+    if $(@el).find('.preview:visible,.preview-data').length == 0
+      $(@el).find('.preview').show()
 
     @model.set('type', $(e.target).data('type'))
 
   removeEmbedly: =>
     @preview.cancelPreview()
 
-  monitorUrl: =>
+  checkUrl: (e) =>
+    self = @
+
+    # Need to use a timeout to wait until the paste content is in the input
+    setTimeout ->
+      urls = self.validateUrl($(e.target).val())
+
+      if urls && urls[0]
+        $(e.target).val($(e.target).val().replace(urls[0], ''))
+        $(self.el).find('.ll-icon-link').click()
+        $(self.el).find('#post-form-fetch-url').val(urls[0])
+        self.fetchEmbedly()
+
+    , 0
 
 
-  preFetchEmbedly: (e) =>
-    urlRegex = /^(?=www\.)?[A-Za-z0-9_-]+\.+[A-Za-z0-9.\/%&=\?_:;-]+$/ig
-    url = $(e.target).val().match(urlRegex)
-
-    if url && url.length > 0
-      @.embedly_collection.fetch({data: {url: url[0]}})
+  monitorSpacebarUrl: (e) =>
+    if e.keyCode == 32 # spacebar
+      @checkUrl(e)
 
   fetchEmbedly: =>
     self = @
 
     # Need to use a timeout to wait until the paste content is in the input
     setTimeout ->
-      self.embedly_collection.fetch({data: {url: self.preview.target.val()}})
+      return if $('#fetch-url-btn').hasClass('disabled')
+
+      return unless $(self.el).find('#post-form-fetch-url').val().length > 5
+
+      $('#fetch-url-btn').addClass('disabled').text('Fetching...')
+      self.embedly_collection.fetch({data: {url: $(self.el).find('#post-form-fetch-url').val()}})
     , 0
+
+  monitorUrlEnter: (e) =>
+    if e.keyCode == 13 # enter keycode
+      e.preventDefault()
+      $(@el).find('#fetch-url-btn').click()
+      return false
 
   focusTalk: =>
     $(@el).find('#post-form-content').focus()
     v = $(@el).find('#post-form-content').val()
     $(@el).find('#post-form-content').val('').val(v)
+
+  validateUrl: (val) =>
+    # http://stackoverflow.com/questions/6927719/url-regex-does-not-work-in-javascript
+    val.match(/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/i)

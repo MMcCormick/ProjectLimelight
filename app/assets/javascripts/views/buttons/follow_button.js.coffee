@@ -15,6 +15,9 @@ class LL.Views.FollowButton extends Backbone.View
   render: =>
     $(@el).html(@template(model: @model))
 
+    if @model.get('following')
+      $(@el).addClass('gray')
+
     @
 
   updateFollow: =>
@@ -29,6 +32,7 @@ class LL.Views.FollowButton extends Backbone.View
         $(self.el).addClass('disabled')
       success: (data) ->
         self.model.set('following', !self.model.get('following'))
+        if self.model.get('following') then $(self.el).addClass('gray') else $(self.el).removeClass('gray')
       error: (jqXHR, textStatus, errorThrown) ->
         $(self.el).removeClass('disabled')
         globalError(jqXHR)

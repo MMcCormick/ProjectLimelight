@@ -18,3 +18,58 @@ $talk50RGBA: rgba(248,148,6,0.5);
 $topic50RGBA: rgba(144,193,45,0.5);
 
 $grayLightest: #F9F9F9;
+
+
+// Overrides
+
+// Buttons
+.btn {
+  @include border-radius(2px);
+}
+.btn-success {
+  @include button-background($green, $greenDarker);
+
+  &.gray {
+    @include button-background(#CCC, #AAA);
+  }
+}
+
+// Dropdowns
+.dropdown-menu {
+  &.right {
+    left: auto;
+    right: 0px;
+  }
+  li > a:hover,
+  .active > a,
+  .active > a:hover {
+    background-color: $blue;
+  }
+}
+
+.navbar {
+  color: #444;
+  .btn {
+    margin-top: 0px;
+  }
+  .dropdown-menu {
+    &:after {
+      left: auto;
+      right: 10px;
+    }
+    &:before {
+      left: auto;
+      right: 9px;
+    }
+  }
+}
+
+// Forms
+form {
+  margin: 0;
+}
+
+// Modals
+.modal {
+  @include border-radius(0px);
+}

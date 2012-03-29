@@ -22,6 +22,11 @@ body {
         width: $baseWidth;
       }
     }
+    #page-header {
+      .container {
+        width: $baseWidth;
+      }
+    }
   }
   &.three {
     $baseWidthThree: $baseWidth + $columnWidth;
@@ -32,6 +37,11 @@ body {
       }
     }
     header {
+      .container {
+        width: $baseWidthThree;
+      }
+    }
+    #page-header {
       .container {
         width: $baseWidthThree;
       }
@@ -50,6 +60,11 @@ body {
         width: $baseWidthFour;
       }
     }
+    #page-header {
+      .container {
+        width: $baseWidthFour;
+      }
+    }
   }
   &.five {
     $baseWidthFive: $baseWidth + $columnWidth * 3;
@@ -60,6 +75,11 @@ body {
       }
     }
     header {
+      .container {
+        width: $baseWidthFive;
+      }
+    }
+    #page-header {
       .container {
         width: $baseWidthFive;
       }
@@ -184,12 +204,16 @@ header {
   .container {
     margin: auto;
     position: relative;
+    height: 43px;
 
     .brand {
-      padding-left: 65px;
-      font-size: 23px;
+      @include single-text-shadow(#444, 0, 1px);
+      padding: 0 0 0 65px;
+      font-size: 25px;
       position: relative;
       margin-left: 20px;
+      line-height: 43px;
+      font-weight: 300;
 
       img {
         position: absolute;
@@ -198,9 +222,10 @@ header {
       }
     }
     .talk {
+      @include border-radius(2px);
       position: absolute;
       top: 4px;
-      left: 260px;
+      left: 250px;
       font-size: 18px;
       padding: 7px 14px 7px 12px;
     }
@@ -263,37 +288,122 @@ header {
   }
 }
 
+#page-header {
+  @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+  @include single-text-shadow(#DDD, 0, 1px);
+  border-top: 1px solid #FFF;
+  background: $grayLightest;
+  display: none;
+  height: 40px;
+  width: 100%;
+  margin: 65px 0 0 0;
+
+  &.on {
+    display: block;
+  }
+  .container {
+    margin: auto;
+    position: relative;
+  }
+  .inner {
+    padding: 0 0 0 250px;
+  }
+  .top {
+    position: absolute;
+    top: -55px;
+    height: 50px;
+  }
+  h1 {
+    cursor: default;
+    float: left;
+    line-height: 50px;
+    margin: 0 15px 0 0;
+  }
+  .score-pts {
+    float: left;
+    display: block;
+    line-height: 50px;
+    font-size: 13px;
+    span {
+      font-size: 18px;
+    }
+  }
+  .follow {
+    margin: 11px 0 0 20px;
+  }
+  .links {
+    float: left;
+    height: 40px;
+
+    li {
+      float: left;
+      position: relative;
+    }
+    a {
+      display: block;
+      line-height: 40px;
+      height: 40px;
+      position: relative;
+      font-size: 13px;
+      font-weight: 300px;
+      padding: 0 15px;
+      color: #444;
+      overflow: hidden;
+
+      span {
+        font-weight: bold;
+      }
+      &:hover {
+        background: #C7E0A9;
+      }
+      &.on {
+        @include background-image(linear-gradient(#C7E0A9, #E9F4DD));
+        cursor: default;
+        border-right: 1px solid #CDC5C5;
+        border-left: 1px solid #CDC5C5;
+
+        &:before {
+          @include single-box-shadow(rgba(34, 25, 25, 0.1), 0, 0, 10px, $default-box-shadow-spread, inset);
+          /*box-shadow: 0 0 10px  inset;*/
+          position: absolute;
+          top: -10px;
+          bottom: -10px;
+          left: 0;
+          right: 0;
+          content: "";
+        }
+      }
+    }
+  }
+}
+
 .sidebar {
-  @include border-radius(5px);
   float: left;
   width: 220px;
-  margin: 0 0 0 10px;
+  margin: 20px 0 0 10px;
   background-color: rgba(255,255,255,0.4);
 
   section {
-    @include border-radius(3px);
+    @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
     background: $grayLightest;
-    border: 1px solid #E6E6E6;
     margin: 10px;
     > h4 {
-      margin: 10px 0 7px 10px;
+      @include single-text-shadow(#DDD, 0, 1px);
+      padding: 10px 0 7px 10px;
       font-weight: normal;
       cursor: default;
     }
   }
+  .profile-image {
+    @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+    max-width: 200px;
+    margin: -120px 0 0 10px;
+  }
   .user-panel {
-    padding: 10px 10px 10px 70px;
+    padding: 10px;
     position: relative;
     border-bottom: 1px solid #EEEEEE;
 
-    img {
-      @include border-radius(3px);
-      position: absolute;
-      top: 7px;
-      left: 10px;
-      width: 50px;
-      height: 50px;
-    }
     h4 {
       margin: 0 0 3px 0;
       cursor: default;
@@ -308,7 +418,7 @@ header {
     .follow {
       font-size: 13px;
       padding: 2px 9px;
-      margin: 0 7px 0 0;
+      margin: 0 0 0 10px;
     }
   }
   .topic-panel {
@@ -400,7 +510,7 @@ header {
 
 #feed {
   @include clearfix();
-  margin: 0 0 0 5px;
+  margin: 20px 0 0 5px;
 
   > h2 {
     margin: 0 0 15px 0;
@@ -591,7 +701,6 @@ header {
 }
 
 .content-tile {
-  @include border-radius(5px);
   background-color: rgba(255,255,255,0.4);
   padding: 0 0 10px 0;
   text-align: left;
@@ -606,9 +715,8 @@ header {
     position: static;
   }
   section {
-    @include border-radius(3px);
+    @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
     background: #FFF;
-    border: 1px solid #E6E6E6;
     padding: 10px 20px;
     margin: 10px 10px 0 10px;
     width: 652px;

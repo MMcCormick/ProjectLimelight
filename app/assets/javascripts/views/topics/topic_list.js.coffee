@@ -6,6 +6,7 @@ class LL.Views.TopicList extends Backbone.View
   initialize: ->
     @collection.on('reset', @render)
     @collection.on('add', @appendUser)
+    @pageTitle = ''
 
     # Always start on page 1
     #@.page = 1
@@ -13,7 +14,9 @@ class LL.Views.TopicList extends Backbone.View
   render: =>
     $(@el).html(@template())
     $('#feed').html(@el)
-    $(@el).before("<h2>#{@pageTitle}</h2>")
+
+    if @pageTitle != ''
+      $(@el).before("<h2>#{@pageTitle}</h2>")
 
     if @collection.models.length == 0
       $(@el).find('section').append("<div class='none'>Hmm, there's nothing to show here</div>")

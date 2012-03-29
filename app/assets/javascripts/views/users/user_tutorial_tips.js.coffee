@@ -34,23 +34,23 @@ class LL.Views.UserTutorialTips extends Backbone.View
     '
 
   tutorial12: =>
-    @target = $('#influence-increases')
+    @target = $('#sidebar-influences')
     @title = 'Topic Influence'
-    @my = 'top left'
-    @at = 'bottom left'
+    @my = 'left middle'
+    @at = 'right middle'
     @tip = true
     @button = 'Next'
     @content = '
-      This bar is a realtime view of the topic influence you\'re gaining as people like what you post.
+      This widget is a realtime view of the topic influence you\'re gaining as people like what you post.
       <br /><br />
       More topic influence means that more people will see what you post about that topic.
     '
 
   tutorial13: =>
-    @target = $('#influence-increases')
+    @target = $('#feed')
     @title = 'Your Feed'
     @my = 'top middle'
-    @at = 'bottom middle'
+    @at = 'top middle'
     @tip = false
     @button = 'Finish'
     @content = '
@@ -61,6 +61,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
     '
 
   renderTip: =>
+
     switch @page
       when 'user_feed'
         switch @step
@@ -74,7 +75,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
             return
       else
         return
-
+    console.log @target
     @currentTip = @target.qtip
                     hide: false
                     position:

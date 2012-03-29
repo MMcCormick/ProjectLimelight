@@ -96,9 +96,6 @@ class TopicsController < ApplicationController
     render json: response, status: status
   end
 
-
-
-  # NEW BACKBONE API
   def suggestions
     @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
 
@@ -107,7 +104,31 @@ class TopicsController < ApplicationController
     @topics = Neo4j.user_topic_suggestions(@user.id.to_s, 20)
     render 'topics/index'
   end
-  # END BACKBONE
+
+  def followers
+    @topic = Topic.find_by_slug(params[:id])
+    not_found("Topic not found") unless @topic
+
+    @title = @topic.name + " followers"
+    @description = "A list of all users who are following" + @topic.name
+    @followers = User.where(:following_topics => @topic.id).order_by(:slug, :asc)
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -333,28 +354,6 @@ class TopicsController < ApplicationController
       status = 422
     end
     render json: response, status: status
-  end
-
-  def followers
-    @topic = Topic.find_by_slug(params[:id])
-    not_found("Topic not found") unless @topic
-    authorize! :read, @topic
-
-    @site_style = 'narrow'
-    @right_sidebar = true
-    @title = "Users following '" + @topic.name + "'"
-    @description = "A list of all users following" + @topic.name
-
-    page = params[:p] ? params[:p].to_i : 1
-    @more_path = topic_followers_path :p => page + 1
-    per_page = 10
-    @followers = User.where(:following_topics => @topic.id).limit(per_page).skip((page - 1) * per_page)
-    @more_path = nil if @followers.count(true) < per_page
-
-    respond_to do |format|
-      format.js { render json: user_list_response("users/std_list", @followers, @more_path), status: :ok }
-      format.html
-    end
   end
 
   def connected

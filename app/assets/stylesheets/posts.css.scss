@@ -6,6 +6,7 @@ $postFontColor: $grayDark;
     font-weight: bold;
   }
   h1 {
+    @include single-text-shadow(#DDD, 0, 1px);
     margin-bottom: 10px;
     .title-with-source {
       margin-right: 5px;
@@ -75,7 +76,6 @@ $postFontColor: $grayDark;
           display: table-cell;
           height: 40px;
           width: 40px;
-          background-color: $gray;
         }
         h5 {
           display: table-cell;

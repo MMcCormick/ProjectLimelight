@@ -5,19 +5,18 @@ class LL.Views.UserSidebar extends Backbone.View
   initialize: ->
 
   render: =>
+    # Profile image
+    $(@el).append("<img class='profile-image' src='#{@model.get('images').cropped.large}' />")
+
     # User talk form
     talk = new LL.Views.UserSidebarTalk(model: @model)
     $(@el).append(talk.render().el)
 
-    # Main top nav
-    nav = new LL.Views.UserSidebarNav(model: @model)
-    nav.page = @page
-    $(@el).append(nav.render().el)
-
-    # Follow stats
-    follow = new LL.Views.UserSidebarFollowStats(model: @model)
-    follow.page = @page
-    $(@el).append(follow.render().el)
+    # Influence strip
+    influences_collection = new LL.Collections.InfluenceIncreases()
+    influences = new LL.Views.InfluenceIncreases(collection: influences_collection, model: @model)
+    $(@el).append(influences.el)
+    influences_collection.fetch({data: {id: @model.get('slug')}})
 
     # Topic suggestions
 #    if LL.App.current_user == @model
@@ -25,7 +24,7 @@ class LL.Views.UserSidebar extends Backbone.View
 #      $(@el).append(topic_suggestions.el)
 #      LL.App.TopicSuggestions.fetch({data: {id: @model.id}})
 
-    # Follow stats
+    # Static Links
     footer = new LL.Views.SidebarFooter()
     $(@el).append(footer.render().el)
 

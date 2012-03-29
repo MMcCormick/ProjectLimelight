@@ -414,7 +414,7 @@ class User
 
   def influence_increases
     increases = []
-    actions = PopularityAction.where("pop_snippets._id" => id).order_by(:et, :desc).limit(30)
+    actions = PopularityAction.where("pop_snippets._id" => id).order_by(:et, :desc).limit(5)
     actions.each do |action|
       action.pop_snippets.each do |snip|
         if snip.ot == "Topic" && snip.a > 0

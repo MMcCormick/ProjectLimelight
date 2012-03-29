@@ -10,6 +10,17 @@
 
     <%= render 'shared/header' if signed_in? && current_user.tutorial_step == 0 %>
 
+    <div id="page-header">
+      <div class="container">
+        <div class='inner'>
+          <div class='top'>
+            <h1></h1>
+          </div>
+          <ul class='links unstyled'></ul>
+        </div>
+      </div>
+    </div>
+    
     <div class="wrapper <%= params[:action].parameterize %>-c">
       <div class="sidebar">
         <%= yield :sidebar %>

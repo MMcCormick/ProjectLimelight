@@ -15,9 +15,7 @@ require 'chronic'
 require 'pusher'
 require 'ken' # Freebase API for Ruby
 require 'yajl'
-
-gem defined?(JRUBY_VERSION) ? 'rmagick4j' : 'rmagick'
-require 'RMagick'
+require 'rmagick'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line

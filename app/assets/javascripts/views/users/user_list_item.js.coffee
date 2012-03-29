@@ -8,7 +8,7 @@ class LL.Views.UserListItem extends Backbone.View
     $(@el).addClass('odd') if @odd
     $(@el).append(@template(user: @model))
 
-    if LL.App.current_user != @model
+    if LL.App.current_user.get('id') != @model.get('id')
       follow = new LL.Views.FollowButton(model: @model)
       $(@el).find('.follow-c').html(follow.render().el)
 

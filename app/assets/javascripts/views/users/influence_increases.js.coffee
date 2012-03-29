@@ -1,16 +1,18 @@
 class LL.Views.InfluenceIncreases extends Backbone.View
-  id: 'influence-increases'
-  tagName: 'ul'
-  className: 'unstyled'
+  template: JST['users/influence_increases']
+  tagName: 'section'
+  id: 'sidebar-influences'
 
   initialize: ->
     @collection.on('reset', @render)
 
   render: =>
+    $(@el).html(@template())
+
     self = @
 
     if @collection.models.length == 0
-      $(@el).html('<li class="none">This bar updates as you gain influence in topics</li>')
+      $(@el).find('ul').html('<li class="none">This bar updates as you gain influence in topics</li>')
 
     for influence in @collection.models
       @appendInfluence(influence)
@@ -33,12 +35,12 @@ class LL.Views.InfluenceIncreases extends Backbone.View
   appendInfluence: (influence) =>
     view = new LL.Views.InfluenceIncrease(model: influence)
     $(@el).find('.none').remove()
-    $(@el).append($(view.render().el).fadeIn(500))
+    $(@el).find('ul').append($(view.render().el).fadeIn(500))
 
   prependInfluence: (influence, pulsate=false) =>
     view = new LL.Views.InfluenceIncrease(model: influence)
     $(@el).find('.none').remove()
-    $(@el).prepend($(view.render().el))
+    $(@el).find('ul').prepend($(view.render().el))
 
     $(view.el).effect 'slide', {direction: 'left', mode: 'show'}, 500, ->
       if pulsate == true

@@ -1,1 +1,0 @@
-<h3><%= @user.get('username') %>'s Likes</h3>

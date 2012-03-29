@@ -17,7 +17,6 @@ $feedFontColor: $grayDark;
 }
 
 .tile {
-  @include border-radius(2px);
   padding: 5px;
   margin-bottom: 10px;
 
@@ -28,7 +27,7 @@ $feedFontColor: $grayDark;
   &.topic { background-color: $topic10RGBA; }
 
   &:hover {
-    @include single-box-shadow(#777, 1px, 1px, 2px);
+    @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
 
     .actions {
       .talk-form,
@@ -62,6 +61,7 @@ $feedFontColor: $grayDark;
     position: relative;
 
     h5 {
+      @include single-text-shadow(#DDD, 0, 1px);
       margin-bottom: 8px;
       .title {
         cursor: pointer;
@@ -81,10 +81,11 @@ $feedFontColor: $grayDark;
       }
     }
     .img {
-      margin-bottom: 6px;
+      margin-bottom: 9px;
       position: relative;
       cursor: pointer;
       overflow-y: auto;
+      overflow-x: hidden;
       max-height: 300px;
       min-height: 50px;
 
@@ -119,7 +120,7 @@ $feedFontColor: $grayDark;
     &.video,
     &.picture {
       .mentions {
-        margin-bottom: 8px;
+        margin-bottom: 4px;
       }
     }
     &.topic {

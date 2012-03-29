@@ -1,11 +1,3 @@
-<div class="topic-panel">
-  <h4><%= @topic.get('name') %></h4>
-  <div class='actions'></div>
-  <div class='img'>
-    <img src='<%= @topic.get('images').fit.medium %>' />
-  </div>
-</div>
-
 <p>Foo efoia seofin aseofin aseoi nfasoei nfaosien faosine f</p>
 
 <h4>Also Known As</h4>

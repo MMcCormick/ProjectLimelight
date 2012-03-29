@@ -1,7 +1,8 @@
 object @topic
 attributes :name,
            :slug,
-           :score
+           :score,
+           :followers_count
 
 node :type do |t|
   "Topic"

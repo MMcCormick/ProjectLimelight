@@ -5,7 +5,11 @@ class LL.Views.TopicSidebar extends Backbone.View
   initialize: ->
 
   render: =>
-    # User talk form
+
+    # Profile image
+    $(@el).append("<img class='profile-image' src='#{@model.get('images').cropped.large}' />")
+
+    # Talk form
     talk = new LL.Views.TopicSidebarTalk(model: @model)
     $(@el).append(talk.render().el)
 

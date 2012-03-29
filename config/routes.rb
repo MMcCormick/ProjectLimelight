@@ -26,6 +26,7 @@ ProjectLimelight::Application.routes.draw do
         delete '' => 'follows#destroy', :type => 'Topic'
       end
 
+      get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'
       get '' => 'topics#show'
@@ -104,6 +105,7 @@ ProjectLimelight::Application.routes.draw do
   post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
 
   #Topics (catch all)
+  get ':id/followers' => 'topics#show', :as => :topic_followers
   get ':id' => 'topics#show', :as => :topic
 
   root :to => 'users#feed'

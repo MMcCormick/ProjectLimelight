@@ -3,24 +3,26 @@ source 'http://rubygems.org'
 gem 'bundler'
 gem 'rails', '3.2.2'
 gem 'jquery-rails'
+gem 'rack'
+gem 'rack-contrib'
 gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
-gem 'rabl', "0.6.0"
+gem 'rabl', "0.6.1"
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'koala' # facebook graph api support
 gem 'twitter' # twitter api support
-gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
-gem 'resque-scheduler', '2.0.0.g' # scheduled resque jobs
+gem 'resque', '1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
+gem 'resque-scheduler', '2.0.0.h' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
 gem 'airbrake' # Exception notification
-gem 'soulmate', '0.1.1', :require => 'soulmate/server' # Redis based autocomplete storage
+gem 'soulmate', '0.1.2', :require => 'soulmate/server' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
 gem 'ken' # Freebase API for Ruby

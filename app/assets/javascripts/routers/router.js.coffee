@@ -11,6 +11,7 @@ class LL.Router extends Backbone.Router
     'settings': 'settings'
     'activity': 'activityFeed'
     'likes': 'likeFeed'
+    ':id/followers': 'topicFollowers'
     ':id': 'topicFeed'
     '': 'userFeed'
 
@@ -48,8 +49,9 @@ class LL.Router extends Backbone.Router
         sidebar = LL.App.createSidebar('user', id, user)
       screen['sidebar'] = sidebar
 
-      feed_header = new LL.Views.UserFeedHeader(model: user)
-      screen['components'].push(feed_header)
+      page_header = new LL.Views.UserPageHeader(model: user)
+      page_header.page = 'feed'
+      screen['components'].push(page_header)
 
       LL.App.renderScreen('user_feed', id)
 
@@ -76,13 +78,14 @@ class LL.Router extends Backbone.Router
     else
       screen = LL.App.newScreen('activity_feed', id)
 
+      page_header = new LL.Views.UserPageHeader(model: user)
+      page_header.page = 'activity'
+      screen['components'].push(page_header)
+
       sidebar = LL.App.findSidebar('user', id)
       unless sidebar
         sidebar = LL.App.createSidebar('user', id, user)
       screen['sidebar'] = sidebar
-
-      feed_header = new LL.Views.UserActivityHeader(model: user)
-      screen['components'].push(feed_header)
 
       LL.App.renderScreen('activity_feed', id)
 
@@ -105,13 +108,14 @@ class LL.Router extends Backbone.Router
     else
       screen = LL.App.newScreen('like_feed', id)
 
+      page_header = new LL.Views.UserPageHeader(model: user)
+      page_header.page = 'likes'
+      screen['components'].push(page_header)
+
       sidebar = LL.App.findSidebar('user', id)
       unless sidebar
         sidebar = LL.App.createSidebar('user', id, user)
       screen['sidebar'] = sidebar
-
-      feed_header = new LL.Views.UserLikeHeader(model: user)
-      screen['components'].push(feed_header)
 
       LL.App.renderScreen('like_feed', id)
 
@@ -127,6 +131,10 @@ class LL.Router extends Backbone.Router
     user = LL.App.current_user
 
     screen = LL.App.newScreen('settings', 0)
+
+    page_header = new LL.Views.UserPageHeader(model: user)
+    screen['components'].push(page_header)
+
     sidebar = LL.App.findSidebar('user', 0)
     unless sidebar
       sidebar = LL.App.createSidebar('user', 0, user)
@@ -144,6 +152,10 @@ class LL.Router extends Backbone.Router
     else
       screen = LL.App.newScreen('user_followers', id)
 
+      page_header = new LL.Views.UserPageHeader(model: user)
+      page_header.page = 'followers'
+      screen['components'].push(page_header)
+
       sidebar = LL.App.findSidebar('user', id)
       unless sidebar
         sidebar = LL.App.createSidebar('user', id, user)
@@ -151,7 +163,6 @@ class LL.Router extends Backbone.Router
 
       collection = new LL.Collections.UserFollowers()
       feed = new LL.Views.UserList(collection: collection, model: user)
-      feed.pageTitle = "#{user.get('username')}'s Followers"
       screen['components'].push(feed)
 
       LL.App.renderScreen('user_followers', id)
@@ -168,6 +179,10 @@ class LL.Router extends Backbone.Router
     else
       screen = LL.App.newScreen('user_following_users', id)
 
+      page_header = new LL.Views.UserPageHeader(model: user)
+      page_header.page = 'following_users'
+      screen['components'].push(page_header)
+
       sidebar = LL.App.findSidebar('user', id)
       unless sidebar
         sidebar = LL.App.createSidebar('user', id, user)
@@ -175,7 +190,6 @@ class LL.Router extends Backbone.Router
 
       collection = new LL.Collections.UserFollowingUsers()
       feed = new LL.Views.UserList(collection: collection, model: user)
-      feed.pageTitle = "Users #{user.get('username')} is Following"
       screen['components'].push(feed)
 
       LL.App.renderScreen('user_following_users', id)
@@ -192,6 +206,10 @@ class LL.Router extends Backbone.Router
     else
       screen = LL.App.newScreen('user_following_topics', id)
 
+      page_header = new LL.Views.UserPageHeader(model: user)
+      page_header.page = 'following_topics'
+      screen['components'].push(page_header)
+
       sidebar = LL.App.findSidebar('user', id)
       unless sidebar
         sidebar = LL.App.createSidebar('user', id, user)
@@ -199,7 +217,6 @@ class LL.Router extends Backbone.Router
 
       collection = new LL.Collections.UserFollowingTopics()
       feed = new LL.Views.TopicList(collection: collection, model: user)
-      feed.pageTitle = "Topics #{user.get('username')} is Following"
       screen['components'].push(feed)
 
       LL.App.renderScreen('user_following_topics', id)
@@ -232,6 +249,10 @@ class LL.Router extends Backbone.Router
     else
       screen = LL.App.newScreen('topic_feed', id)
 
+      page_header = new LL.Views.TopicPageHeader(model: topic)
+      page_header.page = 'feed'
+      screen['components'].push(page_header)
+
       sidebar = LL.App.findSidebar('topic', id)
       unless sidebar
         sidebar = LL.App.createSidebar('topic', id, topic)
@@ -246,6 +267,33 @@ class LL.Router extends Backbone.Router
       LL.App.TopicFeed.id = id
       LL.App.TopicFeed.page = 1
       LL.App.TopicFeed.fetch({data: {id: id}})
+
+  topicFollowers: (id) ->
+    topic = LL.App.Topics.findOrCreate(id, $('#this').data('this'))
+
+    if LL.App.findScreen('topic_followers', id)
+      LL.App.showScreen('topic_followers', id)
+    else
+      screen = LL.App.newScreen('topic_followers', id)
+
+      page_header = new LL.Views.TopicPageHeader(model: topic)
+      page_header.page = 'followers'
+      screen['components'].push(page_header)
+
+      sidebar = LL.App.findSidebar('topic', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('topic', id, topic)
+      screen['sidebar'] = sidebar
+
+      collection = new LL.Collections.TopicFollowers()
+      feed = new LL.Views.UserList(collection: collection, model: topic)
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('topic_followers', id)
+
+      collection.id = id
+      collection.page = 1
+      collection.fetch({data: {id: id}})
 
   #######
   # POSTS

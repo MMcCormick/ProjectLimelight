@@ -286,7 +286,7 @@ class LL.Router extends Backbone.Router
       screen['sidebar'] = sidebar
 
       collection = new LL.Collections.TopicFollowers()
-      feed = new LL.Views.UserList(collection: collection, model: topic)
+      feed = new LL.Views.List(collection: collection, model: topic)
       screen['components'].push(feed)
 
       LL.App.renderScreen('topic_followers', id)

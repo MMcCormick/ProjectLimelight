@@ -297,6 +297,8 @@ header {
   height: 40px;
   width: 100%;
   margin: 65px 0 0 0;
+  position: relative;
+  z-index: 100;
 
   &.on {
     display: block;
@@ -380,7 +382,7 @@ header {
 .sidebar {
   float: left;
   width: 220px;
-  margin: 20px 0 0 10px;
+  margin: -105px 0 0 10px;
   background-color: rgba(255,255,255,0.4);
 
   section {
@@ -397,7 +399,9 @@ header {
   .profile-image {
     @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
     max-width: 200px;
-    margin: -120px 0 0 10px;
+    margin: 10px 0 0 10px;
+    position: relative;
+    z-index: 110;
   }
   .user-panel {
     padding: 10px;
@@ -517,8 +521,8 @@ header {
     cursor: default;
   }
   .column {
-    width: 230px;
-    margin: 0 10px 0 0;
+    width: 220px;
+    margin: 0 20px 0 0;
     float: left;
     &.last {
       margin-right: -10px;

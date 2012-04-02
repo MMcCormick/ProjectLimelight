@@ -16,6 +16,29 @@ class User
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
+  ## Database authenticatable
+  field :email,              :type => String, :null => false
+  field :encrypted_password, :type => String, :null => false
+
+  ## Trackable
+  field :sign_in_count,      :type => Integer
+  field :current_sign_in_at, :type => Time
+  field :last_sign_in_at,    :type => Time
+  field :current_sign_in_ip, :type => String
+  field :last_sign_in_ip,    :type => String
+
+  # Token authenticatable
+  field :authentication_token, :type => String
+
+  ## Confirmable
+  field :confirmation_token,   :type => String
+  field :confirmed_at,         :type => Time
+  field :confirmation_sent_at, :type => Time
+  #field :unconfirmed_email,    :type => String # Only if using reconfirmable
+
+  ## Rememberable
+  field :remember_created_at, :type => Time
+
   # Denormilized:
   # Post.user_snippet.username
   # Post.user_mentions.username

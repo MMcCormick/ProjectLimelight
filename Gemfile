@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'bundler'
-gem 'rails', '3.2.2'
+gem 'rails', '3.2.3'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'

@@ -24,17 +24,15 @@ end
 
 node(:images) do |user|
   {
-          :original => user.image_url(0, 0, 'fit', 'current', true),
-          :fit => {
-                  :large => user.image_url(695, 0, 'fit'),
-                  :medium => user.image_url(190, 0, 'fit')
-          },
-          :cropped => {
-                  :large => user.image_url(300, 300, 'fillcropmid'),
-                  :medium => user.image_url(100, 100, 'fillcropmid'),
-                  :small => user.image_url(50, 50, 'fillcropmid'),
-                  :tiny => user.image_url(30, 30, 'fillcropmid')
-          }
+    :original => user.image_url(nil, nil, 'current', true),
+    :fit => {
+      :large => user.image_url(:fit, :large),
+      :normal => user.image_url(:fit, :normal),
+      :small => user.image_url(:fit, :small)
+    },
+    :square => {
+      :small => user.image_url(:square, :small)
+    }
   }
 end
 

@@ -1,4 +1,4 @@
-<img src="<%= @talk.get('user').get('images').cropped.medium %>">
+<img src="<%= @talk.get('user').get('images').square.medium %>">
 <p>
   <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
   <%= @talk.get('content') %>

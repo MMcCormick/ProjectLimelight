@@ -93,6 +93,7 @@ class User
   field :email_mention, :default => "2"
   field :weekly_email, :default => true
   field :score, :default => 0.0
+  field :use_fb_image, :default => false
 
   auto_increment :public_id
 
@@ -149,18 +150,10 @@ class User
 
   # Pull image from Gravatar
   def save_profile_image
-    hash = Digest::MD5.hexdigest(self.email.downcase)+'.jpeg'
     facebook = get_social_connect 'facebook'
-    google = get_social_connect 'google_oath2'
     @remote_image_url = if facebook
-                          "http://graph.facebook.com/#{facebook.uid}/picture?type=large"
-                        elsif google
-                          google.image
-                        else
-                          "http://www.gravatar.com/avatar/#{hash}?s=500&d=identicon"
+                          self.use_fb_image = true
                         end
-
-    save_remote_image
   end
 
   def recalculate_vote_ratio
@@ -389,6 +382,20 @@ class User
     nil
   end
 
+  def fbuid
+    facebook = get_social_connect('facebook')
+    if facebook
+      facebook.uid
+    end
+  end
+
+  def twuid
+    twitter = get_social_connect('twitter')
+    if twitter
+      twitter.uid
+    end
+  end
+
   def facebook
     connection = social_connects.detect{|connection| connection.provider == 'facebook'}
     if connection
@@ -460,6 +467,24 @@ class User
     end
   end
 
+  def update_social_denorms
+    user_snippet_updates = { "user_snippet.fbuid" => self.fbuid }
+    user_mention_updates = { "user_mentions.$.fbuid" => self.fbuid }
+    object_user_updates = { "object_user.fbuid" => self.fbuid }
+    triggered_by_updates = { "triggered_by.$.fbuid" => self.fbuid }
+    user_snippet_updates["user_snippet.twuid"] = self.twuid
+    user_mention_updates["user_mentions.$.twuid"] = self.twuid
+    object_user_updates["object_user.twuid"] = self.twuid
+    triggered_by_updates["triggered_by.$.twuid"] = self.twuid
+
+    Post.where(:user_id => id).update_all(user_snippet_updates)
+    Post.where("user_mentions._id" => id).update_all(user_mention_updates)
+    Post.where("likes._id" => id).update_all(user_mention_updates)
+    Comment.where(:user_id => id).update_all(user_snippet_updates)
+    Notification.where("object_user._id" => id).update_all(object_user_updates)
+    Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
+  end
+
   class << self
     # Omniauth providers
     def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil)
@@ -489,6 +514,8 @@ class User
           connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :image => info['image'])
           connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
           user.social_connects << connect
+          user.use_fb_image = true if user.image_versions == 0
+          user.update_social_denorms
         end
         # Update the token
         connect.token = omniauth['credentials']['token']
@@ -519,6 +546,8 @@ class User
         connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
         connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
         user.social_connects << connect
+        user.use_fb_image = true if user.image_versions == 0
+        user.update_social_denorms
       end
 
       if user && !user.confirmed?
@@ -586,6 +615,12 @@ class User
       user_mention_updates["user_mentions.$.last_name"] = self.last_name
       object_user_updates["object_user.last_name"] = self.last_name
       triggered_by_updates["triggered_by.$.last_name"] = self.last_name
+    end
+    if use_fb_image_changed?
+      user_snippet_updates["user_snippet.use_fb_image"] = self.use_fb_image
+      user_mention_updates["user_mentions.$.use_fb_image"] = self.use_fb_image
+      object_user_updates["object_user.use_fb_image"] = self.use_fb_image
+      triggered_by_updates["triggered_by.$.use_fb_image"] = self.use_fb_image
     end
     unless user_snippet_updates.empty?
       Post.where(:user_id => id).update_all(user_snippet_updates)

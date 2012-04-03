@@ -1,5 +1,5 @@
 <a href="/<%= @topic.get('slug') %>" class='tlink' data-id='<%= @topic.get('id') %>'>
-  <img src='<%= @topic.get('images').cropped.medium %>' />
+  <img src='<%= @topic.get('images').square.medium %>' />
   <h5><%= @topic.get('name') %></h5>
 </a>
 <div class='follow-c'></div>

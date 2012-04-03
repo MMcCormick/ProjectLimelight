@@ -37,7 +37,10 @@ class Notification
               :username => triggered_by_user.username,
               :first_name => triggered_by_user.first_name,
               :last_name => triggered_by_user.last_name,
-              :public_id => triggered_by_user.public_id
+              :public_id => triggered_by_user.public_id,
+              :fbuid => triggered_by_user.fbuid,
+              :twuid => triggered_by_user.twuid,
+              :use_fb_image => triggered_by_user.use_fb_image
       )
       return true
     end
@@ -154,7 +157,10 @@ class Notification
               :username => object_user.username,
               :first_name => object_user.first_name,
               :last_name => object_user.last_name,
-              :public_id => object_user.public_id
+              :public_id => object_user.public_id,
+              :fbuid => object_user.fbuid,
+              :twuid => object_user.twuid,
+              :use_fb_image => object_user.use_fb_image
           )
         end
       end

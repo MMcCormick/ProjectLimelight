@@ -132,7 +132,8 @@ class Comment
   private
 
   def set_user_snippet
-    self.build_user_snippet({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
+    self.build_user_snippet({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name,
+                             last_name: user.last_name, fbuid: user.fbuid, twuid: user.twuid, use_fb_image: user.use_fb_image})
     self.user_snippet.id = user.id
   end
 

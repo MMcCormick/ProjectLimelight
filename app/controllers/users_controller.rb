@@ -45,6 +45,8 @@ class UsersController < ApplicationController
     current_user.email_follow = params[:email_follow] if params[:email_follow]
     current_user.weekly_email = params[:weekly_email] == "true" if params[:weekly_email]
 
+    current_user.use_fb_image = params[:use_fb_image] == "true" if params[:use_fb_image]
+
     current_user.username = params[:username] if params[:username]
 
     if current_user.save

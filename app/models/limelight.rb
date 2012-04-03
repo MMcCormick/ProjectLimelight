@@ -115,23 +115,32 @@ module Limelight #:nodoc:
       "#{filepath}/current"
     end
 
-    def image_url(w, h, m, version='current', original=false)
-      if self.class.name == 'UserMention' || self.class.name == 'UserSnippet'
+    def image_url(mode, size=nil, version='current', original=false)
+      if ["User", "UserSnippet", "UserMention"].include?(self.class.name) && use_fb_image
+        if mode == :square
+          "http://graph.facebook.com/#{fbuid}/picture?type=square"
+        else
+          "http://graph.facebook.com/#{fbuid}/picture?type=#{size}"
+        end
+      elsif self.class.name == 'UserMention' || self.class.name == 'UserSnippet'
         if original
           "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
         else
-          "#{S3['image_prefix']}/#{filepath}/#{version}/#{w}_#{h}_#{m}.png"
+          "#{S3['image_prefix']}/#{filepath}/#{version}/#{mode}_#{size}.png"
         end
       else
         if image_versions == 0
-          nil
+          hash = Digest::MD5.hexdigest(self.email.downcase)+'.jpeg'
+          "http://www.gravatar.com/avatar/#{hash}?s=" +
+              if size == :small then "50" elsif size == :normal then "100" else "200" end +
+          "&d=identicon"
         elsif processing_image
           "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
         else
           if original
             "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
           else
-            "#{S3['image_prefix']}/#{filepath}/#{version}/#{w}_#{h}_#{m}.png"
+            "#{S3['image_prefix']}/#{filepath}/#{version}/#{mode}_#{size}.png"
           end
         end
       end

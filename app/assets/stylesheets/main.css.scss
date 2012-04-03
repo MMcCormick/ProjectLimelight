@@ -377,6 +377,34 @@ header {
       }
     }
   }
+  .sorting {
+    float: right;
+    height: 40px;
+
+    li {
+      position: relative;
+      display: inline-block;
+      line-height: 40px;
+      height: 40px;
+      position: relative;
+      font-size: 13px;
+      font-weight: 300px;
+      color: #444;
+      overflow: hidden;
+      cursor: pointer;
+
+      span {
+        margin: 0 7px;
+      }
+      &.on {
+        font-weight: bold;
+        cursor: default;
+      }
+      &.last {
+        margin: 0 30px 0 0;
+      }
+    }
+  }
 }
 
 .sidebar {

@@ -4,8 +4,11 @@ class LL.Views.PostsFeed extends Backbone.View
   initialize: ->
     self = @
 
+    # The pusher channel to listen to
+    @channel = null
+
     # Always start on page 1
-    @.page = 1
+    @page = 1
 
     # A tile is the backbone view representing one tile on the feed
     @tiles = []
@@ -22,14 +25,16 @@ class LL.Views.PostsFeed extends Backbone.View
       self.loadMore(e)
 
   render: =>
+    self = @
+
     if @collection.models.length == 0
       $(@el).append("<div class='none'>There are no items in this feed</div>")
     else
       $(@el).remove('.none')
 
       # we start with no columns
-      @.columns = []
-      @.minColumnHeight = 0
+      @columns = []
+      @minColumnHeight = 0
       @arrangeColumns()
 
       for root_post in @collection.models
@@ -37,14 +42,23 @@ class LL.Views.PostsFeed extends Backbone.View
 
       LL.App.calculateSiteWidth()
 
-      # load an extra page if their screen is huge
-#      @loadMore()
+    # listen to the channel for new posts
+    channel = LL.App.get_subscription(@channel)
+    unless channel
+      channel = LL.App.subscribe(@channel)
+
+    unless LL.App.get_event_subscription(@channel, 'new_post')
+      channel.bind 'new_post', (data) ->
+        console.log data
+        post = new LL.Models.RootPost(data)
+        self.collection.add(post, {silend: true})
+        self.prependPost(post)
 
     @
 
   rearrangeColumns: =>
-    @.columns = []
-    @.minColumnHeight = 0
+    @columns = []
+    @minColumnHeight = 0
     @arrangeColumns()
 
     for tile in @tiles
@@ -69,12 +83,7 @@ class LL.Views.PostsFeed extends Backbone.View
         min_height = column.height
     chosen
 
-  appendPost: (root_post) =>
-    column = @chooseColumn()
-    tile = new LL.Views.RootPost(model: root_post)
-    column.appendPost tile
-    @tiles.push tile
-
+  addPost: (root_post) =>
     if root_post.get('root').get('type') != 'Talk'
       root_id = root_post.get('root').get('_id')
 
@@ -93,15 +102,46 @@ class LL.Views.PostsFeed extends Backbone.View
             root_post.get('root').trigger('new_response')
         LL.App.subscribe_event(root_id, 'new_response')
 
+  prependPost: (root_post) =>
+    column = @chooseColumn()
+    tile = new LL.Views.RootPost(model: root_post)
+    @tiles.push tile
+    column.prependPost tile
+
+    @addPost(root_post)
+
+    @
+
+  appendPost: (root_post) =>
+    column = @chooseColumn()
+    tile = new LL.Views.RootPost(model: root_post)
+    @tiles.push tile
+    column.appendPost tile
+
+    @addPost(root_post)
+
     @
 
   loadMore: (e) ->
     if @collection.page == @page && @collection.length % 20 == 0 && $(window).scrollTop()+$(window).height() > $(@.el).height()-$(@.el).offset().top
       @.page += 1
-      @collection.fetch({add: true, data: {id: @collection.id, p: @.page}, success: @incrementPage})
+      data = {id: @collection.id, p: @.page}
+
+      if @collection.sort_value
+        data['sort'] = @collection.sort_value
+
+      @collection.fetch({add: true, data: data, success: @incrementPage})
 
   incrementPage: (collection, response) ->
     if response.length > 0
       collection.page += 1
     else
       collection.page = 0
+
+  reset: =>
+    @page = 1
+    @tiles = []
+    $(@el).html('')
+
+  # TODO: Show a loading spinner or something here if we want to after a certain amount of time
+  loading: =>

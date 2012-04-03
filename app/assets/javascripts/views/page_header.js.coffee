@@ -3,12 +3,14 @@ class LL.Views.PageHeader extends Backbone.View
 
   events:
     'click .links a': 'handleLinkClick'
+    'click .sorting li': 'handleSort'
 
   initialize: ->
     @title = ''
     @links = []
     @showScore = false
     @showFollow = false
+    @showSorting = false
 
   render: =>
     $(@el).show()
@@ -23,6 +25,9 @@ class LL.Views.PageHeader extends Backbone.View
         follow = new LL.Views.FollowButton(model: @model)
         $(@el).find('.top').append(follow.render().el)
 
+    if @showSorting
+      $(@el).find('.sorting').show()
+
     for link in @links
       $(@el).find('.links').append("<li><a class='#{if link.on then 'on' else ''}' href='#{link.url}'>#{link.content}</a></li>")
 
@@ -32,3 +37,13 @@ class LL.Views.PageHeader extends Backbone.View
       return false
 
     $(e.currentTarget).effect("highlight", {color: '#88B925'}, 300)
+
+  handleSort: (e) =>
+    return if $(e.currentTarget).hasClass('on')
+
+    $(e.currentTarget).addClass('on').siblings().removeClass('on')
+
+    LL.App.Feed.reset()
+    LL.App.Feed.collection.page = 1
+    LL.App.Feed.collection.sort_value = $(e.currentTarget).data('sort')
+    LL.App.Feed.collection.fetch({data: {id: LL.App.Feed.collection.id, sort: LL.App.Feed.collection.sort_value}})

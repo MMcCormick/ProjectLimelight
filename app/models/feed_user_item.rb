@@ -39,7 +39,20 @@ class FeedUserItem
 
 
   class << self
+    def render_view
+      app = ProjectLimelight::Application
+      view = ActionView::Base.new(app.config.paths.app.views.first)
+      view.class_eval do
+        include ApplicationHelper
+        include app.routes.url_helpers
+      end
+      puts view.render(:template => 'your/action')
+    end
+
     def post_create(post, popular_talk=false)
+      #controller = PostsController.new
+      #av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first,{},controller)
+
       topic_mention_ids = post.topic_mentions.map{|tm| tm.id}
       user_mention_ids = post.user_mentions.map{|um| um.id}
       
@@ -69,6 +82,10 @@ class FeedUserItem
           updates["$inc"] = { :strength => strength, :ds => strength }
 
           FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
+
+          #av.render(:partial => "view_folder/some_partial", :locals => {:a_var => @some_var})
+          #@post = post
+          #Pusher["#{u.id.to_s}_realtime"].trigger('new_post', av.render(:template => 'posts/show.json.rabl'))
         end
       end
     end

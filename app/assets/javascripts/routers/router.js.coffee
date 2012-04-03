@@ -56,12 +56,14 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('user_feed', id)
 
       feed = new LL.Views.PostsFeed(collection: LL.App.UserFeed)
+      feed.channel = "#{user.get('_id')}_realtime"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
       LL.App.UserFeed.id = id
       LL.App.UserFeed.page = 1
-      LL.App.UserFeed.fetch({data: {id: id}})
+      LL.App.UserFeed.sort_value = 'newest'
+      LL.App.UserFeed.fetch({data: {id: id, sort: 'newest'}})
 
   activityFeed: (id=0) ->
 
@@ -90,6 +92,7 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('activity_feed', id)
 
       feed = new LL.Views.PostsFeed(collection: LL.App.ActivityFeed)
+      feed.channel = "#{user.get('_id')}_activity"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
@@ -120,6 +123,7 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('like_feed', id)
 
       feed = new LL.Views.PostsFeed(collection: LL.App.LikeFeed)
+      feed.channel = "#{user.get('_id')}_likes"
       LL.App.Feed = feed
       screen['components'].push(feed)
 

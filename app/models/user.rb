@@ -46,6 +46,7 @@ class User
   # Notification.triggered_by.username
   # Comment.user_snippet.username
   field :username
+  slug :username
 
   # Denormilized:
   # Post.user_snippet.first_name
@@ -62,8 +63,6 @@ class User
   # Notification.triggered_by.last_name
   # Comment.user_snippet.last_name
   field :last_name
-
-  slug :username
 
   field :status, :default => 'active'
   field :email

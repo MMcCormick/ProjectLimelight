@@ -82,7 +82,7 @@ class PostsController < ApplicationController
   def user_feed
     user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
     page = params[:p] ? params[:p].to_i : 1
-    @posts = Post.feed(user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    @posts = Post.feed(user.id, session[:feed_filters][:display], params[:sort], page)
   end
 
   # The user like feed

@@ -393,14 +393,14 @@ class Post
     # @param { options } Options TODO: Fill out these options
     #
     # @return [ Posts ]
-    def feed(feed_id, display_types, order_by, page)
+    def feed(feed_id, display_types, sort, page)
 
       if display_types.include?('Talk')
         display_types << 'Topic'
       end
 
       items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types.uniq})
-      if order_by == 'newest'
+      if sort == 'newest'
         items = items.order_by(:last_response_time, :desc)
       else
         items = items.order_by(:rel, :desc)

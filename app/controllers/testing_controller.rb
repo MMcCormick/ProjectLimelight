@@ -3,22 +3,29 @@ require "net/http"
 class TestingController < ApplicationController
 
   def test
-    @remove_count = 0
-    @active_count = 0
-    topics = Topic.where(:active_image_version => {'$gt' => 0})
-    topics.each do |t|
-      url = URI.parse("http://img.p-li.me/topics/#{t.id.to_s}/current/original.png")
-      req = Net::HTTP.new(url.host, url.port)
-      res = req.request_head(url.path)
-      if res.code != "200"
-        @remove_count += 1
-        t.active_image_version = 0
-        t.image_versions = 0
-        t.save
-      else
-        @active_count += 1
-      end
-    end
+
+    @post = Talk.all.first
+    av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first)
+    foo = av.render 'posts/show.json', :post => @post
+    foo = foo.to_s
+    bar = 'foo'
+
+    #@remove_count = 0
+    #@active_count = 0
+    #topics = Topic.where(:active_image_version => {'$gt' => 0})
+    #topics.each do |t|
+    #  url = URI.parse("http://img.p-li.me/topics/#{t.id.to_s}/current/original.png")
+    #  req = Net::HTTP.new(url.host, url.port)
+    #  res = req.request_head(url.path)
+    #  if res.code != "200"
+    #    @remove_count += 1
+    #    t.active_image_version = 0
+    #    t.image_versions = 0
+    #    t.save
+    #  else
+    #    @active_count += 1
+    #  end
+    #end
   end
 
   def convert_for_beta

@@ -11,6 +11,7 @@ ProjectLimelight::Application.routes.draw do
         delete '' => 'follows#destroy', :type => 'User'
       end
 
+      get 'notifications' => 'users#notifications'
       get 'following_users' => 'users#following_users'
       get 'following_topics' => 'users#following_topics'
       get 'followers' => 'users#followers'

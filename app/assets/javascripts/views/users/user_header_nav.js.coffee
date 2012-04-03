@@ -3,7 +3,11 @@ class LL.Views.UserHeaderNav extends Backbone.View
   id: 'header-user-nav'
   className: 'dropdown'
 
+  events:
+    'click .notifications': 'showNotifications'
+
   initialize: ->
+    @notifications = null
 
   render: =>
     $(@el).html(@template(user: @model))
@@ -13,3 +17,11 @@ class LL.Views.UserHeaderNav extends Backbone.View
       score = new LL.Views.Score(model: @model)
       $(@el).find('.numbers').append(score.render().el)
     @
+
+  showNotifications: =>
+    if @notifications
+      $(@notifications.el).toggle('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+    else
+      collection = LL.App.Notifications
+      @notifications = new LL.Views.UserNotifications(collection: collection)
+      collection.fetch()

@@ -125,7 +125,11 @@ class UsersController < ApplicationController
     @description = "Here a user can edit their settings: personal info, profile picture, and notification settings"
   end
 
+  def notifications
+    not_found("User not found") unless current_user
 
+    @notifications = Notification.where(:user_id => current_user.id).order_by(:created_at, :desc).to_a
+  end
 
 
 

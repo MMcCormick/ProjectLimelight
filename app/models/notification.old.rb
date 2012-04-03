@@ -1,34 +1,30 @@
+# TODO: update denorms for all those snippets!
 class Notification
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  cache
+
   field :active, :default => true
   field :message
   field :type
-  field :update_count, :default => 1 # how many times has this notification been used (comment comment comment) from the same user on the same object would create 1 notification that is updated
-  field :notify, :default => false
   field :read, :default => false
+  field :notify, :default => false
   field :emailed, :default => false
-  field :pushed, :default => false
   field :user_id
-
-  embeds_one :triggered_by, as: :user_assignable, :class_name => 'UserSnippet'
-  embeds_one :object, :as => :post_assignable, :class_name => 'PostSnippet'
+  field :triggered_by_emailed, :default => []
+  embeds_many :triggered_by, as: :user_assignable, :class_name => 'UserSnippet'
+  embeds_one :object, :as => :core_object_assignable, :class_name => 'PostSnippet'
   embeds_one :object_user, :as => :user_assignable, :class_name => 'UserSnippet'
 
   index(
     [
-      [ :user_id, Mongo::ASCENDING ],
-      [ :created_at, Mongo::DESCENDING ]
+      [ :user_id, Mongo::DESCENDING ],
+      [ :updated_at, Mongo::DESCENDING ]
     ]
   )
-  index(
-    [
-      [ :user_id, Mongo::ASCENDING ],
-      [ :type, Mongo::ASCENDING ]
-    ]
-  )
-
+  index "object_user"
+  index "triggered_by"
 
   belongs_to :user
 
@@ -75,9 +71,18 @@ class Notification
       when :follow
         count > 1 ? 'are following you' : 'is following you'
       when :also # also signifies that someone has also responded to something your responded to
-        "also commented on #{object_user.first_name}'s post".html_safe
-      when :comment
-        "commented on your post".html_safe
+        "also replied to #{object_user.username}'s comment on the #{object.type.downcase} '#{object.name}'".html_safe
+      when :mention
+        "mentioned you in their #{object.type.downcase} '#{object.name}'".html_safe
+      when :reply
+        if object.comment_id
+          name = object_user.id == user_id ? 'your' : "#{object_user.username}'s"
+          "replied to your comment on #{name} #{object.type.downcase} '#{object.name}'".html_safe
+        else
+          "replied to your #{object.type.downcase} '#{object.name}'".html_safe
+        end
+      when :share
+        "shared #{object.type.downcase} '#{object.name}'".html_safe
       else
         "did something weird... this is a mistake and the Limelight team has been notified to fix it!"
     end
@@ -98,94 +103,103 @@ class Notification
     # Creates and optionally sends a notification for a user
     # target_user = the user object we are adding the notification for
     # type = the type of notification (string)
-    # notify = bool wether to send the notification or not via email and/or push message
+    # notify = bool whether to send the notification or not via email and/or push message
     # triggered_by_user = the user object that triggered this notification, if there is one
+    # date_range_aggregate = array[from, to]. If specified, will attempt to only create one notification of a given type between this range
     # message = optional message
     # object = optional object this notification is attached to
     # object_user = optional user associated with the object the notification is about
     # comment = optional comment this notification is attached to
-    def add(target_user, type, notify, triggered_by_user=nil, message=nil, object=nil, object_user=nil, comment=nil)
-      return if !target_user || (triggered_by_user && target_user.id == triggered_by_user.id)
+    def add(target_user, type, notify, triggered_by_user=nil, date_range_aggregate=nil, message=nil, mark_unread=nil, object=nil, object_user=nil, comment=nil)
+      return if target_user.id == triggered_by_user.id
 
       # Get a previous notification if there is one
-      notification = Notification.where(:user_id => target_user.id, :type => type)
-      if triggered_by_user
-        notification = notification.where('triggered_by._id' => triggered_by_user.id)
+      notification = Notification.where(:user_id => target_user.id)
+      if date_range_aggregate
+        notification = notification.where(:created_at.gte => date_range_aggregate[0], :created_at.lte => date_range_aggregate[1])
       end
+      notification = notification.where(:type => type)
       if object
         notification = notification.where('object._id' => object.id)
+        if comment
+          notification = notification.where('object.comment_id' => comment.id)
+        end
+      else
+        # we don't aggregate around read notification unless there is an object attached
+        # for example follow notifications create a new notification if the user has read their previous follow notification
+        notification = notification.where(:read => false)
       end
       notification = notification.first
 
       new_notification = false
-      if notification
-        new_notification = true if notification.read == true
-        notification.created_at = Time.now
-        notification.update_count += 1
-        notification.read = false
-        notification.emailed = false
-        notification.pushed = false
-      else
+      unless notification
         new_notification = true
         notification = Notification.new(
                 :user_id => target_user.id,
                 :type => type,
                 :message => message
         )
-
-        if triggered_by_user
-          notification.triggered_by = UserSnippet.new(
-              :username => triggered_by_user.username,
-              :first_name => triggered_by_user.first_name,
-              :last_name => triggered_by_user.last_name,
-              :public_id => triggered_by_user.public_id,
-              :fbuid => triggered_by_user.fbuid
-          )
-          notification.triggered_by.id = triggered_by_user.id
-        end
-
         if object
           notification.object = PostSnippet.new(
-                  :night_type => object.night_type
+                  :name => object.name,
+                  :type => object.class.name.demodulize,
+                  :public_id => object.public_id
           )
           notification.object.id = object.id
           notification.object.comment_id = comment.id if comment
         end
-
         if object_user
           notification.object_user = UserSnippet.new(
+              :_id => object_user.id,
               :username => object_user.username,
               :first_name => object_user.first_name,
               :last_name => object_user.last_name,
-              :public_id => object_user.public_id,
-              :fuid => object_user.fuid
+              :public_id => object_user.public_id
           )
-          notification.object_user.id = object_user.id
         end
+      end
+      notification.notify = notify
 
-        notification.notify = notify
+      #if always_notify
+      #  notification.triggered_by_emailed.delete(triggered_by_user.id)
+      #end
+
+      new_trigger = false
+      trigger_notified = notification.triggered_by_emailed.include?(triggered_by_user.id) ? true : false
+      if triggered_by_user
+        new_trigger = notification.add_triggered_by(triggered_by_user)
       end
 
-      Pusher["#{target_user.id.to_s}_private"].trigger('notification', notification.to_json)
+      if mark_unread || (notification.notify && !trigger_notified)
+        if notification.read == true
+          new_notification = true
+        end
+        notification.read = false
+        notification.emailed = false
+      end
 
-      if notification.save
+      Pusher["#{target_user.id.to_s}_private"].trigger('notification', {
+              :id => target_user.id.to_s,
+              :message => (message ? message : "#{triggered_by_user.username} #{notification.notification_text(1)}"),
+              :url => ''
+      })
+
+      if target_user.notify_email &&
+            (type.to_s == "follow" && target_user.email_follow == "2" ||
+            type.to_s == "mention" && target_user.email_mention == "2" ||
+            type.to_s == "share" && target_user.email_share == "2" ||
+            %w(reply also).include?(type.to_s) && target_user.email_comment == "2")
+        NotifyNowMailer.notify(triggered_by_user, target_user, notification).deliver
+        notification.set_emailed
+      end
+
+      if notification.save && (!notification.read || new_trigger || !trigger_notified)
         if new_notification
           target_user.unread_notification_count += 1
-
-          if notification.notify
-            # TODO: Only send one every 5 minutes
-            if target_user.device_token  # pushing notification
-              if Notification.send_push_notification(target_user.device_token, target_user.device_type, "#{triggered_by_user.fullname} #{notification.notification_text(1)}")
-                target_user.last_notified = Time.now
-                notification.pushed = true
-                notification.save
-              end
-            else # emailing notification
-              Resque.enqueue_in(30.minutes, SendUserNotification, target_user.id.to_s)
-            end
-          end
-
           target_user.save
+        end
+        if notification.notify
+          #Resque.enqueue_in(30.minutes, SendUserNotification, target_user.id.to_s)
         end
       end
     end
@@ -218,25 +232,6 @@ class Notification
           notification.save
         end
       end
-    end
-
-    def send_push_notification(device_token, device_type, message)
-      case device_type
-        when 'Android'
-          notification = {
-            :schedule_for => [10.seconds.from_now],
-            :apids => [device_token],
-            :android => {:alert => message}
-          }
-        when 'IOS'
-          notification = {
-            :schedule_for => [10.seconds.from_now],
-            :device_tokens => [device_token],
-            :aps => {:alert => message}
-          }
-      end
-
-      Urbanairship.push(notification) if notification
     end
 
   end

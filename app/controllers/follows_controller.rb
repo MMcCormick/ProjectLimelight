@@ -1,6 +1,8 @@
 class FollowsController < ApplicationController
   before_filter :authenticate_user!
 
+  respond_to :json
+
   def create
     if ['User', 'Topic'].include? params[:type]
       target = Kernel.const_get(params[:type]).find(params[:id])
@@ -25,9 +27,7 @@ class FollowsController < ApplicationController
       status = 400
     end
 
-    respond_to do |format|
-      format.json { render :json => response, :status => status }
-    end
+    render :json => response, :status => status
   end
 
   def destroy
@@ -55,9 +55,7 @@ class FollowsController < ApplicationController
       status = 400
     end
 
-    respond_to do |format|
-      format.json { render :json => response, :status => status }
-    end
+    render :json => response, :status => status
   end
 
 end

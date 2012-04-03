@@ -9,9 +9,8 @@
   </div>
 
   <div class='profile-img'>
-    <img src='<%= @user.get('images').cropped.tiny %>' />
+    <img src='<%= @user.get('images').square.small %>' />
   </div>
-
 
   <ul class="dropdown-menu right">
     <li>

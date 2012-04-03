@@ -77,19 +77,33 @@
       margin: 5px 0 10px;
     }
   }
-  .email-settings {
+  .email-settings,
+  .image-settings {
     font-size: 15px;
     .field {
       position: relative;
       padding: 15px 0;
 
       .btn-group,
-      .s-btn {
+      .s-btn,
+      a.facebook {
         position: absolute;
         right: 0px;
         top: 50%;
         margin-top: -14px;
       }
+      a.facebook { margin-top: -11px; }
+    }
+  }
+  .image-settings {
+    padding-bottom: 20px;
+    .profile-image {
+      float: left;
+      margin: 0 20px 0 0;
+    }
+    .upload {
+      float: right;
+      margin: 10px 0;
     }
   }
   .note {

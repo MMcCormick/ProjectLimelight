@@ -209,7 +209,7 @@ class Post
     elsif user_id == user.id
       nil
     else
-      like = self.likes.new(user.attributes)
+      like = self.likes.new(user.attributes.merge({:fbuid => user.fbuid, :twuid => user.twuid, :use_fb_image => user.use_fb_image}))
       like.id = user.id
       user.likes_count += 1
       amount = add_pop_action(:lk, :a, user)
@@ -644,7 +644,8 @@ class Post
 
   # Set some denormilized user data
   def set_user_snippet
-    self.build_user_snippet({:public_id => user.public_id, :username => user.username, :first_name => user.first_name, :last_name => user.last_name})
+    self.build_user_snippet({:public_id => user.public_id, :username => user.username, :first_name => user.first_name,
+                             :last_name => user.last_name, :fbuid => user.fbuid, :twuid => user.twuid, :use_fb_image => user.use_fb_image})
     self.user_snippet.id = user.id
   end
 

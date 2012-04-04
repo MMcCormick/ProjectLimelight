@@ -11,7 +11,7 @@
 
 <% if @post.get('images'): %>
   <div class='img'>
-    <img src='<%= @post.get('images').fit.medium %>' alt='' />
+    <img src='<%= @post.get('images').fit.large %>' alt='' />
 
     <% if @post.get('video'): %>
       <div class='ll-video-play'></div>

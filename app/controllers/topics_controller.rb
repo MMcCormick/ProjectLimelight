@@ -1,8 +1,6 @@
 class TopicsController < ApplicationController
   include ImageHelper
 
-  caches_action :default_picture, :cache_path => Proc.new { |c| "#{c.params[:id]}-#{c.params[:w]}-#{c.params[:h]}-#{c.params[:m]}" }
-
   respond_to :html, :json
 
   def index

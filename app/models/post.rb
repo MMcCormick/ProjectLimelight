@@ -487,10 +487,10 @@ class Post
       build_like_feed(items)
     end
 
-    def topic_feed(feed_ids, user_id, display_types, order_by, page)
+    def topic_feed(feed_ids, user_id, display_types, sort, page)
       items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions => {'$in' => feed_ids})
 
-      if order_by == 'newest'
+      if sort == 'newest'
         items = items.order_by(:last_response_time, :desc)
       else
         items = items.order_by(:p, :desc)

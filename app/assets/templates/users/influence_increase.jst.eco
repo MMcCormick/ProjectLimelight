@@ -1,3 +1,3 @@
-<img src="<%= @influence.get('topic').get('images').square.medium %>">
+<img src="<%= @influence.get('topic').get('images').square.small %>">
 <div class="amount">+<%= parseInt(@influence.get('amount')) %> pts</div>
 <div class="name"><%= @influence.get('reason') %></div>

@@ -270,7 +270,8 @@ class LL.Router extends Backbone.Router
 
       LL.App.TopicFeed.id = id
       LL.App.TopicFeed.page = 1
-      LL.App.TopicFeed.fetch({data: {id: id}})
+      LL.App.TopicFeed.sort_value = 'newest'
+      LL.App.TopicFeed.fetch({data: {id: id, sort: 'newest'}})
 
   topicFollowers: (id) ->
     topic = LL.App.Topics.findOrCreate(id, $('#this').data('this'))

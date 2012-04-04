@@ -1,7 +1,7 @@
 <% if @model.get('limelight_post'): %>
   <% if @model.get('limelight_post').get('images'): %>
     <div class="media">
-      <img src="<%= @model.get('limelight_post').get('images').square.medium %>" alt="" />
+      <img src="<%= @model.get('limelight_post').get('images').square.small %>" alt="" />
     </div>
   <% end %>
 <% else: %>

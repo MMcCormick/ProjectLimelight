@@ -29,7 +29,7 @@
     </div>
   <% else if @post.get('images'): %>
     <div class='media'>
-      <img src='<%= @post.get('images').fit.large %>' />
+      <img src='<%= @post.get('images').original %>' />
     </div>
   <% end %>
 
@@ -38,7 +38,7 @@
       <h3>Topics</h3>
       <% for mention in @post.get('topic_mentions'): %>
         <a class="tlink" href="/<%= mention.get('slug') %>">
-          <img src='<%= mention.get('images').square.medium %>' />
+          <img src='<%= mention.get('images').square.small %>' />
           <h5>
             <%= mention.get('name') %>
           </h5>

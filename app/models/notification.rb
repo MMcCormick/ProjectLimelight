@@ -70,10 +70,10 @@ class Notification
     string
   end
 
-  def notification_text(count)
+  def notification_text
     case type.to_sym
       when :follow
-        count > 1 ? 'are following you' : 'is following you'
+        'is following you'
       when :also # also signifies that someone has also responded to something your responded to
         "also commented on #{object_user.first_name}'s post".html_safe
       when :comment
@@ -139,7 +139,10 @@ class Notification
               :first_name => triggered_by_user.first_name,
               :last_name => triggered_by_user.last_name,
               :public_id => triggered_by_user.public_id,
-              :fbuid => triggered_by_user.fbuid
+              :fbuid => triggered_by_user.fbuid,
+              :twuid => triggered_by_user.twuid,
+              :use_fb_image => triggered_by_user.use_fb_image
+
           )
           notification.triggered_by.id = triggered_by_user.id
         end
@@ -158,7 +161,9 @@ class Notification
               :first_name => object_user.first_name,
               :last_name => object_user.last_name,
               :public_id => object_user.public_id,
-              :fuid => object_user.fuid
+              :fbuid => object_user.fbuid,
+              :twuid => object_user.twuid,
+              :use_fb_image => object_user.use_fb_image
           )
           notification.object_user.id = object_user.id
         end
@@ -166,23 +171,21 @@ class Notification
         notification.notify = notify
       end
 
-      Pusher["#{target_user.id.to_s}_private"].trigger('notification', notification.to_json)
-
       if notification.save
         if new_notification
           target_user.unread_notification_count += 1
 
           if notification.notify
             # TODO: Only send one every 5 minutes
-            if target_user.device_token  # pushing notification
-              if Notification.send_push_notification(target_user.device_token, target_user.device_type, "#{triggered_by_user.fullname} #{notification.notification_text(1)}")
-                target_user.last_notified = Time.now
-                notification.pushed = true
-                notification.save
-              end
-            else # emailing notification
-              Resque.enqueue_in(30.minutes, SendUserNotification, target_user.id.to_s)
-            end
+            #if target_user.device_token  # pushing notification
+            #  if Notification.send_push_notification(target_user.device_token, target_user.device_type, "#{triggered_by_user.fullname} #{notification.notification_text(1)}")
+            #    target_user.last_notified = Time.now
+            #    notification.pushed = true
+            #    notification.save
+            #  end
+            #else # emailing notification
+            #  Resque.enqueue_in(30.minutes, SendUserNotification, target_user.id.to_s)
+            #end
           end
 
           target_user.save

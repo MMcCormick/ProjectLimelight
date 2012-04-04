@@ -19,6 +19,10 @@ node(:created_at_day) do |n|
   pretty_day(n.created_at)
 end
 
+node :sentence do |n|
+  n.notification_text
+end
+
 child :triggered_by => :triggered_by do |n|
   extends "users/show"
 end

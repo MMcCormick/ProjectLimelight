@@ -106,7 +106,7 @@ class PostsController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     topic_ids = Neo4j.pull_from_ids(topic.id).to_a
-    @posts = Post.topic_feed(topic_ids << topic.id, current_user.id, session[:feed_filters][:display], session[:feed_filters][:sort], page)
+    @posts = Post.topic_feed(topic_ids << topic.id, current_user.id, session[:feed_filters][:display], params[:sort], page)
   end
 
   # Post responses from a users friends

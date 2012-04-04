@@ -91,12 +91,16 @@ module Limelight #:nodoc:
       attr_accessor :remote_image_url
     end
 
-    def available_dimensions
-      [[30,30],[50,50],[100,100],[300,300],[165,0],[190,0],[695,0]]
+    def size_dimensions
+      {:small => 50, :normal => 100, :large => 200}
+    end
+
+    def available_sizes
+      [:small, :normal, :large]
     end
 
     def available_modes
-      ['fillcropmid', 'fit']
+      [:square, :fit]
     end
 
     def filepath
@@ -122,25 +126,22 @@ module Limelight #:nodoc:
         else
           "http://graph.facebook.com/#{fbuid}/picture?type=#{size}"
         end
-      elsif self.class.name == 'UserMention' || self.class.name == 'UserSnippet'
-        if original
-          "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
-        else
-          "#{S3['image_prefix']}/#{filepath}/#{version}/#{mode}_#{size}.png"
-        end
       else
         if image_versions == 0
-          hash = Digest::MD5.hexdigest(self.email.downcase)+'.jpeg'
-          "http://www.gravatar.com/avatar/#{hash}?s=" +
-              if size == :small then "50" elsif size == :normal then "100" else "200" end +
-          "&d=identicon"
-        elsif processing_image
-          "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+          if ["User", "UserSnippet", "UserMention"].include?(self.class.name)
+            "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
+          elsif ["Topic", "TopicSnippet", "TopicMention"].include?(self.class.name)
+            "#{S3['image_prefix']}/defaults/topics/#{size}.png"
+          end
         else
-          if original
+          if processing_image
             "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
           else
-            "#{S3['image_prefix']}/#{filepath}/#{version}/#{mode}_#{size}.png"
+            if original
+              "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+            else
+              "#{S3['image_prefix']}/#{filepath}/#{version}/#{mode}_#{size}.png"
+            end
           end
         end
       end
@@ -175,28 +176,26 @@ module Limelight #:nodoc:
         original_h = i.rows
 
         # Generate all the image versions we need
-        available_dimensions.each do |dimensions|
+        available_sizes.each do |size|
           available_modes.each do |mode|
-            # when we're not limiting one dimension fillcropmid doesn't make sense
-            next if mode == 'fillcropmid' && dimensions.include?(0)
-
             # is it already on S3?
-            unless AWS::S3::S3Object.exists? "#{filepath}/#{version}/#{dimensions[0]}_#{dimensions[1]}_#{mode}.png", S3['image_bucket']
-              width = dimensions[0] == 0 ? 999999 : dimensions[0]
-              height = dimensions[1] == 0 ? 999999 : dimensions[1]
+            unless AWS::S3::S3Object.exists? "#{filepath}/#{version}/#{mode}_#{size}.png", S3['image_bucket']
+              dimensions = size_dimensions
+              width = dimensions[size]
+              height = mode == :fit ? 999999 : dimensions[size]
 
               # we don't resize larger than the original image. if the original is smaller, use that max size and mantain the ratio
               if original_w < width
                 width = original_w
-                unless dimensions[1] == 0
+                unless mode == :fit
                   height = original_h
                 end
               end
 
               case mode
-                when 'fillcropmid'
+                when :square
                   new_image = i.resize_to_fill(width, height)
-                when 'fit'
+                when :fit
                   new_image = i.resize_to_fit(width, height)
                 else
                   new_image = nil
@@ -204,7 +203,7 @@ module Limelight #:nodoc:
 
               # upload to s3
               if new_image
-                target = "#{filepath}/#{version}/#{dimensions[0]}_#{dimensions[1]}_#{mode}.png"
+                target = "#{filepath}/#{version}/#{mode}_#{size}.png"
                 AWS::S3::S3Object.store(
                   target,
                   new_image.to_blob,

@@ -10,6 +10,7 @@ class FollowsController < ApplicationController
         if current_user.follow_object(target)
           if params[:type] == 'User'
             Notification.add(target, :follow, true, current_user)
+            #Pusher["#{target_user.id.to_s}_private"].trigger('notification', notification.to_json)
           end
           current_user.save
           response = build_ajax_response(:ok, nil, "You're following #{target.name}", nil, { })

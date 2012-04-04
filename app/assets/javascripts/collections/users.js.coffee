@@ -4,10 +4,13 @@ class LL.Collections.Users extends Backbone.Collection
   findOrCreate: (id, data=null) ->
     model = @get(id)
 
-    return model if model
+    if model
+      if data
+        model.set(data)
+      return model
 
     if data
-      model = new LL.Models.User(data)
+      model = data
       model.id = id
 
     unless model

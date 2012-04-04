@@ -17,5 +17,9 @@ class LL.Views.TopicPageHeader extends Backbone.View
         on: (if @page == 'followers' then true else false)
       }
     ]
+
+    if @page == 'feed'
+      header.showSorting = true
+
     header.render()
     @

@@ -25,7 +25,7 @@ class LL.Views.PageHeader extends Backbone.View
         follow = new LL.Views.FollowButton(model: @model)
         $(@el).find('.top').append(follow.render().el)
 
-    if @showSorting
+    if @showSorting == true
       $(@el).find('.sorting').show()
 
     for link in @links

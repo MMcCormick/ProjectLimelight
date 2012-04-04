@@ -1,4 +1,4 @@
 <div class="score-pts"><span>+<%= parseInt(@influence.get('amount')) %></span> pts</div>
 <div class="user"><%= @influence.get('user').get('username') %></div>
-<img src="<%= @influence.get('topic').get('images').square.medium %>">
+<img src="<%= @influence.get('topic').get('images').square.normal %>">
 <div class="topic"><%= @influence.get('topic').get('name') %></div>

@@ -131,7 +131,7 @@ module Limelight #:nodoc:
           if ["User", "UserSnippet", "UserMention"].include?(self.class.name)
             "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
           elsif ["Topic", "TopicSnippet", "TopicMention"].include?(self.class.name)
-            "#{S3['image_prefix']}/defaults/topics/#{size}.png"
+            "#{S3['image_prefix']}/defaults/topics/#{size}.gif"
           end
         else
           if processing_image

@@ -20,5 +20,5 @@ class LL.Views.RootTalk extends Backbone.View
     @
 
   postShow: (e) =>
-    return if $(e.target).hasClass('ulink,score-pts,like') || $(e.target).is('img')
+    return if $(e.target).is('.ulink, .score-pts, .like') || $(e.target).is('img')
     LL.Router.navigate("talks/#{@model.get('id')}", trigger: true)

@@ -15,11 +15,11 @@ node(:type) do |user|
 end
 
 node(:id) do |user|
-  user.username.downcase
+  user.id.to_s
 end
 
-node(:_id) do |user|
-  user.id.to_s
+node(:slug) do |user|
+  user.username.downcase
 end
 
 node(:images) do |user|

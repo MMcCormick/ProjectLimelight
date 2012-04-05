@@ -3,42 +3,9 @@ require "net/http"
 class TestingController < ApplicationController
 
   def test
-
-    users = User.all
-    users.each do |user|
-      user.image_versions = 0
-      user.active_image_version = 0
-
-      if user.fbuid
-        user.use_fb_image = true
-      end
-
-      user.save
-      user.update_social_denorms
-    end
-
-    #topics = Topic.where(:active_image_version => {'$gt' => 0}).to_a
-
-    #topics = Topic.where(:active_image_version => {'$gt' => 0}).limit(30).skip(270)
-    #topics.each do |topic|
-    #  topic.process_version(topic.active_image_version)
-    #  topic.make_image_version_current(topic.active_image_version)
-    #end
-
-    #topics = Topic.where(:active_image_version => {'$gt' => 0})
-    #topics.each do |t|
-    #  url = URI.parse("http://img.p-li.me/topics/#{t.id.to_s}/current/original.png")
-    #  req = Net::HTTP.new(url.host, url.port)
-    #  res = req.request_head(url.path)
-    #  if res.code != "200"
-    #    @remove_count += 1
-    #    t.active_image_version = 0
-    #    t.image_versions = 0
-    #    t.save
-    #  else
-    #    @active_count += 1
-    #  end
-    #end
+    post = Post.all.first
+    av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first)
+    foo = av.render(:template => 'posts/show.json.rabl', :post => post)
   end
 
   def convert_for_beta

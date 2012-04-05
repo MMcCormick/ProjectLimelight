@@ -2,6 +2,9 @@ class LL.Views.UserNotifications extends Backbone.View
   template: JST['users/notifications']
   id: 'user-notifications'
 
+  events:
+    'click .close': 'togglePanel'
+
   initialize: ->
     @collection.on('reset', @render)
     @collection.on('add', @prependNotification)
@@ -21,10 +24,30 @@ class LL.Views.UserNotifications extends Backbone.View
 
     $(@el).show('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
 
+    @clearNotifications()
+
+    self = @
+
     @
 
   appendNotification: (notification) =>
     view = new LL.Views.UserNotification(model: notification)
-    $(@el).find('ul').append(view.render().el)
+    $(@el).find('ul').append($(view.render().el).show())
 
   prependNotification: (notification) =>
+    view = new LL.Views.UserNotification(model: notification)
+    $(@el).find('ul').prepend(view.render().el)
+    $(view.el).effect 'slide', {direction: 'left', mode: 'show'}, 500
+
+  togglePanel: =>
+    $(@el).toggle('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+
+  clearNotifications: =>
+    if LL.App.current_user.get('unread_notification_count') > 0
+      $.ajax
+        url: '/api/users'
+        type: 'put'
+        dataType: 'json'
+        data: {'unread_notification_count': 0}
+        complete: ->
+          LL.App.current_user.set('unread_notification_count', 0)

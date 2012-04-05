@@ -26,7 +26,7 @@ class LL.Views.FollowButton extends Backbone.View
     self = @
 
     options = {
-      data: {id: @model.get('_id')}
+      data: {id: @model.get('id')}
       dataType: 'json'
       beforeSend: ->
         $(self.el).addClass('disabled')

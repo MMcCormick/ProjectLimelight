@@ -48,6 +48,7 @@ class UsersController < ApplicationController
     current_user.use_fb_image = params[:use_fb_image] == "true" if params[:use_fb_image]
 
     current_user.username = params[:username] if params[:username]
+    current_user.unread_notification_count = params[:unread_notification_count] if params[:unread_notification_count]
 
     if current_user.save
       response = build_ajax_response(:ok)

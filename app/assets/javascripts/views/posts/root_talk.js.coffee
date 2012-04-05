@@ -3,6 +3,9 @@ class LL.Views.RootTalk extends Backbone.View
   tagName: 'div'
   className: 'root talk'
 
+  events:
+    'click': 'postShow'
+
   initialize: ->
 
   render: ->
@@ -15,3 +18,7 @@ class LL.Views.RootTalk extends Backbone.View
     $(@el).find('.actions').prepend(score.render().el)
 
     @
+
+  postShow: (e) =>
+    return if $(e.target).hasClass('ulink,score-pts,like') || $(e.target).is('img')
+    LL.Router.navigate("talks/#{@model.get('id')}", trigger: true)

@@ -9,8 +9,10 @@ class FollowsController < ApplicationController
       if current_user && target
         if current_user.follow_object(target)
           if params[:type] == 'User'
-            Notification.add(target, :follow, true, current_user)
-            #Pusher["#{target_user.id.to_s}_private"].trigger('notification', notification.to_json)
+            @notification = Notification.add(target, :follow, true, current_user)
+            if @notification
+              Pusher["#{target.id.to_s}_private"].trigger('new_notification', render_to_string(:template => 'users/notification.json.rabl'))
+            end
           end
           current_user.save
           response = build_ajax_response(:ok, nil, "You're following #{target.name}", nil, { })
@@ -36,10 +38,12 @@ class FollowsController < ApplicationController
       target = Kernel.const_get(params[:type]).find(params[:id])
       if current_user && target
         if current_user.unfollow_object(target)
-          current_user.save
           if params[:type] == 'User'
             Notification.remove(target, :follow, current_user)
           end
+
+          target.save
+          current_user.save
 
           response = build_ajax_response(:ok, nil, nil, nil, { })
           status = 201

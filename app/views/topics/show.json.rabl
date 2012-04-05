@@ -9,11 +9,11 @@ node :type do |t|
 end
 
 node(:id) do |topic|
-  topic.slug
+  topic.id.to_s
 end
 
-node(:_id) do |topic|
-  topic.id.to_s
+node(:slug) do |topic|
+  topic.slug
 end
 
 node(:images) do |topic|

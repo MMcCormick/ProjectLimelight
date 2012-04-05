@@ -392,17 +392,6 @@ module Limelight #:nodoc:
       topic_mentions.map{|m| m.id}
     end
 
-    def send_mention_notifications
-      sent = []
-      self.user_mentions.each do |mentioned_user|
-        unless sent.include?(mentioned_user.id)
-          target_user = User.find(mentioned_user.id)
-          Notification.add(target_user, :mention, true, self.user, nil, nil, true, self, self.user)
-          sent << target_user.id
-        end
-      end
-    end
-
     #
     # SETTING MENTIONS
     #

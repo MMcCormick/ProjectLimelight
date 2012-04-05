@@ -77,7 +77,7 @@ class User
   field :following_topics, :default => []
   field :followers_count, :type => Integer, :default => 0
   field :likes_count, :type => Integer, :default => 0
-  field :unread_notification_count, :default => 0
+  field :unread_notification_count, :type => Integer, :default => 0
   field :vote_pos_count, :default => 0
   field :vote_neg_count, :default => 0
   field :vote_ratio, :type => Float, :default => 0

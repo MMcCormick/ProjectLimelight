@@ -74,6 +74,8 @@ class Notification
     case type.to_sym
       when :follow
         'is following you'
+      when :mention
+        "mentioned you in a post"
       when :also # also signifies that someone has also responded to something your responded to
         "also commented on #{object_user.first_name}'s post".html_safe
       when :comment
@@ -148,9 +150,10 @@ class Notification
         end
 
         if object
-          notification.object = PostSnippet.new(
-                  :night_type => object.night_type
-          )
+          notification.object = PostSnippet.new
+          notification.object.type = object._type
+          notification.object.name = object.name
+          notification.object.public_id = object.public_id
           notification.object.id = object.id
           notification.object.comment_id = comment.id if comment
         end
@@ -173,7 +176,7 @@ class Notification
 
       if notification.save
         if new_notification
-          target_user.unread_notification_count += 1
+          target_user.unread_notification_count = target_user.unread_notification_count.to_i + 1
 
           if notification.notify
             # TODO: Only send one every 5 minutes
@@ -190,15 +193,14 @@ class Notification
 
           target_user.save
         end
+
+        notification
       end
     end
 
-    def remove(target_user, type, triggered_by_user=nil, date_range_aggregate=nil, object=nil, comment=nil)
+    def remove(target_user, type, triggered_by_user=nil, object=nil, comment=nil)
       # find the notification
       notification = Notification.where(:user_id => target_user.id)
-      if date_range_aggregate
-        notification = notification.where(:created_at.gte => date_range_aggregate[0], :created_at.lte => date_range_aggregate[1])
-      end
       if object
         notification = notification.where('object._id' => object.id)
         if comment
@@ -211,35 +213,11 @@ class Notification
       notification = notification.where(:type => type).first
 
       if notification
-        notification.triggered_by.where(:_id => triggered_by_user.id).delete_all
-        if notification.triggered_by.length == 0
-          unless notification.read
-            target_user.unread_notification_count -= 1
-          end
-          notification.destroy
-        else
-          notification.save
+        unless notification.read
+          target_user.unread_notification_count = target_user.unread_notification_count.to_i - 1
         end
+        notification.destroy
       end
-    end
-
-    def send_push_notification(device_token, device_type, message)
-      case device_type
-        when 'Android'
-          notification = {
-            :schedule_for => [10.seconds.from_now],
-            :apids => [device_token],
-            :android => {:alert => message}
-          }
-        when 'IOS'
-          notification = {
-            :schedule_for => [10.seconds.from_now],
-            :device_tokens => [device_token],
-            :aps => {:alert => message}
-          }
-      end
-
-      Urbanairship.push(notification) if notification
     end
 
   end

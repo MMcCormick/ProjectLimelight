@@ -5,7 +5,6 @@ class Talk < Post
   has_many :comments
   validates :content, :presence => true
 
-  after_create :send_mention_notifications
   after_update :talk_is_cheap
 
   def name

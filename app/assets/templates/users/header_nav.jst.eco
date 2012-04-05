@@ -5,7 +5,9 @@
   </div>
 
   <div class='numbers'>
-    <span class='notifications' rel="tooltip" data-placement='bottom' title='<%= @user.get('unread_notification_count') %> Unread Notifications'><%= @user.get('unread_notification_count') %></span>
+    <span class='notifications' rel="tooltip" data-placement='bottom' title='<%= @user.get('unread_notification_count') %> Unread Notifications'>
+      <span><%= @user.get('unread_notification_count') %></span>
+    </span>
   </div>
 
   <div class='profile-img'>

@@ -60,7 +60,7 @@
     <div id="picture_pupB"></div>
   </div>
   <div class="modal-footer">
-    <input type='submit' value='Submit Post' class="btn btn-success" data-loading-text='Submitting...' autocomplete='off' />
+    <div class="btn btn-success submit" data-loading-text='Submitting...'>Submit</div>
     <% if @modal: %>
       <span class="cancel btn">Cancel</span>
     <% end %>

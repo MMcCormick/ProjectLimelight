@@ -28,10 +28,10 @@ class LL.Views.PostShow extends Backbone.View
     $(@el).find('.talk').html(view.render().el)
     i = 1
     for topic in @model.get('topic_mentions')
-      view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.get('name'), topic.get('_id'))
+      view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.get('name'), topic.get('id'))
       break if i == 2
       i++
-    view.model.set('parent_id', @model.get('_id'))
+    view.model.set('parent_id', @model.get('id'))
     $(view.el).find('.icons').remove()
 
     unless @loaded

@@ -85,7 +85,7 @@ class LL.Views.PostsFeed extends Backbone.View
 
   addPost: (root_post) =>
     if root_post.get('root').get('type') != 'Talk'
-      root_id = root_post.get('root').get('_id')
+      root_id = root_post.get('root').get('id')
 
       channel = LL.App.get_subscription(root_id)
       unless channel
@@ -95,7 +95,7 @@ class LL.Views.PostsFeed extends Backbone.View
         channel.bind 'new_response', (data) ->
           if root_post.get('root')
             post = LL.App.Posts.findOrCreate(data.id, new LL.Models.Post(data))
-            if LL.App.current_user.get('_id') == post.get('user')._id || LL.App.current_user.following(post.get('user')._id)
+            if LL.App.current_user.get('id') == post.get('user').id || LL.App.current_user.following(post.get('user').id)
               root_post.get('personal_responses').push(post)
             else
               root_post.get('public_responses').unshift(post)

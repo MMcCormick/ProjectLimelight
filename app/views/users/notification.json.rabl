@@ -4,7 +4,6 @@ attributes :read,
            :type,
            :user_id,
            :message,
-           :object,
            :created_at
 
 node(:id) do |n|
@@ -21,6 +20,10 @@ end
 
 node :sentence do |n|
   n.notification_text
+end
+
+child :object => :object do |n|
+  extends "posts/show_snippet"
 end
 
 child :triggered_by => :triggered_by do |n|

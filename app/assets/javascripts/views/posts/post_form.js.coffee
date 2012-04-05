@@ -3,7 +3,7 @@ class LL.Views.PostForm extends Backbone.View
   id: 'post-form'
 
   events:
-      "submit form": "createPost"
+      "click .submit": "createPost"
       "click .cancel": "destroyForm"
       "click .icons .icon:not(.cancel-preview)": "activateType"
       "click .icons .cancel-preview": "removeEmbedly"
@@ -60,8 +60,8 @@ class LL.Views.PostForm extends Backbone.View
 
     @
 
-  createPost: (e) ->
-    return if e.keyCode == 13 || e.keyCode == 89
+  createPost: (e) =>
+    return if $(@el).find('.btn-success').hasClass('disabled') || e.keyCode == 13 || e.keyCode == 89
 
     e.preventDefault()
 
@@ -73,15 +73,15 @@ class LL.Views.PostForm extends Backbone.View
     @collection.create attributes,
       wait: true
       beforeSend: ->
-        $(self.el).find('.btn-success').button('loading')
+        $(self.el).find('.btn-success').addClass('disabled').text('Submitting...')
       success: (data) ->
-        $(self.el).find('.btn-success').button('reset')
+        $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
         self.destroyForm()
       error: (jqXHR, textStatus, errorThrown) ->
-        $(self.el).find('.btn-success').button('reset')
+        $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
         globalError(textStatus, $(self.el))
       complete: ->
-        $(self.el).find('.btn-success').button('reset')
+        $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
 
   destroyForm: ->
     $(@el).modal('hide')

@@ -3,75 +3,9 @@ require "net/http"
 class TestingController < ApplicationController
 
   def test
-    connection = "facebook"
-    if connection == "facebook" && current_user.auto_follow_fb # if it's facebook
-      fb = current_user.facebook
-      if fb
-        friends = fb.get_connections("me", "friends")
-        friends_uids = friends.map{|friend| friend['id']}
-        registeredFriends = User.where("social_connects.uid" => {"$in" => friends_uids}, 'social_connects.provider' => 'facebook')
-        registeredFriends.each do |friend|
-          friend.follow_user(current_user) if friend.auto_follow_fb
-          current_user.follow_user(friend) if current_user.auto_follow_fb
-          current_user.save
-        end
-      end
-    elsif connection == "twitter" && current_user.auto_follow_tw
-      tw = current_user.twitter
-      if tw
-        follower_ids = tw.follower_ids.collection
-        registeredFollowers = User.where("social_connects.uid" => {"$in" => follower_ids}, 'social_connects.provider' => 'twitter')
-        registeredFollowers.each do |follower|
-          follower.follow_user(current_user)
-          current_user.save
-        end
-
-        following_ids = tw.friend_ids.collection.map{|id| id.to_s}
-        registeredFollowing = User.where("social_connects.uid" => {"$in" => following_ids}, 'social_connects.provider' => 'twitter')
-        registeredFollowing.each do |following|
-          current_user.follow_user(following)
-          current_user.save
-        end
-      end
-    end
-  end
-
-  def pics
-    users = User.all
-    users.each do |user|
-      user.image_versions = 0
-      user.active_image_version = 0
-
-      if user.fbuid
-        user.use_fb_image = true
-      end
-
-      user.save
-      user.update_social_denorms
-    end
-
-    #topics = Topic.where(:active_image_version => {'$gt' => 0}).to_a
-
-    #topics = Topic.where(:active_image_version => {'$gt' => 0}).limit(30).skip(270)
-    #topics.each do |topic|
-    #  topic.process_version(topic.active_image_version)
-    #  topic.make_image_version_current(topic.active_image_version)
-    #end
-
-    #topics = Topic.where(:active_image_version => {'$gt' => 0})
-    #topics.each do |t|
-    #  url = URI.parse("http://img.p-li.me/topics/#{t.id.to_s}/current/original.png")
-    #  req = Net::HTTP.new(url.host, url.port)
-    #  res = req.request_head(url.path)
-    #  if res.code != "200"
-    #    @remove_count += 1
-    #    t.active_image_version = 0
-    #    t.image_versions = 0
-    #    t.save
-    #  else
-    #    @active_count += 1
-    #  end
-    #end
+    post = Post.all.first
+    av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first)
+    foo = av.render(:template => 'posts/show.json.rabl', :post => post)
   end
 
   def convert_for_beta

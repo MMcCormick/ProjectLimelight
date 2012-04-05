@@ -1,6 +1,6 @@
 <img src='<%= @notification.get('triggered_by').images.square.small %>' />
 <div class='content'>
-  <a href="/users/<%= if @notification.get('triggered_by').username %>"><%= @notification.get('triggered_by').username %></a>
+  <a class="ulink" data-id="<%= @notification.get('triggered_by').id %>" href="/users/<%= @notification.get('triggered_by').username %>"><%= @notification.get('triggered_by').username %></a>
   <%= @notification.get('sentence') %>
 </div>
 <div class='time'>

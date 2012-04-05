@@ -26,7 +26,7 @@ class LL.Views.RootMedia extends Backbone.View
     view.render().el
     i = 1
     for topic in @model.get('topic_mentions')
-      view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.name, topic._id)
+      view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.name, topic.id)
       break if i == 2
       i++
 

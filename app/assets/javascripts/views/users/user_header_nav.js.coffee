@@ -8,20 +8,38 @@ class LL.Views.UserHeaderNav extends Backbone.View
 
   initialize: ->
     @notifications = null
+    @model.bind('change:unread_notification_count', @updateNotificationCount)
 
   render: =>
+    self = @
+
     $(@el).html(@template(user: @model))
 
     # only if the user is signed in
     if @model
       score = new LL.Views.Score(model: @model)
       $(@el).find('.numbers').append(score.render().el)
+
+      # listen for notifications
+      channel = LL.App.get_subscription("#{self.model.get('id')}_private")
+      unless LL.App.get_event_subscription("#{self.model.get('id')}_private", 'new_notification')
+        channel.bind 'new_notification', (data) ->
+          self.model.set('unread_notification_count', self.model.get('unread_notification_count') + 1)
+          if self.notifications
+            notification = self.notifications.collection.findOrCreate(data.id, new LL.Models.Notification(data))
+          createGrowl(false, "#{data.triggered_by.username} #{data.sentence}", 'Notification', 'green')
+
+        LL.App.subscribe_event("#{self.model.get('id')}_private", 'new_notification')
+
     @
 
   showNotifications: =>
     if @notifications
-      $(@notifications.el).toggle('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+      @notifications.togglePanel()
     else
       collection = LL.App.Notifications
       @notifications = new LL.Views.UserNotifications(collection: collection)
       collection.fetch()
+
+  updateNotificationCount: =>
+    $(@el).find('.notifications span').text(@model.get('unread_notification_count')).attr('data-original-title', "#{@model.get('unread_notification_count')} Unread Notifications")

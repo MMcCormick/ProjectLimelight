@@ -7,6 +7,7 @@ class LL.Router extends Backbone.Router
     'users/:id/feed': 'userFeed'
     'users/:id': 'activityFeed'
     'posts/:id': 'postShow'
+    'talks/:id': 'talkShow'
     'pages/:name': 'staticPage'
     'settings': 'settings'
     'activity': 'activityFeed'
@@ -56,7 +57,7 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('user_feed', id)
 
       feed = new LL.Views.PostsFeed(collection: LL.App.UserFeed)
-      feed.channel = "#{user.get('_id')}_realtime"
+      feed.channel = "#{user.get('id')}_realtime"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
@@ -92,7 +93,7 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('activity_feed', id)
 
       feed = new LL.Views.PostsFeed(collection: LL.App.ActivityFeed)
-      feed.channel = "#{user.get('_id')}_activity"
+      feed.channel = "#{user.get('id')}_activity"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
@@ -123,7 +124,7 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('like_feed', id)
 
       feed = new LL.Views.PostsFeed(collection: LL.App.LikeFeed)
-      feed.channel = "#{user.get('_id')}_likes"
+      feed.channel = "#{user.get('id')}_likes"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
@@ -319,6 +320,22 @@ class LL.Router extends Backbone.Router
       $('#feed').html(view.el)
 
     view.render()
+
+  talkShow: (id) ->
+    that = if $('#this').length > 0 && $('#this').data('this').id == id then new LL.Models.Post() else null
+    post = LL.App.Posts.findOrCreate(id, that)
+
+    if LL.App.Feed
+      if LL.App.Modal.get(id)
+        LL.App.Modal.setActive(id).show()
+      else
+        view = new LL.Views.TalkShow(model: post)
+        LL.App.Modal.add(id, view).setActive(id).show()
+    else
+      view = new LL.Views.TalkShow(model: post)
+      $('body').addClass('no-sidebar')
+      $('#feed').html(view.el)
+      view.render()
 
   #######
   # MISC

@@ -18,7 +18,7 @@ class LL.Views.TopicSidebarTalk extends Backbone.View
     view.modal = true
     view.placeholder_text = "Talk about #{@model.get('name')}..."
     view.render().el
-    view.addTopic($(view.el).find('#post-form-mention1'), @model.get('name'), @model.get('_id'), @model.get('id'))
+    view.addTopic($(view.el).find('#post-form-mention1'), @model.get('name'), @model.get('id'), @model.get('id'))
     setTimeout ->
       view.focusTalk()
     , 500

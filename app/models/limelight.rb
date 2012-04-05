@@ -131,7 +131,7 @@ module Limelight #:nodoc:
           if ["User", "UserSnippet", "UserMention"].include?(self.class.name)
             "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
           elsif ["Topic", "TopicSnippet", "TopicMention"].include?(self.class.name)
-            "#{S3['image_prefix']}/defaults/topics/#{size}.png"
+            "#{S3['image_prefix']}/defaults/topics/#{size}.gif"
           end
         else
           if processing_image
@@ -390,17 +390,6 @@ module Limelight #:nodoc:
 
     def mentioned_topic_ids
       topic_mentions.map{|m| m.id}
-    end
-
-    def send_mention_notifications
-      sent = []
-      self.user_mentions.each do |mentioned_user|
-        unless sent.include?(mentioned_user.id)
-          target_user = User.find(mentioned_user.id)
-          Notification.add(target_user, :mention, true, self.user, nil, nil, true, self, self.user)
-          sent << target_user.id
-        end
-      end
     end
 
     #

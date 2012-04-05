@@ -46,6 +46,12 @@ class LL.Views.App extends Backbone.View
     # set the current user
     @current_user = if $('#me').length > 0 then @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user'))) else null
 
+    # listen to the private user channgel
+    if @current_user
+      channel = @get_subscription("#{@current_user.get('id')}_private")
+      unless channel
+        channel = @subscribe("#{@current_user.get('id')}_private")
+
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).resize ->
       self.calculateSiteWidth()

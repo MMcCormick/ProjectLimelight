@@ -23,7 +23,12 @@ class TopicsController < ApplicationController
 
   def show
     # Doesn't use find_by_slug() because it doesn't work after Topic.unscoped (deleted topics are ignored)
-    @topic = Topic.unscoped.where(slug: params[:id]).first
+    if params[:slug]
+      @topic = Topic.unscoped.find_by_slug(params[:slug])
+    else
+      @topic = Topic.unscoped.find(params[:id]).first
+    end
+
     not_found("Topic not found") unless @topic
     authorize! :read, @topic
 

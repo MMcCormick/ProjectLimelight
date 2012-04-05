@@ -169,3 +169,50 @@ $postFontColor: $grayDark;
     }
   }
 }
+
+#talk-show {
+  .post-root {
+    padding: 18px 20px 20px 85px;
+    position: relative;
+
+    .user-image {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .actions-created {
+      margin: 5px 0 0 0;
+      font-size: 16px;
+
+      .actions {
+        .score-pts {
+          margin-right: 15px;
+        }
+
+        .like {
+          padding: 0;
+          font-size: 16px;
+          margin: 0 15px 0 0;
+          color: $greenDarker;
+          font-weight: bold;
+          border: none;
+          background: none;
+          text-shadow: none;
+        }
+      }
+    }
+  }
+  .content {
+    .ulink {
+      font-size: 24px;
+      font-weight: bold;
+      color: $grayDark;
+      margin: 0 10px 0 0;
+    }
+  }
+  h1 {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: normal;
+  }
+}

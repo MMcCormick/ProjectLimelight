@@ -49,7 +49,6 @@ class Post
   before_validation :set_source_snippet
   before_create :set_user_snippet, :current_user_own, :send_tweet, :set_response_to, :set_root
   after_create :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
-  #after_update :expire_caches BETA REMOVE
   after_destroy :remove_from_feeds
 
   # MBM: hot damn lots of indexes. can we do this better? YES WE CAN
@@ -119,17 +118,6 @@ class Post
     end
   end
 
-  # BETA REMOVE
-  #def expire_caches
-  #  ['list', 'grid', 'column'].each do |view|
-  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}")
-  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top-response") # talk list view includes response on feeds but not on show pages.
-  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom-response") # talk list view includes response on feeds but not on show pages.
-  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-top")
-  #    ActionController::Base.new.expire_fragment("teaser-#{id.to_s}-#{view}-bottom")
-  #  end
-  #end
-
   # if required, checks that the given post URL is valid
   def has_valid_url
     if sources.length == 0
@@ -167,35 +155,6 @@ class Post
       user.twitter.update(@tweet_content)
     end
   end
-
-  # Favorites BETA REMOVE
-  #def favorited_by?(user_id)
-  #  favorites.include? user_id
-  #end
-  #
-  #def add_to_favorites(user)
-  #  if favorited_by? user.id
-  #    false
-  #  else
-  #    self.favorites << user.id
-  #    self.favorites_count += 1
-  #    user.add_to_favorites(self)
-  #    Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, 2)
-  #    true
-  #  end
-  #end
-  #
-  #def remove_from_favorites(user)
-  #  if favorited_by? user.id
-  #    self.favorites.delete(user.id)
-  #    self.favorites_count -= 1
-  #    user.remove_from_favorites(self)
-  #    Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, -2)
-  #    true
-  #  else
-  #    false
-  #  end
-  #end
 
   # Likes
   def liked_by?(user_id)

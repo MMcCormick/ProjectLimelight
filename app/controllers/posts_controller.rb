@@ -6,7 +6,12 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.unscoped.find_by_encoded_id(params[:id])
+    if params[:encoded_id]
+      @post = Post.unscoped.find_by_encoded_id(params[:id])
+    else
+      @post = Post.unscoped.find(params[:id])
+    end
+
     not_found("Post not found") unless @post
 
     @title = @post.name
@@ -24,7 +29,21 @@ class PostsController < ApplicationController
       end
 
       if @post.root_id && @post.class.name == 'Talk'
-        Pusher[@post.root_id.to_s].trigger('new_response', render_to_string(:template => 'posts/show'))
+        if @post.root_id
+          Pusher[@post.root_id.to_s].trigger('new_response', render_to_string(:template => 'posts/show'))
+        end
+
+        # send mention notifications
+        user_ids = @post.user_mentions.map{|u| u.id}
+        if user_ids.length > 0
+          users = User.where(:_id => {'$in' => user_ids})
+          users.each do |u|
+            @notification = Notification.add(u, :mention, true, current_user, nil, @post, current_user)
+            if @notification
+              Pusher["#{u.id.to_s}_private"].trigger('new_notification', render_to_string(:template => 'users/notification.json.rabl'))
+            end
+          end
+        end
       end
 
       # send the influence pusher notification

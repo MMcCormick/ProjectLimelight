@@ -46,6 +46,8 @@ class UsersController < ApplicationController
     current_user.weekly_email = params[:weekly_email] == "true" if params[:weekly_email]
 
     current_user.use_fb_image = params[:use_fb_image] == "true" if params[:use_fb_image]
+    current_user.auto_follow_fb = params[:auto_follow_fb] == "true" if params[:auto_follow_fb]
+    current_user.auto_follow_tw = params[:auto_follow_tw] == "true" if params[:auto_follow_tw]
 
     current_user.username = params[:username] if params[:username]
     current_user.unread_notification_count = params[:unread_notification_count] if params[:unread_notification_count]

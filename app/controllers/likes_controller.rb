@@ -8,6 +8,11 @@ class LikesController < ApplicationController
       if like_success
         current_user.save if object.save
 
+        @notification = Notification.add(object.user, :like, true, current_user, nil, object, object.user)
+        if @notification
+          Pusher["#{object.user.id.to_s}_private"].trigger('new_notification', render_to_string(:template => 'users/notification.json.rabl'))
+        end
+
         # send the influence pusher notification
         if object.class.name == 'Talk'
           object.topic_mentions.each do |mention|

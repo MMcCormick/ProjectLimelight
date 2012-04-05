@@ -38,7 +38,7 @@ class PostsController < ApplicationController
         if user_ids.length > 0
           users = User.where(:_id => {'$in' => user_ids})
           users.each do |u|
-            @notification = Notification.add(u, :mention, true, current_user, nil, @post, current_user)
+            @notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
             if @notification
               Pusher["#{u.id.to_s}_private"].trigger('new_notification', render_to_string(:template => 'users/notification.json.rabl'))
             end

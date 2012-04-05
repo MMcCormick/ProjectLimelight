@@ -10,6 +10,8 @@ class LL.Views.UserNotification extends Backbone.View
   render: =>
     $(@el).html(@template(notification: @model))
 
+    $(@el).addClass(@model.get('type'))
+
     if @model.get('read') == false
       $(@el).addClass('unread')
 

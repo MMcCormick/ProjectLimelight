@@ -36,6 +36,15 @@
     &.unread {
       /*background: #E9E9E9;*/
     }
+    &.mention:hover,
+    &.like:hover {
+      background: #F3F3F3;
+      cursor: pointer;
+      .content,
+      .time {
+        cursor: pointer;
+      }
+    }
     img {
       width: 30px;
       height: 30px;

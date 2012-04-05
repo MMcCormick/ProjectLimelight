@@ -93,6 +93,8 @@ class User
   field :weekly_email, :default => true
   field :score, :default => 0.0
   field :use_fb_image, :default => false
+  field :auto_follow_fb, :default => true
+  field :auto_follow_tw, :default => true
 
   auto_increment :public_id
 
@@ -484,6 +486,39 @@ class User
     Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
   end
 
+  def auto_follow (provider)
+    if provider == "facebook" && self.auto_follow_fb
+      fb = self.facebook
+      if fb
+        friends = fb.get_connections("me", "friends")
+        friends_uids = friends.map{|friend| friend['id']}
+        registeredFriends = User.where("social_connects.uid" => {"$in" => friends_uids}, 'social_connects.provider' => 'facebook')
+        registeredFriends.each do |friend|
+          friend.follow_user(self) if friend.auto_follow_fb
+          self.follow_user(friend) if self.auto_follow_fb
+          self.save
+        end
+      end
+    elsif provider == "twitter" && self.auto_follow_tw
+      tw = self.twitter
+      if tw
+        follower_ids = tw.follower_ids.collection
+        registeredFollowers = User.where("social_connects.uid" => {"$in" => follower_ids}, 'social_connects.provider' => 'twitter')
+        registeredFollowers.each do |follower|
+          follower.follow_user(self)
+          self.save
+        end
+
+        following_ids = tw.friend_ids.collection.map{|id| id.to_s}
+        registeredFollowing = User.where("social_connects.uid" => {"$in" => following_ids}, 'social_connects.provider' => 'twitter')
+        registeredFollowing.each do |following|
+          self.follow_user(following)
+          self.save
+        end
+      end
+    end
+  end
+
   class << self
     # Omniauth providers
     def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil)
@@ -515,6 +550,7 @@ class User
           user.social_connects << connect
           user.use_fb_image = true if user.image_versions == 0
           user.update_social_denorms
+          Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s)
         end
         # Update the token
         connect.token = omniauth['credentials']['token']
@@ -547,6 +583,7 @@ class User
         user.social_connects << connect
         user.use_fb_image = true if user.image_versions == 0
         user.update_social_denorms
+        Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s)
       end
 
       if user && !user.confirmed?

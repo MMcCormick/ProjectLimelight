@@ -78,7 +78,8 @@
     }
   }
   .email-settings,
-  .image-settings {
+  .image-settings,
+  .social-settings {
     font-size: 15px;
     .field {
       position: relative;
@@ -86,7 +87,8 @@
 
       .btn-group,
       .s-btn,
-      a.facebook {
+      a.facebook,
+      a.twitter {
         position: absolute;
         right: 0px;
         top: 50%;

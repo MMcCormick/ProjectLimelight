@@ -193,11 +193,11 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
+
   if Rails.env.development?
     ENV['FACEBOOK_APP_ID'] = '121044708007507'
     ENV['FACEBOOK_APP_SECRET'] = '812c097d7a4b36893a736614b1cbd2f4'
   end
-
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV["FACEBOOK_APP_SECRET"], {:scope => 'email,offline_access,user_birthday,user_education_history,user_hometown'}
 
   if Rails.env.development?

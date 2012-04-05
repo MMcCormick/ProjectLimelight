@@ -146,7 +146,7 @@ class ApplicationController < ActionController::Base
 
   def require_sign_in
     if  request.get? &&
-        !(["feed", "facebook", "splash", "check", "influence_increases"].include?(params[:action]) && params[:id].blank?) &&
+        !(["feed", "facebook", "twitter", "splash", "check", "influence_increases"].include?(params[:action]) && params[:id].blank?) &&
         params[:controller] != "confirmations" &&
         request.fullpath != "/assets" &&
         !(params[:controller] == "topics" && params[:action] == "index")

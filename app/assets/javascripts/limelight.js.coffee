@@ -8,8 +8,8 @@ window.LL =
     @Header = new LL.Views.Header(model: LL.App.current_user)
 
     # hack because facebook login appends stupid things to the url
-    if LL.App.current_user && window.location.hash == '#_=_'
-      window.location = '/'
+    #if LL.App.current_user && window.location.hash == '#_=_'
+    #  window.location = '/'
 
     @Router = new LL.Router()
     Backbone.history.start(pushState: true)

@@ -12,6 +12,8 @@ class LL.Router extends Backbone.Router
     'settings': 'settings'
     'activity': 'activityFeed'
     'likes': 'likeFeed'
+    '#_=_': 'userFeed' # for facebook's dumb redirect
+    '_=_': 'userFeed' # for facebook's dumb redirect
     ':id/followers': 'topicFollowers'
     ':id': 'topicFeed'
     '': 'userFeed'
@@ -24,6 +26,7 @@ class LL.Router extends Backbone.Router
   #######
 
   userFeed: (id=0) ->
+    console.log(id)
     if id == 0 && !LL.App.current_user
       @splashPage()
       return

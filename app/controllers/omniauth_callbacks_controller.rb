@@ -6,7 +6,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
     @user = User.find_by_omniauth(env["omniauth.auth"], current_user, session[:invite_code])
 
-    if @user && @user.persisted?
+    if @user && !@user.errors.empty?
+      flash[:error] = "There is already a user with that account!"
+      redirect_to root_path
+    elsif @user && @user.persisted?
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "your Facebook"
       sign_in_and_redirect @user, :event => :authentication
     else
@@ -19,7 +22,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def twitter
     @user = User.find_by_omniauth(env["omniauth.auth"], current_user)
 
-    if @user.persisted?
+    if @user && !@user.errors.empty?
+      flash[:error] = "There is already a user with that account!"
+      redirect_to root_path
+    elsif @user.persisted?
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "your Twitter"
       sign_in_and_redirect @user, :event => :authentication
     else

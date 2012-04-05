@@ -96,7 +96,6 @@ class ApplicationController < ActionController::Base
   end
 
 
-
   # Used to test error messages as they would be shown in production
   #protected
   #

@@ -523,19 +523,23 @@ class User
     # Omniauth providers
     def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil)
       new_user = false
-      no_code = false
       info = omniauth['info']
       extra = omniauth['extra']['raw_info']
 
-      if signed_in_resource
-        user = signed_in_resource
-      else
-        user = User.where("social_connects.uid" => omniauth['uid'], 'social_connects.provider' => omniauth['provider']).first
+      existing_user = User.where("social_connects.uid" => omniauth['uid'], 'social_connects.provider' => omniauth['provider']).first
+      # Try to get via email if user not found and email provided
+      unless existing_user || !info['email']
+        existing_user = User.where(:email => info['email']).first
       end
 
-      # Try to get via email if user not found and email provided
-      unless user || !info['email']
-        user = User.where(:email => info['email']).first
+      if signed_in_resource && existing_user && signed_in_resource != existing_user
+        user = signed_in_resource
+        user.errors[:base] << "There is already a user with that account"
+        return user
+      elsif signed_in_resource
+        user = signed_in_resource
+      elsif existing_user
+        user = existing_user
       end
 
       invite = invite_code ? InviteCode.find(invite_code) : nil
@@ -547,6 +551,7 @@ class User
         unless connect
           connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :image => info['image'])
           connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
+
           user.social_connects << connect
           user.use_fb_image = true if user.image_versions == 0
           user.update_social_denorms
@@ -592,7 +597,7 @@ class User
       end
       user.save :validate => false if user
 
-      if new_user == true
+      if new_user
         user.slug = user.id.to_s # set a temporary slug
         user.save :validate => false
       end

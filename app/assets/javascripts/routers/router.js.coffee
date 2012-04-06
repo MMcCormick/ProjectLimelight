@@ -12,8 +12,6 @@ class LL.Router extends Backbone.Router
     'settings': 'settings'
     'activity': 'activityFeed'
     'likes': 'likeFeed'
-    '#_=_': 'userFeed' # for facebook's dumb redirect
-    '_=_': 'userFeed' # for facebook's dumb redirect
     ':id/followers': 'topicFollowers'
     ':id': 'topicFeed'
     '': 'userFeed'

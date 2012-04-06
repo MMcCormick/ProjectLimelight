@@ -496,8 +496,8 @@ class User
         registeredFriends.each do |friend|
           friend.follow_user(self) if friend.auto_follow_fb
           self.follow_user(friend) if self.auto_follow_fb
-          self.save
         end
+        self.save
       end
     elsif provider == "twitter" && self.auto_follow_tw
       tw = self.twitter
@@ -506,15 +506,15 @@ class User
         registeredFollowers = User.where("social_connects.uid" => {"$in" => follower_ids}, 'social_connects.provider' => 'twitter')
         registeredFollowers.each do |follower|
           follower.follow_user(self)
-          self.save
         end
+        self.save
 
         following_ids = tw.friend_ids.collection.map{|id| id.to_s}
         registeredFollowing = User.where("social_connects.uid" => {"$in" => following_ids}, 'social_connects.provider' => 'twitter')
         registeredFollowing.each do |following|
           self.follow_user(following)
-          self.save
         end
+        self.save
       end
     end
   end
@@ -549,13 +549,13 @@ class User
         connect = user.social_connects.detect{|connection| connection.uid == omniauth['uid'] && connection.provider == omniauth['provider']}
         # Is this a new connection?
         unless connect
+          new_connect = true
           connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :image => info['image'])
           connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
 
           user.social_connects << connect
           user.use_fb_image = true if user.image_versions == 0
           user.update_social_denorms
-          Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s)
         end
         # Update the token
         connect.token = omniauth['credentials']['token']
@@ -563,6 +563,7 @@ class User
       # If an invite code is in the session, create a new user with a stub password.
       elsif invite && invite.usable?
         new_user = true
+        new_connect = true
         if extra["gender"] && !extra["gender"].blank?
           gender = extra["gender"] == 'male' || extra["gender"] == 'm' ? 'm' : 'f'
         else
@@ -588,19 +589,21 @@ class User
         user.social_connects << connect
         user.use_fb_image = true if user.image_versions == 0
         user.update_social_denorms
-        Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s)
       end
 
       if user && !user.confirmed?
         user.confirm!
         user.send_welcome_email
       end
+
+      user.slug = user.id.to_s if new_user # set a temporary slug
       user.save :validate => false if user
 
-      if new_user
-        user.slug = user.id.to_s # set a temporary slug
-        user.save :validate => false
+      if user && new_connect
+        Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s)
+        #user.auto_follow(connect.provider.to_s)
       end
+
       user
     end
   end

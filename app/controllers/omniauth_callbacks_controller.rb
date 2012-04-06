@@ -6,7 +6,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
     @user = User.find_by_omniauth(env["omniauth.auth"], current_user, session[:invite_code])
 
-    if @user && !@user.errors.empty?
+    if @user && @user.errors.messages['base']
       flash[:error] = "There is already a user with that account!"
       redirect_to root_path
     elsif @user && @user.persisted?
@@ -22,7 +22,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def twitter
     @user = User.find_by_omniauth(env["omniauth.auth"], current_user)
 
-    if @user && !@user.errors.empty?
+    if @user && @user.errors.messages['base']
       flash[:error] = "There is already a user with that account!"
       redirect_to root_path
     elsif @user.persisted?

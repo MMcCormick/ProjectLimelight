@@ -3,6 +3,11 @@ require "net/http"
 class TestingController < ApplicationController
 
   def test
+    current_user.auto_follow("facebook")
+    render :none
+  end
+
+  def foo
     post = Post.all.first
     av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first)
     foo = av.render(:template => 'posts/show.json.rabl', :post => post)

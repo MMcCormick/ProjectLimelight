@@ -1,0 +1,34 @@
+<%= form_for user, :html => {:class => "ajax"} do |f| %>
+  <div class="errors"></div>
+
+  <% if can? :manage, :all %>
+    <div class="field">
+      <%= f.label :username, "Username", :class => "" %>
+      <%= f.text_field :username, :class => "" %>
+    </div>
+  <% else %>
+    <div class="static">
+      <div class="name">Username:</div>
+      <div class="value"><%= user.username %></div>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :first_name, "First Name", :class => "" %>
+    <%= f.text_field :first_name, :class => "" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :last_name, "Last Name" %>
+    <%= f.text_field :last_name %>
+  </div>
+
+  <div class="field bio">
+    <%= f.label :bio, "Bio (150 chars max)", :class => "bottom" %>
+    <%= f.text_area :bio, :class => "bottom" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit 'Update Info', :class => 'submit btn btn-success' %>
+  </div>
+<% end %>

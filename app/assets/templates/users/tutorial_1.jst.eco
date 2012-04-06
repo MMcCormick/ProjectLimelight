@@ -3,16 +3,16 @@
   Also, when connected, you can post to Facebook and/or Twitter when you post to Limelight.
 </div>
 
-<div class='social-connect facebook <%= "on" if @user.get('facebook_connected') %>'>
-  <h4><%= if @user.get('facebook_connected') then 'Facebook Connected!' else 'Not Connected' %></h4>
-  <a href="<%= if @user.get('facebook_connected') then '#' else '/users/auth/facebook' %>" class='facebook'>
+<div class='social-connect facebook <%= "on" if @user.get('facebook_id') %>'>
+  <h4><%= if @user.get('facebook_id') then 'Facebook Connected!' else 'Not Connected' %></h4>
+  <a href="<%= if @user.get('facebook_id') then '#' else '/users/auth/facebook' %>" class='facebook'>
     <img src="/assets/images/facebook-connect-button.gif" />
   </a>
 </div>
 
-<div class='social-connect twitter <%= "on" if @user.get('twitter_connected') %>'>
-  <h4><%= if @user.get('twitter_connected') then 'Twitter Connected!' else 'Not Connected' %></h4>
-  <a href="<%= if @user.get('twitter_connected') then '#' else '/users/auth/twitter' %>" class='facebook'>
+<div class='social-connect twitter <%= "on" if @user.get('twitter_id') %>'>
+  <h4><%= if @user.get('twitter_id') then 'Twitter Connected!' else 'Not Connected' %></h4>
+  <a href="<%= if @user.get('twitter_id') then '#' else '/users/auth/twitter' %>" class='facebook'>
     <img src="/assets/images/twitter-connect-button.gif" />
   </a>
 </div>

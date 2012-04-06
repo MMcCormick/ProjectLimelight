@@ -1,7 +1,0 @@
-<div class='user-card'>
-  <div class='name'>
-    <%= user.username %>
-  </div>
-  <%= render 'follows/btn', :current_user => current_user, :target => user %>
-  <%= image_tag user_default_picture_path(user, :w => 100, :h => 100, :m => 'fillcropmid'), :alt => user.username, :title => user.username %>
-</div>

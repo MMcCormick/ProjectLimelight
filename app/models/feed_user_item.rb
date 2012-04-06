@@ -50,9 +50,6 @@ class FeedUserItem
     end
 
     def post_create(post, popular_talk=false)
-      #controller = PostsController.new
-      #av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first,{},controller)
-
       topic_mention_ids = post.topic_mentions.map{|tm| tm.id}
       user_mention_ids = post.user_mentions.map{|um| um.id}
       
@@ -69,6 +66,20 @@ class FeedUserItem
       updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
       updates["$addToSet"] = { :responses => post.id } unless post.is_root?
 
+      # make the root post
+      root_post = RootPost.new
+      if post.is_root?
+        root_post.root = post
+      else
+        root_post.root = post.root
+      end
+      root_post.public_talking = root_post.root.response_count
+      #get the public responses
+      root_post.public_responses = []
+      unless post.root_type == 'Talk' || root_post.public_talking == 0
+        root_post.public_responses = Post.public_responses(root_post.root.id, 1, 2)
+      end
+
       user_feed_users.each do |u|
         unless u.id == post.user_snippet.id
           strength = 0
@@ -83,9 +94,7 @@ class FeedUserItem
 
           FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
 
-          #av.render(:partial => "view_folder/some_partial", :locals => {:a_var => @some_var})
-          #@post = post
-          #Pusher["#{u.id.to_s}_realtime"].trigger('new_post', av.render(:template => 'posts/show.json.rabl'))
+          Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:user => u))
         end
       end
     end

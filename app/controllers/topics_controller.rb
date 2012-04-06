@@ -24,17 +24,16 @@ class TopicsController < ApplicationController
   def show
     # Doesn't use find_by_slug() because it doesn't work after Topic.unscoped (deleted topics are ignored)
     if params[:slug]
-      @topic = Topic.unscoped.find_by_slug(params[:slug])
+      @this = Topic.unscoped.find_by_slug(params[:slug])
     else
-      @topic = Topic.unscoped.find(params[:id]).first
+      @this = Topic.unscoped.find(params[:id]).first
     end
 
-    not_found("Topic not found") unless @topic
-    authorize! :read, @topic
+    not_found("Topic not found") unless @this
+    authorize! :read, @this
 
-    @title = @topic.name
-    @description = @topic.summary
-    @this = {:group => 'topics', :template => 'show'}
+    @title = @this.name
+    @description = @this.summary
   end
 
   def new
@@ -114,7 +113,8 @@ class TopicsController < ApplicationController
 
     @title = @topic.name + " followers"
     @description = "A list of all users who are following" + @topic.name
-    @followers = User.where(:following_topics => @topic.id).order_by(:slug, :asc)
+    followers = User.where(:following_topics => @topic.id).order_by(:slug, :asc)
+    render :json => followers.map {|u| u.as_json}
   end
 
 

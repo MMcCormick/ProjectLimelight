@@ -1,9 +1,0 @@
-<% if current_user != @user %>
-  <% content_for :sidebar_right do %>
-    <%#= render_cell(:user, :sidebar, @user, current_user, '') %>
-  <% end %>
-<% end %>
-
-<% @core_objects.each do |core_object| %>
-  <%= render core_object.class.to_s.pluralize.downcase! + '/teaser', :object => core_object %>
-<% end %>

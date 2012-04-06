@@ -9,6 +9,9 @@ class Post
   include Limelight::Popularity
   include Limelight::Images
 
+  include ModelUtilitiesHelper
+  include VideosHelper
+
   cache
 
   # Denormilized:
@@ -301,9 +304,72 @@ class Post
     id == root_id
   end
 
+  def root
+    if root_type == 'Topic'
+      Topic.find(root_id)
+    else
+      Post.find(root_id)
+    end
+  end
+
   def standalone_talk?
     _type == "Talk" && !response_to
   end
+
+
+  ##########
+  # JSON
+  ##########
+
+  def as_json(options={})
+    {
+            :id => id.to_s,
+            :slug => to_param,
+            :type => _type,
+            :title => title,
+            :content => content,
+            :score => score,
+            :talking_count => response_count,
+            :created_at => created_at,
+            :liked => liked_by?(options[:user].id) ? true : false,
+            :created_at_pretty => pretty_time(created_at),
+            :video => json_video,
+            :video_autoplay => json_video(true),
+            :primary_source => sources.first,
+            :topic_mentions => topic_mentions.map {|m| m.as_json },
+            :images => json_images,
+            :user => user.as_json
+    }
+  end
+
+  def json_video(autoplay=nil)
+    unless embed_html.blank?
+      video_embed(sources[0], 650, 470, nil, nil, embed_html, autoplay)
+    end
+  end
+
+  def json_images
+    if image_versions > 0
+      {
+        :original => image_url(nil, nil, 'current', true),
+        :fit => {
+            :large => image_url(:fit, :large),
+            :normal => image_url(:fit, :normal),
+            :small => image_url(:fit, :small)
+        },
+        :square => {
+            :large => image_url(:square, :large),
+            :normal => image_url(:square, :normal),
+            :small => image_url(:square, :small)
+        }
+      }
+    end
+  end
+
+  ##########
+  # END JSON
+  ##########
+
 
   class << self
     def find_by_encoded_id(id)
@@ -610,10 +676,6 @@ class Post
 
   def current_user_own
     grant_owner(user.id)
-  end
-
-  def update_denorms
-    #TODO: implement when we allow editing of core objects
   end
 
 end

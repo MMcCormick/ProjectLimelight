@@ -24,3 +24,7 @@ en:
           attributes:
             content:
               blank: "You can't talk about nothing! Talk cannot be blank"
+        comment:
+          attributes:
+            content:
+              length: "Must be between 3 and 200 characters"

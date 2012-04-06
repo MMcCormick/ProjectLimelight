@@ -30,7 +30,10 @@ jQuery ->
   $('[rel="tooltip"]').livequery ->
     $(@).tooltip()
 
-  # Global error function
+  window.globalSuccess = (data) ->
+    if data.flash
+      createGrowl false, data.flash, 'Success', 'green'
+
   window.globalError = (jqXHR, target=null) ->
     data = $.parseJSON(jqXHR.responseText)
 

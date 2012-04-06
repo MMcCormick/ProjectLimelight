@@ -2,12 +2,8 @@ require "limelight"
 
 class Comment
   include Mongoid::Document
-  include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Limelight::Acl
-  include Limelight::Voting
-  #include Limelight::Mentions
-  include Limelight::Popularity
 
   field :content
   field :status, :default => "active"
@@ -16,7 +12,6 @@ class Comment
   field :user_id
   field :depth, :default => 0
   field :path, :default => ""
-  field :votes_count, :default => 0
 
   belongs_to :talk
   belongs_to :user
@@ -24,14 +19,14 @@ class Comment
   embeds_one :user_snippet, as: :user_assignable
 
   validates :talk_id, :presence => true
-  validates :content, :length => { :minimum => 3, :maximum => 150 }
+  validates :content, :length => { :minimum => 3, :maximum => 200, :message => :length }
   validates :depth, :numericality => { :less_than_or_equal_to => 5 }
 
   before_validation :set_path
   before_create :set_user_snippet, :current_user_own
   after_create :add_to_count, :action_log_create
 
-  attr_accessible :content, :parent_id, :talk_id
+  attr_accessible :content, :talk_id
 
   index(
     [
@@ -47,32 +42,24 @@ class Comment
     action_log_delete
   end
 
-  def send_notifications(current_user)
-    parent = nil
-    if depth == 0
-      Notification.add(talk.user, :reply, true, current_user, nil, nil, true, talk, talk.user, nil)
-    else
-      parent = Comment.find(parent_id)
-      Notification.add(parent.user, :reply, true, current_user, nil, nil, true, talk, talk.user, parent)
-    end
-
-    if depth == 0
-      siblings = Comment.where(:talk_id => talk_id)
-    else
-      siblings = Comment.where(:parent_id => parent_id)
-    end
-
-    siblings.each do |sibling|
-      unless (depth == 0 && talk.user_id == sibling.user_id) || (parent && parent.user_id == sibling.user_id)
-        Notification.add(sibling.user, :also, true, current_user, nil, nil, true, talk, talk.user, parent)
-      end
-    end
-  end
-
   def add_to_count
     talk.response_count += 1
     talk.update_response_counts(user_snippet.id)
     talk.save
+  end
+
+  def send_notifications(user)
+    notification = Notification.add(talk.user, :comment, true, user, nil, talk, talk.user, nil)
+    Pusher["#{talk.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
+    siblings = Comment.where(:talk_id => talk.id)
+    used_ids = []
+    siblings.each do |sibling|
+      unless used_ids.include?(sibling.user_id.to_s) || (talk.user_id == sibling.user_id) || (sibling.user_id == user.id)
+        notification = Notification.add(sibling.user, :also, true, user, nil, talk, talk.user, sibling)
+        Pusher["#{sibling.user_id.to_s}_private"].trigger('new_notification', notification.to_json)
+      end
+      used_ids << sibling.user_id.to_s
+    end
   end
 
   class << self

@@ -27,4 +27,18 @@ class UserSnippet
   def fullname
     if first_name and last_name then "#{first_name} #{last_name}" else nil end
   end
+
+  def as_json
+    {
+            :id => id.to_s,
+            :type => 'User',
+            :public_id => public_id,
+            :slug => username.downcase,
+            :username => username,
+            :first_name => first_name,
+            :last_name => last_name,
+            :images => User.json_images(self)
+    }
+  end
+
 end

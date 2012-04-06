@@ -2,6 +2,9 @@
   @include single-box-shadow(#333, 1px, 1px, 4px, 1px);
 	border: 0;
 
+  h3 {
+    color: #FFF;
+  }
   .ui-tooltip-tip {
     background: #333;
   }
@@ -34,6 +37,9 @@
     border-top: 1px solid #DDD;
     text-align: right;
   }
+  .close {
+    color: #FFF;
+  }
 }
 
 .tutorial-tip {
@@ -41,6 +47,29 @@
 
   .middle {
     width: 225px;
+  }
+}
+
+.comment-tip {
+  .modal-body {
+    padding: 0px;
+  }
+  .alert-error {
+    @include border-radius(0px);
+    margin: 0px;
+    .close {
+      color: #444;
+      top: -4px;
+    }
+  }
+  textarea {
+    @include border-radius(0px);
+    border: none;
+    margin: 0px;
+    padding: 10px;
+    width: 220px;
+    height: 100px;
+    resize: none;
   }
 }
 

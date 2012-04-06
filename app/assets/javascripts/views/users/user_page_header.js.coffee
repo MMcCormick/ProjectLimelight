@@ -8,7 +8,7 @@ class LL.Views.UserPageHeader extends Backbone.View
     header.links = [
       {
         content: "Feed"
-        url: (if LL.App.current_user == @model then '/' else "/users/#{@model.get('slug')}")
+        url: (if LL.App.current_user == @model then '/' else "/users/#{@model.get('slug')}/feed")
         on: (if @page == 'feed' then true else false)
       }
       {
@@ -18,7 +18,7 @@ class LL.Views.UserPageHeader extends Backbone.View
       }
       {
         content: "Activity"
-        url: (if LL.App.current_user == @model then '/activity' else "/users/#{@model.get('slug')}/activity")
+        url: (if LL.App.current_user == @model then '/activity' else "/users/#{@model.get('slug')}")
         on: (if @page == 'activity' then true else false)
       }
       {

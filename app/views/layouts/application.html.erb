@@ -51,10 +51,9 @@
     <%= render :partial => 'shared/social_tools' %>
 
     <% if defined? @this %>
-      <div id='this' data-this='<%= render(template: "#{@this[:group]}/#{@this[:template]}.json.rabl") %>'></div>
+      <div id='this' data-this='<%= @this.to_json(:user => current_user) %>'></div>
     <% end %>
-    <% @user = current_user %>
-    <div id='me' data-user='<%= render(template: "users/show_extra.json.rabl") %>'></div>
+    <div id='me' data-user='<%= current_user.to_json(:show_extra => true) %>'></div>
 
   </body>
 </html>

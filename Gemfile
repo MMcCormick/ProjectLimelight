@@ -9,7 +9,6 @@ gem 'mongoid' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication
-gem 'rabl', "0.6.1"
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
 gem 'omniauth-facebook'

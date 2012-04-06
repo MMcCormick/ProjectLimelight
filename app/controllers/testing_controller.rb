@@ -1,16 +1,20 @@
 require "net/http"
 
+class Controller
+  attr_accessor :_prefixes
+  def params() {} end
+end
+
 class TestingController < ApplicationController
 
   def test
-    current_user.auto_follow("facebook")
-    render :none
-  end
+    #post = Post.all.first
+    #av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first)
+    #foo = av.render(:template => 'posts/show.json.rabl', :post => post)
 
-  def foo
     post = Post.all.first
-    av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first)
-    foo = av.render(:template => 'posts/show.json.rabl', :post => post)
+    data = post.to_json({:user => current_user})
+    foo = 'bar'
   end
 
   def convert_for_beta

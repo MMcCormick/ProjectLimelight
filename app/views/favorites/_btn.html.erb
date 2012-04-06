@@ -1,8 +1,0 @@
-<button class="btn-tog <%= !signed_in? || !object.favorited_by?(current_user.id) ? 'favB' : 'unfavB' %> fav_<%= object.id %>" title="<%= !signed_in? || !object.favorited_by?(current_user.id) ? 'add to favorites' : 'remove from favorites' %>">
-  <div class="default" data-url="<%= create_favorite_path %>" data-d='{"id":"<%= object.id %>"}' data-m="post">
-    <div class="heart-grey-icon icon"></div>
-  </div>
-  <div class="triggered" data-url="<%= destroy_favorite_path %>" data-d='{"id":"<%= object.id %>"}' data-m="delete">
-    <div class="heart-green-icon icon"></div>
-  </div>
-</button>

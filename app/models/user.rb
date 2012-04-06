@@ -326,32 +326,6 @@ class User
     FeedUserItem.unfollow(self, topic)
   end
 
-  ###
-  # FAVORITING BETA REMOVE
-  ###
-
-  def has_favorite?(object_id)
-    favorites.include? object_id
-  end
-
-  def add_to_favorites(object)
-    unless has_favorite? object.id
-      self.favorites << object.id
-      self.favorites_count += 1
-
-      ActionFavorite.create(:action => 'create', :from_id => id, :to_id => object.id, :to_type => object.class.name)
-    end
-  end
-
-  def remove_from_favorites(object)
-    if has_favorite? object.id
-      self.favorites.delete(object.id)
-      self.favorites_count -= 1
-
-      ActionFavorite.create(:action => 'destroy', :from_id => id, :to_id => object.id, :to_type => object.class.name)
-    end
-  end
-
   def name
     username
   end
@@ -519,7 +493,65 @@ class User
     end
   end
 
+  ##########
+  # JSON
+  ##########
+
+  def as_json(options={})
+    data = {
+            :id => id.to_s,
+            :type => 'User',
+            :public_id => public_id,
+            :slug => username.downcase,
+            :username => username,
+            :first_name => first_name,
+            :last_name => last_name,
+            :score => score,
+            :following_users_count => following_users_count,
+            :following_topics_count => following_topics_count,
+            :followers_count => followers_count,
+            :unread_notification_count => unread_notification_count,
+            :images => User.json_images(self)
+    }
+
+    if options[:show_extra]
+      data.merge!(
+              :following_users => following_users,
+              :following_topics => following_topics,
+              :tutorial_step => tutorial_step,
+              :tutorial1_step => tutorial1_step,
+              :username_reset => username_reset,
+              :facebook_id => fbuid,
+              :twitter_id => twuid
+      )
+
+      code = InviteCode.where(:user_id => id).first
+      data[:invite_code] = code ? {:code => code.code, :remaining => code.remaining} : {}
+    end
+
+    data
+  end
+
   class << self
+
+    def json_images(model)
+      {
+        :original => model.image_url(nil, nil, 'current', true),
+        :fit => {
+          :large => model.image_url(:fit, :large),
+          :normal => model.image_url(:fit, :normal),
+          :small => model.image_url(:fit, :small)
+        },
+        :square => {
+          :small => model.image_url(:square, :small)
+        }
+      }
+    end
+
+  ##########
+  # END JSON
+  ##########
+
     # Omniauth providers
     def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil)
       new_user = false
@@ -608,11 +640,6 @@ class User
     end
   end
 
-  # BETA REMOVE
-  #def expire_caches
-  #  User.expire_caches(id.to_s)
-  #end
-
   def daily_notification_types
     types = []
     types << "follow" if email_follow == "1"
@@ -628,13 +655,6 @@ class User
       login = conditions.delete(:login)
       self.any_of({ :slug => login.downcase.strip }, { :email => login.downcase.strip }).first
     end
-
-    # BETA REMOVE
-    #def expire_caches(target_id)
-    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, target_id
-    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-mine"
-    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-following"
-    #end
   end
 
   def update_denorms

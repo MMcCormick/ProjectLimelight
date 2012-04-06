@@ -45,6 +45,11 @@ ProjectLimelight::Application.routes.draw do
       get '' => 'posts#show'
     end
 
+    scope 'comments' do
+      post '' => 'comments#create'
+      delete '' => 'comments#destroy'
+    end
+
     scope 'likes' do
       post '' => 'likes#create'
       delete '' => 'likes#destroy'

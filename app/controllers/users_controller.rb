@@ -5,12 +5,11 @@ class UsersController < ApplicationController
   respond_to :html, :json
 
   def show
-    @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    @this = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
 
-    not_found("User not found") unless @user
-    @title = @user.username
-    @description = "Everything #{@user.username} on Limelight."
-    @this = {:group => 'users', :template => 'show'}
+    not_found("User not found") unless @this
+    @title = @this.username
+    @description = "Everything #{@this.username} on Limelight."
   end
 
   def create
@@ -65,11 +64,13 @@ class UsersController < ApplicationController
 
   def user_influence_increases
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
-    @increases = @user.influence_increases
+    increases = @user.influence_increases
+    render :json => increases.map {|i| i.as_json}
   end
 
   def influence_increases
-    @increases = InfluenceIncrease.influence_increases
+    increases = InfluenceIncrease.influence_increases
+    render :json => increases.map {|i| i.as_json}
   end
 
   def followers
@@ -78,7 +79,8 @@ class UsersController < ApplicationController
 
     @title = (current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
     @description = "A list of all users who are following" + @user.username
-    @followers = User.where(:following_users => @user.id).order_by(:slug, :asc)
+    followers = User.where(:following_users => @user.id).order_by(:slug, :asc)
+    render :json => followers.map {|u| u.as_json}
   end
 
   def following_users
@@ -87,7 +89,8 @@ class UsersController < ApplicationController
 
     @title = "Users " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all users who are being followed by" + @user.username
-    @following_users = User.where(:_id.in => @user.following_users).order_by(:slug, :asc)
+    following_users = User.where(:_id.in => @user.following_users).order_by(:slug, :asc)
+    render :json => following_users.map {|u| u.as_json}
   end
 
 
@@ -97,7 +100,8 @@ class UsersController < ApplicationController
 
     @title = "Topics " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all topics " + @user.username + " follows"
-    @following_topics = Topic.where(:_id.in => @user.following_topics).order_by(:name, :asc)
+    following_topics = Topic.where(:_id.in => @user.following_topics).order_by(:name, :asc)
+    render :json => following_topics.map {|u| u.as_json}
   end
 
   # Get a users main feed
@@ -116,6 +120,7 @@ class UsersController < ApplicationController
       #else
         @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
       #end
+      render "show"
     else
       @title = 'Welcome to Limelight!'
       @description = "The Limelight splash page, where users are directed to sign in"
@@ -133,7 +138,8 @@ class UsersController < ApplicationController
   def notifications
     not_found("User not found") unless current_user
 
-    @notifications = Notification.where(:user_id => current_user.id).order_by(:created_at, :desc).to_a
+    notifications = Notification.where(:user_id => current_user.id).order_by(:created_at, :desc).to_a
+    render :json => notifications.map {|n| n.as_json}
   end
 
 

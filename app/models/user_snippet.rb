@@ -13,7 +13,7 @@ class UserSnippet
 
   embedded_in :user_assignable, polymorphic: true
 
-  attr_accessible :username, :first_name, :last_name, :public_id, :_id, :fbuid, :twuid
+  attr_accessible :username, :first_name, :last_name, :public_id, :_id, :fbuid, :twuid, :use_fb_image
 
   # Return the users username instead of their ID
   def to_param

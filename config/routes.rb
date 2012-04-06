@@ -114,7 +114,7 @@ ProjectLimelight::Application.routes.draw do
   get ':slug/followers' => 'topics#show', :as => :topic_followers
   get ':slug' => 'topics#show', :as => :topic
 
-  root :to => 'users#show'
+  root :to => 'users#feed'
 
   #scope 'users' do
   #  get 'settings' => 'users#settings', :as => :user_settings

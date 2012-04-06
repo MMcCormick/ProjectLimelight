@@ -1,0 +1,44 @@
+<div class="invite-form hide">
+  <%= render "invite_codes/redeem_form" %>
+  <div class='back'>Back</div>
+</div>
+<div class="login-form <%= 'hide' unless show == :login %>">
+  <div class="left">
+    <div class="head">Use your existing social account.</div>
+    <div class="option one">
+      <a href="<%= user_omniauth_authorize_path(:facebook) %>">
+        <%= image_tag('facebook-login-button.gif') %>
+      </a>
+    </div>
+    <div class="foot1">We do not share your information.</div>
+    <div class="foot2">
+      We do not post to your profile
+      <br/>without your permission.
+    </div>
+    <div class='back'>Back</div>
+  </div>
+  <div class="right">
+    <div class="head">... or log in directly with Limelight.</div>
+    <%= render "users/sessions/new" %>
+  </div>
+</div>
+<div class="register-form <%= 'hide' unless show == :register %>">
+  <div class="left">
+    <div class="head">Use your existing social account.</div>
+    <div class="option one">
+      <a href="<%= user_omniauth_authorize_path(:facebook) %>">
+        <%= image_tag('facebook-login-button.gif') %>
+      </a>
+    </div>
+    <div class="foot1">We do not share your information.</div>
+    <div class="foot2">
+      We do not post to your profile
+      <br/>without your permission.
+    </div>
+    <div class='back'>Back</div>
+  </div>
+  <div class="right">
+    <div class="head">... or register directly with Limelight.</div>
+    <%= render "users/registrations/new" %>
+  </div>
+</div>

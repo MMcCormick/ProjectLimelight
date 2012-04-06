@@ -9,9 +9,9 @@ class FollowsController < ApplicationController
       if current_user && target
         if current_user.follow_object(target)
           if params[:type] == 'User'
-            @notification = Notification.add(target, :follow, true, current_user)
-            if @notification
-              Pusher["#{target.id.to_s}_private"].trigger('new_notification', render_to_string(:template => 'users/notification.json.rabl'))
+            notification = Notification.add(target, :follow, true, current_user)
+            if notification
+              Pusher["#{target.id.to_s}_private"].trigger('new_notification', notification.to_json)
             end
           end
           current_user.save

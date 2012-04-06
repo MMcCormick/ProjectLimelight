@@ -16,6 +16,11 @@ class PostsController < ApplicationController
 
     @title = @this.name
     @description = @this.content_clean
+
+    respond_to do |format|
+      format.js { render :json => @this.to_json(:user => current_user) }
+      format.html
+    end
   end
 
   def create
@@ -29,7 +34,7 @@ class PostsController < ApplicationController
 
       if @post.root_id && @post.class.name == 'Talk'
         if @post.root_id
-          Pusher[@post.root_id.to_s].trigger('new_response', render_to_string(:template => 'posts/show'))
+          Pusher[@post.root_id.to_s].trigger('new_response', @post.to_json(:user => current_user))
         end
 
         # send mention notifications
@@ -37,9 +42,9 @@ class PostsController < ApplicationController
         if user_ids.length > 0
           users = User.where(:_id => {'$in' => user_ids})
           users.each do |u|
-            @notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
-            if @notification
-              Pusher["#{u.id.to_s}_private"].trigger('new_notification', render_to_string(:template => 'users/notification.json.rabl'))
+            notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
+            if notification
+              Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.to_json)
             end
           end
         end
@@ -48,15 +53,15 @@ class PostsController < ApplicationController
       # send the influence pusher notification
       @post.topic_mentions.each do |mention|
         if @post.class.name == 'Talk' && mention.first_mention == true
-          @increase = InfluenceIncrease.new
-          @increase.amount = 1
-          @increase.topic_id = mention.id
-          @increase.object_type = 'Talk'
-          @increase.action = :new
-          @increase.id = mention.name
-          @increase.topic = mention
+          increase = InfluenceIncrease.new
+          increase.amount = 1
+          increase.topic_id = mention.id
+          increase.object_type = 'Talk'
+          increase.action = :new
+          increase.id = mention.name
+          increase.topic = mention
 
-          Pusher[@post.user_id.to_s].trigger('influence_change', render_to_string(:template => 'users/influence_increase.json.rabl'))
+          Pusher[@post.user_id.to_s].trigger('influence_change', increase.to_json)
         end
       end
 

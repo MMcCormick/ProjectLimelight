@@ -48,6 +48,20 @@ class Comment
     talk.save
   end
 
+  def send_notifications(user)
+    notification = Notification.add(talk.user, :comment, true, user, nil, talk, talk.user, nil)
+    Pusher["#{talk.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
+    siblings = Comment.where(:talk_id => talk.id)
+    used_ids = []
+    siblings.each do |sibling|
+      unless used_ids.include?(sibling.user_id.to_s) || (talk.user_id == sibling.user_id) || (sibling.user_id == user.id)
+        notification = Notification.add(sibling.user, :also, true, user, nil, talk, talk.user, sibling)
+        Pusher["#{sibling.user_id.to_s}_private"].trigger('new_notification', notification.to_json)
+      end
+      used_ids << sibling.user_id.to_s
+    end
+  end
+
   class << self
     # Based on Newsmonger: https://github.com/banker/newsmonger
     # Return an array of comments, threaded, from highest to lowest votes.

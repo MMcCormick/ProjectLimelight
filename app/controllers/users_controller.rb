@@ -120,6 +120,7 @@ class UsersController < ApplicationController
       #else
         @title = (current_user.id == @user.id ? 'Your' : @user.username+"'s") + " Feed"
       #end
+      render "show"
     else
       @title = 'Welcome to Limelight!'
       @description = "The Limelight splash page, where users are directed to sign in"

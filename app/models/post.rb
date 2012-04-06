@@ -304,6 +304,14 @@ class Post
     id == root_id
   end
 
+  def root
+    if root_type == 'Topic'
+      Topic.find(root_id)
+    else
+      Post.find(root_id)
+    end
+  end
+
   def standalone_talk?
     _type == "Talk" && !response_to
   end

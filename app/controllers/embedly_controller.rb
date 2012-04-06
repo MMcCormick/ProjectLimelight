@@ -35,9 +35,9 @@ class EmbedlyController < ApplicationController
       end
     end
 
-    @post = result['url'] ? Post.where('sources.url' => result['url']).first : nil
-    if @post
-      response = render_to_string(:template => 'posts/show')
+    post = result['url'] ? Post.where('sources.url' => result['url']).first : nil
+    if post
+      response = post.to_json(:user => current_user)
     end
 
     render json: response

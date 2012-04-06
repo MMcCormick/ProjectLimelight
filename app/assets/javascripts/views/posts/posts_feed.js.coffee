@@ -49,7 +49,6 @@ class LL.Views.PostsFeed extends Backbone.View
 
     unless LL.App.get_event_subscription(@channel, 'new_post')
       channel.bind 'new_post', (data) ->
-        console.log data
         post = new LL.Models.RootPost(data)
         self.collection.add(post, {silend: true})
         self.prependPost(post)

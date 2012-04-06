@@ -326,32 +326,6 @@ class User
     FeedUserItem.unfollow(self, topic)
   end
 
-  ###
-  # FAVORITING BETA REMOVE
-  ###
-
-  def has_favorite?(object_id)
-    favorites.include? object_id
-  end
-
-  def add_to_favorites(object)
-    unless has_favorite? object.id
-      self.favorites << object.id
-      self.favorites_count += 1
-
-      ActionFavorite.create(:action => 'create', :from_id => id, :to_id => object.id, :to_type => object.class.name)
-    end
-  end
-
-  def remove_from_favorites(object)
-    if has_favorite? object.id
-      self.favorites.delete(object.id)
-      self.favorites_count -= 1
-
-      ActionFavorite.create(:action => 'destroy', :from_id => id, :to_id => object.id, :to_type => object.class.name)
-    end
-  end
-
   def name
     username
   end
@@ -658,11 +632,6 @@ class User
     end
   end
 
-  # BETA REMOVE
-  #def expire_caches
-  #  User.expire_caches(id.to_s)
-  #end
-
   def daily_notification_types
     types = []
     types << "follow" if email_follow == "1"
@@ -678,13 +647,6 @@ class User
       login = conditions.delete(:login)
       self.any_of({ :slug => login.downcase.strip }, { :email => login.downcase.strip }).first
     end
-
-    # BETA REMOVE
-    #def expire_caches(target_id)
-    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, target_id
-    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-mine"
-    #  ActionController::Base.new.expire_cell_state UserCell, :sidebar, "#{target_id}-following"
-    #end
   end
 
   def update_denorms

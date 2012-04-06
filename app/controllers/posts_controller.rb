@@ -65,10 +65,10 @@ class PostsController < ApplicationController
         end
       end
 
-      render :template => 'posts/show'
+      render :json => build_ajax_response(:ok, nil, "Your #{@post.class.name} has been submitted"), :status => 201
     else
       response = build_ajax_response(:error, nil, "#{@post.class.name} could not be created", @post.errors)
-      render json: response, status: :unprocessable_entity
+      render :json => response, :status => :unprocessable_entity
     end
   end
 

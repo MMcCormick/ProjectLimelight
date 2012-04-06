@@ -5,6 +5,7 @@ class LL.Views.RootTalk extends Backbone.View
 
   events:
     'click': 'postShow'
+    "click .comment-form": "commentForm"
 
   initialize: ->
 
@@ -20,5 +21,33 @@ class LL.Views.RootTalk extends Backbone.View
     @
 
   postShow: (e) =>
-    return if $(e.target).is('.ulink, .score-pts, .like') || $(e.target).is('img')
+    return if $(e.target).is('.ulink, .score-pts, .like, .comment-form') || $(e.target).is('img')
     LL.Router.navigate("talks/#{@model.get('id')}", trigger: true)
+
+  commentForm: (e) =>
+    self = @
+    view = new LL.Views.CommentForm(model: @model)
+    view.modal = true
+    view.qtip = e.currentTarget
+
+    $(e.currentTarget).qtip
+      position:
+        my: 'top middle'
+        at: 'bottom middle'
+        viewport: $(window)
+      style:
+        tip: true
+        classes: 'ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-limelight comment-tip'
+      show:
+        ready: true
+        effect: (offset) ->
+          $(@).slideDown(150) # "this" refers to the tooltip
+      hide: false
+      content:
+        text: (api) ->
+          $(view.render().el)
+      events:
+        show: (event,api) ->
+          setTimeout ->
+            $(event.delegateTarget).find('textarea').focus()
+          , 0

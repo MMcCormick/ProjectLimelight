@@ -45,6 +45,11 @@ ProjectLimelight::Application.routes.draw do
       get '' => 'posts#show'
     end
 
+    scope 'comments' do
+      post '' => 'comments#create'
+      delete '' => 'comments#destroy'
+    end
+
     scope 'likes' do
       post '' => 'likes#create'
       delete '' => 'likes#destroy'
@@ -109,7 +114,7 @@ ProjectLimelight::Application.routes.draw do
   get ':slug/followers' => 'topics#show', :as => :topic_followers
   get ':slug' => 'topics#show', :as => :topic
 
-  root :to => 'users#feed'
+  root :to => 'users#show'
 
   #scope 'users' do
   #  get 'settings' => 'users#settings', :as => :user_settings

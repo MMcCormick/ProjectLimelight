@@ -13,4 +13,17 @@ class UserMention
   def to_param
     self.username.to_url
   end
+
+  def as_json
+    {
+            :id => id.to_s,
+            :type => 'User',
+            :public_id => public_id,
+            :slug => user.username.downcase,
+            :username => username,
+            :first_name => first_name,
+            :last_name => last_name,
+            :images => User.json_images(self)
+    }
+  end
 end

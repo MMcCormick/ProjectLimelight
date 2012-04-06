@@ -24,6 +24,16 @@ class InfluenceIncrease
     }
   end
 
+  def as_json(options={})
+    {
+            :id => topic_id.to_s,
+            :amount => amount,
+            :reason => reason,
+            :topic => topic.as_json,
+            :user => user.as_json
+    }
+  end
+
   class << self
     def influence_increases
       increases = []

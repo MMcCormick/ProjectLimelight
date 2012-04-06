@@ -9,6 +9,8 @@ class Topic
   include Limelight::Images
   include ImageHelper
 
+  include ModelUtilitiesHelper
+
   cache
 
   @type_of_id = "4eb82a1caaf9060120000081"
@@ -411,7 +413,45 @@ class Topic
     influencers[id.to_s]["percentile"] if influencers[id.to_s]
   end
 
+  ##########
+  # JSON
+  ##########
+
+  def as_json(options={})
+    {
+            :id => id.to_s,
+            :slug => to_param,
+            :type => 'Topic',
+            :name => name,
+            :score => score,
+            :followers_count => followers_count,
+            :created_at => created_at,
+            :created_at_pretty => pretty_time(created_at),
+            :images => Topic.json_images(self)
+    }
+  end
+
   class << self
+
+    def json_images(model)
+      {
+        :original => model.image_url(nil, nil, 'current', true),
+        :fit => {
+          :large => model.image_url(:fit, :large),
+          :normal => model.image_url(:fit, :normal),
+          :small => model.image_url(:fit, :small)
+        },
+        :square => {
+          :large => model.image_url(:square, :large),
+          :normal => model.image_url(:square, :normal),
+          :small => model.image_url(:square, :small)
+        }
+      }
+    end
+
+    ##########
+    # END JSON
+    ##########
 
     # Checks if there is an untyped topic with an alias equal to the name. If so, returns that topic, if not, returns new topic
     def find_untyped_or_create(name, user)

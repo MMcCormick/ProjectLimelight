@@ -26,4 +26,15 @@ class TopicMention
   def encoded_id
     public_id.to_i.to_s(36)
   end
+
+  def as_json(options={})
+    {
+            :id => id.to_s,
+            :slug => to_param,
+            :type => 'Topic',
+            :name => name,
+            :public_id => public_id,
+            :images => Topic.json_images(self)
+    }
+  end
 end

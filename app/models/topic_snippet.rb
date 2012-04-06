@@ -9,10 +9,21 @@ class TopicSnippet
 
   # Return the users username instead of their ID
   def to_param
-    self.slug
+    slug
   end
 
   def encoded_id
     public_id.to_i.to_s(36)
+  end
+
+  def as_json(options={})
+    {
+            :id => id.to_s,
+            :slug => to_param,
+            :type => 'Topic',
+            :name => name,
+            :public_id => public_id,
+            :images => Topic.json_images(self)
+    }
   end
 end

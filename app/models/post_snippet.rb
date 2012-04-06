@@ -16,4 +16,14 @@ class PostSnippet
   def encoded_id
     public_id.to_i.to_s(36)
   end
+
+  def as_json
+    {
+            :id => id.to_s,
+            :slug => to_param,
+            :type => type,
+            :public_id => public_id,
+            :comment_id => comment_id
+    }
+  end
 end

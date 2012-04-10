@@ -43,6 +43,9 @@ class LL.Views.PageHeader extends Backbone.View
 
     $(e.currentTarget).addClass('on').siblings().removeClass('on')
 
+    unless $(e.currentTarget).data('sort') == 'newest'
+      LL.App.unsubscribe(LL.App.Feed.channel)
+
     LL.App.Feed.reset()
     LL.App.Feed.collection.page = 1
     LL.App.Feed.collection.sort_value = $(e.currentTarget).data('sort')

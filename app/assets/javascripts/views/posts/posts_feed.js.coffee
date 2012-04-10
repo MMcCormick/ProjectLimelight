@@ -49,9 +49,16 @@ class LL.Views.PostsFeed extends Backbone.View
 
     unless LL.App.get_event_subscription(@channel, 'new_post')
       channel.bind 'new_post', (data) ->
-        post = new LL.Models.RootPost(data)
-        self.collection.add(post, {silend: true})
-        self.prependPost(post)
+        post = self.collection.get(data.id)
+        if post
+          tmp_post = new LL.Models.RootPost(data)
+          post.set('personal_responses', tmp_post.get('personal_responses'))
+          post.set('public_responses', tmp_post.get('public_responses'))
+          post.trigger('move_to_top')
+        else
+          post = new LL.Models.RootPost(data)
+          self.collection.add(post, {silent: true})
+          self.prependPost(post)
 
     @
 
@@ -83,6 +90,8 @@ class LL.Views.PostsFeed extends Backbone.View
     chosen
 
   addPost: (root_post) =>
+    self = @
+
     if root_post.get('root').get('type') != 'Talk'
       root_id = root_post.get('root').get('id')
 
@@ -105,9 +114,12 @@ class LL.Views.PostsFeed extends Backbone.View
     column = @chooseColumn()
     tile = new LL.Views.RootPost(model: root_post)
     @tiles.push tile
+    tile.render()
     column.prependPost tile
 
     @addPost(root_post)
+
+    @prependNext = false
 
     @
 
@@ -122,7 +134,7 @@ class LL.Views.PostsFeed extends Backbone.View
     @
 
   loadMore: (e) ->
-    if @collection.page == @page && @collection.length % 20 == 0 && $(window).scrollTop()+$(window).height() > $(@.el).height()-$(@.el).offset().top
+    if @collection.page == @page && $(window).scrollTop()+$(window).height() > $(@.el).height()-$(@.el).offset().top
       @.page += 1
       data = {id: @collection.id, p: @.page}
 

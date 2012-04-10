@@ -10,6 +10,7 @@ class RootPost
 
   def as_json(options={})
     {
+            :id => root.id.to_s,
             :public_talking => public_talking,
             :personal_talking => personal_talking,
             :root => root.as_json(options),

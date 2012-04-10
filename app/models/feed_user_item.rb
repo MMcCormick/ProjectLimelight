@@ -92,6 +92,17 @@ class FeedUserItem
           end
           updates["$inc"] = { :strength => strength, :ds => strength }
 
+          personal_responses = []
+          unless post.is_root?
+            personal_responses << post
+          end
+          feed_item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
+          if feed_item && feed_item.responses
+            last = Post.find(feed_item.responses.last)
+            personal_responses << last if last
+          end
+          root_post.personal_responses = personal_responses
+
           FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
 
           Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:user => u))

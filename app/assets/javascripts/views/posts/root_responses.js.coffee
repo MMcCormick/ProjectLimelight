@@ -12,7 +12,7 @@ class LL.Views.RootResponses extends Backbone.View
       if @model.get('personal_talking') == 0
         talking = null
       else
-        talking = "Friends Talking"
+        talking = "Friends"
     else if @type == 'like'
       responses = @model.get('like_responses')
       className = 'like-responses'
@@ -27,7 +27,7 @@ class LL.Views.RootResponses extends Backbone.View
       if @model.get('public_talking') == 0
         talking = ''
       else
-        talking = "#{@model.get('public_talking')} #{(if @model.get('public_talking') > 1 then 'People' else 'Person')} Talking"
+        talking = "People"
 
     $(@el).remove()
 

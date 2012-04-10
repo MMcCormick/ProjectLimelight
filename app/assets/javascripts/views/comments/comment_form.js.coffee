@@ -32,6 +32,7 @@ class LL.Views.CommentForm extends Backbone.View
         $(self.el).find('.btn-success').addClass('disabled').text('Submitting...')
       success: (data) ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
+        self.model.trigger('new_comment')
         createGrowl false, "Comment created", 'Success', 'green'
         globalSuccess(data)
         self.destroyForm()

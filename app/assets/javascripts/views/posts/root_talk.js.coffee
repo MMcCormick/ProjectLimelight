@@ -8,6 +8,7 @@ class LL.Views.RootTalk extends Backbone.View
     "click .comment-form": "commentForm"
 
   initialize: ->
+    @model.on('new_comment', @incrementComment)
 
   render: ->
     $(@el).html(@template(talk: @model))
@@ -23,6 +24,9 @@ class LL.Views.RootTalk extends Backbone.View
   postShow: (e) =>
     return if $(e.target).is('.ulink, .score-pts, .like, .comment-form') || $(e.target).is('img')
     LL.Router.navigate("talks/#{@model.get('id')}", trigger: true)
+
+  incrementComment: =>
+    $(@el).find('.comment-form span').text(parseInt($(@el).find('.comment-form span').text()) + 1)
 
   commentForm: (e) =>
     self = @

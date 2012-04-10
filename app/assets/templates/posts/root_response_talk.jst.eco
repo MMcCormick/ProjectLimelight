@@ -12,7 +12,7 @@
       </span>
     <% end %>
     <span class="actions">
-      <span class="comment-form">+Comment</span>
+      <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>
     </span>
   </span>
 </p>

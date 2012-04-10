@@ -440,7 +440,6 @@ class User
     increases.each do |increase|
       increase.topic = topics[increase.topic_id.to_s]
     end
-    increases
   end
 
   def update_social_denorms

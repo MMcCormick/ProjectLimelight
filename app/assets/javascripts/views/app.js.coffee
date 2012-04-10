@@ -107,6 +107,10 @@ class LL.Views.App extends Backbone.View
   subscribe: (id) =>
     @subscriptions[id] = pusher.subscribe(id)
 
+  unsubscribe: (id) =>
+    pusher.unsubscribe(id)
+    delete @subscriptions[id]
+
   get_event_subscription: (id, event) =>
     @event_subscriptions["#{id}_#{event}"]
 

@@ -12,6 +12,7 @@ class LL.Views.RootPost extends Backbone.View
     @like_responses = null
 
     @model.get('root').on('new_response', @renderResponses)
+    @model.on('move_to_top', @moveToTop)
 
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
@@ -68,3 +69,11 @@ class LL.Views.RootPost extends Backbone.View
       @public_responses = public_responses_view
 
     @public_responses.render()
+
+  moveToTop: =>
+    $(@el).html('')
+    @render()
+    if $(@column.el).offset().top == $(@el).offset().top
+      @renderResponses()
+    else
+      @column.prependPost @

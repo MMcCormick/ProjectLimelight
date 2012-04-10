@@ -12,6 +12,7 @@ class LL.Views.PostShow extends Backbone.View
     @loaded = null
 
   render: =>
+    console.log @model
     $(@el).html(@template(post: @model))
 
     like = new LL.Views.LikeButton(model: @model)

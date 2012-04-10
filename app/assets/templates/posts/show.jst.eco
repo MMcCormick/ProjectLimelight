@@ -1,9 +1,9 @@
 <section class="post-root">
   <h1>
-    <% if @post.get('primarySource'): %>
-      <a target="_blank" href="<%= @post.get('primarySource').url %>">
+    <% if @post.get('primary_source'): %>
+      <a target="_blank" href="<%= @post.get('primary_source').url %>">
         <span class="title title-with-source"><%= @post.get('title') %></span>
-        <span class="source"><%= @post.get('primarySource').name %></span>
+        <span class="source"><%= @post.get('primary_source').name %></span>
       </a>
     <% else: %>
       <span class="title"><%= @post.get('title') %></span>

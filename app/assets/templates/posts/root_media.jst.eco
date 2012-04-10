@@ -1,8 +1,8 @@
 <h5>
-  <% if @post.get('primarySource'): %>
+  <% if @post.get('primary_source'): %>
     <span class="title title-with-source"><%= @post.get('title') %></span>
-    <a target="_blank" href="<%= @post.get('primarySource').url %>">
-      <span class="source"><%= @post.get('primarySource').name %></span>
+    <a target="_blank" href="<%= @post.get('primary_source').url %>">
+      <span class="source"><%= @post.get('primary_source').name %></span>
     </a>
   <% else: %>
     <span class="title"><%= @post.get('title') %></span>

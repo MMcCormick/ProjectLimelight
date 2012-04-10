@@ -474,7 +474,7 @@ class Post
 
         next unless root_post.root
 
-        root_post.personal_responses = personal_responses[root_post.root.id.to_s] ? personal_responses[root_post.root.id.to_s] : []
+        root_post.personal_responses = personal_responses[root_post.root.id.to_s] ? personal_responses[root_post.root.id.to_s].reverse : []
         root_post.public_talking = root_post.root.response_count
 
         #get the public responses

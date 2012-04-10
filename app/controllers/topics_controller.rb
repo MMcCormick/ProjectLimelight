@@ -19,6 +19,7 @@ class TopicsController < ApplicationController
       @topics = @topics.skip(params[:limit].to_i * (params[:page].to_i-1))
     end
 
+    render :json => @topics.map {|t| t.as_json}
   end
 
   def show

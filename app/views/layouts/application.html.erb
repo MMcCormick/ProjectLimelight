@@ -51,9 +51,9 @@
     <%= render :partial => 'shared/social_tools' %>
 
     <% if defined? @this %>
-      <div id='this' data-this='<%= @this.to_json(:user => current_user) %>'></div>
+      <div id='this' data-this="<%= @this.to_json(:user => current_user) %>"></div>
     <% end %>
-    <div id='me' data-user='<%= current_user.to_json(:show_extra => true) %>'></div>
+    <div id='me' data-user="<%= current_user.to_json(:show_extra => true) %>"></div>
 
   </body>
 </html>

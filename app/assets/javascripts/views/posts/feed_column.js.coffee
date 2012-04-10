@@ -6,11 +6,12 @@ class LL.Views.FeedColumn extends Backbone.View
     @height = 0
 
   appendPost: (view) ->
+    view.column = @
     $(@el).append(view.render().el)
     @height = $(@el).height()
 
   prependPost: (view) ->
-    $(view.render().el).css({'position':'absolute','visibility':'hidden','display':'block'})
+    $(view.el).css({'position':'absolute','visibility':'hidden','display':'block'})
     $(@el).prepend(view.el)
 
     setTimeout ->
@@ -18,7 +19,7 @@ class LL.Views.FeedColumn extends Backbone.View
       marginTop = -1 * (40 + height + parseInt($(view.el).css('margin-bottom')))
       $(view.el).css({'margin-top':marginTop,'position':'relative','visibility':'visible'})
 
-      $(view.el).animate {'margin-top': 0}, 1000, 'easeOutExpo', ->
+      $(view.el).animate {'margin-top': 0}, 750, 'easeOutExpo', ->
         @height = $(@el).height()
 
-    , 2000
+    , 1000

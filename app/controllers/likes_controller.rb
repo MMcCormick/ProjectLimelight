@@ -8,23 +8,23 @@ class LikesController < ApplicationController
       if like_success
         current_user.save if object.save
 
-        @notification = Notification.add(object.user, :like, true, current_user, nil, object, object.user)
-        if @notification
-          Pusher["#{object.user.id.to_s}_private"].trigger('new_notification', render_to_string(:template => 'users/notification.json.rabl'))
+        notification = Notification.add(object.user, :like, true, current_user, nil, object, object.user)
+        if notification
+          Pusher["#{object.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
         end
 
         # send the influence pusher notification
         if object.class.name == 'Talk'
           object.topic_mentions.each do |mention|
-            @increase = InfluenceIncrease.new
-            @increase.amount = like_success
-            @increase.topic_id = mention.id
-            @increase.object_type = 'Talk'
-            @increase.action = :lk
-            @increase.id = mention.name
-            @increase.topic = mention
+            increase = InfluenceIncrease.new
+            increase.amount = like_success
+            increase.topic_id = mention.id
+            increase.object_type = 'Talk'
+            increase.action = :lk
+            increase.id = mention.name
+            increase.topic = mention
 
-            Pusher[object.user_id.to_s].trigger('influence_change', render_to_string(:template => 'users/influence_increase.json.rabl'))
+            Pusher[object.user_id.to_s].trigger('influence_change', increase.to_json)
           end
         end
 

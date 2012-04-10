@@ -42,7 +42,7 @@ class Neo4j
 
       if node1 && post_node && post
         # destroy like
-        rel1 = Neo4j.neo.get_relationship_index('users', 'like', "#{node1_id}-#{post_id}")
+        rel1 = Neo4j.neo.get_relationship_index('users', 'like', "#{user_id}-#{post_id}")
         Neo4j.neo.delete_relationship(rel1)
         Neo4j.neo.remove_relationship_from_index('users', rel1)
 

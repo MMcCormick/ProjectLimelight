@@ -28,7 +28,7 @@ module ModelUtilitiesHelper
       when 0..3600 then "#{(a/60).to_i}m"
       when 3601..86400 then "#{(a/3600).to_i}h"
       when 86401..2592000 then "#{(a/86400).to_i}d"
-      else "#{(a/2592000).to_i}m"
+      else "#{(a/2592000).to_i}mo"
     end
   end
 

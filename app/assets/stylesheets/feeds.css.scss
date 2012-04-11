@@ -183,7 +183,7 @@ $feedFontColor: $grayDark;
 
     img {
       position: absolute;
-      top: 0px;
+      top: 2px;
       left: 0px;
       height: 30px;
       width: 30px;
@@ -191,7 +191,8 @@ $feedFontColor: $grayDark;
       z-index: 100;
     }
     .ulink {
-      font-size: 14px;
+      font-size: 13px;
+      margin: 0 0 2px 0;
     }
     p {
       position: relative;
@@ -199,6 +200,8 @@ $feedFontColor: $grayDark;
       line-height: 16px;
       .actions {
         display: block;
+        margin: 2px 0 0 0;
+
         .score-pts,
         .comment-form,
         .like {

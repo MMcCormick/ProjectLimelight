@@ -19,7 +19,7 @@ class LL.Views.App extends Backbone.View
     @Users = new LL.Collections.Users
     @UserFeed = new LL.Collections.UserFeed
     @ActivityFeed = new LL.Collections.ActivityFeed
-    @LikeFeed = new LL.Collections.LikeFeed
+    @RepostFeed = new LL.Collections.RepostFeed
     @Notifications = new LL.Collections.UserNotifications
 
     @Posts = new LL.Collections.Posts

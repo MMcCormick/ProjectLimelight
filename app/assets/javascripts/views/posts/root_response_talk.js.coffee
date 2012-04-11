@@ -17,7 +17,7 @@ class LL.Views.RootResponseTalk extends Backbone.View
     $(@el).find('.actions').prepend(like.render().el)
 
     score = new LL.Views.Score(model: @model)
-    $(@el).find('.actions').prepend(score.render().el)
+    $(@el).find('.top-right').prepend(score.render().el)
 
     @
 
@@ -32,9 +32,9 @@ class LL.Views.RootResponseTalk extends Backbone.View
     self = @
     view = new LL.Views.CommentForm(model: @model)
     view.modal = true
-    view.qtip = e.currentTarget
+    view.qtip = @el
 
-    $(e.currentTarget).qtip
+    $(@el).qtip
       position:
         my: 'top middle'
         at: 'bottom middle'

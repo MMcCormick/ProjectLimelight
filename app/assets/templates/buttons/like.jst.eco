@@ -1,1 +1,1 @@
-<%= if @model.get('liked') == true then 'Unlike' else 'Like' %>
+<%= if @model.get('liked') == true then 'Reposted' else 'Repost' %>

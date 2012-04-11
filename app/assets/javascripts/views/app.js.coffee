@@ -129,10 +129,10 @@ class LL.Views.App extends Backbone.View
 #      className = 'five'
     if width >= 1235
       className = 'four'
-    else if width >= 995
+    else #if width >= 995
       className = 'three'
-    else
-      className = 'two'
+#    else
+#      className = 'two'
 
     unless $('body').hasClass(className)
       $('body').removeClass('two three four five').addClass(className)

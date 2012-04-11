@@ -419,7 +419,7 @@ class User
 
   def influence_increases
     increases = []
-    actions = PopularityAction.where("pop_snippets._id" => id, "pop_snippets.ot" => 'Topic').order_by(:et, :desc).limit(5).to_a
+    actions = PopularityAction.where("pop_snippets._id" => id, "pop_snippets.ot" => 'Topic').order_by(:et, :desc).limit(3).to_a
     actions.each do |action|
       action.pop_snippets.each do |snip|
         if snip.ot == "Topic" && snip.a > 0
@@ -440,6 +440,7 @@ class User
     increases.each do |increase|
       increase.topic = topics[increase.topic_id.to_s]
     end
+    increases.last(3)
   end
 
   def update_social_denorms

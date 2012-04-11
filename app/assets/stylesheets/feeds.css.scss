@@ -19,23 +19,9 @@ $feedFontColor: $grayDark;
 .tile {
   margin-bottom: 20px;
 
-  //&.link { background-color: $link10RGBA; }
-  //&.picture { background-color: $picture10RGBA; }
-  //&.video { background-color: $video10RGBA; }
-  //&.talk { background-color: $talk10RGBA; }
-  //&.topic { background-color: $topic10RGBA; }
-
-
   @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-  //&.link { @include single-box-shadow($link50RGBA, 0px, 1px, 3px); }
-  //&.picture { @include single-box-shadow($picture50RGBA, 0px, 1px, 3px); }
-  //&.video { @include single-box-shadow($video50RGBA, 0px, 1px, 3px); }
-  //&.talk { @include single-box-shadow($talk50RGBA, 0px, 1px, 3px); }
-  //&.topic { @include single-box-shadow($topic50RGBA, 0px, 1px, 3px); }
 
   &:hover {
-    //@include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-
     .actions {
       .talk-form,
       .follow,
@@ -44,11 +30,6 @@ $feedFontColor: $grayDark;
         color: $greenDarker;
       }
     }
-    //&.link { background-color: $link50RGBA; }
-    //&.picture { background-color: $picture50RGBA; }
-    //&.video { background-color: $video50RGBA; }
-    //&.talk { background-color: $talk50RGBA; }
-    //&.topic { background-color: $topic50RGBA; }
   }
 
   .mentions {

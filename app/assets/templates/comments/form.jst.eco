@@ -1,18 +1,26 @@
 <form>
-  <% unless @modal: %>
-    <div class="modal-header">
-      <h3>+Comment</h3>
+  <% if @minimal == false: %>
+
+    <% unless @modal: %>
+      <div class="modal-header">
+        <h3>+Comment</h3>
+      </div>
+    <% end %>
+    <div class="modal-body">
+      <div class='errors'></div>
+      <textarea id="comment-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Add comment..."></textarea>
+      <input type="hidden" id="post-form-parent-id" name="talk_id" value="<%= @model.get('id') %>" />
     </div>
-  <% end %>
-  <div class="modal-body">
+    <div class="modal-footer">
+      <div class="btn btn-success submit" data-loading-text='Submitting...'>Submit</div>
+      <% if @modal: %>
+        <span class="cancel btn">Cancel</span>
+      <% end %>
+    </div>
+
+  <% else: %>
     <div class='errors'></div>
     <textarea id="comment-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Add comment..."></textarea>
     <input type="hidden" id="post-form-parent-id" name="talk_id" value="<%= @model.get('id') %>" />
-  </div>
-  <div class="modal-footer">
-    <div class="btn btn-success submit" data-loading-text='Submitting...'>Submit</div>
-    <% if @modal: %>
-      <span class="cancel btn">Cancel</span>
-    <% end %>
-  </div>
+  <% end %>
 </form>

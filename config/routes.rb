@@ -46,6 +46,7 @@ ProjectLimelight::Application.routes.draw do
     end
 
     scope 'comments' do
+      get '' => 'comments#index'
       post '' => 'comments#create'
       delete '' => 'comments#destroy'
     end

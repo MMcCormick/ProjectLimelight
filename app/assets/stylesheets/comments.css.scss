@@ -1,0 +1,28 @@
+.comment-list {
+  li {
+    position: relative;
+    padding: 0 0 0 50px;
+    min-height: 40px;
+    margin: 10px 0;
+
+    img {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 40px;
+      height: 40px;
+    }
+    .ulink {
+      color: #444;
+      font-weight: bold;
+    }
+    p {
+      font-size: 15px;
+      padding: 3px 0 0 0;
+    }
+    .when {
+      font-size: 11px;
+      color: #999;
+    }
+  }
+}

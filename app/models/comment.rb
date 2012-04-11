@@ -5,6 +5,8 @@ class Comment
   include Mongoid::Timestamps
   include Limelight::Acl
 
+  include ModelUtilitiesHelper
+
   field :content
   field :status, :default => "active"
   field :parent_id
@@ -62,13 +64,24 @@ class Comment
     end
   end
 
+  def as_json
+    {
+            :id => id.to_s,
+            :content => content,
+            :created_at => created_at,
+            :created_at_pretty => pretty_time(created_at),
+            :created_at_short => short_time(created_at),
+            :user => user.as_json
+    }
+  end
+
   class << self
     # Based on Newsmonger: https://github.com/banker/newsmonger
     # Return an array of comments, threaded, from highest to lowest votes.
     # Sorts by votes descending by default, but could use any other field.
     # If you want to build out an internal balanced score, pass that field in,
     # and be sure to index it on the database.
-    def threaded_with_field(talk_id, field_name='created_at', limit)
+    def threaded_with_field(talk_id, field_name='created_at', limit=nil)
       comments = Comment.where(:talk_id => talk_id).asc(:path).desc(field_name)
       results, map = [], {}
       comments.each do |comment|
@@ -83,22 +96,7 @@ class Comment
         end
       end
 
-      comments = assemble(results, map)
-
-      results = {:show => [], :hide => []}
-      if limit
-        comments.each_with_index do |comment,i|
-          if i < limit
-            results[:show] << comment
-          else
-            results[:hide] << comment
-          end
-        end
-      else
-        results[:show] = comments
-      end
-
-      results
+      assemble(results, map)
     end
 
     # Used by Comment#threaded_with_field to assemble the results.

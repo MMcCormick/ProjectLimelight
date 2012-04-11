@@ -8,7 +8,7 @@ class Talk < Post
   after_update :talk_is_cheap
 
   def name
-    content_clean
+    content
   end
 
   def talk_is_cheap

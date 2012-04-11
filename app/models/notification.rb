@@ -78,8 +78,8 @@ class Notification
         'is following you'
       when :mention
         "mentioned you in a post"
-      when :like
-        "liked your post"
+      when :repost
+        "reposted your \"#{object.short_name}\""
       when :comment
         "commented on your post".html_safe
       when :also # also signifies that someone has also responded to something your responded to

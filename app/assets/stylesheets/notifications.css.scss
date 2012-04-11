@@ -3,7 +3,7 @@
   position: fixed;
   top: 0px;
   right: 0px;
-  width: 200px;
+  width: 220px;
   background: #F9F9F9;
   border-left: 1px solid #666;
   height: 100%;
@@ -37,7 +37,7 @@
       /*background: #E9E9E9;*/
     }
     &.mention:hover,
-    &.like:hover {
+    &.repost:hover {
       background: #F3F3F3;
       cursor: pointer;
       .content,
@@ -49,13 +49,13 @@
       width: 30px;
       height: 30px;
       position: absolute;
-      top: 50%;
+      top: 9px;
       left: 5px;
-      margin-top: -15px;
     }
     .content {
       margin: 2px 0 0 0;
-      font-size: 12px;
+      font-size: 11px;
+      line-height: 14px;
       cursor: default;
       a {
         font-weight: bold;

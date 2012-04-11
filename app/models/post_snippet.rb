@@ -17,6 +17,15 @@ class PostSnippet
     public_id.to_i.to_s(36)
   end
 
+  # short version of the contnet "foo bar foo bar..." used in notifications etc.
+  def short_name
+    short = name[0..30]
+    if name.length > 30
+      short += '...'
+    end
+    short
+  end
+
   def as_json
     {
             :id => id.to_s,

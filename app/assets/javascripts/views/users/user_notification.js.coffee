@@ -20,5 +20,5 @@ class LL.Views.UserNotification extends Backbone.View
   showRelevant: (e) =>
     return if $(e.target).is('a')
 
-    if @model.get('type') == 'mention' || @model.get('type') == 'like'
+    if @model.get('type') == 'mention' || @model.get('type') == 'repost'
       LL.Router.navigate("talks/#{@model.get('object').id}", trigger: true)

@@ -1,11 +1,10 @@
 <div class="root-talk">
   <img src="<%= @talk.get('user').get('images').square.small %>">
+  <a class="ulink" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
   <p>
-    <a class="ulink" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
     <%= @talk.get('content') %>
     <% if @talk.get('topic_mentions').length > 0: %>
       <span class="mentions">
-        --
         <% for mention, i in @talk.get('topic_mentions'): %>
           <a class="tlink" href="/<%= mention.get('slug') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
         <% end %>
@@ -15,4 +14,5 @@
       <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>
     </span>
   </p>
+  <div class='when'><%= @talk.get('created_at_short') %></div>
 </div>

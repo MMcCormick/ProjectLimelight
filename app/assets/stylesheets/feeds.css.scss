@@ -190,6 +190,9 @@ $feedFontColor: $grayDark;
       background-color: #444;
       z-index: 100;
     }
+    .ulink {
+      font-size: 14px;
+    }
     p {
       position: relative;
       top: -1px;
@@ -204,6 +207,13 @@ $feedFontColor: $grayDark;
           font-weight: normal;
         }
       }
+    }
+    .when {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      font-size: 10px;
+      color: $grayLight;
     }
     .score-pts {
       font-size: 10px;

@@ -1,11 +1,12 @@
 <img src="<%= @talk.get('user').get('images').square.small %>">
+<a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
 <p>
-  <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
+
   <%= @talk.get('content') %>
+
   <span class="response-float">
     <% if @talk.get('topic_mentions').length > 0: %>
       <span class="mentions">
-        --
         <% for mention, i in @talk.get('topic_mentions'): %>
           <a class="tlink" data-id='<%= mention.get('slug') %>' href="/<%= mention.get('slug') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
         <% end %>
@@ -15,4 +16,6 @@
       <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>
     </span>
   </span>
+
 </p>
+<span class='when'><%= @talk.get('created_at_short') %></span>

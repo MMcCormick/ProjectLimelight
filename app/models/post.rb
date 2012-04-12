@@ -85,6 +85,15 @@ class Post
     public_id.to_i.to_s(36)
   end
 
+  # short version of the contnet "foo bar foo bar..." used in notifications etc.
+  def short_name
+    short = name[0..30]
+    if name.length > 30
+      short += '...'
+    end
+    short
+  end
+
   # After a root post create, if there is content then create a linked talk for the user
   def add_first_talk
     unless self.class.name == 'Talk' || content.blank?
@@ -322,7 +331,7 @@ class Post
   ##########
 
   def as_json(options={})
-    {
+    data = {
             :id => id.to_s,
             :slug => to_param,
             :type => _type,
@@ -330,9 +339,10 @@ class Post
             :content => content,
             :score => score,
             :talking_count => response_count,
-            :created_at => created_at,
             :liked => liked_by?(options[:user].id) ? true : false,
+            :created_at => created_at,
             :created_at_pretty => pretty_time(created_at),
+            :created_at_short => short_time(created_at),
             :video => json_video,
             :video_autoplay => json_video(true),
             :primary_source => sources.first,
@@ -340,6 +350,14 @@ class Post
             :images => json_images,
             :user => user.as_json
     }
+
+    if options[:comment_threads] && options[:comment_threads][id.to_s]
+      data[:comments] = options[:comment_threads][id.to_s].map {|c| c.as_json}
+    else
+      data[:comments] = []
+    end
+
+    data
   end
 
   def json_video(autoplay=nil)
@@ -500,7 +518,7 @@ class Post
       build_activity_feed(items)
     end
 
-    def like_feed(feed_id, display_types, page)
+    def repost_feed(feed_id, display_types, page)
 
       if display_types.include?('Talk')
         display_types << 'Topic'
@@ -509,7 +527,7 @@ class Post
       items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc)
       items = items.skip((page-1)*20).limit(20)
 
-      build_like_feed(items)
+      build_repost_feed(items)
     end
 
     def topic_feed(feed_ids, user_id, display_types, sort, page)
@@ -617,7 +635,7 @@ class Post
       return_objects
     end
 
-    def build_like_feed(items)
+    def build_repost_feed(items)
       topic_ids = []
       item_ids = []
       items.each do |i|
@@ -631,15 +649,15 @@ class Post
 
       topics = {}
       posts = {}
-      like_responses = {}
+      repost_responses = {}
       tmp_topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
       tmp_posts = Post.where(:_id => {'$in' => item_ids})
 
       tmp_topics.each {|t| topics[t.id.to_s] = t}
       tmp_posts.each do |p|
         if p.root_id != p.id
-          like_responses[p.root_id.to_s] ||= []
-          like_responses[p.root_id.to_s] << p
+          repost_responses[p.root_id.to_s] ||= []
+          repost_responses[p.root_id.to_s] << p
         else
           posts[p.id.to_s] = p
         end
@@ -656,7 +674,7 @@ class Post
 
         next unless root_post.root
 
-        root_post.like_responses = like_responses[root_post.root.id.to_s] ? like_responses[root_post.root.id.to_s] : []
+        root_post.repost_responses = repost_responses[root_post.root.id.to_s] ? repost_responses[root_post.root.id.to_s] : []
 
         return_objects << root_post
       end

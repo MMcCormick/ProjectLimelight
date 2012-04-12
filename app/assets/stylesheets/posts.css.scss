@@ -79,7 +79,7 @@ $postFontColor: $grayDark;
         }
         h5 {
           display: table-cell;
-          margin: 0px;                
+          margin: 0px;
           padding: 0 10px;
           vertical-align: middle;
         }
@@ -97,7 +97,7 @@ $postFontColor: $grayDark;
       .modal-header {
         padding: 0 0 10px 0;
         border: none;
-      }            
+      }
       .modal-body {
         padding: 0px 0 10px;
         .main-content {
@@ -129,13 +129,19 @@ $postFontColor: $grayDark;
           font-weight: normal;
           color: $grayLight;
         }
+        .like,
+        .comment-form {
+          &:hover {
+            color: $greenDarker;
+          }
+        }
       }
       .created-at {
         font-size: 13px;
         color: $grayLight;
       }
     }
-    img {
+    > img {
       position: absolute;
       top: 0px;
       left: 0px;
@@ -143,7 +149,7 @@ $postFontColor: $grayDark;
       width: 50px;
       background-color: #444;
     }
-    p {
+    > p {
       position: relative;
       font-size: 15px;
       line-height: 20px;
@@ -159,13 +165,10 @@ $postFontColor: $grayDark;
         color: $grayLight;
       }
     }
-    &:hover {
-      .actions {
-        .like,
-        .comment-form {
-          color: $greenDarker;
-        }
-      }
+    .comments {
+      margin: 20px 0 0 -60px;
+      padding: 0 10px;
+      background: #F6F6F6;
     }
   }
 }
@@ -174,6 +177,7 @@ $postFontColor: $grayDark;
   .post-root {
     padding: 18px 20px 20px 85px;
     position: relative;
+    width: 587px;
 
     .user-image {
       position: absolute;
@@ -214,5 +218,12 @@ $postFontColor: $grayDark;
     display: inline-block;
     font-size: 24px;
     font-weight: normal;
+  }
+  #comment-form {
+    margin: 15px 0 0 0;
+
+    textarea {
+      width: 300px;
+    }
   }
 }

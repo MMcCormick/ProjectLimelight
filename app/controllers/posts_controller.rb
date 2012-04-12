@@ -110,10 +110,10 @@ class PostsController < ApplicationController
   end
 
   # The user like feed
-  def like_feed
+  def repost_feed
     user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
     page = params[:p] ? params[:p].to_i : 1
-    posts = Post.like_feed(user.id, session[:feed_filters][:display], page)
+    posts = Post.repost_feed(user.id, session[:feed_filters][:display], page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
   end
 
@@ -141,7 +141,9 @@ class PostsController < ApplicationController
     post = Post.find(params[:id])
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.friend_responses(post.id, current_user, page, 50)
-    render :json => posts.map {|p| p.as_json(:user => current_user)}
+    post_ids = posts.map {|p| p.id}
+    threads = Comment.multiple_threads(post_ids)
+    render :json => posts.map {|p| p.as_json(:user => current_user, :comment_threads => threads)}
   end
 
   def public_responses

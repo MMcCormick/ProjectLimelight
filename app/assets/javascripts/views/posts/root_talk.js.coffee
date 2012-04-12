@@ -8,6 +8,7 @@ class LL.Views.RootTalk extends Backbone.View
     "click .comment-form": "commentForm"
 
   initialize: ->
+    @model.on('new_comment', @incrementComment)
 
   render: ->
     $(@el).html(@template(talk: @model))
@@ -16,7 +17,7 @@ class LL.Views.RootTalk extends Backbone.View
     $(@el).find('.actions').prepend(like.render().el)
 
     score = new LL.Views.Score(model: @model)
-    $(@el).find('.actions').prepend(score.render().el)
+    $(@el).find('.top-right').prepend(score.render().el)
 
     @
 
@@ -24,13 +25,16 @@ class LL.Views.RootTalk extends Backbone.View
     return if $(e.target).is('.ulink, .score-pts, .like, .comment-form') || $(e.target).is('img')
     LL.Router.navigate("talks/#{@model.get('id')}", trigger: true)
 
+  incrementComment: =>
+    $(@el).find('.comment-form span').text(parseInt($(@el).find('.comment-form span').text()) + 1)
+
   commentForm: (e) =>
     self = @
     view = new LL.Views.CommentForm(model: @model)
     view.modal = true
-    view.qtip = e.currentTarget
+    view.qtip = @el
 
-    $(e.currentTarget).qtip
+    $(@el).qtip
       position:
         my: 'top middle'
         at: 'bottom middle'

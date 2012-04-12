@@ -78,12 +78,12 @@ class Notification
         'is following you'
       when :mention
         "mentioned you in a post"
-      when :like
-        "liked your post"
+      when :repost
+        "reposted \"#{object.short_name}\""
       when :comment
-        "commented on your post".html_safe
+        "commented on \"#{object.short_name}\""
       when :also # also signifies that someone has also responded to something your responded to
-        "also commented on #{object_user.username}'s post".html_safe
+        "also commented on #{object_user.username}'s post \"#{object.short_name}\""
       else
         "did something weird... this is a mistake and the Limelight team has been notified to fix it!"
     end

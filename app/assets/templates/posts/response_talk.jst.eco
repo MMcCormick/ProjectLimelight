@@ -13,8 +13,9 @@
 
   <span class="actions-created">
     <span class="actions">
-      <span class="comment-form">+Comment</span>
+      <span class="comment-form">+Comment (<%= @talk.get('talking_count') %>)</span>
     </span>
     <span class="created-at"><%= @talk.get('created_at_pretty') %></span>
   </span>
 </p>
+<div class='comments'></div>

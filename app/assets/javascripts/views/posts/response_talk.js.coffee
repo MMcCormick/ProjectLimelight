@@ -14,4 +14,9 @@ class LL.Views.ResponseTalk extends Backbone.View
     score = new LL.Views.Score(model: @model)
     $(@el).find('.actions').prepend(score.render().el)
 
+    @comments = new LL.Collections.Comments
+    @comments_view = new LL.Views.CommentList(collection: @comments, model: @model)
+    @comments.add(@model.get('comments'))
+    $(@el).find('.comments').html(@comments_view.render().el)
+
     @

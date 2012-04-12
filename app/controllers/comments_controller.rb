@@ -1,12 +1,18 @@
 class CommentsController < ApplicationController
   before_filter :authenticate_user!
 
+  def index
+    comments = Comment.threaded_with_field(params[:id])
+    render :json => comments.map {|c| c.as_json}
+  end
+
   def create
     talk = Talk.find(params[:talk_id])
     comment = talk.comments.new(params)
     comment.user_id = current_user.id
 
     if comment.save
+      Pusher[talk.id.to_s].trigger('new_comment', comment.as_json)
       comment.send_notifications(current_user)
       response = build_ajax_response(:ok, nil, "Comment created!")
       render json: response, :status => 201

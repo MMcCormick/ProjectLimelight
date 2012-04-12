@@ -9,7 +9,7 @@ class LL.Views.RootPost extends Backbone.View
     @public_responses = null
     @personal_responses = null
     @activity_responses = null
-    @like_responses = null
+    @repost_responses = null
 
     @model.get('root').on('new_response', @renderResponses)
     @model.on('move_to_top', @moveToTop)
@@ -38,13 +38,13 @@ class LL.Views.RootPost extends Backbone.View
 
   renderResponses: =>
 
-    if !@like_responses
-      like_responses_view = new LL.Views.RootResponses(model: @model)
-      like_responses_view.type = 'like'
-      like_responses_view.target = $(@el)
-      @like_responses = like_responses_view
+    if !@repost_responses
+      repost_responses_view = new LL.Views.RootResponses(model: @model)
+      repost_responses_view.type = 'repost'
+      repost_responses_view.target = $(@el)
+      @repost_responses = repost_responses_view
 
-    @like_responses.render()
+    @repost_responses.render()
 
     if !@activity_responses
       activity_responses_view = new LL.Views.RootResponses(model: @model)

@@ -43,7 +43,7 @@ ProjectLimelight::Application.routes.draw do
     scope 'posts' do
       post '' => 'posts#create'
       get 'user_feed' => 'posts#user_feed'
-      get 'like_feed' => 'posts#like_feed'
+      get 'repost_feed' => 'posts#repost_feed'
       get 'activity_feed' => 'posts#activity_feed'
       get 'topic_feed' => 'posts#topic_feed'
       get 'friend_responses' => 'posts#friend_responses'
@@ -53,6 +53,7 @@ ProjectLimelight::Application.routes.draw do
     end
 
     scope 'comments' do
+      get '' => 'comments#index'
       post '' => 'comments#create'
       delete '' => 'comments#destroy'
     end
@@ -95,13 +96,13 @@ ProjectLimelight::Application.routes.draw do
     get ':id/following/users' => 'users#show', :as => :user_following_topics
     get ':id/following/topics' => 'users#show', :as => :user_following_users
     get ':id/followers' => 'users#show', :as => :user_followers
-    get ':id/likes' => 'users#show', :as => :user_likes
+    get ':id/reposts' => 'users#show', :as => :user_reposts
     get ':id/feed' => 'users#show', :as => :user_feed
     get ':id' => 'users#show', :as => :user
   end
   get 'settings' => 'users#settings', :as => :user_settings
   get 'activity' => 'users#show'
-  get 'likes' => 'users#show'
+  get 'reposts' => 'users#show'
   resources :posts, :only => [:show]
 
   # Pages

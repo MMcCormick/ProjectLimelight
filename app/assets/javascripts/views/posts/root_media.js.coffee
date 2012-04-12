@@ -30,6 +30,5 @@ class LL.Views.RootMedia extends Backbone.View
       break if i == 2
       i++
 
-    console.log @model
     view.preview.setResponse(@model)
     $(view.el).find('.icons').remove()

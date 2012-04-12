@@ -4,5 +4,5 @@
   <%= @notification.get('sentence') %>
 </div>
 <div class='time'>
-  <%= @notification.get('created_at_pretty') %> ago
+  <%= @notification.get('created_at_pretty') %>
 </div>

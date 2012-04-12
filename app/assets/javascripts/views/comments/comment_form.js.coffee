@@ -10,9 +10,10 @@ class LL.Views.CommentForm extends Backbone.View
   initialize: ->
     @collection = new LL.Collections.Comments()
     @modal = false
+    @minimal = false
 
   render: ->
-    $(@el).html(@template(model: @model, modal: @modal))
+    $(@el).html(@template(model: @model, modal: @modal, minimal: @minimal))
 
     @
 
@@ -29,17 +30,18 @@ class LL.Views.CommentForm extends Backbone.View
     @collection.create attributes,
       wait: true
       beforeSend: ->
-        $(self.el).find('.btn-success').addClass('disabled').text('Submitting...')
+        $(self.el).find('textarea, .btn-success').addClass('disabled').text('Submitting...')
       success: (data) ->
-        $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
+        $(self.el).find('textarea, .btn-success').removeClass('disabled').text('Submit')
+        self.model.trigger('new_comment')
         createGrowl false, "Comment created", 'Success', 'green'
         globalSuccess(data)
         self.destroyForm()
       error: (jqXHR, textStatus, errorThrown) ->
-        $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
+        $(self.el).find('textarea, .btn-success').removeClass('disabled').text('Submit')
         globalError(textStatus, $(self.el))
       complete: ->
-        $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
+        $(self.el).find('textarea, .btn-success').removeClass('disabled').text('Submit')
 
   catchEnter: (e) =>
     if e.keyCode == 13
@@ -48,3 +50,5 @@ class LL.Views.CommentForm extends Backbone.View
   destroyForm: =>
     if @modal
       $(@qtip).qtip('destroy')
+    else
+      $(@el).find('textarea').val('').blur()

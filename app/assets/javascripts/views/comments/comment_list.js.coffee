@@ -1,6 +1,7 @@
 class LL.Views.CommentList extends Backbone.View
-  className: 'comment-list unstyled'
-  tagName: 'ul'
+  template: JST['comments/comment_list']
+  className: 'comment-list'
+  tagName: 'div'
 
   initialize: ->
     @collection.on('reset', @render)
@@ -19,8 +20,9 @@ class LL.Views.CommentList extends Backbone.View
         self.collection.add(comment)
 
   render: =>
+    $(@el).html(@template())
     if @collection.models.length > 0
-      $(@el).html('')
+      $(@el).fadeIn(200)
       for comment in @collection.models
         @prependComment(comment)
 
@@ -28,10 +30,13 @@ class LL.Views.CommentList extends Backbone.View
 
   prependComment: (comment) =>
     comment_view = new LL.Views.Comment(model: comment)
-    $(@el).prepend(comment_view.render().el)
+    $(@el).find('ul').prepend(comment_view.render().el)
     @
 
   appendComment: (comment) =>
+    unless $(@el).is(':visible')
+      $(@el).fadeIn(200)
+
     comment_view = new LL.Views.Comment(model: comment)
-    $(@el).append(comment_view.render().el)
+    $(@el).find('ul').append(comment_view.render().el)
     @

@@ -1,6 +1,6 @@
 class LL.Views.PostShowResponses extends Backbone.View
   tagName: 'section'
-  className: 'hide'
+  className: 'hide post-responses'
 
   initialize: ->
     @collection.on('reset', @render)
@@ -8,9 +8,9 @@ class LL.Views.PostShowResponses extends Backbone.View
   render: =>
     if @collection.models.length > 0
       if @collection.constructor.name == 'PostFriendResponses'
-        $(@el).prepend('<h2>Friends Talking</h2>')
+        $(@el).addClass('friend-responses').prepend('<h3>Friends Talking</h3>')
       else
-        $(@el).prepend("<h2>Other People Talking</h2>")
+        $(@el).addClass('public-responses').prepend("<h3>Other People Talking</h3>")
 
       for post in @collection.models
         @appendResponse(post)

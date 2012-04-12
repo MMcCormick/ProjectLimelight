@@ -3,6 +3,9 @@ class LL.Views.ResponseTalk extends Backbone.View
   tagName: 'div'
   className: 'response-talk'
 
+  events:
+    "click .comment-form": "commentForm"
+
   initialize: ->
 
   render: ->
@@ -20,3 +23,31 @@ class LL.Views.ResponseTalk extends Backbone.View
     $(@el).find('.comments').html(@comments_view.render().el)
 
     @
+
+  commentForm: (e) =>
+    self = @
+    view = new LL.Views.CommentForm(model: @model)
+    view.modal = true
+    view.qtip = $(@el).find('.meat')
+
+    $(@el).find('.meat').qtip
+      position:
+        my: 'top middle'
+        at: 'bottom middle'
+        viewport: $(window)
+      style:
+        tip: true
+        classes: 'ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-limelight comment-tip'
+      show:
+        ready: true
+        effect: (offset) ->
+          $(@).slideDown(150) # "this" refers to the tooltip
+      hide: false
+      content:
+        text: (api) ->
+          $(view.render().el)
+      events:
+        show: (event,api) ->
+          setTimeout ->
+            $(event.delegateTarget).find('textarea').focus()
+          , 0

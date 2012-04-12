@@ -41,6 +41,12 @@
   height: 38px;
 }
 
+.ll-white-arrow-down {
+  @include icon-sprite(white-arrow-down);
+  width: 20px;
+  height: 11px;
+}
+
 //.handle-black-small {
 //    @include icon-sprite(handle-black-small);
 //    width: 13px;

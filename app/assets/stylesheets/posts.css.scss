@@ -22,7 +22,7 @@ $postFontColor: $grayDark;
       }
     }
   }
-  h2 {
+  h3 {
     margin: 5px 0 15px;
   }
   .like,
@@ -115,19 +115,25 @@ $postFontColor: $grayDark;
     position: relative;
     padding: 0 0 10px 60px;
     min-height: 50px;
-    .actions-created {
-      display: block;
+
+    .top-right {
+      position: absolute;
+      top: 0px;
+      right: 0px;
       font-size: 12px;
-      line-height: 16px;
-      margin: 2px 0 0 0;
+      color: $grayLight;
+
       .actions {
-        .score-pts,
-        .comment-form,
-        .like {
-          font-size: 13px;
-          margin-right: 10px;
-          font-weight: normal;
-          color: $grayLight;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background: #FFF;
+        display: none;
+        width: 200px;
+        text-align: right;
+
+        span {
+          margin: 0 0 0 5px;
         }
         .like,
         .comment-form {
@@ -136,10 +142,9 @@ $postFontColor: $grayDark;
           }
         }
       }
-      .created-at {
-        font-size: 13px;
-        color: $grayLight;
-      }
+    }
+    .meat {
+      min-height: 50px;
     }
     > img {
       position: absolute;
@@ -151,24 +156,26 @@ $postFontColor: $grayDark;
     }
     > p {
       position: relative;
-      font-size: 15px;
+      font-size: 14px;
       line-height: 20px;
-      .mentions {
-        font-size: 12px;
-      }
     }
     .mentions {
-      position: relative;
-      bottom: 1px;
+      font-size: 12px;
       color: $grayLight;
       .tlink {
         color: $grayLight;
       }
     }
-    .comments {
-      margin: 20px 0 0 -60px;
-      padding: 0 10px;
+    .comment-list {
+      margin: 5px 0 10px -60px;
       background: #F6F6F6;
+    }
+    &:hover {
+      .top-right {
+        .actions {
+          display: block;
+        }
+      }
     }
   }
 }
@@ -179,13 +186,19 @@ $postFontColor: $grayDark;
     position: relative;
     width: 587px;
 
+    .ulink {
+      display: block;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 0 5px 0;
+    }
     .user-image {
       position: absolute;
       top: 20px;
       left: 20px;
     }
     .actions-created {
-      margin: 5px 0 0 0;
+      margin: 7px 0 0 0;
       font-size: 16px;
 
       .actions {
@@ -202,6 +215,7 @@ $postFontColor: $grayDark;
           border: none;
           background: none;
           text-shadow: none;
+          cursor: pointer;
         }
       }
     }
@@ -224,6 +238,19 @@ $postFontColor: $grayDark;
 
     textarea {
       width: 300px;
+      margin: 0 0 20px 0;
     }
+  }
+}
+
+section.post-responses {
+  width: 317px;
+  float: left;
+
+  &.friend-responses {
+    margin: 6px 6px 0 10px;
+  }
+  &.public-responses {
+    margin: 6px 0 0 0;
   }
 }

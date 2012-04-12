@@ -1,10 +1,8 @@
 <section class="post-root">
-  <div class='content'>
-    <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
-    <h1>
-      <%= @post.get('content') %>
-    </h1>
-  </div>
+  <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
+  <h1>
+    <%= @post.get('content') %>
+  </h1>
 
   <div class="actions-created">
     <span class='actions'></span>

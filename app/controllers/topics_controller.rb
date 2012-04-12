@@ -72,16 +72,17 @@ class TopicsController < ApplicationController
   end
 
   def update
-    @topic = Topic.find_by_slug(params[:id])
+    @topic = Topic.find(params[:id])
     authorize! :update, @topic
-    respond_to do |format|
-      if @topic.update_attributes(params[:topic])
-        format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
-        format.json { render json: build_ajax_response(:ok, topic_path(@topic), 'Topic was successfully updated.'), :status => :ok }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: build_ajax_response(:error, nil, 'Topic could not be updated', @topic.errors), status: :unprocessable_entity }
-      end
+
+    original_slug = @topic.slug
+    @topic.name = params[:name] if params[:name]
+    @topic.summary = params[:summary] if params[:summary]
+
+    if @topic.save
+      render json: build_ajax_response(:ok, (original_slug != @topic.slug) ? topic_path(@topic) : nil, 'Topic was successfully updated.'), :status => :ok
+    else
+      render json: build_ajax_response(:error, nil, 'Topic could not be updated', @topic.errors), status: :unprocessable_entity
     end
   end
 
@@ -118,7 +119,47 @@ class TopicsController < ApplicationController
     render :json => followers.map {|u| u.as_json}
   end
 
+  def lock_slug
+    topic = Topic.find(params[:id])
+    authorize! :update, topic
 
+    original_slug = topic.slug
+    topic.slug = params[:slug]
+    topic.slug_locked = true
+    #topic.v += 1
+
+    if topic.save
+      response = build_ajax_response(:ok, (original_slug != topic.slug) ? topic_path(topic) : nil, "Slug locked!")
+      status = 200
+    else
+      response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+      status = 422
+    end
+    render json: response, :status => status
+  end
+
+  def add_alias
+    topic = Topic.find(params[:id])
+    authorize! :update, topic
+
+    ooac = params[:ooac] == "true" ? true : false
+    result = topic.add_alias(params[:alias], ooac)
+
+    if result == true
+      if topic.save
+        response = build_ajax_response(:ok, nil, "Alias added!")
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+        status = 422
+      end
+    else
+      response = build_ajax_response(:error, nil, result)
+      status = 400
+    end
+
+    render json: response, :status => status
+  end
 
 
 
@@ -157,25 +198,6 @@ class TopicsController < ApplicationController
       format.js { render json: topic_list_response("topics/health_list", @topics, @more_path), status: :ok }
       format.html
     end
-  end
-
-  def lock_slug
-    topic = Topic.find_by_slug(params[:id])
-    authorize! :update, topic
-
-    original_slug = topic.slug
-    topic.slug = params[:slug]
-    topic.slug_locked = true
-    topic.v += 1
-
-    if topic.save
-      response = build_ajax_response(:ok, (original_slug != topic.slug) ? edit_topic_path(topic) : nil, "Slug locked!")
-      status = 200
-    else
-      response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
-      status = 422
-    end
-    render json: response, :status => status
   end
 
   def default_picture
@@ -277,30 +299,6 @@ class TopicsController < ApplicationController
       if topic.save
         response = build_ajax_response(:ok, nil, "Alias updated!", nil,
                                                {:target => ".ooac_"+params[:alias][:id], :toggle_classes => ['ooacB', 'unooacB']})
-        status = 200
-      else
-        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
-        status = 422
-      end
-    else
-      response = build_ajax_response(:error, nil, result)
-      status = 400
-    end
-
-    render json: response, :status => status
-  end
-
-  def add_alias
-    topic = Topic.find_by_slug(params[:id])
-    authorize! :update, topic
-
-    ooac = params[:alias][:ooac] ? true : false
-
-    result = topic.add_alias(params[:alias][:name], ooac)
-
-    if result == true
-      if topic.save
-        response = build_ajax_response(:ok, nil, "Alias added!")
         status = 200
       else
         response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)

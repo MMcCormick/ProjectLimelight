@@ -319,8 +319,8 @@ class LL.Router extends Backbone.Router
       view = new LL.Views.PostShow(model: post)
       $('body').addClass('no-sidebar')
       $('#feed').html(view.el)
+      view.render()
 
-    view.render()
 
   talkShow: (id) ->
     that = if $('#this').length > 0 && $('#this').data('this').id == id then new LL.Models.Post() else null

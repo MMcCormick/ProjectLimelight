@@ -593,7 +593,7 @@ class Topic
       primary_type_updates["primary_type"] = name
     end
 
-    if slug_changed?
+    if name_changed? || slug_changed? || slugged_attributes_changed?
       soulmate = true
       topic_mention_updates["topic_mentions.$.slug"] = self.slug
     end

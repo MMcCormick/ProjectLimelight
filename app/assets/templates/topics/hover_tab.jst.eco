@@ -1,3 +1,7 @@
 <div class='top'><%= @topic.get('name') %></div>
 <div class='middle'>Topic Information</div>
-<div class='bottom'></div>
+<div class='bottom'>
+  <% if LL.App.current_user.hasRole('admin'): %>
+    <div class="btn edit-btn">Edit</div>
+  <% end %>
+</div>

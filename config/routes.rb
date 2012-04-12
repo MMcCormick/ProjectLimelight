@@ -26,10 +26,17 @@ ProjectLimelight::Application.routes.draw do
         post '' => 'follows#create', :type => 'Topic'
         delete '' => 'follows#destroy', :type => 'Topic'
       end
+      scope 'connections' do
+        post '' => 'topic_con_sugs#create'
+      end
+      scope 'aliases' do
+        post '' => 'topics#add_alias'
+      end
 
       get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'
+      put '' => 'topics#update'
       get '' => 'topics#show'
     end
 
@@ -158,7 +165,6 @@ ProjectLimelight::Application.routes.draw do
   #get '/:id/google_images' => 'topics#google_images', :as => :topic_google_images
   #get '/:id' => 'topics#show', :as => :topic
   #delete '/:id' => 'topics#destroy', :as => :topic
-  #put '/:id' => 'topics#update', :as => :update_topic
 
   # Topic Connection Suggestions
   #resources :topic_con_sugs, :only => [:create]

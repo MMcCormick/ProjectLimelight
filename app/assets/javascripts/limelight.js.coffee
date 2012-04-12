@@ -8,7 +8,8 @@ window.LL =
     @Header = new LL.Views.Header(model: LL.App.current_user)
 
     # hack because facebook login appends stupid things to the url
-    if LL.App.current_user && window.location.hash == '#_=_'
+    console.log(window.location)
+    if LL.App.current_user && (window.location.hash == '#_=_' || window.location.pathname == '/_=_')
       window.location = '/'
 
     @Router = new LL.Router()
@@ -33,6 +34,9 @@ jQuery ->
   window.globalSuccess = (data) ->
     if data.flash
       createGrowl false, data.flash, 'Success', 'green'
+
+    if data.redirect
+      window.location = data.redirect
 
   window.globalError = (jqXHR, target=null) ->
     data = $.parseJSON(jqXHR.responseText)

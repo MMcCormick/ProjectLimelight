@@ -1,0 +1,13 @@
+<h3>Lock Slug</h3>
+
+<form>
+  <div class="errors"></div>
+
+  <div class="">
+    <input type="text" name="slug" value="<%= @topic.get('slug') %>">
+  </div>
+
+  <div class="actions">
+    <button class="submit btn btn-success" confirm="Are you sure?">Lock Slug</button>
+  </div>
+</form>

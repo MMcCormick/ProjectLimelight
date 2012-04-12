@@ -1,6 +1,9 @@
 class LL.Views.TopicHoverTab extends Backbone.View
   template: JST['topics/hover_tab']
 
+  events:
+    "click .edit-btn": "loadEditModal"
+
   initialize: ->
 
   render: =>
@@ -34,3 +37,7 @@ class LL.Views.TopicHoverTab extends Backbone.View
 
   setTarget: (el) =>
     @target = el
+
+  loadEditModal: (e) =>
+    view = new LL.Views.TopicEdit(model: @model)
+    LL.App.Modal.add("topic_edit", view).setActive("topic_edit").show()

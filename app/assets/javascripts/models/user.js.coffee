@@ -7,7 +7,6 @@ class LL.Models.User extends Backbone.Model
     LL.App.Users.findOrCreate(resp.id, new LL.Models.User(resp))
 
   following: (model) ->
-    console.log model
     if model.get('type') == 'User'
       _.include(@get('following_users'), model.get('id'))
     else if model.get('type') == 'Topic'
@@ -17,3 +16,6 @@ class LL.Models.User extends Backbone.Model
 
   scorePretty: ->
     parseInt @get('score')
+
+  hasRole: (role) ->
+    _.include(@get('roles'), role)

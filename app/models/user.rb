@@ -523,7 +523,8 @@ class User
               :tutorial1_step => tutorial1_step,
               :username_reset => username_reset,
               :facebook_id => fbuid,
-              :twitter_id => twuid
+              :twitter_id => twuid,
+              :roles => roles
       )
 
       code = InviteCode.where(:user_id => id).first

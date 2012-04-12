@@ -1,0 +1,19 @@
+<h3>Edit Topic Info</h3>
+
+<form>
+  <div class="errors"></div>
+
+  <div class="field">
+    <label for="name">Topic Name</label>
+    <input type="text" name="name" value="<%= @topic.get('name') %>">
+  </div>
+
+  <div class="field">
+    <label for="summary">Summary</label>
+    <textarea name="summary"></textarea>
+  </div>
+
+  <div class="actions">
+    <div type="submit" class="submit btn btn-success">Update</div>
+  </div>
+</form>

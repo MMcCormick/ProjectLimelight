@@ -33,7 +33,6 @@ class Comment
   index(
     [
       [ :talk_id, Mongo::DESCENDING ],
-      [ :path, Mongo::ASCENDING ],
       [ :created_at, Mongo::DESCENDING ]
     ]
   )
@@ -81,22 +80,22 @@ class Comment
     # Sorts by votes descending by default, but could use any other field.
     # If you want to build out an internal balanced score, pass that field in,
     # and be sure to index it on the database.
-    def threaded_with_field(talk_id, field_name='created_at', limit=nil)
-      comments = Comment.where(:talk_id => talk_id).asc(:path).desc(field_name)
-      results, map = [], {}
-      comments.each do |comment|
-        if comment.parent_id.blank?
-          results << comment
-        else
-          comment.path =~ /:([\d|\w]+)$/
-          if parent = $1
-            map[parent] ||= []
-            map[parent] << comment
-          end
-        end
-      end
-
-      assemble(results, map)
+    def threaded_with_field(talk_id)
+      comments = Comment.where(:talk_id => talk_id).desc(:created_at)
+      #results, map = [], {}
+      #comments.each do |comment|
+      #  if comment.parent_id.blank?
+      #    results << comment
+      #  else
+      #    comment.path =~ /:([\d|\w]+)$/
+      #    if parent = $1
+      #      map[parent] ||= []
+      #      map[parent] << comment
+      #    end
+      #  end
+      #end
+      #
+      #assemble(results, map)
     end
 
     # Used by Comment#threaded_with_field to assemble the results.
@@ -111,6 +110,17 @@ class Comment
         end
       end
       list
+    end
+
+    # get the threads for multiple posts in one query
+    def multiple_threads(post_ids)
+      comments = Comment.where(:talk_id => {"$in" => post_ids}).desc(:created_at)
+      threads = {}
+      comments.each do |c|
+        threads[c.talk_id.to_s] ||= []
+        threads[c.talk_id.to_s] << c
+      end
+      threads
     end
   end
 

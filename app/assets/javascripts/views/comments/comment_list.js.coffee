@@ -23,8 +23,6 @@ class LL.Views.CommentList extends Backbone.View
       $(@el).html('')
       for comment in @collection.models
         @prependComment(comment)
-    else
-      $(@el).html('Loading comments...')
 
     @
 

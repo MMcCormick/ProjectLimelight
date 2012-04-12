@@ -307,7 +307,12 @@ class LL.Router extends Backbone.Router
   #######
 
   postShow: (id) ->
-    post = LL.App.Posts.findOrCreate(id, new LL.Models.Post($('#this').data('this')))
+    if _.include(['Talk','Video','Link','Picture'], $('#this').data('type'))
+      data = new LL.Models.Post($('#this').data('this'))
+    else
+      data = null
+
+    post = LL.App.Posts.findOrCreate(id, data)
 
     if LL.App.Feed
       if LL.App.Modal.get(id)

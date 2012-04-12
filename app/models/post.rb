@@ -331,7 +331,7 @@ class Post
   ##########
 
   def as_json(options={})
-    {
+    data = {
             :id => id.to_s,
             :slug => to_param,
             :type => _type,
@@ -350,6 +350,14 @@ class Post
             :images => json_images,
             :user => user.as_json
     }
+
+    if options[:comment_threads] && options[:comment_threads][id.to_s]
+      data[:comments] = options[:comment_threads][id.to_s].map {|c| c.as_json}
+    else
+      data[:comments] = []
+    end
+
+    data
   end
 
   def json_video(autoplay=nil)

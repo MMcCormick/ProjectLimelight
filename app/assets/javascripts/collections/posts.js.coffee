@@ -4,7 +4,9 @@ class LL.Collections.Posts extends Backbone.Collection
   findOrCreate: (id, data=null) ->
     model = @get(id)
 
-    return model if model
+    if model
+      model.set(data, {silent: true})
+      return model
 
     model = data unless model
 

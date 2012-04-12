@@ -129,13 +129,19 @@ $postFontColor: $grayDark;
           font-weight: normal;
           color: $grayLight;
         }
+        .like,
+        .comment-form {
+          &:hover {
+            color: $greenDarker;
+          }
+        }
       }
       .created-at {
         font-size: 13px;
         color: $grayLight;
       }
     }
-    img {
+    > img {
       position: absolute;
       top: 0px;
       left: 0px;
@@ -143,7 +149,7 @@ $postFontColor: $grayDark;
       width: 50px;
       background-color: #444;
     }
-    p {
+    > p {
       position: relative;
       font-size: 15px;
       line-height: 20px;
@@ -159,13 +165,10 @@ $postFontColor: $grayDark;
         color: $grayLight;
       }
     }
-    &:hover {
-      .actions {
-        .like,
-        .comment-form {
-          color: $greenDarker;
-        }
-      }
+    .comments {
+      margin: 20px 0 0 -60px;
+      padding: 0 10px;
+      background: #F6F6F6;
     }
   }
 }

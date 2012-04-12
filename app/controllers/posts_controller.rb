@@ -141,7 +141,9 @@ class PostsController < ApplicationController
     post = Post.find(params[:id])
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.friend_responses(post.id, current_user, page, 50)
-    render :json => posts.map {|p| p.as_json(:user => current_user)}
+    post_ids = posts.map {|p| p.id}
+    threads = Comment.multiple_threads(post_ids)
+    render :json => posts.map {|p| p.as_json(:user => current_user, :comment_threads => threads)}
   end
 
   def public_responses

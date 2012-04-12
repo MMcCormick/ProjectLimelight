@@ -1,4 +1,6 @@
 .comment-list {
+  @include clearfix();
+
   li {
     position: relative;
     padding: 0 0 0 50px;

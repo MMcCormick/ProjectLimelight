@@ -37,7 +37,9 @@
       /*background: #E9E9E9;*/
     }
     &.mention:hover,
-    &.repost:hover {
+    &.repost:hover,
+    &.comment:hover,
+    &.also:hover {
       background: #F3F3F3;
       cursor: pointer;
       .content,

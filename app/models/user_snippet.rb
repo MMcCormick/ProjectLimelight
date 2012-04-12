@@ -37,7 +37,8 @@ class UserSnippet
             :username => username,
             :first_name => first_name,
             :last_name => last_name,
-            :images => User.json_images(self)
+            :images => User.json_images(self),
+            :url => "/users/#{to_param}"
     }
   end
 

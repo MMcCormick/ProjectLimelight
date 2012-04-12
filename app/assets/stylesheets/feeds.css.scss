@@ -77,6 +77,9 @@ $feedFontColor: $grayDark;
       max-height: 300px;
       min-height: 50px;
 
+      img {
+        max-width: 210px;
+      }
       .ll-video-play {
         position: absolute;
         top: 50%;
@@ -107,7 +110,8 @@ $feedFontColor: $grayDark;
     }
     &.link,
     &.video,
-    &.picture {
+    &.picture,
+    &.topic {
       .score-pts {
         margin: 0 15px 0 0;
         span {
@@ -177,7 +181,7 @@ $feedFontColor: $grayDark;
     }
     .ulink {
       font-size: 13px;
-      margin: 0 0 5px 0;
+      margin: 0 0 2px 0;
       display: block;
     }
     p {

@@ -16,13 +16,13 @@ class LL.Models.RootPost extends Backbone.Model
       personal_responses.push(LL.App.Posts.findOrCreate(response.id, new LL.Models.Post(response)))
     @set('personal_responses', personal_responses)
 
-    repost_responses = []
-    for response in @get('repost_responses')
+    like_responses = []
+    for response in @get('like_responses')
       continue if _.include(used_ids, response.id)
       used_ids.push response.id
       response = LL.App.Posts.findOrCreate(response.id, new LL.Models.Post(response))
-      repost_responses.push(LL.App.Posts.findOrCreate(response.id, new LL.Models.Post(response)))
-    @set('repost_responses', repost_responses)
+      like_responses.push(LL.App.Posts.findOrCreate(response.id, new LL.Models.Post(response)))
+    @set('like_responses', like_responses)
 
     activity_responses = []
     for response in @get('activity_responses')

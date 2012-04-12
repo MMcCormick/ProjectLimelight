@@ -3,7 +3,7 @@ class LL.Router extends Backbone.Router
     'users/:id/following/topics': 'userFollowingTopics'
     'users/:id/following/users': 'userFollowingUsers'
     'users/:id/followers': 'userFollowers'
-    'users/:id/reposts': 'repostFeed'
+    'users/:id/likes': 'likeFeed'
     'users/:id/feed': 'userFeed'
     'users/:id': 'activityFeed'
     'posts/:id': 'postShow'
@@ -11,7 +11,7 @@ class LL.Router extends Backbone.Router
     'pages/:name': 'staticPage'
     'settings': 'settings'
     'activity': 'activityFeed'
-    'reposts': 'repostFeed'
+    'likes': 'likeFeed'
     ':id/followers': 'topicFollowers'
     ':id': 'topicFeed'
     '': 'userFeed'
@@ -102,19 +102,19 @@ class LL.Router extends Backbone.Router
       LL.App.ActivityFeed.page = 1
       LL.App.ActivityFeed.fetch({data: {id: id}})
 
-  repostFeed: (id=0) ->
+  likeFeed: (id=0) ->
     if id == 0
       user = LL.App.current_user
     else
       user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
 
-    if LL.App.findScreen('repost_feed', id)
-      LL.App.showScreen('repost_feed', id)
+    if LL.App.findScreen('like_feed', id)
+      LL.App.showScreen('like_feed', id)
     else
-      screen = LL.App.newScreen('repost_feed', id)
+      screen = LL.App.newScreen('like_feed', id)
 
       page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'reposts'
+      page_header.page = 'likes'
       screen['components'].push(page_header)
 
       sidebar = LL.App.findSidebar('user', id)
@@ -122,16 +122,16 @@ class LL.Router extends Backbone.Router
         sidebar = LL.App.createSidebar('user', id, user)
       screen['sidebar'] = sidebar
 
-      LL.App.renderScreen('repost_feed', id)
+      LL.App.renderScreen('like_feed', id)
 
-      feed = new LL.Views.PostsFeed(collection: LL.App.RepostFeed)
-      feed.channel = "#{user.get('id')}_reposts"
+      feed = new LL.Views.PostsFeed(collection: LL.App.LikeFeed)
+      feed.channel = "#{user.get('id')}_likes"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
-      LL.App.RepostFeed.id = id
-      LL.App.RepostFeed.page = 1
-      LL.App.RepostFeed.fetch({data: {id: id}})
+      LL.App.LikeFeed.id = id
+      LL.App.LikeFeed.page = 1
+      LL.App.LikeFeed.fetch({data: {id: id}})
 
   settings: ->
     user = LL.App.current_user
@@ -307,7 +307,7 @@ class LL.Router extends Backbone.Router
   #######
 
   postShow: (id) ->
-    if _.include(['Talk','Video','Link','Picture'], $('#this').data('type'))
+    if _.include(['Video','Link','Picture'], $('#this').data('type'))
       data = new LL.Models.Post($('#this').data('this'))
     else
       data = null
@@ -328,8 +328,12 @@ class LL.Router extends Backbone.Router
 
 
   talkShow: (id) ->
-    that = if $('#this').length > 0 && $('#this').data('this').id == id then new LL.Models.Post() else null
-    post = LL.App.Posts.findOrCreate(id, that)
+    if $('#this').data('type') == 'Talk'
+      data = new LL.Models.Post($('#this').data('this'))
+    else
+      data = null
+
+    post = LL.App.Posts.findOrCreate(id, data)
 
     if LL.App.Feed
       if LL.App.Modal.get(id)

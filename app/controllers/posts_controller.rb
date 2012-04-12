@@ -110,10 +110,10 @@ class PostsController < ApplicationController
   end
 
   # The user like feed
-  def repost_feed
+  def like_feed
     user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
     page = params[:p] ? params[:p].to_i : 1
-    posts = Post.repost_feed(user.id, session[:feed_filters][:display], page)
+    posts = Post.like_feed(user.id, session[:feed_filters][:display], page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
   end
 

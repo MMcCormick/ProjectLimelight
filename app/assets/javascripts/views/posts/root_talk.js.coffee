@@ -17,7 +17,7 @@ class LL.Views.RootTalk extends Backbone.View
     $(@el).find('.actions').prepend(like.render().el)
 
     score = new LL.Views.Score(model: @model)
-    $(@el).find('.top-right').prepend(score.render().el)
+    $(@el).find('.actions').prepend(score.render().el)
 
     @
 

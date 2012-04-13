@@ -12,9 +12,9 @@ class LL.Views.UserPageHeader extends Backbone.View
         on: (if @page == 'feed' then true else false)
       }
       {
-        content: "Reposts"
-        url: (if LL.App.current_user == @model then '/reposts' else "/users/#{@model.get('slug')}/reposts")
-        on: (if @page == 'reposts' then true else false)
+        content: "Likes"
+        url: (if LL.App.current_user == @model then '/likes' else "/users/#{@model.get('slug')}/likes")
+        on: (if @page == 'likes' then true else false)
       }
       {
         content: "Activity"

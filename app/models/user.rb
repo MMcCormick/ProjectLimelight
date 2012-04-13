@@ -512,7 +512,8 @@ class User
             :following_topics_count => following_topics_count,
             :followers_count => followers_count,
             :unread_notification_count => unread_notification_count,
-            :images => User.json_images(self)
+            :images => User.json_images(self),
+            :url => "/users/#{to_param}"
     }
 
     if options[:show_extra]

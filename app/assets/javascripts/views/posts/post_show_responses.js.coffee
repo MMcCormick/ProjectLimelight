@@ -1,24 +1,28 @@
 class LL.Views.PostShowResponses extends Backbone.View
   tagName: 'section'
-  className: 'hide post-responses'
+  className: 'half-section post-responses'
 
   initialize: ->
     @collection.on('reset', @render)
 
   render: =>
-    if @collection.models.length > 0
-      if @collection.constructor.name == 'PostFriendResponses'
-        $(@el).addClass('friend-responses').prepend('<h3>Friends Talking</h3>')
-      else
-        $(@el).addClass('public-responses').prepend("<h3>Other People Talking</h3>")
+    if @collection.constructor.name == 'PostFriendResponses'
+      $(@el).addClass('friend-responses').prepend("<div class='top'><h4>Friends Talking</h4></div><div class='meat'></div>")
+    else
+      $(@el).addClass('public-responses').prepend("<div class='top'><h4>Other People Talking</h4></div><div class='meat'></div>")
 
+    if @collection.models.length > 0
       for post in @collection.models
         @appendResponse(post)
+    else
+      $(@el).find('.meat').append('<div class="none">No responses</div>')
 
-      $(@el).fadeIn(200)
+    $(@el).fadeIn(200)
+
     @
 
   appendResponse: (post) =>
+    $(@el).remove('.none')
     response_view = new LL.Views.ResponseTalk(model: post)
-    $(@el).append(response_view.render().el)
+    $(@el).find('.meat').append(response_view.render().el)
     @

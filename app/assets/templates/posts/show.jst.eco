@@ -1,52 +1,41 @@
 <section class="post-root">
-  <h1>
-    <% if @post.get('primary_source'): %>
-      <a target="_blank" href="<%= @post.get('primary_source').url %>">
-        <span class="title title-with-source"><%= @post.get('title') %></span>
-        <span class="source"><%= @post.get('primary_source').name %></span>
-      </a>
-    <% else: %>
-      <span class="title"><%= @post.get('title') %></span>
-    <% end %>
-  </h1>
-
-  <div class="actions-created">
-    <span class='actions'></span>
-    <span class="created-at">
-      Originally posted by
-      <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
-      <%= @post.get('created_at_pretty') %>
-    </span>
-  </div>
-
-  <% if @post.get('video'): %>
-    <div class='media'>
-      <% if LL.App.Feed: %>
-        <%- @post.get('video_autoplay') %>
-      <% else: %>
-        <%- @post.get('video') %>
-      <% end %>
-    </div>
-  <% else if @post.get('images'): %>
-    <div class='media'>
-      <img src='<%= @post.get('images').original %>' />
-    </div>
-  <% end %>
-
-  <% if @post.get('topic_mentions').length > 0: %>
-    <div class="existing-mentions">
-      <h3>Topics</h3>
-      <% for mention in @post.get('topic_mentions'): %>
-        <a class="tlink" href="/<%= mention.get('slug') %>">
-          <img src='<%= mention.get('images').square.small %>' />
-          <h5>
-            <%= mention.get('name') %>
-          </h5>
+  <div class='meat'>
+    <h1>
+      <% if @post.get('primary_source'): %>
+        <a target="_blank" href="<%= @post.get('primary_source').url %>">
+          <span class="title title-with-source"><%= @post.get('title') %></span>
+          <span class="source"><%= @post.get('primary_source').name %></span>
         </a>
+      <% else: %>
+        <span class="title"><%= @post.get('title') %></span>
       <% end %>
-    </div>
-  <% end %>
-  <div class='talk'></div>
-  <div class="c"></div>
+    </h1>
 
+    <div class="actions-created">
+      <span class='actions'></span>
+      <span class="created-at">
+        Originally posted by
+        <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
+        <%= @post.get('created_at_pretty') %>
+      </span>
+    </div>
+
+    <% if @post.get('video'): %>
+      <div class='media'>
+        <% if LL.App.Feed: %>
+          <%- @post.get('video_autoplay') %>
+        <% else: %>
+          <%- @post.get('video') %>
+        <% end %>
+      </div>
+    <% else if @post.get('images'): %>
+      <div class='media'>
+        <img src='<%= @post.get('images').original %>' />
+      </div>
+    <% end %>
+
+    <div class='talk'></div>
+    <div class="c"></div>
+  </div>
 </section>
+<div class='half-sections'></div>

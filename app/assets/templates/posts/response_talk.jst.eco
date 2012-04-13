@@ -1,6 +1,6 @@
 <img src="<%= @talk.get('user').get('images').square.small %>">
 
-<div class='meat'>
+<div class='body'>
   <div>
     <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
   </div>

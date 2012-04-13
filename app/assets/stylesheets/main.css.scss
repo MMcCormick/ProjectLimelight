@@ -739,7 +739,7 @@ header {
 
 .content-tile {
   background-color: rgba(255,255,255,0.4);
-  padding: 0 0 10px 0;
+  padding: 3px 0 10px 0;
   text-align: left;
   display: inline-block;
 
@@ -751,12 +751,36 @@ header {
     left: auto;
     position: static;
   }
+  .half-sections {
+    @include clearfix();
+  }
   section {
     @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
     background: #FFF;
-    padding: 10px 20px;
-    margin: 10px 10px 0 10px;
+    margin: 7px 10px 0 10px;
     width: 680px;
+    clear: both;
+
+    .top {
+      background: #F9F9F9;
+      border-bottom: 1px solid #EEE;
+      padding: 8px 20px;
+      h4 {
+        cursor: default;
+      }
+    }
+    > .meat {
+      padding: 10px 20px;
+    }
+    &.half-section {
+      width: 337px;
+      float: left;
+      clear: none;
+
+      > .meat {
+        @include clearfix();
+      }
+    }
   }
   .static-page {
     padding-top: 5px;
@@ -783,5 +807,10 @@ header {
         border: none;
       }
     }
+  }
+}
+#pages-c {
+  .sidebar {
+    margin-top: 0px;
   }
 }

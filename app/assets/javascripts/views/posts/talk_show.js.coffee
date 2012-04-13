@@ -18,15 +18,22 @@ class LL.Views.TalkShow extends Backbone.View
       score = new LL.Views.Score(model: @model)
       $(@el).find('.actions').prepend(score.render().el)
 
-  #    for topic in @model.get('topic_mentions')
+      topic_section = new LL.Views.TopicSectionList()
+      topic_section.topics = @model.get('topic_mentions')
+      $(@el).find('.half-sections').append(topic_section.render().el)
+
+      user_section = new LL.Views.UserSectionList()
+      user_section.users = @model.get('likes')
+      user_section.count = @model.get('likes_count')
+      $(@el).find('.half-sections').append(user_section.render().el)
 
       @comments = new LL.Collections.Comments
       @comments_view = new LL.Views.CommentList(collection: @comments, model: @model)
-      comment_section = $('<section/>').html('<h4>Comments</h4>')
+      comment_section = $('<section/>').html('<div class="top"><h4>Comments</h4></div><div class="meat"></div>')
       form = new LL.Views.CommentForm(model: @model)
       form.minimal = true
-      comment_section.append(form.render().el)
-      comment_section.append(@comments_view.render().el)
+      comment_section.find('.meat').append(form.render().el)
+      comment_section.find('.meat').append(@comments_view.render().el)
       $(@el).append(comment_section)
       @comments.fetch({data: {id: @model.get('id')}})
 

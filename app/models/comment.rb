@@ -44,7 +44,7 @@ class Comment
   end
 
   def add_to_count
-    talk.response_count += 1
+    talk.response_count = talk.response_count.to_i + 1
     talk.update_response_counts(user_snippet.id)
     talk.save
   end

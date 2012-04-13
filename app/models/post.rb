@@ -22,10 +22,8 @@ class Post
   field :content
 
   field :status, :default => 'active'
-  field :favorites, :default => []
-  field :favorites_count, :default => 0
   field :user_id
-  field :response_count, :default => 0 # for talks, number of comments. for link/vid/pics, number of unique users talking / commenting
+  field :response_count, :type => Integer, :default => 0 # for talks, number of comments. for link/vid/pics, number of unique users talking / commenting
   field :talking_ids, :default => [] # ids of users talking about / commenting on this (not used for talks)
   field :tweet_id
   field :root_type
@@ -248,8 +246,8 @@ class Post
   def register_response(u_id)
     unless talking_ids.include?(u_id)
       self.talking_ids << u_id
-      self.response_count += 1
-      self.save
+      self.response_count =  response_count.to_i + 1
+      save
     end
   end
 
@@ -348,7 +346,9 @@ class Post
             :primary_source => sources.first,
             :topic_mentions => topic_mentions.map {|m| m.as_json },
             :images => json_images,
-            :user => user.as_json
+            :user => user.as_json,
+            :likes_count => likes.length,
+            :likes => likes.last(5).map {|u| u.as_json}
     }
 
     if options[:comment_threads] && options[:comment_threads][id.to_s]
@@ -518,7 +518,7 @@ class Post
       build_activity_feed(items)
     end
 
-    def repost_feed(feed_id, display_types, page)
+    def like_feed(feed_id, display_types, page)
 
       if display_types.include?('Talk')
         display_types << 'Topic'
@@ -527,7 +527,7 @@ class Post
       items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc)
       items = items.skip((page-1)*20).limit(20)
 
-      build_repost_feed(items)
+      build_like_feed(items)
     end
 
     def topic_feed(feed_ids, user_id, display_types, sort, page)
@@ -635,7 +635,7 @@ class Post
       return_objects
     end
 
-    def build_repost_feed(items)
+    def build_like_feed(items)
       topic_ids = []
       item_ids = []
       items.each do |i|
@@ -649,15 +649,15 @@ class Post
 
       topics = {}
       posts = {}
-      repost_responses = {}
+      like_responses = {}
       tmp_topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
       tmp_posts = Post.where(:_id => {'$in' => item_ids})
 
       tmp_topics.each {|t| topics[t.id.to_s] = t}
       tmp_posts.each do |p|
         if p.root_id != p.id
-          repost_responses[p.root_id.to_s] ||= []
-          repost_responses[p.root_id.to_s] << p
+          like_responses[p.root_id.to_s] ||= []
+          like_responses[p.root_id.to_s] << p
         else
           posts[p.id.to_s] = p
         end
@@ -674,7 +674,7 @@ class Post
 
         next unless root_post.root
 
-        root_post.repost_responses = repost_responses[root_post.root.id.to_s] ? repost_responses[root_post.root.id.to_s] : []
+        root_post.like_responses = like_responses[root_post.root.id.to_s] ? like_responses[root_post.root.id.to_s] : []
 
         return_objects << root_post
       end

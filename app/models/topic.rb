@@ -14,7 +14,7 @@ class Topic
   cache
 
   @type_of_id = "4eb82a1caaf9060120000081"
-  @instances_id = "4eb82a3daaf906012000008a" # this is the opposite of type_of connection
+  @related_to_id = "4f0a51745b1dc3000500016f"
   @limelight_id = '4ec69d9fcddc7f9fe80000b8'
   @limelight_feedback_id = '4ecab6c1cddc7fd77f000106'
   @stop_words = %w(a about above after again against all am an and any are arent as at be because been before being
@@ -27,7 +27,7 @@ class Topic
                   those through to too under until up very was wasnt we wed well were weve were werent what whats
                   when whens where wheres which while who whos whom why whys with wont would wouldnt you youd youll
                   youre youve your yours yourself yourselves)
-  class << self; attr_accessor :type_of_id, :instances_id, :limelight_id, :limelight_feedback_id, :stop_words end
+  class << self; attr_accessor :type_of_id, :related_to_id, :limelight_id, :limelight_feedback_id, :stop_words end
 
   # Denormilized:
   # Post.topic_mentions.name

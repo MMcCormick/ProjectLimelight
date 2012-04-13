@@ -11,11 +11,11 @@ class TopicConSugsController < ApplicationController
   end
 
   def create
-    topic1 = params[:topic1_id].blank? ? Topic.find_untyped_or_create(params[:topic1_name], current_user) : Topic.find(params[:topic1_id])
-    topic2 = params[:topic2_id].blank? ? Topic.find_untyped_or_create(params[:topic2_name], current_user) : Topic.find(params[:topic2_id])
+    topic1 = params[:topic1_id] == "0" ? Topic.find_untyped_or_create(params[:topic1_name], current_user) : Topic.find(params[:topic1_id])
+    topic2 = params[:topic2_id] == "0" ? Topic.find_untyped_or_create(params[:topic2_name], current_user) : Topic.find(params[:topic2_id])
 
     # If type of, use
-    con = params[:type_of] == "true" ? TopicConnection.find("4eb82a1caaf9060120000081") : TopicConnection.find("4f0a51745b1dc3000500016f")
+    con = params[:type_of] == "true" ? TopicConnection.find(Topic.type_of_id) : TopicConnection.find(Topic.related_to_id)
 
     if !topic1.has_alias?(params[:topic1_name]) || !topic2.has_alias?(params[:topic2_name])
       response = build_ajax_response(:error, nil, "Please select / create topics from the drop down")

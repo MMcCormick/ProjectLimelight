@@ -27,7 +27,7 @@ class TopicsController < ApplicationController
     if params[:slug]
       @this = Topic.unscoped.find_by_slug(params[:slug])
     else
-      @this = Topic.unscoped.find(params[:id]).first
+      @this = Topic.unscoped.find(params[:id])
     end
 
     not_found("Topic not found") unless @this
@@ -35,6 +35,12 @@ class TopicsController < ApplicationController
 
     @title = @this.name
     @description = @this.summary
+
+    respond_to do |format|
+      format.html
+      format.json { render :json => @this.to_json }
+    end
+
   end
 
   def new
@@ -161,7 +167,48 @@ class TopicsController < ApplicationController
     render json: response, :status => status
   end
 
+  def update_alias
+    topic = Topic.find(params[:id])
+    authorize! :update, topic
 
+    ooac = params[:ooac] == 'true' ? true : false
+
+    result = topic.update_alias(params[:alias_id], params[:name], ooac)
+    if result == true
+      if topic.save
+        response = build_ajax_response(:ok, nil, "Alias updated!")
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+        status = 422
+      end
+    else
+      response = build_ajax_response(:error, nil, result)
+      status = 400
+    end
+
+    render json: response, :status => status
+  end
+
+  def destroy_alias
+    topic = Topic.find(params[:id])
+    authorize! :update, topic
+
+    if topic.remove_alias(params[:name])
+      if topic.save
+        response = build_ajax_response(:ok, nil, "Alias removed!")
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
+        status = 422
+      end
+    else
+      response = build_ajax_response(:error, nil, "The topic does not have that alias!")
+      status = 400
+    end
+
+    render json: response, :status => status
+  end
 
 
 
@@ -262,50 +309,6 @@ class TopicsController < ApplicationController
       end
     else
       response = build_ajax_response(:error, nil, "You cannot merge a topic with itself!")
-      status = 400
-    end
-
-    render json: response, :status => status
-  end
-
-  def destroy_alias
-    topic = Topic.find_by_slug(params[:id])
-    authorize! :update, topic
-
-    if topic.remove_alias(params[:name])
-      if topic.save
-        response = build_ajax_response(:ok, nil, "Alias removed!")
-        status = 200
-      else
-        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
-        status = 422
-      end
-    else
-      response = build_ajax_response(:error, nil, "The topic does not have that alias!")
-      status = 400
-    end
-
-    render json: response, :status => status
-  end
-
-  def update_alias
-    topic = Topic.find_by_slug(params[:id])
-    authorize! :update, topic
-
-    ooac = params[:alias][:ooac] == 'true' ? true : false
-
-    result = topic.update_alias(params[:alias][:id], params[:alias][:name], ooac)
-    if result == true
-      if topic.save
-        response = build_ajax_response(:ok, nil, "Alias updated!", nil,
-                                               {:target => ".ooac_"+params[:alias][:id], :toggle_classes => ['ooacB', 'unooacB']})
-        status = 200
-      else
-        response = build_ajax_response(:error, nil, "Topic could not be saved", topic.errors)
-        status = 422
-      end
-    else
-      response = build_ajax_response(:error, nil, result)
       status = 400
     end
 

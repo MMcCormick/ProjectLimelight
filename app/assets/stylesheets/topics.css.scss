@@ -66,6 +66,29 @@
       margin-top: 10px;
     }
   }
+  .alias {
+    margin-bottom: 5px;
+    position: relative;
+    @include clearfix();
+    //>div {
+    //  float: left;
+    //}
+    .ooac-btn,
+    .delete {
+      cursor: pointer;
+      margin-left: 15px;
+      position: absolute;
+      top: 0px;
+    }
+    .ooac-btn {
+      left: 80px;
+      color: $blue;
+    }
+    .delete {
+      left: 230px;
+      color: $red;
+    }
+  }
 }
 
 

@@ -9,7 +9,7 @@ class LL.Models.Post extends Backbone.Model
 
     if @get('topic_mentions')
       for mention in @get('topic_mentions')
-        mentions.push(LL.App.Topics.findOrCreate(mention.slug, mention))
+        mentions.push(LL.App.Topics.findOrCreate(mention.id, mention))
 
     @set('topic_mentions', mentions)
 

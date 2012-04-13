@@ -159,8 +159,8 @@ class Topic
           return "The '#{names}' topic already have an alias with this name."
         end
       end
-      found.name = name if name
-      found.slug = name.to_url if name
+      found.name = name unless name.blank?
+      found.slug = name.to_url unless name.blank?
       found.ooac = ooac
     end
     true
@@ -427,7 +427,8 @@ class Topic
             :followers_count => followers_count,
             :created_at => created_at,
             :created_at_pretty => pretty_time(created_at),
-            :images => Topic.json_images(self)
+            :images => Topic.json_images(self),
+            :aliases => aliases
     }
   end
 

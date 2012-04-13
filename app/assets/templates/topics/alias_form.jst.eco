@@ -1,3 +1,16 @@
+<h3>Topic Aliases</h3>
+
+<% for topic_alias in @topic.get('aliases'): %>
+  <div class="alias">
+    <div class='name'><%= topic_alias.name %></div>
+    <% console.log(topic_alias) %>
+    <div class="ooac-btn" data-val="<%= if topic_alias.ooac == true then "false" else "true" %>" data-id='<%= topic_alias._id %>'>
+      <%= if topic_alias.ooac == true then "[remove one of a kind]" else "[make one of a kind]" %>
+    </div>
+    <div class='delete' data-id='<%= topic_alias.id %>'>[delete]</div>
+  </div>
+<% end %>
+
 <form>
   <div class="">
     <label for="alias">New Alias</label>

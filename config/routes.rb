@@ -31,6 +31,8 @@ ProjectLimelight::Application.routes.draw do
       end
       scope 'aliases' do
         post '' => 'topics#add_alias'
+        put '' => 'topics#update_alias'
+        delete '' => 'topics#destroy_alias'
       end
 
       get 'followers' => 'topics#followers'

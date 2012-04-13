@@ -23,7 +23,7 @@
 <% if @post.get('topic_mentions').length > 0: %>
   <div class="mentions">
     <% for mention, i in @post.get('topic_mentions'): %>
-      <a class="tlink" data-id='<%= mention.get('slug') %>' href="/<%= mention.get('slug') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @post.get('topic_mentions').length %>
+      <a class="tlink" data-id='<%= mention.get('id') %>' href="/<%= mention.get('slug') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @post.get('topic_mentions').length %>
     <% end %>
   </div>
 <% end %>

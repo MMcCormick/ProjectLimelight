@@ -4,8 +4,13 @@ class LL.Views.TopicEdit extends Backbone.View
 
   initialize: ->
     @hasNoUrl = true
+    @model.on('change', @render)
 
   render: =>
+    unless @model.get('aliases')
+      LL.App.Topics.findOrCreate(@model.get('id'), null, true)
+      return @
+
     self = @
 
     basic_form = new LL.Views.TopicBasicForm(model: @model)

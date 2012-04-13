@@ -8,12 +8,15 @@ class LL.Collections.Topics extends Backbone.Collection
     else
       id
 
-  findOrCreate: (id, data=null) ->
+  findOrCreate: (id, data=null, forceLookup=false) ->
     id = @convertProtected(id)
 
     model = @get(id)
 
-    return model if model
+    if model
+      if forceLookup == true
+        model.fetch({data: {id: id}, success: (model, response) -> model.set(response) })
+      return model
 
     if data
       model = new LL.Models.Topic(data)
@@ -21,6 +24,7 @@ class LL.Collections.Topics extends Backbone.Collection
 
     unless model
       model = new LL.Models.Topic
+      model.id = id
       model.fetch({data: {id: id}})
 
     @add(model)

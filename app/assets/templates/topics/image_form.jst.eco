@@ -1,0 +1,14 @@
+<div class='top'>
+  <h4>Images</h4>
+</div>
+
+<div class='meat'>
+  <img class='current-image' src="<%= @topic.get('images').fit.large %>" />
+  <div class='google-images'>
+    <div class='left'><</div>
+    <div class='right'>></div>
+    <div class='dimensions'></div>
+    <div class='images'></div>
+    <div class='btn btn-success'>Use This Image</div>
+  </div>
+</div>

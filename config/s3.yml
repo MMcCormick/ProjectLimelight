@@ -4,10 +4,10 @@ development: &defaults
     :secret_access_key: 'xCxVvzSCaHN+tGBhpO9hnkeqWGa7SmNMDn4Xu8ak'
     :use_ssl: true
     # :persistent: true
-#  image_bucket: "development.img.p-li.me"
-#  image_prefix: "http://development.img.p-li.me"
-  image_bucket: "img.p-li.me"
-  image_prefix: "http://img.p-li.me"
+  image_bucket: "development.img.p-li.me"
+  image_prefix: "http://development.img.p-li.me"
+#  image_bucket: "img.p-li.me"
+#  image_prefix: "http://img.p-li.me"
   max_file_size: 10485760
   acl: public-read
 

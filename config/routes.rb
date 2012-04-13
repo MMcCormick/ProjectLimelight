@@ -35,6 +35,7 @@ ProjectLimelight::Application.routes.draw do
         delete '' => 'topics#destroy_alias'
       end
 
+      post 'update_image' => 'topics#update_image'
       get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'

@@ -45,6 +45,28 @@
   }
 }
 
+section.user-section-list {
+  margin: 7px 10px 0 0;
+  height: 107px;
+  overflow: hidden;
+
+  .none {
+    margin: 16px 0 0 0;
+  }
+  .ulink {
+    float: left;
+    width: 50px;
+    text-align: center;
+    margin-right: 8px;
+    margin-bottom: 15px;
+
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}
+
 #user-settings {
 
   section {

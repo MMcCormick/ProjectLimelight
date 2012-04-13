@@ -44,6 +44,31 @@
   }
 }
 
+section.topic-section-list {
+  margin: 7px 6px 0 10px;
+  height: 107px;
+  overflow: hidden;
+
+  .none {
+    margin: 16px 0 0 0;
+  }
+  .tlink {
+    float: left;
+    width: 50px;
+    text-align: center;
+    margin-right: 8px;
+    margin-bottom: 15px;
+
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}
+
+section.like-section-list {
+}
+
 #topic-edit {
   section {
     padding-bottom: 15px;

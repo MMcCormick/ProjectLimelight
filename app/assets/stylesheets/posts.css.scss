@@ -143,7 +143,7 @@ $postFontColor: $grayDark;
         }
       }
     }
-    .meat {
+    .body {
       min-height: 50px;
     }
     > img {
@@ -182,10 +182,11 @@ $postFontColor: $grayDark;
 
 #talk-show {
   .post-root {
-    padding: 18px 20px 20px 85px;
     position: relative;
-    width: 615px;
 
+    > .meat {
+      padding: 18px 20px 20px 85px;
+    }
     .ulink {
       display: block;
       font-size: 24px;
@@ -194,7 +195,7 @@ $postFontColor: $grayDark;
     }
     .user-image {
       position: absolute;
-      top: 20px;
+      top: 18px;
       left: 20px;
     }
     .actions-created {
@@ -234,10 +235,10 @@ $postFontColor: $grayDark;
     font-weight: normal;
   }
   #comment-form {
-    margin: 15px 0 0 0;
+    margin: 10px 0 0 0;
 
     textarea {
-      width: 300px;
+      width: 350px;
       margin: 0 0 20px 0;
     }
   }
@@ -248,10 +249,10 @@ section.post-responses {
   float: left;
 
   &.friend-responses {
-    margin: 6px 6px 0 10px;
+    margin: 7px 6px 0 10px;
   }
   &.public-responses {
-    margin: 6px 0 0 0;
+    margin: 7px 10px 0 0;
   }
   .none {
     font-size: 14px;

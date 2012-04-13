@@ -22,10 +22,8 @@ class Post
   field :content
 
   field :status, :default => 'active'
-  field :favorites, :default => []
-  field :favorites_count, :default => 0
   field :user_id
-  field :response_count, :default => 0 # for talks, number of comments. for link/vid/pics, number of unique users talking / commenting
+  field :response_count, :type => Integer, :default => 0 # for talks, number of comments. for link/vid/pics, number of unique users talking / commenting
   field :talking_ids, :default => [] # ids of users talking about / commenting on this (not used for talks)
   field :tweet_id
   field :root_type
@@ -248,8 +246,8 @@ class Post
   def register_response(u_id)
     unless talking_ids.include?(u_id)
       self.talking_ids << u_id
-      self.response_count += 1
-      self.save
+      self.response_count =  response_count.to_i + 1
+      save
     end
   end
 
@@ -348,7 +346,9 @@ class Post
             :primary_source => sources.first,
             :topic_mentions => topic_mentions.map {|m| m.as_json },
             :images => json_images,
-            :user => user.as_json
+            :user => user.as_json,
+            :likes_count => likes.length,
+            :likes => likes.last(5).map {|u| u.as_json}
     }
 
     if options[:comment_threads] && options[:comment_threads][id.to_s]

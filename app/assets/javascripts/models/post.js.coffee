@@ -6,12 +6,16 @@ class LL.Models.Post extends Backbone.Model
       @set('user', LL.App.Users.findOrCreate(@get('user').id, new LL.Models.User(@get('user'))))
 
     mentions = []
-
     if @get('topic_mentions')
       for mention in @get('topic_mentions')
         mentions.push(LL.App.Topics.findOrCreate(mention.slug, mention))
-
     @set('topic_mentions', mentions)
+
+    likes = []
+    if @get('likes')
+      for user in @get('likes')
+        likes.push(LL.App.Users.findOrCreate(user.id, user))
+    @set('likes', likes)
 
     if !@get('comments')
       @set('comments', [])

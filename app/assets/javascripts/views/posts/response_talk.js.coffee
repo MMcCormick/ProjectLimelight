@@ -28,9 +28,9 @@ class LL.Views.ResponseTalk extends Backbone.View
     self = @
     view = new LL.Views.CommentForm(model: @model)
     view.modal = true
-    view.qtip = $(@el).find('.meat')
+    view.qtip = $(@el).find('.body')
 
-    $(@el).find('.meat').qtip
+    $(@el).find('.body').qtip
       position:
         my: 'top middle'
         at: 'bottom middle'

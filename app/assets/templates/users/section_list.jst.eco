@@ -1,0 +1,11 @@
+<div class='top'>
+  <h4><%= @title %></h4>
+</div>
+
+<div class='meat'>
+  <% for user in @users: %>
+    <a class="ulink" href="<%= user.get('url') %>" data-id="<%= user.get('id') %>">
+      <img src='<%= user.get('images').square.small %>' />
+    </a>
+  <% end %>
+</div>

@@ -20,6 +20,15 @@ class LL.Views.PostShow extends Backbone.View
     score = new LL.Views.Score(model: @model)
     $(@el).find('.actions').prepend(score.render().el)
 
+    topic_section = new LL.Views.TopicSectionList()
+    topic_section.topics = @model.get('topic_mentions')
+    $(@el).find('.half-sections').append(topic_section.render().el)
+
+    user_section = new LL.Views.UserSectionList()
+    user_section.users = @model.get('likes')
+    user_section.count = @model.get('likes_count')
+    $(@el).find('.half-sections').append(user_section.render().el)
+
     $(@el).append(@friendResponses.el)
     $(@el).append(@publicResponses.el)
 

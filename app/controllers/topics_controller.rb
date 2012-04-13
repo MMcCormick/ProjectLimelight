@@ -210,6 +210,32 @@ class TopicsController < ApplicationController
     render json: response, :status => status
   end
 
+  def update_image
+    topic = Topic.find(params[:id])
+    authorize! :update, topic
+
+    if params[:url]
+      topic.remote_image_url = params[:url]
+      topic.save_remote_image(true)
+    end
+
+    url = topic.image_url(:fit, :large)
+    render :json => build_ajax_response(:ok, nil, "Image Updated", nil, {:url => url})
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

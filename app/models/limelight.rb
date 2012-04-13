@@ -148,7 +148,7 @@ module Limelight #:nodoc:
     end
 
     # Saves a new set of images from the remote_image_url currently specified on the model
-    def save_remote_image
+    def save_remote_image(force=false)
       unless @remote_image_url.blank?
         target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
         AWS::S3::S3Object.store(
@@ -163,7 +163,13 @@ module Limelight #:nodoc:
         self.active_image_version += image_versions
         self.processing_image = true
 
-        Resque.enqueue(ProcessImages, id.to_s, self.class.name, active_image_version, true)
+        if force
+          process_version(active_image_version)
+          make_image_version_current(active_image_version)
+          self.processing_image = false
+        else
+          Resque.enqueue(ProcessImages, id.to_s, self.class.name, active_image_version, true)
+        end
 
         self.save
       end

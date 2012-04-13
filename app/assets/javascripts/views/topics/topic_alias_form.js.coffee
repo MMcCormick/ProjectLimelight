@@ -78,10 +78,8 @@ class LL.Views.TopicAliasForm extends Backbone.View
       beforeSend: ->
         $(e.target).addClass('disabled').text('Submitting...')
       success: (data) ->
-        $(e.target).removeClass('disabled').text('[updated!]')
+        $(e.target).text('[updated!]')
         globalSuccess(data)
       error: (jqXHR, textStatus, errorThrown) ->
-        $(e.target).removeClass('disabled').text('[fail whale]')
+        $(e.target).text('[fail whale]')
         globalError(jqXHR, $(self.el))
-      complete: ->
-        $(e.target).removeClass('disabled').text('[woops]')

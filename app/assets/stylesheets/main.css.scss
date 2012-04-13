@@ -783,18 +783,13 @@ header {
     }
   }
   .static-page {
-    padding-top: 5px;
-
-    h3 {
-      margin: 10px 0 5px 0;
-    }
     span {
       font-weight: bold;
     }
     p {
       font-size: 15px;
       line-height: 18px;
-      padding: 5px 0;
+      padding: 5px 0 10px;
     }
     #post-form {
       @include border-radius(6px);
@@ -811,6 +806,9 @@ header {
 }
 #pages-c {
   .sidebar {
+    margin-top: 0px;
+  }
+  #feed {
     margin-top: 0px;
   }
 }

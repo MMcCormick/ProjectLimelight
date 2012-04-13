@@ -1,19 +1,23 @@
-<h3>Edit Topic Info</h3>
+<div class="top">
+  <h4>Edit Topic Info</h4>
+</div>
 
-<form>
-  <div class="errors"></div>
+<div class="meat">
+  <form>
+    <div class="errors"></div>
 
-  <div class="field">
-    <label for="name">Topic Name</label>
-    <input type="text" name="name" value="<%= @topic.get('name') %>">
-  </div>
+    <div class="field">
+      <label for="name">Topic Name</label>
+      <input type="text" name="name" value="<%= @topic.get('name') %>">
+    </div>
 
-  <div class="field">
-    <label for="summary">Summary</label>
-    <textarea name="summary"></textarea>
-  </div>
+    <div class="field">
+      <label for="summary">Summary</label>
+      <textarea name="summary"></textarea>
+    </div>
 
-  <div class="actions">
-    <div type="submit" class="submit btn btn-success">Update</div>
-  </div>
-</form>
+    <div class="actions">
+      <div type="submit" class="submit btn btn-success">Update</div>
+    </div>
+  </form>
+</div>

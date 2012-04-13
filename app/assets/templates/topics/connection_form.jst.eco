@@ -1,35 +1,39 @@
-<h3>Topic Connections</h3>
+<div class="top">
+  <h4>Topic Connections</h4>
+</div>
 
-<form>
-  <div class="errors"></div>
+<div class="meat">
+  <form>
+    <div class="errors"></div>
 
-  <div class="topic1">
-    <input type="hidden" name="topic1_name" value="<%= @topic.get('name') %>">
-    <input type="hidden" name="topic1_id" value="<%= @topic.get('id') %>">
-  </div>
+    <div class="topic1">
+      <input type="hidden" name="topic1_name" value="<%= @topic.get('name') %>">
+      <input type="hidden" name="topic1_id" value="<%= @topic.get('id') %>">
+    </div>
 
-  <div class="topic2">
-    <label for="topic2_name">Choose a Topic</label>
-    <input type="text" name="topic2_name" class="tc-auto">
-    <input type="hidden" name="topic2_id" autocomplete="off">
-  </div>
+    <div class="topic2">
+      <label for="topic2_name">Choose a Topic</label>
+      <input type="text" name="topic2_name" class="tc-auto">
+      <input type="hidden" name="topic2_id" autocomplete="off">
+    </div>
 
-  <div class="type_of check">
-    <input type="checkbox" name="type_of" value="true">
-    <label for="type_of">Is <%= @topic.get('name') %> a type of the above topic?</label>
-  </div>
+    <div class="type_of check">
+      <input type="checkbox" name="type_of" value="true">
+      <label for="type_of">Is <%= @topic.get('name') %> a type of the above topic?</label>
+    </div>
 
-  <div class="pull check">
-    <input type="checkbox" name="pull" value="true">
-    <label for="pull">Should <%= @topic.get('name') %> pull from above topic?</label>
-  </div>
+    <div class="pull check">
+      <input type="checkbox" name="pull" value="true">
+      <label for="pull">Should <%= @topic.get('name') %> pull from above topic?</label>
+    </div>
 
-  <div class="reverse_pull check">
-    <input type="checkbox" name="reverse_pull" value="true">
-    <label for="type_of">Should the above topic pull from <%= @topic.get('name') %>?</label>
-  </div>
+    <div class="reverse_pull check">
+      <input type="checkbox" name="reverse_pull" value="true">
+      <label for="type_of">Should the above topic pull from <%= @topic.get('name') %>?</label>
+    </div>
 
-  <div class="actions">
-    <div class="submit btn btn-success">Connect</div>
-  </div>
-</form>
+    <div class="actions">
+      <div class="submit btn btn-success">Connect</div>
+    </div>
+  </form>
+</div>

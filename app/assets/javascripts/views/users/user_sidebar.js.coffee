@@ -24,6 +24,10 @@ class LL.Views.UserSidebar extends Backbone.View
 #      $(@el).append(topic_suggestions.el)
 #      LL.App.TopicSuggestions.fetch({data: {id: @model.id}})
 
+    # Invite Code
+    invite = new LL.Views.UserSidebarInvite(model: @model)
+    $(@el).append(invite.render().el)
+
     # Static Links
     footer = new LL.Views.SidebarFooter()
     $(@el).append(footer.render().el)

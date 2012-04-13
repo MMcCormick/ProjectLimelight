@@ -17,7 +17,8 @@ module SoulmateHelper
               'term' => topic.name,
               'score' => topic.score,
               'data' => {
-                      'slug' => topic.slug
+                      'slug' => topic.slug,
+                      'ooac' => []
               }
     }
 
@@ -25,6 +26,7 @@ module SoulmateHelper
       nugget['aliases'] ||= Array.new
       topic.aliases.each do |data|
         nugget['aliases'] << data.name
+        nugget['data']['ooac'] << data.name if data.ooac
       end
     end
 

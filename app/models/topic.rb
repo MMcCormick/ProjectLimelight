@@ -145,6 +145,7 @@ class Topic
       end
     end
     self.aliases = new_aliases
+    Resque.enqueue(SmCreateTopic, id.to_s)
   end
 
   def update_alias(alias_id, name, ooac)
@@ -162,20 +163,21 @@ class Topic
       found.name = name unless name.blank?
       found.slug = name.to_url unless name.blank?
       found.ooac = ooac
+      Resque.enqueue(SmCreateTopic, id.to_s)
     end
     true
   end
 
-  # not used?
-  def update_aliases new_aliases
-    self.aliases = []
-    init_alias
-
-    new_aliases = new_aliases.split(', ') unless new_aliases.is_a? Array
-    new_aliases.each do |new_alias|
-      add_alias(new_alias)
-    end
-  end
+  # not used? BETA REMOVE
+  #def update_aliases new_aliases
+  #  self.aliases = []
+  #  init_alias
+  #
+  #  new_aliases = new_aliases.split(', ') unless new_aliases.is_a? Array
+  #  new_aliases.each do |new_alias|
+  #    add_alias(new_alias)
+  #  end
+  #end
 
   def update_name_alias
     if short_name_changed?

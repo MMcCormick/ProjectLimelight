@@ -525,7 +525,7 @@ class User
               :username_reset => username_reset,
               :facebook_id => fbuid,
               :twitter_id => twuid,
-              :roles => roles
+              :roles => roles,
       )
 
       code = InviteCode.where(:user_id => id).first

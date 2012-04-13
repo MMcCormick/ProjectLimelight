@@ -26,7 +26,7 @@ class LL.Views.UserSidebar extends Backbone.View
 
     # Invite Code
     if LL.App.current_user.get('id') == @model.get('id')
-      invite = new LL.Views.UserSidebarInvite(model: @model)
+      invite = new LL.Views.UserSidebarInvite(model: LL.App.current_user)
       $(@el).append(invite.render().el)
 
     # Static Links

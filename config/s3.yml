@@ -4,6 +4,7 @@ development: &defaults
     :secret_access_key: 'xCxVvzSCaHN+tGBhpO9hnkeqWGa7SmNMDn4Xu8ak'
     :use_ssl: true
     # :persistent: true
+  cloudfront_id: "EOKKI5GMUVBB9"
   image_bucket: "development.img.p-li.me"
   image_prefix: "http://development.img.p-li.me"
 #  image_bucket: "img.p-li.me"
@@ -16,6 +17,7 @@ test:
 
 staging:
   <<: *defaults
+  cloudfront_id: "EGT0XWGY6ELAY"
   image_bucket: "staging.img.p-li.me"
   image_prefix: "http://staging.img.p-li.me"
 
@@ -23,5 +25,6 @@ production:
   <<: *defaults
   # prefix is optional. This is where you would put your CloudFront Domain
   # Name or your CloudFront CNAME if you have one configured.
+  cloudfront_id: "E2P9H5V4PQJQ0"
   image_bucket: "img.p-li.me"
   image_prefix: "http://img.p-li.me"

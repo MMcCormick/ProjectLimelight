@@ -369,7 +369,7 @@ class Post
   def json_images
     if image_versions > 0
       {
-        :original => image_url(nil, nil, 'current', true),
+        :original => image_url(nil, nil, nil, true),
         :fit => {
             :large => image_url(:fit, :large),
             :normal => image_url(:fit, :normal),

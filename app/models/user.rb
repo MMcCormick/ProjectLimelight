@@ -539,7 +539,7 @@ class User
 
     def json_images(model)
       {
-        :original => model.image_url(nil, nil, 'current', true),
+        :original => model.image_url(nil, nil, nil, true),
         :fit => {
           :large => model.image_url(:fit, :large),
           :normal => model.image_url(:fit, :normal),

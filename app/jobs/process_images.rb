@@ -2,13 +2,10 @@ class ProcessImages
 
   @queue = :fast
 
-  def self.perform(target_id, target_model, version, set_active=false)
+  def self.perform(target_id, target_model, version)
     target = Kernel.const_get(target_model).find(target_id)
     if target
       target.process_version(version)
-      if set_active
-        target.make_image_version_current(version)
-      end
       target.processing_image = false
       target.save
     end

@@ -116,10 +116,11 @@ module Limelight #:nodoc:
     end
 
     def current_filepath
-      "#{filepath}/current"
+      "#{filepath}/#{active_image_version}"
     end
 
-    def image_url(mode, size=nil, version='current', original=false)
+    def image_url(mode, size=nil, version=nil, original=false)
+      version = active_image_version unless version
       if ["User", "UserSnippet", "UserMention"].include?(self.class.name) && use_fb_image
         if mode == :square
           "http://graph.facebook.com/#{fbuid}/picture?type=square"
@@ -160,15 +161,14 @@ module Limelight #:nodoc:
         AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
 
         self.image_versions += 1
-        self.active_image_version += image_versions
+        self.active_image_version = image_versions
         self.processing_image = true
 
         if force
           process_version(active_image_version)
-          make_image_version_current(active_image_version)
           self.processing_image = false
         else
-          Resque.enqueue(ProcessImages, id.to_s, self.class.name, active_image_version, true)
+          Resque.enqueue(ProcessImages, id.to_s, self.class.name, active_image_version)
         end
 
         self.save
@@ -226,17 +226,20 @@ module Limelight #:nodoc:
       end
     end
 
-    def make_image_version_current(version)
-      current_images = AWS::S3::Bucket.objects S3['image_bucket'], :prefix => "#{filepath}/current"
-      current_images.each do |image|
-        image.delete
-      end
-      version_images = AWS::S3::Bucket.objects S3['image_bucket'], :prefix => "#{filepath}/#{version}"
-      version_images.each do |image|
-        filename = image.key.split('/').last
-        AWS::S3::S3Object.copy image.key, "#{current_filepath}/#{filename}", S3['image_bucket']
-      end
-    end
+    # Deprecated. It used to copy images from the active image version folder to the current folder, but we ran into invalidation issues
+    #def make_image_version_current(version)
+    #  invalidator = CloudfrontInvalidator.new(S3['connection'][:access_key_id], S3['connection'][:secret_access_key], S3['cloudfront_id'])
+    #  current_images = AWS::S3::Bucket.objects S3['image_bucket'], :prefix => "#{filepath}/current"
+    #  current_images.each do |image|
+    #    image.delete
+    #  end
+    #  version_images = AWS::S3::Bucket.objects S3['image_bucket'], :prefix => "#{filepath}/#{version}"
+    #  version_images.each do |image|
+    #    filename = image.key.split('/').last
+    #    AWS::S3::S3Object.copy image.key, "#{current_filepath}/#{filename}", S3['image_bucket']
+    #    invalidator.invalidate("/#{current_filepath}/#{filename}")
+    #  end
+    #end
   end
 
   # Include this module to enable voting on a document

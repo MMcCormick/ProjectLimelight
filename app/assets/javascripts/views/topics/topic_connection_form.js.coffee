@@ -7,6 +7,7 @@ class LL.Views.TopicConnectionForm extends Backbone.View
     'click .btn-success': 'updateTopic'
 
   initialize: ->
+    @collection.on('reset', @renderConnections)
 
   render: =>
     $(@el).html(@template(topic: @model))
@@ -25,7 +26,7 @@ class LL.Views.TopicConnectionForm extends Backbone.View
       attributes[$(input).attr('name')] = $(input).val() if $(input).is(':checked')
 
     self = @
-    $.ajax '/api/topics/connections',
+    $.ajax @collection.url,
       type: 'post'
       data: attributes
       beforeSend: ->
@@ -39,3 +40,12 @@ class LL.Views.TopicConnectionForm extends Backbone.View
         globalError(textStatus, $(self.el))
       complete: ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
+
+  renderConnections: =>
+    for connection in @collection.models
+      $(@el).find('ul').append("<h4>#{connection.get('name')}</h4>")
+      for topic in connection.get('connections')
+        view = new LL.Views.TopicConnectionEdit(model: topic)
+        view.topic = @model
+        view.connection_id = connection.get('connection_id')
+        $(@el).find('ul').append(view.render().el)

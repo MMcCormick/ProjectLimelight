@@ -68,7 +68,6 @@ class LL.Views.TopicAliasForm extends Backbone.View
 
     e.preventDefault()
 
-    console.log($(e.target).data('id'))
     attributes = {id: @model.get('id'), alias_id: $(e.target).data('id'), name: $(e.target).prev('.name').text(), ooac: $(e.target).data('val') }
 
     self = @

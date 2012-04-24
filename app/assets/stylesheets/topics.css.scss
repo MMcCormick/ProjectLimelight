@@ -82,13 +82,16 @@ section.like-section-list {
   #topic-basic-form {
     .actions { margin-top: 5px }
   }
-  #topic-connection-form {
+  #topic-connection-form .meat {
+    h4 { margin-bottom: 5px; }
+    ul { margin-bottom: 15px; }
     .actions {
       clear: left;
       margin-top: 10px;
     }
   }
-  .alias {
+  .alias,
+  .topic-connection {
     margin-bottom: 5px;
     position: relative;
     @include clearfix();

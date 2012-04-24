@@ -236,16 +236,22 @@ class Neo4j
         end
       end
 
+      # commented out for beta
       # sort by number of connected topics
-      organized = organized.sort do |a,b|
-        b[1]["connections"].length <=> a[1]["connections"].length
-      end
+      #organized = organized.sort do |a,b|
+      #  b[1]["connections"].length <=> a[1]["connections"].length
+      #end
 
       # put type at the beginning
-      type_of_index = organized.index{ |con| con[1]["connection_id"] == Topic.type_of_id }
-      organized.unshift(organized.delete_at(type_of_index)) if type_of_index
+      #type_of_index = organized.index{ |con| con["connection_id"] == Topic.type_of_id }
+      #organized.unshift(organized.delete_at(type_of_index)) if type_of_index
 
-      organized
+      returnable = []
+      organized.each do |type, data|
+        returnable << {:name => type}.merge(data)
+      end
+
+      returnable
     end
 
     # get a topics pull from ids

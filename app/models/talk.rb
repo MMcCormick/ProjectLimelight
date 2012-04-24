@@ -1,11 +1,15 @@
 class Talk < Post
 
   field :is_popular, :default => false
+  field :standalone_tweet, :default => false
+  field :first_talk, :default => false
 
   has_many :comments
   validates :content, :presence => true
 
   after_update :talk_is_cheap
+
+  attr_accessible :standalone_tweet, :first_talk
 
   def name
     content

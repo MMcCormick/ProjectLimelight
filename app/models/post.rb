@@ -48,8 +48,8 @@ class Post
   default_scope where('status' => 'active')
 
   before_validation :set_source_snippet
-  before_create :set_user_snippet, :current_user_own, :send_tweet, :set_response_to, :set_root
-  after_create :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
+  before_create :denormalize_user, :current_user_own, :send_tweet, :set_response_to, :set_root
+  after_create :save_remote_image, :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
   after_destroy :remove_from_feeds
 
   # MBM: hot damn lots of indexes. can we do this better? YES WE CAN
@@ -686,9 +686,17 @@ class Post
   protected
 
   # Set some denormilized user data
-  def set_user_snippet
-    self.build_user_snippet({:public_id => user.public_id, :username => user.username, :first_name => user.first_name,
-                             :last_name => user.last_name, :fbuid => user.fbuid, :twuid => user.twuid, :use_fb_image => user.use_fb_image})
+  def denormalize_user
+    self.build_user_snippet(
+            :public_id => user.public_id,
+            :username => user.username,
+            :status => user.status,
+            :first_name => user.first_name,
+            :last_name => user.last_name,
+            :fbuid => user.fbuid,
+            :twuid => user.twuid,
+            :use_fb_image => user.use_fb_image
+    )
     self.user_snippet.id = user.id
   end
 

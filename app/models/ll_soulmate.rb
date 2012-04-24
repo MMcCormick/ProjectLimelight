@@ -14,7 +14,9 @@ class LlSoulmate
     end
 
     def create_user(user)
-      Soulmate::Loader.new("user").add(user_nugget(user))
+      if user.status == 'active'
+        Soulmate::Loader.new("user").add(user_nugget(user))
+      end
     end
 
     def destroy_user(user_id)

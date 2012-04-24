@@ -28,6 +28,7 @@ gem 'ken' # Freebase API for Ruby
 gem 'neography' # neo4j graph database
 gem 'backbone-on-rails'
 gem 'asset_sync' # can maybe move this to assets group?
+gem 'datasift'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'

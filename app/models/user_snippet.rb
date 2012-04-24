@@ -6,6 +6,7 @@ class UserSnippet
   field :username
   field :first_name
   field :last_name
+  field :status, :default => 'active'
   field :public_id
   field :fbuid
   field :twuid
@@ -13,7 +14,7 @@ class UserSnippet
 
   embedded_in :user_assignable, polymorphic: true
 
-  attr_accessible :username, :first_name, :last_name, :public_id, :_id, :fbuid, :twuid, :use_fb_image
+  attr_accessible :username, :status, :first_name, :last_name, :public_id, :_id, :fbuid, :twuid, :use_fb_image
 
   # Return the users username instead of their ID
   def to_param
@@ -32,13 +33,14 @@ class UserSnippet
     {
             :id => id.to_s,
             :type => 'User',
+            :status => status,
             :public_id => public_id,
             :slug => username.downcase,
             :username => username,
             :first_name => first_name,
             :last_name => last_name,
             :images => User.json_images(self),
-            :url => "/users/#{to_param}"
+            :url => status == 'twitter' ? "http://twitter.com/#{username}" : "/users/#{to_param}"
     }
   end
 

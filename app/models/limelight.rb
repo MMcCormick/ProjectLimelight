@@ -121,11 +121,19 @@ module Limelight #:nodoc:
 
     def image_url(mode, size=nil, version=nil, original=false)
       version = active_image_version unless version
-      if ["User", "UserSnippet", "UserMention"].include?(self.class.name) && use_fb_image
+      if ["User", "UserSnippet", "UserMention"].include?(self.class.name) && (use_fb_image || status == 'twitter')
         if mode == :square
-          "http://graph.facebook.com/#{fbuid}/picture?type=square"
+          if status == 'twitter'
+            "https://api.twitter.com/1/users/profile_image?screen_name=#{username}&size=bigger"
+          else
+            "http://graph.facebook.com/#{fbuid}/picture?type=square"
+          end
         else
-          "http://graph.facebook.com/#{fbuid}/picture?type=#{size}"
+          if status == 'twitter'
+            "https://api.twitter.com/1/users/profile_image?screen_name=#{username}&size=original"
+          else
+            "http://graph.facebook.com/#{fbuid}/picture?type=#{size}"
+          end
         end
       else
         if image_versions == 0
@@ -455,6 +463,7 @@ module Limelight #:nodoc:
           end
         end
       end
+      existing_ids.uniq!
       save_topic_mentions(existing_ids)
       save_new_topic_mentions(new_names)
     end

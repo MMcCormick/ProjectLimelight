@@ -69,6 +69,7 @@ class User
   field :gender
   field :birthday, :type => Date
   field :username_reset, :default => false
+  field :email_reset, :default => false
   field :time_zone, :type => String, :default => "Eastern Time (US & Canada)"
   field :roles, :default => []
   field :following_users_count, :type => Integer, :default => 0
@@ -114,14 +115,16 @@ class User
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio, :invite_code_id
 
-  validates :username, :uniqueness => { :case_sensitive => false, :message => 'Username is already taken' },
-            :length => { :minimum => 3, :maximum => 15, :message => 'Username must be between 3 and 15 characters' },
-            :format => { :with => /\A[a-zA-Z_0-9]+\z/, :message => "Username can only contain letters, numbers, and underscores" },
-            :format => { :with => /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/, :message => "Username must start with a letter and end with a letter or number" }
-  validates :email, :uniqueness => { :case_sensitive => false, :message => 'This email has already been used' }
-  validates :bio, :length => { :maximum => 150, :message => 'Bio has a max length of 150' }
-  validate :username_change
-  validate :validate_invite_code, :on => :create
+  with_options :if => :is_active? do |user|
+    user.validates :username, :uniqueness => { :case_sensitive => false, :message => 'Username is already taken' },
+              :length => { :minimum => 3, :maximum => 15, :message => 'Username must be between 3 and 15 characters' },
+              :format => { :with => /\A[a-zA-Z_0-9]+\z/, :message => "Username can only contain letters, numbers, and underscores" },
+              :format => { :with => /^[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$/, :message => "Username must start with a letter and end with a letter or number" }
+    user.validates :email, :uniqueness => { :case_sensitive => false, :message => 'This email has already been used' }
+    user.validates :bio, :length => { :maximum => 150, :message => 'Bio has a max length of 150' }
+    user.validate :validate_invite_code, :on => :create
+    user.validate :username_change
+  end
 
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff
   after_update :update_denorms#, :expire_caches
@@ -138,6 +141,31 @@ class User
   # Return the users slug instead of their ID
   def to_param
     self.slug.downcase
+  end
+
+  def is_active?
+    status == 'active'
+  end
+
+  # Overrides devise methods
+  # Checks whether a password is needed or not. For validations only.
+  # Passwords are always required if it's a new record, or if the password
+  # or confirmation are being set somewhere.
+  def password_required?
+    status == 'active' && (!persisted? || !password.nil? || !password_confirmation.nil?)
+  end
+  def email_required?
+    status == 'active'
+  end
+
+  # override username. if the user is a twitter user only, return their twitter username, else their limelight username
+  def username
+    if status == 'twitter'
+      twitter = get_social_connect 'twitter'
+      twitter.username
+    else
+      @attributes['username']
+    end
   end
 
   def follow_limelight_topic
@@ -413,8 +441,10 @@ class User
 
   def invite_stuff
     InviteCode.create(:user_id => id, :allotted => 3)
-    invite = InviteCode.find(invite_code_id)
-    invite.redeem
+    if invite_code_id
+      invite = InviteCode.find(invite_code_id)
+      invite.redeem
+    end
   end
 
   def influence_increases
@@ -503,7 +533,7 @@ class User
             :id => id.to_s,
             :type => 'User',
             :public_id => public_id,
-            :slug => username.downcase,
+            :slug => username ? username.downcase : '',
             :username => username,
             :first_name => first_name,
             :last_name => last_name,
@@ -670,6 +700,12 @@ class User
       user_mention_updates["user_mentions.$.username"] = self.username
       object_user_updates["object_user.username"] = self.username
       triggered_by_updates["triggered_by.$.username"] = self.username
+    end
+    if status_changed?
+      user_snippet_updates["user_snippet.status"] = self.status
+      #user_mention_updates["user_mentions.$.status"] = self.username
+      object_user_updates["object_user.status"] = self.status
+      triggered_by_updates["triggered_by.$.status"] = self.status
     end
     if first_name_changed?
       user_snippet_updates["user_snippet.first_name"] = self.first_name

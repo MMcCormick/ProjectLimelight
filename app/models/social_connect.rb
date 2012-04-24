@@ -5,6 +5,7 @@ class SocialConnect
   field :uid, :type => String
   field :token
   field :secret
+  field :username
   field :image
 
   embedded_in :user

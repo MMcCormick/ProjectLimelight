@@ -49,7 +49,6 @@ $feedFontColor: $grayDark;
     position: relative;
 
     h5 {
-      @include single-text-shadow(#DDD, 0, 1px);
       margin-bottom: 8px;
       .title {
         cursor: pointer;

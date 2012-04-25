@@ -58,6 +58,7 @@ class Topic
   field :score, :default => 0.0
   field :datasift_enabled, :default => false
   field :datasift_tags, :default => []
+  field :datasift_last_pushed
 
   auto_increment :public_id
 

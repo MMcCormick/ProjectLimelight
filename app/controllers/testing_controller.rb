@@ -8,8 +8,21 @@ end
 class TestingController < ApplicationController
 
   def test
-    datasift_user = DataSift::User.new("marbemac", "6acfce1c072652c8316f7d555c2d74d3")
-    consumer = definition.getConsumer(DataSift::StreamConsumer::TYPE_HTTP)
+    array = "one Two Three four Five"
+    array = array.split(" ")
+
+    combinaties = []
+    i=0
+    while i <= array.length-1
+      combinaties << array[i].downcase
+      unless i == array.length-1
+        array[(i+1)..(array.length-1)].each{|volgend_element|
+          combinaties<<(combinaties.last.dup.downcase<<" #{volgend_element.downcase}")
+        }
+      end
+      i+=1
+    end
+    bar = 'foo'
   end
 
   def convert_for_beta

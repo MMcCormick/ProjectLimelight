@@ -42,146 +42,137 @@ namespace :datasift do
     consumer.consume(true) do |interaction|
       if interaction
 
-        # filter tweets
-        # no tweets that include @usernames
+        # clean tweets
         tweet_content = interaction['twitter']['retweet']['text']
-        tweet_content.gsub!(/\B#\w+/i, '')
         tweet_content.chomp!('-|_ ')
         tweet_content.strip!
 
         existing_post = Post.where(:tweet_id => interaction['twitter']['retweeted']['id']).first
-        unless existing_post
+        unless !tweet_content || existing_post
 
           puts tweet_content
 
-          #user = User.where("social_connects._id" => interaction['twitter']['retweeted']['user']['id'], "social_connects.provider" => "twitter").first
-          #unless user
-          #  user = User.new(
-          #          :bio => interaction['twitter']['retweeted']['user']['description']
-          #  )
-          #  user.status = 'twitter'
-          #  user.username_reset = true
-          #  user.email_reset = true
-          #  connect = SocialConnect.new(:uid => interaction['twitter']['retweeted']['user']['id'], :provider => 'twitter', :username => interaction['twitter']['retweeted']['user']['screen_name'])
-          #  user.social_connects << connect
-          #  user.use_fb_image = true if user.image_versions == 0
-          #  user.update_social_denorms
-          #  user.confirm!
-          #end
-
-          #if user.save
-          begin
-            # grab info with embedly
-            embedly_key = 'ca77b5aae56d11e0a9544040d3dc5c07'
-            buffer = open("http://api.embed.ly/1/preview?key=#{embedly_key}&url=#{interaction['twitter']['retweet']['links'][0]}&format=json", "UserAgent" => "Ruby-Wget").read
-          rescue => e
-            next
+          # generate the word combinations in the tweet (to find topics based on)
+          words = tweet_content.split(" ")
+          combinaties = []
+          i=0
+          while i <= words.length-1
+            combinaties << words[i].downcase
+            unless i == words.length-1
+              words[(i+1)..(words.length-1)].each{|volgend_element|
+                # TODO: refactor this mess
+                tmp_word = combinaties.last.dup
+                volgend_element.chomp!(':')
+                volgend_element.gsub!("'s", '')
+                volgend_element.gsub!("#", '')
+                volgend_element.gsub!("@", '')
+                tmp_word.chomp!(':')
+                tmp_word.gsub!("'s", '')
+                tmp_word.gsub!("#", '')
+                tmp_word.gsub!("@", '')
+                combinaties<<(tmp_word.downcase<<" #{volgend_element.downcase}")
+              }
+            end
+            i+=1
           end
 
-          # convert JSON data into a hash
-          link_data = JSON.parse(buffer)
-
-          # replace the link with empty text in the tweet
-          tweet_content.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
-          tweet_content.strip!
-          tweet_content.chomp!('-|_ ')
-          tweet_content.strip!
-
-          post = link_data['url'] ? Post.where('sources.url' => link_data['url']).first : nil
-          # create the post if it is new
-          unless post
-            puts 'New Post'
-
-            response = {
-              :type => 'Link',
-              :source_name => link_data['provider_name'],
-              :source_url => link_data['url'],
-              :title => link_data['title']
-            }
-
-            #if link_data['provider_name'].to_url == user.username.to_url
-            #  puts 'Self promotion post'
-            #  next
-            #end
-
-            # remove the site title that often comes after the |, ie google buys microsoft | tech crunch
-            response[:title] = response[:title].split('|')
-            response[:title] = response[:title][0]
-            response[:title].strip!
-
-            if link_data['images'] && link_data['images'].length > 0
-              image = link_data['images'].max_by{|v| v.size}
-              if image['width'] >= 210
-                response[:remote_image_url] = image['url']
-              end
+          # we skip this post if there has been another post pushed to all the mentioned topics in the past 45 seconds
+          skip = true
+          topics = Topic.where(:datasift_tags => {"$in" => combinaties}).to_a
+          topics.each_with_index do |t,i|
+            if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 45)
+              # dont skip this post, there is a topic that has not had a datasift post in the past 45 seconds
+              skip = false
+              t.datasift_last_pushed = Time.now
+              t.save
             end
+          end
 
-            if link_data['object']
-              if link_data['object']['type'] == 'video'
-                response[:type] = 'Video'
-                response[:embed_html] = video_embed(nil, 120, 120, link_data['provider_name'], nil, link_data['object']['html'])
-              elsif link_data['object']['type'] == 'photo'
-                response[:type] = 'Picture'
-                response[:remote_image_url] = link_data['object']['url']
-              end
+          if skip == false
+            puts 'one'
+            begin
+              # grab info with embedly
+              embedly_key = 'ca77b5aae56d11e0a9544040d3dc5c07'
+              buffer = open("http://api.embed.ly/1/preview?key=#{embedly_key}&url=#{interaction['twitter']['retweet']['links'][0]}&format=json", "UserAgent" => "Ruby-Wget").read
+            rescue => e
+              puts 'embedly error'
+              puts e
+              next
             end
+            puts 'two'
+            # convert JSON data into a hash
+            link_data = JSON.parse(buffer)
 
-            post = Post.post(response, user.id)
-            post.tweet_id = interaction['twitter']['retweeted']['id']
-            post.standalone_tweet = true
+            # replace the link with empty text in the tweet
+            tweet_content.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
+            tweet_content.strip!
+            tweet_content.chomp!('-|_ ')
+            tweet_content.strip!
 
-            if interaction['interaction']['tags']
-              interaction['interaction']['tags'].uniq!
-              interaction['interaction']['tags'].each_with_index do |t,i|
-                t = t.split('-')
-                if i == 0
-                  post.mention1_id = t[0]
-                  post.mention1 = t[1]
-                elsif i == 1
-                  post.mention2_id = t[0]
-                  post.mention2 = t[1]
+            post = link_data['url'] ? Post.where('sources.url' => link_data['url']).first : nil
+            puts 'three'
+            # create the post if it is new
+            unless post
+              puts 'New Post'
+
+              response = {
+                :type => 'Link',
+                :source_name => link_data['provider_name'],
+                :source_url => link_data['url'],
+                :title => link_data['title']
+              }
+
+              #if link_data['provider_name'].to_url == user.username.to_url
+              #  puts 'Self promotion post'
+              #  next
+              #end
+
+              # remove the site title that often comes after the |, ie google buys microsoft | tech crunch
+              if response[:title]
+                response[:title] = response[:title].split('|')
+                response[:title] = response[:title][0]
+                response[:title].strip!
+              end
+
+              if link_data['images'] && link_data['images'].length > 0
+                image = link_data['images'].max_by{|v| v.size}
+                if image['width'] >= 210
+                  response[:remote_image_url] = image['url']
                 end
               end
+
+              if link_data['object']
+                if link_data['object']['type'] == 'video'
+                  response[:type] = 'Video'
+                  response[:embed_html] = video_embed(nil, 120, 120, link_data['provider_name'], nil, link_data['object']['html'])
+                elsif link_data['object']['type'] == 'photo'
+                  response[:type] = 'Picture'
+                  response[:remote_image_url] = link_data['object']['url']
+                end
+              end
+
+              puts 'four'
+
+              post = Post.post(response, user.id)
+              post.tweet_id = interaction['twitter']['retweeted']['id']
+              post.standalone_tweet = true
+
+              topics.each_with_index do |t,i|
+                # add the mentions
+                if i == 0
+                  post.mention1_id = t.id
+                  post.mention1 = t.name
+                elsif i == 1
+                  post.mention2_id = t.id
+                  post.mention2 = t.name
+                end
+              end
+
+              post.save
             end
-
-            post.save
+          else
+            puts 'skipped post'
           end
-
-          # if the tweet is the same as the link title, skip it (self promotion tweet)
-          #unless post && post.title.to_url.include?(tweet_content.to_url)
-          #  talk = user.talks.new(
-          #          :content => tweet_content,
-          #          :tweet_id => interaction['twitter']['retweeted']['id'],
-          #          :standalone_tweet => true
-          #  )
-          #  talk.created_at = interaction['twitter']['created_at']
-          #  if post
-          #    talk.parent_id = post.id
-          #    #if new_post
-          #    #  talk.first_talk = true
-          #    #end
-          #  end
-          #
-          #  if interaction['interaction']['tags']
-          #    interaction['interaction']['tags'].each_with_index do |t,i|
-          #      t = t.split('-')
-          #      if i == 0
-          #        talk.mention1_id = t[0]
-          #        talk.mention1 = t[1]
-          #      elsif i == 1
-          #        talk.mention2_id = t[0]
-          #        talk.mention2 = t[1]
-          #      end
-          #    end
-          #  end
-          #
-          #  talk.save
-          #end
-          #else
-          #  user.errors.each do |e,e2|
-          #    puts "#{e} - #{e2}"
-          #  end
-          #end
         end
 
         #Resque.enqueue(PushDatasiftStream)

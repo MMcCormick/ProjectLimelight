@@ -231,6 +231,7 @@ class TopicsController < ApplicationController
     topic.datasift_tags = params[:datasift_tags].split(', ')
 
     if topic.save
+      Resque.enqueue(DatasiftRecompile)
       render :json => build_ajax_response(:ok, nil, "Datasift info updated", nil), :status => 200
     else
       render :json => build_ajax_response(:error, nil, "Could not update Datasift info", nil), :status => 400

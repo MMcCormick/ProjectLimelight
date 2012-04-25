@@ -57,7 +57,7 @@ class Topic
   field :influencers, :default => {}
   field :score, :default => 0.0
   field :datasift_enabled, :default => false
-  field :datasift_tags
+  field :datasift_tags, :default => []
 
   auto_increment :public_id
 
@@ -433,7 +433,9 @@ class Topic
             :created_at => created_at,
             :created_at_pretty => pretty_time(created_at),
             :images => Topic.json_images(self),
-            :aliases => aliases
+            :aliases => aliases,
+            :datasift_enabled => datasift_enabled,
+            :datasift_tags => datasift_tags
     }
   end
 

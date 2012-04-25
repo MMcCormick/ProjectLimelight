@@ -223,6 +223,20 @@ class TopicsController < ApplicationController
     render :json => build_ajax_response(:ok, nil, "Image Updated", nil, {:url => url})
   end
 
+  def update_datasift
+    topic = Topic.find(params[:id])
+    authorize! :update, topic
+
+    topic.datasift_enabled = params[:datasift_enabled] == "true" ? true : false
+    topic.datasift_tags = params[:datasift_tags].split(', ')
+
+    if topic.save
+      render :json => build_ajax_response(:ok, nil, "Datasift info updated", nil), :status => 200
+    else
+      render :json => build_ajax_response(:error, nil, "Could not update Datasift info", nil), :status => 400
+    end
+  end
+
 
 
 

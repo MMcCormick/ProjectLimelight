@@ -1,0 +1,22 @@
+<div class="top">
+  <h4>Datasift</h4>
+</div>
+
+<div class="meat">
+  <form>
+    <div class="errors"></div>
+
+    <div class="datasift-enabled check">
+      <input type="checkbox" name="datasift_enabled" value="true" <%= if @topic.get('datasift_enabled') == true then 'checked="checked"' else '' %>>
+      <label for="datasift_enabled">Enable Datasift?</label>
+    </div>
+
+    <div class="datasift-tags">
+      <input type="text" name="datasift_tags" value="<%= @topic.get('datasift_tags').join(', ') %>">
+    </div>
+
+    <div class="actions">
+      <div class="submit btn btn-success">Connect</div>
+    </div>
+  </form>
+</div>

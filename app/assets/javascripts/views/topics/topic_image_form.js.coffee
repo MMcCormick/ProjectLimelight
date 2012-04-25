@@ -18,7 +18,6 @@ class LL.Views.TopicImageForm extends Backbone.View
     $.ajax url,
       dataType: 'jsonp'
       success: (data) ->
-        console.log data
         if data.responseData.results.length > 0
           for image in data.responseData.results
             self.addGoogleImage(image)

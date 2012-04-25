@@ -27,6 +27,9 @@ class LL.Views.TopicEdit extends Backbone.View
     alias_form = new LL.Views.TopicAliasForm(model: @model)
     $(@el).append(alias_form.render().el)
 
+    datasift_form = new LL.Views.TopicDatasiftForm(model: @model)
+    $(@el).append(datasift_form.render().el)
+
     $(@el).find('input.tc-auto').each (i,val) ->
       $(val).soulmate
         url:            '/autocomplete/search',

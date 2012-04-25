@@ -24,7 +24,6 @@ class LL.Router extends Backbone.Router
   #######
 
   userFeed: (id=0) ->
-    console.log(id)
     if id == 0 && !LL.App.current_user
       @splashPage()
       return

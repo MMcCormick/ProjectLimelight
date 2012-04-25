@@ -38,6 +38,7 @@ ProjectLimelight::Application.routes.draw do
       end
 
       post 'update_image' => 'topics#update_image'
+      put 'datasift' => 'topics#update_datasift'
       get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'

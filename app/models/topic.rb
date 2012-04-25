@@ -56,7 +56,7 @@ class Topic
   field :response_count, :default => 0
   field :influencers, :default => {}
   field :score, :default => 0.0
-  field :enable_datasift, :default => false
+  field :datasift_enabled, :default => false
   field :datasift_tags
 
   auto_increment :public_id

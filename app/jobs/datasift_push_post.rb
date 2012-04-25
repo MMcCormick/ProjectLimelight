@@ -1,4 +1,4 @@
-class PushDatasiftStream
+class DatasiftPushPost
 
   @queue = :datasift
 

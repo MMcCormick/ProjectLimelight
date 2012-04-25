@@ -8,13 +8,8 @@ end
 class TestingController < ApplicationController
 
   def test
-    #post = Post.all.first
-    #av = ActionView::Base.new(ProjectLimelight::Application.config.paths['app/views'].first)
-    #foo = av.render(:template => 'posts/show.json.rabl', :post => post)
-
-    post = Post.all.first
-    data = post.to_json({:user => current_user})
-    foo = 'bar'
+    datasift_user = DataSift::User.new("marbemac", "6acfce1c072652c8316f7d555c2d74d3")
+    consumer = definition.getConsumer(DataSift::StreamConsumer::TYPE_HTTP)
   end
 
   def convert_for_beta

@@ -61,16 +61,12 @@ namespace :datasift do
             unless i == words.length-1
               words[(i+1)..(words.length-1)].each{|volgend_element|
                 # TODO: refactor this mess
-                tmp_word = combinaties.last.dup
-                volgend_element.chomp!(':')
-                volgend_element.gsub!("'s", '')
-                volgend_element.gsub!("#", '')
-                volgend_element.gsub!("@", '')
-                tmp_word.chomp!(':')
+                tmp_word = combinaties.last.dup.downcase
+                tmp_word.gsub!(/[^a-z1-9 ]/, '')
                 tmp_word.gsub!("'s", '')
-                tmp_word.gsub!("#", '')
-                tmp_word.gsub!("@", '')
-                combinaties<<(tmp_word.downcase<<" #{volgend_element.downcase}")
+                tmp_volgend = volgend_element.downcase.gsub(/[^a-z1-9 ]/, '')
+                tmp_word.gsub("'s", '')
+                combinaties<<(tmp_word<<" #{tmp_volgend}")
               }
             end
             i+=1
@@ -80,6 +76,7 @@ namespace :datasift do
           skip = true
           topics = Topic.where(:datasift_tags => {"$in" => combinaties}).to_a
           topics.each_with_index do |t,i|
+            puts Time.now.to_i - t.datasift_last_pushed.to_i
             if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 45)
               # dont skip this post, there is a topic that has not had a datasift post in the past 45 seconds
               skip = false

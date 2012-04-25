@@ -9,7 +9,7 @@ ProjectLimelight::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_assets = false
+  config.serve_static_assets = true
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
@@ -22,6 +22,8 @@ ProjectLimelight::Application.configure do
 
   # use the closure library to minify js
   config.assets.js_compressor = :closure
+
+  config.static_cache_control = "public, max-age=2592000"
 
   config.action_controller.asset_host = 'http://static.p-li.me'
 
@@ -40,6 +42,12 @@ ProjectLimelight::Application.configure do
 
   # Use a different cache store in production
   config.cache_store = :dalli_store
+
+  config.action_dispatch.rack_cache = {
+    :metastore    => Dalli::Client.new,
+    :entitystore  => 'file:tmp/cache/rack/body',
+    :allow_reload => false
+  }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"

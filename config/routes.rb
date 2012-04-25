@@ -27,7 +27,9 @@ ProjectLimelight::Application.routes.draw do
         delete '' => 'follows#destroy', :type => 'Topic'
       end
       scope 'connections' do
-        post '' => 'topic_con_sugs#create'
+        post '' => 'topic_connections#add'
+        get '' => 'topic_connections#index'
+        delete '' => 'topic_connections#remove'
       end
       scope 'aliases' do
         post '' => 'topics#add_alias'

@@ -3,6 +3,9 @@
 </div>
 
 <div class="meat">
+  <ul class="unstyled"></ul>
+
+  <h4>Add a Connection</h4>
   <form>
     <div class="errors"></div>
 
@@ -12,7 +15,6 @@
     </div>
 
     <div class="topic2">
-      <label for="topic2_name">Choose a Topic</label>
       <input type="text" name="topic2_name" class="tc-auto">
       <input type="hidden" name="topic2_id" autocomplete="off">
     </div>

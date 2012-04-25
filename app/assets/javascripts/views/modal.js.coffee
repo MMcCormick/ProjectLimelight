@@ -35,7 +35,6 @@ class LL.Views.Modal extends Backbone.View
   navBack: (e) =>
     if $(e.target).hasClass('ll-modal')
       if @activeScreen.hasNoUrl
-        console.log('hasNoUrl')
         @hide()
       else
         history.back()

@@ -9,7 +9,8 @@ class User
 
   @marc_id = "4eb9cda1cddc7f4068000042"
   @matt_id = "4ebf1748cddc7f0c9f000002"
-  class << self; attr_accessor :marc_id, :matt_id end
+  @limelight_user_id = "4f971b6ccddc7f1480000046"
+  class << self; attr_accessor :marc_id, :matt_id, :limelight_user_id end
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable
@@ -543,7 +544,8 @@ class User
             :followers_count => followers_count,
             :unread_notification_count => unread_notification_count,
             :images => User.json_images(self),
-            :url => "/users/#{to_param}"
+            :status => status,
+            :url => status == 'twitter' ? "http://twitter.com/#{username}" : "/users/#{to_param}"
     }
 
     if options[:show_extra]

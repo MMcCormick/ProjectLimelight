@@ -1,5 +1,5 @@
 <img src="<%= @talk.get('user').get('images').square.small %>">
-<a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
+<a class="ulink" <%= 'target="_blank"' if @talk.get('user').get('status') == 'twitter' %> data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
 <p>
   <%= @talk.get('content') %>
 </p>
@@ -7,5 +7,7 @@
   <span class='when'><%= @talk.get('created_at_short') %></span>
 </div>
 <div class="actions">
-  <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>
+  <% if @talk.get('user').get('status') == 'active': %>
+    <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>
+  <% end %>
 </div>

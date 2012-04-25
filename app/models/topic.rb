@@ -56,6 +56,8 @@ class Topic
   field :response_count, :default => 0
   field :influencers, :default => {}
   field :score, :default => 0.0
+  field :enable_datasift, :default => false
+  field :datasift_tags
 
   auto_increment :public_id
 
@@ -83,6 +85,7 @@ class Topic
   index [[ :public_id, Mongo::DESCENDING ]]
   index [[ :score, Mongo::DESCENDING ]]
   index [[ :short_name, Mongo::ASCENDING ]]
+  index :datasift_tags, :sparse => true
   index :aliases
   index :primary_type_id
 

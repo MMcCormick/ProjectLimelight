@@ -61,6 +61,26 @@ else
   puts 'matt already in DB'
 end
 
+puts 'Creating limelight bot'
+limelight_bot = User.find(User.limelight_user_id)
+unless limelight_bot
+  limelight_bot = User.new(
+          :username => 'Limelight',
+          :first_name => 'Marc',
+          :last_name => 'Matt',
+          :email => 'bot@projectlimelight.com',
+          :password => '87yot4',
+          :password_confirmation => '87yot4',
+          :invite_code_id => invite_code.id
+  )
+  limelight_bot.id = User.limelight_user_id
+  limelight_bot.save!
+  limelight_bot.confirm!
+  puts 'limelight_bot created'
+else
+  puts 'limelight_bot already in DB'
+end
+
 puts 'Creating type of connection'
 connection = TopicConnection.find(Topic.type_of_id)
 unless connection

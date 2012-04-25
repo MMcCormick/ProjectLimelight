@@ -28,6 +28,7 @@ class Post
   field :tweet_id
   field :root_type
   field :embed_html # video embeds
+  field :standalone_tweet, :default => false
   field :root_id, :type => BSON::ObjectId
 
   auto_increment :public_id
@@ -42,7 +43,7 @@ class Post
   validates :user_id, :status, :presence => true
   validate :title_length, :content_length, :unique_source
 
-  attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :embed_html, :tweet_content, :tweet, :tweet_id
+  attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :embed_html, :tweet_content, :tweet, :tweet_id, :standalone_tweet
   attr_accessor :parent, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
 
   default_scope where('status' => 'active')
@@ -118,7 +119,9 @@ class Post
   end
 
   def add_initial_pop
-    add_pop_action(:new, :a, user)
+    unless standalone_tweet
+      add_pop_action(:new, :a, user)
+    end
   end
 
   def add_source(source)

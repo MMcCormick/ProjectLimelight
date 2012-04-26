@@ -15,27 +15,34 @@
       <span class='actions'></span>
       <span class="created-at">
         Originally posted by
-        <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
+        <% if @post.get('user').get('id') == '4f971b6ccddc7f1480000046': %>
+          Limelight
+        <% else: %>
+          <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
+        <% end %>
         <%= @post.get('created_at_pretty') %>
       </span>
     </div>
-
-    <% if @post.get('video'): %>
-      <div class='media'>
-        <% if LL.App.Feed: %>
-          <%- @post.get('video_autoplay') %>
-        <% else: %>
-          <%- @post.get('video') %>
-        <% end %>
-      </div>
-    <% else if @post.get('images'): %>
-      <div class='media'>
-        <img src='<%= @post.get('images').original %>' />
-      </div>
-    <% end %>
 
     <div class='talk'></div>
     <div class="c"></div>
   </div>
 </section>
+
+<% if @post.get('video') || @post.get('images'): %>
+  <% if @post.get('video'): %>
+    <div class='post-media'>
+      <% if LL.App.Feed: %>
+        <%- @post.get('video_autoplay') %>
+      <% else: %>
+        <%- @post.get('video') %>
+      <% end %>
+    </div>
+  <% else if @post.get('images'): %>
+    <div class='post-media'>
+      <img src='<%= @post.get('images').original %>' />
+    </div>
+  <% end %>
+<% end %>
+
 <div class='half-sections'></div>

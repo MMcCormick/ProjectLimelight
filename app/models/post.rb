@@ -364,7 +364,7 @@ class Post
 
   def json_video(autoplay=nil)
     unless embed_html.blank?
-      video_embed(sources[0], 650, 470, nil, nil, embed_html, autoplay)
+      video_embed(sources[0], 680, 480, nil, nil, embed_html, autoplay)
     end
   end
 

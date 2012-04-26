@@ -8,21 +8,9 @@ end
 class TestingController < ApplicationController
 
   def test
-    array = "one Two Three four Five"
-    array = array.split(" ")
-
-    combinaties = []
-    i=0
-    while i <= array.length-1
-      combinaties << array[i].downcase
-      unless i == array.length-1
-        array[(i+1)..(array.length-1)].each{|volgend_element|
-          combinaties<<(combinaties.last.dup.downcase<<" #{volgend_element.downcase}")
-        }
-      end
-      i+=1
-    end
-    bar = 'foo'
+    test = "Beyonce Is Peoples Most Beautiful Woman Only 3 Months After Giving Birth"
+    test2 = "RT if you think that Katy is beautiful even without any makeup"
+    foo = 'bar'
   end
 
   def convert_for_beta

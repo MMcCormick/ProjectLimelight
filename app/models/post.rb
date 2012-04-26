@@ -8,7 +8,6 @@ class Post
   include Limelight::Mentions
   include Limelight::Popularity
   include Limelight::Images
-
   include ModelUtilitiesHelper
   include VideosHelper
 
@@ -49,9 +48,8 @@ class Post
   default_scope where('status' => 'active')
 
   before_validation :set_source_snippet
-  before_create :denormalize_user, :current_user_own, :send_tweet, :set_response_to, :set_root
-  after_create :save_remote_image, :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
-  after_destroy :remove_from_feeds
+  before_create :save_remote_image, :denormalize_user, :current_user_own, :send_tweet, :set_response_to, :set_root
+  after_create :process_images, :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
 
   # MBM: hot damn lots of indexes. can we do this better? YES WE CAN
   # MCM: chill out obama
@@ -75,6 +73,7 @@ class Post
         [ "likes", Mongo::DESCENDING ]
       ]
     ) # used in FeedUserItem
+
 
   def to_param
     "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
@@ -142,13 +141,13 @@ class Post
   end
 
   def title_length
-    if title_clean.length > 125
+    if title && title.length > 125
       errors.add(:title, "cannot be more than 125 characters long")
     end
   end
 
   def content_length
-    if content_clean.length > 280
+    if content && content.length > 280
       errors.add(:content, "cannot be more than 280 characters long")
     end
   end

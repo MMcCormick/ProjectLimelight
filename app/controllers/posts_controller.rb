@@ -15,7 +15,7 @@ class PostsController < ApplicationController
     not_found("Post not found") unless @this
 
     @title = @this.name
-    @description = @this.content_clean
+    @description = @this.content
 
     respond_to do |format|
       format.js { render :json => @this.to_json(:user => current_user) }

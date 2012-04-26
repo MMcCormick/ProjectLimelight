@@ -13,7 +13,7 @@ class DatasiftRecompile
             AND
             language.tag == \"en\"
             AND
-            twitter.retweet.count >= 5
+            twitter.retweet.count >= 10
             AND
             twitter.retweet.links exists
     "

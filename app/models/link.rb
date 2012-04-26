@@ -4,6 +4,6 @@ class Link < Post
   validates :title, :presence => true
 
   def name
-    title_clean
+    title
   end
 end

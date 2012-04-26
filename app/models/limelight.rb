@@ -144,12 +144,12 @@ module Limelight #:nodoc:
           end
         else
           if processing_image
-            "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+            "#{S3['image_prefix']}/#{filepath}/#{version.to_i}/original.png"
           else
             if original
-              "#{S3['image_prefix']}/#{filepath}/#{version}/original.png"
+              "#{S3['image_prefix']}/#{filepath}/#{version.to_i}/original.png"
             else
-              "#{S3['image_prefix']}/#{filepath}/#{version}/#{mode}_#{size}.png"
+              "#{S3['image_prefix']}/#{filepath}/#{version.to_i}/#{mode}_#{size}.png"
             end
           end
         end
@@ -175,11 +175,13 @@ module Limelight #:nodoc:
         if force
           process_version(active_image_version)
           self.processing_image = false
-        else
-          Resque.enqueue(ProcessImages, id.to_s, self.class.name, active_image_version)
         end
+      end
+    end
 
-        self.save
+    def process_images
+      if processing_image
+        Resque.enqueue(ProcessImages, id.to_s, self.class.name, active_image_version)
       end
     end
 
@@ -369,32 +371,6 @@ module Limelight #:nodoc:
       attr_accessible :mention1, :mention2, :mention1_id, :mention2_id, :first_response
 
       before_create :set_mentions
-    end
-
-    def title_clean
-      clean = ''
-      if @title_raw.blank? && title
-        clean = title.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
-      elsif !@title_raw.blank?
-        # old mentions
-        clean = @title_raw.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
-        # new mentions
-        clean = clean.gsub(/[\#]\[([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/, '\2')
-      end
-      clean
-    end
-
-    def content_clean
-      clean = ''
-      if @content_raw.blank? && content
-        clean = content.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
-      elsif !@content_raw.blank?
-        # old mentions
-        clean = @content_raw.gsub(/[\#\@]\[([0-9a-zA-Z]*)#([^\]]*)\]/, '\2')
-        # new mentions
-        clean = clean.gsub(/[\#]\[([a-zA-Z0-9,!\-_:'&\?\$ ]*)\]/, '\2')
-      end
-      clean
     end
 
     def mentions_topic?(id)

@@ -103,10 +103,6 @@ class Topic
     name
   end
 
-  def title_clean
-    name
-  end
-
   #
   # Aliases
   #

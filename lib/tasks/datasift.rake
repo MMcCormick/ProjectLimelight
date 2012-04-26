@@ -53,32 +53,26 @@ namespace :datasift do
           puts tweet_content
 
           # generate the word combinations in the tweet (to find topics based on)
-          words = tweet_content.split(" ")
+          words = tweet_content.downcase.gsub("'s'", '').gsub(/[^a-z1-9 ]/, '')
+          words = words.split(" ")
           combinaties = []
           i=0
           while i <= words.length-1
             combinaties << words[i].downcase
             unless i == words.length-1
               words[(i+1)..(words.length-1)].each{|volgend_element|
-                # TODO: refactor this mess
-                tmp_word = combinaties.last.dup.downcase
-                tmp_word.gsub!(/[^a-z1-9 ]/, '')
-                tmp_word.gsub!("'s", '')
-                tmp_volgend = volgend_element.downcase.gsub(/[^a-z1-9 ]/, '')
-                tmp_word.gsub("'s", '')
-                combinaties<<(tmp_word<<" #{tmp_volgend}")
+                combinaties<<(combinaties.last.dup<<" #{volgend_element}")
               }
             end
             i+=1
           end
 
-          # we skip this post if there has been another post pushed to all the mentioned topics in the past 45 seconds
+          # we skip this post if there has been another post pushed to all the mentioned topics in the past 60 seconds
           skip = true
           topics = Topic.where(:datasift_tags => {"$in" => combinaties}).to_a
           topics.each_with_index do |t,i|
-            puts Time.now.to_i - t.datasift_last_pushed.to_i
-            if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 45)
-              # dont skip this post, there is a topic that has not had a datasift post in the past 45 seconds
+            if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 60)
+              # dont skip this post, there is a topic that has not had a datasift post in the past 60 seconds
               skip = false
               t.datasift_last_pushed = Time.now
               t.save
@@ -86,7 +80,6 @@ namespace :datasift do
           end
 
           if skip == false
-            puts 'one'
             begin
               # grab info with embedly
               embedly_key = 'ca77b5aae56d11e0a9544040d3dc5c07'
@@ -96,7 +89,7 @@ namespace :datasift do
               puts e
               next
             end
-            puts 'two'
+
             # convert JSON data into a hash
             link_data = JSON.parse(buffer)
 
@@ -107,10 +100,9 @@ namespace :datasift do
             tweet_content.strip!
 
             post = link_data['url'] ? Post.where('sources.url' => link_data['url']).first : nil
-            puts 'three'
+
             # create the post if it is new
             unless post
-              puts 'New Post'
 
               response = {
                 :type => 'Link',
@@ -118,11 +110,6 @@ namespace :datasift do
                 :source_url => link_data['url'],
                 :title => link_data['title']
               }
-
-              #if link_data['provider_name'].to_url == user.username.to_url
-              #  puts 'Self promotion post'
-              #  next
-              #end
 
               # remove the site title that often comes after the |, ie google buys microsoft | tech crunch
               if response[:title]
@@ -147,8 +134,6 @@ namespace :datasift do
                   response[:remote_image_url] = link_data['object']['url']
                 end
               end
-
-              puts 'four'
 
               post = Post.post(response, user.id)
               post.tweet_id = interaction['twitter']['retweeted']['id']

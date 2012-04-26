@@ -1,15 +1,15 @@
 <section class="post-root">
   <div class='meat'>
-    <h1>
-      <% if @post.get('primary_source'): %>
-        <a target="_blank" href="<%= @post.get('primary_source').url %>">
-          <span class="title title-with-source"><%= @post.get('title') %></span>
-          <span class="source"><%= @post.get('primary_source').name %></span>
+    <% if @post.get('primary_source'): %>
+        <h1 class="title">
+          <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('title') %></a>
+        </h1>
+        <a class="source" target="_blank" href="<%= @post.get('primary_source').url %>">
+          View on <span><%= @post.get('primary_source').name %></span>
         </a>
-      <% else: %>
-        <span class="title"><%= @post.get('title') %></span>
-      <% end %>
-    </h1>
+    <% else: %>
+      <h1 class="title"><%= @post.get('title') %></h1>
+    <% end %>
 
     <div class="actions-created">
       <span class='actions'></span>

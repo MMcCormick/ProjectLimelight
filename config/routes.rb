@@ -73,6 +73,10 @@ ProjectLimelight::Application.routes.draw do
       post 'check' => 'invite_codes#check'
     end
 
+    scope 'beta_signups' do
+      post '' => 'beta_signups#create'
+    end
+
     get 'influence_increases' => 'users#influence_increases'
   end
 

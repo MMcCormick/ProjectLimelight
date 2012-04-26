@@ -11,4 +11,9 @@ class UserMailer < ActionMailer::Base
     @user = user
     mail(:to => "#{email}", :subject => "#{user.fullname ? user.fullname : user.username} invites you to join Limelight")
   end
+
+  def beta_signup_email(email)
+    @email = email
+    mail(:to => "#{email}", :subject => "Thanks for signing up for the Limelight Beta!")
+  end
 end

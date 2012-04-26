@@ -1,5 +1,5 @@
 class LL.Views.UserUseInviteForm extends Backbone.View
-  el: $('.invite-form form')
+  el: $('#new_invite_code')
 
   events:
     "submit": "useInvite"

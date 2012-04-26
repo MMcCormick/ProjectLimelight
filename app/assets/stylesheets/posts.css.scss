@@ -7,18 +7,16 @@ $postFontColor: $grayDark;
   }
   h1 {
     margin-bottom: 10px;
-    .title-with-source {
-      margin-right: 5px;
-    }
-    .source {
-      position: relative;
-      bottom: 3px;
-      font-size: 16px;
-      color: $grayLight;
-      font-weight: normal;
-      &:hover {
-        text-decoration: underline;
-      }
+  }
+  .source {
+    display: inline-block;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: $grayLight;
+    font-weight: normal;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
     }
   }
   h3 {

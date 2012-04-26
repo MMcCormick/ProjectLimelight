@@ -16,6 +16,9 @@ class LL.Views.SplashPage extends Backbone.View
     invite_form = new LL.Views.UserUseInviteForm()
     invite_form.splash = @
 
+    invite_form = new LL.Views.UserBetaSignupForm()
+    invite_form.splash = @
+
     collection = new LL.Collections.SplashInfluenceIncreases()
     influences = new LL.Views.SplashInfluenceIncreases(collection: collection)
     collection.fetch()

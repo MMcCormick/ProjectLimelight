@@ -56,22 +56,24 @@ class DatasiftPushPost
         tweet_content.chomp!('-|_ ')
         tweet_content.strip!
 
+        # FILTERS
+
         # blacklist certain sites as sources
-        if ['facebook', 'twitter', 'twitpic', 'google+', 'amazon', 'ebay', 'instagram'].include?(link_data['provider_name'].downcase)
-          return
-        end
+        return if ['facebook', 'twitter', 'twitpic', 'google+', 'amazon', 'ebay', 'instagram'].include?(link_data['provider_name'].downcase)
 
         # skip if it is a root source (www.google.com is the root and www.google.com is the url submitted)
         return if link_data['provider_url'].to_url == link_data['url'].to_url
 
         post = link_data['url'] ? Post.where('sources.url' => link_data['url']).first : nil
-
         # create the post if it is new
         unless post
 
           # new combinations using the link description as well
-          combinations = DatasiftPushPost.combinalities("#{tweet_content} #{link_data['description']}")
+          combinations = DatasiftPushPost.combinalities("#{link_data['title']} #{link_data['description']}")
           topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
+
+          # return if the title/description of the url does not include any of the topics
+          return if topics.length == 0
 
           response = {
             :type => 'Link',
@@ -88,19 +90,15 @@ class DatasiftPushPost
           # remove the site title that often comes after the |, ie google buys microsoft | tech crunch
           if response[:title]
             response[:title] = response[:title].split('|')
-            # figure out if the title is before or after the |
+            # Take out part of the title if one side of the | is shorter than the other AND includes the name of the provider
             if response[:title].length > 1
-              if response[:title][0].downcase.gsub(' ', '').strip == link_data['provider_name'].downcase.gsub(' ', '').strip
+              if response[:title][0].length < response[:title][response[:title].length - 1].length && response[:title][0].to_url.include?(link_data['provider_name'].to_url)
                 response[:title].shift
-              else
+              elsif response[:title][response[:title].length - 1].length < response[:title][0].length && response[:title][response[:title].length - 1].to_url.include?(link_data['provider_name'].to_url)
                 response[:title].pop
               end
-              response[:title] = response[:title].join(' ')
-            else
-              response[:title] = response[:title][0]
             end
-
-            response[:title].strip!
+            response[:title] = response[:title].join(' ').strip
           end
 
           if link_data['images'] && link_data['images'].length > 0

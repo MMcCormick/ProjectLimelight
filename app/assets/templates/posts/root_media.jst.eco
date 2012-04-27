@@ -4,6 +4,11 @@
 
 <div class='when'>
   <%= @post.get('created_at_pretty') %>
+
+  <% if @post.get('primary_source'): %>
+    via
+    <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
+  <% end %>
 </div>
 
 <% if @post.get('images'): %>
@@ -18,13 +23,6 @@
 <% end %>
 
 <div class='bottom-sheet <%= "static" unless @post.get('images') %>'>
-  <% if @post.get('primary_source'): %>
-    <div class='source'>
-      View on
-      <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
-    </div>
-  <% end %>
-
   <% if @post.get('topic_mentions').length > 0: %>
     <div class="mentions">
       <div class='head'>TOPICS</div>

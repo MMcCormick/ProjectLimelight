@@ -64,6 +64,9 @@ class DatasiftPushPost
         # skip if it is a root source (www.google.com is the root and www.google.com is the url submitted)
         return if link_data['provider_url'].to_url == link_data['url'].to_url
 
+        # associated press does not return actual titles with their stories and looks fucking dumb on feeds. skiiiippp.
+        return if link_data['title'] && link_data['title'].to_url == 'news-from-the-associated-press'
+
         post = link_data['url'] ? Post.where('sources.url' => link_data['url']).first : nil
         # create the post if it is new
         unless post
@@ -81,11 +84,6 @@ class DatasiftPushPost
             :source_url => link_data['url'],
             :title => link_data['title']
           }
-
-          # associated press does not return actual titles with their stories and looks fucking dumb on feeds. skiiiippp.
-          if response[:title].to_url == 'news-from-the-associated-press'
-            return
-          end
 
           # remove the site title that often comes after the |, ie google buys microsoft | tech crunch
           if response[:title]

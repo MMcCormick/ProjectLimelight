@@ -427,7 +427,7 @@ class Topic
             :name => name,
             :score => score,
             :followers_count => followers_count,
-            :created_at => created_at,
+            :created_at => created_at.to_i,
             :created_at_pretty => pretty_time(created_at),
             :images => Topic.json_images(self),
             :aliases => aliases,

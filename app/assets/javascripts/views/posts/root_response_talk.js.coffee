@@ -13,12 +13,16 @@ class LL.Views.RootResponseTalk extends Backbone.View
   render: ->
     $(@el).html(@template(talk: @model))
 
-    if @model.get('user').get('status') == 'active'
-      like = new LL.Views.LikeButton(model: @model)
-      $(@el).find('.actions').prepend(like.render().el)
+    prettyTime = new LL.Views.PrettyTime()
+    prettyTime.format = 'short'
+    prettyTime.time = @model.get('created_at')
+    $(@el).find('.when').prepend(prettyTime.render().el)
 
-      score = new LL.Views.Score(model: @model)
-      $(@el).find('.actions').prepend(score.render().el)
+    like = new LL.Views.LikeButton(model: @model)
+    $(@el).find('.actions').prepend(like.render().el)
+
+    score = new LL.Views.Score(model: @model)
+    $(@el).find('.actions').prepend(score.render().el)
 
     @
 

@@ -11,6 +11,11 @@ class LL.Views.RootMedia extends Backbone.View
   render: ->
     $(@el).addClass(@model.get('type').toLowerCase()).html(@template(post: @model))
 
+    prettyTime = new LL.Views.PrettyTime()
+    prettyTime.format = 'extended'
+    prettyTime.time = @model.get('created_at')
+    $(@el).find('.when').prepend(prettyTime.render().el)
+
     like = new LL.Views.LikeButton(model: @model)
     $(@el).find('.actions').prepend(like.render().el)
 

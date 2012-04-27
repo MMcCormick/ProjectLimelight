@@ -3,9 +3,7 @@
 <p>
   <%= @talk.get('content') %>
 </p>
-<div class='top-right'>
-  <span class='when'><%= @talk.get('created_at_short') %></span>
-</div>
+<div class='when top-right'></div>
 <div class="actions">
   <% if @talk.get('user').get('status') == 'active': %>
     <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>

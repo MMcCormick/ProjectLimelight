@@ -21,6 +21,7 @@
 //= require jquery.qtip
 //= require jquery.gritter
 //= require jquery.timer
+//= require prettytime
 //
 //
 //

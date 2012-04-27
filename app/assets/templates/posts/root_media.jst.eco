@@ -3,8 +3,6 @@
 </h5>
 
 <div class='when'>
-  <%= @post.get('created_at_pretty') %>
-
   <% if @post.get('primary_source'): %>
     via
     <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>

@@ -33,8 +33,6 @@ class DatasiftPushPost
         if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 75)
           # dont skip this post, there is a topic that has not had a datasift post in the past x seconds
           skip = false
-          t.datasift_last_pushed = Time.now
-          t.save
         end
       end
 
@@ -82,16 +80,22 @@ class DatasiftPushPost
             :title => link_data['title']
           }
 
+          # associated press does not return actual titles with their stories and looks fucking dumb on feeds. skiiiippp.
+          if response[:title].to_url == 'news-from-the-associated-press'
+            return
+          end
+
           # remove the site title that often comes after the |, ie google buys microsoft | tech crunch
           if response[:title]
             response[:title] = response[:title].split('|')
             # figure out if the title is before or after the |
             if response[:title].length > 1
               if response[:title][0].downcase.gsub(' ', '').strip == link_data['provider_name'].downcase.gsub(' ', '').strip
-                response[:title] = response[:title].shift.join(' ')
+                response[:title].shift
               else
-                response[:title] = response[:title].pop.join(' ')
+                response[:title].pop
               end
+              response[:title] = response[:title].join(' ')
             else
               response[:title] = response[:title][0]
             end
@@ -121,6 +125,9 @@ class DatasiftPushPost
           post.standalone_tweet = true
 
           topics.each_with_index do |t,i|
+            t.datasift_last_pushed = Time.now
+            t.save
+
             # add the mentions
             if i == 0
               post.mention1_id = t.id

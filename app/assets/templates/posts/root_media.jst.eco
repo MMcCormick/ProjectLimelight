@@ -1,13 +1,10 @@
 <h5>
-  <% if @post.get('primary_source'): %>
-    <span class="title title-with-source"><%= @post.get('title') %></span>
-    <a target="_blank" href="<%= @post.get('primary_source').url %>">
-      <span class="source"><%= @post.get('primary_source').name %></span>
-    </a>
-  <% else: %>
-    <span class="title"><%= @post.get('title') %></span>
-  <% end %>
+  <%= @post.get('title') %>
 </h5>
+
+<div class='when'>
+  <%= @post.get('created_at_pretty') %>
+</div>
 
 <% if @post.get('images'): %>
   <div class='img'>
@@ -20,14 +17,26 @@
   </div>
 <% end %>
 
-<% if @post.get('topic_mentions').length > 0: %>
-  <div class="mentions">
-    <% for mention, i in @post.get('topic_mentions'): %>
-      <a class="tlink" data-id='<%= mention.get('id') %>' href="/<%= mention.get('slug') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @post.get('topic_mentions').length %>
-    <% end %>
-  </div>
-<% end %>
+<div class='bottom-sheet <%= "static" unless @post.get('images') %>'>
+  <% if @post.get('primary_source'): %>
+    <div class='source'>
+      View on
+      <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
+    </div>
+  <% end %>
 
-<div class='actions'>
-  <span class='talk-form'>+Talk</span>
+  <% if @post.get('topic_mentions').length > 0: %>
+    <div class="mentions">
+      <div class='head'>TOPICS</div>
+      <% for mention, i in @post.get('topic_mentions'): %>
+        <a class="tlink" data-id='<%= mention.get('id') %>' href="/<%= mention.get('slug') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @post.get('topic_mentions').length %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class='actions'>
+    <span class='talk-form'>+Talk</span>
+  </div>
+
+  <div class='bg'></div>
 </div>

@@ -11,6 +11,7 @@ class LL.Views.FeedColumn extends Backbone.View
     @height = $(@el).height()
 
   prependPost: (view) ->
+    self = @
     $(view.el).css({'position':'absolute','visibility':'hidden','display':'block'})
     $(@el).prepend(view.el)
 
@@ -20,6 +21,6 @@ class LL.Views.FeedColumn extends Backbone.View
       $(view.el).css({'margin-top':marginTop,'position':'relative','visibility':'visible'})
 
       $(view.el).animate {'margin-top': 0}, 750, 'easeOutExpo', ->
-        @height = $(@el).height()
+        self.height = $(self.el).height()
 
     , 1000

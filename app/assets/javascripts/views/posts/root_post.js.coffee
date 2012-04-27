@@ -4,12 +4,16 @@ class LL.Views.RootPost extends Backbone.View
 
   events:
     "click .root .img, .talking, .title": "postShow"
+    "mouseenter .root": "showHover"
+    "mouseleave .root": "hideHover"
 
   initialize: ->
     @public_responses = null
     @personal_responses = null
     @activity_responses = null
     @like_responses = null
+    @hovering = false
+    @opened = false
 
     @model.get('root').on('new_response', @renderResponses)
     @model.on('move_to_top', @moveToTop)
@@ -77,3 +81,14 @@ class LL.Views.RootPost extends Backbone.View
       @renderResponses()
     else
       @column.prependPost @
+
+  showHover: (e) =>
+    self = @
+    $(@el).oneTime 500, 'post-tile-hover', ->
+      $(self.el).find('.bottom-sheet').slideDown 200
+
+  hideHover: (e) =>
+    return if $(e.target).hasClass('.bottom-sheet')
+
+    $(@el).stopTime 'post-tile-hover'
+    $(@el).find('.bottom-sheet').slideUp 200

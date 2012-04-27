@@ -71,8 +71,15 @@ class DatasiftPushPost
         # create the post if it is new
         unless post
 
+          # don't use the description from certain website (they are user generated and often promote their facebook page which results in an incorrect FB topic assignment)
+          if ['youtube', 'vimeo'].include?(link_data['provider_name'].downcase)
+            text_content = link_data['title']
+          else
+            text_content = "#{link_data['title']} #{link_data['description']}"
+          end
+
           # new combinations using the link description as well
-          combinations = DatasiftPushPost.combinalities("#{link_data['title']} #{link_data['description']}")
+          combinations = DatasiftPushPost.combinalities(text_content)
           topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
 
           # return if the title/description of the url does not include any of the topics

@@ -4,9 +4,7 @@
   <p>
     <%= @talk.get('content') %>
   </p>
-  <div class='top-right'>
-    <span class='when'><%= @talk.get('created_at_short') %></span>
-  </div>
+  <div class='when top-right'></div>
   <span class="actions">
     <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>
   </span>

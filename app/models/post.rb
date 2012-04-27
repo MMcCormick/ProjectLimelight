@@ -340,7 +340,7 @@ class Post
             :score => score,
             :talking_count => response_count,
             :liked => liked_by?(options[:user].id) ? true : false,
-            :created_at => created_at,
+            :created_at => created_at.to_i,
             :created_at_pretty => pretty_time(created_at),
             :created_at_short => short_time(created_at),
             :video => json_video,

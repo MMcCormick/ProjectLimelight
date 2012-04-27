@@ -83,6 +83,9 @@ class LL.Views.RootPost extends Backbone.View
       @column.prependPost @
 
   showHover: (e) =>
+    # remove the green background that slowly fades out after a new post is pushed
+    $(@el).removeClass('fade-new').find('.root').stop(true, true)
+
     self = @
     $(@el).oneTime 500, 'post-tile-hover', ->
       $(self.el).find('.bottom-sheet').slideDown 200

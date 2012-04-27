@@ -11,6 +11,11 @@ class LL.Views.ResponseTalk extends Backbone.View
   render: ->
     $(@el).html(@template(talk: @model))
 
+    prettyTime = new LL.Views.PrettyTime()
+    prettyTime.format = 'short'
+    prettyTime.time = @model.get('created_at')
+    $(@el).find('.when').prepend(prettyTime.render().el)
+
     like = new LL.Views.LikeButton(model: @model)
     $(@el).find('.actions').prepend(like.render().el)
 

@@ -16,11 +16,9 @@
     </span>
   <% end %>
 
-  <div class="top-right">
-    <span class="when"><%= @talk.get('created_at_pretty') %></span>
-    <div class="actions">
-      <span class="comment-form">+Comment (<%= @talk.get('talking_count') %>)</span>
-    </div>
+  <div class='when top-right'></div>
+  <div class="actions">
+    <span class="comment-form">+Comment (<%= @talk.get('talking_count') %>)</span>
   </div>
 </div>
 

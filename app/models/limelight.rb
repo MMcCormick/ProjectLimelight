@@ -235,21 +235,6 @@ module Limelight #:nodoc:
         nil
       end
     end
-
-    # Deprecated. It used to copy images from the active image version folder to the current folder, but we ran into invalidation issues
-    #def make_image_version_current(version)
-    #  invalidator = CloudfrontInvalidator.new(S3['connection'][:access_key_id], S3['connection'][:secret_access_key], S3['cloudfront_id'])
-    #  current_images = AWS::S3::Bucket.objects S3['image_bucket'], :prefix => "#{filepath}/current"
-    #  current_images.each do |image|
-    #    image.delete
-    #  end
-    #  version_images = AWS::S3::Bucket.objects S3['image_bucket'], :prefix => "#{filepath}/#{version}"
-    #  version_images.each do |image|
-    #    filename = image.key.split('/').last
-    #    AWS::S3::S3Object.copy image.key, "#{current_filepath}/#{filename}", S3['image_bucket']
-    #    invalidator.invalidate("/#{current_filepath}/#{filename}")
-    #  end
-    #end
   end
 
   # Include this module to enable voting on a document
@@ -493,7 +478,7 @@ module Limelight #:nodoc:
         mention.image_versions = topic.image_versions
         mention.active_image_version = topic.active_image_version
 
-        if topic.score > primary_topic_pm
+        if !primary_topic_pm || topic.score > primary_topic_pm
           self.primary_topic_mention = topic.id
           self.primary_topic_pm = topic.score
         end

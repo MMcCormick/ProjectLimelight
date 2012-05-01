@@ -6,6 +6,8 @@ class DatasiftPushPost
     include VideosHelper
 
     def combinalities(string)
+      return [] unless string && !string.blank?
+
       # generate the word combinations in the tweet (to find topics based on)
       words = string.downcase.gsub("'s", '').gsub(/[^a-z1-9 ]/, '')
       words = words.split(" ")
@@ -23,73 +25,98 @@ class DatasiftPushPost
       combinaties
     end
 
-    def perform(interaction, tweet_content)
+    def perform(interaction, tweet_content, url)
+      begin
+        # grab info with embedly
+        buffer = open("http://api.embed.ly/1/preview?key=ca77b5aae56d11e0a9544040d3dc5c07&url=#{url}&format=json", "UserAgent" => "Ruby-Wget").read
+      rescue => e
+        #puts 'embedly error'
+        #puts e
+        return
+      end
 
+      # convert JSON data into a hash
+      link_data = JSON.parse(buffer)
+
+      # replace the link with empty text in the tweet
+      tweet_content.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
+      tweet_content.strip!
+      tweet_content.chomp!('-|_ ')
+      tweet_content.strip!
+
+      # FILTERS
+
+      # blacklist certain sites as sources
+      return if ['facebook', 'twitter', 'twitpic', 'google+', 'amazon', 'ebay', 'instagram'].include?(link_data['provider_name'].downcase)
+
+      # skip if it is a root source (www.google.com is the root and www.google.com is the url submitted)
+      return if link_data['provider_url'].to_url == url.to_url
+
+      # associated press does not return actual titles with their stories and looks fucking dumb on feeds. skiiiippp.
+      return if link_data['title'] && link_data['title'].to_url == 'news-from-the-associated-press'
+
+      # extract topics from the text
       combinations = DatasiftPushPost.combinalities(tweet_content)
+      # extract topics from the link with alchemy api
+      postData = Net::HTTP.post_form(
+              URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
+              {
+                      'url' => url,
+                      'apikey' => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
+                      'outputMode' => 'json'
+              }
+      )
+      tmp_entities = JSON.parse(postData.body)['entities']
+      entities = []
+
+      tmp_entities.each do |e|
+        if e['relevance'].to_f >= 0.6
+          entities << e['text'].downcase
+          if e['disambiguated']
+            entities << e['disambiguated']['name'].downcase
+          end
+        end
+      end
+      entities.uniq!
+
+      combinations << entities
+      combinations.uniq!
+
       # we skip this post if there has been another post pushed to all the mentioned topics in the past x seconds
       skip = true
       topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
       topics.each_with_index do |t,i|
         if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 75)
+          t.datasift_last_pushed = Time.now
+          t.save
           # dont skip this post, there is a topic that has not had a datasift post in the past x seconds
           skip = false
         end
       end
 
       if skip == false
-        begin
-          # grab info with embedly
-          embedly_key = 'ca77b5aae56d11e0a9544040d3dc5c07'
-          buffer = open("http://api.embed.ly/1/preview?key=#{embedly_key}&url=#{interaction['twitter']['retweet']['links'][0]}&format=json", "UserAgent" => "Ruby-Wget").read
-        rescue => e
-          #puts 'embedly error'
-          #puts e
-          return
-        end
+        text_content = link_data['title']
+        combinations = DatasiftPushPost.combinalities(text_content)
+        combinations << entities
+        topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
 
-        # convert JSON data into a hash
-        link_data = JSON.parse(buffer)
-
-        # replace the link with empty text in the tweet
-        tweet_content.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
-        tweet_content.strip!
-        tweet_content.chomp!('-|_ ')
-        tweet_content.strip!
-
-        # FILTERS
-
-        # blacklist certain sites as sources
-        return if ['facebook', 'twitter', 'twitpic', 'google+', 'amazon', 'ebay', 'instagram'].include?(link_data['provider_name'].downcase)
-
-        # skip if it is a root source (www.google.com is the root and www.google.com is the url submitted)
-        return if link_data['provider_url'].to_url == link_data['url'].to_url
-
-        # associated press does not return actual titles with their stories and looks fucking dumb on feeds. skiiiippp.
-        return if link_data['title'] && link_data['title'].to_url == 'news-from-the-associated-press'
-
-        post = link_data['url'] ? Post.where('sources.url' => link_data['url']).first : nil
-        # create the post if it is new
-        unless post
-
-          # don't use the description from certain website (they are user generated and often promote their facebook page which results in an incorrect FB topic assignment)
-          if ['youtube', 'vimeo'].include?(link_data['provider_name'].downcase)
-            text_content = link_data['title']
-          else
-            text_content = "#{link_data['title']} #{link_data['description']}"
-          end
-
-          # new combinations using the link description as well
-          combinations = DatasiftPushPost.combinalities(text_content)
-          topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
-
-          # return if the title/description of the url does not include any of the topics
-          return if topics.length == 0
-
+        # check to see if a news story covering this story has already been submitted
+        existing_post = Post.find_similar(topics)
+        if existing_post
+          source = SourceSnippet.new
+          source.name = link_data['provider_name']
+          source.url = link_data['url']
+          source.title = link_data['title']
+          source.content = link_data['description']
+          existing_post.add_source(source)
+          existing_post.save
+        else
           response = {
             :type => 'Link',
+            :title => link_data['title'],
             :source_name => link_data['provider_name'],
             :source_url => link_data['url'],
-            :title => link_data['title']
+            :source_content => link_data['description']
           }
 
           # remove the site title that often comes after the |, ie google buys microsoft | tech crunch
@@ -104,6 +131,7 @@ class DatasiftPushPost
               end
             end
             response[:title] = response[:title].join(' ').strip
+            response[:source_title] = response[:title]
           end
 
           if link_data['images'] && link_data['images'].length > 0
@@ -124,21 +152,13 @@ class DatasiftPushPost
           end
 
           post = Post.post(response, User.limelight_user_id)
-          post.tweet_id = interaction['twitter']['retweeted']['id']
+          post.tweet_id = interaction['twitter']['retweeted'] ? interaction['twitter']['retweeted']['id'] : interaction['twitter']['id']
           post.standalone_tweet = true
-
-          topics.each_with_index do |t,i|
+          post.alchemy_entities = entities
+          topics.each do |t|
             t.datasift_last_pushed = Time.now
             t.save
-
-            # add the mentions
-            if i == 0
-              post.mention1_id = t.id
-              post.mention1 = t.name
-            elsif i == 1
-              post.mention2_id = t.id
-              post.mention2 = t.name
-            end
+            post.save_topic_mention(t)
           end
 
           post.save

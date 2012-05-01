@@ -13,9 +13,11 @@ class DatasiftRecompile
             AND
             language.tag == \"en\"
             AND
-            twitter.retweet.count >= 20
+            twitter.retweet.count >= 10
             AND
-            twitter.retweet.links exists
+            links.retweet_count >= 30
+            AND
+            links.age <= 86400
     "
 
     postData = Net::HTTP.post_form(

@@ -13,7 +13,6 @@ require 'uri'
 require 'open-uri'
 require 'chronic'
 require 'pusher'
-require 'ken' # Freebase API for Ruby
 require 'yajl'
 
 gem defined?(JRUBY_VERSION) ? 'rmagick4j' : 'rmagick'

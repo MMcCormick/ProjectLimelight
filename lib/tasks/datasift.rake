@@ -42,15 +42,17 @@ namespace :datasift do
 
         # clean tweets
         tweet_content = interaction['twitter']['retweet']['text']
+        #tweet_content = interaction['interaction']['content']
         tweet_content.chomp!('-|_ ')
         tweet_content.strip!
 
-        existing_post = Post.where(:tweet_id => interaction['twitter']['retweeted']['id']).first
-        unless !tweet_content || existing_post
+        link = interaction['links'].kind_of?(Array) ? interaction['links'][0] : interaction['links']
+        existing_post = Post.where('sources.url' => link['url'], :tweet_id => interaction['twitter']['retweeted']['id']).first
+        if tweet_content && !existing_post
 
           puts tweet_content
 
-          Resque.enqueue(DatasiftPushPost, interaction, tweet_content)
+          Resque.enqueue(DatasiftPushPost, interaction, tweet_content, link['url'][0])
         end
       end
     end

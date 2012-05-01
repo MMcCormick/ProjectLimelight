@@ -24,11 +24,13 @@ class Post
   field :user_id
   field :response_count, :type => Integer, :default => 0 # for talks, number of comments. for link/vid/pics, number of unique users talking / commenting
   field :talking_ids, :default => [] # ids of users talking about / commenting on this (not used for talks)
-  field :tweet_id
+  field :root_id, :type => BSON::ObjectId
   field :root_type
   field :embed_html # video embeds
+  field :tweet_id
   field :standalone_tweet, :default => false
-  field :root_id, :type => BSON::ObjectId
+  field :alchemy_entities
+  field :alchemy_concepts
 
   auto_increment :public_id
 
@@ -112,6 +114,8 @@ class Post
       source = SourceSnippet.new
       source.name = @source_name unless @source_name.blank?
       source.url = @source_url unless @source_url.blank?
+      source.title = @source_title unless @source_title.blank?
+      source.content = @source_content unless @source_content.blank?
       source.video_id = @source_video_id unless @source_video_id.blank?
       add_source(source)
     end
@@ -405,6 +409,26 @@ class Post
         post = Post.new
       end
       post
+    end
+
+    # Find potential news story overlap in the past X hours
+    def find_similar(topics)
+      posts = Post.where("topic_mentions._id" => {"$in" => topics.map{|t| t.id}}, :created_at.gte => Chronic.parse('1 hour ago'))
+      chosen = nil
+      posts.each do |p|
+        t_ids = p.topic_mentions.map {|t| t.id.to_s}
+        topic_overlap = topics.select{|t| t_ids.include?(t.id.to_s)}
+
+        # facebook/twitter are in so many posts, never combine them
+        skippers = topics.detect{|t| ['facebook','twitter'].include?(t.name.downcase)}
+
+        if topic_overlap.length == t_ids.length && t_ids.length >= 2 && !skippers
+          chosen = p
+          break
+        end
+      end
+
+      chosen ? chosen : nil
     end
 
     def friend_responses(id, user, page, limit)

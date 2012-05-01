@@ -1,3 +1,7 @@
+<% if LL.App.current_user.hasRole('admin'): %>
+  <div class="btn edit-btn">Edit</div>
+<% end %>
+
 <p>Foo efoia seofin aseofin aseoi nfasoei nfaosien faosine f</p>
 
 <h4>Also Known As</h4>

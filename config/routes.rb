@@ -39,6 +39,7 @@ ProjectLimelight::Application.routes.draw do
 
       post 'update_image' => 'topics#update_image'
       put 'datasift' => 'topics#update_datasift'
+      get 'datasift' => 'topics#datasift'
       get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'
@@ -118,11 +119,12 @@ ProjectLimelight::Application.routes.draw do
 
   # Pages
   scope 'pages' do
-    get 'about' => 'pages#about', :as => :about_path
-    get 'contact' => 'pages#contact', :as => :contact_path
-    get 'privacy' => 'pages#privacy', :as => :privacy_path
-    get 'terms' => 'pages#terms', :as => :terms_path
-    get 'help' => 'pages#help', :as => :help_path
+    get 'about' => 'pages#about', :as => :about
+    get 'contact' => 'pages#contact', :as => :contact
+    get 'privacy' => 'pages#privacy', :as => :privacy
+    get 'terms' => 'pages#terms', :as => :terms
+    get 'help' => 'pages#help', :as => :help
+    get 'admin' => 'pages#admin', :as => :admin
   end
 
   # Invites
@@ -132,6 +134,7 @@ ProjectLimelight::Application.routes.draw do
   #Topics (catch all)
   get ':slug/followers' => 'topics#show', :as => :topic_followers
   get ':slug' => 'topics#show', :as => :topic
+  get 'topics/datasift' => 'users#show', :as => :datasift_topics
 
   root :to => 'users#feed'
 

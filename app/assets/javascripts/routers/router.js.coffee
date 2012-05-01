@@ -6,6 +6,7 @@ class LL.Router extends Backbone.Router
     'users/:id/likes': 'likeFeed'
     'users/:id/feed': 'userFeed'
     'users/:id': 'activityFeed'
+    'topics/datasift': 'datasiftTopics'
     'posts/:id': 'postShow'
     'talks/:id': 'talkShow'
     'pages/:name': 'staticPage'
@@ -300,6 +301,33 @@ class LL.Router extends Backbone.Router
       collection.id = id
       collection.page = 1
       collection.fetch({data: {id: id}})
+
+  datasiftTopics: ->
+    user = LL.App.current_user
+    id = user.get('id')
+
+    if LL.App.findScreen('datasift_topics', id)
+      LL.App.showScreen('datasift_topics', id)
+    else
+      screen = LL.App.newScreen('datasift_topics', id)
+
+      page_header = new LL.Views.UserPageHeader(model: user)
+      page_header.page = 'datasift_topics'
+      screen['components'].push(page_header)
+
+      sidebar = LL.App.findSidebar('user', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('user', id, user)
+      screen['sidebar'] = sidebar
+
+      collection = new LL.Collections.DatasiftTopics()
+      feed = new LL.Views.TopicList(collection: collection, model: user)
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('datasift_topics', id)
+
+      collection.page = 1
+      collection.fetch()
 
   #######
   # POSTS

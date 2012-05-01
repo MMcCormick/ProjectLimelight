@@ -238,6 +238,14 @@ class TopicsController < ApplicationController
     end
   end
 
+  def datasift
+    authorize! :manage, :all
+
+    topics = Topic.where(:datasift_enabled => true)
+
+    render :json => topics.map {|t| t.as_json}
+
+  end
 
 
 

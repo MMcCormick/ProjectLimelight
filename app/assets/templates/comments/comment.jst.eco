@@ -1,9 +1,9 @@
 <img src="<%= @comment.get('user').get('images').square.small %>">
-<div>
+<div class='when'>
   <a class="ulink" data-id="<%= @comment.get('user').get('id') %>" href="<%= @comment.get('user').get('url') %>">
     <%= @comment.get('user').get('username') %>
-    <span class="when"><%= @comment.get('created_at_pretty') %></span>
   </a>
+  <span><%= @comment.get('created_at_pretty') %></span>
 </div>
 <p>
   <%= @comment.get('content') %>

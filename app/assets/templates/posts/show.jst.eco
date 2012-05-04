@@ -1,3 +1,19 @@
+<% if @post.get('video') || @post.get('images'): %>
+  <% if @post.get('video'): %>
+    <div class='post-media'>
+      <% if LL.App.Feed: %>
+        <%- @post.get('video_autoplay') %>
+      <% else: %>
+        <%- @post.get('video') %>
+      <% end %>
+    </div>
+  <% else if @post.get('images'): %>
+    <div class='post-media'>
+      <img src='<%= @post.get('images').original %>' />
+    </div>
+  <% end %>
+<% end %>
+
 <section class="post-root">
   <div class='meat'>
     <% if @post.get('primary_source'): %>
@@ -24,25 +40,12 @@
       </span>
     </div>
 
-    <div class='talk'></div>
     <div class="c"></div>
   </div>
 </section>
 
-<% if @post.get('video') || @post.get('images'): %>
-  <% if @post.get('video'): %>
-    <div class='post-media'>
-      <% if LL.App.Feed: %>
-        <%- @post.get('video_autoplay') %>
-      <% else: %>
-        <%- @post.get('video') %>
-      <% end %>
-    </div>
-  <% else if @post.get('images'): %>
-    <div class='post-media'>
-      <img src='<%= @post.get('images').original %>' />
-    </div>
-  <% end %>
-<% end %>
-
 <div class='half-sections'></div>
+
+<section class="post-responses">
+  <div class='talk-form'></div>
+</section>

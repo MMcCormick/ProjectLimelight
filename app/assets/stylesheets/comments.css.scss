@@ -1,21 +1,21 @@
 .comment-list {
   @include clearfix();
   background: #F9F9F9;
-  padding: 10px 0 0 0;
+  padding: 0;
   border-top: 1px solid #DDD;
   border-left: 1px solid #DDD;
   border-right: 1px solid #DDD;
   display: none;
   position: relative;
 
-  .ll-white-arrow-down {
+  .ll-grey-arrow-up {
     position: absolute;
-    top: -1px;
+    top: -11px;
     left: 15px;
   }
   li {
     position: relative;
-    padding: 10px 0 10px 50px;
+    padding: 9px 0 10px 50px;
     min-height: 30px;
     border-bottom: 1px solid #DDD;
 
@@ -31,9 +31,19 @@
       font-weight: bold;
     }
     .when {
-      font-size: 11px;
-      color: #999;
-      font-weight: normal;
+      position: relative;
+      display: inline-block;
+
+      > span {
+        font-size: 11px;
+        color: #999;
+        font-weight: normal;
+        position: absolute;
+        top: 0px;
+        right: -160px;
+        width: 150px;
+        cursor: default;
+      }
     }
     p {
       font-size: 14px;

@@ -244,7 +244,7 @@ $feedFontColor: $grayDark;
     }
     .top-right {
       position: absolute;
-      top: 1px;
+      top: 0px;
       right: 0px;
       font-size: 10px;
       color: $grayLight;
@@ -269,6 +269,9 @@ $feedFontColor: $grayDark;
       .comment-form,
       .like {
         cursor: pointer;
+        &:hover {
+          color: $greenDarker;
+        }
       }
       .comment-form,
       .like,

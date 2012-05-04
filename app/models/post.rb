@@ -44,8 +44,8 @@ class Post
   validates :user_id, :status, :presence => true
   validate :title_length, :content_length, :unique_source
 
-  attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :embed_html, :tweet_content, :tweet, :tweet_id, :standalone_tweet
-  attr_accessor :parent, :parent_id, :source_name, :source_url, :source_video_id, :tweet_content, :tweet
+  attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :source_title, :source_content, :embed_html, :tweet_content, :tweet, :tweet_id, :standalone_tweet
+  attr_accessor :parent, :parent_id, :source_name, :source_url, :source_video_id, :source_title, :source_content, :tweet_content, :tweet
 
   default_scope where('status' => 'active')
 

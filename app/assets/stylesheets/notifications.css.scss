@@ -4,7 +4,7 @@
   right: 0px;
   width: 220px;
   background: #EFEFEF;
-  background: rgba(239, 239, 239, .95);
+  background: rgba(246, 246, 246, .96);
   border-left: 1px solid #999;
   height: 100%;
   overflow-y: auto;
@@ -41,7 +41,7 @@
     &.repost:hover,
     &.comment:hover,
     &.also:hover {
-      background: #DDD;
+      background: #E6E6E6;
       cursor: pointer;
       .content,
       .time {

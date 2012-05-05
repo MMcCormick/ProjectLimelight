@@ -284,15 +284,20 @@ section.post-responses {
       padding: 8px 10px;
       display: block;
     }
+    .none {
+      padding: 0 0 20px 0;
+    }
   }
   .public-responses {
     width: 339px;
     border-left: 1px solid #DDD;
     position: relative;
     left: -1px;
+    .none {
+      padding: 8px 0 0 0;
+    }
   }
   .none {
     font-size: 14px;
-    margin: 10px 0 12px 0;
   }
 }

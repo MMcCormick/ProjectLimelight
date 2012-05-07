@@ -13,7 +13,7 @@ gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'koala' # facebook graph api support
+gem 'koala', '1.4.1' # facebook graph api support
 gem 'twitter' # twitter api support
 gem 'resque', '1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
 gem 'resque-scheduler', '2.0.0.h' # scheduled resque jobs

@@ -3,6 +3,9 @@ class LL.Views.PostShow extends Backbone.View
   id: 'post-show'
   className: 'content-tile'
 
+  events:
+    "click .friend-responses input": "showTalkForm"
+
   initialize: ->
     @friendResponsesCollection = new LL.Collections.PostFriendResponses()
     @publicResponsesCollection = new LL.Collections.PostPublicResponses()
@@ -29,12 +32,11 @@ class LL.Views.PostShow extends Backbone.View
     user_section.count = @model.get('likes_count')
     $(@el).find('.half-sections').append(user_section.render().el)
 
-    $(@el).append(@friendResponses.el)
-    $(@el).append(@publicResponses.el)
+    $(@el).find('.post-responses').append(@friendResponses.el).append(@publicResponses.el)
 
     view = new LL.Views.PostForm()
     view.placeholder_text = "Talk about this #{@model.get('type')}..."
-    $(@el).find('.talk').html(view.render().el)
+    $(@el).find('.post-responses .talk-form').html(view.render().el)
     i = 1
     for topic in @model.get('topic_mentions')
       view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.get('name'), topic.get('id'))
@@ -54,3 +56,6 @@ class LL.Views.PostShow extends Backbone.View
       $(@el).addClass('modal')
 
     @
+
+  showTalkForm: =>
+    $(@el).find('.talk-form').fadeIn(250).find('textarea').focus()

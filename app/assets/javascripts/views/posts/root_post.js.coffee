@@ -3,7 +3,7 @@ class LL.Views.RootPost extends Backbone.View
   className: 'tile'
 
   events:
-    "click .root .img, .talking, .title": "postShow"
+    "click .root .img, .talking, h5": "postShow"
     "mouseenter .root": "showHover"
     "mouseleave .root": "hideHover"
 

@@ -86,23 +86,29 @@ class DatasiftPushPost
       skip = true
       topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
       topics.each_with_index do |t,i|
+        puts t.name
         if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 75)
-          t.datasift_last_pushed = Time.now
-          t.save
           # dont skip this post, there is a topic that has not had a datasift post in the past x seconds
           skip = false
         end
       end
 
+      puts skip
+
       if skip == false
         text_content = link_data['title']
         combinations = DatasiftPushPost.combinalities(text_content)
         combinations << entities
+        combinations.uniq!
         topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
+
+        puts url
+        puts link_data['url']
 
         # check to see if a news story covering this story has already been submitted
         existing_post = Post.find_similar(topics)
         if existing_post
+          puts "existing post"
           source = SourceSnippet.new
           source.name = link_data['provider_name']
           source.url = link_data['url']
@@ -151,6 +157,7 @@ class DatasiftPushPost
             end
           end
 
+          puts "creating post"
           post = Post.post(response, User.limelight_user_id)
           post.tweet_id = interaction['twitter']['retweeted'] ? interaction['twitter']['retweeted']['id'] : interaction['twitter']['id']
           post.standalone_tweet = true
@@ -161,10 +168,14 @@ class DatasiftPushPost
             post.save_topic_mention(t)
           end
 
-          post.save
+          if post.save
+            puts 'saved'
+          else
+            puts post.errors.to_a
+          end
         end
       else
-        #puts 'skipped post'
+        puts 'skipped post'
       end
     end
   end

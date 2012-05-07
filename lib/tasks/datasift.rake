@@ -47,7 +47,7 @@ namespace :datasift do
         tweet_content.strip!
 
         link = interaction['links'].kind_of?(Array) ? interaction['links'][0] : interaction['links']
-        existing_post = Post.where('sources.url' => link['url'], :tweet_id => interaction['twitter']['retweeted']['id']).first
+        existing_post = Post.any_of({'sources.url' => link['url'][0]}, {:tweet_id => interaction['twitter']['retweeted']['id']}).first
         if tweet_content && !existing_post
 
           puts tweet_content

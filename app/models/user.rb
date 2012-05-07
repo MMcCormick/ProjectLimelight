@@ -502,34 +502,35 @@ class User
   end
 
   def auto_follow (provider)
+    puts 'starting auto follow'
     if provider == "facebook" && self.auto_follow_fb
-      fb = self.facebook
+      fb = facebook
       if fb
         friends = fb.get_connections("me", "friends")
         friends_uids = friends.map{|friend| friend['id']}
         registeredFriends = User.where("social_connects.uid" => {"$in" => friends_uids}, 'social_connects.provider' => 'facebook')
         registeredFriends.each do |friend|
           friend.follow_user(self) if friend.auto_follow_fb
-          self.follow_user(friend) if self.auto_follow_fb
+          follow_user(friend) if self.auto_follow_fb
         end
-        self.save
+        save :validate => false
       end
     elsif provider == "twitter" && self.auto_follow_tw
-      tw = self.twitter
+      tw = twitter
       if tw
         follower_ids = tw.follower_ids.collection
         registeredFollowers = User.where("social_connects.uid" => {"$in" => follower_ids}, 'social_connects.provider' => 'twitter')
         registeredFollowers.each do |follower|
           follower.follow_user(self)
         end
-        self.save
+        save :validate => false
 
         following_ids = tw.friend_ids.collection.map{|id| id.to_s}
         registeredFollowing = User.where("social_connects.uid" => {"$in" => following_ids}, 'social_connects.provider' => 'twitter')
         registeredFollowing.each do |following|
-          self.follow_user(following)
+          follow_user(following)
         end
-        self.save
+        save :validate => false
       end
     end
   end

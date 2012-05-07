@@ -10,7 +10,7 @@ $postFontColor: $grayDark;
   }
   .source {
     display: inline-block;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     font-size: 16px;
     color: $grayLight;
     font-weight: normal;
@@ -27,8 +27,10 @@ $postFontColor: $grayDark;
     cursor: pointer;
   }
   .post-root {
+    .meat {
+      padding: 15px;
+    }
     .actions-created {
-      margin-bottom: 20px;
       font-size: 16px;
 
       .actions {
@@ -79,26 +81,6 @@ $postFontColor: $grayDark;
         }
       }
     }
-    .talk {
-      width: 405px;
-      margin-bottom: 10px;
-      float: left;
-      .modal-header {
-        padding: 0 0 10px 0;
-        border: none;
-      }
-      .modal-body {
-        padding: 0px 0 10px;
-        .main-content {
-          margin-bottom: 10px;
-        }
-      }
-      .modal-footer {
-        padding: 0;
-        background: transparent;
-        border: none;
-      }
-    }
   }
   .post-media {
     margin: 7px 0 0 0;
@@ -119,29 +101,43 @@ $postFontColor: $grayDark;
       position: absolute;
       top: 0px;
       right: 0px;
-      font-size: 12px;
+      font-size: 11px;
       color: $grayLight;
+    }
 
-      .actions {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        background: #FFF;
-        display: none;
-        width: 200px;
-        text-align: right;
+    .actions {
+      position: absolute;
+      top: -1px;
+      right: 0px;
+      padding: 0;
+      display: none;
+      background: #FFF;
 
-        span {
-          margin: 0 0 0 5px;
+      .comment-form,
+      .like {
+        cursor: pointer;
+        &:hover {
+          color: $greenDarker;
         }
-        .like,
-        .comment-form {
-          &:hover {
-            color: $greenDarker;
-          }
+      }
+      .comment-form,
+      .like,
+      .score-pts {
+        font-size: 11px;
+        font-weight: normal;
+        margin: 0 0 0 5px;
+        span {
+          font-size: 11px;
         }
       }
     }
+
+    &:hover {
+      .actions {
+        display: block;
+      }
+    }
+
     .body {
       min-height: 50px;
     }
@@ -166,7 +162,7 @@ $postFontColor: $grayDark;
       }
     }
     .comment-list {
-      margin: 5px 0 10px -60px;
+      margin: 15px 0 10px -60px;
       background: #F6F6F6;
     }
     &:hover {
@@ -244,17 +240,64 @@ $postFontColor: $grayDark;
 }
 
 section.post-responses {
-  width: 317px;
-  float: left;
+  @include clearfix();
 
-  &.friend-responses {
-    margin: 7px 6px 0 10px;
+  .talk-form {
+    display: none;
+    padding: 15px;
+    border-bottom: 1px solid #DDD;
+
+    .modal-header {
+      padding: 0;
+      border: none;
+    }
+    .modal-body {
+      padding: 0px 0 10px;
+      .main-content {
+        margin-bottom: 10px;
+      }
+    }
+    .modal-footer {
+      padding: 0;
+      background: transparent;
+      border: none;
+      width: 403px;
+    }
   }
-  &.public-responses {
-    margin: 7px 10px 0 0;
+
+  .friend-responses,
+  .public-responses {
+    float: left;
+
+    .meat {
+      padding: 15px 15px 0 15px;
+    }
+  }
+  .friend-responses {
+    width: 339px;
+    border-right: 1px solid #DDD;
+    input {
+      @include border-radius(0px);
+      margin: 15px 0 5px 15px;
+      width: 287px;
+      font-size: 16px;
+      padding: 8px 10px;
+      display: block;
+    }
+    .none {
+      padding: 0 0 20px 0;
+    }
+  }
+  .public-responses {
+    width: 339px;
+    border-left: 1px solid #DDD;
+    position: relative;
+    left: -1px;
+    .none {
+      padding: 8px 0 0 0;
+    }
   }
   .none {
     font-size: 14px;
-    margin: 0 0 10px 0;
   }
 }

@@ -1,11 +1,11 @@
 #user-notifications {
-  @include single-box-shadow(rgba(34, 25, 25, 0.4), -2px, 0px, 2px);
   position: fixed;
   top: 0px;
   right: 0px;
   width: 220px;
-  background: #F9F9F9;
-  border-left: 1px solid #666;
+  background: #EFEFEF;
+  background: rgba(246, 246, 246, .96);
+  border-left: 1px solid #999;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -14,24 +14,25 @@
   padding-top: 45px;
 
   h4 {
-    @include single-text-shadow(#DDD, 0, 1px);
     margin: 10px;
     cursor: default;
+    color: #333;
   }
   .close {
     @include opacity(40);
-    @include single-text-shadow(#DDD, 0, 1px);
     position: absolute;
     top: 56px;
     right: 15px;
     cursor: pointer;
     font-size: 14px;
+    color: #333;
   }
   li {
-    margin: 0 10px;
-    padding: 5px 5px 5px 45px;
-    border-bottom: 1px solid #E3E3E3;
+    margin: 0;
+    padding: 7px 5px 8px 45px;
+    border-bottom: 1px solid #DDD;
     position: relative;
+    color: #444;
 
     &.unread {
       /*background: #E9E9E9;*/
@@ -40,7 +41,7 @@
     &.repost:hover,
     &.comment:hover,
     &.also:hover {
-      background: #F3F3F3;
+      background: #E6E6E6;
       cursor: pointer;
       .content,
       .time {
@@ -51,11 +52,11 @@
       width: 30px;
       height: 30px;
       position: absolute;
-      top: 9px;
-      left: 5px;
+      top: 7px;
+      left: 6px;
     }
     .content {
-      margin: 2px 0 0 0;
+      margin: 1px 0 0 0;
       font-size: 11px;
       line-height: 14px;
       cursor: default;
@@ -66,7 +67,7 @@
     }
     .time {
       font-size: 10px;
-      color: #999;
+      color: #777;
       cursor: default;
       line-height: 15px;
     }

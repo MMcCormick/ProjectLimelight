@@ -8,6 +8,10 @@ end
 class TestingController < ApplicationController
 
   def test
+    RecalculateInfluence.perform("4fa3f23fac8ddec67c000005")
+  end
+
+  def something
     #test = "Beyonce Is Peoples Most Beautiful Woman Only 3 Months After Giving Birth"
     #test2 = "RT if you think that Katy is beautiful even without any makeup"
     #alchemyObj = AlchemyApi::ConceptTagging.get_concepts_from_url()

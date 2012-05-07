@@ -108,6 +108,7 @@ ProjectLimelight::Application.routes.draw do
     get ':id/following/topics' => 'users#show', :as => :user_following_users
     get ':id/followers' => 'users#show', :as => :user_followers
     get ':id/likes' => 'users#show', :as => :user_likes
+    get ':id/influence' => 'users#show', :as => :user_influence
     get ':id/feed' => 'users#show', :as => :user_feed
     get ':id' => 'users#show', :as => :user
   end

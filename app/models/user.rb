@@ -448,15 +448,17 @@ class User
     end
   end
 
-  def influence_increases
+  def influence_increases(limit, with_post=false)
     increases = []
-    actions = PopularityAction.where("pop_snippets._id" => id, "pop_snippets.ot" => 'Topic').order_by(:et, :desc).limit(3).to_a
+    actions = PopularityAction.where("pop_snippets._id" => id, "pop_snippets.ot" => 'Topic').order_by(:et, :desc).limit(limit).to_a
+
     actions.each do |action|
       action.pop_snippets.each do |snip|
         if snip.ot == "Topic" && snip.a > 0
           inc = InfluenceIncrease.new()
           inc.amount = snip.a
           inc.topic_id = snip.id
+          inc.post_id = action.oid
           inc.object_type = action.pop_snippets[0].ot
           inc.action = action.t
           increases << inc
@@ -468,10 +470,17 @@ class User
     tmp_topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
     tmp_topics.each {|t| topics[t.id.to_s] = t}
 
+    if with_post
+      posts = {}
+      tmp_posts = Post.where(:_id.in => increases.map{|i| i.post_id})
+      tmp_posts.each {|t| posts[t.id.to_s] = t}
+    end
+
     increases.each do |increase|
       increase.topic = topics[increase.topic_id.to_s]
+      increase.post = posts[increase.post_id.to_s] if with_post
     end
-    increases.last(3)
+    increases.last(limit)
   end
 
   def update_social_denorms

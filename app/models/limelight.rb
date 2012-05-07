@@ -620,8 +620,8 @@ module Limelight #:nodoc:
               Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
 
               topic = mentioned_topics.detect{|t| t.id == mention.id}
-              if topic.score >= 100 && topic.influencers.length >= 10
-                Resque.enqueue_in(30.minutes, RecalculateInfluence, mention.id.to_s)
+              if topic.score >= 0 && topic.influencers.length >= 3
+                Resque.enqueue_in(10.seconds, RecalculateInfluence, mention.id.to_s)
               end
             end
           end

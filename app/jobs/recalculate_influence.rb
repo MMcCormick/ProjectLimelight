@@ -11,7 +11,9 @@ class RecalculateInfluence
 
     #length = array.length
     array.each_with_index do |a, i|
-      topic.influencers[a[0]]["percentile"] = ((i.to_f+1.0) * 100.0 / array.length.to_f).to_f
+      percentile = ((i.to_f+1.0) * 100.0 / array.length.to_f).to_f
+      topic.influencers[a[0]]["percentile"] = percentile
+      topic.influencers[a[0]]["influencer"] = percentile > 90 ? true : false
     end
 
     topic.save!

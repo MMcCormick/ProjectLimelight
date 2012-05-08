@@ -16,7 +16,7 @@ class LL.Views.UserSidebar extends Backbone.View
     influences_collection = new LL.Collections.InfluenceIncreases()
     influences = new LL.Views.InfluenceIncreases(collection: influences_collection, model: @model)
     $(@el).append(influences.el)
-    influences_collection.fetch({data: {id: @model.get('slug')}})
+    influences_collection.fetch({data: {id: @model.get('slug'), limit: 3, with_post: false}})
 
     # Topic suggestions
 #    if LL.App.current_user == @model

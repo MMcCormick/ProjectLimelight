@@ -64,7 +64,7 @@ class UsersController < ApplicationController
 
   def user_influence_increases
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
-    increases = @user.influence_increases
+    increases = @user.influence_increases(params[:limit].to_i, params[:with_post] == "true")
     render :json => increases.map {|i| i.as_json}
   end
 

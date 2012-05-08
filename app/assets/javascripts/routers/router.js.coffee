@@ -4,6 +4,7 @@ class LL.Router extends Backbone.Router
     'users/:id/following/users': 'userFollowingUsers'
     'users/:id/followers': 'userFollowers'
     'users/:id/likes': 'likeFeed'
+    'users/:id/influence': 'userInfluence'
     'users/:id/feed': 'userFeed'
     'users/:id': 'activityFeed'
     'topics/datasift': 'datasiftTopics'
@@ -132,6 +133,33 @@ class LL.Router extends Backbone.Router
       LL.App.LikeFeed.id = id
       LL.App.LikeFeed.page = 1
       LL.App.LikeFeed.fetch({data: {id: id}})
+
+  userInfluence: (id=0) ->
+    if id == 0
+      user = LL.App.current_user
+    else
+      user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+
+    if LL.App.findScreen('user_influence', id)
+      LL.App.showScreen('user_influence', id)
+    else
+      screen = LL.App.newScreen('user_influence', id)
+
+      page_header = new LL.Views.UserPageHeader(model: user)
+      screen['components'].push(page_header)
+
+      sidebar = LL.App.findSidebar('user', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('user', id, user)
+      screen['sidebar'] = sidebar
+
+      collection = new LL.Collections.InfluenceIncreases()
+      view = new LL.Views.UserInfluence(collection: collection)
+      screen['components'].push(view)
+
+      collection.fetch({data: {id: user.get('slug'), limit: 10, with_post: true}})
+
+      LL.App.renderScreen('user_influence', id)
 
   settings: ->
     user = LL.App.current_user
@@ -312,7 +340,6 @@ class LL.Router extends Backbone.Router
       screen = LL.App.newScreen('datasift_topics', id)
 
       page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'datasift_topics'
       screen['components'].push(page_header)
 
       sidebar = LL.App.findSidebar('user', id)

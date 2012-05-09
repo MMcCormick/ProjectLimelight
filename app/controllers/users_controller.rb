@@ -65,7 +65,15 @@ class UsersController < ApplicationController
   def user_influence_increases
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
     increases = @user.influence_increases(params[:limit].to_i, params[:with_post] == "true")
-    render :json => increases.map {|i| i.as_json}
+    render :json => increases.map {|i| i.as_json(:user => current_user)}
+  end
+
+  def influencer_in_topics
+    Topic.where("influencers.#{params[:id]}.influencer" => true)
+  end
+
+  def almost_influencer_in_topics
+    Topic.where("influencers.#{params[:id]}.influencer" => false, "influencers.#{params[:id]}.percentile" => { "$lte" => 70 } )
   end
 
   def influence_increases
@@ -92,7 +100,6 @@ class UsersController < ApplicationController
     following_users = User.where(:_id.in => @user.following_users).order_by(:slug, :asc)
     render :json => following_users.map {|u| u.as_json}
   end
-
 
   def following_topics
     @user = User.find_by_slug(params[:id])

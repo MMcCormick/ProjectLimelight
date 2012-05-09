@@ -33,3 +33,22 @@
     }
   }
 }
+
+.content-tile {
+  .increases {
+    li {
+      position: relative;
+      padding: 5px 0 5px 70px;
+      min-height: 50px;
+      img {
+        position: absolute;
+        left: 0px;
+      }
+      .ulink {
+        color: $grayDark;
+        font-weight: bold;
+      }
+
+    }
+  }
+}

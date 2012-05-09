@@ -32,10 +32,10 @@ class LikesController < ApplicationController
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})
         status = 201
       elsif like_success.nil?
-        response = build_ajax_response(:error, nil, 'You cannot repost your own posts!')
+        response = build_ajax_response(:error, nil, 'You cannot like your own posts!')
         status = 401
       else
-        response = build_ajax_response(:error, nil, 'You already reposted that!')
+        response = build_ajax_response(:error, nil, 'You already liked that!')
         status = 401
       end
     else

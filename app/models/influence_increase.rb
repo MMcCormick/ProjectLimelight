@@ -1,9 +1,5 @@
 class InfluenceIncrease
-  attr_accessor :id, :amount, :topic_id, :topic, :object_type, :action, :user_id, :user, :reason, :post_id, :post
-
-  def initialize
-    @post = nil
-  end
+  attr_accessor :id, :amount, :topic_id, :topic, :object_type, :action, :user_id, :user, :triggered_by_id, :triggered_by, :reason, :post_id, :post
 
   def id
     @topic_id
@@ -35,7 +31,9 @@ class InfluenceIncrease
             :reason => reason,
             :topic => topic.as_json,
             :user => user.as_json,
-            :post => post ? post.as_json : nil
+            :action => action,
+            :post => post ? post.as_json(:user => options[:user]) : nil,
+            :triggered_by => triggered_by ? triggered_by.as_json() : nil
     }
   end
 

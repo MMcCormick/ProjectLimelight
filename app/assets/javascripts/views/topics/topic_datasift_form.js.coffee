@@ -11,8 +11,6 @@ class LL.Views.TopicDatasiftForm extends Backbone.View
   render: =>
     $(@el).html(@template(topic: @model))
 
-    console.log(@model)
-
     @
 
   submit: (e) =>

@@ -1,3 +1,8 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+
 body {
   $sidebarWidth: 250px;
   $baseWidth: 750px;
@@ -9,6 +14,8 @@ body {
   &#blank {
     background: #E9E9E9;
     padding: 0px;
+    height: 100%;
+    width: 100%;
   }
   &.two {
     .wrapper {

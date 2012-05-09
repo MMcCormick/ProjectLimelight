@@ -1,12 +1,12 @@
 <div id='splash-page'>
-  <div class='top'>
-    <div class='container'>
-      <div class="logo-title">
-        <%= image_tag "splash-logo.png", :alt => "", :class => "logo" %>
+  <div class='meat'>
+    <div class='top'>
+      <%= image_tag "splash-logo.gif", :alt => "", :class => "logo" %>
 
-        <h1>Limelight</h1>
-        <h2>Connect Through Topics</h2>
-      </div>
+      <h1>Limelight</h1>
+      <h2>Connect Through Topics</h2>
+    </div>
+    <div class='middle'>
 
       <% flash.each do |name, msg| %>
         <div class="alert alert-<%= name == :notice ? "success" : "error" %>">
@@ -15,35 +15,21 @@
         </div>
       <% end %>
 
-      <div class='cheeky-buttons <%= 'hide' if @show == :login || @show == :register %>'>
-        <div class='btn btn-success login'>I <b>have</b> an Account</div>
-        <div class='btn btn-success register'>I <b>want</b> an Account</div>
-      </div>
-
       <%= render "users/auth_box", :show => @show %>
+
+      <!--<div class='cheeky-buttons <%#= 'hide' if @show == :login || @show == :register %>'>-->
+        <!--<div class='btn btn-success login'>I <b>have</b> an Account</div>-->
+        <!--<div class='btn btn-success register'>I <b>want</b> an Account</div>-->
+      <!--</div>-->
+
     </div>
-  </div>
-  <div class='bottom'>
-    <div class='container'>
-      <ul class="splash-influence unstyled"></ul>
-      <div class="left">
-        <h2>What's Limelight?</h2>
-        <p>On Limelight, you can follow users (what else is new), but you can also follow topics. We show you videos, pictures, links, and discussion from your friends about the topics that interest you.</p>
-        <h2>What are topics?</h2>
-        <p>A topic on Limelight can be any noun, like “iPhone 5” or “Barack Obama” or “Lolcats”.</p>
-      </div>
-      <div class="right">
-        <h2>What's influence?</h2>
-        <p>
-          The more people like what you say, the more “influence” you gain toward the topics you talk about. These people are gaining influence right now!
-          <%= image_tag "splash-inf-arrow.png", :alt => "", :class => "inf-arrow" %>
-        </p>
-        <h2>What does influence do?</h2>
-        <p>
-          The more influence you have over a topic, the more likely people are to see what you say about it.
-          Grow your following by reaching people interested in the topics you're talking about.
-        </p>
-      </div>
+    <div class='bottom'>
+      <div class='about'>About</div>
+      <div class='team'>Built & run by 2 guys in NYC</div>
     </div>
+    <div class='beta'>
+      Beta
+    </div>
+
   </div>
 </div>

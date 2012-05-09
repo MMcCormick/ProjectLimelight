@@ -2,9 +2,11 @@ class LL.Views.SplashPage extends Backbone.View
   el: $('body')
 
   events:
-    'click .cheeky-buttons .login': 'showLogin'
-    'click .cheeky-buttons .register': 'showInvite'
-    'click .back': 'showCheekyButtons'
+    'click .beta-signup .account': 'showLogin'
+    'click .beta-signup .invite-code': 'showInvite'
+    'click .middle .back': 'showEnter'
+    'click .bottom .about': 'showAbout'
+    'click .bottom .team': 'showTeam'
 
   initialize: ->
     login_form = new LL.Views.UserLoginForm()
@@ -19,25 +21,29 @@ class LL.Views.SplashPage extends Backbone.View
     invite_form = new LL.Views.UserBetaSignupForm()
     invite_form.splash = @
 
-    collection = new LL.Collections.SplashInfluenceIncreases()
-    influences = new LL.Views.SplashInfluenceIncreases(collection: collection)
-    collection.fetch()
-
   hideAll: =>
-    $('.alert,.cheeky-buttons,.invite-form,.login-form,.register-form').hide()
+    $('#splash-page .middle > div:visible').slideUp(300)
 
   showLogin: =>
     @hideAll()
-    $('.login-form').show()
+    $('.beta-login').slideDown(300)
 
   showRegister: =>
     @hideAll()
-    $('.register-form').show()
+    $('.register-form').slideDown(300)
 
   showInvite: =>
     @hideAll()
-    $('.invite-form').show()
+    $('.invite-form').slideDown(300)
 
-  showCheekyButtons: =>
+  showEnter: =>
     @hideAll()
-    $('.cheeky-buttons').show()
+    $('.beta-signup').slideDown(300)
+
+  showAbout: =>
+    @hideAll()
+    $('.meat .beta-about').slideDown(300)
+
+  showTeam: =>
+    @hideAll()
+    $('.meat .beta-team').slideDown(300)

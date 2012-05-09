@@ -1,199 +1,409 @@
 #splash-page {
-  .container {
-    position: relative;
-    width: 650px;
-    margin: auto;
+  @include background-image(linear-gradient(#C7E0A9, #E9F4DD));
+
+  height: 100%;
+  width: 100%;
+
+  background: {
+    image: image-url("splash-bg.jpg");
+    repeat: no-repeat;
+    color: #8A9BA0;
+    position: center top;
   }
-  .top {
-    @include single-box-shadow(#666, 0px, 1px, 3px);
-    background: #B8CFD6;
-    padding-bottom: 40px;
-    .container {
-      width: 500px;
+
+  .meat {
+    @include single-box-shadow(rgba(34, 25, 25, 0.7), 1px, 2px, 3px);
+
+    width: 380px;
+    margin: auto;
+    position: relative;
+    top: 130px;
+    background: #FCFCFC;
+
+    .beta {
+      @include single-box-shadow(rgba(34, 25, 25, 0.6), 0px, 1px, 2px);
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #FFF;
+      color: #333;
+      font-size: 18px;
+      padding: 6px 10px;
     }
-    .logo-title {
-      height: 100px;
-      position: relative;
-      margin: 40px 0;
+    .top,
+    .bottom {
+      background: #F9F9F9;
+      color: #333;
+    }
+    .top {
+      border-bottom: 1px solid #DCDCDC;
+      height: 120px;
 
       .logo {
         position: absolute;
+        left: 25px;
+        top: 23px;
       }
-      h1 {
-        position: absolute;
-        left: 120px;
-        top: 15px;
-        font-size: 40px;
-        font-weight: normal;
-      }
-      h2 {
-        position: absolute;
-        left: 120px;
-        top: 61px;
-        font-size: 26px;
-        font-weight: normal;
+      h1,h2 {
+        display: none;
       }
     }
-    .cheeky-buttons {
-      position: relative;
-      padding: 20px 0;
-      left: 50%;
-      margin-left: -200px;
-      width: 400px;
-      height: 40px;
-      .login {
-        float: left;
+    .middle {
+      @include clearfix();
+      padding: 40px 25px;
+
+      .social {
+        clear: both;
+        height: 30px;
+        position: relative;
+
+        .fb-like,
+        .twitter-share-button,
+        .google {
+          position: absolute;
+          bottom: -30px;
+        }
+        .fb-like {
+          left: 0px;
+        }
+        .twitter-share-button {
+          left: 110px;
+        }
+        .google {
+          left: 220px;
+          bottom: -34px;
+        }
       }
-      .register {
+    }
+    .bottom {
+      @include clearfix();
+
+      border-top: 1px solid #DCDCDC;
+      padding: 10px 25px;
+
+      > div {
+        font-size: 12px;
+        color: #333;
+        font-weight: bold;
+        float: left;
+        cursor: pointer;
+      }
+      .team {
         float: right;
       }
-      .btn {
-        font-size: 18px;
-        padding: 10px 17px;
-      }
     }
-    .invite-form {
-      margin-left: 120px;
-      #new_invite_code {
-        margin-bottom: 30px;
-      }
-      label {
-        font-size: 16px;
-        margin: 0 0 7px 1px;
-      }
-      #invite_code_code,
+
+    .beta-signup {
       #beta-signup-email {
+        @include border-radius(1px);
         font-size: 18px;
         padding: 10px;
-        width: 285px;
-        border: 1px solid #999;
+        width: 310px;
       }
-      .btn-success {
-        display: block;
+      .btn {
+        font-size: 16px;
+        padding: 5px 12px;
+      }
+      .invite-code,
+      .account {
+        color: #333;
+        cursor: pointer;
         font-size: 14px;
-        padding: 6px 14px;
+        float: left;
+        clear: both;
+      }
+      .invite-code {
+        margin: 40px 0 5px 0;
+      }
+      .account {
+
       }
     }
-    .back {
-      font-size: 12px;
-      margin-top: 30px;
-      cursor: pointer;
-      color: $blue;
-    }
-    .left,
-    .right {
-      .head {
-        font-size: 15px;
-        margin: 0 0 10px;
+
+    .beta-login {
+      .facebook {
+        margin: 0 0 10px 0;
+        display: block;
       }
-      .option {
-        position: relative;
-        width: 170px;
-        margin-bottom: 30px;
-        a {
-          text-decoration: none;
-          cursor: default;
-        }
-      }
-      .foot1,
-      .foot2 {
+      .foot {
+        color: #666;
+        font-weight: bold;
         font-size: 12px;
-        line-height: 14px;
-        margin-bottom: 10px;
+        margin: 1px 0 0 1px;
       }
-    }
-    .left {
-      float: left;
-      width: 235px;
-    }
-    .right {
-      float: right;
-      width: 245px;
-    }
-    #user-login,
-    #user-password,
-    #user-username,
-    #user-email {
-      padding: 5px;
-      border: 1px solid $grayLight;
-      width: 225px;
-    }
-  }
-  .bottom {
-    padding-top: 30px;
-    .splash-influence {
-      height: 125px;
-      margin-bottom: 30px;
-      overflow: hidden;
-      white-space: nowrap;
-      position: relative;
-      left: -8px;
-
-      li {
-        width: 100px;
+      .divider {
+        border-bottom: 1px solid #DCDCDC;
         position: relative;
-        float: right;
-        margin-right: 7px;
+        margin: 40px 0;
 
-        .user {
-          width: 45px;
-          margin-left: 5px;
-          white-space: nowrap;
-          overflow: hidden;
-        }
-        .score-pts {
-          float: right;
-          font-size: 10px;
-          margin-right: 5px;
-          span {
-            font-weight: bold;
-            font-size: 13px;
-          }
-        }
-        img {
-          display: block;
-          height: 100px;
-          width: 100px;
-          margin-top: 5px;
-        }
-        .topic {
-          @include opacity(85);
-          background-color: #FFF;
+        > div {
           position: absolute;
-          bottom: 0px;
-          padding: 5px 7px;
-          font-size: 11px;
-          width: 86px;
-          z-index: 110;
-          line-height: 16px;
-          white-space: normal;
-        }
-        &:hover {
-          .topic {
-            @include opacity(100);
-          }
+          top: -14px;
+          left: 0px;
+          font-size: 15px;
+          font-weight: bold;
+          color: #333;
+          padding: 5px 10px 5px 0;
+          background: #FFF;
         }
       }
+      #user-login,
+      #user-password, {
+        @include border-radius(1px);
+        font-size: 18px;
+        padding: 10px;
+        width: 310px;
+      }
+      #user-login {
+        margin: 10px 0 5px 0;
+      }
+      .btn {
+        font-size: 16px;
+        padding: 5px 12px;
+      }
     }
-    .left{
+
+    .beta-about {
+      .summary {
+        margin: 0 0 25px 0;
+        line-height: 20px;
+        font-size: 14px;
+      }
+      .why {
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .reason {
+        margin: 10px 0 0 0;
+        font-size: 14px;
+      }
+    }
+
+    .invite-form {
+      #invite_code_code {
+        @include border-radius(1px);
+        font-size: 18px;
+        padding: 10px;
+        width: 310px;
+      }
+      .btn {
+        font-size: 16px;
+        padding: 5px 12px;
+      }
+    }
+
+    .back {
+      position: relative;
+      margin: 40px 0 0 0;
+      padding: 0 0 0 20px;
+      color: #333;
+      cursor: pointer;
+      font-weight: bold;
       float: left;
-      width: 315px;
-    }
-    .right {
-      float: right;
-      width: 310px;
-      p { position: relative; }
-      .inf-arrow {
+
+      .ll-green-arrow-left {
         position: absolute;
-        bottom: 6px;
-        left: 85%;
+        top: 3px;
+        left: 0px;
       }
-    }
-    p {
-      font-size: 17px;
-      line-height: 22px;
-      margin-bottom: 30px;
-      margin-top: 7px;
     }
   }
+
+  //.container {
+  //  position: relative;
+  //  width: 650px;
+  //  margin: auto;
+  //}
+  //.top {
+  //  @include single-box-shadow(#666, 0px, 1px, 3px);
+  //  background: #B8CFD6;
+  //  padding-bottom: 40px;
+  //  .container {
+  //    width: 500px;
+  //  }
+  //  .logo-title {
+  //    height: 100px;
+  //    position: relative;
+  //    margin: 40px 0;
+  //
+  //    .logo {
+  //      position: absolute;
+  //    }
+  //    h1 {
+  //      position: absolute;
+  //      left: 120px;
+  //      top: 15px;
+  //      font-size: 40px;
+  //      font-weight: normal;
+  //    }
+  //    h2 {
+  //      position: absolute;
+  //      left: 120px;
+  //      top: 61px;
+  //      font-size: 26px;
+  //      font-weight: normal;
+  //    }
+  //  }
+  //  .cheeky-buttons {
+  //    position: relative;
+  //    padding: 20px 0;
+  //    left: 50%;
+  //    margin-left: -200px;
+  //    width: 400px;
+  //    height: 40px;
+  //    .login {
+  //      float: left;
+  //    }
+  //    .register {
+  //      float: right;
+  //    }
+  //    .btn {
+  //      font-size: 18px;
+  //      padding: 10px 17px;
+  //    }
+  //  }
+  //  .invite-form {
+  //    margin-left: 120px;
+  //    #new_invite_code {
+  //      margin-bottom: 30px;
+  //    }
+  //    label {
+  //      font-size: 16px;
+  //      margin: 0 0 7px 1px;
+  //    }
+  //    #invite_code_code,
+  //    #beta-signup-email {
+  //      font-size: 18px;
+  //      padding: 10px;
+  //      width: 285px;
+  //      border: 1px solid #999;
+  //    }
+  //    .btn-success {
+  //      display: block;
+  //      font-size: 14px;
+  //      padding: 6px 14px;
+  //    }
+  //  }
+  //  .back {
+  //    font-size: 12px;
+  //    margin-top: 30px;
+  //    cursor: pointer;
+  //    color: $blue;
+  //  }
+  //  .left,
+  //  .right {
+  //    .head {
+  //      font-size: 15px;
+  //      margin: 0 0 10px;
+  //    }
+  //    .option {
+  //      position: relative;
+  //      width: 170px;
+  //      margin-bottom: 30px;
+  //      a {
+  //        text-decoration: none;
+  //        cursor: default;
+  //      }
+  //    }
+  //    .foot1,
+  //    .foot2 {
+  //      font-size: 12px;
+  //      line-height: 14px;
+  //      margin-bottom: 10px;
+  //    }
+  //  }
+  //  .left {
+  //    float: left;
+  //    width: 235px;
+  //  }
+  //  .right {
+  //    float: right;
+  //    width: 245px;
+  //  }
+  //  #user-login,
+  //  #user-password,
+  //  #user-username,
+  //  #user-email {
+  //    padding: 5px;
+  //    border: 1px solid $grayLight;
+  //    width: 225px;
+  //  }
+  //}
+  //.bottom {
+  //  padding-top: 30px;
+  //  .splash-influence {
+  //    height: 125px;
+  //    margin-bottom: 30px;
+  //    overflow: hidden;
+  //    white-space: nowrap;
+  //    position: relative;
+  //    left: -8px;
+  //
+  //    li {
+  //      width: 100px;
+  //      position: relative;
+  //      float: right;
+  //      margin-right: 7px;
+  //
+  //      .user {
+  //        width: 45px;
+  //        margin-left: 5px;
+  //        white-space: nowrap;
+  //        overflow: hidden;
+  //      }
+  //      .score-pts {
+  //        float: right;
+  //        font-size: 10px;
+  //        margin-right: 5px;
+  //        span {
+  //          font-weight: bold;
+  //          font-size: 13px;
+  //        }
+  //      }
+  //      img {
+  //        display: block;
+  //        height: 100px;
+  //        width: 100px;
+  //        margin-top: 5px;
+  //      }
+  //      .topic {
+  //        @include opacity(85);
+  //        background-color: #FFF;
+  //        position: absolute;
+  //        bottom: 0px;
+  //        padding: 5px 7px;
+  //        font-size: 11px;
+  //        width: 86px;
+  //        z-index: 110;
+  //        line-height: 16px;
+  //        white-space: normal;
+  //      }
+  //      &:hover {
+  //        .topic {
+  //          @include opacity(100);
+  //        }
+  //      }
+  //    }
+  //  }
+  //  .left{
+  //    float: left;
+  //    width: 315px;
+  //  }
+  //  .right {
+  //    float: right;
+  //    width: 310px;
+  //    p { position: relative; }
+  //    .inf-arrow {
+  //      position: absolute;
+  //      bottom: 6px;
+  //      left: 85%;
+  //    }
+  //  }
+  //  p {
+  //    font-size: 17px;
+  //    line-height: 22px;
+  //    margin-bottom: 30px;
+  //    margin-top: 7px;
+  //  }
+  //}
 }

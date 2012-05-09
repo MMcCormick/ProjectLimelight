@@ -1,17 +1,6 @@
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <% unless flash.empty? %>
-    <div class="alert alert-error">
-      <a class="close" data-dismiss="alert">x</a>
-      <% flash.each do |name, message| %>
-        <div><%= message %></div>
-      <% end %>
-    </div>
-  <% end %>
-  <div>
-    <%= f.text_field :login, :id => 'user-login', :autocomplete => :off, :placeholder => 'Email or Username...' %>
-  </div>
-  <div>
-    <%= f.password_field :password, :id => 'user-password', :autocomplete => :off, :placeholder => 'Password...' %>
-  </div>
+  <%= f.text_field :login, :id => 'user-login', :autocomplete => :off, :placeholder => 'Email or Username...' %>
+  <%= f.password_field :password, :id => 'user-password', :autocomplete => :off, :placeholder => 'Password...' %>
+
   <input type="submit" data-loading-text='Logging In...' value="Log In" class="btn btn-success" autocomplete='off'>
 <% end %>

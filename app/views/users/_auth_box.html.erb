@@ -1,27 +1,88 @@
+<div class='beta-about hide'>
+  <p class='summary'>
+    On Limelight, you can follow users (what else
+    is new), but you can also follow topics. We
+    show you videos, pictures, links, and discussion
+    from your friends about the topics that interest
+    you.
+  </p>
+
+  <div class='why'>Here are some reasons you want an invite</div>
+
+  <div class='reason'>
+    <b>It's smart.</b>
+    We distribute content through the
+    topics the content is about, and show you what your friends
+    say about it all.
+  </div>
+  <div class='reason'>
+    <b>Influence.</b>
+    We measure a user's influence in the topics they discuss, and use it to
+    spread quality content to interested users.
+  </div>
+  <div class='reason'>
+    <b>It's beautiful.</b>
+    Mmm pretty pictures.
+  </div>
+  <div class='back'>
+    Back <div class='ll-green-arrow-left'></div>
+  </div>
+</div>
+
+<div class='beta-team hide'>
+  <p class='summary'>
+    We're awesome.
+  </p>
+  <div class='back'>
+    Back <div class='ll-green-arrow-left'></div>
+  </div>
+</div>
+
+<div class="beta-signup <%= 'hide' unless show != :login && show != :register %>">
+  <form id="beta-signup-form">
+    <div class="errors"></div>
+    <input id="beta-signup-email" name="email" placeholder="Email..." type="text" autocomplete="off" />
+    <input class="btn btn-success" type="submit" value="Request Invite">
+  </form>
+
+  <div class='invite-code'>I have an invite code</div>
+  <div class='account'>I have an account</div>
+
+  <div class="social">
+    <div class="fb-like" data-href="http://www.facebook.com/pages/Limelight/240530529343415" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+    <a href="https://twitter.com/share?url=http://projectlimelight.com&text=foo bar" class="twitter-share-button" data-lang="en">Tweet</a>
+    <div class="google">
+      <div class="g-plusone" data-size="medium" data-href="http://projectlimelight.com"></div>
+    </div>
+  </div>
+
+</div>
+
 <div class="invite-form hide">
   <%= render "invite_codes/redeem_form" %>
-  <div class='back'>Back</div>
-</div>
-<div class="login-form <%= 'hide' unless show == :login %>">
-  <div class="left">
-    <div class="head">Use your existing social account.</div>
-    <div class="option one">
-      <a href="<%= user_omniauth_authorize_path(:facebook) %>">
-        <%= image_tag('facebook-login-button.gif') %>
-      </a>
-    </div>
-    <div class="foot1">We do not share your information.</div>
-    <div class="foot2">
-      We do not post to your profile
-      <br/>without your permission.
-    </div>
-    <div class='back'>Back</div>
-  </div>
-  <div class="right">
-    <div class="head">... or log in directly with Limelight.</div>
-    <%= render "users/sessions/new" %>
+  <div class='back'>
+    Back <div class='ll-green-arrow-left'></div>
   </div>
 </div>
+
+<div class="beta-login <%= 'hide' unless show == :login %>">
+  <a href="<%= user_omniauth_authorize_path(:facebook) %>" class='facebook'>
+    <%= image_tag('facebook-login-button.gif') %>
+  </a>
+  <div class="foot">We do not share your information.</div>
+  <div class="foot">We do not abuse your wall.</div>
+
+  <div class='divider'>
+    <div>OR</div>
+  </div>
+
+  <div class="foot">Login with Limelight.</div>
+  <%= render "users/sessions/new" %>
+  <div class='back'>
+    Back <div class='ll-green-arrow-left'></div>
+  </div>
+</div>
+
 <div class="register-form <%= 'hide' unless show == :register %>">
   <div class="left">
     <div class="head">Use your existing social account.</div>
@@ -35,7 +96,6 @@
       We do not post to your profile
       <br/>without your permission.
     </div>
-    <div class='back'>Back</div>
   </div>
   <div class="right">
     <div class="head">... or register directly with Limelight.</div>

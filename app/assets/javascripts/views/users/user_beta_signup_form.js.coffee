@@ -20,6 +20,8 @@ class LL.Views.UserBetaSignupForm extends Backbone.View
         $(self.el).find('.btn-success').addClass('disabled').text('Submitting...')
       success: (data) ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Send Me One')
+        $(self.el).slideUp 300, ->
+          $('.beta-signup-success').slideDown 300
         globalSuccess(data)
       error: (jqXHR, textStatus, errorThrown) ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Send Me One')

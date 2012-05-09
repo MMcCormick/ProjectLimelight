@@ -1,5 +1,5 @@
 class LL.Views.UserRegisterForm extends Backbone.View
-  el: $('.register-form form')
+  el: $('.beta-register form')
 
   events:
     "submit": "registerUser"

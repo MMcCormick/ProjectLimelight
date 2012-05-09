@@ -30,9 +30,27 @@
 </div>
 
 <div class='beta-team hide'>
-  <p class='summary'>
-    We're awesome.
+  <p>
+    We're Marc MacLeod and Matt McCormick. We met as roommates freshman year at Tufts University,
+    because someone in admissions went "Ha! Look at these names."
   </p>
+  <p>
+    We currently live in New York City, but we started building Limelight while living in Boston.
+    So while we don't like talking sports, we'd love to talk about Limelight.
+    Especially if you want to write about us. Or invest.
+  </p>
+  <p>
+    We've spent all this time building Limelight because we're lazy (ironic, right?). We want a quicker
+    way to find and discuss everything that interests us.
+    We don't want to Google everything cool, we just want to follow it and have the content come to us.
+    So if that's something that interests you, we look forward to seeing you on the site!
+  </p>
+
+
+  <div class='email'>
+    <a href="mailto:marc@projectlimelight.com">Marc</a> & <a href="mailto:matt@projectlimelight.com">Matt</a>
+  </div>
+
   <div class='back'>
     Back <div class='ll-green-arrow-left'></div>
   </div>
@@ -43,10 +61,22 @@
     <div class="errors"></div>
     <input id="beta-signup-email" name="email" placeholder="Email..." type="text" autocomplete="off" />
     <input class="btn btn-success" type="submit" value="Request Invite">
+
+    <div>
+      <div class='invite-code'>I have an invite code</div>
+      <div class='account'>I have an account</div>
+    </div>
   </form>
 
-  <div class='invite-code'>I have an invite code</div>
-  <div class='account'>I have an account</div>
+  <div class='beta-signup-success hide'>
+    <h3>Thanks for signing up for the beta!</h3>
+    <p>
+      We will be letting users onto Limelight in waves.
+      The faster we reach our goal, the faster you get in,
+      so help us spread the word using the buttons below!
+      We will love you forever.
+    </p>
+  </div>
 
   <div class="social">
     <div class="fb-like" data-href="http://www.facebook.com/pages/Limelight/240530529343415" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
@@ -76,29 +106,32 @@
     <div>OR</div>
   </div>
 
-  <div class="foot">Login with Limelight.</div>
+  <div class="foot">Login directly with Limelight.</div>
   <%= render "users/sessions/new" %>
   <div class='back'>
     Back <div class='ll-green-arrow-left'></div>
   </div>
 </div>
 
-<div class="register-form <%= 'hide' unless show == :register %>">
-  <div class="left">
-    <div class="head">Use your existing social account.</div>
-    <div class="option one">
-      <a href="<%= user_omniauth_authorize_path(:facebook) %>">
-        <%= image_tag('facebook-login-button.gif') %>
-      </a>
-    </div>
-    <div class="foot1">We do not share your information.</div>
-    <div class="foot2">
-      We do not post to your profile
-      <br/>without your permission.
-    </div>
+<div class="beta-register <%= 'hide' unless show == :register %>">
+  <div class='invite-code'>
+    Great, your invite worked!
+    You can now register below.
   </div>
-  <div class="right">
-    <div class="head">... or register directly with Limelight.</div>
-    <%= render "users/registrations/new" %>
+
+  <a href="<%= user_omniauth_authorize_path(:facebook) %>" class='facebook'>
+    <%= image_tag('facebook-login-button.gif') %>
+  </a>
+  <div class="foot">We do not share your information.</div>
+  <div class="foot">We do not abuse your wall.</div>
+
+  <div class='divider'>
+    <div>OR</div>
+  </div>
+
+  <div class="foot">Register directly with Limelight.</div>
+  <%= render "users/registrations/new" %>
+  <div class='back'>
+    Back <div class='ll-green-arrow-left'></div>
   </div>
 </div>

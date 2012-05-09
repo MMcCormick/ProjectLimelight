@@ -11,13 +11,16 @@
     position: center top;
   }
 
+  .meat-wrapper {
+    padding: 100px 0;
+  }
+
   .meat {
     @include single-box-shadow(rgba(34, 25, 25, 0.7), 1px, 2px, 3px);
 
     width: 380px;
     margin: auto;
     position: relative;
-    top: 130px;
     background: #FCFCFC;
 
     .beta {
@@ -120,7 +123,23 @@
       }
     }
 
-    .beta-login {
+    .beta-signup-success {
+      text-align: center;
+      h3 {
+        margin: 0 0 10px 0;
+      }
+      p {
+        line-height: 19px;
+        margin: auto;
+        width: 305px;
+      }
+    }
+
+    .beta-login,
+    .beta-register{
+      .errors {
+        margin: 20px 0 0 0;
+      }
       .facebook {
         margin: 0 0 10px 0;
         display: block;
@@ -148,18 +167,32 @@
         }
       }
       #user-login,
-      #user-password, {
+      #user-password,
+      #user-username,
+      #user-email {
         @include border-radius(1px);
-        font-size: 18px;
-        padding: 10px;
-        width: 310px;
+        font-size: 16px;
+        padding: 8px 7px;
+        width: 314px;
+        margin: 0 0 5px 0;
       }
-      #user-login {
-        margin: 10px 0 5px 0;
+      #user-login,
+      #user-username {
+        margin-top: 10px;
       }
       .btn {
         font-size: 16px;
         padding: 5px 12px;
+        margin: 4px 0 0 0;
+      }
+
+      .invite-code {
+        font-size: 12px;
+        font-weight: bold;
+        position: relative;
+        top: -20px;
+        color: #79A22A;
+        margin: 0 0 10px 0;
       }
     }
 
@@ -176,6 +209,13 @@
       .reason {
         margin: 10px 0 0 0;
         font-size: 14px;
+      }
+    }
+
+    .beta-team {
+      p {
+        margin: 0 0 15px 0;
+        line-height: 20px;
       }
     }
 

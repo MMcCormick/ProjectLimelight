@@ -30,7 +30,7 @@ class LL.Views.SplashPage extends Backbone.View
 
   showRegister: =>
     @hideAll()
-    $('.register-form').slideDown(300)
+    $('.beta-register').slideDown(300)
 
   showInvite: =>
     @hideAll()

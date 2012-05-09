@@ -48,7 +48,10 @@
         color: $grayDark;
         font-weight: bold;
       }
-
+      .plink {
+        cursor: pointer;
+        &:hover { color: $blue !important; }
+      }
     }
   }
 }

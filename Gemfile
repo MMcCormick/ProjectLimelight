@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 
+#ruby '1.9.3'
+
 gem 'bundler'
 gem 'rails', '3.2.3'
 gem 'jquery-rails'
@@ -29,6 +31,7 @@ gem 'neography' # neo4j graph database
 gem 'backbone-on-rails'
 gem 'asset_sync' # can maybe move this to assets group?
 gem 'datasift' # streaming api access (twitter, facebook, youtube, etc)
+gem 'mixpanel' # analytics
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'

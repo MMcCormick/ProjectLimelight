@@ -12,6 +12,7 @@ class CommentsController < ApplicationController
     comment.user_id = current_user.id
 
     if comment.save
+      track_mixpanel("New Comment", current_user.mixpanel_data)
       Pusher[talk.id.to_s].trigger('new_comment', comment.as_json)
       comment.send_notifications(current_user)
       response = build_ajax_response(:ok, nil, "Comment created!")

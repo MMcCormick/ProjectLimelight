@@ -15,8 +15,10 @@ class UsersController < ApplicationController
   def create
     user = User.new_with_session(params, session)
     user.invite_code_id = session[:invite_code]
+    user.origin = 'limelight'
 
     if user.save
+      track_mixpanel("Signup", user.mixpanel_data)
       if user.active_for_authentication?
         set_flash_message :notice, :signed_up if is_navigational_format?
         sign_in(:user, user)
@@ -36,7 +38,11 @@ class UsersController < ApplicationController
   end
 
   def update
-    current_user.tutorial_step = params['tutorial_step'] if params['tutorial_step']
+    # Post signup tutorial updates
+    if params['tutorial_step'] && current_user.tutorial_step != params['tutorial_step']
+      track_mixpanel("Signup Tutorial #{current_user.tutorial_step}", current_user.mixpanel_data)
+      current_user.tutorial_step = params['tutorial_step']
+    end
     current_user.tutorial1_step = params['tutorial1_step'] if params['tutorial1_step']
 
     current_user.email_comment = params[:email_comment] if params[:email_comment]

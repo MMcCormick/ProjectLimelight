@@ -96,5 +96,26 @@
       font-size: 17px;
       margin: 0 0 20px 0;
     }
+    .social {
+      height: 50px;
+      position: relative;
+
+      .fb-like,
+      .twitter-share-button,
+      .google {
+        position: absolute;
+        bottom: 0px;
+      }
+      .fb-like {
+        left: 0px;
+      }
+      .twitter-share-button {
+        left: 110px;
+      }
+      .google {
+        left: 220px;
+        bottom: -4px;
+      }
+    }
   }
 }

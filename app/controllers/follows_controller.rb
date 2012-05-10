@@ -14,7 +14,11 @@ class FollowsController < ApplicationController
               Pusher["#{target.id.to_s}_private"].trigger('new_notification', notification.to_json)
             end
           end
-          current_user.save
+
+          if current_user.save
+            track_mixpanel("Follow #{params[:type]}", current_user.mixpanel_data.merge(target.mixpanel_data(params[:type] == 'User' ? '2 ' : nil)))
+          end
+
           response = build_ajax_response(:ok, nil, "You're following #{target.name}", nil, { })
           status = 201
         else
@@ -42,8 +46,9 @@ class FollowsController < ApplicationController
             Notification.remove(target, :follow, current_user)
           end
 
-          target.save
-          current_user.save
+          if target.save && current_user.save
+            track_mixpanel("Unfollow #{params[:type]}", current_user.mixpanel_data.merge(target.mixpanel_data(params[:type] == 'User' ? '2 ' : nil)))
+          end
 
           response = build_ajax_response(:ok, nil, nil, nil, { })
           status = 201

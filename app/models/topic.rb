@@ -419,6 +419,17 @@ class Topic
   # JSON
   ##########
 
+  def mixpanel_data(extra=nil)
+    {
+            "Topic Name" => name,
+            "Topic Score" => score,
+            "Topic Response Count" => response_count,
+            "Topic Followers" => followers_count,
+            "Topic Created At" => created_at,
+            "Topic Datasift Enabled?" => datasift_enabled ? true : false
+    }
+  end
+
   def as_json(options={})
     {
             :id => id.to_s,

@@ -14,6 +14,7 @@ require 'open-uri'
 require 'chronic'
 require 'pusher'
 require 'yajl'
+require 'mixpanel'
 
 gem defined?(JRUBY_VERSION) ? 'rmagick4j' : 'rmagick'
 require 'RMagick'

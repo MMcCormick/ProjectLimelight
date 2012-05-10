@@ -8,6 +8,8 @@ class LikesController < ApplicationController
       if like_success
         current_user.save if object.save
 
+        track_mixpanel("Like Post", current_user.mixpanel_data.merge(object.mixpanel_data))
+
         # send the influence pusher notification
         if object.class.name == 'Talk'
 
@@ -53,6 +55,9 @@ class LikesController < ApplicationController
     if object
       if object.remove_from_likes(current_user)
         current_user.save if object.save
+
+        track_mixpanel("Unlike Post", current_user.mixpanel_data.merge(object.mixpanel_data))
+
         Notification.remove(object.user, :repost, current_user, object)
         response = build_ajax_response(:ok, nil, nil, nil)
         status = 200

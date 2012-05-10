@@ -25,7 +25,8 @@ class InviteCodesController < ApplicationController
     if invite
       if invite.usable?
         session[:invite_code] = invite.id.to_s
-        response = build_ajax_response(:ok, nil, "Code accpted", nil, :invite_code_id => invite.id.to_s)
+        track_mixpanel("Invite Code Accepted", {:code => invite.code})
+        response = build_ajax_response(:ok, nil, nil, nil, :invite_code_id => invite.id.to_s)
         status = 200
       else
         invite.errors.add(:invite_code, "Sorry, that invite code has been used up")

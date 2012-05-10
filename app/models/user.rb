@@ -97,6 +97,7 @@ class User
   field :use_fb_image, :default => false
   field :auto_follow_fb, :default => true
   field :auto_follow_tw, :default => true
+  field :origin # what did the user use to originally signup (limelight, facebook, etc)
 
   auto_increment :public_id
 
@@ -539,6 +540,29 @@ class User
   # JSON
   ##########
 
+  def mixpanel_data(extra=nil)
+    {
+            :distinct_id => id.to_s,
+            "User#{extra if extra} Username" => username,
+            "User#{extra if extra} Birthday" => birthday,
+            "User#{extra if extra} Score" => score,
+            "User#{extra if extra} Clout" => clout,
+            "User#{extra if extra} Following Users" => following_users_count,
+            "User#{extra if extra} Following Topics" => following_topics_count,
+            "User#{extra if extra} Followers" => followers_count,
+            "User#{extra if extra} Connected Twitter?" => twuid ? true : false,
+            "User#{extra if extra} Connected Facebook?" => fbuid ? true : false,
+            "User#{extra if extra} Auto Follow Twitter?" => auto_follow_tw,
+            "User#{extra if extra} Auto Follow Facebook?" => auto_follow_fb,
+            "User#{extra if extra} Origin" => origin,
+            "User#{extra if extra} Status" => status,
+            "User#{extra if extra} Sign Ins" => sign_in_count,
+            "User#{extra if extra} Last Sign In" => current_sign_in_at,
+            "User#{extra if extra} Created At" => created_at,
+            "User#{extra if extra} Confirmed At" => confirmed_at
+    }
+  end
+
   def as_json(options={})
     data = {
             :id => id.to_s,
@@ -598,8 +622,9 @@ class User
   ##########
 
     # Omniauth providers
-    def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil)
+    def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil, request_env=nil)
       new_user = false
+      login = false
       info = omniauth['info']
       extra = omniauth['extra']['raw_info']
 
@@ -637,6 +662,10 @@ class User
         # Update the token
         connect.token = omniauth['credentials']['token']
 
+        unless signed_in_resource
+          login = true
+        end
+
       # If an invite code is in the session, create a new user with a stub password.
       elsif invite && invite.usable?
         new_user = true
@@ -664,6 +693,7 @@ class User
         connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
         connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
         user.social_connects << connect
+        user.origin = omniauth['provider']
         user.use_fb_image = true if user.image_versions == 0
         user.update_social_denorms
       end
@@ -679,6 +709,14 @@ class User
       if user && new_connect
         Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s)
         #user.auto_follow(connect.provider.to_s)
+      end
+
+      if new_user && request_env
+        Resque.enqueue(MixpanelTrackEvent, "Signup", user.mixpanel_data, request_env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
+      end
+
+      if login == true && request_env
+        Resque.enqueue(MixpanelTrackEvent, "Login", user.mixpanel_data.merge!("Login Method" => omniauth['provider']), request_env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
       end
 
       user

@@ -96,6 +96,11 @@ class ApplicationController < ActionController::Base
   end
 
 
+  # Mixpanel
+  def track_mixpanel(name, params)
+    Resque.enqueue(MixpanelTrackEvent, name, params, request.env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
+  end
+
   # Used to test error messages as they would be shown in production
   #protected
   #

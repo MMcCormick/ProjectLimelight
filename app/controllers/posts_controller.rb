@@ -31,6 +31,8 @@ class PostsController < ApplicationController
         @post.bubble_up
       end
 
+      track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.mixpanel_data))
+
       if @post.root_id && @post.class.name == 'Talk'
         if @post.root_id
           Pusher[@post.root_id.to_s].trigger('new_response', @post.to_json(:user => current_user))

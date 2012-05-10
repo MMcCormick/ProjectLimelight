@@ -114,24 +114,32 @@
 </div>
 
 <div class="beta-register <%= 'hide' unless show == :register %>">
-  <div class='invite-code'>
-    Great, your invite worked!
-    You can now register below.
+  <div class='form'>
+    <div class='invite-code'>
+      Great, your invite worked!
+      You can now register below.
+    </div>
+
+    <a href="<%= user_omniauth_authorize_path(:facebook) %>" class='facebook'>
+      <%= image_tag('facebook-login-button.gif') %>
+    </a>
+    <div class="foot">We do not share your information.</div>
+    <div class="foot">We do not abuse your wall.</div>
+
+    <div class='divider'>
+      <div>OR</div>
+    </div>
+
+    <div class="foot">Register directly with Limelight.</div>
+    <%= render "users/registrations/new" %>
+    <div class='back'>
+      Back <div class='ll-green-arrow-left'></div>
+    </div>
   </div>
 
-  <a href="<%= user_omniauth_authorize_path(:facebook) %>" class='facebook'>
-    <%= image_tag('facebook-login-button.gif') %>
-  </a>
-  <div class="foot">We do not share your information.</div>
-  <div class="foot">We do not abuse your wall.</div>
-
-  <div class='divider'>
-    <div>OR</div>
-  </div>
-
-  <div class="foot">Register directly with Limelight.</div>
-  <%= render "users/registrations/new" %>
-  <div class='back'>
-    Back <div class='ll-green-arrow-left'></div>
+  <div class='confirm hide'>
+    Great, your registration was successful! Please check your
+    email for a confirmation, we'll send it in the next few minutes.
+    Just click the confirmation link in the email and your registration will be complete!
   </div>
 </div>

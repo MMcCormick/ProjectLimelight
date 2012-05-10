@@ -334,6 +334,18 @@ class Post
   # JSON
   ##########
 
+  def mixpanel_data(extra=nil)
+    {
+            "Post Type" => _type,
+            "Post Score" => score,
+            "Post Response Count" => response_count,
+            "Post Created At" => created_at,
+            "Post Is Root?" => response_to ? true : false,
+            "Post Root Type" => response_to ? root_type : nil,
+            "Post From Twitter?" => standalone_tweet ? true : false
+    }
+  end
+
   def as_json(options={})
     data = {
             :id => id.to_s,

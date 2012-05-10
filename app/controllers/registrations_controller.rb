@@ -14,6 +14,7 @@ class RegistrationsController < Devise::RegistrationsController
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up if is_navigational_format?
         sign_in(resource_name, resource)
+        track_mixpanel("Signup", resource.as_json)
         render json: build_ajax_response(:ok, after_sign_up_path_for(resource)), status: 201
       else
         set_flash_message :notice, :inactive_signed_up, :reason => inactive_reason(resource) if is_navigational_format?

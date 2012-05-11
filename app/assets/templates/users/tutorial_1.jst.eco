@@ -1,6 +1,11 @@
 <div>
-  Connecting Facebook/Twitter is not required, but it helps Limelight connect you to users you already know on those networks.
-  Also, when connected, you can post to Facebook and/or Twitter when you post to Limelight.
+  <h5>Connecting is not required, but does provide several benefits:</h5>
+
+  <ul>
+    <li>- Recreating your social network is a pain, so Limelight will automatically connect you to users you already know on Facebook/Twitter. This can be turned off in settings.</li>
+    <li>- Limelight scans your Facebook interests and will automatically follow topics you're already interested in.</li>
+    <li>- Optionally post to Facebook and/or Twitter when you post to Limelight.</li>
+  </ul>
 </div>
 
 <div class='social-connect facebook <%= "on" if @user.get('facebook_id') %>'>

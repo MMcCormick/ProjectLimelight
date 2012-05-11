@@ -14,7 +14,32 @@
     @include clearfix();
   }
   .modal-footer {
+    position: relative;
+
     .btn { float: right; }
+    .social {
+      position: absolute;
+      left: 20px;
+      top: 44px;
+
+      .fb-like,
+      .twitter-share-button,
+      .google {
+        position: absolute;
+      }
+      .fb-like {
+        left: 0px;
+        bottom: -1px;
+      }
+      .twitter-share-button {
+        left: 100px;
+        bottom: 0px;
+      }
+      .google {
+        left: 205px;
+        bottom: -4px;
+      }
+    }
   }
   .step-count {
     float: right;
@@ -37,6 +62,13 @@
     }
   }
   #tutorial-1 {
+    ul {
+      list-style: none;
+      margin: 10px 0 0 0;
+      li {
+        margin: 10px 0 0 0;
+      }
+    }
     .social-connect {
       width: 250px;
       float: left;
@@ -95,27 +127,6 @@
     .code {
       font-size: 17px;
       margin: 0 0 20px 0;
-    }
-    .social {
-      height: 50px;
-      position: relative;
-
-      .fb-like,
-      .twitter-share-button,
-      .google {
-        position: absolute;
-        bottom: 0px;
-      }
-      .fb-like {
-        left: 0px;
-      }
-      .twitter-share-button {
-        left: 110px;
-      }
-      .google {
-        left: 220px;
-        bottom: -4px;
-      }
     }
   }
 }

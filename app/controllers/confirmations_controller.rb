@@ -7,7 +7,7 @@ class ConfirmationsController < Devise::ConfirmationsController
     if resource.errors.empty?
       track_mixpanel("Confirm Signup", resource.mixpanel_data)
       resource.send_welcome_email
-      set_flash_message(:notice, :confirmed) if is_navigational_format?
+      #set_flash_message(:notice, :confirmed) if is_navigational_format?
       sign_in(resource_name, resource)
       respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
     else

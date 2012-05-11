@@ -16,6 +16,7 @@ ProjectLimelight::Application.routes.draw do
       get 'following_topics' => 'users#following_topics'
       get 'followers' => 'users#followers'
       get 'influence_increases' => 'users#user_influence_increases'
+      get 'influencer_topics' => 'users#influencer_topics'
       post '' => 'users#create'
       put '' => 'users#update'
       get '' => 'users#show'

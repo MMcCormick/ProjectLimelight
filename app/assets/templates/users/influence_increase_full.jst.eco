@@ -1,10 +1,21 @@
-<img src="<%= @influence.get('topic').get('images').square.small %>">
-<div class="amount">+<%= parseInt(@influence.get('amount')) %> pts</div>
+<a href="/<%= @influence.get('topic').get('slug') %>" class='tlink' data-id='<%= @influence.get('topic').get('id') %>'>
+  <img src="<%= @influence.get('topic').get('images').square.small %>">
+</a>
+<div class="amount">
+  +<%= parseInt(@influence.get('amount')) %> pts in
+  <a href="/<%= @influence.get('topic').get('slug') %>" class='tlink' data-id='<%= @influence.get('topic').get('id') %>'><%= @influence.get('topic').get('name') %></a>
+</div>
 <div class="name">
   <% if @influence.get('action') == 'lk': %>
     <a class="ulink" data-id="<%= @influence.get('triggered_by').get('id') %>" href="<%= @influence.get('triggered_by').get('url') %>"><%= @influence.get('triggered_by').get('username') %></a>
-    liked your talk "<span class="plink"><%= @influence.get('post').get('content') %></span>"
+    liked
+    <% if @influence.get('post').get('user') == LL.App.current_user : %>
+      your
+    <% else : %>
+      <%= @influence.get('post').get('user').get('username') %>'s talk
+    <% end %>
+    "<span class="plink"><%= @influence.get('post').get('content') %></span>"
   <% else: %>
-    <%= @influence.get('reason') %>
+    <span class="plink"><%= @influence.get('reason') %></span>
   <% end %>
 </div>

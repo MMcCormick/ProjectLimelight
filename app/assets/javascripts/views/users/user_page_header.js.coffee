@@ -23,7 +23,7 @@ class LL.Views.UserPageHeader extends Backbone.View
       }
       {
         content: "Influence"
-        url: (if LL.App.current_user == @model then '/influence' else "/users/#{@model.get('slug')}")
+        url: (if LL.App.current_user == @model then '/influence' else "/users/#{@model.get('slug')}/influence")
         on: (if @page == 'influence' then true else false)
       }
       {

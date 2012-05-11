@@ -1,17 +1,14 @@
 class LL.Models.InfluenceIncrease extends Backbone.Model
 
-  events:
-    'click .name span': 'showPost'
-
   initialize: =>
     if @get('user')
       @set('user', LL.App.Users.findOrCreate(@get('user').id, @get('user')))
     if @get('triggered_by')
       @set('triggered_by', LL.App.Users.findOrCreate(@get('triggered_by').id, @get('triggered_by')))
     if @get('topic')
-      @set('topic', LL.App.Users.findOrCreate(@get('topic').id, @get('topic')))
+      @set('topic', LL.App.Topics.findOrCreate(@get('topic').id, @get('topic')))
     if @get('post')
-      @set('post', LL.App.Users.findOrCreate(@get('post').id, @get('post')))
+      @set('post', LL.App.Posts.findOrCreate(@get('post').id, @get('post')))
 
   parse: (resp, xhr) ->
     data = {
@@ -29,7 +26,3 @@ class LL.Models.InfluenceIncrease extends Backbone.Model
     console.log(data)
 
     data
-
-  showPost: =>
-    console.log('foo')
-    LL.Router.navigate("talks/#{@model.get('object').id}", trigger: true)

@@ -68,11 +68,12 @@ class UsersController < ApplicationController
     render :json => increases.map {|i| i.as_json(:user => current_user)}
   end
 
-  def influencer_in_topics
-    Topic.where("influencers.#{params[:id]}.influencer" => true)
+  def influencer_topics
+    topics = Topic.where("influencers.#{params[:id]}.influencer" => true)
+    render :json => topics.map { |t| InfluencerTopic.new({ :topic => t.as_json }.merge(t.influencers[params[:id]])) }, status: 200
   end
 
-  def almost_influencer_in_topics
+  def almost_influencer_topics
     Topic.where("influencers.#{params[:id]}.influencer" => false, "influencers.#{params[:id]}.percentile" => { "$lte" => 70 } )
   end
 

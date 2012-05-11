@@ -473,11 +473,12 @@ class User
 
     if full
       posts = {}
-      tmp_posts = Post.where(:_id.in => increases.map{|i| i.post_id})
+      post_ids = increases.map{|i| i.post_id}
+      tmp_posts = Post.where(:_id.in => post_ids).to_a
       tmp_posts.each {|t| posts[t.id.to_s] = t}
 
       triggered = {}
-      tmp_triggered = User.where(:_id.in => increases.map{|i| i.triggered_by_id}).to_a
+      tmp_triggered = User.where(:_id.in => increases.map{|i| i.triggered_by_id})
       tmp_triggered.each {|t| triggered[t.id.to_s] = t}
     end
 

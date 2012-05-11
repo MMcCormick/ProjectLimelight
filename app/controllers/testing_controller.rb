@@ -8,7 +8,11 @@ end
 class TestingController < ApplicationController
 
   def test
-    RecalculateInfluence.perform("4fa3f23fac8ddec67c000005")
+    #fb = current_user.facebook
+    #if fb
+    #  likes = fb.get_connections("me", "likes")
+    #  foo = 'bar'
+    #end
   end
 
   def something

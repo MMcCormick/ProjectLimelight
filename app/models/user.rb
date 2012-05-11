@@ -708,7 +708,10 @@ class User
 
       if user && new_connect
         Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s)
-        #user.auto_follow(connect.provider.to_s)
+
+        if connect.provider == 'facebook'
+          Resque.enqueue(AutoFollowFBLikes, user.id.to_s)
+        end
       end
 
       if new_user && request_env

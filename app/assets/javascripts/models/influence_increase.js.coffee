@@ -23,6 +23,4 @@ class LL.Models.InfluenceIncrease extends Backbone.Model
     data['triggered_by'] = new LL.Models.User(resp.triggered_by)
     data['post'] = new LL.Models.Post(resp.post)
 
-    console.log(data)
-
     data

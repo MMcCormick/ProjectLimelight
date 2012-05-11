@@ -69,12 +69,13 @@ class UsersController < ApplicationController
   end
 
   def influencer_topics
-    topics = Topic.where("influencers.#{params[:id]}.influencer" => true)
+    topics = Topic.where("influencers.#{params[:id]}.influencer" => true).order_by("influencers.#{params[:id]}.influence", :desc)
     render :json => topics.map { |t| InfluencerTopic.new({ :topic => t.as_json }.merge(t.influencers[params[:id]])) }, status: 200
   end
 
   def almost_influencer_topics
-    Topic.where("influencers.#{params[:id]}.influencer" => false, "influencers.#{params[:id]}.percentile" => { "$lte" => 70 } )
+    topics = Topic.where("influencers.#{params[:id]}.influencer" => false).order_by("influencers.#{params[:id]}.offset", :asc).limit(10).to_a
+    render :json => topics.map { |t| InfluencerTopic.new({ :topic => t.as_json }.merge(t.influencers[params[:id]])) }, status: 200
   end
 
   def influence_increases

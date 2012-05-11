@@ -37,7 +37,7 @@
 .content-tile {
   .increases,
   .influencer-topics,
-  .almost-topics {
+  .almost-influencer-topics {
     li {
       position: relative;
       padding: 5px 0 5px 70px;
@@ -76,20 +76,27 @@
       }
     }
   }
-  .influencer-topics {
+  .influencer-topics,
+  .almost-influencer-topics {
+    .meat {
+      // -11 + 61px per topic (including border)
+      max-height: 294px;
+      overflow-y: auto;
+    }
     margin-right: 6px;
-    h4 {
+    .tlink h4 {
       margin: 5px 0 2px;
     }
     .rank,
-    .influence {
+    .influence,
+    .offset {
       font-size: 16px;
       position: relative;
       bottom: -1px;
       font-weight: bold;
     }
   }
-  .almost-topics {
+  .almost-influencer-topics {
     margin-left: 0px;
   }
 }

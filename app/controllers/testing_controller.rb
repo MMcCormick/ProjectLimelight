@@ -8,7 +8,7 @@ end
 class TestingController < ApplicationController
 
   def test
-    RecalculateInfluence.perform("4fa3f23fac8ddec67c000005")
+    RecalculateInfluence.perform("4ec69d9fcddc7f9fe80000b8")
   end
 
   def something

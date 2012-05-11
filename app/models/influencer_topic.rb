@@ -1,5 +1,5 @@
 class InfluencerTopic
-  attr_accessor :topic, :influence, :influencer, :percentile, :rank
+  attr_accessor :topic, :influence, :influencer, :percentile, :rank, :offset
 
   def initialize args
     args.each do |k,v|
@@ -13,7 +13,8 @@ class InfluencerTopic
       :influence => influence.to_i,
       :influencer => influencer,
       :percentile => percentile.to_i,
-      :rank => rank
+      :rank => rank,
+      :offset => offset.to_i + 1
     }
   end
 end

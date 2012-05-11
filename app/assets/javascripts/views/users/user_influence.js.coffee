@@ -18,4 +18,9 @@ class LL.Views.UserInfluence extends Backbone.View
     $('.influencer-topics .meat').append(@influencerTopicsView.render().el)
     @influencerTopics.fetch({data: {id: @user.get('id')}})
 
+    @almostInfluencerTopics = new LL.Collections.AlmostInfluencerTopics()
+    @almostInfluencerTopicsView = new LL.Views.AlmostInfluencerTopicsFull(collection: @almostInfluencerTopics)
+    $('.almost-influencer-topics .meat').append(@almostInfluencerTopicsView.render().el)
+    @almostInfluencerTopics.fetch({data: {id: @user.get('id')}})
+
     @

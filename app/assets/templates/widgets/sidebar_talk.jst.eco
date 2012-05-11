@@ -1,2 +1,7 @@
-<h4>+Talk</h4>
-<input type="text" spellcheck="false" autocomplete="off" placeholder="<%= @placeholder %>" />
+<div class='top'>
+  <h4>+Talk</h4>
+</div>
+
+<div class='meat'>
+  <input type="text" spellcheck="false" autocomplete="off" placeholder="<%= @placeholder %>" />
+</div>

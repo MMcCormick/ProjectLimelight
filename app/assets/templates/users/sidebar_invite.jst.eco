@@ -1,3 +1,8 @@
-<h4>Invite Code</h4>
-<div class="code"><%= @user.get('invite_code').code %></div>
-<div class="remaining"><%= @user.get('invite_code').remaining %> Remaining</div>
+<div class='top'>
+  <h4>Invite Code</h4>
+</div>
+
+<div class='meat'>
+  <div class="code"><%= @user.get('invite_code').code %></div>
+  <div class="remaining"><%= @user.get('invite_code').remaining %> Remaining</div>
+</div>

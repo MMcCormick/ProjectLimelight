@@ -72,9 +72,6 @@ section.user-section-list {
   section {
     @include clearfix();
   }
-  h3 {
-    margin-bottom: 10px;
-  }
   form {
     position: relative;
 
@@ -157,13 +154,10 @@ section.user-section-list {
 }
 
 .sidebar-invite {
-  padding-bottom: 10px;
   .code {
-    margin: 0 0 0 10px;
     float: left;
   }
   .remaining {
-    margin: 0 10px 0 0;
     float: right;
   }
 }

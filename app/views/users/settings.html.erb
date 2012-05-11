@@ -1,80 +1,97 @@
 <div class="content-tile" id="user-settings">
   <section>
-    <h3>Basic Info</h3>
+    <div class="top">
+      <h3>Basic Info</h3>
+    </div>
 
-    <%= render 'form', :user => current_user %>
+    <div class='meat'>
+      <%= render 'form', :user => current_user %>
+    </div>
   </section>
 
   <div class="clear"></div>
 
   <section class="image-settings">
-    <h3>Profile Image</h3>
-    <%= image_tag current_user.image_url(:fit, :normal), :style => "max-width: 100px;", :class => 'profile-image', :alt => "" %>
-    <% content_for :js do %>
-      <%#= render "users/image_upload_js" %>
-    <% end %>
-
-    <div class="field">
-      <div class="setting-text">Use Facebook Image</div>
-      <% if current_user.fbuid %>
-        <div class="btn-group">
-          <div class="btn radio-btn <%= "btn-info" if current_user.use_fb_image %>" name="use_fb_image" data-value="true">On</div>
-          <div class="btn radio-btn <%= "btn-info" unless current_user.use_fb_image %>" name="use_fb_image" data-value="false">Off</div>
-        </div>
-      <% else %>
-        <div class='social-connect facebook'>
-            <a href="/users/auth/facebook" class='facebook'>
-              <img src="/assets/images/facebook-connect-button.gif" />
-            </a>
-        </div>
-    <% end %>
+    <div class="top">
+      <h3>Profile Image</h3>
     </div>
 
-    <div class="upload btn" id="user_uploadB">Upload My Own Image</div>
-    <div id="user_uploadB-progress"></div>
+    <div class='meat'>
+      <%= image_tag current_user.image_url(:fit, :normal), :style => "max-width: 100px;", :class => 'profile-image', :alt => "" %>
+      <% content_for :js do %>
+        <%#= render "users/image_upload_js" %>
+      <% end %>
+
+      <div class="field">
+        <div class="setting-text">Use Facebook Image</div>
+        <% if current_user.fbuid %>
+          <div class="btn-group">
+            <div class="btn radio-btn <%= "btn-info" if current_user.use_fb_image %>" name="use_fb_image" data-value="true">On</div>
+            <div class="btn radio-btn <%= "btn-info" unless current_user.use_fb_image %>" name="use_fb_image" data-value="false">Off</div>
+          </div>
+        <% else %>
+          <div class='social-connect facebook'>
+              <a href="/users/auth/facebook" class='facebook'>
+                <img src="/assets/images/facebook-connect-button.gif" />
+              </a>
+          </div>
+      <% end %>
+      </div>
+
+      <div class="upload btn disabled" id="user_uploadB">Upload My Own Image (coming soon)</div>
+      <div id="user_uploadB-progress"></div>
+    </div>
   </section>
 
   <section class="social-settings">
-    <h3>Social Settings</h3>
-
-    <div class="field">
-      <div class="setting-text">Auto-follow Facebook friends</div>
-      <% if current_user.fbuid %>
-        <div class="btn-group">
-          <div class="btn radio-btn <%= "btn-info" if current_user.auto_follow_fb %>" name="auto_follow_fb" data-value="true">On</div>
-          <div class="btn radio-btn <%= "btn-info" unless current_user.auto_follow_fb %>" name="auto_follow_fb" data-value="false">Off</div>
-        </div>
-      <% else %>
-        <div class='social-connect facebook'>
-            <a href="/users/auth/facebook" class='facebook'>
-              <img src="/assets/images/facebook-connect-button.gif" />
-            </a>
-        </div>
-      <% end %>
+    <div class="top">
+      <h3>Social Settings</h3>
     </div>
 
-    <div class="field">
-      <div class="setting-text">Auto-follow users you follow on Twitter</div>
-      <% if current_user.twuid %>
-        <div class="btn-group">
-          <div class="btn radio-btn <%= "btn-info" if current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="true">On</div>
-          <div class="btn radio-btn <%= "btn-info" unless current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="false">Off</div>
-        </div>
-      <% else %>
-        <div class='social-connect twitter'>
-            <a href="/users/auth/twitter" class='twitter'>
-              <img src="/assets/images/twitter-connect-button.gif" />
-            </a>
-        </div>
-      <% end %>
+    <div class='meat'>
+      <div class="field">
+        <div class="setting-text">Auto-follow Facebook friends</div>
+        <% if current_user.fbuid %>
+          <div class="btn-group">
+            <div class="btn radio-btn <%= "btn-info" if current_user.auto_follow_fb %>" name="auto_follow_fb" data-value="true">On</div>
+            <div class="btn radio-btn <%= "btn-info" unless current_user.auto_follow_fb %>" name="auto_follow_fb" data-value="false">Off</div>
+          </div>
+        <% else %>
+          <div class='social-connect facebook'>
+              <a href="/users/auth/facebook" class='facebook'>
+                <img src="/assets/images/facebook-connect-button.gif" />
+              </a>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="field">
+        <div class="setting-text">Auto-follow users you follow on Twitter</div>
+        <% if current_user.twuid %>
+          <div class="btn-group">
+            <div class="btn radio-btn <%= "btn-info" if current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="true">On</div>
+            <div class="btn radio-btn <%= "btn-info" unless current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="false">Off</div>
+          </div>
+        <% else %>
+          <div class='social-connect twitter'>
+              <a href="/users/auth/twitter" class='twitter'>
+                <img src="/assets/images/twitter-connect-button.gif" />
+              </a>
+          </div>
+        <% end %>
+      </div>
     </div>
   </section>
 
   <div class="clear"></div>
 
   <section class="email-settings">
-    <h3>Emails</h3>
+    <div class="top">
+      <h3>Emails</h3>
+    </div>
 
-    <%= render 'settings_form', :user => current_user %>
+    <div class='meat'>
+      <%= render 'settings_form', :user => current_user %>
+    </div>
   </section>
 </div>

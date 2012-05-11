@@ -415,6 +415,17 @@ class Topic
     influencers[id.to_s]["percentile"] if influencers[id.to_s]
   end
 
+  # only returns those aliases that are not plurals of another alias and that are not the original name
+  def clean_aliases
+    response = []
+    aliases.each do |a|
+      if a.name.to_url != name.to_url && a.name.pluralize != a.name
+        response << a
+      end
+    end
+    response
+  end
+
   ##########
   # JSON
   ##########
@@ -426,7 +437,8 @@ class Topic
             "Topic Response Count" => response_count,
             "Topic Followers" => followers_count,
             "Topic Created At" => created_at,
-            "Topic Datasift Enabled?" => datasift_enabled ? true : false
+            "Topic Datasift Enabled?" => datasift_enabled ? true : false,
+            "Topic Primary Type" => primary_type
     }
   end
 
@@ -436,12 +448,14 @@ class Topic
             :slug => to_param,
             :type => 'Topic',
             :name => name,
+            :summary => summary,
             :score => score,
             :followers_count => followers_count,
             :created_at => created_at.to_i,
             :created_at_pretty => pretty_time(created_at),
             :images => Topic.json_images(self),
-            :aliases => aliases,
+            :primary_type => primary_type,
+            :aliases => clean_aliases,
             :datasift_enabled => datasift_enabled,
             :datasift_tags => datasift_tags
     }

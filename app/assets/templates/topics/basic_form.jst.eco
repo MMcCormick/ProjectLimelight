@@ -13,7 +13,7 @@
 
     <div class="field">
       <label for="summary">Summary</label>
-      <textarea name="summary"></textarea>
+      <textarea name="summary"><%= @topic.get('summary') %></textarea>
     </div>
 
     <div class="actions">

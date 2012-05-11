@@ -426,13 +426,22 @@ header {
   section {
     @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
     @include clearfix();
-    background: $grayLightest;
+
     margin: 10px;
-    > h4 {
-      @include single-text-shadow(#DDD, 0, 1px);
-      padding: 10px 0 7px 10px;
-      font-weight: normal;
-      cursor: default;
+    .top {
+      background: $grayLightest;
+      border-bottom: 1px solid #EEE;
+      padding: 8px 15px;
+      h4 {
+        @include single-text-shadow(#DDD, 0, 1px);
+        font-weight: normal;
+        cursor: default;
+      }
+    }
+    > .meat {
+      @include clearfix();
+      padding: 10px 15px;
+      background: #FFF;
     }
   }
   .profile-image {
@@ -500,12 +509,6 @@ header {
       }
     }    
   }
-  p {
-    margin: 0 0 10px 10px;
-  }
-  ul {
-    margin: 0 0 10px 10px;
-  }
   .menu {
     margin: 0px;
     a {
@@ -540,14 +543,15 @@ header {
   }
   .sidebar-talk-form {
     input {
-      width: 168px;
-      margin: 0 0 10px 10px;
+      @include border-radius(1px);
+      width: 152px;
+      margin: 5px 0;
+      padding: 6px 8px;
     }
-  }           
+  }
   .sidebar-footer {
-    padding-bottom: 10px;
     a {
-      margin-left: 10px;
+      margin-right: 10px;
     }
   }
 }

@@ -2,10 +2,15 @@
   <div class="btn edit-btn">Edit</div>
 <% end %>
 
-<p>Foo efoia seofin aseofin aseoi nfasoei nfaosien faosine f</p>
+<% if @topic.get('summary'): %>
+  <p><%= @topic.get('summary') %></p>
+<% end %>
 
-<h4>Also Known As</h4>
-<ul class='unstyled'>
-  <li>Foo</li>
-  <li>Bar</li>
-</ul>
+<% if @topic.get('aliases').length > 0: %>
+  <h4>Also Known As</h4>
+  <ul class='unstyled'>
+    <% for name in @topic.get('aliases'): %>
+    <li><%= name.name %></li>
+    <% end %>
+  </ul>
+<% end %>

@@ -1,2 +1,7 @@
-<h4>Influence Increases</h4>
-<ul class='unstyled'></ul>
+<div class='top'>
+  <h4>Influence Increases</h4>
+</div>
+
+<div class='meat'>
+  <ul class='unstyled'></ul>
+</div>

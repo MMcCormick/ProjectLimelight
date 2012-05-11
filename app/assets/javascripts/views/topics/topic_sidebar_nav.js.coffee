@@ -8,6 +8,7 @@ class LL.Views.TopicSidebarNav extends Backbone.View
   initialize: ->
 
   render: ->
+    console.log @model
     $(@el).html(@template(topic: @model))
 
     score = new LL.Views.Score(model: @model)

@@ -217,6 +217,7 @@ class TopicsController < ApplicationController
     if params[:url]
       topic.remote_image_url = params[:url]
       topic.save_remote_image(true)
+      topic.save
     end
 
     url = topic.image_url(:fit, :large)

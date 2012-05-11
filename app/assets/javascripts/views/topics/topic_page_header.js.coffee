@@ -2,12 +2,7 @@ class LL.Views.TopicPageHeader extends Backbone.View
 
   render: =>
     header = new LL.Views.PageHeader(model: @model)
-
-    if @model.get('primary_type')
-      header.title = "#{@model.get('name')} - #{@model.get('primary_type')}"
-    else
-      header.title = @model.get('name')
-
+    header.title = @model.get('name')
     header.showScore = true
     header.showFollow = true
     header.links = [

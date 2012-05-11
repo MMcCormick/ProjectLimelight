@@ -437,11 +437,17 @@ header {
         font-weight: normal;
         cursor: default;
       }
+      h5 {
+        font-weight: normal;
+      }
     }
     > .meat {
       @include clearfix();
       padding: 10px 15px;
       background: #FFF;
+      h5 {
+        margin: 15px 0 0 0;
+      }
     }
   }
   .profile-image {

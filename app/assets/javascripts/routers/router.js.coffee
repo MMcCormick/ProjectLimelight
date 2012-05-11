@@ -14,6 +14,7 @@ class LL.Router extends Backbone.Router
     'settings': 'settings'
     'activity': 'activityFeed'
     'likes': 'likeFeed'
+    'influence': 'userInfluence'
     ':id/followers': 'topicFollowers'
     ':id': 'topicFeed'
     '': 'userFeed'
@@ -146,6 +147,7 @@ class LL.Router extends Backbone.Router
       screen = LL.App.newScreen('user_influence', id)
 
       page_header = new LL.Views.UserPageHeader(model: user)
+      page_header.page = 'influence'
       screen['components'].push(page_header)
 
       sidebar = LL.App.findSidebar('user', id)
@@ -153,11 +155,9 @@ class LL.Router extends Backbone.Router
         sidebar = LL.App.createSidebar('user', id, user)
       screen['sidebar'] = sidebar
 
-      collection = new LL.Collections.InfluenceIncreases()
-      view = new LL.Views.UserInfluence(collection: collection)
+      view = new LL.Views.UserInfluence()
+      view.user = user
       screen['components'].push(view)
-
-      collection.fetch({data: {id: user.get('slug'), limit: 10, with_post: true}})
 
       LL.App.renderScreen('user_influence', id)
 

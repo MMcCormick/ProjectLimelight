@@ -16,6 +16,8 @@ ProjectLimelight::Application.routes.draw do
       get 'following_topics' => 'users#following_topics'
       get 'followers' => 'users#followers'
       get 'influence_increases' => 'users#user_influence_increases'
+      get 'influencer_topics' => 'users#influencer_topics'
+      get 'almost_influencer_topics' => 'users#almost_influencer_topics'
       post '' => 'users#create'
       put '' => 'users#update'
       get '' => 'users#show'
@@ -116,6 +118,7 @@ ProjectLimelight::Application.routes.draw do
   get 'settings' => 'users#settings', :as => :user_settings
   get 'activity' => 'users#show'
   get 'likes' => 'users#show'
+  get 'influence' => 'users#show'
   get '/posts/:id' => 'posts#show'
   get '/talks/:id' => 'posts#show'
 

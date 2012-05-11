@@ -449,9 +449,9 @@ class User
     end
   end
 
-  def influence_increases(limit, with_post=false)
+  def influence_increases(limit, full=false)
     increases = []
-    actions = PopularityAction.where("pop_snippets._id" => id, "pop_snippets.ot" => 'Topic').order_by(:et, :desc).limit(limit).to_a
+    actions = PopularityAction.where("pop_snippets._id" => id, "pop_snippets.ot" => 'Topic').order_by(:et, :desc).limit(limit)
 
     actions.each do |action|
       action.pop_snippets.each do |snip|
@@ -462,6 +462,7 @@ class User
           inc.post_id = action.oid
           inc.object_type = action.pop_snippets[0].ot
           inc.action = action.t
+          inc.triggered_by_id = action.user_id
           increases << inc
         end
       end
@@ -471,17 +472,26 @@ class User
     tmp_topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
     tmp_topics.each {|t| topics[t.id.to_s] = t}
 
-    if with_post
+    if full
       posts = {}
-      tmp_posts = Post.where(:_id.in => increases.map{|i| i.post_id})
+      post_ids = increases.map{|i| i.post_id}
+      tmp_posts = Post.where(:_id.in => post_ids).to_a
       tmp_posts.each {|t| posts[t.id.to_s] = t}
+
+      triggered = {}
+      tmp_triggered = User.where(:_id.in => increases.map{|i| i.triggered_by_id})
+      tmp_triggered.each {|t| triggered[t.id.to_s] = t}
     end
 
     increases.each do |increase|
       increase.topic = topics[increase.topic_id.to_s]
-      increase.post = posts[increase.post_id.to_s] if with_post
+      if full
+        increase.post = posts[increase.post_id.to_s]
+        increase.triggered_by = triggered[increase.triggered_by_id.to_s]
+      end
+      foo = increase
     end
-    increases.last(limit)
+    increases.first(limit)
   end
 
   def update_social_denorms

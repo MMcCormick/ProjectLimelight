@@ -79,7 +79,7 @@ class Notification
       when :mention
         "mentioned you in a post"
       when :repost
-        "reposted \"#{object.short_name}\""
+        "liked \"#{object.short_name}\""
       when :comment
         "commented on \"#{object.short_name}\""
       when :also # also signifies that someone has also responded to something your responded to

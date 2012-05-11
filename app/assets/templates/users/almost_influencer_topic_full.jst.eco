@@ -1,0 +1,10 @@
+<a class="tlink" href="/<%= @almost_influencer_topic.get('topic').get('slug') %>" data-id='<%= @almost_influencer_topic.get('topic').get('id') %>'>
+  <img src='<%= @almost_influencer_topic.get('topic').get('images').square.small %>' />
+  <h4>
+    <%= @almost_influencer_topic.get('topic').get('name') %>
+  </h4>
+</a>
+<div class="stats">
+  <span class="offset"><%= @almost_influencer_topic.get('offset') %></span>
+  pts away with <span class="influence"><%= @almost_influencer_topic.get('influence') %></span> pts
+</div>

@@ -1,0 +1,101 @@
+#sidebar-influences {
+  max-height: 450px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .none {
+    margin: 0 10px -10px 0;
+    padding: 0px;
+    min-height: 0px;
+  }
+  li {
+    margin: 10px 0 0 0;
+    padding:  0 0 0 60px;
+    position: relative;
+    min-height: 50px;
+
+    img {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      top: 50%;
+      left: 0px;
+      margin-top: -25px;
+    }
+    .amount {
+      margin: 0 0 0 0;
+      font-size: 13px;
+      cursor: default;
+    }
+    .name {
+      font-size: 11px;
+    }
+  }
+}
+
+.content-tile {
+  .increases,
+  .influencer-topics,
+  .almost-influencer-topics {
+    li {
+      position: relative;
+      padding: 5px 0 5px 70px;
+      min-height: 50px;
+      border-bottom: 1px solid $grayLighter;
+      &.last { border: none; }
+      img {
+        position: absolute;
+        left: 0px;
+      }
+      &.none {
+        padding-left: 0px;
+      }
+    }
+  }
+  .increases {
+    li {
+      .amount {
+        margin: 5px 0 3px;
+        .tlink {
+          color: $grayDark;
+          font-weight: bold;
+        }
+      }
+      .name {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .ulink {
+        color: $grayDark;
+        font-weight: bold;
+      }
+      .plink {
+        cursor: pointer;
+        &:hover { color: $blue !important; }
+      }
+    }
+  }
+  .influencer-topics,
+  .almost-influencer-topics {
+    .meat {
+      // -11 + 61px per topic (including border)
+      max-height: 294px;
+      overflow-y: auto;
+    }
+    margin-right: 6px;
+    .tlink h4 {
+      margin: 5px 0 2px;
+    }
+    .rank,
+    .influence,
+    .offset {
+      font-size: 16px;
+      position: relative;
+      bottom: -1px;
+      font-weight: bold;
+    }
+  }
+  .almost-influencer-topics {
+    margin-left: 0px;
+  }
+}

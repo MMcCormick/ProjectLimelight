@@ -615,6 +615,7 @@ module Limelight #:nodoc:
           topic_mentions.each do |mention|
             if type != :new || (type == :new && mention.first_mention)
               affected_topic_ids << mention.id
+              foo = affected_topic_ids
 
               action.pop_snippets.new(:amount => topic_amt, :id => mention.id, :object_type => "Topic")
               Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
@@ -627,6 +628,7 @@ module Limelight #:nodoc:
           end
           # Update the popularities on affected objects
           unless affected_topic_ids.empty?
+            foo = affected_topic_ids
             Topic.collection.update(
               {:_id => {"$in" => affected_topic_ids}},
               {
@@ -635,7 +637,7 @@ module Limelight #:nodoc:
                   "influencers."+user_id.to_s+".influence" => topic_amt
                 }
               },
-              {:upsert => true}
+              {:upsert => true, :multi => true}
             )
           end
         end

@@ -76,8 +76,9 @@ platforms :ruby do
   gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
   gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
   gem 'heroku'
-  gem 'rpm_contrib', '2.1.7' # extra instrumentation for the new relic rpm agent
-  gem 'newrelic_rpm' # performance / server monitoring
+  gem 'rpm_contrib', '2.1.9' # extra instrumentation for the new relic rpm agent
+  gem 'newrelic-redis', '1.2.0' # new relic redis instrumentation
+  gem 'newrelic-faraday'
 
   group :development do
     gem "foreman"

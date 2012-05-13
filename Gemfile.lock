@@ -175,6 +175,13 @@ GEM
       net-ssh (>= 1.99.1)
     net-ssh (2.3.0)
     netrc (0.7.1)
+    newrelic-faraday (0.6.2)
+      faraday (< 0.8)
+      faraday (>= 0.6)
+      newrelic_rpm (~> 3.0)
+    newrelic-redis (1.2.0)
+      newrelic_rpm (~> 3.0)
+      redis (< 3.0)
     newrelic_rpm (3.3.4.1)
     nokogiri (1.5.2)
     oauth (0.4.6)
@@ -248,7 +255,7 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rmagick (2.13.1)
-    rpm_contrib (2.1.7)
+    rpm_contrib (2.1.9)
       newrelic_rpm (>= 3.1.1)
       newrelic_rpm (>= 3.1.1)
     rspec (2.10.0)
@@ -342,7 +349,8 @@ DEPENDENCIES
   mongoid_auto_inc
   mongoid_slug
   neography
-  newrelic_rpm
+  newrelic-faraday
+  newrelic-redis (= 1.2.0)
   omniauth-facebook
   omniauth-twitter
   pusher
@@ -353,7 +361,7 @@ DEPENDENCIES
   resque-loner
   resque-scheduler (= 2.0.0.h)
   rmagick
-  rpm_contrib (= 2.1.7)
+  rpm_contrib (= 2.1.9)
   rspec-rails
   sass-rails (~> 3.2.3)
   soulmate (= 0.1.2)

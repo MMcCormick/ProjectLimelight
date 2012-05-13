@@ -59,6 +59,8 @@ class Topic
   field :datasift_enabled, :default => false
   field :datasift_tags, :default => []
   field :datasift_last_pushed
+  field :fb_page_id
+  field :website
 
   auto_increment :public_id
 

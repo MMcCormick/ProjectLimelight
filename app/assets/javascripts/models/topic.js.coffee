@@ -5,10 +5,7 @@ class LL.Models.Topic extends Backbone.Model
 
   # check if it's in the master identity map
   parse: (resp, xhr) ->
-    if LL.App.Topics.get(resp.id)
-      null
-    else
-      LL.App.Topics.findOrCreate(resp.id, resp)
+    LL.App.Topics.findOrCreate(resp.id, resp)
 
   scorePretty: ->
     parseInt @get('score')

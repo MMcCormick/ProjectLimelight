@@ -182,9 +182,10 @@ class User
   # Pull image from Gravatar
   def save_profile_image
     facebook = get_social_connect 'facebook'
-    @remote_image_url = if facebook
-                          self.use_fb_image = true
-                        end
+    if facebook
+      self.use_fb_image = true
+      save
+    end
   end
 
   def recalculate_vote_ratio
@@ -666,7 +667,7 @@ class User
           connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
 
           user.social_connects << connect
-          user.use_fb_image = true if user.image_versions == 0
+          user.use_fb_image = true if omniauth['provider'] == 'facebook' && user.image_versions == 0
           user.update_social_denorms
         end
         # Update the token

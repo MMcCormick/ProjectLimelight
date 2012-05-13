@@ -9,7 +9,7 @@
   <div class="modal-body"></div>
   <div class="modal-footer">
     <div class="social">
-      <div class="fb-like" data-href="http://www.facebook.com/pages/Limelight/240530529343415" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+      <div class="fb-like" data-href="http://www.facebook.com/DiscoverLimelight" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
       <a href="https://twitter.com/share?url=http://projectlimelight.com&text=foo bar" class="twitter-share-button" data-lang="en">Tweet</a>
       <div class="google">
         <div class="g-plusone" data-size="medium" data-href="http://projectlimelight.com"></div>

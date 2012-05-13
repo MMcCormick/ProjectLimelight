@@ -198,7 +198,7 @@ Devise.setup do |config|
     ENV['FACEBOOK_APP_ID'] = '121044708007507'
     ENV['FACEBOOK_APP_SECRET'] = '812c097d7a4b36893a736614b1cbd2f4'
   end
-  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV["FACEBOOK_APP_SECRET"], {:scope => 'email,offline_access,user_birthday,user_education_history,user_hometown'}
+  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV["FACEBOOK_APP_SECRET"], {:scope => 'email,user_about_me,user_birthday,user_hometown,user_interests,user_likes,publish_stream'}
 
   if Rails.env.development?
     ENV['TWITTER_KEY'] = 'ZG0pbDrqivgwyBUFRUtmg'

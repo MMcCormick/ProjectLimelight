@@ -41,11 +41,13 @@ group :assets do
 
   gem 'closure-compiler'
 
+  gem 'asset_sync'
+
   gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
 
 group :production do
-  gem 'asset_sync' # can maybe move this to assets group?
+
 end
 
 group :production, :staging do

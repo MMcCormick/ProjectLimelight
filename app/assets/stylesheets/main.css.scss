@@ -232,7 +232,7 @@ header {
     .talk {
       @include border-radius(2px);
       position: absolute;
-      top: 4px;
+      top: 5px;
       left: 250px;
       font-size: 18px;
       padding: 7px 14px 7px 12px;
@@ -289,7 +289,7 @@ header {
     color: $grayLightest;
     cursor: pointer;
     height: 32px;
-    padding: 11px 10px 0 12px;
+    padding: 12px 10px 0 12px;
     
     i {
       margin: 3px 0 0 4px;

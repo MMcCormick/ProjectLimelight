@@ -48,25 +48,33 @@ $feedFontColor: $grayDark;
   }
 
   .root {
-    padding: 10px 15px 10px;
     position: relative;
     background: #FFF;
+    padding: 0 0 10px 0;
 
     h5 {
       cursor: pointer;
+      padding: 7px 15px 7px;
+      background: #F9F9F9;
+      border-bottom: 1px solid #EEE;
+      font-size: 13px;
+      line-height: 19px;
+      &:hover {
+        background: #F6F6F6;
+        border-bottom-color: #DDD;
+      }
     }
     .when {
       color: $grayLight;
       font-size: 11px;
-      margin: 3px 0 0 0;
+      margin: 10px 0 0 16px;
       a {
         color: $grayDark;
       }
     }
     .img {
-      @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-      margin-top: 8px;
-      margin-bottom: 4px;
+      padding: 5px;
+      margin: 3px 0 -1px 10px;
       position: relative;
       cursor: pointer;
       overflow-y: auto;
@@ -75,6 +83,7 @@ $feedFontColor: $grayDark;
       min-height: 50px;
 
       img {
+        @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
         max-width: 210px;
       }
       .ll-video-play {
@@ -103,6 +112,15 @@ $feedFontColor: $grayDark;
       margin
       span {
         font-size: 13px;
+      }
+    }
+    .response-divider {
+      width: 240px;
+      height: 15px;
+      margin: 10px 0 -10px 0;
+      background: {
+        image: image-url("tile-response-divider.png");
+        repeat: no-repeat;
       }
     }
     &.link,
@@ -138,7 +156,6 @@ $feedFontColor: $grayDark;
   }
 
   .bottom-sheet {
-    @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, -1px, 4px);
     position: absolute;
     bottom: 0px;
     left: 0px;
@@ -147,13 +164,25 @@ $feedFontColor: $grayDark;
     z-index: 1;
     display: none;
     border-top: 1px solid #BBB;
+    border-bottom: 1px solid #BBB;
 
     &.static {
       @include single-box-shadow(none);
       position: relative;
-      left: -15px;
       top: 7px;
-      width: 240px;
+      width: 210px;
+      padding: 0 15px;
+      .mentions,
+      .actions {
+        left: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+      }
+      .mentions {
+        .head {
+          left: 0px;
+        }
+      }
     }
     .bg {
       @include opacity(95);
@@ -294,7 +323,7 @@ $feedFontColor: $grayDark;
   .root-talk {
     padding: 0 0 9px 40px;
     .top-right {
-      top: -4px;
+      top: -10px;
     }
     .actions {
       background: #FFF;
@@ -306,7 +335,6 @@ $feedFontColor: $grayDark;
   .responses {
     background-color: #FBFBFB;
     padding: 10px 15px 0;
-    margin-top: 2px;
 
     .talking {
       font-weight: bold;

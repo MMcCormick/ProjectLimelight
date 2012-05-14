@@ -3,10 +3,9 @@
   background: #F9F9F9;
   padding: 0;
   border-top: 1px solid #DDD;
-  border-left: 1px solid #DDD;
-  border-right: 1px solid #DDD;
   display: none;
   position: relative;
+  margin: 0 -15px -10px -15px;
 
   .ll-grey-arrow-up {
     position: absolute;
@@ -15,14 +14,14 @@
   }
   li {
     position: relative;
-    padding: 9px 0 10px 50px;
+    padding: 9px 0 10px 55px;
     min-height: 30px;
     border-bottom: 1px solid #DDD;
 
     img {
       position: absolute;
       top: 10px;
-      left: 10px;
+      left: 15px;
       width: 30px;
       height: 30px;
     }

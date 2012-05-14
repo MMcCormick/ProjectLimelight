@@ -8,7 +8,6 @@ end
 class TestingController < ApplicationController
 
   def test
-    Resque.enqueue(AutoFollowFBLikes, current_user.id.to_s)
   end
 
   def something

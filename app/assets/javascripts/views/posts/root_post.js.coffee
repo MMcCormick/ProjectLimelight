@@ -41,12 +41,15 @@ class LL.Views.RootPost extends Backbone.View
     LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
 
   renderResponses: =>
+    hasResponses = false
 
     if !@like_responses
       like_responses_view = new LL.Views.RootResponses(model: @model)
       like_responses_view.type = 'like'
       like_responses_view.target = $(@el)
       @like_responses = like_responses_view
+      if @model.get('like_responses').length > 0
+        hasResponses = true
 
     @like_responses.render()
 
@@ -55,6 +58,8 @@ class LL.Views.RootPost extends Backbone.View
       activity_responses_view.type = 'activity'
       activity_responses_view.target = $(@el)
       @activity_responses = activity_responses_view
+      if @model.get('activity_responses').length > 0
+        hasResponses = true
 
     @activity_responses.render()
 
@@ -63,6 +68,8 @@ class LL.Views.RootPost extends Backbone.View
       personal_responses_view.type = 'personal'
       personal_responses_view.target = $(@el)
       @personal_responses = personal_responses_view
+      if @model.get('personal_responses').length > 0
+        hasResponses = true
 
     @personal_responses.render()
 
@@ -71,8 +78,13 @@ class LL.Views.RootPost extends Backbone.View
       public_responses_view.type = 'public'
       public_responses_view.target = $(@el)
       @public_responses = public_responses_view
+      if @model.get('public_responses').length > 0
+        hasResponses = true
 
     @public_responses.render()
+
+    if hasResponses == true
+      $(@el).find('.root').append("<div class='response-divider'></div>")
 
   moveToTop: =>
     $(@el).html('')

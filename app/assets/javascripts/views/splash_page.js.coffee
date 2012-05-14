@@ -29,24 +29,42 @@ class LL.Views.SplashPage extends Backbone.View
 
   showLogin: =>
     @hideAll()
-    $(@el).find('.beta-login').slideDown(300)
+    self = @
+    setTimeout ->
+      $(self.el).find('.beta-login').slideDown(300)
+    , 300
 
   showRegister: =>
     @hideAll()
-    $(@el).find('.beta-register').slideDown(300)
+    self = @
+    setTimeout ->
+      $(self.el).find('.beta-register').slideDown(300)
+    , 300
 
   showInvite: =>
     @hideAll()
-    $(@el).find('.invite-form').slideDown(300)
+    self = @
+    setTimeout ->
+      $(self.el).find('.invite-form').slideDown(300)
+    , 300
 
   showEnter: =>
     @hideAll()
-    $(@el).find('.beta-signup').slideDown(300)
+    self = @
+    setTimeout ->
+      $(self.el).find('.beta-signup').slideDown(300)
+    , 300
 
   showAbout: =>
     @hideAll()
-    $(@el).find('.meat .beta-about').slideDown(300)
+    self = @
+    setTimeout ->
+      $(self.el).find('.meat .beta-about').slideDown(300)
+    , 300
 
   showTeam: =>
     @hideAll()
-    $(@el).find('.meat .beta-team').slideDown(300)
+    self = @
+    setTimeout ->
+      $(self.el).find('.meat .beta-team').slideDown(300)
+    , 300

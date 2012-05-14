@@ -26,7 +26,6 @@ gem 'airbrake' # Exception notification
 gem 'soulmate', '0.1.2', :require => 'soulmate/server' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
-gem 'ken' # Freebase API for Ruby
 gem 'neography' # neo4j graph database
 gem 'backbone-on-rails'
 gem 'asset_sync' # can maybe move this to assets group?

@@ -45,7 +45,7 @@ group :assets do
   gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
 
-group :production do
+group :production, :staging do
   gem 'thin'
 end
 

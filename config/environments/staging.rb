@@ -14,10 +14,10 @@ ProjectLimelight::Application.configure do
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
-  # Don't fallback to assets pipeline if a precompiled asset is missed
+  # Don't fallback to assets pipeline if a precompiled asset is missing
   config.assets.compile = true
 
-  # Generate digests for assets URLs
+  # Generate digets for assets URLs
   config.assets.digest = true
 
   # use the closure library to minify js
@@ -26,9 +26,6 @@ ProjectLimelight::Application.configure do
   config.static_cache_control = "public, max-age=2592000"
 
   config.action_controller.asset_host = 'http://static.p-li.me'
-
-  # Defaults to Rails.root.join("public/assets")
-  # config.assets.manifest = YOUR_PATH
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -68,7 +65,7 @@ ProjectLimelight::Application.configure do
   config.active_support.deprecation = :notify
 
   # Enable threaded mode
-  config.threadsafe!
+  #config.threadsafe!
 
   # ActionMailer Config
   # Setup for production - deliveries, no errors raised

@@ -1,5 +1,6 @@
 class FollowsController < ApplicationController
   before_filter :authenticate_user!
+  include ModelUtilitiesHelper
 
   respond_to :json
 
@@ -23,9 +24,9 @@ class FollowsController < ApplicationController
           fb = current_user.facebook
           if fb
             if params[:type] == 'User'
-              fb.put_connections("me", "limelight_staging:follow", :profile => user_url(current_user))
+              fb.put_connections("me", "#{og_namespace}:follow", :profile => user_url(target))
             else
-              fb.put_connections("me", "limelight_staging:follow", :topic => '')
+              fb.put_connections("me", "#{og_namespace}:follow", :topic => '')
             end
           end
 
@@ -58,6 +59,16 @@ class FollowsController < ApplicationController
 
           if target.save && current_user.save
             track_mixpanel("Unfollow #{params[:type]}", current_user.mixpanel_data.merge(target.mixpanel_data(params[:type] == 'User' ? '2 ' : nil)))
+          end
+
+          # delete from facebook open graph
+          fb = current_user.facebook
+          if fb
+            if params[:type] == 'User'
+              fb.delete_connections("me", "#{og_namespace}:follow", :profile => user_url(target))
+            else
+              fb.delete_connections("me", "#{og_namespace}:follow", :topic => '')
+            end
           end
 
           response = build_ajax_response(:ok, nil, nil, nil, { })

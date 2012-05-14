@@ -332,9 +332,9 @@ class Post
   def og_type
     case _type
       when "Talk"
-        "talk"
+        og_namespace + ":talk"
       when "Picture"
-        "picture"
+        og_namespace + ":picture"
       when "Video"
         "video.other"
       when "Link"

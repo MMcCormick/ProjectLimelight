@@ -32,4 +32,15 @@ module ModelUtilitiesHelper
     end
   end
 
+  def og_namespace
+    case Rails.env
+      when "development"
+        "projectlimelight_dev"
+      when "staging"
+        "limelight_staging"
+      when "development"
+        "project_limelight"
+    end
+  end
+
 end

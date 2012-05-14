@@ -178,5 +178,4 @@ module ApplicationHelper
     }
     data.to_json
   end
-
 end

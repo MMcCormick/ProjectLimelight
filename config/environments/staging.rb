@@ -20,14 +20,15 @@ ProjectLimelight::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
+  # use the closure library to minify js
+  config.assets.js_compressor = :closure
+
   config.static_cache_control = "public, max-age=2592000"
+
+  config.action_controller.asset_host = 'http://static.p-li.me'
 
   # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
-
-  # Specifies the header that your server uses for sending files
-  # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
-  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true

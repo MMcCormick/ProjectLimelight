@@ -119,7 +119,7 @@ GEM
       rest-client (~> 1.6.1)
       rubyzip
     hike (1.2.1)
-    hirefireapp (0.0.7)
+    hirefireapp (0.0.8)
     httparty (0.8.1)
       multi_json
       multi_xml

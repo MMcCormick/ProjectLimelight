@@ -14,20 +14,18 @@ ProjectLimelight::Application.configure do
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
-  # Don't fallback to assets pipeline if a precompiled asset is missed
+  # Don't fallback to assets pipeline if a precompiled asset is missing
   config.assets.compile = true
 
-  # Generate digests for assets URLs
+  # Generate digets for assets URLs
   config.assets.digest = true
+
+  # use the closure library to minify js
+  config.assets.js_compressor = :closure
 
   config.static_cache_control = "public, max-age=2592000"
 
-  # Defaults to Rails.root.join("public/assets")
-  # config.assets.manifest = YOUR_PATH
-
-  # Specifies the header that your server uses for sending files
-  # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
-  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
+  config.action_controller.asset_host = 'http://static.p-li.me'
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -67,11 +65,11 @@ ProjectLimelight::Application.configure do
   config.active_support.deprecation = :notify
 
   # Enable threaded mode
-  config.threadsafe!
+  #config.threadsafe!
 
   # ActionMailer Config
   # Setup for production - deliveries, no errors raised
-  ActionMailer::Base.register_interceptor(StagingMailInterceptor)
+  #ActionMailer::Base.register_interceptor(StagingMailInterceptor)
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false

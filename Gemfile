@@ -26,10 +26,8 @@ gem 'airbrake' # Exception notification
 gem 'soulmate', '0.1.2', :require => 'soulmate/server' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
-gem 'ken' # Freebase API for Ruby
 gem 'neography' # neo4j graph database
 gem 'backbone-on-rails'
-gem 'asset_sync' # can maybe move this to assets group?
 gem 'datasift' # streaming api access (twitter, facebook, youtube, etc)
 gem 'mixpanel' # analytics
 
@@ -43,10 +41,16 @@ group :assets do
 
   gem 'closure-compiler'
 
+  gem 'asset_sync'
+
   gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
 
 group :production do
+
+end
+
+group :production, :staging do
   gem 'thin'
 end
 

@@ -8,11 +8,12 @@ class UsersController < ApplicationController
     @this = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
 
     not_found("User not found") unless @this
-    @title = @this.username
-    @description = "Everything #{@this.username} on Limelight."
 
     if params[:show_og] && params[:id] != "0"
-      @og_tags = build_og_tags(@title, "profile", user_url(@this), @this.image_url(:fit, :large), [["og:username", @this.username]])
+      @title = @this.username
+      @description = "#{@this.username}'s profile on Limelight. #{@this.username} is following #{@this.following_users_count} users"+
+          " and #{@this.following_topics_count} topics. #{@this.username} has #{@this.followers_count} followers."
+      @og_tags = build_og_tags(@title, "profile", user_url(@this), @this.image_url(:fit, :large), @description, [["og:username", @this.username]])
     end
   end
 
@@ -142,8 +143,9 @@ class UsersController < ApplicationController
       render "show"
     else
       @title = 'Welcome to Limelight!'
-      @description = "The Limelight splash page, where users are directed to sign in"
+      @description = "Limelight is a real-time news and discussion platform where users follow and discuss topics with their social network."
       @show = params[:show] ? params[:show].to_sym : false
+      @og_tags = build_og_tags("Limelight", "website", root_url, "http://static.p-li.me.s3.amazonaws.com/assets/images/splash-logo.png", @description)
 
       render "splash", :layout => "blank"
     end

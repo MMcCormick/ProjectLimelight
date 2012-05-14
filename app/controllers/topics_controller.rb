@@ -20,6 +20,9 @@ class TopicsController < ApplicationController
       @topics = @topics.skip(params[:limit].to_i * (params[:page].to_i-1))
     end
 
+    @title = "All Topics"
+    @description = "A list of all the topics on Limelight."
+
     render :json => @topics.map {|t| t.as_json}
   end
 
@@ -35,8 +38,8 @@ class TopicsController < ApplicationController
     authorize! :read, @this
 
     @title = @this.name
-    @description = @this.summary
-    @og_tags = build_og_tags(@title, og_namespace+":topic", topic_url(@this), @this.image_url(:fit, :large))
+    @description = @this.summary ? @this.summary : "All posts about the #{@this.name} topic on Limelight. #{@this.followers_count} people are following #{@this.name}"
+    @og_tags = build_og_tags(@title, og_namespace+":topic", topic_url(@this), @this.image_url(:fit, :large), @description)
 
     respond_to do |format|
       format.html

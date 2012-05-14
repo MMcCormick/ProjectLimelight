@@ -160,12 +160,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def build_og_tags(title, type, url, image, extra=[])
+  def build_og_tags(title, type, url, image, desc, extra=[])
     og_tags = []
     og_tags << ["og:title", title]
     og_tags << ["og:type", type]
     og_tags << ["og:url", url]
     og_tags << ["og:image", image]
+    og_tags << ["og:description", desc]
     extra.each do |e|
       og_tags << [e[0], e[1]]
     end

@@ -19,6 +19,16 @@ class FollowsController < ApplicationController
             track_mixpanel("Follow #{params[:type]}", current_user.mixpanel_data.merge(target.mixpanel_data(params[:type] == 'User' ? '2 ' : nil)))
           end
 
+          # post to facebook open graph
+          fb = current_user.facebook
+          if fb
+            if params[:type] == 'User'
+              fb.put_connections("me", "limelight_staging:follow", :profile => user_url(current_user))
+            else
+              fb.put_connections("me", "limelight_staging:follow", :topic => '')
+            end
+          end
+
           response = build_ajax_response(:ok, nil, "You're following #{target.name}", nil, { })
           status = 201
         else

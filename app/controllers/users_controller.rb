@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     @description = "Everything #{@this.username} on Limelight."
 
     if params[:show_og] && params[:id] != "0"
-      @og_tags = build_og_tags(@title, "profile", user_path(@this), @this.image_url(:fit, :large), [["og:profile:username", @this.username]])
+      @og_tags = build_og_tags(@title, "profile", user_url(@this), @this.image_url(:fit, :large), [["og:profile:username", @this.username]])
     end
   end
 

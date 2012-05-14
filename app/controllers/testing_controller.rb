@@ -8,6 +8,25 @@ end
 class TestingController < ApplicationController
 
   def test
+    fb = current_user.facebook
+    og_id = fb.put_connections("me", "#{og_namespace}:follow", :profile => "http://localhost:3000/users/marc2")
+    if og_id
+
+      case action
+        when 'follow'
+          ll_action = ActionFollow.where(:from_id => user_id, :to_id => target_id, :action => 'create').order_by(:created_at, :desc).first
+        when 'like'
+          ll_action = ActionLike.where(:from_id => user_id, :to_id => target_id, :action => 'create').order_by(:created_at, :desc).first
+        else
+          ll_action = nil
+      end
+
+      if ll_action
+        ll_action.og_id = og_id
+        ll_action.save
+      end
+
+    end
   end
 
   def something

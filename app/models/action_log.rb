@@ -6,7 +6,14 @@ class ActionLog
   field :fid, :as => :from_id
   field :tid, :as => :to_id
 
-  index :fid
-  index :tid
+  index(
+    [
+      [ :_type, Mongo::DESCENDING ],
+      [ :fid, Mongo::DESCENDING ],
+      [ :tid, Mongo::DESCENDING ],
+      [ :a, Mongo::DESCENDING ],
+      [ :created_at, Mongo::DESCENDING ]
+    ]
+  )
 
 end

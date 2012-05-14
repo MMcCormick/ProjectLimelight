@@ -47,5 +47,5 @@
     </li>
   </ul>
 <% else: %>
-  <div>Login</div>
+  <div class='login btn btn-success'>Login</div>
 <% end %>

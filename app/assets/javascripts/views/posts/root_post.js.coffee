@@ -84,7 +84,7 @@ class LL.Views.RootPost extends Backbone.View
     @public_responses.render()
 
     if hasResponses == true
-      $(@el).find('.root').append("<div class='response-divider'></div>")
+      $(@el).find('.root').append("<div class='response-divider'><div class='ll-grey-arrow-up'></div></div>")
 
   moveToTop: =>
     $(@el).html('')

@@ -133,7 +133,7 @@ class PostsController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     topic_ids = Neo4j.pull_from_ids(topic.id).to_a
-    posts = Post.topic_feed(topic_ids << topic.id, current_user.id, session[:feed_filters][:display], params[:sort], page)
+    posts = Post.topic_feed(topic_ids << topic.id, (signed_in? ? current_user.id : nil), session[:feed_filters][:display], params[:sort], page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
   end
 

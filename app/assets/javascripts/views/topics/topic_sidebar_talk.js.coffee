@@ -14,6 +14,10 @@ class LL.Views.TopicSidebarTalk extends Backbone.View
     @
 
   loadPostForm: =>
+    unless LL.App.current_user
+      LL.LoginBox.showModal()
+      return
+
     view = new LL.Views.PostForm()
     view.modal = true
     view.placeholder_text = "Talk about #{@model.get('name')}..."

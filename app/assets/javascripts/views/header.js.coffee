@@ -6,7 +6,7 @@ class LL.Views.Header extends Backbone.View
 
   initialize: ->
     # only show if the user is not doing the tutorial
-    if @model && @model.get('tutorial_step') == 0
+    if (@model && @model.get('tutorial_step') == 0) || (!@model && window.location.pathname != '/')
       @render()
 
   render: =>
@@ -14,6 +14,10 @@ class LL.Views.Header extends Backbone.View
     $(@el).append(header_user_nav.render().el)
 
   loadPostForm: ->
+    unless LL.App.current_user
+      LL.LoginBox.showModal()
+      return
+
     view = new LL.Views.PostForm()
     view.modal = true
     view.render()

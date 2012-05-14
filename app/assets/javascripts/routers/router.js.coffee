@@ -434,7 +434,8 @@ class LL.Router extends Backbone.Router
       when "contact"
         foo = "bar"
       when "help"
-        view = new LL.Views.PostForm()
-        view.placeholder_text = "Suggest something!"
-        $('.content-tile section').append(view.render().el)
-        view.addTopic($(view.el).find('#post-form-mention1'), "Limelight Feedback", 'foo', "limelight-feedback")
+        if LL.App.current_user
+          view = new LL.Views.PostForm()
+          view.placeholder_text = "Suggest something!"
+          $('.content-tile section').append(view.render().el)
+          view.addTopic($(view.el).find('#post-form-mention1'), "Limelight Feedback", 'foo', "limelight-feedback")

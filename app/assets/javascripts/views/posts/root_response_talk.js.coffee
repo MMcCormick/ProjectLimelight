@@ -34,6 +34,10 @@ class LL.Views.RootResponseTalk extends Backbone.View
     $(@el).find('.comment-form span').text(parseInt($(@el).find('.comment-form span').text()) + 1)
 
   commentForm: (e) =>
+    unless LL.App.current_user
+      LL.LoginBox.showModal()
+      return
+
     self = @
     view = new LL.Views.CommentForm(model: @model)
     view.modal = true

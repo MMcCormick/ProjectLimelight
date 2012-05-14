@@ -5,6 +5,7 @@ class LL.Views.CommentForm extends Backbone.View
   events:
       "click .submit": "createComment"
       "click .close,.cancel": "destroyForm"
+      "click textarea": "requireLogin"
       "keydown textarea": "catchEnter"
 
   initialize: ->
@@ -52,3 +53,9 @@ class LL.Views.CommentForm extends Backbone.View
       $(@qtip).qtip('destroy')
     else
       $(@el).find('textarea').val('').blur()
+
+  requireLogin: =>
+    unless LL.App.current_user
+      $(@el).find('textarea').blur()
+      LL.LoginBox.showModal()
+      return

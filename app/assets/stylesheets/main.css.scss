@@ -229,13 +229,20 @@ header {
         left: 0px;
       }
     }
-    .talk {
+    .talk,
+    .login {
       @include border-radius(2px);
       position: absolute;
       top: 5px;
-      left: 250px;
       font-size: 18px;
+    }
+    .talk {
+      left: 250px;
       padding: 7px 14px 7px 12px;
+    }
+    .login {
+      padding: 7px 12px;
+      right: 0px;
     }
   }
 }
@@ -427,6 +434,7 @@ header {
     @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
     @include clearfix();
 
+    background: #FFF;
     margin: 10px;
     .top {
       background: $grayLightest;

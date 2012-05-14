@@ -30,6 +30,10 @@ class LL.Views.ResponseTalk extends Backbone.View
     @
 
   commentForm: (e) =>
+    unless LL.App.current_user
+      LL.LoginBox.showModal()
+      return
+
     self = @
     view = new LL.Views.CommentForm(model: @model)
     view.modal = true

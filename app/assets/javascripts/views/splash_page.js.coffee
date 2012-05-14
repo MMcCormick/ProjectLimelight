@@ -1,5 +1,5 @@
 class LL.Views.SplashPage extends Backbone.View
-  el: $('body')
+  el: '#splash-page'
 
   events:
     'click .beta-signup .account': 'showLogin'
@@ -9,41 +9,44 @@ class LL.Views.SplashPage extends Backbone.View
     'click .bottom .team': 'showTeam'
 
   initialize: ->
-    login_form = new LL.Views.UserLoginForm()
+    login_form = new LL.Views.UserLoginForm(el: $(@el).find('.login-form form'))
     login_form.splash = @
 
-    register_form = new LL.Views.UserRegisterForm(collection: LL.App.Users)
+    register_form = new LL.Views.UserRegisterForm(collection: LL.App.Users, el: $(@el).find('.beta-register form'))
     register_form.splash = @
 
-    invite_form = new LL.Views.UserUseInviteForm()
+    invite_form = new LL.Views.UserUseInviteForm(el: $(@el).find('#new_invite_code'))
     invite_form.splash = @
 
-    invite_form = new LL.Views.UserBetaSignupForm()
+    invite_form = new LL.Views.UserBetaSignupForm(el: $(@el).find('#beta-signup-form'))
     invite_form.splash = @
+
+  showModal: =>
+    $(@el).addClass('modal fade').modal()
 
   hideAll: =>
-    $('#splash-page .middle > div:visible').slideUp(300)
+    $(@el).find('.middle > div:visible').slideUp(300)
 
   showLogin: =>
     @hideAll()
-    $('.beta-login').slideDown(300)
+    $(@el).find('.beta-login').slideDown(300)
 
   showRegister: =>
     @hideAll()
-    $('.beta-register').slideDown(300)
+    $(@el).find('.beta-register').slideDown(300)
 
   showInvite: =>
     @hideAll()
-    $('.invite-form').slideDown(300)
+    $(@el).find('.invite-form').slideDown(300)
 
   showEnter: =>
     @hideAll()
-    $('.beta-signup').slideDown(300)
+    $(@el).find('.beta-signup').slideDown(300)
 
   showAbout: =>
     @hideAll()
-    $('.meat .beta-about').slideDown(300)
+    $(@el).find('.meat .beta-about').slideDown(300)
 
   showTeam: =>
     @hideAll()
-    $('.meat .beta-team').slideDown(300)
+    $(@el).find('.meat .beta-team').slideDown(300)

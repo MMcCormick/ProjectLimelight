@@ -93,7 +93,7 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     not_found("User not found") unless @user
 
-    @title = (current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
+    @title = (signed_in? && current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
     @description = "A list of all users who are following" + @user.username
     followers = User.where(:following_users => @user.id).order_by(:slug, :asc)
     render :json => followers.map {|u| u.as_json}
@@ -103,7 +103,7 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     not_found("User not found") unless @user
 
-    @title = "Users " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
+    @title = "Users " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all users who are being followed by" + @user.username
     following_users = User.where(:_id.in => @user.following_users).order_by(:slug, :asc)
     render :json => following_users.map {|u| u.as_json}
@@ -113,7 +113,7 @@ class UsersController < ApplicationController
     @user = User.find_by_slug(params[:id])
     not_found("User not found") unless @user
 
-    @title = "Topics " + (current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
+    @title = "Topics " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all topics " + @user.username + " follows"
     following_topics = Topic.where(:_id.in => @user.following_topics).order_by(:name, :asc)
     render :json => following_topics.map {|u| u.as_json}

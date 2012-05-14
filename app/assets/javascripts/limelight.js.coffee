@@ -7,8 +7,10 @@ window.LL =
     @App =  new LL.Views.App()
     @Header = new LL.Views.Header(model: LL.App.current_user)
 
+    unless LL.App.current_user
+      @LoginBox = new LL.Views.SplashPage()
+
     # hack because facebook login appends stupid things to the url
-    console.log(window.location)
     if LL.App.current_user && (window.location.hash == '#_=_' || window.location.pathname == '/_=_')
       window.location = '/'
 

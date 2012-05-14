@@ -21,7 +21,7 @@ class LL.Views.PageHeader extends Backbone.View
       $(@el).find('.top').append(score.render().el)
 
     if @showFollow
-      if LL.App.current_user.get('id') != @model.get('id')
+      if !LL.App.current_user || LL.App.current_user.get('id') != @model.get('id')
         follow = new LL.Views.FollowButton(model: @model)
         $(@el).find('.top').append(follow.render().el)
 

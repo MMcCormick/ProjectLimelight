@@ -8,7 +8,7 @@
   </head>
   <body id="<%= params[:controller].parameterize %>-c" class="three">
 
-    <%= render 'shared/header' if signed_in? && current_user.tutorial_step == 0 %>
+    <%= render 'shared/header' if (signed_in? && current_user.tutorial_step == 0) || !signed_in? && params[:controller] %>
 
     <div id="page-header">
       <div class="container">
@@ -53,7 +53,12 @@
     <% if defined? @this %>
       <div id='this' data-this="<%= @this.to_json(:user => current_user) %>" data-type="<%= @this.class.name %>"></div>
     <% end %>
-    <div id='me' data-user="<%= current_user.to_json(:show_extra => true) %>"></div>
+
+    <% if signed_in? %>
+      <div id='me' data-user="<%= current_user.to_json(:show_extra => true) %>"></div>
+    <% else %>
+      <%= render 'users/splash', :extra_class => 'hide' %>
+    <% end %>
 
   </body>
 </html>

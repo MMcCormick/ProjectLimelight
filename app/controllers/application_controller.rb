@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :init, :set_request_type, :set_session, :set_user_time_zone, :require_sign_in
+  before_filter :init, :set_request_type, :set_session, :set_user_time_zone#, :require_sign_in
   layout :layout
 
   def authenticate_admin_user!
@@ -132,9 +132,6 @@ class ApplicationController < ActionController::Base
                 :sort => 'popular',
                 :layout => 'column'
               }
-    end
-    unless session[:tutorial]
-      session[:tutorial] = :off
     end
   end
 

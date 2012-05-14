@@ -55,12 +55,11 @@ $feedFontColor: $grayDark;
     h5 {
       cursor: pointer;
       padding: 7px 15px 7px;
-      background: #F9F9F9;
       border-bottom: 1px solid #EEE;
       font-size: 13px;
       line-height: 19px;
       &:hover {
-        background: #F6F6F6;
+        background: #F9F9F9;
         border-bottom-color: #DDD;
       }
     }
@@ -116,11 +115,15 @@ $feedFontColor: $grayDark;
     }
     .response-divider {
       width: 240px;
-      height: 15px;
+      height: 10px;
       margin: 10px 0 -10px 0;
-      background: {
-        image: image-url("tile-response-divider.png");
-        repeat: no-repeat;
+      position: relative;
+      border-bottom: 1px solid #EEE;
+      .ll-grey-arrow-up {
+        position: absolute;
+        top: 0px;
+        left: 50%;
+        margin-left: -10px;
       }
     }
     &.link,
@@ -151,20 +154,20 @@ $feedFontColor: $grayDark;
         margin: 0px;
         padding: 0 0 0 10px;
         vertical-align: middle;
+        border-bottom: none;
       }
     }
   }
 
   .bottom-sheet {
     position: absolute;
-    bottom: 0px;
+    bottom: 1px;
     left: 0px;
     width: 100%;
     padding: 0;
     z-index: 1;
     display: none;
     border-top: 1px solid #BBB;
-    border-bottom: 1px solid #BBB;
 
     &.static {
       @include single-box-shadow(none);

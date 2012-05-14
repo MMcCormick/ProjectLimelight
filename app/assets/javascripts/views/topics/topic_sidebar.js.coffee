@@ -14,7 +14,7 @@ class LL.Views.TopicSidebar extends Backbone.View
     $(@el).append(talk.render().el)
 
     # Main top nav
-    if @model.get('summary') || @model.get('aliases').length > 0 || LL.App.current_user.hasRole('admin')
+    if @model.get('summary') || @model.get('aliases').length > 0 || (LL.App.current_user && LL.App.current_user.hasRole('admin'))
       nav = new LL.Views.TopicSidebarNav(model: @model)
       $(@el).append(nav.render().el)
 

@@ -17,6 +17,10 @@ class LL.Views.LikeButton extends Backbone.View
   updateLike: =>
     return if $(@el).hasClass('disabled')
 
+    unless LL.App.current_user
+      LL.LoginBox.showModal()
+      return
+
     self = @
 
     options = {

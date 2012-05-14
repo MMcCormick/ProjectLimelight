@@ -7,7 +7,9 @@ class LL.Views.FollowButton extends Backbone.View
     'click': 'updateFollow'
 
   initialize: ->
-    unless @model.get('following')
+    if !LL.App.current_user
+      @model.set('following', false)
+    else if !@model.get('following')
       @model.set('following', LL.App.current_user.following(@model))
 
     @model.bind('change:following', @render)
@@ -22,6 +24,10 @@ class LL.Views.FollowButton extends Backbone.View
 
   updateFollow: =>
     return if $(@el).hasClass('disabled')
+
+    unless LL.App.current_user
+      LL.LoginBox.showModal()
+      return
 
     self = @
 

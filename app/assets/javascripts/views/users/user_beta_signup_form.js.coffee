@@ -1,5 +1,4 @@
 class LL.Views.UserBetaSignupForm extends Backbone.View
-  el: $('#beta-signup-form')
 
   events:
     "submit": "betaSignUp"

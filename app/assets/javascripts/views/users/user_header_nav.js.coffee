@@ -5,10 +5,13 @@ class LL.Views.UserHeaderNav extends Backbone.View
 
   events:
     'click .notifications': 'showNotifications'
+    'click .login': 'showLogin'
+
 
   initialize: ->
     @notifications = null
-    @model.bind('change:unread_notification_count', @updateNotificationCount)
+    if @model
+      @model.bind('change:unread_notification_count', @updateNotificationCount)
 
   render: =>
     self = @
@@ -43,3 +46,6 @@ class LL.Views.UserHeaderNav extends Backbone.View
 
   updateNotificationCount: =>
     $(@el).find('.notifications span').text(@model.get('unread_notification_count')).attr('data-original-title', "#{@model.get('unread_notification_count')} Unread Notifications")
+
+  showLogin: =>
+    LL.LoginBox.showModal()

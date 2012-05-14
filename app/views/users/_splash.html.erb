@@ -1,0 +1,32 @@
+<div id='splash-page' class='<%= extra_class %>'>
+  <div class='meat-wrapper'>
+    <div class='meat'>
+      <div class='top'>
+        <%= image_tag "splash-logo.gif", :alt => "", :class => "logo" %>
+
+        <h1>Limelight</h1>
+        <h2>Connect Through Topics</h2>
+      </div>
+      <div class='middle'>
+
+        <% flash.each do |name, msg| %>
+          <div class="alert alert-<%= name == :notice ? "success" : "error" %>">
+            <a class="close" data-dismiss="alert">×</a>
+            <%= msg %>
+          </div>
+        <% end %>
+
+        <%= render "users/auth_box", :show => @show, :only_box => @only_box %>
+
+      </div>
+      <div class='bottom'>
+        <div class='about'>About</div>
+        <div class='team'>Built & run by 2 guys in NYC</div>
+      </div>
+      <div class='beta'>
+        Beta
+      </div>
+
+    </div>
+  </div>
+</div>

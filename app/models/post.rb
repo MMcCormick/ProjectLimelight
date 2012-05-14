@@ -355,7 +355,7 @@ class Post
             :content => content,
             :score => score,
             :talking_count => response_count,
-            :liked => liked_by?(options[:user].id) ? true : false,
+            :liked => options[:user] && liked_by?(options[:user].id) ? true : false,
             :created_at => created_at.to_i,
             :created_at_pretty => pretty_time(created_at),
             :created_at_short => short_time(created_at),
@@ -444,9 +444,13 @@ class Post
     end
 
     def friend_responses(id, user, page, limit)
-      Post.where(:root_id => id, :_type => 'Talk', "user_snippet._id" => {"$in" => user.following_users})
-          .order_by(:created_at, :desc)
-          .skip((page-1)*limit).limit(limit)
+      if user
+        Post.where(:root_id => id, :_type => 'Talk', "user_snippet._id" => {"$in" => user.following_users})
+            .order_by(:created_at, :desc)
+            .skip((page-1)*limit).limit(limit)
+      else
+        []
+      end
     end
 
     # get the public responses for a root, with a limit
@@ -459,7 +463,11 @@ class Post
 
     def public_responses_no_friends(id, page, limit, user)
       posts = Post.public_responses(id, page, limit)
-      posts.select{|p| !user.is_following_user?(p.user_snippet.id) }
+      if user
+        posts.select{|p| !user.is_following_user?(p.user_snippet.id) }
+      else
+        posts
+      end
     end
 
     def for_show_page(parent_id)

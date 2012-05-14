@@ -58,4 +58,8 @@ class LL.Views.PostShow extends Backbone.View
     @
 
   showTalkForm: =>
+    unless LL.App.current_user
+      LL.LoginBox.showModal()
+      return
+
     $(@el).find('.talk-form').fadeIn(250).find('textarea').focus()

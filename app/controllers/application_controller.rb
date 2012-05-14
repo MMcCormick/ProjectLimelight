@@ -171,5 +171,4 @@ class ApplicationController < ActionController::Base
     end
     og_tags
   end
-
 end

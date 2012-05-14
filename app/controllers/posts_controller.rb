@@ -16,7 +16,7 @@ class PostsController < ApplicationController
 
     @title = @this.name
     @description = @this.content
-    @og_tags = build_og_tags(@title, @this.og_type, post_path(@this), @this.image_url(:fit, :large))
+    @og_tags = build_og_tags(@title, @this.og_type, post_url(@this), @this.image_url(:fit, :large))
 
     respond_to do |format|
       format.js { render :json => @this.to_json(:user => current_user) }

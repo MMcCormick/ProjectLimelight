@@ -35,6 +35,7 @@ class TopicsController < ApplicationController
 
     @title = @this.name
     @description = @this.summary
+    #@og_tags = build_og_tags(@title, og_namespace, user_url(@this), @this.image_url(:fit, :large), [["og:username", @this.username]])
 
     respond_to do |format|
       format.html

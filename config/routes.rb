@@ -136,10 +136,10 @@ ProjectLimelight::Application.routes.draw do
   resources :invite_codes, :only => [:create, :new]
   post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
 
-  #Topics (catch all)
-  get ':slug/followers' => 'topics#show', :as => :topic_followers
-  get ':slug' => 'topics#show', :as => :topic
+  #Topics
   get 'topics/datasift' => 'users#show', :as => :datasift_topics
+  get ':slug/followers' => 'topics#show', :as => :topic_followers
+  get ':slug' => 'topics#show', :as => :topic #(catch all)
 
   root :to => 'users#feed'
 

@@ -329,6 +329,19 @@ class Post
     _type == "Talk" && !response_to
   end
 
+  def og_type
+    case _type
+      when "Talk"
+        "talk"
+      when "Picture"
+        "picture"
+      when "Video"
+        "video.other"
+      when "Link"
+        "article"
+    end
+  end
+
 
   ##########
   # JSON

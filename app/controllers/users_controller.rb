@@ -10,6 +10,10 @@ class UsersController < ApplicationController
     not_found("User not found") unless @this
     @title = @this.username
     @description = "Everything #{@this.username} on Limelight."
+
+    if params[:show_og] && params[:id] != "0"
+      @og_tags = build_og_tags(@title, "profile", user_path(@this), @this.image_url(:fit, :large), [["og:profile:username", @this.username]])
+    end
   end
 
   def create

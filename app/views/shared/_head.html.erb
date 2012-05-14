@@ -9,13 +9,16 @@
 <!-- Mobile viewport optimized: j.mp/bplateviewport -->
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
+
 <!-- Open Graph -->
-<meta property="og:title" content="Limelight" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="http://projectlimelight.com" />
-<meta property="og:image" content="http://static.p-li.me.s3.amazonaws.com/assets/images/splash-logo.png" />
-<meta property="og:site_name" content="Limelight" />
-<meta property="fb:admins" content="1229430023" />
+<% if @og_tags %>
+  <% @og_tags.each do |tag| %>
+    <meta property=<%= tag[0] %> content="<%= tag[1] %>" />
+  <% end %>
+  <meta property="og:site_name" content="Limelight" />
+  <meta property="fb:admins" content="1229430023" />
+<% end %>
+
 
 <!-- Google Tags -->
 <meta itemprop="name" content="Limelight">

@@ -1,5 +1,6 @@
 class TopicsController < ApplicationController
   include ImageHelper
+  include ModelUtilitiesHelper
 
   respond_to :html, :json
 
@@ -35,7 +36,7 @@ class TopicsController < ApplicationController
 
     @title = @this.name
     @description = @this.summary
-    #@og_tags = build_og_tags(@title, og_namespace, user_url(@this), @this.image_url(:fit, :large), [["og:username", @this.username]])
+    @og_tags = build_og_tags(@title, og_namespace+":topic", topic_url(@this), @this.image_url(:fit, :large))
 
     respond_to do |format|
       format.html

@@ -330,12 +330,7 @@ class Post
   end
 
   def og_type
-    case _type
-      when "Talk"
-        og_namespace + ":talk"
-      else
-        og_namespace + ":post"
-    end
+    og_namespace + ":post"
   end
 
 

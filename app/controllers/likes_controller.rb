@@ -11,9 +11,16 @@ class LikesController < ApplicationController
 
         track_mixpanel("Like Post", current_user.mixpanel_data.merge(object.mixpanel_data))
 
+        # post to facebook open graph
+        fb = current_user.facebook
+        if fb
+          object_url = object.class.name == 'Talk' ? talk_url(:id => object.id) : post_url(:id => object.id)
+          object_type = object.class.name == 'Talk' ? :talk : :post
+          Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', object_type, object_url)
+        end
+
         # send the influence pusher notification
         if object.class.name == 'Talk'
-
           notification = Notification.add(object.user, :repost, true, current_user, nil, object, object.user)
           if notification
             Pusher["#{object.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
@@ -30,14 +37,6 @@ class LikesController < ApplicationController
 
             Pusher[object.user_id.to_s].trigger('influence_change', increase.to_json)
           end
-        end
-
-        # post to facebook open graph
-        fb = current_user.facebook
-        if fb
-          object_url = object.class.name == 'Talk' ? talk_url(object) : post_url(object)
-          object_type = object.class.name == 'Talk' ? :talk : :post
-          Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', object_type, object_url)
         end
 
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})

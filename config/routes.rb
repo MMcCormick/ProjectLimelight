@@ -120,7 +120,7 @@ ProjectLimelight::Application.routes.draw do
   get 'likes' => 'users#show'
   get 'influence' => 'users#show'
   get '/posts/:id' => 'posts#show', :as => :post
-  get '/talks/:id' => 'posts#show'
+  get '/talks/:id' => 'posts#show', :as => :talk
 
   # Pages
   scope 'pages' do

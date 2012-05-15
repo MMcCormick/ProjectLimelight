@@ -160,11 +160,16 @@ module Limelight #:nodoc:
     def save_remote_image(force=false)
       unless @remote_image_url.blank?
         target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
-        AWS::S3::S3Object.store(
-          target,
-          open(@remote_image_url).read,
-          S3['image_bucket']
-        )
+
+        begin
+          AWS::S3::S3Object.store(
+            target,
+            open(@remote_image_url).read,
+            S3['image_bucket']
+          )
+        rescue => e
+          return
+        end
 
         AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
 

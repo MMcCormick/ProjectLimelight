@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings, :topic_finder]
-  include ImageHelper
   include ModelUtilitiesHelper
+  include ImageHelper
 
   respond_to :html, :json
 
@@ -75,6 +75,7 @@ class UsersController < ApplicationController
 
   def user_influence_increases
     @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    not_found("User not found") unless @user
     increases = @user.influence_increases(params[:limit].to_i, params[:with_post] == "true")
     render :json => increases.map {|i| i.as_json(:user => current_user)}
   end

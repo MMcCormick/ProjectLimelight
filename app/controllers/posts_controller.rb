@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  include ModelUtilitiesHelper
 
   respond_to :html, :json
 

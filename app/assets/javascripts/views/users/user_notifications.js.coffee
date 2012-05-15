@@ -22,7 +22,7 @@ class LL.Views.UserNotifications extends Backbone.View
       for notification,i in @collection.models
         @appendNotification(notification)
 
-    $(@el).show('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+    @showPanel()
 
     @clearNotifications()
 
@@ -40,7 +40,21 @@ class LL.Views.UserNotifications extends Backbone.View
     $(view.el).effect 'slide', {direction: 'left', mode: 'show'}, 500
 
   togglePanel: =>
-    $(@el).toggle('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+    if $(@el).is(':visible')
+      @hidePanel()
+    else
+      @showPanel()
+
+  showPanel: =>
+    $(@el).show('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+    difference = $('body').width() - ($('#feed').offset().left + $('#feed').width())
+    offset = 245 - difference
+    if offset > 0
+      $('body').animate({left: "-#{offset}px"}, 500, 'easeOutExpo')
+
+  hidePanel: =>
+    $(@el).hide('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+    $('body').animate({left: '0px'}, 500, 'easeOutExpo')
 
   clearNotifications: =>
     if LL.App.current_user.get('unread_notification_count') > 0

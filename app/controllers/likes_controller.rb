@@ -1,5 +1,6 @@
 class LikesController < ApplicationController
   before_filter :authenticate_user!
+  include CoreObjectsHelper
 
   def create
     object = Post.find(params[:id])
@@ -31,6 +32,17 @@ class LikesController < ApplicationController
           end
         end
 
+        # post to facebook open graph
+        fb = current_user.facebook
+        if fb
+          url = object.class.name == 'Talk' ? talk_url(object) : post_url(object)
+          if params[:type] == 'User'
+            Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', url)
+          else
+            Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', url)
+          end
+        end
+
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})
         status = 201
       elsif like_success.nil?
@@ -59,6 +71,9 @@ class LikesController < ApplicationController
         track_mixpanel("Unlike Post", current_user.mixpanel_data.merge(object.mixpanel_data))
 
         Notification.remove(object.user, :repost, current_user, object)
+
+        Resque.enqueue(OpenGraphDelete, current_user.id.to_s, object.id.to_s, object.class.name, 'like')
+
         response = build_ajax_response(:ok, nil, nil, nil)
         status = 200
       else

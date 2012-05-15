@@ -1,17 +1,16 @@
 module CoreObjectsHelper
 
-  #BETA REMOVE
-  def core_object_url(object, type=nil)
+  def core_object_url(object, type=nil, absolute=nil)
     type = object.type unless type
     case type
       when 'Talk'
-        talk_path object
+        absolute ? talk_url(object) : talk_path(object)
       when 'Picture'
-        picture_path object
+        absolute ? picture_path(object) : picture_path(object)
       when 'Link'
-        link_path object
+        absolute ? link_path(object) : link_path(object)
       when 'Video'
-        video_path object
+        absolute ? video_path(object) : video_path(object)
     end
   end
 

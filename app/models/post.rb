@@ -336,9 +336,9 @@ class Post
       when "Picture"
         og_namespace + ":picture"
       when "Video"
-        "video.other"
+        og_namespace + ":video"
       when "Link"
-        "article"
+        og_namespace + ":link"
     end
   end
 

@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings, :topic_finder]
   include ImageHelper
+  include ModelUtilitiesHelper
 
   respond_to :html, :json
 

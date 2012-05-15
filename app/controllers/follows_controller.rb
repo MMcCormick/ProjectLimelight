@@ -24,7 +24,7 @@ class FollowsController < ApplicationController
           fb = current_user.facebook
           if fb
             if params[:type] == 'User'
-              Resque.enqueue(OpenGraphCreate, current_user.id.to_s, target.id.to_s, 'User', 'follow', 'profile', user_url(target))
+              Resque.enqueue(OpenGraphCreate, current_user.id.to_s, target.id.to_s, 'User', 'follow', 'user', user_url(target))
             else
               Resque.enqueue(OpenGraphCreate, current_user.id.to_s, target.id.to_s, 'Topic', 'follow', 'topic', topic_url(target))
             end

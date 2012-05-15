@@ -35,12 +35,9 @@ class LikesController < ApplicationController
         # post to facebook open graph
         fb = current_user.facebook
         if fb
-          url = object.class.name == 'Talk' ? talk_url(object) : post_url(object)
-          if params[:type] == 'User'
-            Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', url)
-          else
-            Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', url)
-          end
+          object_url = object.class.name == 'Talk' ? talk_url(object) : post_url(object)
+          object_type = object.class.name == 'Talk' ? :talk : :post
+          Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', object_type, object_url)
         end
 
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})

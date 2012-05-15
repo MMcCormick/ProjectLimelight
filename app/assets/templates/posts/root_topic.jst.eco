@@ -4,9 +4,3 @@
     <%= @topic.get('name') %>
   </h5>
 </a>
-
-<div class='bottom-sheet static'>
-  <div class='actions'>
-    <span class='talk-form'>+Talk</span>
-  </div>
-</div>

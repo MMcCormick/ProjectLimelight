@@ -414,7 +414,6 @@ class LL.Router extends Backbone.Router
     $('.modal, .content-tile').remove()
 
   splashPage: ->
-    view = new LL.Views.SplashPage()
 
   showTipTutorial: (type) ->
     switch type

@@ -1,4 +1,5 @@
 class UserMailer < ActionMailer::Base
+  include Resque::Mailer
   default :from => "Limelight <support@projectlimelight.com>"
   layout 'email'
 

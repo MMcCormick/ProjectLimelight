@@ -3,7 +3,7 @@ class BetaSignupsController < ApplicationController
     signup = BetaSignup.new(params)
 
     if signup.save
-      Resque.enqueue(BetaSignupEmail, params[:email])
+      UserMailer.beta_signup_email(params[:email]).deliver
       track_mixpanel("Request Beta Invite", {})
       response = build_ajax_response(:ok, nil, nil)
       status = 201

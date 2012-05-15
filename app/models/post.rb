@@ -333,12 +333,8 @@ class Post
     case _type
       when "Talk"
         og_namespace + ":talk"
-      when "Picture"
-        og_namespace + ":picture"
-      when "Video"
-        og_namespace + ":video"
-      when "Link"
-        og_namespace + ":link"
+      else
+        og_namespace + ":post"
     end
   end
 

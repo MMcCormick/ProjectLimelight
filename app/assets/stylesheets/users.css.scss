@@ -161,3 +161,29 @@ section.user-section-list {
     float: right;
   }
 }
+
+.sidebar-social-connect {
+  .status {
+    font-weight: normal;
+    margin: 0 0 3px 0;
+    font-size: 12px;
+    cursor: none;
+  }
+  .social-connect {
+    > a {
+      margin: 0 0 0 -2px;
+    }
+    &.on {
+      .status {
+        color: green;
+      }
+      > a {
+        @include opacity(40);
+        cursor: default;
+      }
+    }
+    &.twitter {
+      margin: 10px 0 0 0;
+    }
+  }
+}

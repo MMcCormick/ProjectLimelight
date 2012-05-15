@@ -442,13 +442,14 @@ header {
       background: $grayLightest;
       border-bottom: 1px solid #EEE;
       padding: 8px 15px;
-      h4 {
+      h5 {
         @include single-text-shadow(#DDD, 0, 1px);
         font-weight: normal;
         cursor: default;
       }
-      h5 {
+      h5.sub {
         font-weight: normal;
+        font-size: 13px;
       }
     }
     > .meat {

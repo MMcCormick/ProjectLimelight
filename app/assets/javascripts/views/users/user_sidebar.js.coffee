@@ -23,6 +23,12 @@ class LL.Views.UserSidebar extends Backbone.View
     $(@el).append(influences.el)
     influences_collection.fetch({data: {id: @model.get('slug'), limit: 3, with_post: false}})
 
+    # Social connect
+    if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') && (!@model.get('facebook_id') || !@model.get('twitter_id'))
+      connect = new LL.Views.UserSidebarSocialConnect(model: LL.App.current_user)
+      $(@el).append(connect.render().el)
+
+
     # Topic suggestions
 #    if LL.App.current_user == @model
 #      topic_suggestions = new LL.Views.UserSidebarTopicSuggestions(model: @model)

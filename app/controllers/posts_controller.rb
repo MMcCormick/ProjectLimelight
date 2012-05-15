@@ -26,7 +26,7 @@ class PostsController < ApplicationController
     else
       extra["#{og_namespace}:source"] = @this.sources.name
     end
-    @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, )
+    @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, extra)
 
     respond_to do |format|
       format.js { render :json => @this.to_json(:user => current_user) }

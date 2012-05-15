@@ -8,4 +8,12 @@
   <a href="/pages/help">Help</a>
   <a href="/pages/privacy">Privacy</a>
   <a href="/pages/terms">Terms</a>
+
+  <div class="social">
+    <div class="fb-like" data-href="http://www.facebook.com/DiscoverLimelight" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+    <a href="https://twitter.com/share?url=http://projectlimelight.com&text=Check out Limelight! It's a new way to follow the topics you care about. @limelight_team" class="twitter-share-button" data-lang="en">Tweet</a>
+    <div class="google">
+      <div class="g-plusone" data-size="medium" data-href="http://projectlimelight.com"></div>
+    </div>
+  </div>
 </div>

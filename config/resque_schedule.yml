@@ -24,6 +24,6 @@ recalculate_clout:
 
 daily_notifications:
   cron: "0 14 * * *"
-  class: SendUserNotification
+  class: SendDailyUserNotifications
   args:
   description: "This job sends users a daily email with their new notifications"

@@ -22,7 +22,7 @@ module NotificationsHelper
         "also replied to <a href='#{base+user_path(notification.object_user)}'>#{notification.object_user.username}'s</a> <a href='#{base+post_path(notification.object)}##{notification.object.comment_id}'>comment</a> on the #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
       when :mention
         "mentioned you in their #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
-      when :reply
+      when :comment
         if notification.object.comment_id
           #name = notification.object_user.id == current_user.id ? 'your' : "<a href='#{base+user_path(notification.object_user)}'>#{notification.object_user.username}'s</a>"
           "replied to your <a href='#{base+post_path(notification.object)}##{notification.object.comment_id}'>comment</a> on the #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe

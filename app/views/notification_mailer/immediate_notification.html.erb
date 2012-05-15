@@ -1,0 +1,15 @@
+<%
+ if Rails.env.development?
+   base = 'http://localhost:3000'
+ elsif Rails.env.staging?
+   base = 'http://staging.projectlimelight.com'
+ else
+   base = 'http://www.projectlimelight.com'
+ end
+%>
+
+<p>Hi <%= @user.first_or_username %>, you have a new notification:</p>
+
+<div style="padding: 10px 5px;">
+  <%= render "notifications/#{@notification.type.to_s.underscore}_notification", :notification => @notification, :is_first => nil, :base => base %>
+</div>

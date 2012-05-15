@@ -3,26 +3,17 @@ class SendUserNotification
 
   @queue = :slow
 
-  def self.perform
-    users = User.all
-    users.each do |user|
-      notifications = Notification.where(
-              :user_id => user.id,
-              :active => true,
-              :read => false,
-              :notify => true,
-              :emailed => false,
-              :type => {"$in" => user.daily_notification_types})
+  def self.perform(notification_id)
+    notification = Notification.find(notification_id)
 
-      if notifications && notifications.length > 0
-        NotificationMailer.new_notifications(user, notifications).deliver
-        # Set each notification to emailed
-        notifications.each do |notification|
-          notification.set_emailed
-          notification.save
-        end
+    if notification
+      user = User.find(notification.user_id)
+      NotificationMailer.immediate_notification(user, notification).deliver
+      # Set each notification to emailed
+      notifications.each do |notification|
+        notification.set_emailed
+        notification.save
       end
     end
   end
-
 end

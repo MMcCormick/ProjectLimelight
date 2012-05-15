@@ -8,7 +8,7 @@
  end
 %>
 
-<p>Hi <%= @user.first_or_username %>, you have some new notifications:</p>
+<p>Hi <%= @user.first_or_username %>, you have <%= @notifications.length > 1 ? "some new notifications" : "a new notification" %>:</p>
 
 <% @notifications.each_with_index do |notification,i| %>
   <% is_first = nil %>

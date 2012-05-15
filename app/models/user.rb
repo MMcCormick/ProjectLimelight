@@ -745,6 +745,19 @@ class User
     types
   end
 
+  def notify_immediately?(notification_type)
+    type = notification_type.to_s
+    if %w(comment also).include?(type) && email_comment == "2"
+      true
+    elsif type == "follow" && email_comment == "2"
+      true
+    elsif type == "mention" && email_mention == "2"
+      true
+    else
+      false
+    end
+  end
+
   protected
 
   class << self

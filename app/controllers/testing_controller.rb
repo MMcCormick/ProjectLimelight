@@ -8,6 +8,10 @@ end
 class TestingController < ApplicationController
 
   def test
+    SendUserNotification.perform(Notification.order_by('created_at', :desc).first.id)
+  end
+
+  def facebook_thing
     fb = current_user.facebook
     og_id = fb.put_connections("me", "#{og_namespace}:follow", :profile => "http://localhost:3000/users/marc2")
     if og_id

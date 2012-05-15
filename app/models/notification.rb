@@ -199,8 +199,7 @@ class Notification
         if new_notification
           target_user.unread_notification_count = target_user.unread_notification_count.to_i + 1
 
-          if notification.notify
-            # TODO: Only send one every 5 minutes
+          if notification.notify && target_user.notify_immediately?(type)
             #if target_user.device_token  # pushing notification
             #  if Notification.send_push_notification(target_user.device_token, target_user.device_type, "#{triggered_by_user.fullname} #{notification.notification_text(1)}")
             #    target_user.last_notified = Time.now
@@ -208,7 +207,7 @@ class Notification
             #    notification.save
             #  end
             #else # emailing notification
-            #  Resque.enqueue_in(30.minutes, SendUserNotification, target_user.id.to_s)
+            Resque.enqueue(SendUserNotification, notification.id.to_s)
             #end
           end
 

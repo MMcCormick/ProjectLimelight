@@ -83,8 +83,14 @@ ProjectLimelight::Application.routes.draw do
     get 'influence_increases' => 'users#influence_increases'
   end
 
+  resque_constraint = lambda do |request|
+    request.env['warden'].authenticate? and request.env['warden'].user.role?('admin')
+  end
+
   # Resque admin
-  mount Resque::Server, :at => "resque"
+  constraints resque_constraint do
+    mount Resque::Server, :at => "admin/resque"
+  end
 
   # Soulmate api
   mount Soulmate::Server, :at => "autocomplete"

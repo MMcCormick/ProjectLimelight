@@ -11,9 +11,8 @@ class UsersController < ApplicationController
 
     if params[:show_og] && params[:id] != "0"
       @title = @this.username
-      @description = "#{@this.username}'s profile on Limelight. #{@this.username} is following #{@this.following_users_count} users"+
-          " and #{@this.following_topics_count} topics. #{@this.username} has #{@this.followers_count} followers."
-      @og_tags = build_og_tags(@title, "profile", user_url(@this), @this.image_url(:fit, :large), @description, [["og:username", @this.username]])
+      @description = "#{@this.username} on Limelight."
+      @og_tags = build_og_tags(@title, "profile", user_url(@this), @this.image_url(:fit, :large), @description, {"og:username" => @this.username, "#{og_namespace}:followers_count" => @this.followers_count, "#{og_namespace}:score" => @this.score, "#{og_namespace}:following_users_count" => @this.following_users_count, "#{og_namespace}:following_topics_count" => @this.following_topics_count})
     end
   end
 

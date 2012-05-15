@@ -38,8 +38,8 @@ class TopicsController < ApplicationController
     authorize! :read, @this
 
     @title = @this.name
-    @description = @this.summary ? @this.summary : "All posts about the #{@this.name} topic on Limelight. #{@this.followers_count} people are following #{@this.name}"
-    @og_tags = build_og_tags(@title, og_namespace+":topic", topic_url(@this), @this.image_url(:fit, :large), @description)
+    @description = @this.summary ? @this.summary : "All posts about the #{@this.name} topic on Limelight."
+    @og_tags = build_og_tags(@title, og_namespace+":topic", topic_url(@this), @this.image_url(:fit, :large), @description, {"#{og_namespace}:followers_count" => @this.followers_count, "#{og_namespace}:score" => @this.score, "#{og_namespace}:type" => @this.primary_type})
 
     respond_to do |format|
       format.html

@@ -18,7 +18,9 @@ class PostsController < ApplicationController
     @title = @this.name
     @description = @this.content
     url = @this.class.name == 'Talk' ? talk_url(:id => @this.id) : post_url(:id => @this.id)
-    @og_tags = build_og_tags(@title, @this.og_type, url, @this.image_url(:fit, :large), @description, {"#{og_namespace}:display_name" => @this.class.name, "#{og_namespace}:score" => @this.score.to_i})
+    image_url = @this.class.name == 'Talk' ? @this.user.image_url(:fit, :large) : @this.image_url(:fit, :large)
+    image_url = '' unless image_url
+    @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, {"#{og_namespace}:display_name" => @this.class.name, "#{og_namespace}:score" => @this.score.to_i})
 
     respond_to do |format|
       format.js { render :json => @this.to_json(:user => current_user) }

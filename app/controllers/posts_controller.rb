@@ -24,7 +24,7 @@ class PostsController < ApplicationController
     if @this.class.name == 'talk' || @this.sources.length == 0
       extra["#{og_namespace}:source"] = @this.user.username
     else
-      extra["#{og_namespace}:source"] = @this.sources.name
+      extra["#{og_namespace}:source"] = @this.sources.first.name
     end
     @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, extra)
 

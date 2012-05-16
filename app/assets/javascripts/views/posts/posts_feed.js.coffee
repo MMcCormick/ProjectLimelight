@@ -116,7 +116,7 @@ class LL.Views.PostsFeed extends Backbone.View
     @tiles.push tile
     tile.render()
     column.prependPost tile
-    $(tile.el).addClass('fade-new').find('.root').animate(backgroundColor: '#FFF', 60000)
+    $(tile.el).addClass('fade-new').find('.root').animate(backgroundColor: '#FFF', 600000)
 
     @addPost(root_post)
 

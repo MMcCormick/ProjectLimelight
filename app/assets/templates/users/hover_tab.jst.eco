@@ -1,3 +1,14 @@
 <div class='top'><%= @user.get('username') %></div>
-<div class='middle'>User Information</div>
+<div class='middle'>
+  <img src='<%= @user.get('images').fit.normal %>' />
+  <div class='right'>
+    <div class='stats'>
+      <div class='stat1'></div>
+      <div class='stat2'><%= @user.get('followers_count') %> Followers</div>
+    </div>
+    <p>
+      <%= @user.get('bio') %>
+    </p>
+  </div>
+</div>
 <div class='bottom'></div>

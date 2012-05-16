@@ -9,6 +9,8 @@ class LL.Views.TopicHoverTab extends Backbone.View
   render: =>
     self = @
 
+    console.log @model
+
     @target.qtip
       position:
         my: 'top left'
@@ -26,6 +28,11 @@ class LL.Views.TopicHoverTab extends Backbone.View
       content:
         text: (api) ->
           $(self.el).html(self.template(topic: self.model))
+
+          talk = new LL.Views.TalkButton()
+          talk.topic1 = self.model
+          talk.button = true
+          $(self.el).find('.bottom').append(talk.render().el)
 
           follow = new LL.Views.FollowButton(model: self.model)
           $(self.el).find('.bottom').append(follow.render().el)

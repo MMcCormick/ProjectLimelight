@@ -8,6 +8,7 @@
 
 .topic-list {
   li {
+    position: relative;
     height: 50px;
     margin: 5px 0;
 
@@ -30,6 +31,11 @@
     }
     h5 {
       vertical-align: middle;
+    }
+    .ll-cloud-green {
+      position: absolute;
+      top: 17px;
+      left: 520px;
     }
     .score-pts {
       float: right;

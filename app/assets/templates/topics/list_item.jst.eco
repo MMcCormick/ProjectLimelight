@@ -2,4 +2,7 @@
   <img src='<%= @topic.get('images').square.small %>' />
   <h5><%= @topic.get('name') %></h5>
 </a>
+<% if @topic.get('datasift_enabled'): %>
+  <div class='ll-cloud-green' title='This topic pulls content from other sources on the web.'></div>
+<% end %>
 <div class='follow-c'></div>

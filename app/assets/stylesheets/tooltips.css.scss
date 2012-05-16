@@ -17,20 +17,24 @@
   }
 
   .top {
-    border-bottom: 1px solid #FFF;
+    border-bottom: 1px solid #DDD;
     font-size: 18px;
     background: #333;
     padding: 12px 10px;
     color: #FFF;
+    width: 300px;
   }
   .middle {
+    @include clearfix();
     background: #333;
     padding: 10px 10px;
     font-size: 13px;
     line-height: 16px;
     color: #FFF;
+    padding: 0px;
   }
   .bottom {
+    position: relative;
     padding: 7px 10px;
     background: #F5F5F5;
     box-shadow: 0 1px 0 white inset;
@@ -75,7 +79,36 @@
 
 .hover-tab {
   .middle {
-    width: 225px;
+    width: 278px;
+  }
+  .talk {
+    margin: 0 5px 0 0;
+  }
+  .edit-btn {
+    margin: 0 5px 0 0;
+  }
+  .ll-cloud-green {
+    position: absolute;
+    top: 14px;
+    left: 10px;
+  }
+  img {
+    border-right: 1px solid #DDD;
+    max-width: 90px;
+    display: block;
+    float: left;
+  }
+  .right {
+    float: left;
+  }
+  .stats {
+    @include clearfix();
+    .stat1 {
+      float: left;
+    }
+    .stat2 {
+      float: right;
+    }
   }
 }
 

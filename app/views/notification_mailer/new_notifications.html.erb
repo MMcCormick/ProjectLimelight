@@ -15,8 +15,8 @@
   <% if i == 0 %>
     <% is_first = true %>
   <% end %>
-  <div style="padding: 0 10px 10px 10px; <%= 'border-top: 1px solid #EFEFEF;' unless is_first %>">
-    <a href="<%= base + notification.triggered_by.username %>" target="_blank"><%= notification.triggered_by.first_or_username %></a>
+  <div style="padding: 10px; <%= 'border-top: 1px solid #EFEFEF;' unless is_first %>">
+    <a href="<%= base + user_path(notification.triggered_by) %>" target="_blank"><%= notification.triggered_by.first_or_username %></a>
     <%= action_text(notification, base) %>
   </div>
 <% end %>

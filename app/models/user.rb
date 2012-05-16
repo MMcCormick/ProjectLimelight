@@ -741,7 +741,7 @@ class User
     types = []
     types << "follow" if email_follow == "1"
     types << "mention" if email_mention == "1"
-    types = types + ["also", "reply"] if email_comment == "1"
+    types = types + ["also", "comment"] if email_comment == "1"
     types
   end
 

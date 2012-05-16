@@ -8,7 +8,7 @@ end
 class TestingController < ApplicationController
 
   def test
-    SendUserNotification.perform(Notification.order_by('created_at', :desc).first.id)
+    SendDailyUserNotifications.perform()
   end
 
   def facebook_thing

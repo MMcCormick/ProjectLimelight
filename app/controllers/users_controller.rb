@@ -166,9 +166,9 @@ class UsersController < ApplicationController
 
     notifications = Notification.where(:user_id => current_user.id).order_by(:created_at, :desc).limit(20).to_a
 
-    if notifications.length > 0
-      Notification.where(:_id => {"$in" => notifications.map {|n| n.id}}).update_all(:read => true)
-    end
+    #if notifications.length > 0
+    #  Notification.where(:_id => {"$in" => notifications.map {|n| n.id}}).update_all(:read => true)
+    #end
 
     render :json => notifications.map {|n| n.as_json}
   end

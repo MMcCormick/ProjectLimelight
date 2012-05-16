@@ -6,8 +6,16 @@ class LL.Views.UserHoverTab extends Backbone.View
 
   render: =>
     self = @
-    console.log @model
+
     if @model.get('created_at')
+      score = new LL.Views.Score(model: self.model)
+
+      talk = new LL.Views.TalkButton()
+      talk.user = self.model
+      talk.button = true
+
+      follow = new LL.Views.FollowButton(model: self.model)
+
       @target.qtip
         position:
           my: 'top left'
@@ -27,21 +35,15 @@ class LL.Views.UserHoverTab extends Backbone.View
           text: (api) ->
             $(self.el).html(self.template(user: self.model))
 
-            score = new LL.Views.Score(model: self.model)
             $(self.el).find('.stat1').html(score.render().el)
 
-            talk = new LL.Views.TalkButton()
-            talk.user = self.model
-            talk.button = true
-            $(self.el).find('.bottom').append(talk.render().el)
+            $(self.el).find('.bottom').append(talk.render().el).append(follow.render().el)
 
-            follow = new LL.Views.FollowButton(model: self.model)
-            $(self.el).find('.bottom').append(follow.render().el)
             $(self.el)
 
       @target.qtip('show')
     else
-      LL.App.Users.findOrCreate(@model.get('id'), @model, true)
+      LL.App.Users.findOrCreate(@model.get('id'), null, true)
 
     @
 

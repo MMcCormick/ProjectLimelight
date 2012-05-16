@@ -40,7 +40,7 @@ class LL.Router extends Backbone.Router
       user = LL.App.current_user
       @showTipTutorial('user_feed')
     else
-      user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+      user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
 
     # Only load the feed if it's new
     if LL.App.findScreen('user_feed', id)
@@ -76,7 +76,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+      user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
 
     # Only load the feed if it's new
     if LL.App.findScreen('activity_feed', id)
@@ -108,7 +108,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+      user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
 
     if LL.App.findScreen('like_feed', id)
       LL.App.showScreen('like_feed', id)
@@ -139,7 +139,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+      user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
 
     if LL.App.findScreen('user_influence', id)
       LL.App.showScreen('user_influence', id)
@@ -179,7 +179,7 @@ class LL.Router extends Backbone.Router
     view = new LL.Views.UserSettings()
 
   userFollowers: (id) ->
-    user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+    user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
 
     if LL.App.findScreen('user_followers', id)
       LL.App.showScreen('user_followers', id)
@@ -206,7 +206,7 @@ class LL.Router extends Backbone.Router
       collection.fetch({data: {id: id}})
 
   userFollowingUsers: (id) ->
-    user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+    user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
 
     if LL.App.findScreen('user_following_users', id)
       LL.App.showScreen('user_following_users', id)
@@ -233,7 +233,7 @@ class LL.Router extends Backbone.Router
       collection.fetch({data: {id: id}})
 
   userFollowingTopics: (id) ->
-    user = LL.App.Users.findOrCreate(id, new LL.Models.User($('#this').data('this')))
+    user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
 
     if LL.App.findScreen('user_following_topics', id)
       LL.App.showScreen('user_following_topics', id)
@@ -276,7 +276,7 @@ class LL.Router extends Backbone.Router
 
     @hideModal()
 
-    topic = LL.App.Topics.findOrCreate(id, $('#this').data('this'))
+    topic = LL.App.Topics.findOrCreate($('#this').data('this').id, $('#this').data('this'))
 
     if LL.App.findScreen('topic_feed', id)
       LL.App.showScreen('topic_feed', id)
@@ -304,7 +304,7 @@ class LL.Router extends Backbone.Router
       LL.App.TopicFeed.fetch({data: {id: id, sort: 'newest'}})
 
   topicFollowers: (id) ->
-    topic = LL.App.Topics.findOrCreate(id, $('#this').data('this'))
+    topic = LL.App.Topics.findOrCreate($('#this').data('this').id, $('#this').data('this'))
 
     if LL.App.findScreen('topic_followers', id)
       LL.App.showScreen('topic_followers', id)

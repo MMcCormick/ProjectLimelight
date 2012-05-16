@@ -1,13 +1,15 @@
 <div class='top'><%= @user.get('username') %></div>
 <div class='middle'>
-  <img src='<%= @user.get('images').fit.normal %>' />
+  <div class='image'>
+    <img src='<%= @user.get('images').fit.normal %>' />
+  </div>
   <div class='right'>
     <div class='stats'>
       <div class='stat1'></div>
       <div class='stat2'><%= @user.get('followers_count') %> Followers</div>
     </div>
     <p>
-      <%= @user.get('bio') %>
+      <%= if @user.get('bio') then @user.get('bio') else "#{@user.get('username')} has no bio..." %>
     </p>
   </div>
 </div>

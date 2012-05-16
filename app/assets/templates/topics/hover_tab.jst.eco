@@ -1,5 +1,23 @@
-<div class='top'><%= @topic.get('name') %></div>
-<div class='middle'>Topic Information</div>
+<div class='top'>
+  <%= @topic.get('name') %>
+  <% if @topic.get('primary_type'): %>
+    <div class='sub'><%= @topic.get('primary_type') %></div>
+  <% end %>
+</div>
+<div class='middle'>
+  <div class='image'>
+    <img src='<%= @topic.get('images').fit.normal %>' />
+  </div>
+  <div class='right'>
+    <div class='stats'>
+      <div class='stat1'></div>
+      <div class='stat2'><%= @topic.get('followers_count') %> Followers</div>
+    </div>
+    <p>
+      <%= if @topic.get('summary') then "#{@topic.get('summary').substring(0,100)}..." else "#{@topic.get('name')} has no summary..." %>
+    </p>
+  </div>
+</div>
 <div class='bottom'>
   <% if @topic.get('datasift_enabled'): %>
     <div class='ll-cloud-green' title='This topic pulls content from other sources on the web.'></div>

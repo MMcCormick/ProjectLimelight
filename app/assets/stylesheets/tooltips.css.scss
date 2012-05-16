@@ -23,6 +23,10 @@
     padding: 12px 10px;
     color: #FFF;
     width: 300px;
+    .sub {
+      font-size: 14px;
+      margin: 9px 0 0 0;
+    }
   }
   .middle {
     @include clearfix();
@@ -92,14 +96,22 @@
     top: 14px;
     left: 10px;
   }
-  img {
-    border-right: 1px solid #DDD;
-    max-width: 90px;
-    display: block;
+  .image {
+    width: 90px;
+    min-height: 40px;
     float: left;
+    img {
+      border-right: 1px solid #DDD;
+      border-bottom: 1px solid #DDD;
+      max-width: 90px;
+      display: block;
+      margin: 0 0 -1px 0;
+    }
   }
   .right {
     float: left;
+    width: 170px;
+    margin: 6px 0 0 9px;
   }
   .stats {
     @include clearfix();
@@ -109,6 +121,9 @@
     .stat2 {
       float: right;
     }
+  }
+  p {
+    margin: 10px 0 10px 0;
   }
 }
 

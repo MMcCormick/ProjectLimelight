@@ -29,6 +29,9 @@ class LL.Views.TopicHoverTab extends Backbone.View
         text: (api) ->
           $(self.el).html(self.template(topic: self.model))
 
+          score = new LL.Views.Score(model: self.model)
+          $(self.el).find('.stat1').html(score.render().el)
+
           talk = new LL.Views.TalkButton()
           talk.topic1 = self.model
           talk.button = true

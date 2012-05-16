@@ -9,11 +9,9 @@ class SendUserNotification
     if notification
       user = User.find(notification.user_id)
       NotificationMailer.immediate_notification(user, notification).deliver
-      # Set each notification to emailed
-      notifications.each do |notification|
-        notification.set_emailed
-        notification.save
-      end
+      # Set notification to emailed
+      notification.emailed = true
+      notification.save
     end
   end
 end

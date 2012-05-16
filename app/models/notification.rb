@@ -35,19 +35,14 @@ class Notification
   belongs_to :user
 
   def add_triggered_by(triggered_by_user)
-    found = triggered_by.detect {|u| u.id == triggered_by_user.id}
-    self.set_emailed.delete(triggered_by_user.id)
-    unless found
-      self.triggered_by.create(
-              :_id => triggered_by_user.id,
-              :username => triggered_by_user.username,
-              :first_name => triggered_by_user.first_name,
-              :last_name => triggered_by_user.last_name,
-              :public_id => triggered_by_user.public_id
-      )
-      return true
-    end
-    false
+    self.triggered_by.create(
+            :_id => triggered_by_user.id,
+            :username => triggered_by_user.username,
+            :first_name => triggered_by_user.first_name,
+            :last_name => triggered_by_user.last_name,
+            :public_id => triggered_by_user.public_id
+    )
+    true
   end
 
   def triggered_users_notify_count
@@ -86,16 +81,6 @@ class Notification
         "also commented on #{object_user.username}'s post \"#{object.short_name}\""
       else
         "did something weird... this is a mistake and the Limelight team has been notified to fix it!"
-    end
-  end
-
-  def set_emailed
-    self.emailed = true
-    # Set each triggered to emailed
-    self.triggered_by.each do |user|
-      unless triggered_by_emailed.include? user.id
-        self.triggered_by_emailed << user.id
-      end
     end
   end
 

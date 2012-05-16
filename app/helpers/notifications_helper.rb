@@ -14,23 +14,20 @@ module NotificationsHelper
   end
 
   def action_text(notification, base='')
-    count = notification.triggered_by.length
     case notification.type.to_sym
       when :follow
-        count > 1 ? 'are following you' : 'is following you'
+        'is following you'
       when :also # also signifies that someone has also responded to something your responded to
-        "also replied to <a href='#{base+user_path(notification.object_user)}'>#{notification.object_user.username}'s</a> <a href='#{base+post_path(notification.object)}##{notification.object.comment_id}'>comment</a> on the #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
+        "also replied to <a href='#{base+user_path(notification.object_user)}'>#{notification.object_user.username}'s</a> <a href='#{base+talk_path(notification.object)}##{notification.object.comment_id}'>comment</a> on the #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
       when :mention
-        "mentioned you in their #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
+        "mentioned you in their talk <a href='#{base+talk_path(notification.object)}'>#{notification.object.name}</a>".html_safe
       when :comment
         if notification.object.comment_id
           #name = notification.object_user.id == current_user.id ? 'your' : "<a href='#{base+user_path(notification.object_user)}'>#{notification.object_user.username}'s</a>"
-          "replied to your <a href='#{base+post_path(notification.object)}##{notification.object.comment_id}'>comment</a> on the #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
+          "replied to your <a href='#{base+talk_path(notification.object)}'>comment</a> on the #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
         else
-          "replied to your #{notification.object.type.downcase} <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
+          "replied to your talk <a href='#{base+talk_path(notification.object)}'>#{notification.object.name}</a>".html_safe
         end
-      when :share
-        "shared a #{notification.object.type.downcase}: <a href='#{base+post_path(notification.object)}'>#{notification.object.name}</a>".html_safe
       else
         "did something weird... this is a mistake and the Limelight team has been notified to fix it!"
     end

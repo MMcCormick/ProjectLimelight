@@ -1,3 +1,4 @@
+#BETA REMOVE
 module UsersHelper
   def user_link(user, alt_name=nil, base='')
     name = alt_name ? alt_name : user.username

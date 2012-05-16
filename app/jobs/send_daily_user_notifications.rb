@@ -18,7 +18,7 @@ class SendDailyUserNotifications
         NotificationMailer.new_notifications(user, notifications).deliver
         # Set each notification to emailed
         notifications.each do |notification|
-          notification.set_emailed
+          notification.emailed = true
           notification.save
         end
       end

@@ -10,6 +10,7 @@
 
 <p>Hi <%= @user.first_or_username %>, you have a new notification:</p>
 
-<div style="padding: 10px 5px;">
-  <%= render "notifications/#{@notification.type.to_s.underscore}_notification", :notification => @notification, :is_first => nil, :base => base %>
+<div style="padding: 0 10px 10px 10px;">
+  <a href="<%= base + user_path(@notification.triggered_by) %>" target="_blank"><%= @notification.triggered_by.first_or_username %></a>
+  <%= action_text(@notification, base) %>
 </div>

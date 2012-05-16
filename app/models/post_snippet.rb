@@ -10,7 +10,8 @@ class PostSnippet
   embedded_in :core_object_assignable, polymorphic: true
 
   def to_param
-    "#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
+    id.to_s
+    #"#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
   end
 
   def encoded_id

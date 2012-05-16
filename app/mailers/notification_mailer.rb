@@ -14,6 +14,6 @@ class NotificationMailer < ActionMailer::Base
   def immediate_notification(user, notification)
     @user = user
     @notification = notification
-    mail(:to => "#{user.fullname} <#{user.email}>", :subject => @notification.triggered_by.first_or_username + @notification.notification_text)
+    mail(:to => "#{user.fullname} <#{user.email}>", :subject => "#{@notification.triggered_by.first_or_username} #{@notification.notification_text}")
   end
 end

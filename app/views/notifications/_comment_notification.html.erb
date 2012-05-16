@@ -1,5 +1,5 @@
 <div class="notification reply <%= is_first %> <%= 'unread' unless notification.read %>">
   <div class="chat-grey-icon icon"></div>
-  <%= triggered_users_text_list(notification.triggered_by, base) %>
+  <%= user_link(notification.triggered_by, nil, base) %>
   <%= action_text(notification, base) %>
 </div>

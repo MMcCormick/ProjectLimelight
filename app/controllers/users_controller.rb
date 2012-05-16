@@ -6,7 +6,11 @@ class UsersController < ApplicationController
   respond_to :html, :json
 
   def show
-    @this = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    if params[:slug]
+      @this = User.find_by_slug(params[:slug])
+    else
+      @this = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
+    end
 
     not_found("User not found") unless @this
 
@@ -96,7 +100,7 @@ class UsersController < ApplicationController
   end
 
   def followers
-    @user = User.find_by_slug(params[:id])
+    @user = User.find(params[:id])
     not_found("User not found") unless @user
 
     @title = (signed_in? && current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
@@ -106,7 +110,7 @@ class UsersController < ApplicationController
   end
 
   def following_users
-    @user = User.find_by_slug(params[:id])
+    @user = User.find(params[:id])
     not_found("User not found") unless @user
 
     @title = "Users " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
@@ -116,7 +120,7 @@ class UsersController < ApplicationController
   end
 
   def following_topics
-    @user = User.find_by_slug(params[:id])
+    @user = User.find(params[:id])
     not_found("User not found") unless @user
 
     @title = "Topics " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"

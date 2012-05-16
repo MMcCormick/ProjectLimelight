@@ -113,13 +113,13 @@ ProjectLimelight::Application.routes.draw do
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
   scope 'users' do
-    get ':id/following/users' => 'users#show', :as => :user_following_topics
-    get ':id/following/topics' => 'users#show', :as => :user_following_users
-    get ':id/followers' => 'users#show', :as => :user_followers
-    get ':id/likes' => 'users#show', :as => :user_likes
-    get ':id/influence' => 'users#show', :as => :user_influence
-    get ':id/feed' => 'users#show', :as => :user_feed
-    get ':id' => 'users#show', :as => :user, :show_og => true
+    get ':slug/following/users' => 'users#show', :as => :user_following_topics
+    get ':slug/following/topics' => 'users#show', :as => :user_following_users
+    get ':slug/followers' => 'users#show', :as => :user_followers
+    get ':slug/likes' => 'users#show', :as => :user_likes
+    get ':slug/influence' => 'users#show', :as => :user_influence
+    get ':slug/feed' => 'users#show', :as => :user_feed
+    get ':slug' => 'users#show', :as => :user, :show_og => true
   end
   get 'settings' => 'users#settings', :as => :user_settings
   get 'activity' => 'users#show'

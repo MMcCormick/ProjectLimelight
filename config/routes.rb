@@ -105,21 +105,26 @@ ProjectLimelight::Application.routes.draw do
   #match "/upload" => "uploads#create", :as => :upload_tmp
 
   # Users
-  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",
-                                       :registrations => :registrations,
-                                       :confirmations => :confirmations,
-                                       :sessions => :sessions }
+  devise_for :users, :skip => [:sessions], :controllers => { :omniauth_callbacks => "omniauth_callbacks",
+                                           :registrations => :registrations,
+                                           :confirmations => :confirmations,
+                                           :sessions => :sessions }
+  devise_scope :user do
+    get '' => 'users#feed', :as => :new_user_session
+    post 'sign_in' => 'sessions#create', :as => :user_session
+    get 'sign_out' => 'sessions#destroy', :as => :destroy_user_session
+  end
   #omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
   scope 'users' do
-    get ':id/following/users' => 'users#show', :as => :user_following_topics
-    get ':id/following/topics' => 'users#show', :as => :user_following_users
-    get ':id/followers' => 'users#show', :as => :user_followers
-    get ':id/likes' => 'users#show', :as => :user_likes
-    get ':id/influence' => 'users#show', :as => :user_influence
-    get ':id/feed' => 'users#show', :as => :user_feed
-    get ':id' => 'users#show', :as => :user, :show_og => true
+    get ':slug/following/users' => 'users#show', :as => :user_following_topics
+    get ':slug/following/topics' => 'users#show', :as => :user_following_users
+    get ':slug/followers' => 'users#show', :as => :user_followers
+    get ':slug/likes' => 'users#show', :as => :user_likes
+    get ':slug/influence' => 'users#show', :as => :user_influence
+    get ':slug/feed' => 'users#show', :as => :user_feed
+    get ':slug' => 'users#show', :as => :user, :show_og => true
   end
   get 'settings' => 'users#settings', :as => :user_settings
   get 'activity' => 'users#show'

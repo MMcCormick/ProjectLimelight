@@ -121,7 +121,7 @@ class TopicsController < ApplicationController
   end
 
   def followers
-    @topic = Topic.find_by_slug(params[:id])
+    @topic = Topic.find(params[:id])
     not_found("Topic not found") unless @topic
 
     @title = @topic.name + " followers"

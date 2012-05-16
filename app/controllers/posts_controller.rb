@@ -115,7 +115,8 @@ class PostsController < ApplicationController
 
   # The main user feed
   def user_feed
-    user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
+    not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.feed(user.id, session[:feed_filters][:display], params[:sort], page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
@@ -123,7 +124,8 @@ class PostsController < ApplicationController
 
   # The user like feed
   def like_feed
-    user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
+    not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.like_feed(user.id, session[:feed_filters][:display], page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
@@ -131,7 +133,8 @@ class PostsController < ApplicationController
 
   # The user activity feed
   def activity_feed
-    user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
+    not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.activity_feed(user.id, session[:feed_filters][:display], page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
@@ -139,7 +142,7 @@ class PostsController < ApplicationController
 
   # Topic feeds...
   def topic_feed
-    topic = Topic.unscoped.where(slug: params[:id]).first
+    topic = Topic.unscoped.find(params[:id])
     not_found("Topic not found") unless topic
 
     page = params[:p] ? params[:p].to_i : 1
@@ -151,6 +154,7 @@ class PostsController < ApplicationController
   # Post responses from a users friends
   def friend_responses
     post = Post.find(params[:id])
+    not_found("Post not found") unless post
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.friend_responses(post.id, current_user, page, 50)
     post_ids = posts.map {|p| p.id}
@@ -160,6 +164,7 @@ class PostsController < ApplicationController
 
   def public_responses
     post = Post.find(params[:id])
+    not_found("Post not found") unless post
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.public_responses_no_friends(post.id, page, 50, current_user)
     render :json => posts.map {|p| p.as_json(:user => current_user)}

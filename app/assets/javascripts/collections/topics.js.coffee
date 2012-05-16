@@ -12,9 +12,6 @@ class LL.Collections.Topics extends Backbone.Collection
     id = @convertProtected(id)
 
     model = @get(id)
-    console.log id
-    console.log @
-    console.log model
 
     if model
       if forceLookup == true

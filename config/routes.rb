@@ -105,10 +105,15 @@ ProjectLimelight::Application.routes.draw do
   #match "/upload" => "uploads#create", :as => :upload_tmp
 
   # Users
-  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",
-                                       :registrations => :registrations,
-                                       :confirmations => :confirmations,
-                                       :sessions => :sessions }
+  devise_for :users, :skip => [:sessions], :controllers => { :omniauth_callbacks => "omniauth_callbacks",
+                                           :registrations => :registrations,
+                                           :confirmations => :confirmations,
+                                           :sessions => :sessions }
+  devise_scope :user do
+    get '' => 'users#feed', :as => :new_user_session
+    post 'sign_in' => 'sessions#create', :as => :user_session
+    get 'sign_out' => 'sessions#destroy', :as => :destroy_user_session
+  end
   #omniauth passthrough (https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 

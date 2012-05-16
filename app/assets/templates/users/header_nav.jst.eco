@@ -43,7 +43,7 @@
     </li>
     <li class="divider"></li>
     <li>
-      <a href="/users/sign_out">Logout</a>
+      <a href="/sign_out">Logout</a>
     </li>
   </ul>
 <% else: %>

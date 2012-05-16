@@ -8,7 +8,7 @@ end
 class TestingController < ApplicationController
 
   def test
-    SendDailyUserNotifications.perform()
+    SendPersonalWelcome.perform("4fb3ccfaac8dde1bff000035", "today")
   end
 
   def facebook_thing

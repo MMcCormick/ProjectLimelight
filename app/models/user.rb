@@ -128,7 +128,7 @@ class User
     user.validate :username_change
   end
 
-  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff
+  after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff, :send_personal_email
   after_update :update_denorms#, :expire_caches
   before_destroy :remove_from_soulmate
 
@@ -378,7 +378,21 @@ class User
   end
 
   def send_welcome_email
-    UserMailer.welcome_email(self).deliver
+    UserMailer.welcome_email(self.id).deliver
+  end
+
+  def send_personal_email
+    hour = Time.now.hour
+    variation = rand(7200)
+    if hour < 11
+      delay = Chronic.parse('Today at 11AM').to_i - Time.now.to_i + variation
+      Resque.enqueue_in(delay, SendPersonalWelcome, id, "today")
+    elsif hour >= 11 && hour < 18
+      Resque.enqueue_in(1.hours + variation, SendPersonalWelcome, id, "today")
+    else
+      delay = Chronic.parse('Tomorrow at 11AM').to_i - Time.now.to_i + variation
+      Resque.enqueue_in(delay, SendPersonalWelcome, id, "today")
+    end
   end
 
   def get_social_connect provider

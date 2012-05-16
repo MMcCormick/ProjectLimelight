@@ -1,0 +1,30 @@
+<%
+ if Rails.env.development?
+   base = 'http://localhost:3000'
+ elsif Rails.env.staging?
+   base = 'http://staging.projectlimelight.com'
+ else
+   base = 'http://www.projectlimelight.com'
+ end
+%>
+
+<p>Hi<%= @user.first_name ? " #{@user.first_name}" : "" %>,</p>
+
+<p>
+  I'm Matt, and I'm a Co-Founder of Limelight.
+  You're one of our first users, so I wanted to send you an email and see how your first time on Limelight was.
+</p>
+
+<p>
+  Marc and I built Limelight as a new way to follow the topics you care about, and we want it to be as useful as possible!
+  So if you have any ideas on how we can improve it, please don't hesitate to reach out anytime.
+  This is my personal email, and it's the quickest way to give me feedback (or get me to fix a bug!).
+  Thanks again for signing up, and I look forward to seeing you on Limelight!
+</p>
+
+<div>
+  Best,
+  <br/>Matt
+  <br/>matt@projectlimelight.com
+  <br/><a href="<%= base %>/users/matt" target="_blank">@Matt</a> on Limelight<br />
+</div>

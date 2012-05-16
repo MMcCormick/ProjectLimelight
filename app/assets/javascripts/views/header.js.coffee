@@ -10,6 +10,9 @@ class LL.Views.Header extends Backbone.View
       @render()
 
   render: =>
+    header_search = new LL.Views.HeaderSearch()
+    $(@el).append(header_search.render().el)
+
     header_user_nav = new LL.Views.UserHeaderNav(model: @model)
     $(@el).append(header_user_nav.render().el)
 

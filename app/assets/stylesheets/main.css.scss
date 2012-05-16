@@ -231,6 +231,21 @@ header {
         left: 0px;
       }
     }
+    .search {
+      position: absolute;
+      top: 5px;
+      left: 350px;
+      .add-on {
+        @include border-radius(1px 0 0 1px);
+        margin: 0 -5px 0 0;
+        padding: 9px 8px 5px 8px;
+      }
+      input {
+        @include border-radius(0 1px 1px 0);
+        padding: 7px 10px;
+        font-size: 14px;
+      }
+    }
     .talk,
     .login {
       @include border-radius(2px);
@@ -256,25 +271,25 @@ header {
   font-size: 16px;
 
   .profile-img {
-    @include border-radius(3px);
+    @include border-radius(1px);
     background: $grayLightest;
     padding: 2px;
     float: right;
-    margin: 4px 5px 0 0;
+    margin: 5px 5px 0 0;
 
     img {
-      @include border-radius(2px);
+      @include border-radius(1px);
       width: 30px;
       height: 30px;
       display: block;
     }
   }
   .numbers {
-    @include border-radius(3px);
+    @include border-radius(1px);
     float: right;
     background: $grayLightest;
     height: 34px;
-    margin: 4px 5px 0 0;
+    margin: 5px 5px 0 0;
     padding: 0 10px;
     line-height: 34px;
     cursor: default;
@@ -442,13 +457,14 @@ header {
       background: $grayLightest;
       border-bottom: 1px solid #EEE;
       padding: 8px 15px;
-      h4 {
+      h5 {
         @include single-text-shadow(#DDD, 0, 1px);
         font-weight: normal;
         cursor: default;
       }
-      h5 {
+      h5.sub {
         font-weight: normal;
+        font-size: 13px;
       }
     }
     > .meat {

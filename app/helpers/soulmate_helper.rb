@@ -1,10 +1,14 @@
 module SoulmateHelper
+  include Rails.application.routes.url_helpers
+
   def user_nugget(user)
     nugget = {
               'id' => user.id.to_s,
               'term' => user.username,
               'score' => user.score,
               'data' => {
+                      'slug' => user.slug,
+                      'url' => user_path(user)
               }
     }
 
@@ -18,6 +22,7 @@ module SoulmateHelper
               'score' => topic.score,
               'data' => {
                       'slug' => topic.slug,
+                      'url' => topic_path(topic),
                       'ooac' => []
               }
     }

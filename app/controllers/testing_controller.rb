@@ -8,10 +8,11 @@ end
 class TestingController < ApplicationController
 
   def test
-    users = User.where("social_connects.provider" => 'facebook')
-    users.each do |u|
-      Resque.enqueue(AutoFollowFBLikes, u.id.to_s)
-    end
+    AutoFollowFBLikes.perform(User.matt_id)
+    #users = User.where("social_connects.provider" => 'facebook')
+    #users.each do |u|
+    #  Resque.enqueue(AutoFollowFBLikes, u.id.to_s)
+    #end
   end
 
   def facebook_thing

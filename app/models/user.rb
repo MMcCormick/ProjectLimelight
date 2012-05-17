@@ -379,7 +379,7 @@ class User
   end
 
   def send_welcome_email
-    UserMailer.welcome_email(self.id).deliver
+    UserMailer.welcome_email(self.id.to_s).deliver
   end
 
   def send_personal_email
@@ -387,12 +387,12 @@ class User
     variation = rand(7200)
     if hour < 11
       delay = Chronic.parse('Today at 11AM').to_i - Time.now.to_i + variation
-      Resque.enqueue_in(delay, SendPersonalWelcome, id, "today")
+      Resque.enqueue_in(delay, SendPersonalWelcome, id.to_s, "today")
     elsif hour >= 11 && hour < 18
-      Resque.enqueue_in(1.hours + variation, SendPersonalWelcome, id, "today")
+      Resque.enqueue_in(1.hours + variation, SendPersonalWelcome, id.to_s, "today")
     else
       delay = Chronic.parse('Tomorrow at 11AM').to_i - Time.now.to_i + variation
-      Resque.enqueue_in(delay, SendPersonalWelcome, id, "today")
+      Resque.enqueue_in(delay, SendPersonalWelcome, id.to_s, "today")
     end
   end
 

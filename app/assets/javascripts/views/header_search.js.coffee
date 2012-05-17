@@ -16,7 +16,12 @@ class LL.Views.HeaderSearch extends Backbone.View
       allowNew:       false,
       selectFirst:    true,
       renderCallback: (term, data, type) ->
-        term
+        if data['data']['type'] && data['data']['type'].length > 0
+          "#{term} <div class='topic-type'>#{data['data']['type']}</div>"
+        else
+          term
+
+#        if data
       selectCallback: (term, data, type) ->
         window.location = data.data.url
 

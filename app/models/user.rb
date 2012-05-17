@@ -4,6 +4,7 @@ class User
   include Mongoid::Timestamps
   include Mongoid::Slug
   include Limelight::Images
+  include ModelUtilitiesHelper
 
   cache
 
@@ -604,7 +605,9 @@ class User
             :unread_notification_count => unread_notification_count,
             :images => User.json_images(self),
             :status => status,
-            :url => status == 'twitter' ? "http://twitter.com/#{username}" : "/users/#{to_param}"
+            :url => status == 'twitter' ? "http://twitter.com/#{username}" : "/users/#{to_param}",
+            :created_at => created_at.to_i,
+            :created_at_pretty => pretty_time(created_at)
     }
 
     if options[:show_extra]

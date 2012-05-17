@@ -8,8 +8,8 @@ class DatasiftPushPost
     def combinalities(string)
       return [] unless string && !string.blank?
 
-      # generate the word combinations in the tweet (to find topics based on)
-      words = string.downcase.gsub("'s", '').gsub(/[^a-z1-9 ]/, '')
+      # generate the word combinations in the tweet (to find topics based on) and remove short words
+      words = string.downcase.gsub("'s", '').gsub(/[^a-z1-9 ]/, '').split.select { |w| w.length > 2 }.join(' ')
       words = words.split(" ")
       combinaties = []
       i=0
@@ -56,28 +56,30 @@ class DatasiftPushPost
       return if link_data['title'] && link_data['title'].to_url == 'news-from-the-associated-press'
 
       # extract topics from the text
-      combinations = DatasiftPushPost.combinalities(tweet_content)
+      combinations = DatasiftPushPost.combinalities("#{tweet_content} #{link_data['title']} #{link_data['description']}")
       # extract topics from the link with alchemy api
-      postData = Net::HTTP.post_form(
-              URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
-              {
-                      'url' => url,
-                      'apikey' => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
-                      'outputMode' => 'json'
-              }
-      )
-      tmp_entities = JSON.parse(postData.body)['entities']
+      #postData = Net::HTTP.post_form(
+      #        URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
+      #        {
+      #                'url' => url,
+      #                'apikey' => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
+      #                'outputMode' => 'json'
+      #        }
+      #)
+      #tmp_entities = JSON.parse(postData.body)['entities']
       entities = []
-
-      tmp_entities.each do |e|
-        if e['relevance'].to_f >= 0.6
-          entities << e['text'].downcase
-          if e['disambiguated']
-            entities << e['disambiguated']['name'].downcase
-          end
-        end
-      end
-      entities.uniq!
+      #
+      #if tmp_entities
+      #  tmp_entities.each_with_index do |e,i|
+      #    if e['relevance'].to_f >= 0.6
+      #      entities << e['text'].downcase
+      #      if e['disambiguated']
+      #        entities << e['disambiguated']['name'].downcase
+      #      end
+      #    end
+      #  end
+      #  entities.uniq!
+      #end
 
       combinations << entities
       combinations.uniq!
@@ -86,29 +88,22 @@ class DatasiftPushPost
       skip = true
       topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
       topics.each_with_index do |t,i|
-        puts t.name
         if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 75)
           # dont skip this post, there is a topic that has not had a datasift post in the past x seconds
           skip = false
         end
       end
 
-      puts skip
-
       if skip == false
         text_content = link_data['title']
         combinations = DatasiftPushPost.combinalities(text_content)
         combinations << entities
         combinations.uniq!
-        topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
-
-        puts url
-        puts link_data['url']
+        topics = Topic.where(:datasift_tags => {"$in" => combinations}).order_by(:score, :desc).to_a
 
         # check to see if a news story covering this story has already been submitted
         existing_post = Post.find_similar(topics)
         if existing_post
-          puts "existing post"
           source = SourceSnippet.new
           source.name = link_data['provider_name']
           source.url = link_data['url']
@@ -162,7 +157,8 @@ class DatasiftPushPost
           post.tweet_id = interaction['twitter']['retweeted'] ? interaction['twitter']['retweeted']['id'] : interaction['twitter']['id']
           post.standalone_tweet = true
           post.alchemy_entities = entities
-          topics.each do |t|
+          topics.each_with_index do |t,i|
+            break if i > 3
             t.datasift_last_pushed = Time.now
             t.save
             post.save_topic_mention(t)

@@ -11,6 +11,14 @@ class LL.Views.TopicHoverTab extends Backbone.View
     self = @
 
     if @model.get('created_at')
+      score = new LL.Views.Score(model: self.model)
+
+      talk = new LL.Views.TalkButton()
+      talk.topic1 = self.model
+      talk.button = true
+
+      follow = new LL.Views.FollowButton(model: self.model)
+
       @target.qtip
         position:
           my: 'top left'
@@ -30,16 +38,9 @@ class LL.Views.TopicHoverTab extends Backbone.View
           text: (api) ->
             $(self.el).html(self.template(topic: self.model))
 
-            score = new LL.Views.Score(model: self.model)
             $(self.el).find('.stat1').html(score.render().el)
 
-            talk = new LL.Views.TalkButton()
-            talk.topic1 = self.model
-            talk.button = true
-            $(self.el).find('.bottom').append(talk.render().el)
-
-            follow = new LL.Views.FollowButton(model: self.model)
-            $(self.el).find('.bottom').append(follow.render().el)
+            $(self.el).find('.bottom').append(talk.render().el).append(follow.render().el)
             $(self.el)
 
       @target.qtip('show')

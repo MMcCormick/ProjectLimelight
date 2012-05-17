@@ -38,7 +38,7 @@ module ModelUtilitiesHelper
         "projectlimelight_dev"
       when "staging"
         "limelight_staging"
-      when "development"
+      when "production"
         "project_limelight"
     end
   end

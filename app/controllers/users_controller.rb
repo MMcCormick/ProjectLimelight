@@ -19,6 +19,13 @@ class UsersController < ApplicationController
       @description = "#{@this.username} on Limelight."
       @og_tags = build_og_tags(@title, "#{og_namespace}:user", user_url(@this), @this.image_url(:fit, :large), @description, {"og:username" => @this.username, "#{og_namespace}:display_name" => "User", "#{og_namespace}:followers_count" => @this.followers_count.to_i, "#{og_namespace}:score" => @this.score.to_i, "#{og_namespace}:following_users" => @this.following_users_count.to_i, "#{og_namespace}:following_topics" => @this.following_topics_count.to_i})
     end
+
+    respond_to do |format|
+      format.js {
+        render :json => @this.as_json
+      }
+      format.html
+    end
   end
 
   def create

@@ -56,30 +56,30 @@ class DatasiftPushPost
       return if link_data['title'] && link_data['title'].to_url == 'news-from-the-associated-press'
 
       # extract topics from the text
-      combinations = DatasiftPushPost.combinalities(tweet_content)
+      combinations = DatasiftPushPost.combinalities("#{tweet_content} #{link_data['title']} #{link_data['description']}")
       # extract topics from the link with alchemy api
-      postData = Net::HTTP.post_form(
-              URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
-              {
-                      'url' => url,
-                      'apikey' => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
-                      'outputMode' => 'json'
-              }
-      )
-      tmp_entities = JSON.parse(postData.body)['entities']
-      entities = []
-
-      if tmp_entities
-        tmp_entities.each_with_index do |e,i|
-          if e['relevance'].to_f >= 0.6
-            entities << e['text'].downcase
-            if e['disambiguated']
-              entities << e['disambiguated']['name'].downcase
-            end
-          end
-        end
-        entities.uniq!
-      end
+      #postData = Net::HTTP.post_form(
+      #        URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
+      #        {
+      #                'url' => url,
+      #                'apikey' => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
+      #                'outputMode' => 'json'
+      #        }
+      #)
+      #tmp_entities = JSON.parse(postData.body)['entities']
+      #entities = []
+      #
+      #if tmp_entities
+      #  tmp_entities.each_with_index do |e,i|
+      #    if e['relevance'].to_f >= 0.6
+      #      entities << e['text'].downcase
+      #      if e['disambiguated']
+      #        entities << e['disambiguated']['name'].downcase
+      #      end
+      #    end
+      #  end
+      #  entities.uniq!
+      #end
 
       combinations << entities
       combinations.uniq!

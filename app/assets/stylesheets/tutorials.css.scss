@@ -1,10 +1,13 @@
 #tutorial {
-  margin: 60px 0 0 200px;
+  margin: 80px 0 0 200px;
   width: 570px;
   position: relative;
 
   h2 {
     cursor: default;
+  }
+  .content-tile {
+    position: relative;
   }
   section {
     padding: 0px;
@@ -50,8 +53,9 @@
   }
   .tutorial-head {
     position: absolute;
-    top: -110px;
-    left: 10px;
+    top: -120px;
+    left: 50%;
+    margin-left: -260px;
     h3 {
       position: absolute;
       top: 36px;

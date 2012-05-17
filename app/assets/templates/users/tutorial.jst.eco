@@ -2,22 +2,24 @@
   <h3>Welcome <%= @user.get('username') %>!</h3>
   <img src="/assets/images/splash-logo.png" />
 </div>
-<section>
-  <div class="modal-header">
-    <h2></h2>
-  </div>
-  <div class="modal-body"></div>
-  <div class="modal-footer">
-    <div class="social">
-      <div class="fb-like" data-href="http://www.facebook.com/DiscoverLimelight" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
-      <a href="https://twitter.com/share?url=http://projectlimelight.com&text=I just signed up for Limelight, a new way to follow the topics I care about. @limelight_team" class="twitter-share-button" data-lang="en">Tweet</a>
-      <div class="google">
-        <div class="g-plusone" data-size="medium" data-href="http://projectlimelight.com"></div>
+<div class='content-tile'>
+  <section>
+    <div class="modal-header">
+      <h2></h2>
+    </div>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+      <div class="social">
+        <div class="fb-like" data-href="http://www.facebook.com/DiscoverLimelight" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+        <a href="https://twitter.com/share?url=http://projectlimelight.com&text=I just signed up for Limelight, a new way to follow the topics I care about. @limelight_team" class="twitter-share-button" data-lang="en">Tweet</a>
+        <div class="google">
+          <div class="g-plusone" data-size="medium" data-href="http://projectlimelight.com"></div>
+        </div>
+      </div>
+      <div class='btn btn-large btn-success next'>Next</div>
+      <div class='step-count'>
+        step <span><%= @step %></span> of 4
       </div>
     </div>
-    <div class='btn btn-large btn-success next'>Next</div>
-    <div class='step-count'>
-      step <span><%= @step %></span> of 4
-    </div>
-  </div>
-</section>
+  </section>
+</div>

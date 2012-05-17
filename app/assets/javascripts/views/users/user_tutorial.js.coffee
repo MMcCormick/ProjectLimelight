@@ -1,6 +1,5 @@
 class LL.Views.UserTutorial extends Backbone.View
   template: JST['users/tutorial']
-  className: 'content-tile'
   id: 'tutorial'
 
   events:
@@ -17,7 +16,7 @@ class LL.Views.UserTutorial extends Backbone.View
     view.parent = @
     @activeView = view
 
-    @displayActive()
+    @displayActive(true)
 
     if @step < 4
       next = new LL.Views["UserTutorial#{@step+1}"](model: LL.App.current_user)
@@ -38,26 +37,38 @@ class LL.Views.UserTutorial extends Backbone.View
         $(self.el).find('.next').addClass('disabled').text('Follow 3 Topics First')
     , 1000
 
-  displayActive: =>
-    self = @
+  changeValues: =>
+    $(@el).find('h2').text(@activeView.title)
 
-    $(@el).find('h2').fadeOut 300, ->
-      $(@).text(self.activeView.title).fadeIn 300
-
-    $(@el).find('.modal-body').fadeOut 300, ->
-      $(@).html(self.activeView.render().el).fadeIn 300
+    $(@el).find('.modal-body').html(@activeView.render().el)
 
     $(@el).find('.step-count span').text(@step)
 
     if @step == 2 && @followCount < 3 && $('.follow').length > 0
       $(@el).find('.next').addClass('disabled').text('Follow 3 Topics First')
 
-    $('body').scrollTop(0)
-
     if @step == 4
       setTimeout ->
         $('.next').text('Finish!')
       , 400
+
+  displayActive: (first=false) =>
+    self = @
+
+    $('body').scrollTop(0)
+
+    if first == true
+
+      @changeValues()
+
+    else
+      tile = $(@el).find('.content-tile')
+      adjust = tile.offset().left + tile.width()
+      tile.animate {left: "-#{adjust}px"}, 500, 'easeOutExpo', ->
+        self.changeValues()
+        tile.css(left: $('body').width()).animate {left: "0px"}, 500, 'easeOutExpo'
+
+
 
   displayNext: =>
 

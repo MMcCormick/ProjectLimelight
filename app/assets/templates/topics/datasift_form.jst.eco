@@ -16,7 +16,7 @@
     </div>
 
     <div class="actions">
-      <div class="submit btn btn-success">Connect</div>
+      <div class="submit btn btn-success">Submit</div>
     </div>
   </form>
 </div>

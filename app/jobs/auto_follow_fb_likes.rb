@@ -18,6 +18,7 @@ class AutoFollowFBLikes
           unless type
             type = Topic.new
             type.name = like['category']
+            type.user_id = User.marc_id
             type.save
           end
 

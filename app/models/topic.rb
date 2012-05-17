@@ -385,6 +385,7 @@ class Topic
   def neo4j_create
     node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'slug' => slug, 'public_id' => public_id)
     Neo4j.neo.add_node_to_index('topics', 'uuid', id.to_s, node)
+    node
   end
 
   def neo4j_update

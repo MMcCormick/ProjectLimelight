@@ -8,6 +8,7 @@ end
 class TestingController < ApplicationController
 
   def test
+    AutoFollowFBLikes.perform(User.matt_id)
   end
 
   def facebook_thing

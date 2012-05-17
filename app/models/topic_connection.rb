@@ -41,6 +41,10 @@ class TopicConnection
         }
         node1 = Neo4j.neo.get_node_index('topics', 'uuid', topic1.id.to_s)
         node2 = Neo4j.neo.get_node_index('topics', 'uuid', topic2.id.to_s)
+
+        node1 = topic1.neo4j_create unless node1
+        node2 = topic2.neo4j_create unless node2
+
         rel1 = Neo4j.neo.create_relationship(connection.name, node1, node2)
         Neo4j.neo.set_relationship_properties(rel1, {
                 'connection_id' => connection.id.to_s,

@@ -171,12 +171,12 @@ $feedFontColor: $grayDark;
     padding: 0;
     z-index: 1;
     display: none;
-    border-top: 1px solid #BBB;
+    border-top: 1px solid #EEE;
 
     &.static {
       @include single-box-shadow(none);
       position: relative;
-      top: 7px;
+      top: 9px;
       width: 210px;
       padding: 0 15px;
       .mentions,

@@ -67,7 +67,7 @@ class DatasiftPushPost
       #        }
       #)
       #tmp_entities = JSON.parse(postData.body)['entities']
-      #entities = []
+      entities = []
       #
       #if tmp_entities
       #  tmp_entities.each_with_index do |e,i|

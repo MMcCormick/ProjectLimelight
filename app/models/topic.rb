@@ -262,11 +262,9 @@ class Topic
 
   def set_primary_type(primary_name, primary_id)
     update_health('type')
-    if !primary_type || !primary_type_id
-      self.primary_type = primary_name
-      self.primary_type_id = primary_id
-      Resque.enqueue(SmCreateTopic, id.to_s)
-    end
+    self.primary_type = primary_name
+    self.primary_type_id = primary_id
+    Resque.enqueue(SmCreateTopic, id.to_s)
   end
 
   def unset_primary_type
@@ -655,7 +653,10 @@ class Topic
     end
 
     unless primary_type_updates.empty?
-      Topic.where("primary_type_id" => id).update_all(primary_type_updates)
+      Topic.where("primary_type_id" => id).each do |topic|
+        topic.set_primary_type(name, id)
+        topic.save
+      end
     end
 
     if soulmate

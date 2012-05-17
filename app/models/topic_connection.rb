@@ -68,7 +68,7 @@ class TopicConnection
           action_log[:reverse_pull_from] = true
         end
 
-        if connection.id.to_s == Topic.type_of_id
+        if connection.id.to_s == Topic.type_of_id && !topic1.primary_type_id
           topic1.set_primary_type(topic2.name, topic2.id)
         else
           topic1.update_health('connection')

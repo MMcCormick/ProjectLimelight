@@ -69,15 +69,17 @@ class DatasiftPushPost
       tmp_entities = JSON.parse(postData.body)['entities']
       entities = []
 
-      tmp_entities.each_with_index do |e,i|
-        if e['relevance'].to_f >= 0.6
-          entities << e['text'].downcase
-          if e['disambiguated']
-            entities << e['disambiguated']['name'].downcase
+      if tmp_entities
+        tmp_entities.each_with_index do |e,i|
+          if e['relevance'].to_f >= 0.6
+            entities << e['text'].downcase
+            if e['disambiguated']
+              entities << e['disambiguated']['name'].downcase
+            end
           end
         end
+        entities.uniq!
       end
-      entities.uniq!
 
       combinations << entities
       combinations.uniq!

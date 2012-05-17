@@ -8,7 +8,10 @@ end
 class TestingController < ApplicationController
 
   def test
-    SendPersonalWelcome.perform("4fb3ccfaac8dde1bff000035", "today")
+    users = User.where("social_connects.provider" => 'facebook')
+    users.each do |u|
+      Resque.enqueue(AutoFollowFBLikes, u.id.to_s)
+    end
   end
 
   def facebook_thing

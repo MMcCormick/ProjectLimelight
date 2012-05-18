@@ -31,6 +31,7 @@ class Post
   field :standalone_tweet, :default => false
   field :alchemy_entities
   field :alchemy_concepts
+  field :neo4j_id
 
   auto_increment :public_id
 
@@ -268,7 +269,14 @@ class Post
   end
 
   def neo4j_create
+    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post', 'subtype' => self.class.name, 'created_at' => created_at.to_i)
+    Neo4j.neo.add_node_to_index('posts', 'uuid', post.id.to_s, post_node)
+    self.neo4j_id = node['self'].split('/').last
+    save
+
     Resque.enqueue(Neo4jPostCreate, id.to_s)
+
+    node
   end
 
   def action_log_create

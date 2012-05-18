@@ -68,16 +68,6 @@ class Neo4j
       creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
 
       post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s)
-      unless post_node
-        post_node = Neo4j.neo.create_node(
-                'uuid' => post.id.to_s,
-                'type' => 'post',
-                'subtype' => post.class.name,
-                'public_id' => post.public_id,
-                'created_at' => post.created_at.to_i
-        )
-        Neo4j.neo.add_node_to_index('posts', 'uuid', post.id.to_s, post_node)
-      end
 
       rel1 = Neo4j.neo.create_relationship('created', creator_node, post_node)
       Neo4j.neo.add_relationship_to_index('users', 'created', "#{post.user_id.to_s}-#{post.id.to_s}", rel1)

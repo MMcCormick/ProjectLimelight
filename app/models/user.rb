@@ -99,6 +99,7 @@ class User
   field :auto_follow_fb, :default => true
   field :auto_follow_tw, :default => true
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
+  field :neo4j_id
 
   auto_increment :public_id
 
@@ -446,10 +447,12 @@ class User
             'uuid' => id.to_s,
             'type' => 'user',
             'username' => username,
-            'public_id' => public_id,
             'created_at' => created_at.to_i
     )
     Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
+    self.neo4j_id = node['self'].split('/').last
+    save
+    node
   end
 
   def neo4j_update

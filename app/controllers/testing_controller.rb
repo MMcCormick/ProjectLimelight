@@ -8,7 +8,7 @@ end
 class TestingController < ApplicationController
 
   def test
-    Resque.enqueue(TestJob)
+    SendDailyUserNotifications.perform()
   end
 
   def facebook_thing

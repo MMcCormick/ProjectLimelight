@@ -1,8 +1,7 @@
 class UserMailer < ActionMailer::Base
   include Resque::Mailer
   default :from => "Limelight <support@projectlimelight.com>"
-  layout 'email'
-  layout false, :only => [:matt_welcome, :marc_welcome]
+  layout 'email', :except => [:matt_welcome, :marc_welcome]
 
   def welcome_email(user_id)
     @user = User.find(user_id)

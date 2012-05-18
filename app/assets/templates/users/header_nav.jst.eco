@@ -29,6 +29,9 @@
       <a href="<%= "/activity" %>">Activity</a>
     </li>
     <li>
+      <a href="<%= "/influence" %>">Influence</a>
+    </li>
+    <li>
       <a href="/settings">Settings</a>
     </li>
     <li class="divider"></li>

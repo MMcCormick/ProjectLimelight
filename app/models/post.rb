@@ -270,7 +270,7 @@ class Post
 
   def neo4j_create
     node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post', 'subtype' => self.class.name, 'created_at' => created_at.to_i)
-    Neo4j.neo.add_node_to_index('posts', 'uuid', post.id.to_s, post_node)
+    Neo4j.neo.add_node_to_index('posts', 'uuid', id.to_s, node)
     self.neo4j_id = node['self'].split('/').last
     save
 

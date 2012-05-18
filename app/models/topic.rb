@@ -189,8 +189,10 @@ class Topic
       add_alias(short_name)
     end
     if name_changed?
-      remove_alias(name_was.pluralize)
-      remove_alias(name_was.singularize)
+      if name_was
+        remove_alias(name_was.pluralize)
+        remove_alias(name_was.singularize)
+      end
       add_alias(name.pluralize)
       add_alias(name.singularize)
     end

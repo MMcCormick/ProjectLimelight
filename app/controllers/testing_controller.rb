@@ -47,7 +47,7 @@ class TestingController < ApplicationController
       end
     end
 
-    posts = Link.all
+    posts = Post.all
     posts.each do |p|
       node = Neo4j.neo.get_node_index('posts', 'uuid', p.id.to_s)
 

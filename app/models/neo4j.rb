@@ -193,7 +193,7 @@ class Neo4j
       query = "
         START n=node:topics(uuid = '#{topic_id.to_s}')
         MATCH (n)-[r]->(x)
-        WHERE r.connection_id
+        WHERE has(r.connection_id)
         RETURN r,x
       "
       outgoing = Neo4j.neo.execute_query(query)
@@ -201,7 +201,7 @@ class Neo4j
       query = "
         START n=node:topics(uuid = '#{topic_id.to_s}')
         MATCH (n)<-[r]-(x)
-        WHERE r.connection_id
+        WHERE has(r.connection_id)
         RETURN r,x
       "
       incoming = Neo4j.neo.execute_query(query)
@@ -290,7 +290,7 @@ class Neo4j
       query = "
         START n=node:users(uuid = '#{user_id}')
         MATCH n-[r1:affinity]->topic
-        WHERE topic.type = 'topic' and r1.weight and r1.weight >= 50
+        WHERE topic.type = 'topic' and r1.weight! >= 50
         RETURN topic, r1.weight
         ORDER BY r1.weight desc
         LIMIT #{limit}
@@ -314,7 +314,7 @@ class Neo4j
       query = "
         START user=node:users(uuid = '#{user_id}')
         MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion, user-[r4?:affinity]->suggestion, user-[r5?:follow]->suggestion
-        WHERE topic.type = 'topic' and user2.type = 'user' and suggestion.type = 'topic' and r1.weight and r1.weight >= 10 and r3.weight and (r1.sentiment != 'negative') and (r4 IS NULL) and r5 IS NULL
+        WHERE topic.type = 'topic' and user2.type = 'user' and suggestion.type = 'topic' and r1.weight! >= 10 and has(r3.weight) and (r1.sentiment != 'negative') and (r4 IS NULL) and r5 IS NULL
         RETURN suggestion, SUM(r3.weight)
         ORDER BY SUM(r3.weight) desc
         LIMIT #{limit}
@@ -335,7 +335,7 @@ class Neo4j
       query = "
         START topic=node:topics(uuid = '#{topic_id}')
         MATCH topic-[r:affinity]-related
-        WHERE related.type = 'topic' and r.weight
+        WHERE related.type = 'topic' and has(r.weight)
         RETURN related, SUM(r.weight)
         orDER BY SUM(r.weight) desc
         LIMIT #{limit}

@@ -36,9 +36,6 @@ GEM
       railties (>= 3.0)
       sass
     arel (3.0.2)
-    asset_sync (0.4.1)
-      activemodel
-      fog
     aws-s3 (0.6.2)
       builder
       mime-types
@@ -91,26 +88,14 @@ GEM
     erubis (2.7.0)
     escape (0.0.4)
     eventmachine (0.12.10)
-    excon (0.13.4)
     execjs (1.3.2)
       multi_json (~> 1.0)
     faraday (0.7.6)
       addressable (~> 2.2)
       multipart-post (~> 1.1)
       rack (~> 1.1)
-    fog (1.3.1)
-      builder
-      excon (~> 0.13.0)
-      formatador (~> 0.2.0)
-      mime-types
-      multi_json (~> 1.0)
-      net-scp (~> 1.0.4)
-      net-ssh (>= 2.1.3)
-      nokogiri (~> 1.5.0)
-      ruby-hmac
     foreman (0.46.0)
       thor (>= 0.13.6)
-    formatador (0.2.1)
     fssm (0.2.9)
     hashie (1.2.0)
     heroku (2.25.0)
@@ -165,9 +150,6 @@ GEM
       os
       rake (>= 0.8.7)
       rubyzip
-    net-scp (1.0.4)
-      net-ssh (>= 1.99.1)
-    net-ssh (2.3.0)
     netrc (0.7.1)
     newrelic-faraday (0.6.2)
       faraday (< 0.8)
@@ -177,7 +159,6 @@ GEM
       newrelic_rpm (~> 3.0)
       redis (< 3.0)
     newrelic_rpm (3.3.4.1)
-    nokogiri (1.5.2)
     oauth (0.4.6)
     oauth2 (0.6.1)
       faraday (~> 0.7)
@@ -259,7 +240,7 @@ GEM
       rspec-core (~> 2.10.0)
       rspec-expectations (~> 2.10.0)
       rspec-mocks (~> 2.10.0)
-    rspec-core (2.10.0)
+    rspec-core (2.10.1)
     rspec-expectations (2.10.0)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.10.1)
@@ -268,7 +249,6 @@ GEM
       activesupport (>= 3.0)
       railties (>= 3.0)
       rspec (~> 2.10.0)
-    ruby-hmac (0.4.0)
     rubyzip (0.9.8)
     rufus-scheduler (2.0.16)
       tzinfo (>= 0.3.23)
@@ -322,7 +302,6 @@ PLATFORMS
 DEPENDENCIES
   airbrake
   anjlab-bootstrap-rails (>= 2.0)
-  asset_sync
   aws-s3
   backbone-on-rails
   bson_ext

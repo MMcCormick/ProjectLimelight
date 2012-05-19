@@ -1,7 +1,7 @@
 class LL.Views.TopicSidebarTalk extends Backbone.View
   template: JST['widgets/sidebar_talk']
-  tagName: 'section'
-  className: 'sidebar-talk-form'
+  tagName: 'div'
+  className: 'section sidebar-talk-form'
 
   events:
     'click input': 'loadPostForm'
@@ -11,6 +11,7 @@ class LL.Views.TopicSidebarTalk extends Backbone.View
   render: ->
     placeholder = "Talk about #{@model.get('name')}!"
     $(@el).html(@template(user: @model, placeholder: placeholder))
+    $(@el).updatePolyfill()
     @
 
   loadPostForm: =>

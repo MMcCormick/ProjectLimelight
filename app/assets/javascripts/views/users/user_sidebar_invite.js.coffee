@@ -1,7 +1,7 @@
 class LL.Views.UserSidebarInvite extends Backbone.View
   template: JST['users/sidebar_invite']
-  tagName: 'section'
-  className: 'sidebar-invite'
+  tagName: 'div'
+  className: 'section sidebar-invite'
 
   initialize: ->
 

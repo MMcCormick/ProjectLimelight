@@ -17,7 +17,7 @@ class LL.Views.UserNotifications extends Backbone.View
       $('body').append($(@el))
 
     if @collection.models.length == 0
-      $(@el).find('section').append("<div class='none'>Hmm, there's nothing to show here</div>")
+      $(@el).find('.section').append("<div class='none'>Hmm, there's nothing to show here</div>")
     else
       for notification,i in @collection.models
         @appendNotification(notification)

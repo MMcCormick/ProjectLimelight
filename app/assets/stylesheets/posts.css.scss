@@ -239,7 +239,7 @@ $postFontColor: $grayDark;
   }
 }
 
-section.post-responses {
+.section.post-responses {
   @include clearfix();
 
   .talk-form {

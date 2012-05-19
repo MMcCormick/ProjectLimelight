@@ -28,7 +28,7 @@ class LL.Views.PostForm extends Backbone.View
     @preview = new LL.Views.PostFormPreview({collection: @embedly_collection, post_form_model: @model})
     @preview.post_form_model = @model
 
-  render: ->
+  render: =>
     $(@el).html(@template(modal: @modal, initial_text: @initial_text, placeholder_text: @placeholder_text))
     @preview.target = $(@el).find('.preview')
 
@@ -57,6 +57,8 @@ class LL.Views.PostForm extends Backbone.View
             name = if data.data then data.data.slug else 'new'
             self.addTopic($(val), data.term, data.id, name)
     , 1200
+
+    $(@el).updatePolyfill()
 
     @
 

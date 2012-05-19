@@ -1,6 +1,7 @@
 class LL.Views.TopicAliasForm extends Backbone.View
   template: JST['topics/alias_form']
-  tagName: 'section'
+  tagName: 'div'
+  className: 'section'
   id: 'topic-alias-form'
 
   events:

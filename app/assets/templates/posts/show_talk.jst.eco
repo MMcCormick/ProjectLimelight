@@ -1,4 +1,4 @@
-<section class="post-root">
+<div class='section post-root'>
   <div class='meat'>
     <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
     <h1>
@@ -14,6 +14,6 @@
 
     <img class='user-image' src='<%= @post.get('user').get('images').square.small %>' />
   </div>
-</section>
+</div>
 
 <div class='half-sections'></div>

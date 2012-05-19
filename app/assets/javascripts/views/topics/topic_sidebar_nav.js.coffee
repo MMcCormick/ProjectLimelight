@@ -1,6 +1,7 @@
 class LL.Views.TopicSidebarNav extends Backbone.View
   template: JST['topics/sidebar_nav']
-  tagName: 'section'
+  tagName: 'div'
+  className: 'section'
 
   events:
     "click .edit-btn": "loadEditModal"

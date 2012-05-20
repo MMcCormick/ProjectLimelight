@@ -1,4 +1,4 @@
-<section>
+<div class='section'>
   <ul class='menu unstyled'>
     <li>
       <a class='first <%= 'on' if @page == 'about' %>' href="/pages/about">
@@ -26,4 +26,4 @@
       </a>
     </li>
   </ul>
-</section>
+</div>

@@ -1,22 +1,22 @@
 <div class="content-tile">
   <div class="half-sections">
-    <section class="half-section influencer-topics">
+    <div class="section half-section influencer-topics">
       <div class="top">
         <h4>Influencer in...</h4>
       </div>
       <div class="meat"></div>
-    </section>
-    <section class="half-section right almost-influencer-topics">
+    </div>
+    <div class="section half-section right almost-influencer-topics">
       <div class="top">
         <h4>Almost an influencer in...</h4>
       </div>
       <div class="meat"></div>
-    </section>
+    </div>
   </div>
-  <section class="increases">
+  <div class="section increases">
     <div class="top">
       <h4>Influence Increases</h4>
     </div>
     <div class="meat"></div>
-  </section>
+  </div>
 </div>

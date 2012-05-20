@@ -28,10 +28,13 @@
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 <%= stylesheet_link_tag "application" %>
 <%#= stylesheet_link_tag "webkit", :type => "text/chrome/safari" %>
-<!--[if lt IE 9]><%= stylesheet_link_tag "ie" %><![endif]-->
+<!--[if lt IE 9]>
+  <%= stylesheet_link_tag "ie" %>
+  <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+<![endif]-->
 
 <%= csrf_meta_tags %>
 
 <%= yield :head %>
 
-<%= javascript_include_tag 'modernizr' %>
+<script src="http://static.p-li.me/assets/modernizr.js"></script>

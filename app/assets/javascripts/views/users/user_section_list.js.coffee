@@ -1,7 +1,7 @@
 class LL.Views.UserSectionList extends Backbone.View
   template: JST['users/section_list']
-  tagName: 'section'
-  className: 'half-section user-section-list'
+  tagName: 'div'
+  className: 'section half-section user-section-list'
 
   initialize: ->
     @count = 0

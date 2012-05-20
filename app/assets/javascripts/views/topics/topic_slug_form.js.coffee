@@ -1,8 +1,8 @@
 class LL.Views.TopicSlugForm extends Backbone.View
-
   # Note: the endpoint doesn't correctly / locking slugs is not implemented
   template: JST['topics/slug_form']
-  tagName: 'section'
+  tagName: 'div'
+  className: 'section'
   id: 'topic-slug-form'
 
   events:

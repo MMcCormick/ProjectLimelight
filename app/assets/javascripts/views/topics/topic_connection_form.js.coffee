@@ -1,6 +1,7 @@
 class LL.Views.TopicConnectionForm extends Backbone.View
   template: JST['topics/connection_form']
-  tagName: 'section'
+  tagName: 'div'
+  className: 'section'
   id: 'topic-connection-form'
 
   events:

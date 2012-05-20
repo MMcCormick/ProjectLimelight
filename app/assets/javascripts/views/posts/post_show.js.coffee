@@ -12,10 +12,13 @@ class LL.Views.PostShow extends Backbone.View
     @friendResponses = new LL.Views.PostShowResponses(collection: @friendResponsesCollection)
     @friendResponses.type = 'FriendResponses'
     @publicResponses = new LL.Views.PostShowResponses(collection: @publicResponsesCollection)
-    @friendResponses.type = 'PublicResponses'
+    @publicResponses.type = 'PublicResponses'
     @loaded = null
 
+    @model.on('change', @render)
+
   render: =>
+    return unless @model
     $(@el).html(@template(post: @model))
 
     like = new LL.Views.LikeButton(model: @model)

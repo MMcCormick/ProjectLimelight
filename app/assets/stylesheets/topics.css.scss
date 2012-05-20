@@ -50,7 +50,7 @@
   }
 }
 
-section.topic-section-list {
+.section.topic-section-list {
   margin: 7px 6px 0 10px;
   height: 107px;
   overflow: hidden;
@@ -72,11 +72,11 @@ section.topic-section-list {
   }
 }
 
-section.like-section-list {
+.section.like-section-list {
 }
 
 #topic-edit {
-  section {
+  .section {
     padding-bottom: 15px;
     .check {
       input {

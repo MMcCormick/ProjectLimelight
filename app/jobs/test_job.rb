@@ -47,7 +47,11 @@ class TestJob
       node = Neo4j.neo.get_node_index('posts', 'uuid', p.id.to_s)
 
       unless node
-        p.neo4j_create
+        begin
+          p.neo4j_create
+        rescue => e
+          p.delete
+        end
       else
         p.neo4j_id = node[0]['self'].split('/').last
 

@@ -19,7 +19,7 @@ class LL.Views.TopicList extends Backbone.View
       $(@el).before("<h2>#{@pageTitle}</h2>")
 
     if @collection.models.length == 0
-      $(@el).find('section').append("<div class='none'>Hmm, there's nothing to show here</div>")
+      $(@el).find('.section').append("<div class='none'>Hmm, there's nothing to show here</div>")
     else
       for topic,i in @collection.models
         @appendUser(topic, i%2)

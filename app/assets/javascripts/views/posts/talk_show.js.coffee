@@ -29,7 +29,7 @@ class LL.Views.TalkShow extends Backbone.View
 
       @comments = new LL.Collections.Comments
       @comments_view = new LL.Views.CommentList(collection: @comments, model: @model)
-      comment_section = $('<section/>').html('<div class="top"><h4>Comments</h4></div><div class="meat"></div>')
+      comment_section = $('<div/>').addClass('section').html('<div class="top"><h4>Comments</h4></div><div class="meat"></div>')
       form = new LL.Views.CommentForm(model: @model)
       form.minimal = true
       comment_section.find('.meat').append(form.render().el)

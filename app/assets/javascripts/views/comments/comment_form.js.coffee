@@ -15,7 +15,7 @@ class LL.Views.CommentForm extends Backbone.View
 
   render: ->
     $(@el).html(@template(model: @model, modal: @modal, minimal: @minimal))
-
+    $(@el).updatePolyfill()
     @
 
   createComment: (e) =>

@@ -8,7 +8,7 @@ end
 class TestingController < ApplicationController
 
   def test
-    SendDailyUserNotifications.perform()
+    #Resque.enqueue(TestJob)
   end
 
   def facebook_thing
@@ -130,8 +130,6 @@ class TestingController < ApplicationController
         end
       end
     end
-
-    foo = 'bar'
   end
 
   def convert_for_beta

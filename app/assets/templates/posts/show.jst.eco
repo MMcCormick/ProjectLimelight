@@ -1,4 +1,4 @@
-<section class="post-root">
+<div class='section' class="post-root">
   <div class='meat'>
     <% if @post.get('primary_source'): %>
         <h1 class="title">
@@ -26,10 +26,10 @@
 
     <div class="c"></div>
   </div>
-</section>
+</div>
 
 <% if @post.get('video') || @post.get('images'): %>
-  <section>
+  <div class='section'>
     <% if @post.get('video'): %>
       <div class='post-media'>
         <% if LL.App.Feed: %>
@@ -43,11 +43,11 @@
         <img src='<%= @post.get('images').original %>' />
       </div>
     <% end %>
-  </section>
+  </div>
 <% end %>
 
 <div class='half-sections'></div>
 
-<section class="post-responses">
+<div class="section post-responses">
   <div class='talk-form'></div>
-</section>
+</div>

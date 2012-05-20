@@ -16,6 +16,8 @@ class LL.Views.Header extends Backbone.View
     header_user_nav = new LL.Views.UserHeaderNav(model: @model)
     $(@el).append(header_user_nav.render().el)
 
+    $(@el).updatePolyfill()
+
   loadPostForm: ->
     unless LL.App.current_user
       LL.LoginBox.showModal()

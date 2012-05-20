@@ -1,6 +1,7 @@
 class LL.Views.InfluenceIncreases extends Backbone.View
   template: JST['users/influence_increases']
-  tagName: 'section'
+  tagName: 'div'
+  className: 'section'
   id: 'sidebar-influences'
 
   initialize: ->

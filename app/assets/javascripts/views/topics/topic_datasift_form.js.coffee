@@ -1,6 +1,7 @@
 class LL.Views.TopicDatasiftForm extends Backbone.View
   template: JST['topics/datasift_form']
-  tagName: 'section'
+  tagName: 'div'
+  className: 'section'
   id: 'topic-datasift-form'
 
   events:

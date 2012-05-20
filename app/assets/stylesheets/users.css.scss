@@ -45,7 +45,7 @@
   }
 }
 
-section.user-section-list {
+.section.user-section-list {
   margin: 7px 10px 0 0;
   height: 107px;
   overflow: hidden;
@@ -69,7 +69,7 @@ section.user-section-list {
 
 #user-settings {
 
-  section {
+  .section {
     @include clearfix();
   }
   form {

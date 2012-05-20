@@ -392,6 +392,7 @@ header {
         background: #C7E0A9;
       }
       &.on {
+        background-color: #C7E0A9;
         @include background-image(linear-gradient(#C7E0A9, #E9F4DD));
         cursor: default;
         border-right: 1px solid #CDC5C5;
@@ -451,9 +452,10 @@ header {
   float: left;
   width: 220px;
   margin: -105px 0 0 10px;
+  background-color: $IETransparentBlue;
   background-color: rgba(255,255,255,0.4);
 
-  section {
+  .section {
     @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
     @include clearfix();
 
@@ -812,6 +814,7 @@ header {
 }
 
 .content-tile {
+  background-color: $IETransparentBlue;
   background-color: rgba(255,255,255,0.4);
   padding: 3px 0 10px 0;
   text-align: left;
@@ -828,7 +831,7 @@ header {
   .half-sections {
     @include clearfix();
   }
-  section {
+  .section {
     @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
     background: #FFF;
     margin: 7px 10px 0 10px;

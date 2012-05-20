@@ -42,7 +42,7 @@ group :assets do
 
   gem 'closure-compiler'
 
-  gem 'asset_sync'
+  #gem 'asset_sync'
 
   gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end

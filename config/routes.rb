@@ -45,6 +45,7 @@ ProjectLimelight::Application.routes.draw do
       get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'
+      post '' => 'topics#create', :as => :topics
       put '' => 'topics#update'
       get '' => 'topics#show'
     end
@@ -149,6 +150,7 @@ ProjectLimelight::Application.routes.draw do
 
   #Topics
   get 'topics/datasift' => 'users#show', :as => :datasift_topics
+  get 'topics/new' => 'topics#new', :as => :new_topic
   get ':slug/followers' => 'topics#show', :as => :topic_followers
   get ':slug' => 'topics#show', :as => :topic #(catch all)
 

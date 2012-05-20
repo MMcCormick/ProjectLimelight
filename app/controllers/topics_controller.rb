@@ -60,8 +60,7 @@ class TopicsController < ApplicationController
     authorize! :manage, :all
     topic = current_user.topics.build(params[:topic])
     if topic.save
-      tlink = render_to_string :partial => 'topics/link', :locals => { :topic => topic, :name => topic.name }
-      response = build_ajax_response(:ok, nil, "Topic created!", nil, :tlink => tlink)
+      response = build_ajax_response(:ok, nil, "Topic created!", nil)
       status = 201
     else
       response = build_ajax_response(:error, nil, "Topic creation failed", topic.errors)

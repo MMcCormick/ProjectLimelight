@@ -482,6 +482,7 @@ class User
           inc.object_type = action.pop_snippets[0].ot
           inc.action = action.t
           inc.triggered_by_id = action.user_id
+          inc.created_at_pretty = pretty_time(Time.at(action.et))
           increases << inc
         end
       end

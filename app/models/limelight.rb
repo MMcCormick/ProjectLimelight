@@ -430,8 +430,10 @@ module Limelight #:nodoc:
         end
       end
       existing_ids.uniq!
-      save_topic_mentions(existing_ids)
-      save_new_topic_mentions(new_names)
+      new_names.uniq!
+
+      save_topic_mentions(existing_ids) if existing_ids.length > 0
+      save_new_topic_mentions(new_names) if new_names.length > 0
     end
 
     def save_topic_mentions(found_topics)

@@ -56,7 +56,7 @@ class DatasiftPushPost
       return if link_data['title'] && link_data['title'].to_url == 'news-from-the-associated-press'
 
       # extract topics from the text
-      combinations = DatasiftPushPost.combinalities("#{tweet_content} #{link_data['title']} #{link_data['description']}")
+      combinations = DatasiftPushPost.combinalities("#{tweet_content} #{link_data['title']}")
       # extract topics from the link with alchemy api
       #postData = Net::HTTP.post_form(
       #        URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
@@ -86,32 +86,28 @@ class DatasiftPushPost
 
       # we skip this post if there has been another post pushed to all the mentioned topics in the past x seconds
       skip = true
-      topics = Topic.where(:datasift_tags => {"$in" => combinations}).to_a
-      topics.each_with_index do |t,i|
+      topics = []
+      found_topics = Topic.where(:datasift_tags => {"$in" => combinations}).order_by(:score, :desc).to_a
+      found_topics.each_with_index do |t,i|
         if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 75)
           # dont skip this post, there is a topic that has not had a datasift post in the past x seconds
           skip = false
+          topics << t
         end
       end
 
       if skip == false
-        text_content = link_data['title']
-        combinations = DatasiftPushPost.combinalities(text_content)
-        combinations << entities
-        combinations.uniq!
-        topics = Topic.where(:datasift_tags => {"$in" => combinations}).order_by(:score, :desc).to_a
-
         # check to see if a news story covering this story has already been submitted
-        existing_post = Post.find_similar(topics)
-        if existing_post
-          source = SourceSnippet.new
-          source.name = link_data['provider_name']
-          source.url = link_data['url']
-          source.title = link_data['title']
-          source.content = link_data['description']
-          existing_post.add_source(source)
-          existing_post.save
-        else
+        #existing_post = Post.find_similar(topics)
+        #if existing_post
+        #  source = SourceSnippet.new
+        #  source.name = link_data['provider_name']
+        #  source.url = link_data['url']
+        #  source.title = link_data['title']
+        #  source.content = link_data['description']
+        #  existing_post.add_source(source)
+        #  existing_post.save
+        #else
           response = {
             :type => 'Link',
             :title => link_data['title'],
@@ -169,7 +165,7 @@ class DatasiftPushPost
           else
             puts post.errors.to_a
           end
-        end
+        #end
       else
         puts 'skipped post'
       end

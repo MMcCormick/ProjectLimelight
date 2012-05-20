@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 #ruby '1.9.3'
 
 gem 'bundler'
+gem 'thin'
 gem 'rails', '3.2.3'
 gem 'jquery-rails'
 gem 'rack'
@@ -42,17 +43,13 @@ group :assets do
 
   gem 'closure-compiler'
 
-  #gem 'asset_sync'
+  gem 'asset_sync'
 
   gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
 
 group :production do
 
-end
-
-group :production, :staging do
-  gem 'thin'
 end
 
 group :development do

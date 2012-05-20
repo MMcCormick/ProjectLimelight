@@ -16,6 +16,7 @@ class LL.Models.InfluenceIncrease extends Backbone.Model
       'amount': resp.amount
       'reason': resp.reason
       'action': resp.action
+      'created_at_pretty': resp.created_at_pretty
     }
 
     data['topic'] = new LL.Models.Topic(resp.topic)

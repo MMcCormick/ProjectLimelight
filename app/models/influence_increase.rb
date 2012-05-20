@@ -1,5 +1,7 @@
 class InfluenceIncrease
-  attr_accessor :id, :amount, :topic_id, :topic, :object_type, :action, :user_id, :user, :triggered_by_id, :triggered_by, :reason, :post_id, :post
+  include ModelUtilitiesHelper
+
+  attr_accessor :id, :amount, :topic_id, :topic, :object_type, :action, :user_id, :user, :triggered_by_id, :triggered_by, :reason, :post_id, :post, :created_at_pretty
 
   def id
     @topic_id
@@ -33,7 +35,8 @@ class InfluenceIncrease
             :user => user.as_json,
             :action => action,
             :post => post ? post.as_json(:user => options[:user]) : nil,
-            :triggered_by => triggered_by ? triggered_by.as_json() : nil
+            :triggered_by => triggered_by ? triggered_by.as_json() : nil,
+            :created_at_pretty => created_at_pretty
     }
   end
 

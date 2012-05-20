@@ -171,16 +171,15 @@ class Topic
     true
   end
 
-  # not used? BETA REMOVE
-  #def update_aliases new_aliases
-  #  self.aliases = []
-  #  init_alias
-  #
-  #  new_aliases = new_aliases.split(', ') unless new_aliases.is_a? Array
-  #  new_aliases.each do |new_alias|
-  #    add_alias(new_alias)
-  #  end
-  #end
+  def update_aliases new_aliases
+    self.aliases = []
+    init_alias
+
+    new_aliases = new_aliases.split(', ') unless new_aliases.is_a? Array
+    new_aliases.each do |new_alias|
+      add_alias(new_alias)
+    end
+  end
 
   def update_name_alias
     if short_name_changed?

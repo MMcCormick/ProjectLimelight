@@ -111,7 +111,7 @@ class Post
   end
 
   def set_source_snippet
-    if @source_name || @source_url || @source_video_id
+    if (@source_name && !@source_name.blank?) || (@source_url && !@source_url.blank?) || (@source_video_id && !@source_video_id.blank?)
       source = SourceSnippet.new
       source.name = @source_name unless @source_name.blank?
       source.url = @source_url unless @source_url.blank?
@@ -271,8 +271,6 @@ class Post
   def neo4j_create
     node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post', 'subtype' => self.class.name, 'created_at' => created_at.to_i)
     Neo4j.neo.add_node_to_index('posts', 'uuid', id.to_s, node)
-    self.neo4j_id = node['self'].split('/').last
-    save
 
     Resque.enqueue(Neo4jPostCreate, id.to_s)
 

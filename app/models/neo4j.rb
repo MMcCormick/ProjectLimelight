@@ -69,6 +69,9 @@ class Neo4j
 
       post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s)
 
+      post.neo4j_id = post_node[0]['self'].split('/').last
+      post.save
+
       rel1 = Neo4j.neo.create_relationship('created', creator_node, post_node)
       Neo4j.neo.add_relationship_to_index('users', 'created', "#{post.user_id.to_s}-#{post.id.to_s}", rel1)
 

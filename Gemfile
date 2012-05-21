@@ -8,7 +8,7 @@ gem 'rails', '3.2.3'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'
-gem 'mongoid', '2.4.9' # MongoDB
+gem 'mongoid', '2.4.10' # MongoDB
 gem 'mongoid_slug' # Automatic MongoDB slugs
 gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
 gem 'devise' # Authentication

@@ -155,6 +155,7 @@ class DatasiftPushPost
           post.alchemy_entities = entities
           topics.each_with_index do |t,i|
             break if i > 3
+            puts "Adding topic #{t.name}"
             t.datasift_last_pushed = Time.now
             t.save
             post.save_topic_mention(t)

@@ -59,6 +59,7 @@ class Topic
   field :datasift_enabled, :default => false
   field :datasift_tags, :default => []
   field :datasift_last_pushed
+  field :freebase_id
   field :fb_page_id
   field :website
   field :neo4j_id
@@ -113,9 +114,6 @@ class Topic
   def init_alias
     self.aliases ||= []
     add_alias(name)
-    plurl = name.pluralize == name ? name.singularize : name.pluralize
-    add_alias(plurl)
-    add_alias(short_name) unless !short_name || short_name.blank?
   end
 
   def get_alias name
@@ -126,14 +124,14 @@ class Topic
     return unless new_alias && !new_alias.blank?
 
     unless get_alias new_alias
-      existing = Topic.where('aliases.slug' => new_alias.to_url, 'ooac' => true).first
-      if existing
-        return "The '#{existing.name}' topic has a one of a kind alias with this name."
-      else
+      #existing = Topic.where('aliases.slug' => new_alias.to_url, 'ooac' => true).first
+      #if existing
+      #  return "The '#{existing.name}' topic has a one of a kind alias with this name."
+      #else
         self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :hash => new_alias.to_url.gsub('-', ''), :ooac => ooac)
         Resque.enqueue(SmCreateTopic, id.to_s)
         return true
-      end
+      #end
     else
       'This topic already has that alias.'
     end

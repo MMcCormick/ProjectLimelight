@@ -32,6 +32,7 @@ class Post
   field :alchemy_entities
   field :alchemy_concepts
   field :neo4j_id
+  field :category
 
   auto_increment :public_id
 

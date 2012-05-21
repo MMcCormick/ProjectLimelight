@@ -83,7 +83,7 @@ class TopicConnection
 
         topic1.save
         topic2.save
-        TopicConSug.destroy_all(conditions: { topic1_id: topic1.id, topic2_id: topic2.id, con_id: connection.id })
+        #TopicConSug.destroy_all(conditions: { topic1_id: topic1.id, topic2_id: topic2.id, con_id: connection.id })
         Neo4j.update_affinity(topic1.id.to_s, topic2.id.to_s, node1, node2, 10, true, true)
         ActionConnection.create(action_log)
         true

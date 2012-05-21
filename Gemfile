@@ -32,6 +32,7 @@ gem 'neography' # neo4j graph database
 gem 'backbone-on-rails'
 gem 'datasift' # streaming api access (twitter, facebook, youtube, etc)
 gem 'mixpanel' # analytics
+gem 'feedzirra'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'

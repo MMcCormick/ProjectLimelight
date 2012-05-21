@@ -41,6 +41,9 @@ class AutoFollowFBLikes
 
           if saved
             unless topic.primary_type_id
+              topic.primary_type_id = type.id
+              topic.primary_type = type.name
+              topic.save
               TopicConnection.add(type_connection, topic, type, User.marc_id, {:pull => false, :reverse_pull => true})
             end
 

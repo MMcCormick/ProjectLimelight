@@ -8,7 +8,9 @@ end
 class TestingController < ApplicationController
 
   def test
-    #Resque.enqueue(TestJob)
+
+    Resque.enqueue(CrawlerGo)
+
   end
 
   def facebook_thing

@@ -12,4 +12,6 @@ class CrawlerSource
   field :status, :default => 'active'
 
   attr_accessible :source_name, :category, :url
+
+  validates :url, :uniqueness => { :case_sensitive => false, :message => 'URL is already in use!' }
 end

@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Source name:</b>
+  <%= @crawler_source.source_name %>
+</p>
+
+<p>
+  <b>Category:</b>
+  <%= @crawler_source.category %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= @crawler_source.url %>
+</p>
+
+<p>
+  <b>Last crawled:</b>
+  <%= @crawler_source.last_crawled %>
+</p>
+
+<p>
+  <b>Last modified:</b>
+  <%= @crawler_source.last_modified %>
+</p>
+
+<p>
+  <b>Etag:</b>
+  <%= @crawler_source.etag %>
+</p>
+
+<p>
+  <b>Posts added:</b>
+  <%= @crawler_source.posts_added %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @crawler_source.status %>
+</p>
+
+
+<%= link_to 'Edit', edit_crawler_source_path(@crawler_source) %> |
+<%= link_to 'Back', crawler_sources_path %>

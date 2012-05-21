@@ -146,7 +146,10 @@ ProjectLimelight::Application.routes.draw do
   resources :invite_codes, :only => [:create, :new]
   post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
 
-  #Topics
+  # Crawler
+  resources :crawler_sources
+
+  # Topics
   get 'topics/new' => 'topics#new', :as => :new_topic
   get ':slug/followers' => 'topics#show', :as => :topic_followers
   get ':slug' => 'topics#show', :as => :topic #(catch all)

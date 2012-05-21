@@ -16,14 +16,19 @@ recalculate_clout:
   args:
   description: "This job recalculates user clout"
 
-#weekly_email:
-#  cron: "0 15 * * fri"
-#  class: WeeklyEmail
-#  args:
-#  description: "This job sends users a periodic content-you-might-like email"
+crawl_sources:
+  every: 15m
+  class: CrawlerGo
+  description: "This job invokes the Limelight crawler to re-crawl all of it's sources and push posts"
 
 daily_notifications:
   cron: "0 14 * * *"
   class: SendDailyUserNotifications
   args:
   description: "This job sends users a daily email with their new notifications"
+
+#weekly_email:
+  #  cron: "0 15 * * fri"
+  #  class: WeeklyEmail
+  #  args:
+  #  description: "This job sends users a periodic content-you-might-like email"

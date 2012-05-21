@@ -1,0 +1,37 @@
+<h1>Listing crawler_sources</h1>
+
+<table>
+  <tr>
+    <th>Source name</th>
+    <th>Category</th>
+    <th>Url</th>
+    <th>Last crawled</th>
+    <th>Last modified</th>
+    <th>Etag</th>
+    <th>Posts added</th>
+    <th>Status</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @crawler_sources.each do |crawler_source| %>
+  <tr>
+    <td><%= crawler_source.source_name %></td>
+    <td><%= crawler_source.category %></td>
+    <td><%= crawler_source.url %></td>
+    <td><%= crawler_source.last_crawled %></td>
+    <td><%= crawler_source.last_modified %></td>
+    <td><%= crawler_source.etag %></td>
+    <td><%= crawler_source.posts_added %></td>
+    <td><%= crawler_source.status %></td>
+    <td><%= link_to 'Show', crawler_source %></td>
+    <td><%= link_to 'Edit', edit_crawler_source_path(crawler_source) %></td>
+    <td><%= link_to 'Destroy', crawler_source, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Crawler source', new_crawler_source_path %>

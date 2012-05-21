@@ -53,6 +53,7 @@ namespace :datasift do
           puts tweet_content
 
           Resque.enqueue(DatasiftPushPost, interaction, tweet_content, link['url'][0])
+          #DatasiftPushPost.perform(interaction, tweet_content, link['url'][0])
         end
       end
     end

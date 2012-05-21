@@ -81,12 +81,13 @@ class DatasiftPushPost
       #  entities.uniq!
       #end
 
-      combinations << entities
+      #combinations << entities
       combinations.uniq!
 
       # we skip this post if there has been another post pushed to all the mentioned topics in the past x seconds
       skip = true
       topics = []
+      puts combinations
       found_topics = Topic.where(:datasift_tags => {"$in" => combinations}).order_by(:score, :desc).to_a
       found_topics.each_with_index do |t,i|
         if !t.datasift_last_pushed || (Time.now.to_i - t.datasift_last_pushed.to_i > 75)

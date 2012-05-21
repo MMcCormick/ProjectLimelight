@@ -13,9 +13,9 @@ class DatasiftRecompile
             AND
             language.tag == \"en\"
             AND
-            twitter.retweet.count >= 5
+            twitter.retweet.count >= 2
             AND
-            links.retweet_count >= 30
+            links.retweet_count >= 50
             AND
             links.age <= 172800
     "

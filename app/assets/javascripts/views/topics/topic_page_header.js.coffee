@@ -23,7 +23,4 @@ class LL.Views.TopicPageHeader extends Backbone.View
 
     header.render()
 
-    if @model.get('datasift_enabled')
-      $(header.el).find('.follow.btn').after("<div class='ll-cloud-green' title='This topic pulls content from other sources on the web.'></div>")
-
     @

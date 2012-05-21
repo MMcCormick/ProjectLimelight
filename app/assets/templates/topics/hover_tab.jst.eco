@@ -19,10 +19,6 @@
   </div>
 </div>
 <div class='bottom'>
-  <% if @topic.get('datasift_enabled'): %>
-    <div class='ll-cloud-green' title='This topic pulls content from other sources on the web.'></div>
-  <% end %>
-
   <% if LL.App.current_user.hasRole('admin'): %>
     <span class="btn edit-btn">Edit</span>
   <% end %>

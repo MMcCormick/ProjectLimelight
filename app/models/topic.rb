@@ -56,9 +56,6 @@ class Topic
   field :response_count, :default => 0
   field :influencers, :default => {}
   field :score, :default => 0.0
-  field :datasift_enabled, :default => false
-  field :datasift_tags, :default => []
-  field :datasift_last_pushed
   field :freebase_id
   field :fb_page_id
   field :website
@@ -90,7 +87,6 @@ class Topic
   index [[ :public_id, Mongo::DESCENDING ]]
   index [[ :score, Mongo::DESCENDING ]]
   index [[ :short_name, Mongo::ASCENDING ]]
-  index :datasift_tags, :sparse => true
   index :aliases
   index :primary_type_id
 
@@ -441,7 +437,6 @@ class Topic
             "Topic Response Count" => response_count,
             "Topic Followers" => followers_count,
             "Topic Created At" => created_at,
-            "Topic Datasift Enabled?" => datasift_enabled ? true : false,
             "Topic Primary Type" => primary_type
     }
   end
@@ -459,9 +454,7 @@ class Topic
             :created_at_pretty => pretty_time(created_at),
             :images => Topic.json_images(self),
             :primary_type => primary_type,
-            :aliases => clean_aliases,
-            :datasift_enabled => datasift_enabled,
-            :datasift_tags => datasift_tags
+            :aliases => clean_aliases
     }
   end
 

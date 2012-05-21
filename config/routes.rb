@@ -40,8 +40,6 @@ ProjectLimelight::Application.routes.draw do
       end
 
       post 'update_image' => 'topics#update_image'
-      put 'datasift' => 'topics#update_datasift'
-      get 'datasift' => 'topics#datasift'
       get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'
@@ -149,7 +147,6 @@ ProjectLimelight::Application.routes.draw do
   post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
 
   #Topics
-  get 'topics/datasift' => 'users#show', :as => :datasift_topics
   get 'topics/new' => 'topics#new', :as => :new_topic
   get ':slug/followers' => 'topics#show', :as => :topic_followers
   get ':slug' => 'topics#show', :as => :topic #(catch all)

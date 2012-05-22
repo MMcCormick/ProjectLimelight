@@ -21,8 +21,8 @@
     <td><%= crawler_source.source_name %></td>
     <td><%= crawler_source.category %></td>
     <td><%= crawler_source.url %></td>
-    <td><%= pretty_time(crawler_source.last_crawled) %></td>
-    <td><%= pretty_time(crawler_source.last_modified) %></td>
+    <td><%= pretty_time(crawler_source.last_crawled) if crawler_source.last_crawled %></td>
+    <td><%= pretty_time(crawler_source.last_modified) if crawler_source.last_modified %></td>
     <td><%= crawler_source.posts_added %></td>
     <td><%= crawler_source.status %></td>
     <td><%= link_to 'Show', crawler_source %></td>

@@ -50,6 +50,7 @@ ProjectLimelight::Application.routes.draw do
 
     scope 'posts' do
       post '' => 'posts#create'
+      get 'stream' => 'posts#stream'
       get 'user_feed' => 'posts#user_feed'
       get 'like_feed' => 'posts#like_feed'
       get 'activity_feed' => 'posts#activity_feed'
@@ -140,6 +141,7 @@ ProjectLimelight::Application.routes.draw do
     get 'terms' => 'pages#terms', :as => :terms
     get 'help' => 'pages#help', :as => :help
     get 'admin' => 'pages#admin', :as => :admin
+    get 'admin/posts/stream' => 'users#show', :as => :admin_post_stream, :require_admin => true
   end
 
   # Invites

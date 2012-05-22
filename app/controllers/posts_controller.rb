@@ -113,6 +113,15 @@ class PostsController < ApplicationController
     render json: response, :status => status
   end
 
+  # a stream of all posts
+  def stream
+    authorize! :manage, :all
+
+    page = params[:p] ? params[:p].to_i : 1
+    posts = Post.global_stream(page)
+    render :json => posts.map {|p| p.as_json(:user => current_user)}
+  end
+
   # The main user feed
   def user_feed
     user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user

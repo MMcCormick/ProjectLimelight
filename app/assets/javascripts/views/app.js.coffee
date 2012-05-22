@@ -78,6 +78,9 @@ class LL.Views.App extends Backbone.View
       when 'topic'
         sidebar = new LL.Views.TopicSidebar(model: model)
         @sidebars["#{type}_#{id}"] = sidebar
+      when 'admin'
+        sidebar = new LL.Views.AdminSidebar()
+        @sidebars["#{type}_#{id}"] = sidebar
 
   renderScreen: (name, id) =>
     screen = @screens["#{name}_#{id}"]

@@ -13,8 +13,9 @@ class LL.Views.PostsFeed extends Backbone.View
     # A tile is the backbone view representing one tile on the feed
     @tiles = []
 
+    @on_add = 'append'
     @collection.on('reset', @render)
-    @collection.on('add', @appendPost)
+    @collection.on('add', @handleNewPost)
 
     LL.App.calculateSiteWidth(true)
 
@@ -88,6 +89,12 @@ class LL.Views.PostsFeed extends Backbone.View
         chosen = column
         min_height = column.height
     chosen
+
+  handleNewPost: (root_post) =>
+    if @on_add == 'append'
+      @appendPost(root_post)
+    else
+      @prependPost(root_post)
 
   addPost: (root_post) =>
     self = @

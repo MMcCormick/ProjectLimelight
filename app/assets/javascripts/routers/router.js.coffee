@@ -9,6 +9,10 @@ class LL.Router extends Backbone.Router
     'users/:id': 'activityFeed'
     'posts/:id': 'postShow'
     'talks/:id': 'talkShow'
+    'pages/admin': 'adminHome'
+    'topics/new': 'adminManageTopics'
+    'crawler_sources': 'adminManageCrawlers'
+    'pages/admin/posts/stream': 'adminPostStream'
     'pages/:name': 'staticPage'
     'settings': 'settings'
     'activity': 'activityFeed'
@@ -373,6 +377,104 @@ class LL.Router extends Backbone.Router
       $('body').addClass('no-sidebar')
       $('#feed').html(view.el)
       view.render()
+
+  #######
+  # ADMIN
+  #######
+
+  adminHome: ->
+
+    @hideModal()
+
+    user = LL.App.current_user
+    id = user.get('id')
+
+    # Only load the feed if it's new
+    if LL.App.findScreen('admin_home', id)
+      LL.App.showScreen('admin_home', id)
+    else
+      screen = LL.App.newScreen('admin_home', id)
+
+      sidebar = LL.App.findSidebar('admin', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('admin', id, user)
+      screen['sidebar'] = sidebar
+
+      LL.App.renderScreen('admin_home', id)
+
+  adminManageTopics: ->
+
+    @hideModal()
+
+    user = LL.App.current_user
+    id = user.get('id')
+
+    # Only load the feed if it's new
+    if LL.App.findScreen('admin_manage_topics', id)
+      LL.App.showScreen('admin_manage_topics', id)
+    else
+      screen = LL.App.newScreen('admin_manage_topics', id)
+
+      sidebar = LL.App.findSidebar('admin', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('admin', id, user)
+      screen['sidebar'] = sidebar
+
+      LL.App.renderScreen('admin_manage_topics', id)
+
+  adminManageCrawlers: ->
+
+    @hideModal()
+
+    user = LL.App.current_user
+    id = user.get('id')
+
+    # Only load the feed if it's new
+    if LL.App.findScreen('admin_manage_crawlers', id)
+      LL.App.showScreen('admin_manage_crawlers', id)
+    else
+      screen = LL.App.newScreen('admin_manage_crawlers', id)
+
+      sidebar = LL.App.findSidebar('admin', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('admin', id, user)
+      screen['sidebar'] = sidebar
+
+      LL.App.renderScreen('admin_manage_crawlers', id)
+
+  adminPostStream: ->
+
+    @hideModal()
+
+    user = LL.App.current_user
+    id = user.get('id')
+
+    # Only load the feed if it's new
+    if LL.App.findScreen('admin_post_stream', id)
+      LL.App.showScreen('admin_post_stream', id)
+    else
+      screen = LL.App.newScreen('admin_post_stream', id)
+
+      sidebar = LL.App.findSidebar('admin', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('admin', id, user)
+      screen['sidebar'] = sidebar
+
+      LL.App.renderScreen('admin_post_stream', id)
+
+      stream = new LL.Collections.PostStream()
+      feed = new LL.Views.PostsFeed(collection: stream)
+      LL.App.Feed = feed
+      screen['components'].push(feed)
+
+      stream.id = id
+      stream.page = 1
+      stream.sort_value = 'newest'
+      stream.fetch()
+
+      $('body').everyTime 5000, ->
+        feed.on_add = 'prepend'
+        stream.fetch {add: true}
 
   #######
   # MISC

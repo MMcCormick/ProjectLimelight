@@ -6,6 +6,8 @@ class UsersController < ApplicationController
   respond_to :html, :json
 
   def show
+    authorize! :manage, :all if params[:require_admin]
+
     if params[:slug]
       @this = User.find_by_slug(params[:slug])
     else

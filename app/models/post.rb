@@ -486,6 +486,30 @@ class Post
       Post.where(:root_id => parent_id).order_by(:created_at, :desc)
     end
 
+    # returns the latest posts site wide
+    def global_stream(page)
+      items = Post.where(:status => 'active').order_by(:created_at, :desc)
+      items = items.skip((page-1)*20).limit(20)
+
+      return_objects = []
+      items.each do |i|
+        root_post = RootPost.new
+        root_post.root = i
+
+        root_post.public_talking = root_post.root.response_count
+
+        #get the public responses
+        root_post.public_responses = []
+        unless i.root_type == 'Talk' || root_post.public_talking == 0
+          root_post.public_responses = Post.public_responses(root_post.root.id, 1, 2)
+        end
+
+        return_objects << root_post
+      end
+
+      return_objects
+    end
+
     # @example Fetch the core_objects for a feed with the given criteria
     #   Post.feed
     #

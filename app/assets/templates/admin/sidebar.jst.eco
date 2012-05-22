@@ -1,0 +1,19 @@
+<div class='section'>
+  <ul class='menu unstyled'>
+    <li>
+      <a class='first <%= 'on' if @page == 'admin_manage_topics' %>' href="/topics/new">
+        Manage Topics<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a class='<%= 'on' if @page == 'admin_manage_crawlers' %>' href="/crawler_sources">
+        Manage Crawler Sources<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a class='<%= 'on' if @page == 'admin_post_stream' %>' href="/pages/admin/posts/stream">
+        Post Stream<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+  </ul>
+</div>

@@ -99,6 +99,24 @@ else
   puts 'Type of connection already in DB'
 end
 
+puts 'Creating related to connection'
+connection = TopicConnection.find(Topic.related_to_id)
+unless connection
+  connection = TopicConnection.new(
+          :name => 'Related To',
+          :reverse_name => 'Related To',
+          :pull_from => false,
+          :reverse_pull_from => false,
+          :inline => "is related to"
+  )
+  connection.user_id = marc.id
+  connection.id = Topic.related_to_id
+  connection.save!
+  puts 'Related to connection created'
+else
+  puts 'Related to connection already in DB'
+end
+
 puts 'Creating limelight topic'
 topic = Topic.find(Topic.limelight_id)
 unless topic

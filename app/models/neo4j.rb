@@ -64,6 +64,25 @@ class Neo4j
       end
     end
 
+    def find_or_create_category(name)
+      topic = Topic.where("aliases.slug" => name.to_url).first
+
+      unless !topic || topic.is_category
+        topic.is_category = true
+        topic.save
+      end
+
+      unless topic
+        topic = Topic.new
+        topic.name = name
+        topic.user_id = User.marc_id
+        topic.is_category = true
+        topic.save
+      end
+
+      topic.neo4j_node
+    end
+
     def post_create(post)
       creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
 
@@ -71,6 +90,12 @@ class Neo4j
 
       post.neo4j_id = post_node[0]['self'].split('/').last
       post.save
+
+      # connect it to it's overall category if present
+      if post.category
+        category_node = find_or_create_category(post.category)
+        category_rel = Neo4j.neo.create_relationship('categorized in', post_node, category_node)
+      end
 
       rel1 = Neo4j.neo.create_relationship('created', creator_node, post_node)
       Neo4j.neo.add_relationship_to_index('users', 'created', "#{post.user_id.to_s}-#{post.id.to_s}", rel1)

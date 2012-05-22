@@ -605,13 +605,14 @@ module Limelight #:nodoc:
         # Update user if not a link, video, or picture and this is not a :new action
         elsif !["Link", "Video", "Picture"].include?(self.class.name)
           action.pop_snippets.new(:amount => amt, :id => user_id, :object_type => "User")
-            User.collection.update(
-              {:_id => user_id},
-              {
-                "$inc" => { :score => amt }
-              }
-            )
-            Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => amt})
+          User.collection.update(
+            {:_id => user_id},
+            {
+              "$inc" => { :score => amt }
+            }
+          )
+          Resque.enqueue_in(10.minutes, ScoreUpdate, 'User', user_id.to_s)
+          Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => amt})
         end
 
         # Update mentioned topics if applicable
@@ -622,20 +623,18 @@ module Limelight #:nodoc:
           topic_mentions.each do |mention|
             if type != :new || (type == :new && mention.first_mention)
               affected_topic_ids << mention.id
-              foo = affected_topic_ids
 
               action.pop_snippets.new(:amount => topic_amt, :id => mention.id, :object_type => "Topic")
               Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
 
               topic = mentioned_topics.detect{|t| t.id == mention.id}
               if topic.score >= 0 && topic.influencers.length >= 3
-                Resque.enqueue_in(10.seconds, RecalculateInfluence, mention.id.to_s)
+                Resque.enqueue_in(10.minutes, RecalculateInfluence, mention.id.to_s)
               end
             end
           end
           # Update the popularities on affected objects
           unless affected_topic_ids.empty?
-            foo = affected_topic_ids
             Topic.collection.update(
               {:_id => {"$in" => affected_topic_ids}},
               {
@@ -646,6 +645,9 @@ module Limelight #:nodoc:
               },
               {:upsert => true, :multi => true}
             )
+            affected_topic_ids.each do |tid|
+              Resque.enqueue_in(10.minutes, ScoreUpdate, 'Topic', tid.to_s)
+            end
           end
         end
 
@@ -657,6 +659,7 @@ module Limelight #:nodoc:
 
     def change_pop(amt)
       self.score += amt
+      Resque.enqueue_in(10.minutes, ScoreUpdate, 'Post', id.to_s)
       Pusher[id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
     end
   end

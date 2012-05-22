@@ -447,7 +447,8 @@ class User
             'uuid' => id.to_s,
             'type' => 'user',
             'username' => username,
-            'created_at' => created_at.to_i
+            'created_at' => created_at.to_i,
+            'score' => score
     )
     Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
     self.neo4j_id = node['self'].split('/').last
@@ -832,6 +833,10 @@ class User
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
       neo4j_update
       Resque.enqueue(SmCreateUser, id.to_s)
+    end
+
+    if score_changed?
+      Resque.enqueue_in(10.minutes, ScoreUpdate, 'User', id.to_s)
     end
   end
 

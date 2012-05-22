@@ -60,6 +60,7 @@ class Topic
   field :fb_page_id
   field :website
   field :neo4j_id
+  field :is_category, :default => false
 
   auto_increment :public_id
 
@@ -377,7 +378,7 @@ class Topic
   #end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'slug' => slug, 'created_at' => created_at.to_i)
+    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'slug' => slug, 'created_at' => created_at.to_i, 'score' => score)
     Neo4j.neo.add_node_to_index('topics', 'uuid', id.to_s, node)
     self.neo4j_id = node['self'].split('/').last
     save
@@ -387,7 +388,10 @@ class Topic
   def neo4j_update
     node = Neo4j.neo.get_node_index('topics', 'uuid', id.to_s)
     Neo4j.neo.set_node_properties(node, {'name' => name, 'slug' => slug})
+  end
 
+  def neo4j_node
+    Neo4j.neo.get_node_index('topics', 'uuid', id.to_s)
   end
 
   def disconnect
@@ -658,6 +662,10 @@ class Topic
     if soulmate
       neo4j_update
       Resque.enqueue(SmCreateTopic, id.to_s)
+    end
+
+    if score_changed?
+      Resque.enqueue_in(10.minutes, ScoreUpdate, 'Topic', id.to_s)
     end
   end
 end

@@ -54,6 +54,7 @@ class Post
   before_validation :set_source_snippet
   before_create :save_remote_image, :denormalize_user, :current_user_own, :send_tweet, :set_response_to, :set_root
   after_create :process_images, :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
+  after_save :update_denorms
 
   # MBM: hot damn lots of indexes. can we do this better? YES WE CAN
   # MCM: chill out obama
@@ -270,7 +271,7 @@ class Post
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post', 'subtype' => self.class.name, 'created_at' => created_at.to_i)
+    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post', 'subtype' => self.class.name, 'created_at' => created_at.to_i, 'category' => category, 'score' => score)
     Neo4j.neo.add_node_to_index('posts', 'uuid', id.to_s, node)
 
     Resque.enqueue(Neo4jPostCreate, id.to_s)
@@ -737,6 +738,12 @@ class Post
       end
 
       return_objects
+    end
+  end
+
+  def update_denorms
+    if score_changed?
+      Resque.enqueue_in(10.minutes, ScoreUpdate, 'Post', id.to_s)
     end
   end
 

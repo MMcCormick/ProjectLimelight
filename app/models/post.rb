@@ -29,8 +29,8 @@ class Post
   field :embed_html # video embeds
   field :tweet_id
   field :standalone_tweet, :default => false
-  field :alchemy_entities
-  field :alchemy_concepts
+  field :pushed_users, :default => [] # the users this post has been pushed to
+  field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
   field :neo4j_id
   field :category
 
@@ -192,7 +192,8 @@ class Post
       user.likes_count += 1
       amount = add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostLike, user.id.to_s, id.to_s)
-      Resque.enqueue(PushLike, id.to_s, user.id.to_s)
+      push_like(user)
+      #Resque.enqueue(PushLike, id.to_s, user.id.to_s)
 
       amount
     end
@@ -211,7 +212,8 @@ class Post
       user.likes_count -= 1
       add_pop_action(:lk, :r, user)
       Resque.enqueue(Neo4jPostUnlike, user.id.to_s, id.to_s)
-      Resque.enqueue(PushUnlike, id.to_s, user.id.to_s)
+      push_unlike(user)
+      #Resque.enqueue(PushUnlike, id.to_s, user.id.to_s)
 
       true
     else
@@ -288,13 +290,15 @@ class Post
   end
 
   def feed_post_create
-    Resque.enqueue(PushPostToFeeds, id.to_s)
+    #Resque.enqueue(PushPostToFeeds, id.to_s)
+    self.push_to_feeds
   end
 
   def push_to_feeds
-    FeedUserItem.post_create(self)
-    FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
-    FeedContributeItem.create(self)
+    FeedUserItem.push_post_through_users(self)
+    FeedUserItem.push_post_through_topics(self)
+    #FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
+    #FeedContributeItem.create(self)
   end
 
   def disable
@@ -566,6 +570,7 @@ class Post
       return_objects = []
       items.each do |i|
         root_post = RootPost.new
+        root_post.push_item = i
         if i.root_type == 'Topic'
           root_post.root = topics[i.root_id.to_s]
         else

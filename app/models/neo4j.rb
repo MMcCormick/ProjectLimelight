@@ -290,6 +290,23 @@ class Neo4j
       pull_from
     end
 
+    # get the topics that pull from the given topics
+    def pulled_from_ids(topic_neo4j_ids)
+      query = "
+        START n=node(#{topic_neo4j_ids.join(',')})
+        MATCH n<-[:pull*]-x
+        RETURN distinct n.uuid, x.uuid
+      "
+      ids = Neo4j.neo.execute_query(query)
+      pull_from = []
+      if ids
+        ids['data'].each do |id|
+          pull_from << [BSON::ObjectId(id[0]),BSON::ObjectId(id[1])]
+        end
+      end
+      pull_from
+    end
+
     # user interests, used in the user sidebar
     def user_interests(user_id, limit)
       interests = {:general => [], :specific => []}

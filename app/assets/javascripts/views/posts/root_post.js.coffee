@@ -6,6 +6,8 @@ class LL.Views.RootPost extends Backbone.View
     "click .root .img, .talking, h5": "postShow"
     "mouseenter .root": "showHover"
     "mouseleave .root": "hideHover"
+    "mouseenter .reasons": "showReasons"
+    "mouseleave .reasons": "hideReasons"
 
   initialize: ->
     @public_responses = null
@@ -32,6 +34,12 @@ class LL.Views.RootPost extends Backbone.View
           root_view = new LL.Views.RootMedia(model: @model.get('root'))
 
       $(@el).append(root_view.render().el)
+
+      if @model.get('reasons').length > 0
+        reason_div = $('<div/>').addClass('reasons').html("<div class='ll-tan-earmark'></div><ul></ul>")
+        for reason in @model.get('reasons')
+          reason_div.find('ul').append("<li>#{reason}</li>")
+        $(@el).append(reason_div)
 
     @renderResponses()
 
@@ -107,3 +115,9 @@ class LL.Views.RootPost extends Backbone.View
 
     $(@el).stopTime 'post-tile-hover'
     $(@el).find('.bottom-sheet').slideUp 200
+
+  showReasons: (e) =>
+    $(@el).find('.reasons ul').fadeIn(200)
+
+  hideReasons: (e) =>
+    $(@el).find('.reasons ul').fadeOut(200)

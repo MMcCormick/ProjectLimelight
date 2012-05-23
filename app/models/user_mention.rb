@@ -14,6 +14,10 @@ class UserMention
     self.username.to_url
   end
 
+  def name
+    username
+  end
+
   def as_json
     {
             :id => id.to_s,

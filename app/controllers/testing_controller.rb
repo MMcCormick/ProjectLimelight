@@ -9,7 +9,8 @@ class TestingController < ApplicationController
 
   def test
 
-    Resque.enqueue(CrawlerGo)
+    post = Post.find('4fbc2338261946ede4000005')
+    FeedUserItem.push_post_through_topics(post)
 
   end
 

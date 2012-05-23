@@ -25,6 +25,10 @@ class UserSnippet
     if first_name then first_name else username end
   end
 
+  def name
+    username
+  end
+
   def fullname
     if first_name and last_name then "#{first_name} #{last_name}" else nil end
   end

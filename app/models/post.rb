@@ -169,6 +169,20 @@ class Post
     end
   end
 
+  def add_mention
+
+  end
+
+  def remove_mention(topic)
+    mention = self.topic_mentions.find(topic.id)
+    if mention
+      mention.delete
+      FeedUserItem.unpush_post_through_topic(self, topic)
+      FeedTopicItem.unpush_post_through_topic(self, topic)
+      Neo4j.post_remove_topic_mention(self, topic)
+    end
+  end
+
   def send_tweet
     if @tweet == '1' && @tweet_content && !@tweet_content.blank? && user.twitter
       user.twitter.update(@tweet_content)
@@ -293,7 +307,7 @@ class Post
 
   def push_to_feeds
     FeedUserItem.push_post_through_users(self)
-    FeedUserItem.push_post_through_topics(self)
+    FeedUserItem.push_post_through_topics(self) unless response_to || topic_mentions.empty?
     FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
     FeedContributeItem.create(self)
   end

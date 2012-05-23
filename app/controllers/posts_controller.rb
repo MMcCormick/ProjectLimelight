@@ -179,4 +179,19 @@ class PostsController < ApplicationController
     render :json => posts.map {|p| p.as_json(:user => current_user)}
   end
 
+  def delete_mention
+    post = Post.find(params[:id])
+    not_found("Post not found") unless post
+
+    topic = Topic.find(params[:topic_id])
+    not_found("Topic not found") unless topic
+
+    authorize! :update, post
+
+    post.remove_mention(topic)
+    post.save
+
+    render :json => build_ajax_response(:ok)
+  end
+
 end

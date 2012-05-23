@@ -58,6 +58,7 @@ ProjectLimelight::Application.routes.draw do
       get 'friend_responses' => 'posts#friend_responses'
       get 'public_responses' => 'posts#public_responses'
       put 'disable' => 'posts#disable'
+      delete 'mentions' => 'posts#delete_mention'
       get '' => 'posts#show'
     end
 

@@ -23,9 +23,22 @@
 <div class='bottom-sheet <%= "static" unless @post.get('images') %>'>
   <% if @post.get('topic_mentions').length > 0: %>
     <div class="mentions">
-      <div class='head'>TOPICS</div>
+      <div class='head'>
+        TOPICS
+        <% if LL.App.current_user && LL.App.current_user.hasRole('admin'): %>
+
+        <% end %>
+      </div>
       <% for mention, i in @post.get('topic_mentions'): %>
-        <a class="tlink" data-id='<%= mention.get('id') %>' href="/<%= mention.get('slug') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @post.get('topic_mentions').length %>
+        <span>
+          <a class="tlink" data-id='<%= mention.get('id') %>' href="/<%= mention.get('slug') %>">
+            <%= mention.get('name') %>
+          </a>
+          <% if LL.App.current_user && LL.App.current_user.hasRole('admin'): %>
+            <div class='ll-grey-x delete' data-id='<%= mention.get('id') %>' title='Delete topic mention from this post.'></div>
+          <% end %>
+          <%= "," if i + 1 < @post.get('topic_mentions').length %>
+        </span>
       <% end %>
     </div>
   <% end %>

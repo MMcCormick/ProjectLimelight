@@ -65,6 +65,16 @@
   height: 16px;
 }
 
+.ll-grey-x {
+  @include icon-sprite(grey-x);
+  width: 11px;
+  height: 11px;
+
+  &:hover {
+    @include icon-sprite(red-x);
+  }
+}
+
 //.handle-black-small {
 //    @include icon-sprite(handle-black-small);
 //    width: 13px;

@@ -8,6 +8,7 @@ class LL.Views.RootPost extends Backbone.View
     "mouseleave .root": "hideHover"
     "mouseenter .reasons": "showReasons"
     "mouseleave .reasons": "hideReasons"
+    "click .mentions .delete": "deleteMention"
 
   initialize: ->
     @public_responses = null
@@ -123,3 +124,18 @@ class LL.Views.RootPost extends Backbone.View
 
   hideReasons: (e) =>
     $(@el).find('.reasons ul').fadeOut(200)
+
+  deleteMention: (e) =>
+    $.ajax '/api/posts/mentions',
+      type: 'delete'
+      data: {id: @model.get('id'), topic_id: $(e.currentTarget).data('id')}
+      beforeSend: ->
+        $(e.currentTarget).addClass('disabled')
+      success: (data) ->
+        $(e.currentTarget).parent().remove()
+        globalSuccess(data)
+      error: (jqXHR, textStatus, errorThrown) ->
+        $(e.currentTarget).removeClass('disabled')
+        globalError(jqXHR, $(self.el))
+      complete: ->
+        $(e.currentTarget).removeClass('disabled')

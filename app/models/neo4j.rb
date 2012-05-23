@@ -94,7 +94,7 @@ class Neo4j
       # connect it to it's overall category if present
       if post.category
         category_node = find_or_create_category(post.category)
-        category_rel = Neo4j.neo.create_relationship('categorized in', post_node, category_node)
+        Neo4j.neo.create_relationship('categorized in', post_node, category_node)
       end
 
       rel1 = Neo4j.neo.create_relationship('created', creator_node, post_node)
@@ -111,18 +111,16 @@ class Neo4j
         Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 1, false, false)
       end
 
-      topics = []
+      topic_nodes = []
       post.topic_mentions.each do |m|
-        # connect the post to it's mentioned topics
         mention_node = Neo4j.neo.get_node_index('topics', 'uuid', m.id.to_s)
-        rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
-        Neo4j.neo.set_relationship_properties(rel2, {"type" => 'topic'})
-        Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
-
-        # increase the creators affinity to these topics
-        Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 1, false, false)
-
-        topics << {:node => mention_node, :node_id => m.id.to_s}
+        topic_nodes << {:node => mention_node, :node_id => m.id.to_s}
+      end
+      post.topic_mentions.each do |m|
+        mention_node = topic_nodes.detect{|t| t[:node_id] == m.id.to_s}
+        topic_nodes.delete_if{|t| t[:node_id] == m.id.to_s}
+        topic_nodes ||= []
+        post_add_topic_mention(post, m, post_node, creator_node, mention_node[:node], topic_nodes)
       end
 
       if post.response_to
@@ -133,19 +131,10 @@ class Neo4j
           Neo4j.neo.add_relationship_to_index('users', 'talked', "#{post.user_snippet.id.to_s}-#{post.response_to.id.to_s}", talk_rel)
         end
       end
-
-      # increase the mentioned topics affinities towards each other
-      topics.combination(2).to_a.each do |t|
-        Neo4j.update_affinity(t[0][:node_id], t[1][:node_id], t[0][:node], t[1][:node], 1, true, nil)
-      end
     end
 
     # creates a follow relationship between two nodes
     def follow_create(node1_id, node2_id, node1_index, node2_index)
-      #nodes = self.neo.batch [:get_node_by_index, node1_index, "uuid", node1_id], [:get_node_by_index, node2_index, "uuid", node2_id]
-      #self.neo.batch [:create_relationship, "follow", nodes[0]['body'].first['self'].split('/').last, nodes[1]['body'].first['self'].split('/').last],
-      #               [:add_relationship_to_index, "users", "follow", "#{node1_id}-#{node2_id}", "{0}"] if nodes && nodes.length == 2
-      #self.update_affinity(node1_id, node2_id, nodes[0]['body'].first, nodes[1]['body'].first, 50, false, nil, 'positive', false) if nodes && nodes.length == 2
       node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
       node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
       if node1 && node2
@@ -164,6 +153,65 @@ class Neo4j
       node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
 
       Neo4j.update_affinity(node1_id, node2_id, node1, node2, -10, false, nil, nil, false)
+    end
+
+    def post_add_topic_mention(post, topic, post_node=nil, creator_node=nil, mention_node=nil, topic_nodes=nil)
+      # connect the post to it's mentioned topics
+      mention_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless mention_node
+      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s) unless creator_node
+      post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s) unless post_node
+
+      rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
+      Neo4j.neo.set_relationship_properties(rel2, {"type" => 'topic'})
+      Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{topic.id.to_s}", rel2)
+
+      # increase the creators affinity to these topics
+      Neo4j.update_affinity(post.user_id.to_s, topic.id.to_s, creator_node, mention_node, 1, false, false)
+
+      unless topic_nodes
+        topic_nodes = []
+        post.topic_mentions.each do |m|
+          if m.id != topic.id
+            node = Neo4j.neo.get_node_index('topics', 'uuid', m.id.to_s)
+            topic_nodes << {:node => node, :node_id => m.id.to_s}
+          end
+        end
+      end
+
+      # increase the mentioned topics affinity towards the other mentioned topics
+      topic_nodes.each do |t|
+        Neo4j.update_affinity(topic.id.to_s, t[:node_id], mention_node, t[:node], 1, true, nil)
+      end
+    end
+
+    def post_remove_topic_mention(post, topic)
+
+      mention_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s)
+      return unless mention_node
+
+      rel1 = Neo4j.neo.get_relationship_index('posts', 'mentions', "#{post.id.to_s}-#{topic.id.to_s}")
+      return unless rel1
+
+      Neo4j.neo.delete_relationship(rel1)
+      Neo4j.neo.remove_relationship_from_index('posts', rel1)
+
+      # decrease the creators affinity to these topics
+      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_snippet.id.to_s)
+      Neo4j.update_affinity(post.user_snippet.id.to_s, topic.id.to_s, creator_node, mention_node, -1, false, false)
+
+      topic_nodes = []
+      post.topic_mentions.each do |m|
+        if m.id != topic.id
+          node = Neo4j.neo.get_node_index('topics', 'uuid', m.id.to_s)
+          topic_nodes << {:node => node, :node_id => m.id.to_s}
+        end
+      end
+
+      # decrease the mentioned topics affinity towards the other mentioned topics
+      topic_nodes.each do |t|
+        Neo4j.update_affinity(topic.id.to_s, t[:node_id], mention_node, t[:node], -1, true, nil)
+      end
+
     end
 
     # updates the affinity between two nodes

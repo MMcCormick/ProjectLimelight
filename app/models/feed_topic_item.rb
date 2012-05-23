@@ -38,6 +38,19 @@ class FeedTopicItem
       FeedTopicItem.collection.update({:root_id => root_id}, updates, {:upsert => true})
     end
 
+    def unpush_post_through_topic(post, topic)
+      root_id = post.root_type == 'Topic' ? post.id : post.root_id
+      items = FeedTopicItem.where(:root_id => root_id)
+      items.each do |item|
+        item.mentions.delete(topic.id)
+        if item.mentions.length == 0
+          item.delete
+        else
+          item.save
+        end
+      end
+    end
+
     def post_disable(post)
       # warning: do not use post.is_root? in this function, since topic roots are excluded
       root_id = post.root_type == 'Topic' ? post.id : post.root_id

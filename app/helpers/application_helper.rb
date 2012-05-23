@@ -15,31 +15,9 @@ module ApplicationHelper
     @description.nil? ? "" : @description
   end
 
-  def site_style
-    if session[:feed_filters][:layout] == 'list'
-      'narrow'
-    elsif @site_style
-      @site_style
-    end
-  end
-
-  def right_sidebar
-    if @right_sidebar
-      'sbr'
-    else
-      ''
-    end
-  end
-
   # Return the page load time (defined in application_controller.rb init)
   def load_time
     "#{(Time.now-@start_time).round(4)}s"
-  end
-
-  # Parse text via markdown
-  def markdown(text)
-    options = [:hard_wrap, :autolink, :no_intraemphasis, :strikethrough]
-    Redcarpet.new(text, *options).to_html.html_safe
   end
 
   def output_errors(errors)
@@ -137,45 +115,8 @@ module ApplicationHelper
     @devise_mapping ||= Devise.mappings[:user]
   end
 
-  # Generate a random hint
-  def generate_hint
-    hints = [
-      "You can use the arrow keys to navigate feeds.",
-      "Limelight <3 shortcuts. Press shift+up or shift+down to vote on a highlighted post. <span id='shortcuts'>See All Shortcuts.</span>",
-      "Mention a user in a post with @username or a topic with #topic name. Spaces allowed!",
-      "Post interesting stuff to up your popularity.",
-      "Got a big screen? Try the grid view and put that space to use! Just click the grid button on the top right.",
-      "You can double click a feed filter to turn all of the other filters off.",
-      "If there is only one filter on and you turn it off all of the filters will turn on."
-    ]
-
-    choice = rand(hints.length+5)
-    hints.length > choice ? hints[choice] : nil
-  end
-
-  # show the splash page to new users
-  def new_user_splash
-    unless signed_in? || cookies[:shown_splash] == 'true'
-      cookies.permanent[:shown_splash] = true
-      "<div id='show_splash'></div>".html_safe
-    end
-  end
-
   def pretty_time(date)
     pretty = time_ago_in_words(date, false).sub('about', '')+ ' ago'
     pretty == 'Today ago' ? 'just now' : pretty
-  end
-
-  def static_data
-    data = {
-            :fetchEmbedUrl => embedly_fetch_path,
-            :myId => signed_in? ? current_user.id.to_s : 0,
-            :autocomplete => '/soul-data/search',
-            :userAutoBucket => signed_in? ? current_user.id.to_s : 0,
-            :feedFiltersUpdate => feed_update_url,
-            :getSugsUrl => list_topic_con_sugs_path,
-            :mentionSuggestionUrl => mention_suggestion_path
-    }
-    data.to_json
   end
 end

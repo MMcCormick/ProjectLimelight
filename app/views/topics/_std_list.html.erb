@@ -1,7 +1,0 @@
-<% topics.each do |topic| %>
-  <%= render 'topics/teaser', :topic => topic %>
-<% end %>
-
-<% unless topics.count(true) == 0 || !@more_path %>
-  <div id="load-more" class="ac" data-m="get" data-url="<%= @more_path %>">load more</div>
-<% end %>

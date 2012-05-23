@@ -1,17 +1,4 @@
 module NotificationsHelper
-  def triggered_users_text_list(triggered_by, base='')
-    string = ''
-    triggered_by.each_with_index do |user, i|
-      if i == triggered_by.length - 1 && triggered_by.length > 1
-        string += ' and '
-      end
-      string += user_link(user, nil, base)
-      if i < triggered_by.length - 1 && triggered_by.length > 2
-        string += ', '
-      end
-    end
-    string.html_safe
-  end
 
   def action_text(notification, base='')
     case notification.type.to_sym

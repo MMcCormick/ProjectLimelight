@@ -135,7 +135,7 @@ class CrawlerPushPost
         # find and take out any provider names at the end of string
         if response[:title].last.gsub(' ', '').to_url.include? (link_data['provider_name'].gsub(' ', '').to_url)
           response[:title].pop
-          if ['-', '|', '--', '/', '\\'].response[:title].last
+          if ['-', '|', '--', '/', '\\'].include?(response[:title].last)
             response[:title].pop
           end
         end
@@ -143,7 +143,7 @@ class CrawlerPushPost
         # find and take out any provider names at the start of string
         if response[:title].first.gsub(' ', '').to_url.include? (link_data['provider_name'].gsub(' ', '').to_url)
           response[:title].shift
-          if ['-', '|', '--', '/', '\\'].response[:title].first
+          if ['-', '|', '--', '/', '\\'].include?(response[:title].first)
             response[:title].shift
           end
         end

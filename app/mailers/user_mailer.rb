@@ -22,10 +22,4 @@ class UserMailer < ActionMailer::Base
     @today_or_yesterday = today_or_yesterday
     mail(:from => "marc@projectlimelight.com", :to => "#{@user.fullname} <#{@user.email}>", :subject => "Hi There")
   end
-
-  # Depricated
-  #def invite_email(user_id, email)
-  #  @user = User.find(user_id)
-  #  mail(:to => email, :subject => "#{@user.fullname ? @user.fullname : @user.username} invites you to join Limelight")
-  #end
 end

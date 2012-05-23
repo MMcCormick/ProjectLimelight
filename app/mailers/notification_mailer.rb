@@ -1,7 +1,5 @@
 class NotificationMailer < ActionMailer::Base
   helper NotificationsHelper
-  helper UsersHelper
-  helper CoreObjectsHelper
   default :from => "Limelight <support@projectlimelight.com>"
   layout 'email'
 

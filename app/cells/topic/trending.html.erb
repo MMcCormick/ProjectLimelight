@@ -1,8 +1,0 @@
-<div id="trending-topics">
-  <%= @trend_title ? @trend_title : "Trending Topics:" %>
-  <% if @topics %>
-    <% @topics.each do |topic| %>
-      <%= topic_link topic %>
-    <% end %>
-  <% end %>
-</div>

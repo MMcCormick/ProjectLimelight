@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :init, :set_request_type, :set_session, :set_user_time_zone#, :require_sign_in
-  layout :layout
+  before_filter :init, :set_user_time_zone
 
   def authenticate_admin_user!
     unless can? :manage, :all
@@ -16,42 +15,6 @@ class ApplicationController < ActionController::Base
     else
       render_forbidden(exception)
     end
-  end
-
-  def is_users_page?
-    if current_user.slug != params[:id] && !current_user.role?("admin")
-      flash[:notice] = "You don't have permission to access this page!"
-      redirect_to root_path
-    end
-  end
-
-  # Build a feed response
-  def reload_feed(core_objects, more_path, page)
-    html =  render_to_string :partial => "core_objects/feed", :locals => { :core_objects => core_objects, :more_path => more_path }
-    response = { :status => :ok, :event => "loaded_feed_page", :content => html }
-    response[:full_reload] = (page == 1 ? true : false)
-    response
-  end
-
-  # Build a topic list response
-  def topic_list_response(partial, topics, more_path)
-    html = render_to_string :partial => partial, :locals => { :topics => topics, :more_path => more_path }
-    build_ajax_response(:ok, nil, nil, nil, :content => html, :event => "loaded_topic_list")
-  end
-
-  # Build a user list response
-  def user_list_response(partial, users, more_path)
-    html = render_to_string :partial => partial, :locals => { :users => users, :more_path => more_path }
-    build_ajax_response(:ok, nil, nil, nil, :content => html, :event => "loaded_user_list")
-  end
-
-  def set_request_type
-    # this fixes an IE 8 issue with refreshing page returning javascript response
-    request.format = :html if request.format == "*/*"
-  end
-
-  def json?
-    request.format == 'application/json'
   end
 
   # Exception Throwers
@@ -95,18 +58,10 @@ class ApplicationController < ActionController::Base
     path
   end
 
-
   # Mixpanel
   def track_mixpanel(name, params)
     Resque.enqueue(MixpanelTrackEvent, name, params, request.env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
   end
-
-  # Used to test error messages as they would be shown in production
-  #protected
-  #
-  #def local_request?
-  #  false
-  #end
 
   def build_ajax_response(status, redirect=nil, flash=nil, errors=nil, extra=nil)
     response = {:status => status, :event => "#{params[:controller]}_#{params[:action]}"}
@@ -124,42 +79,12 @@ class ApplicationController < ActionController::Base
     @start_time = Time.now
   end
 
-  def set_session
-    unless session[:feed_filters]
-      session[:feed_filters] =
-              {
-                :display => ['Talk', 'Link', 'Picture', 'Video'],
-                :sort => 'popular',
-                :layout => 'column'
-              }
-    end
-  end
-
   def set_user_time_zone
     Time.zone = current_user.time_zone if signed_in? && current_user
     Chronic.time_class = Time.zone
   end
 
-  def layout
-    # use ajax layout for ajax requests
-    request.xhr? ? "ajax" : "application"
-  end
-
-  def require_sign_in
-    if  request.get? &&
-        !(["feed", "facebook", "twitter", "splash", "check", "influence_increases"].include?(params[:action]) && params[:id].blank?) &&
-        params[:controller] != "confirmations" &&
-        request.fullpath != "/assets" &&
-        !(params[:controller] == "topics" && params[:action] == "index")
-      if !signed_in?
-        session[:return_to] = request.fullpath
-        redirect_to (root_path)
-      elsif current_user && current_user.tutorial_step != 0
-        redirect_to (root_path)
-      end
-    end
-  end
-
+  # open graph tags
   def build_og_tags(title, type, url, image, desc, extra={})
     og_tags = []
     og_tags << ["og:title", title]

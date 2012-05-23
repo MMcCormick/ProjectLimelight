@@ -1,5 +1,5 @@
 <div class="content-tile" id="user-settings">
-  <section>
+  <div class="section">
     <div class="top">
       <h3>Basic Info</h3>
     </div>
@@ -7,11 +7,11 @@
     <div class='meat'>
       <%= render 'form', :user => current_user %>
     </div>
-  </section>
+  </div>
 
   <div class="clear"></div>
 
-  <section class="image-settings">
+  <div class="section image-settings">
     <div class="top">
       <h3>Profile Image</h3>
     </div>
@@ -41,9 +41,9 @@
       <div class="upload btn disabled" id="user_uploadB">Upload My Own Image (coming soon)</div>
       <div id="user_uploadB-progress"></div>
     </div>
-  </section>
+  </div>
 
-  <section class="social-settings">
+  <div class="section social-settings">
     <div class="top">
       <h3>Social Settings</h3>
     </div>
@@ -81,11 +81,11 @@
         <% end %>
       </div>
     </div>
-  </section>
+  </div>
 
   <div class="clear"></div>
 
-  <section class="email-settings">
+  <div class="section email-settings">
     <div class="top">
       <h3>Emails</h3>
     </div>
@@ -93,5 +93,5 @@
     <div class='meat'>
       <%= render 'settings_form', :user => current_user %>
     </div>
-  </section>
+  </div>
 </div>

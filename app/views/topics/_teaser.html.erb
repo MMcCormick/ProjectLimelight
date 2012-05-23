@@ -1,6 +1,0 @@
-<li class="teaser <%= cycle("odd", "") -%>">
-  <div><%= topic_link topic %></div>
-  <div class="score"><%= sprintf "%.1f", topic.pt %></div>
-  <div><%= link_to topic.followers_count, topic_followers_path(topic) %></div>
-  <%= render 'follows/btn', :current_user => @current_user, :target => topic %>
-</li>

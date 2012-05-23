@@ -24,36 +24,3 @@
 //= require jquery.gritter
 //= require jquery.timer
 //= require prettytime
-//
-//
-//
-// require jquery.livequery
-// require preload
-// require jquery-ui.min
-// require amplify
-// require jquery.colorbox
-// require jquery.qtip
-// require jquery.autocomplete
-// require jquery.scroll
-// require jquery.typing
-// require jquery.label
-// require jquery.charCount
-// require jquery.oauthpopup
-// require plupload/plupload.full
-// require help
-// require pusher
-// require mention
-// require core
-// require action.controller
-// require form.controller
-// require utilities
-// require social
-// require users
-// require videos
-// require links
-// require pictures
-// require core_objects
-// require main
-// require topics
-// require subscribers
-// require_tree .

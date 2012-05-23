@@ -127,7 +127,7 @@ class PostsController < ApplicationController
     user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
-    posts = Post.feed(user.id, session[:feed_filters][:display], params[:sort], page)
+    posts = Post.feed(user.id, params[:sort], page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
   end
 
@@ -136,7 +136,7 @@ class PostsController < ApplicationController
     user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
-    posts = Post.like_feed(user.id, session[:feed_filters][:display], page)
+    posts = Post.like_feed(user.id, page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
   end
 
@@ -145,7 +145,7 @@ class PostsController < ApplicationController
     user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
-    posts = Post.activity_feed(user.id, session[:feed_filters][:display], page)
+    posts = Post.activity_feed(user.id, page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
   end
 
@@ -156,7 +156,7 @@ class PostsController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     topic_ids = Neo4j.pull_from_ids(topic.id).to_a
-    posts = Post.topic_feed(topic_ids << topic.id, (signed_in? ? current_user.id : nil), session[:feed_filters][:display], params[:sort], page)
+    posts = Post.topic_feed(topic_ids << topic.id, (signed_in? ? current_user.id : nil), params[:sort], page)
     render :json => posts.map {|p| p.as_json(:user => current_user)}
   end
 

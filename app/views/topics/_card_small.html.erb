@@ -1,8 +1,0 @@
-<div class='topic-card-small' data-id='<%= topic.id %>' data-pid='<%= topic.encoded_id %>'>
-  <div class='name'>
-    <%= topic.name %>
-  </div>
-  <span class='cancel ac' title="I'm not interested in this topic." data-m='post' data-url='<%= sentiment_create_path(:neutral) %>' data-d='{"type":"Topic","id":"<%= topic.encoded_id %>"}'>X</span>
-  <%= render 'follows/btn', :current_user => current_user, :target => topic %>
-  <%= image_tag topic_default_picture(topic, 100, 100, 'fillcropmid'), :alt => topic.name, :title => topic.name %>
-</div>

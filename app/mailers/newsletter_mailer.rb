@@ -1,7 +1,6 @@
 class NewsletterMailer < ActionMailer::Base
   helper ApplicationHelper
   helper ImageHelper
-  helper UsersHelper
   default :from => "Limelight <support@projectlimelight.com>"
   layout 'email_no_logo'
 

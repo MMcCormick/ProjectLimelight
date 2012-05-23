@@ -1,1 +1,0 @@
-#run "cd #{release_path}; RAILS_ENV=#{framework_env} bundle exec rake assets:precompile"

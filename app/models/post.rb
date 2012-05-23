@@ -529,13 +529,8 @@ class Post
     # @param { options } Options TODO: Fill out these options
     #
     # @return [ Posts ]
-    def feed(feed_id, display_types, sort, page)
-
-      if display_types.include?('Talk')
-        display_types << 'Topic'
-      end
-
-      items = FeedUserItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types.uniq})
+    def feed(feed_id, sort, page)
+      items = FeedUserItem.where(:feed_id => feed_id)
       if sort == 'newest'
         items = items.order_by(:last_response_time, :desc)
       else
@@ -601,31 +596,22 @@ class Post
       return_objects
     end
 
-    def activity_feed(feed_id, display_types, page)
-      if display_types.include?('Talk')
-        display_types << 'Topic'
-      end
-
-      items = FeedContributeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc)
+    def activity_feed(feed_id, page)
+      items = FeedContributeItem.where(:feed_id => feed_id).order_by(:last_response_time, :desc)
       items = items.skip((page-1)*20).limit(20)
 
       build_activity_feed(items)
     end
 
-    def like_feed(feed_id, display_types, page)
-
-      if display_types.include?('Talk')
-        display_types << 'Topic'
-      end
-
-      items = FeedLikeItem.where(:feed_id => feed_id, :root_type => {'$in' => display_types}).order_by(:last_response_time, :desc)
+    def like_feed(feed_id, page)
+      items = FeedLikeItem.where(:feed_id => feed_id).order_by(:last_response_time, :desc)
       items = items.skip((page-1)*20).limit(20)
 
       build_like_feed(items)
     end
 
-    def topic_feed(feed_ids, user_id, display_types, sort, page)
-      items = FeedTopicItem.where(:root_type => {'$in' => display_types}, :mentions => {'$in' => feed_ids})
+    def topic_feed(feed_ids, user_id, sort, page)
+      items = FeedTopicItem.where(:mentions => {'$in' => feed_ids})
 
       if sort == 'newest'
         items = items.order_by(:last_response_time, :desc)

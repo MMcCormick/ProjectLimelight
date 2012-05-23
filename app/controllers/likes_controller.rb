@@ -1,6 +1,5 @@
 class LikesController < ApplicationController
   before_filter :authenticate_user!
-  include CoreObjectsHelper
 
   def create
     object = Post.find(params[:id])

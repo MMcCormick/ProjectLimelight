@@ -510,7 +510,6 @@ class User
         increase.post = posts[increase.post_id.to_s]
         increase.triggered_by = triggered[increase.triggered_by_id.to_s]
       end
-      foo = increase
     end
     increases.first(limit)
   end

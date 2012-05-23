@@ -130,16 +130,25 @@ class CrawlerPushPost
 
       # remove the site title that often comes after/before the |, ie "google buys microsoft | tech crunch"
       if response[:title]
-        response[:title] = response[:title].split('|')
-        # Take out part of the title if one side of the | is shorter than the other AND includes the name of the provider
-        if response[:title].length > 1
-          if response[:title][0].length < response[:title][response[:title].length - 1].length && response[:title][0].to_url.include?(link_data['provider_name'].to_url)
-            response[:title].shift
-          elsif response[:title][response[:title].length - 1].length < response[:title][0].length && response[:title][response[:title].length - 1].to_url.include?(link_data['provider_name'].to_url)
+        response[:title] = response[:title].split(' ')
+
+        # find and take out any provider names at the end of string
+        if response[:title].last.gsub(' ', '').to_url.include? (link_data['provider_name'].gsub(' ', '').to_url)
+          response[:title].pop
+          if ['-', '|', '--', '/', '\\'].response[:title].last
             response[:title].pop
           end
         end
-        response[:title] = response[:title].join(' ').strip.html_safe
+
+        # find and take out any provider names at the start of string
+        if response[:title].first.gsub(' ', '').to_url.include? (link_data['provider_name'].gsub(' ', '').to_url)
+          response[:title].shift
+          if ['-', '|', '--', '/', '\\'].response[:title].first
+            response[:title].shift
+          end
+        end
+
+        response[:title] = response[:title].join(' ').strip
         response[:source_title] = response[:title].html_safe
       end
 

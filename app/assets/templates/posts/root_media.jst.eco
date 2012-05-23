@@ -25,17 +25,17 @@
     <div class="mentions">
       <div class='head'>
         TOPICS
-        <% if LL.App.current_user && LL.App.current_user.hasRole('admin'): %>
-
-        <% end %>
       </div>
+      <% if LL.App.current_user && LL.App.current_user.hasRole('admin'): %>
+        <div class='ll-green-plus add' title='Add a topic mention.'></div>
+      <% end %>
       <% for mention, i in @post.get('topic_mentions'): %>
         <span>
           <a class="tlink" data-id='<%= mention.get('id') %>' href="/<%= mention.get('slug') %>">
             <%= mention.get('name') %>
           </a>
           <% if LL.App.current_user && LL.App.current_user.hasRole('admin'): %>
-            <div class='ll-grey-x delete' data-id='<%= mention.get('id') %>' title='Delete topic mention from this post.'></div>
+            <div class='ll-grey-x delete' data-id='<%= mention.get('id') %>' title='Delete topic mention.'></div>
           <% end %>
           <%= "," if i + 1 < @post.get('topic_mentions').length %>
         </span>

@@ -194,4 +194,30 @@ class PostsController < ApplicationController
     render :json => build_ajax_response(:ok)
   end
 
+  def create_mention
+    post = Post.find(params[:id])
+    not_found("Post not found") unless post
+
+    authorize! :update, post
+
+    if params[:topic_id] != '0'
+      topic = Topic.find(params[:topic_id])
+      not_found("Topic not found") unless topic
+    else
+      topic = Topic.where("aliases.slug" => params[:topic_name].to_url, "primary_type_id" => {"$exists" => false}).first
+      unless topic
+        topic = current_user.topics.build({name: params[:topic_name]})
+        topic.save
+      end
+    end
+
+    post.save_topic_mention(topic)
+    post.save
+    FeedUserItem.push_post_through_topic(post, topic)
+    FeedTopicItem.push_post_through_topic(post, topic)
+    Neo4j.post_add_topic_mention(post, topic)
+
+    render :json => build_ajax_response(:ok)
+  end
+
 end

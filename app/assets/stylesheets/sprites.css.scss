@@ -75,6 +75,16 @@
   }
 }
 
+.ll-green-plus {
+  @include icon-sprite(grey-plus);
+  width: 8px;
+  height: 8px;
+
+  &:hover {
+    @include icon-sprite(green-plus);
+  }
+}
+
 //.handle-black-small {
 //    @include icon-sprite(handle-black-small);
 //    width: 13px;

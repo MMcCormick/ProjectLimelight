@@ -75,6 +75,8 @@ $feedFontColor: $grayDark;
   }
   .mentions {
     color: $grayDark;
+    position: relative;
+
     .tlink {
       white-space: nowrap;
       color: $grayDark;
@@ -84,6 +86,27 @@ $feedFontColor: $grayDark;
       display: inline-block;
       position: relative;
       top: 1px;
+    }
+    .add {
+      cursor: pointer;
+      position: absolute;
+      top: 13px;
+      left: 61px;
+    }
+    .mention-add-form {
+      display: none;
+      padding: 5px 0 10px 0;
+      border-bottom: 1px solid #DDD;
+      margin-bottom: 5px;
+
+      input {
+        @include border-radius(1px);
+        width: 200px;
+      }
+      .btn {
+        font-size: 12px;
+        padding: 2px 7px;
+      }
     }
   }
   .ulink {

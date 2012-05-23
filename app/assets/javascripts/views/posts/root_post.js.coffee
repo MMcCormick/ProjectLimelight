@@ -9,6 +9,7 @@ class LL.Views.RootPost extends Backbone.View
     "mouseenter .reasons": "showReasons"
     "mouseleave .reasons": "hideReasons"
     "click .mentions .delete": "deleteMention"
+    "click .mentions .add": "showAddMention"
 
   initialize: ->
     @public_responses = null
@@ -17,6 +18,7 @@ class LL.Views.RootPost extends Backbone.View
     @like_responses = null
     @hovering = false
     @opened = false
+    @addMentionForm = null
 
     @model.get('root').on('new_response', @renderResponses)
     @model.on('move_to_top', @moveToTop)
@@ -139,3 +141,10 @@ class LL.Views.RootPost extends Backbone.View
         globalError(jqXHR, $(self.el))
       complete: ->
         $(e.currentTarget).removeClass('disabled')
+
+  showAddMention: (e) =>
+    unless @addMentionForm
+      @addMentionForm = new LL.Views.AddMentionForm(model: @model)
+      $(e.currentTarget).after(@addMentionForm.render().el)
+
+    $(@addMentionForm.el).fadeToggle(200)

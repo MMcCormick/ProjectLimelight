@@ -38,6 +38,17 @@ class FeedTopicItem
       FeedTopicItem.collection.update({:root_id => root_id}, updates, {:upsert => true})
     end
 
+    def push_post_through_topic(post, topic)
+      root_id = post.root_type == 'Topic' ? post.id : post.root_id
+      items = FeedTopicItem.where(:root_id => root_id)
+      items.each do |item|
+        unless item.mentions.detect{|i| i == topic.id}
+          item.mentions << topic.id
+        end
+        item.save
+      end
+    end
+
     def unpush_post_through_topic(post, topic)
       root_id = post.root_type == 'Topic' ? post.id : post.root_id
       items = FeedTopicItem.where(:root_id => root_id)

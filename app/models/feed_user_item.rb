@@ -167,10 +167,10 @@ class FeedUserItem
             post.pushed_users << u.id.to_s
             post.pushed_users_count += 1
             item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
+            item.last_response_time = Time.now
           end
 
           item.root_type = post.root_type
-          item.last_response_time = Time.now
           item.responses ||= []
           item.responses << post.id unless post.is_root?
 

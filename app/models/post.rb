@@ -169,10 +169,6 @@ class Post
     end
   end
 
-  def add_mention
-
-  end
-
   def remove_mention(topic)
     mention = self.topic_mentions.find(topic.id)
     if mention

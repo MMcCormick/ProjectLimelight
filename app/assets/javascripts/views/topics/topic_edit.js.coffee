@@ -41,7 +41,6 @@ class LL.Views.TopicEdit extends Backbone.View
             html += "<div class='topic-type'>#{data.data.type}</div>"
           html
         selectCallback: (term, data, type) ->
-          data.id
           name = if data.data then data.data.slug else ''
           self.addTopic($(val), data.term, data.id, name)
 

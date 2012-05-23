@@ -37,8 +37,10 @@ class LL.Views.RootPost extends Backbone.View
 
       if @model.get('reasons').length > 0
         reason_div = $('<div/>').addClass('reasons').html("<div class='ll-tan-earmark'></div><ul></ul>")
+        first = 'first'
         for reason in @model.get('reasons')
-          reason_div.find('ul').append("<li>#{reason}</li>")
+          reason_div.find('ul').append("<li class='#{first}'>#{reason}</li>")
+          first = ''
         $(@el).append(reason_div)
 
     @renderResponses()

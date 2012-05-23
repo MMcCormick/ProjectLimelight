@@ -15,15 +15,15 @@ class RootPost
     reasons.each do |item|
       case item['t']
         when 'lk' # follwed user liked this post
-          pretty_reasons << "#{item['n']} liked this"
+          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> liked this"
         when 'm' # you are mentioned
           pretty_reasons << "You were mentioned in this post"
         when 'fu' # followed user posted this post
-          pretty_reasons << "#{item['n']} posted this"
+          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> posted this"
         when 'ft' # followed topic mentioned
-          pretty_reasons << "You follow #{item['n']}"
+          pretty_reasons << "You follow <a href='#{item['s']}' class='tlink' data-id='#{item['id']}'>#{item['n']}</a>"
         when 'frt' # topic related to a followed topic mentioned (pull from relation only)
-          pretty_reasons << "TYou follow #{item['n']}, which is related to #{item['n2']}"
+          pretty_reasons << "You follow <a href='#{item['s']}' class='tlink' data-id='#{item['id']}'>#{item['n']}</a>, which is connected to <a href='#{item['s2']}' class='tlink' data-id='#{item['id2']}'>#{item['n2']}</a>"
       end
     end
     pretty_reasons

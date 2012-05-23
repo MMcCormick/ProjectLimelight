@@ -49,16 +49,27 @@ $feedFontColor: $grayDark;
     ul {
       display: none;
       background: #BDB5B1;
-      background: rgba(189, 181, 177, 0.92);
-      padding: 10px;
+      background: rgba(189, 181, 177, 0.95);
+      padding: 0 10px;
       color: #FFF;
-      font-weight: bold;
       position: absolute;
       z-index: 110;
       list-style: none;
       width: 218px;
+      border-bottom: 1px solid #DDD;
+
       li {
         cursor: default;
+        padding: 7px 0;
+        border-top: 1px solid #DDD;
+
+        &.first {
+          border-top: none;
+        }
+        a {
+          font-weight: bold;
+          color: #FFF;
+        }
       }
     }
   }

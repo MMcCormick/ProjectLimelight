@@ -1,6 +1,5 @@
 class FeedTopicItem
   include Mongoid::Document
-  include Mongoid::Timestamps
 
   field :root_id
   field :root_type
@@ -22,6 +21,10 @@ class FeedTopicItem
       [ :last_response_time, Mongo::DESCENDING ]
     ]
   )
+
+  def created_at
+    id.generation_time
+  end
 
   class << self
 

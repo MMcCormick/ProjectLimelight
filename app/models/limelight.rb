@@ -402,7 +402,7 @@ module Limelight #:nodoc:
     def save_topic_mention(topic)
       existing = topic_mentions.detect{|mention| mention.id == topic.id}
       unless existing
-        payload = {public_id: topic.public_id, name: topic.name, slug: topic.slug }
+        payload = {:public_id => topic.public_id, :name => topic.name, :slug => topic.slug }
         payload["first_mention"] = true if !topic.talking_ids.include?(user.id)
         mention = self.topic_mentions.build(payload)
         mention.id = topic.id

@@ -2,7 +2,7 @@ require "limelight"
 
 class Post
   include Mongoid::Document
-  include Mongoid::Timestamps
+  include Mongoid::Timestamps::Updated
   include Limelight::Acl
   include Limelight::Mentions
   include Limelight::Popularity
@@ -65,7 +65,6 @@ class Post
     [
       [ :root_id, Mongo::DESCENDING ],
       [ :_type, Mongo::DESCENDING ],
-      [ :created_at, Mongo::DESCENDING ]
     ]
   )
   index "topic_mentions"
@@ -82,6 +81,10 @@ class Post
   def to_param
     id.to_s
     #"#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
+  end
+
+  def created_at
+    id.generation_time
   end
 
   def encoded_id
@@ -164,8 +167,6 @@ class Post
       if Post.where('sources.url' => sources.first.url).first
         errors.add('Link', "has already been added to Limelight")
       end
-    elsif sources.length > 0 && sources.first.url.blank?
-      sources = nil
     end
   end
 
@@ -243,6 +244,13 @@ class Post
     FeedTopicItem.post_destroy(self)
     FeedLikeItem.post_destroy(self)
     FeedContributeItem.post_destroy(self)
+
+    # remove from popularity actions
+    actions = PopularityAction.where("pop_snippets._id" => id)
+    actions.each do |a|
+      a.pop_snippets.find(id).delete
+      a.save
+    end
   end
 
   ##
@@ -456,30 +464,10 @@ class Post
       post
     end
 
-    # Find potential news story overlap in the past X hours
-    def find_similar(topics)
-      posts = Post.where("topic_mentions._id" => {"$in" => topics.map{|t| t.id}}, :created_at.gte => Chronic.parse('1 hour ago'))
-      chosen = nil
-      posts.each do |p|
-        t_ids = p.topic_mentions.map {|t| t.id.to_s}
-        topic_overlap = topics.select{|t| t_ids.include?(t.id.to_s)}
-
-        # facebook/twitter are in so many posts, never combine them
-        skippers = topics.detect{|t| ['facebook','twitter'].include?(t.name.downcase)}
-
-        if topic_overlap.length == t_ids.length && t_ids.length >= 2 && !skippers
-          chosen = p
-          break
-        end
-      end
-
-      chosen ? chosen : nil
-    end
-
     def friend_responses(id, user, page, limit)
       if user
         Post.where(:root_id => id, :_type => 'Talk', "user_snippet._id" => {"$in" => user.following_users})
-            .order_by(:created_at, :desc)
+            .order_by(:_id, :desc)
             .skip((page-1)*limit).limit(limit)
       else
         []
@@ -490,7 +478,7 @@ class Post
     # TODO: Cache this
     def public_responses(id, page, limit)
       Post.where(:root_id => id, :_type => 'Talk')
-          .order_by(:created_at, :desc)
+          .order_by(:_id, :desc)
           .skip((page-1)*limit).limit(limit)
     end
 
@@ -504,12 +492,12 @@ class Post
     end
 
     def for_show_page(parent_id)
-      Post.where(:root_id => parent_id).order_by(:created_at, :desc)
+      Post.where(:root_id => parent_id).order_by(:_id, :desc)
     end
 
     # returns the latest posts site wide
     def global_stream(page)
-      items = Post.where(:status => 'active').order_by(:created_at, :desc)
+      items = Post.where(:status => 'active').order_by(:_id, :desc)
       items = items.skip((page-1)*20).limit(20)
 
       return_objects = []

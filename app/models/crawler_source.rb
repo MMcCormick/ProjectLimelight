@@ -1,6 +1,5 @@
 class CrawlerSource
   include Mongoid::Document
-  include Mongoid::Timestamps::Created
 
   field :source_name
   field :category

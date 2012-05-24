@@ -1,7 +1,7 @@
 class User
   include Mongoid::Document
   include Mongoid::Paranoia
-  include Mongoid::Timestamps
+  include Mongoid::Timestamps::Updated
   include Mongoid::Slug
   include Limelight::Images
   include ModelUtilitiesHelper
@@ -142,6 +142,10 @@ class User
   # Return the users slug instead of their ID
   def to_param
     self.slug.downcase
+  end
+
+  def created_at
+    id.generation_time
   end
 
   def is_active?

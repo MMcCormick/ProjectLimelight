@@ -1,6 +1,5 @@
 class BetaSignup
   include Mongoid::Document
-  include Mongoid::Timestamps::Created
 
   field :email
   field :invite_code_id

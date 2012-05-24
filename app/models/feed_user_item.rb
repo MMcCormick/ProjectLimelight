@@ -1,6 +1,5 @@
 class FeedUserItem
   include Mongoid::Document
-  include Mongoid::Timestamps
 
   field :feed_id, :type => BSON::ObjectId
   field :root_id
@@ -36,6 +35,10 @@ class FeedUserItem
       [ :last_response_time, Mongo::DESCENDING ]
     ]
   )
+
+  def created_at
+    id.generation_time
+  end
 
   def add_reason(type, target, target2=nil)
     self.reasons ||= []

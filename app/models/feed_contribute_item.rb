@@ -1,6 +1,5 @@
 class FeedContributeItem
   include Mongoid::Document
-  include Mongoid::Timestamps
 
   field :user_id, :type => BSON::ObjectId
   field :root_id
@@ -32,6 +31,10 @@ class FeedContributeItem
     ]
   )
 
+  def created_at
+    id.generation_time
+  end
+
   class << self
     def create(post)
       updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
@@ -49,7 +52,8 @@ class FeedContributeItem
     end
 
     def post_destroy(post)
-      FeedContributeItem.destroy_all(conditions: { :root_id => post.id })
+      root_id = post.root_type == 'Topic' ? post.id : post.root_id
+      FeedContributeItem.destroy_all(conditions: { :root_id => root_id })
     end
   end
 end

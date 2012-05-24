@@ -2,7 +2,7 @@ require 'securerandom'
 
 class InviteCode
   include Mongoid::Document
-  include Mongoid::Timestamps
+  include Mongoid::Timestamps::Updated
 
   cache
 
@@ -21,6 +21,10 @@ class InviteCode
 
   index :user_id
   index :code
+
+  def created_at
+    id.generation_time
+  end
 
   def generate
     if self.code.blank?

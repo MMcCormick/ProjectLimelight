@@ -10,9 +10,9 @@ class OpenGraphDelete
       if fb
         case action
           when 'follow'
-            ll_action = ActionFollow.where(:fid => user.id, :tid => target.id, :a => 'create').order_by(:created_at, :desc).first
+            ll_action = ActionFollow.where(:fid => user.id, :tid => target.id, :a => 'create').order_by(:_id, :desc).first
           when 'like'
-            ll_action = ActionLike.where(:fid => user.id, :tid => target.id, :a => 'create').order_by(:created_at, :desc).first
+            ll_action = ActionLike.where(:fid => user.id, :tid => target.id, :a => 'create').order_by(:_id, :desc).first
           else
             ll_action = nil
         end

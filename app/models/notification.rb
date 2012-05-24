@@ -1,6 +1,6 @@
 class Notification
   include Mongoid::Document
-  include Mongoid::Timestamps
+  include Mongoid::Timestamps::Updated
 
   include ModelUtilitiesHelper
 
@@ -21,7 +21,6 @@ class Notification
   index(
     [
       [ :user_id, Mongo::ASCENDING ],
-      [ :created_at, Mongo::DESCENDING ]
     ]
   )
   index(
@@ -33,6 +32,10 @@ class Notification
 
 
   belongs_to :user
+
+  def created_at
+    id.generation_time
+  end
 
   def add_triggered_by(triggered_by_user)
     self.triggered_by.create(

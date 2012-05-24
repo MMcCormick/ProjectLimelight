@@ -173,7 +173,7 @@ class UsersController < ApplicationController
   def notifications
     not_found("User not found") unless current_user
 
-    notifications = Notification.where(:user_id => current_user.id).order_by(:created_at, :desc).limit(20).to_a
+    notifications = Notification.where(:user_id => current_user.id).order_by(:_id, :desc).limit(20).to_a
 
     ids = notifications.map {|n| n.id}
     if ids.length > 0

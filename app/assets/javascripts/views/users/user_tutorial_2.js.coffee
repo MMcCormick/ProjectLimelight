@@ -46,7 +46,7 @@ class LL.Views.UserTutorial2 extends Backbone.View
     e.preventDefault()
 
   fetchTopics: =>
-    @topics.fetch({data: {sort: ['score', 'desc'], limit: 10, page: @page}})
+    @topics.fetch({data: {sort: ['response_count', 'desc'], limit: 15, page: @page}})
 
   loadMore: (e) =>
     $('.load-more').button('loading')

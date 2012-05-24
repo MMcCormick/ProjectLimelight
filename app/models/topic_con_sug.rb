@@ -1,6 +1,6 @@
 class TopicConSug
   include Mongoid::Document
-  include Limelight::Voting
+  #include Limelight::Voting
 
   field :topic1_id
   field :topic1_name

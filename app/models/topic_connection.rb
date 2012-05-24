@@ -1,6 +1,6 @@
 class TopicConnection
   include Mongoid::Document
-  include Mongoid::Timestamps
+  include Mongoid::Timestamps::Updated
 
   cache
 
@@ -23,6 +23,10 @@ class TopicConnection
   # Return the topic slug instead of its ID
   def to_param
     self.name.to_url
+  end
+
+  def created_at
+    id.generation_time
   end
 
   class << self

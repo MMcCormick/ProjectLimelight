@@ -1,6 +1,5 @@
 class ActionLog
   include Mongoid::Document
-  include Mongoid::Timestamps::Created
 
   field :a, :as => :action
   field :fid, :as => :from_id
@@ -11,8 +10,7 @@ class ActionLog
       [ :_type, Mongo::DESCENDING ],
       [ :fid, Mongo::DESCENDING ],
       [ :tid, Mongo::DESCENDING ],
-      [ :a, Mongo::DESCENDING ],
-      [ :created_at, Mongo::DESCENDING ]
+      [ :a, Mongo::DESCENDING ]
     ]
   )
 

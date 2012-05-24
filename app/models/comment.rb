@@ -2,7 +2,7 @@ require "limelight"
 
 class Comment
   include Mongoid::Document
-  include Mongoid::Timestamps
+  include Mongoid::Timestamps::Updated
   include Limelight::Acl
 
   include ModelUtilitiesHelper
@@ -33,10 +33,13 @@ class Comment
   index(
     [
       [ :talk_id, Mongo::DESCENDING ],
-      [ :created_at, Mongo::DESCENDING ]
     ]
   )
   index [[ :parent_id, Mongo::DESCENDING ]]
+
+  def created_at
+    id.generation_time
+  end
 
   def user_delete
     self.status = "deleted"

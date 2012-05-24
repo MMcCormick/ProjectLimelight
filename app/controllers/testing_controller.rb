@@ -11,6 +11,13 @@ class TestingController < ApplicationController
     authorize! :manage, :all
 
     Post.all.destroy
+    FeedUserItem.all.delete
+    FeedTopicItem.all.delete
+    FeedContributeItem.all.delete
+    PopularityAction.all.delete
+
+    User.update_all(:score => 0)
+    Topic.update_all(:score => 0)
 
     @destroyed = 0
     @updated = 0
@@ -20,7 +27,7 @@ class TestingController < ApplicationController
         t.destroy
         @destroyed += 1
       else
-        t.talking_ids = 0
+        t.talking_ids = []
         t.response_count = 0
         t.influencers = {}
         t.save

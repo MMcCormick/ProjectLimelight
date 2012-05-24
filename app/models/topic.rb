@@ -4,7 +4,7 @@ class Topic
   include Mongoid::Document
   include Mongoid::Slug
   include Mongoid::Paranoia
-  include Mongoid::Timestamps
+  include Mongoid::Timestamps::Updated
   include Limelight::Acl
   include Limelight::Images
   include ImageHelper
@@ -96,6 +96,10 @@ class Topic
 
   def encoded_id
     public_id.to_i.to_s(36)
+  end
+
+  def created_at
+    id.generation_time
   end
 
   def title
@@ -399,6 +403,13 @@ class Topic
 
     # remove from topic feeds
     FeedTopicItem.topic_destroy(self)
+
+    # remove from popularity actions
+    actions = PopularityAction.where("pop_snippets._id" => id)
+    actions.each do |a|
+      a.pop_snippets.find(id).delete
+      a.save
+    end
   end
 
   def user_influence(id)

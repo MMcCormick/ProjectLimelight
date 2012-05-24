@@ -1,6 +1,5 @@
 class FeedLikeItem
   include Mongoid::Document
-  include Mongoid::Timestamps
 
   field :user_id, :type => BSON::ObjectId
   field :root_id
@@ -32,6 +31,10 @@ class FeedLikeItem
     ]
   )
 
+  def created_at
+    id.generation_time
+  end
+
   class << self
     def create(user, post)
       updates = {"$set" => { :root_type => post.root_type, :last_response_time => Time.now }}
@@ -49,7 +52,8 @@ class FeedLikeItem
     end
 
     def post_destroy(post)
-      FeedLikeItem.destroy_all(conditions: { :root_id => post.id })
+      root_id = post.root_type == 'Topic' ? post.id : post.root_id
+      FeedLikeItem.destroy_all(conditions: { :root_id => root_id })
     end
   end
 end

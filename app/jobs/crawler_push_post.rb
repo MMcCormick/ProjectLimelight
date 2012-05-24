@@ -153,9 +153,11 @@ class CrawlerPushPost
       end
 
       if link_data['images'] && link_data['images'].length > 0
-        image = link_data['images'].max_by{|v| v.size}
-        if image['width'] >= 210
-          response[:remote_image_url] = image['url']
+        link_data['images'].each do |image|
+          if image['width'] >= 210 || image['width'] * image['height'] >= 30000
+            response[:remote_image_url] = image['url']
+            break if image['width'] >= 210
+          end
         end
       end
 

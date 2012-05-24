@@ -141,7 +141,7 @@ class LL.Views.PostsFeed extends Backbone.View
 
     @
 
-  loadMore: (e) ->
+  loadMore: (e) =>
     if @collection.page == @page && $(window).scrollTop()+$(window).height() > $(@.el).height()-$(@.el).offset().top
       @.page += 1
       data = {id: @collection.id, p: @.page}
@@ -149,9 +149,10 @@ class LL.Views.PostsFeed extends Backbone.View
       if @collection.sort_value
         data['sort'] = @collection.sort_value
 
+      @on_add = 'append'
       @collection.fetch({add: true, data: data, success: @incrementPage})
 
-  incrementPage: (collection, response) ->
+  incrementPage: (collection, response) =>
     if response.length > 0
       collection.page += 1
     else

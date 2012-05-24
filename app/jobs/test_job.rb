@@ -3,64 +3,28 @@ class TestJob
   @queue = :fast
 
   def self.perform()
-    type_connection = TopicConnection.find(Topic.type_of_id)
+    Post.all.destroy
+    FeedUserItem.all.delete
+    FeedTopicItem.all.delete
+    FeedContributeItem.all.delete
+    PopularityAction.all.delete
+
+    User.update_all(:score => 0)
+    Topic.update_all(:score => 0)
+
+    @destroyed = 0
+    @updated = 0
     topics = Topic.all
     topics.each do |t|
-      node = Neo4j.neo.get_node_index('topics', 'uuid', t.id.to_s)
-
-      unless node
-        t.neo4j_create
+      if t.followers_count == 0 && !t.primary_type_id && !t.fb_page_id && !t.is_category && t.image_versions == 0
+        t.destroy
+        @destroyed += 1
       else
-        t.neo4j_id = node[0]['self'].split('/').last
+        t.talking_ids = []
+        t.response_count = 0
+        t.influencers = {}
         t.save
-      end
-
-      if t.primary_type_id
-        type = Topic.find(t.primary_type_id)
-        saved = true
-        unless type
-          type = Topic.new
-          type.name = t.primary_type
-          type.user_id = User.marc_id
-          saved = type.save
-        end
-        if saved
-          TopicConnection.add(type_connection, t, type, User.marc_id, {:pull => false, :reverse_pull => true})
-        end
-      end
-    end
-
-    users = User.all
-    users.each do |u|
-      node = Neo4j.neo.get_node_index('users', 'uuid', u.id.to_s)
-
-      unless node
-        u.neo4j_create
-      else
-        u.neo4j_id = node[0]['self'].split('/').last
-        u.save
-      end
-    end
-
-    posts = Post.all
-    posts.each do |p|
-      node = Neo4j.neo.get_node_index('posts', 'uuid', p.id.to_s)
-
-      unless node
-        begin
-          p.neo4j_create
-        rescue => e
-          p.delete
-        end
-      else
-        p.neo4j_id = node[0]['self'].split('/').last
-
-        begin
-          p.save
-        rescue => e
-          p.delete
-        end
-
+        @updated += 1
       end
     end
   end

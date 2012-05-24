@@ -242,82 +242,6 @@ module Limelight #:nodoc:
     end
   end
 
-  # Include this module to enable voting on a document
-  # @example Add image handling.
-  #   require "limelight"
-  #   class Person
-  #     include Limelight::Voting
-  #   end
-  module Voting
-    extend ActiveSupport::Concern
-
-    included do
-      field :votes_count, :default => 0
-
-      embeds_many :votes, as: :votable
-    end
-
-    # Votes
-    def voter?(user_id, amount=nil)
-      if amount
-        vote = votes.where(:_id => user_id, :amount => amount).first
-      elsif
-        vote = votes.where(:_id => user_id).first
-      end
-      vote
-    end
-
-    def add_voter(user, amount)
-      vote = voter? user.id
-      net = nil
-      if !vote
-        self.votes.create(:_id => user.id, :amount => amount)
-        self.votes_count += amount
-        if amount > 0
-          user.vote_pos_count += 1
-          net = 1
-        else
-          user.vote_neg_count += 1
-          net = -1
-        end
-      elsif vote.amount != amount
-        self.votes_count = votes_count - vote.amount + amount
-        vote.amount = amount
-        if amount > 0
-          user.vote_pos_count += 1
-          user.vote_neg_count -= 1
-          net = 2
-        else
-          user.vote_pos_count -= 1
-          user.vote_neg_count += 1
-          net = -2
-        end
-      end
-      user.recalculate_vote_ratio
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, net)
-      net
-    end
-
-    def remove_voter(user)
-      vote = voter? user.id
-      net = 0
-      if vote
-        if vote.amount > 0
-          user.vote_pos_count -= 1
-          net = -1
-        else
-          user.vote_neg_count -= 1
-          net = 1
-        end
-        user.recalculate_vote_ratio
-        self.votes_count -= vote.amount
-        vote.destroy
-      end
-      Resque.enqueue(Neo4jPostAction, user.id.to_s, id.to_s, net)
-      net
-    end
-  end
-
   # Include this module to get sentiment functionality for root level documents.
   # @example Add sentiment support to a document.
   #   require "limelight"
@@ -523,15 +447,10 @@ module Limelight #:nodoc:
       end
     end
 
-    def remove_topic_mentions_of(topic_id)
-      # Loop through all of the topic mentions with the given id
-      self.content.scan(/\#\[#{topic_id.to_s}#([a-zA-Z0-9,!\-_:'&\?\$ ]+)\]/).each do |topic|
-        # If we found a match, replace the mention with just the text
-        self.content.gsub!(/\#\[#{topic_id.to_s}##{topic[0]}\]/, topic[0])
-      end
-
-      self.topic_mentions.delete_all(conditions: {id: topic_id})
+    def remove_topic_mention(topic)
+      self.topic_mentions.find(topic.id).delete
       save
+      FeedUserItem.unpush_post_through_topic(self, topic)
     end
   end
 

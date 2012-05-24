@@ -62,11 +62,23 @@ class FeedTopicItem
       end
     end
 
-    def post_disable(post)
+    def post_destroy(post)
       # warning: do not use post.is_root? in this function, since topic roots are excluded
       root_id = post.root_type == 'Topic' ? post.id : post.root_id
 
       FeedTopicItem.destroy_all(conditions: { :root_id => post.id }) if root_id == post.id
+    end
+
+    def topic_destroy(topic)
+      items = FeedTopicItem.where(:mentions => topic.id)
+      items.each do |item|
+        item.mentions.delete(topic.id)
+        if item.mentions.length == 0
+          item.delete
+        else
+          item.save
+        end
+      end
     end
   end
 end

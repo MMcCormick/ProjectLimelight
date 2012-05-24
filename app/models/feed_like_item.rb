@@ -47,5 +47,9 @@ class FeedLikeItem
       FeedLikeItem.collection.update({:feed_id => user.id, :root_id => post.root_id }, updates)
       FeedLikeItem.delete_all(conditions: { :feed_id => user.id, :root_id => post.root_id, :strength => {"$lte" => 0} })
     end
+
+    def post_destroy(post)
+      FeedLikeItem.destroy_all(conditions: { :root_id => post.id })
+    end
   end
 end

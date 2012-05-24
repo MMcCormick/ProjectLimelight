@@ -2,7 +2,6 @@ require "limelight"
 
 class Post
   include Mongoid::Document
-  include Mongoid::Paranoia
   include Mongoid::Timestamps
   include Limelight::Acl
   include Limelight::Mentions
@@ -55,6 +54,7 @@ class Post
   before_create :save_remote_image, :denormalize_user, :current_user_own, :send_tweet, :set_response_to, :set_root
   after_create :process_images, :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
   after_save :update_denorms
+  before_destroy :disconnect
 
   # MBM: hot damn lots of indexes. can we do this better? YES WE CAN
   # MCM: chill out obama
@@ -233,6 +233,16 @@ class Post
     ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
     FeedUserItem.unlike(user, self)
     FeedLikeItem.destroy(user, self)
+  end
+
+  def disconnect
+    # remove from neo4j
+    node = Neo4j.neo.get_node_index('posts', 'uuid', id.to_s)
+    Neo4j.neo.delete_node!(node)
+
+    FeedTopicItem.post_destroy(self)
+    FeedLikeItem.post_destroy(self)
+    FeedContributeItem.post_destroy(self)
   end
 
   ##

@@ -44,8 +44,6 @@ class Topic
   field :short_name
   field :health, :default => []
   field :health_index, :default => 0
-  field :fb_id # freebase id
-  field :fb_mid # freebase mid
   field :status, :default => 'active'
   field :slug_locked
   field :user_id
@@ -81,8 +79,8 @@ class Topic
   before_create :init_alias, :text_health
   after_create :neo4j_create, :add_to_soulmate
   before_update :update_name_alias, :text_health
-  after_update :update_denorms#, :expire_caches
-  before_destroy :remove_from_soulmate, :disconnect#, :expire_caches
+  after_update :update_denorms
+  before_destroy :remove_from_soulmate, :disconnect
 
   index [[ :slug, Mongo::ASCENDING ]]
   index [[ :public_id, Mongo::DESCENDING ]]
@@ -381,9 +379,9 @@ class Topic
   end
 
   def disconnect
-    # remove mentions of this topic
+    # remove mentions of this topic (also removes from user feeds)
     Post.where("topic_mentions._id" => id).each do |object|
-      object.remove_topic_mentions_of(id)
+      object.remove_topic_mention(self)
     end
 
     # remove from neo4j
@@ -395,11 +393,18 @@ class Topic
       topic.unset_primary_type
       topic.save
     end
+
+    # update those users following this topic
+    User.collection.update({:following_topics => id}, {"$pull" => {"following_topics" => id}, "$inc" => {"following_topics_count" => -1}})
+
+    # remove from topic feeds
+    FeedTopicItem.topic_destroy(self)
   end
 
   def user_influence(id)
     influencers[id.to_s]["influence"] if influencers[id.to_s]
   end
+
   def user_percentile(id)
     influencers[id.to_s]["percentile"] if influencers[id.to_s]
   end

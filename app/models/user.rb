@@ -81,9 +81,6 @@ class User
   field :followers_count, :type => Integer, :default => 0
   field :likes_count, :type => Integer, :default => 0
   field :unread_notification_count, :type => Integer, :default => 0
-  field :vote_pos_count, :default => 0
-  field :vote_neg_count, :default => 0
-  field :vote_ratio, :type => Float, :default => 0
   field :clout, :default => 1
   field :bio
   field :invite_code_id
@@ -131,7 +128,7 @@ class User
   end
 
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff, :send_personal_email
-  after_update :update_denorms#, :expire_caches
+  after_update :update_denorms
   before_destroy :remove_from_soulmate
 
   index [[ :slug, Mongo::ASCENDING ]]

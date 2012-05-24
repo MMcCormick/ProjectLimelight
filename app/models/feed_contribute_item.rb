@@ -47,5 +47,9 @@ class FeedContributeItem
       FeedContributeItem.collection.update({:feed_id => post.user_snippet.id, :root_id => post.root_id }, updates)
       FeedContributeItem.delete_all(conditions: { :feed_id => post.user_snippet.id, :root_id => post.root_id, :strength => {"$lte" => 0} })
     end
+
+    def post_destroy(post)
+      FeedContributeItem.destroy_all(conditions: { :root_id => post.id })
+    end
   end
 end

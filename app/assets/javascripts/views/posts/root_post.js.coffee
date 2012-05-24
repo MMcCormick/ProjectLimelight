@@ -51,7 +51,8 @@ class LL.Views.RootPost extends Backbone.View
     @
 
   postShow: =>
-    LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
+    unless @model.get('root').get('type') == 'Topic'
+      LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
 
   renderResponses: =>
     hasResponses = false

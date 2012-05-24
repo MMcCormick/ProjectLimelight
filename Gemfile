@@ -19,7 +19,7 @@ gem 'omniauth-twitter'
 gem 'koala', '1.4.1' # facebook graph api support
 gem 'twitter' # twitter api support
 gem 'resque', '1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
-gem 'resque-scheduler', '2.0.0.h' # scheduled resque jobs
+gem 'resque-scheduler', '2.0.0', :require => 'resque_scheduler' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'resque_mailer'
 gem 'chronic' # Date/Time management
@@ -32,6 +32,7 @@ gem 'neography' # neo4j graph database
 gem 'backbone-on-rails'
 gem 'mixpanel' # analytics
 gem 'feedzirra'
+gem 'ken' # freebase
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'
@@ -79,7 +80,7 @@ platforms :ruby do
   #gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
   gem 'heroku'
   gem 'rpm_contrib', '2.1.9' # extra instrumentation for the new relic rpm agent
-  gem 'newrelic-redis', '1.2.0' # new relic redis instrumentation
+  gem 'newrelic-redis', '1.3.2' # new relic redis instrumentation
   gem 'newrelic-faraday'
 
   group :development do

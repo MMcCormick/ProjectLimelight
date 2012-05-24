@@ -1,5 +1,5 @@
 <div class='top'>
-  <%= @topic.get('name') %>
+  <h4><%= @topic.get('name') %></h4>
   <% if @topic.get('primary_type'): %>
     <div class='sub'><%= @topic.get('primary_type') %></div>
   <% end %>

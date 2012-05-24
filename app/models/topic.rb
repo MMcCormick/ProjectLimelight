@@ -42,21 +42,27 @@ class Topic
 
   field :summary
   field :short_name
-  field :health, :default => []
-  field :health_index, :default => 0
   field :status, :default => 'active'
   field :slug_locked
   field :user_id
   field :followers_count, :default => 0
   field :primary_type
   field :primary_type_id
+  field :is_topic_type, :default => false # is this topic a type for other topics?
   field :talking_ids, :default => []
   field :response_count, :default => 0
   field :influencers, :default => {}
   field :score, :default => 0.0
-  field :freebase_id
   field :fb_page_id
+  field :dbpedia
+  field :opencyc
+  field :freebase_guid
+  field :freebase_id
+  field :freebase_url
+  field :use_freebase_image, :default => false
+  field :wikipedia
   field :website
+  field :websites_extra, :default => []
   field :neo4j_id
   field :is_category, :default => false
 
@@ -69,16 +75,16 @@ class Topic
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 50 }
   validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
   validates_each :name do |record, attr, value|
-    if Topic.stop_words.include?(value) || !Topic.deleted.where("aliases.slug" => value.parameterize).first.nil?
-      record.errors.add attr, "is not permitted"
+    if Topic.stop_words.include?(value) || !Topic.deleted.where("aliases.slug" => value.to_url).first.nil?
+      record.errors.add attr, "This topic name is not permitted."
     end
   end
 
   attr_accessible :name, :summary, :aliases, :short_name
 
-  before_create :init_alias, :text_health
-  after_create :neo4j_create, :add_to_soulmate
-  before_update :update_name_alias, :text_health
+  before_create :init_alias
+  after_create :neo4j_create, :add_to_soulmate, :fetch_external_data
+  before_update :update_name_alias
   after_update :update_denorms
   before_destroy :remove_from_soulmate, :disconnect
 
@@ -106,20 +112,99 @@ class Topic
     name
   end
 
+  def freebase_guid
+    if read_attribute(:freebase_guid)
+      "/guid/#{read_attribute(:freebase_guid).split('.').last}"
+    end
+  end
+
+  def fetch_external_data
+    Resque.enqueue(TopicFetchExternalData, id.to_s)
+  end
+
+  def fetch_freebase(overwrite=false)
+    # get or find the freebase object
+    if freebase_guid
+      freebase_object = Ken::Topic.get(freebase_guid)
+      return unless freebase_object
+    else
+      search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=#{URI::encode(name)}")
+      return unless search && search['result'] && search['result'].first && search['result'].first['score'] >= 150
+
+      freebase_object = Ken::Topic.get(search['result'].first['mid'])
+      return unless freebase_object
+
+      existing_topic = Topic.where(:freebase_id => freebase_object.id).first
+      return if existing_topic && existing_topic.id != id
+    end
+
+    # basics
+    self.freebase_id = freebase_object.id
+    self.freebase_url = freebase_object.url
+    self.summary = freebase_object.description unless summary
+
+    # store extra websites
+    freebase_object.webpages.each do |w|
+      if w['text'] == '{name}'
+        self.website = w['url']
+      elsif ['Wikipedia','New York Times','Crunchbase'].include?(w['text']) && !websites_extra.detect{|we| we['name'] == w['text']}
+        self.websites_extra << {
+                'name' => w['text'],
+                'url' => w['url']
+        }
+      end
+    end
+
+    # try to connect types
+    type_names = freebase_object.types.map{|t| t.name.to_url}
+    type_topics = Topic.where("aliases.slug" => {"$in" => type_names}, :is_topic_type => true).to_a
+    type_connection = TopicConnection.find(Topic.type_of_id) if type_topics.length > 0
+
+    type_topics.each do |t|
+      next if primary_type_id && primary_type_id == t.id
+
+      unless self.primary_type_id
+        set_primary_type(t.name, t.id)
+      end
+
+      TopicConnection.add(type_connection, self, t, User.marc_id, {:pull => false, :reverse_pull => true})
+    end
+
+    # update the image
+    if image_versions == 0
+      self.use_freebase_image = true
+    end
+
+    # overwrite certain things
+    if overwrite
+      self.name = freebase_object.name
+      self.summary = freebase_object.description
+
+      if freebase_object.aliases.length > 0
+        self.aliases = []
+        freebase_object.aliases.each do |a|
+          add_alias(a)
+        end
+      end
+    end
+
+    save
+  end
+
   #
   # Aliases
   #
 
   def init_alias
     self.aliases ||= []
-    add_alias(name)
+    add_alias(name, false, true)
   end
 
   def get_alias name
     self.aliases.detect{|a| a.slug == name.to_url}
   end
 
-  def add_alias(new_alias, ooac=false)
+  def add_alias(new_alias, ooac=false, hidden=false)
     return unless new_alias && !new_alias.blank?
 
     unless get_alias new_alias
@@ -127,7 +212,7 @@ class Topic
       #if existing
       #  return "The '#{existing.name}' topic has a one of a kind alias with this name."
       #else
-        self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :hash => new_alias.to_url.gsub('-', ''), :ooac => ooac)
+        self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :hash => new_alias.to_url.gsub('-', ''), :ooac => ooac, :hidden => hidden)
         Resque.enqueue(SmCreateTopic, id.to_s)
         return true
       #end
@@ -148,7 +233,7 @@ class Topic
     Resque.enqueue(SmCreateTopic, id.to_s)
   end
 
-  def update_alias(alias_id, name, ooac)
+  def update_alias(alias_id, name, ooac, hidden=false)
     found = self.aliases.detect{|a| a.id.to_s == alias_id}
     if found
       if ooac == true
@@ -163,6 +248,7 @@ class Topic
       found.name = name unless name.blank?
       found.slug = name.to_url unless name.blank?
       found.ooac = ooac
+      found.hidden = hidden
       Resque.enqueue(SmCreateTopic, id.to_s)
     end
     true
@@ -189,8 +275,8 @@ class Topic
         remove_alias(name_was.pluralize)
         remove_alias(name_was.singularize)
       end
-      add_alias(name.pluralize)
-      add_alias(name.singularize)
+      add_alias(name.pluralize, false, true)
+      add_alias(name.singularize, false, true)
     end
   end
 
@@ -215,35 +301,6 @@ class Topic
   end
 
   #
-  # Health
-  #
-
-  def text_health
-    self.health ||= []
-    if summary_changed? || short_name_changed?
-      update_health('summary') if !summary.blank?
-      update_health('short_name') if !short_name.blank?
-      self.health_index = health.length
-    end
-  end
-
-  def update_health(attr)
-    self.health ||= []
-    if !health.include?(attr)
-      self.health << attr
-      self.health_index = health.length
-    end
-  end
-
-  def remove_health(attr)
-    self.health ||= []
-    if health.include?(attr)
-      self.health.delete(attr)
-      self.health_index = health.length
-    end
-  end
-
-  #
   # SoulMate
   #
 
@@ -260,17 +317,20 @@ class Topic
   #
 
   def set_primary_type(primary_name, primary_id)
-    update_health('type')
-    self.primary_type = primary_name
-    self.primary_type_id = primary_id
-    Resque.enqueue(SmCreateTopic, id.to_s)
+    topic = Topic.find(primary_id)
+    if topic
+      self.primary_type = primary_name
+      self.primary_type_id = primary_id
+      topic.is_topic_type = true
+      topic.save
+      Resque.enqueue(SmCreateTopic, id.to_s)
+    end
   end
 
   def unset_primary_type
     self.primary_type = nil
     self.primary_type_id = nil
     Resque.enqueue(SmCreateTopic, id.to_s)
-    remove_health('type')
   end
 
   #
@@ -420,15 +480,19 @@ class Topic
     influencers[id.to_s]["percentile"] if influencers[id.to_s]
   end
 
-  # only returns those aliases that are not plurals of another alias and that are not the original name
-  def clean_aliases
-    response = []
-    aliases.each do |a|
-      if a.name.to_url != name.to_url && a.name.pluralize != a.name
-        response << a
-      end
+  # only returns visible aliases
+  def visible_aliases
+    aliases.select { |a| !a[:hidden] }
+  end
+
+  def short_summary
+    if summary
+      short = summary.split('.')[0,1].join('. ') + '.'
+      #if short.length < 500
+      #  short += summary.split('.')[1,2].join('. ') + '.'
+      #end
+      #short
     end
-    response
   end
 
   ##########
@@ -452,14 +516,16 @@ class Topic
             :slug => to_param,
             :type => 'Topic',
             :name => name,
-            :summary => summary,
+            :summary => short_summary,
             :score => score,
             :followers_count => followers_count,
             :created_at => created_at.to_i,
             :created_at_pretty => pretty_time(created_at),
             :images => Topic.json_images(self),
             :primary_type => primary_type,
-            :aliases => clean_aliases
+            :aliases => visible_aliases,
+            :freebase_url => freebase_url
+
     }
   end
 
@@ -639,6 +705,14 @@ class Topic
     if image_versions_changed? || active_image_version_changed?
       topic_mention_updates["topic_mentions.$.image_versions"] = self.image_versions
       topic_mention_updates["topic_mentions.$.active_image_version"] = self.active_image_version
+    end
+
+    if use_freebase_image_changed?
+      topic_mention_updates["topic_mentions.$.use_freebase_image"] = self.use_freebase_image
+    end
+
+    if freebase_id_changed?
+      topic_mention_updates["topic_mentions.$.freebase_id"] = self.freebase_id
     end
 
     unless topic_mention_updates.empty?

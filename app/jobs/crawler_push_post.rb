@@ -52,7 +52,7 @@ class CrawlerPushPost
           if e['relevance'].to_f >= 0.75
             entities << e
             if e['disambiguated'] && e['disambiguated']['freebase']
-              topic = Topic.where(:freebase_id => e['disambiguated']['freebase']).first
+              topic = Topic.where(:freebase_guid => e['disambiguated']['freebase']).first
               unless topic
                 topic = Topic.where("aliases.slug" => e['disambiguated']['name'].to_url).order_by(:score, :desc).first
               end
@@ -64,7 +64,7 @@ class CrawlerPushPost
             # create the topic if it's not already in the DB
             if !topic
               type = nil
-              if e['type'] && ['company','product','technology','organization'].include?(e['type'].downcase)
+              if e['type'] && ['company','product','technology','organization','healthcondition','printmedia'].include?(e['type'].downcase)
                 type = Topic.where("aliases.slug" => e['type'].to_url).order_by(:score, :desc).first
                 unless type
                   type = Topic.new
@@ -77,8 +77,10 @@ class CrawlerPushPost
               topic = Topic.new
               topic.name = e['disambiguated'] ? e['disambiguated']['name'] : e['text']
               topic.user_id = User.marc_id
-              if e['disambiguated'] && e['disambiguated']['freebase']
-                topic.freebase_id = e['disambiguated']['freebase']
+              if e['disambiguated']
+                topic.freebase_guid = e['disambiguated']['freebase'] if e['disambiguated']['freebase']
+                topic.dbpedia = e['disambiguated']['dbpedia'] if e['disambiguated']['dbpedia']
+                topic.opencyc = e['disambiguated']['opencyc'] if e['disambiguated']['opencyc']
               end
               saved = topic.save
               if saved

@@ -140,7 +140,12 @@ module Limelight #:nodoc:
           if ["User", "UserSnippet", "UserMention"].include?(self.class.name)
             "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
           elsif ["Topic", "TopicSnippet", "TopicMention"].include?(self.class.name)
-            "#{S3['image_prefix']}/defaults/topics/#{size}.gif"
+            if use_freebase_image
+              "https://usercontent.googleapis.com/freebase/v1/image#{freebase_id}?maxheight=#{size_dimensions[size]}&maxwidth=#{size_dimensions[size]}&mode=#{mode == :fit ? 'fit' : 'fillcropmid'}&pad=true"
+            else
+              "#{S3['image_prefix']}/defaults/topics/#{size}.gif"
+            end
+
           end
         else
           if processing_image
@@ -402,7 +407,7 @@ module Limelight #:nodoc:
     def save_topic_mention(topic)
       existing = topic_mentions.detect{|mention| mention.id == topic.id}
       unless existing
-        payload = {:public_id => topic.public_id, :name => topic.name, :slug => topic.slug }
+        payload = {:public_id => topic.public_id, :name => topic.name, :slug => topic.slug, :freebase_id => topic.freebase_id, :use_freebase_image => topic.use_freebase_image }
         payload["first_mention"] = true if !topic.talking_ids.include?(user.id)
         mention = self.topic_mentions.build(payload)
         mention.id = topic.id

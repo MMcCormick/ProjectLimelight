@@ -6,6 +6,8 @@ class TopicSnippet
   field :name
   field :slug
   field :public_id
+  field :freebase_id
+  field :use_freebase_image
 
   # Return the users username instead of their ID
   def to_param

@@ -8,6 +8,7 @@ require "rails/test_unit/railtie"
 require "sprockets/railtie"
 require 'coffee_script'
 require "sass-rails"
+require 'resque/server'
 require 'resque-loner'
 require 'uri'
 require 'open-uri'

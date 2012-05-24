@@ -13,8 +13,8 @@ class TopicMention
   field :short_name
   field :score, :default => 1
   field :first_mention
-
-  attr_accessible :name, :slug, :public_id, :short_name, :score, :first_mention
+  field :freebase_id
+  field :use_freebase_image
 
   embedded_in :topic_mentionable, polymorphic: true
 

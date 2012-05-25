@@ -125,17 +125,17 @@ class Topic
   def fetch_freebase(overwrite_text=false, overwrite_aliases=false, overwrite_primary_type=false, overwrite_image=false)
     # get or find the freebase object
     freebase_search = nil
-    if freebase_guid
-      freebase_object = Ken::Topic.get(freebase_guid)
+    if freebase_guid || freebase_id
+      freebase_object = freebase_guid ? Ken::Topic.get(freebase_guid) : Ken::Topic.get(freebase_id)
 
       return unless freebase_object
 
       search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=#{URI::encode(name)}")
 
       # make sure the names match up at least a little bit
-      if search && search['result']
+      if search && search['result'] && search['result'].first && search['result'].first['score'] >= 800
         search['result'].each do |s|
-          if s['name'].to_url == name.to_url
+          if s['name'].to_url == name.to_url && s['score'] >= 75
             freebase_search = s
             break
           end
@@ -147,10 +147,10 @@ class Topic
       end
     else
       search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(name)}")
-      return unless search && search['result'] && search['result'].first
+      return unless search && search['result'] && search['result'].first && search['result'].first['score'] >= 800
 
       search['result'].each do |s|
-        if s['name'].to_url == name.to_url
+        if s['name'].to_url == name.to_url && s['score'] >= 75
           freebase_search = s
           break
         end
@@ -222,6 +222,7 @@ class Topic
 
     if overwrite_aliases && freebase_object.aliases.length > 0
       self.aliases = []
+      init_alias
       freebase_object.aliases.each do |a|
         add_alias(a)
       end
@@ -563,6 +564,7 @@ class Topic
             :images => Topic.json_images(self),
             :primary_type => primary_type,
             :aliases => visible_aliases,
+            :websites => [],
             :freebase_url => freebase_url
 
     }

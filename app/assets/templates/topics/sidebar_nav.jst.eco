@@ -12,6 +12,15 @@
 
   <p><%= if @topic.get('summary') then @topic.get('summary') else 'No summary...' %></p>
 
+  <% if @topic.get('websites').length > 0: %>
+    <h5>Websites</h5>
+    <ul class='unstyled'>
+      <% for website in @topic.get('websites'): %>
+        <li><a href="<%= website.url %>" target="_blank" rel="nofollow"><%= website.name %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+
   <% if @topic.get('aliases').length > 0: %>
     <h5>Also Known As</h5>
     <ul class='unstyled'>

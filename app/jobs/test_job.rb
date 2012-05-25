@@ -29,6 +29,12 @@ class TestJob
       end
     end
 
+    time_id = BSON::ObjectId.from_time(Chronic.parse('7 days ago'))
+    topics = Topic.where(:_id.gt => time_id).to_a
+    topics.each do |t|
+      t.destroy!
+    end
+
     topics = Topic.all
     topics.each do |t|
       if t.primary_type_id
@@ -43,6 +49,15 @@ class TestJob
       end
 
       t.fetch_freebase(true, true, true)
+    end
+
+    crawlers = CrawlerSource.all
+    crawlers.each do |c|
+      c.last_modified = nil
+      c.last_crawled = nil
+      c.etag = nil
+      c.posts_added = 0
+      c.save
     end
 
   end

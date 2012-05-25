@@ -29,7 +29,6 @@ class CrawlerPushPost
     end
 
     def perform(url, crawler_source_id)
-      type_connection = TopicConnection.find(Topic.type_of_id)
       crawler_source = CrawlerSource.find(crawler_source_id)
 
       # extract topics from the link with alchemy api
@@ -48,59 +47,45 @@ class CrawlerPushPost
       topics = []
 
       if tmp_entities
-        tmp_entities.each_with_index do |e,i|
-          if e['relevance'].to_f >= 0.75
+        tmp_entities.each do |e|
+          if e['relevance'].to_f >= 0.70
+
             entities << e
             if e['disambiguated'] && e['disambiguated']['freebase']
               topic = Topic.where(:freebase_guid => e['disambiguated']['freebase']).first
-              unless topic
-                topic = Topic.where("aliases.slug" => e['disambiguated']['name'].to_url).order_by(:score, :desc).first
+              unless topic # didn't find the topic with the freebase guid, check names
+                topic = Topic.where("aliases.slug" => e['disambiguated']['name'].to_url, :primary_type_id => {'$exists' => true}).order_by(:response_count, :desc).first
+                topic.freebase_guid = e['disambiguated']['freebase'] if topic
               end
             else
               name = e['disambiguated'] ? e['disambiguated']['name'].to_url : e['text'].to_url
-              topic = Topic.where("aliases.slug" => name).order_by(:score, :desc).first
+              topic = Topic.where("aliases.slug" => name, :primary_type_id => {'$exists' => true}).order_by(:response_count, :desc).first
             end
 
-            # create the topic if it's not already in the DB
-            if !topic
-              type = nil
-              if e['type'] && ['company','product','technology','organization','healthcondition','printmedia'].include?(e['type'].downcase)
-                type = Topic.where("aliases.slug" => e['type'].to_url).order_by(:score, :desc).first
-                unless type
-                  type = Topic.new
-                  type.name = e['type']
-                  type.user_id = User.marc_id
-                  type.save
-                end
-              end
-
+            if topic && !topic.freebase_id # if it's an existing topic without a freebase id, queue it up to fetch data
+              Resque.enqueue(TopicFetchExternalData, topic.id.to_s)
+            else # create the topic if it's not already in the DB, and freebase has a decent match for it
               topic = Topic.new
               topic.name = e['disambiguated'] ? e['disambiguated']['name'] : e['text']
+
+              # check freebase if there is no freebase id returned from alchemy api
+              unless e['disambiguated'] && e['disambiguated']['freebase']
+                search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(topic.name)}")
+                next unless search && search['result'] && search['result'].first && search['result'].first['score'] >= 100
+              end
+
               topic.user_id = User.marc_id
               if e['disambiguated']
                 topic.freebase_guid = e['disambiguated']['freebase'] if e['disambiguated']['freebase']
                 topic.dbpedia = e['disambiguated']['dbpedia'] if e['disambiguated']['dbpedia']
                 topic.opencyc = e['disambiguated']['opencyc'] if e['disambiguated']['opencyc']
               end
-              saved = topic.save
-              if saved
-                if type
-                  topic.primary_type_id = type.id
-                  topic.primary_type = type.name
-                  topic.save
-                  TopicConnection.add(type_connection, topic, type, User.marc_id, {:pull => false, :reverse_pull => true})
-                end
-              end
             end
 
+            topic.save
             topics << topic if topic && topic.valid?
           end
         end
-      end
-
-      if topics.length == 0
-        puts "no topics found"
-        return
       end
 
       # grab info with embedly
@@ -115,10 +100,22 @@ class CrawlerPushPost
       # get topics in the news title
       combinations = CrawlerPushPost.combinalities(link_data['title'])
 
-      #TODO: Make this require typed topics when we have more typed topics filled out
-      extra_topics = Topic.where("aliases.slug" => {"$in" => combinations.map{|c| c.to_url}})
+      extra_topics = Topic.where("aliases.slug" => {"$in" => combinations.map{|c| c.to_url}}).order_by(:response_count, :desc)
       extra_topics.each do |t|
+
+        unless t.freebase_id
+          Resque.enqueue(TopicFetchExternalData, t.id.to_s)
+          next
+        end
+
+        # skip this topic if we already have a topic with this topics id, this topics name, or a topic whos aliases include this topics name
+        next if topics.detect{|t2| t2.id == t.id || t2.name.to_url == t.name.to_url || t2.aliases.detect {|a| a.slug == t.name.to_url}}
         topics << t
+      end
+
+      if topics.length == 0
+        puts "no topics found"
+        return
       end
 
       # Build the initial post data structure
@@ -127,7 +124,7 @@ class CrawlerPushPost
         :title => link_data['title'].html_safe,
         :source_name => link_data['provider_name'].html_safe,
         :source_url => link_data['url'],
-        :source_content => link_data['description'].html_safe
+        :source_content => link_data['description'] ? link_data['description'].html_safe : nil
       }
 
       # remove the site title that often comes after/before the |, ie "google buys microsoft | tech crunch"

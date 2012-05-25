@@ -19,7 +19,7 @@ gem 'omniauth-twitter'
 gem 'koala', '1.4.1' # facebook graph api support
 gem 'twitter' # twitter api support
 gem 'resque', '1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
-gem 'resque-scheduler', '2.0.0', :require => 'resque_scheduler' # scheduled resque jobs
+gem 'resque-scheduler', '2.0.0h', :require => 'resque_scheduler' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'resque_mailer'
 gem 'chronic' # Date/Time management

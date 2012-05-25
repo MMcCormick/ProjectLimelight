@@ -40,8 +40,9 @@ class TestJob
           t.unset_primary_type
           t.save
         end
-
       end
+
+      #t.fetch_freebase(true)
     end
 
   end

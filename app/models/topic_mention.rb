@@ -6,7 +6,6 @@ class TopicMention
   @threshold = 2
   class << self; attr_accessor :threshold end
 
-
   field :name
   field :slug
   field :public_id
@@ -15,6 +14,8 @@ class TopicMention
   field :first_mention
   field :freebase_id
   field :use_freebase_image
+
+  attr_accessible :name, :slug, :public_id, :short_name, :score, :first_mention, :freebase_id, :use_freebase_image
 
   embedded_in :topic_mentionable, polymorphic: true
 

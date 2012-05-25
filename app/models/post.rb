@@ -48,7 +48,7 @@ class Post
   attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :source_title, :source_content, :embed_html, :tweet_content, :tweet, :tweet_id, :standalone_tweet
   attr_accessor :parent, :parent_id, :source_name, :source_url, :source_video_id, :source_title, :source_content, :tweet_content, :tweet
 
-  default_scope where('status' => 'active')
+  #default_scope where('status' => 'active')
 
   before_validation :set_source_snippet
   before_create :save_remote_image, :denormalize_user, :current_user_own, :send_tweet, :set_response_to, :set_root

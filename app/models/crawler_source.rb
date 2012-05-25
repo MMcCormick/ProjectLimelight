@@ -10,7 +10,7 @@ class CrawlerSource
   field :posts_added, :default => 0
   field :status, :default => 'active'
 
-  attr_accessible :source_name, :category, :url
+  attr_accessible :source_name, :category, :url, :status
 
   validates :url, :uniqueness => { :case_sensitive => false, :message => 'URL is already in use!' }
 end

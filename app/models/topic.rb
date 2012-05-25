@@ -535,6 +535,16 @@ class Topic
     end
   end
 
+  def all_websites
+    response = []
+    response << { :name => 'Official', :url => website } if website
+    response << { :name => 'Freebase', :url => freebase_url } if freebase_url
+    websites_extra.each do |w|
+      response << { :name => w[:name], :url => w[:url] }
+    end
+    response
+  end
+
   ##########
   # JSON
   ##########
@@ -564,7 +574,7 @@ class Topic
             :images => Topic.json_images(self),
             :primary_type => primary_type,
             :aliases => visible_aliases,
-            :websites => [],
+            :websites => all_websites,
             :freebase_url => freebase_url
 
     }

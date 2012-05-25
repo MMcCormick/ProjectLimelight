@@ -136,7 +136,7 @@ class Topic
       if search && search['result']
         search['result'].each do |s|
           if s['name'].to_url == name.to_url
-            freebase_search = s['result']
+            freebase_search = s
             break
           end
         end
@@ -151,7 +151,7 @@ class Topic
 
       search['result'].each do |s|
         if s['name'].to_url == name.to_url
-          freebase_search = s['result']
+          freebase_search = s
           break
         end
       end

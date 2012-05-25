@@ -42,7 +42,7 @@ class TestJob
         end
       end
 
-      #t.fetch_freebase(true)
+      t.fetch_freebase(true, true, true)
     end
 
   end

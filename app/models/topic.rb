@@ -122,16 +122,46 @@ class Topic
     Resque.enqueue(TopicFetchExternalData, id.to_s)
   end
 
-  def fetch_freebase(overwrite=false)
+  def fetch_freebase(overwrite_text=false, overwrite_aliases=false, overwrite_primary_type=false, overwrite_image=false)
     # get or find the freebase object
+    freebase_search = nil
     if freebase_guid
       freebase_object = Ken::Topic.get(freebase_guid)
-      return unless freebase_object
-    else
-      search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=#{URI::encode(name)}")
-      return unless search && search['result'] && search['result'].first && search['result'].first['score'] >= 150
 
-      freebase_object = Ken::Topic.get(search['result'].first['mid'])
+      return unless freebase_object
+
+      search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=#{URI::encode(name)}")
+
+      # make sure the names match up at least a little bit
+      if search && search['result']
+        search['result'].each do |s|
+          if s['name'].to_url == name.to_url
+            freebase_search = s['result']
+            break
+          end
+        end
+        unless freebase_search
+          freebase_search = search['result'].first
+          freebase_search = nil unless search['result'].first['name'].to_url.include?(name.to_url) || name.to_url.include?(search['result'].first['name'].to_url) || search['result'].first['score'] >= 800
+        end
+      end
+    else
+      search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(name)}")
+      return unless search && search['result'] && search['result'].first
+
+      search['result'].each do |s|
+        if s['name'].to_url == name.to_url
+          freebase_search = s['result']
+          break
+        end
+      end
+      # make sure the names match up at least a little bit
+      unless !search || freebase_search
+        return unless search['result'].first['name'].to_url.include?(name.to_url) || name.to_url.include?(search['result'].first['name'].to_url) || search['result'].first['score'] >= 1500
+        freebase_search = search['result'].first
+      end
+
+      freebase_object = Ken::Topic.get(freebase_search['mid'])
       return unless freebase_object
 
       existing_topic = Topic.where(:freebase_id => freebase_object.id).first
@@ -156,35 +186,44 @@ class Topic
     end
 
     # try to connect types
-    type_names = freebase_object.types.map{|t| t.name.to_url}
-    type_topics = Topic.where("aliases.slug" => {"$in" => type_names}, :is_topic_type => true).to_a
-    type_connection = TopicConnection.find(Topic.type_of_id) if type_topics.length > 0
-
-    type_topics.each do |t|
-      next if primary_type_id && primary_type_id == t.id
-
-      unless self.primary_type_id
-        set_primary_type(t.name, t.id)
+    type_connection = TopicConnection.find(Topic.type_of_id)
+    if search && search['notable'] && (overwrite_primary_type || !primary_type_id)
+      type_topic = Topic.where("aliases.slug" => freebase_search['notable']['name'].to_url).first
+      unless type_topic
+        type_topic = Topic.new
+        type_topic.name = freebase_search['notable']['name']
+        type_topic.user_id = User.marc_id
+        type_topic.save
       end
-
-      TopicConnection.add(type_connection, self, t, User.marc_id, {:pull => false, :reverse_pull => true})
+      set_primary_type(type_topic.name, type_topic.id)
+      TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
+    else
+      type_names = freebase_object.types.map{|t| t.name.to_url}
+      type_topics = Topic.where("aliases.slug" => {"$in" => type_names}, :is_topic_type => true).to_a
+      type_topics.each do |t|
+        next if primary_type_id || primary_type_id == t.id
+        set_primary_type(t.name, t.id) unless primary_type_id
+        TopicConnection.add(type_connection, self, t, User.marc_id, {:pull => false, :reverse_pull => true})
+      end
     end
 
     # update the image
-    if image_versions == 0
+    if image_versions == 0 || overwrite_image
+      self.active_image_version = 0
       self.use_freebase_image = true
     end
 
     # overwrite certain things
-    if overwrite
-      self.name = freebase_object.name
+    if overwrite_text
+      existing_name = Topic.where(:name => freebase_object.name, :primary_type_id => {"$exists" => false}).first
+      self.name = freebase_object.name unless existing_name
       self.summary = freebase_object.description
+    end
 
-      if freebase_object.aliases.length > 0
-        self.aliases = []
-        freebase_object.aliases.each do |a|
-          add_alias(a)
-        end
+    if overwrite_aliases && freebase_object.aliases.length > 0
+      self.aliases = []
+      freebase_object.aliases.each do |a|
+        add_alias(a)
       end
     end
 

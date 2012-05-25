@@ -7,7 +7,12 @@ class TestingController < ApplicationController
 
     Resque.enqueue(TestJob)
 
-    #resource = Ken.get('/guid/9202a8c04000641f80000000002e875e')
+    #facebook = Topic.where(:name => 'Facebook').first
+    #facebook.fetch_freebase
+
+    #search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=google")
+
+    #resource = Ken.get('/organization/organization')
     #resource.views.each do |view|
     #  type = view.type
     #  view.attributes.each do |a|
@@ -46,9 +51,6 @@ class TestingController < ApplicationController
 
     #topic = Topic.find('4fbe56102619467425000002')
     #topic.fetch_freebase(true)
-
-    #foo = 'bar'
-
 
   end
 

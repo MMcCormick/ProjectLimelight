@@ -133,31 +133,31 @@ class Topic
       search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=#{URI::encode(name)}")
 
       # make sure the names match up at least a little bit
-      if search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 75) || search['result'].first['score'] >= 800)
+      if search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 800)
         search['result'].each do |s|
-          if s['name'].to_url.include?(name.to_url) && s['score'] >= 75
+          if s['name'].to_url.include?(name.to_url) && s['score'] >= 50
             freebase_search = s
             break
           end
         end
         unless freebase_search
           freebase_search = search['result'].first
-          freebase_search = nil unless (search['result'].first['name'].to_url.include?(name.to_url) && search['result'].first['score'] > 150) || search['result'].first['score'] >= 1500
+          freebase_search = nil unless (search['result'].first['name'].to_url.include?(name.to_url) && search['result'].first['score'] > 100) || search['result'].first['score'] >= 1500
         end
       end
     else
       search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(name)}")
-      return unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 75) || search['result'].first['score'] >= 800)
+      return unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 800)
 
       search['result'].each do |s|
-        if s['name'].to_url == name.to_url && s['score'] >= 75
+        if s['name'].to_url == name.to_url && s['score'] >= 50
           freebase_search = s
           break
         end
       end
       # make sure the names match up at least a little bit
       unless !search || freebase_search
-        return unless (search['result'].first['name'].to_url.include?(name.to_url) && search['result'].first['score'] > 150) || search['result'].first['score'] >= 1500
+        return unless (search['result'].first['name'].to_url.include?(name.to_url) && search['result'].first['score'] > 100) || search['result'].first['score'] >= 1500
         freebase_search = search['result'].first
       end
 

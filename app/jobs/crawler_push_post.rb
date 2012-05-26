@@ -48,7 +48,7 @@ class CrawlerPushPost
 
       if tmp_entities
         tmp_entities.each do |e|
-          if e['relevance'].to_f >= 0.65
+          if e['relevance'].to_f >= 0.60
 
             entities << e
             if e['disambiguated'] && e['disambiguated']['freebase']

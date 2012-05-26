@@ -23,7 +23,7 @@ class CrawlerGo
         feed.entries.each do |entry|
 
           # skip this entry if it is older than the last time we crawled
-          next if s.last_crawled && entry.published <= s.last_crawled
+          next if s.last_crawled && entry.published && s.last_crawled && entry.published <= s.last_crawled
 
           Resque.enqueue_in(rand(13.minutes), CrawlerPushPost, entry.url, s.id.to_s)
 

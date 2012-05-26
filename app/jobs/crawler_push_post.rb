@@ -48,7 +48,7 @@ class CrawlerPushPost
 
       if tmp_entities
         tmp_entities.each do |e|
-          if e['relevance'].to_f >= 0.70
+          if e['relevance'].to_f >= 0.65
 
             entities << e
             if e['disambiguated'] && e['disambiguated']['freebase']
@@ -62,16 +62,14 @@ class CrawlerPushPost
               topic = Topic.where("aliases.slug" => name, :primary_type_id => {'$exists' => true}).order_by(:response_count, :desc).first
             end
 
-            if topic && !topic.freebase_id # if it's an existing topic without a freebase id, queue it up to fetch data
-              Resque.enqueue(TopicFetchExternalData, topic.id.to_s)
-            else # create the topic if it's not already in the DB, and freebase has a decent match for it
+            unless topic # create the topic if it's not already in the DB, and freebase has a decent match for it
               topic = Topic.new
               topic.name = e['disambiguated'] ? e['disambiguated']['name'] : e['text']
 
               # check freebase if there is no freebase id returned from alchemy api
               unless e['disambiguated'] && e['disambiguated']['freebase']
                 search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(topic.name)}")
-                next unless search && search['result'] && search['result'].first && search['result'].first['score'] >= 100
+                next unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 100)
               end
 
               topic.user_id = User.marc_id
@@ -102,7 +100,6 @@ class CrawlerPushPost
 
       extra_topics = Topic.where("aliases.slug" => {"$in" => combinations.map{|c| c.to_url}}).order_by(:response_count, :desc)
       extra_topics.each do |t|
-
         unless t.freebase_id
           Resque.enqueue(TopicFetchExternalData, t.id.to_s)
           next
@@ -117,6 +114,14 @@ class CrawlerPushPost
         puts "no topics found"
         return
       end
+
+      # delete less specific topics ("Facebook IPO" should take precedence over "Facebook")
+      delete_at_ids = []
+      topics.each do |t|
+        found = topics.detect{|t2| t2.id != t.id && t.name.to_url.include?(t2.name.to_url)}
+        delete_at_ids << found.id if found
+      end
+      topics.delete_if {|t| delete_at_ids.include?(t.id)} if delete_at_ids.length > 0
 
       # Build the initial post data structure
       response = {

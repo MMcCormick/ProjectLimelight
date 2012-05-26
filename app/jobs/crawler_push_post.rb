@@ -172,7 +172,7 @@ class CrawlerPushPost
       end
 
       post = Post.post(response, User.limelight_user_id)
-      post.category = crawler_source.category
+      post.category = crawler_source.category if crawler_source.category
       used_ids = []
       puts "starting topic loop"
       topics.each do |t|

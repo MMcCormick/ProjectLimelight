@@ -197,7 +197,7 @@ class Topic
       end
       set_primary_type(type_topic.name, type_topic.id)
       TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
-    else
+    elsif freebase_object.types && freebase_object.types.length > 0
       type_names = freebase_object.types.map{|t| t.name.to_url}
       type_topics = Topic.where("aliases.slug" => {"$in" => type_names}, :is_topic_type => true).to_a
       type_topics.each do |t|

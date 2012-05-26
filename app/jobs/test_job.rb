@@ -14,7 +14,7 @@ class TestJob
 
     @destroyed = 0
     @updated = 0
-    topics = Topic.deleted.all
+    topics = Topic.all
     topics.each do |t|
       primary_for = Topic.where(:primary_type_id => t.id)
       if primary_for.length == 0 && t.followers_count == 0 && !t.fb_page_id && !t.is_category

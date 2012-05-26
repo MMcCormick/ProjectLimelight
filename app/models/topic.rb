@@ -142,7 +142,7 @@ class Topic
         end
         unless freebase_search
           freebase_search = search['result'].first
-          freebase_search = nil unless ((search['result'].first['name'].to_url.include?(name.to_url) || name.to_url.include?(search['result'].first['name'].to_url)) && search['result'].first['score'] > 150) || search['result'].first['score'] >= 1500
+          freebase_search = nil unless (search['result'].first['name'].to_url.include?(name.to_url) && search['result'].first['score'] > 150) || search['result'].first['score'] >= 1500
         end
       end
     else
@@ -157,7 +157,7 @@ class Topic
       end
       # make sure the names match up at least a little bit
       unless !search || freebase_search
-        return unless ((search['result'].first['name'].to_url.include?(name.to_url) || name.to_url.include?(search['result'].first['name'].to_url)) && search['result'].first['score'] > 150) || search['result'].first['score'] >= 1500
+        return unless (search['result'].first['name'].to_url.include?(name.to_url) && search['result'].first['score'] > 150) || search['result'].first['score'] >= 1500
         freebase_search = search['result'].first
       end
 

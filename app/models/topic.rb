@@ -133,9 +133,9 @@ class Topic
       search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=#{URI::encode(name)}")
 
       # make sure the names match up at least a little bit
-      if search && search['result'] && search['result'].first && search['result'].first['score'] >= 800
+      if search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 75) || search['result'].first['score'] >= 800)
         search['result'].each do |s|
-          if s['name'].to_url == name.to_url && s['score'] >= 75
+          if s['name'].to_url.include?(name.to_url) && s['score'] >= 75
             freebase_search = s
             break
           end
@@ -147,7 +147,7 @@ class Topic
       end
     else
       search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(name)}")
-      return unless search && search['result'] && search['result'].first && search['result'].first['score'] >= 800
+      return unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 75) || search['result'].first['score'] >= 800)
 
       search['result'].each do |s|
         if s['name'].to_url == name.to_url && s['score'] >= 75

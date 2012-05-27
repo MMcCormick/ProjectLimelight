@@ -558,14 +558,14 @@ class Topic
     :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
     :type => { :definition => lambda { |instance| 'Topic' }, :properties => :short, :versions => [ :v1 ] },
     :name => { :properties => :short, :versions => [ :v1 ] },
-    :summary => { :properties => :short, :versions => [ :v1 ] },
+    :summary => { :definition => :short_summary, :properties => :short, :versions => [ :v1 ] },
     :score => { :properties => :short, :versions => [ :v1 ] },
     :followers_count => { :properties => :short, :versions => [ :v1 ] },
     :primary_type => { :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| Topic.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
-    #:aliases => { :definition => :visible_aliases, :properties => :public, :versions => [ :v1 ] },
+    :aliases => { :type => :reference, :definition => :visible_aliases, :properties => :public, :versions => [ :v1 ] },
     :websites => { :definition => :all_websites, :properties => :public, :versions => [ :v1 ] },
     :freebase_url => { :definition => :all_websites, :properties => :public, :versions => [ :v1 ] }
 

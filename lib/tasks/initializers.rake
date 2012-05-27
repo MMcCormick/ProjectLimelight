@@ -18,7 +18,7 @@ task :topic_response_counts => :environment do
     if obj._type == "Talk"
       obj.comments.each do |comment|
         #TODO: get this to set user_snippet.id's which are wrong
-        comment.user_snippet._id = comment.user_id if comment.user_id
+        comment.user_id = comment.user_id if comment.user_id
         comment.save
         comment.add_to_count
       end

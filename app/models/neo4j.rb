@@ -128,7 +128,7 @@ class Neo4j
         if parent_node
           talk_rel = Neo4j.neo.create_relationship('talked', creator_node, parent_node)
           Neo4j.neo.set_relationship_properties(talk_rel, {"created_at" => Time.now.to_i})
-          Neo4j.neo.add_relationship_to_index('users', 'talked', "#{post.user_snippet.id.to_s}-#{post.response_to.id.to_s}", talk_rel)
+          Neo4j.neo.add_relationship_to_index('users', 'talked', "#{post.user_id.to_s}-#{post.response_to.id.to_s}", talk_rel)
         end
       end
     end
@@ -196,8 +196,8 @@ class Neo4j
       Neo4j.neo.remove_relationship_from_index('posts', rel1)
 
       # decrease the creators affinity to these topics
-      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_snippet.id.to_s)
-      Neo4j.update_affinity(post.user_snippet.id.to_s, topic.id.to_s, creator_node, mention_node, -1, false, false)
+      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
+      Neo4j.update_affinity(post.user_id.to_s, topic.id.to_s, creator_node, mention_node, -1, false, false)
 
       topic_nodes = []
       post.topic_mentions.each do |m|
@@ -404,23 +404,23 @@ class Neo4j
 
     # topic suggestions, used in the user sidebar and topic finder
     def user_topic_suggestions(user_id, limit)
-      query = "
-        START user=node:users(uuid = '#{user_id}')
-        MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion, user-[r4?:affinity]->suggestion, user-[r5?:follow]->suggestion
-        WHERE topic.type = 'topic' and user2.type = 'user' and suggestion.type = 'topic' and r1.weight! >= 10 and has(r3.weight) and (r1.sentiment != 'negative') and (r4 IS NULL) and r5 IS NULL
-        RETURN suggestion, SUM(r3.weight)
-        ORDER BY SUM(r3.weight) desc
-        LIMIT #{limit}
-      "
-      ids = self.neo.execute_query(query)
-      suggestions = []
-      if ids
-        ids['data'].each do |n|
-          n[0]['data']['id'] = n[0]['data']['uuid']
-          suggestions << TopicSnippet.new(n[0]['data'])
-        end
-      end
-      suggestions
+      #query = "
+      #  START user=node:users(uuid = '#{user_id}')
+      #  MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion, user-[r4?:affinity]->suggestion, user-[r5?:follow]->suggestion
+      #  WHERE topic.type = 'topic' and user2.type = 'user' and suggestion.type = 'topic' and r1.weight! >= 10 and has(r3.weight) and (r1.sentiment != 'negative') and (r4 IS NULL) and r5 IS NULL
+      #  RETURN suggestion, SUM(r3.weight)
+      #  ORDER BY SUM(r3.weight) desc
+      #  LIMIT #{limit}
+      #"
+      #ids = self.neo.execute_query(query)
+      #suggestions = []
+      #if ids
+      #  ids['data'].each do |n|
+      #    n[0]['data']['id'] = n[0]['data']['uuid']
+      #    suggestions << TopicSnippet.new(n[0]['data'])
+      #  end
+      #end
+      #suggestions
     end
 
     # related topic, used in the topic sidebar

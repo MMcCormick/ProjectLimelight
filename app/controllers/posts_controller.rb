@@ -29,13 +29,13 @@ class PostsController < ApplicationController
     @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, extra)
 
     respond_to do |format|
-      format.js { render :json => @this.to_json(:user => current_user) }
+      format.js { render :json => @this.to_json(:properties => :public) }
       format.html
     end
   end
 
   def create
-    @post = Post.post(params, current_user.id)
+    @post = Post.post(params, current_user)
 
     if @post.save
       if @post.response_to
@@ -46,34 +46,15 @@ class PostsController < ApplicationController
 
       if @post.root_id && @post.class.name == 'Talk'
         if @post.root_id
-          Pusher[@post.root_id.to_s].trigger('new_response', @post.to_json(:user => current_user))
+          Pusher[@post.root_id.to_s].trigger('new_response', @post.to_json(:properties => :public))
         end
 
         # send mention notifications
-        user_ids = @post.user_mentions.map{|u| u.id}
-        if user_ids.length > 0
-          users = User.where(:_id => {'$in' => user_ids})
-          users.each do |u|
-            notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
-            if notification
-              Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.to_json)
-            end
+        @post.user_mentions.each do |u|
+          notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
+          if notification
+            Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.to_json)
           end
-        end
-      end
-
-      # send the influence pusher notification
-      @post.topic_mentions.each do |mention|
-        if @post.class.name == 'Talk' && mention.first_mention == true
-          increase = InfluenceIncrease.new
-          increase.amount = 1
-          increase.topic_id = mention.id
-          increase.object_type = 'Talk'
-          increase.action = :new
-          increase.id = mention.name
-          increase.topic = mention
-
-          Pusher[@post.user_id.to_s].trigger('influence_change', increase.to_json)
         end
       end
 
@@ -128,7 +109,7 @@ class PostsController < ApplicationController
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.feed(user.id, params[:sort], page)
-    render :json => posts.map {|p| p.as_json(:user => current_user)}
+    render :json => posts.map {|p| p.as_json(:properties => :public)}
   end
 
   # The user like feed
@@ -137,7 +118,7 @@ class PostsController < ApplicationController
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.like_feed(user.id, page)
-    render :json => posts.map {|p| p.as_json(:user => current_user)}
+    render :json => posts.map {|p| p.as_json()}
   end
 
   # The user activity feed
@@ -146,7 +127,7 @@ class PostsController < ApplicationController
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.activity_feed(user.id, page)
-    render :json => posts.map {|p| p.as_json(:user => current_user)}
+    render :json => posts.map {|p| p.as_json(:properties => :public)}
   end
 
   # Topic feeds...
@@ -157,7 +138,7 @@ class PostsController < ApplicationController
     page = params[:p] ? params[:p].to_i : 1
     topic_ids = Neo4j.pull_from_ids(topic.id).to_a
     posts = Post.topic_feed(topic_ids << topic.id, (signed_in? ? current_user.id : nil), params[:sort], page)
-    render :json => posts.map {|p| p.as_json(:user => current_user)}
+    render :json => posts.map {|p| p.as_json(:properties => :public)}
   end
 
   # Post responses from a users friends
@@ -166,9 +147,7 @@ class PostsController < ApplicationController
     not_found("Post not found") unless post
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.friend_responses(post.id, current_user, page, 50)
-    post_ids = posts.map {|p| p.id}
-    threads = Comment.multiple_threads(post_ids)
-    render :json => posts.map {|p| p.as_json(:user => current_user, :comment_threads => threads)}
+    render :json => posts.map {|p| p.as_json(:properties => :all)}
   end
 
   def public_responses
@@ -176,7 +155,7 @@ class PostsController < ApplicationController
     not_found("Post not found") unless post
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.public_responses_no_friends(post.id, page, 50, current_user)
-    render :json => posts.map {|p| p.as_json(:user => current_user)}
+    render :json => posts.map {|p| p.as_json(:properties => :all)}
   end
 
   def delete_mention
@@ -211,7 +190,7 @@ class PostsController < ApplicationController
       end
     end
 
-    post.save_topic_mention(topic)
+    post.topic_mentions << topic
     post.save
     FeedUserItem.push_post_through_topic(post, topic)
     FeedTopicItem.push_post_through_topic(post, topic)

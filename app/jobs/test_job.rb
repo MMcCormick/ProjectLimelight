@@ -29,11 +29,11 @@ class TestJob
       end
     end
 
-    time_id = BSON::ObjectId.from_time(Chronic.parse('7 days ago'))
-    topics = Topic.where(:_id.gt => time_id).to_a
-    topics.each do |t|
-      t.destroy!
-    end
+    #time_id = BSON::ObjectId.from_time(Chronic.parse('7 days ago'))
+    #topics = Topic.where(:_id.gt => time_id).to_a
+    #topics.each do |t|
+    #  t.destroy!
+    #end
 
     topics = Topic.all
     topics.each do |t|

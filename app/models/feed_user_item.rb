@@ -87,7 +87,7 @@ class FeedUserItem
 
       # the potential users this post can be pushed to
       # take care of user mentions and users that are following the user that posted this
-      user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_snippet.id})
+      user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_id})
 
       # do not consider users this post has already been pushed to
       user_feed_users = user_feed_users.where(:_id => {"$nin" => post.pushed_users}) if post.pushed_users.length > 0
@@ -111,10 +111,10 @@ class FeedUserItem
         item.responses << post.id unless post.is_root?
 
         # add following user reason
-        item.add_reason('fu', post.user_snippet) if u.following_users.include?(post.user_snippet.id)
+        item.add_reason('fu', post.user) if u.following_users.include?(post.user_id)
 
         # add mentioned reason
-        item.add_reason('m', post.user_snippet) if user_mention_ids.include?(u.id)
+        item.add_reason('m', post.user) if user_mention_ids.include?(u.id)
 
         item.save if item.reasons.length > 0
 
@@ -130,11 +130,8 @@ class FeedUserItem
     def push_post_through_topics(post)
       return if post.class.name == 'Talk'
 
-      topic_mention_ids = post.topic_mentions.map{|tm| tm.id}
-      topics = Topic.where(:_id => {"$in" => topic_mention_ids})
-
       # push through topics
-      topics.each do |topic|
+      post.topic_mentions.each do |topic|
         push_post_through_topic(post, topic)
       end
     end
@@ -244,7 +241,7 @@ class FeedUserItem
       user_feed_users = User.only(:id, :username, :following_users).where(:following_users => user.id)
 
       user_feed_users.each do |u|
-        next if u.id == post.user_snippet.id
+        next if u.id == post.user_id
 
         item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 
@@ -278,7 +275,7 @@ class FeedUserItem
       user_feed_users = User.only(:id, :following_topics, :following_users).where(:following_users => user.id)
 
       user_feed_users.each do |u|
-        next if u.id == post.user_snippet.id
+        next if u.id == post.user_id
 
         item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 

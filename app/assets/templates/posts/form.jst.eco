@@ -28,12 +28,12 @@
 
     <div class="mentions">
       <div>
-        <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention1" placeholder="Add topic..." />
-        <input type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention1_id" />
+        <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Add topic..." />
+        <input class='topic-mention-id' type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
       </div>
       <div>
-        <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention2" placeholder="Add topic..." />
-        <input type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention2_id" />
+        <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Add topic..." />
+        <input class='topic-mention-id' type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
       </div>
     </div>
 
@@ -54,7 +54,7 @@
     <input type="hidden" id="post-form-source-vid" name="source_video_id" />
     <input type="hidden" id="post-form-embed" name="embed_html" />
     <input type="hidden" id="post-form-type" name="type" value="Talk" />
-    <input type="hidden" id="post-form-parent-id" name="parent_id" />
+    <input type="hidden" id="post-form-parent-id" name="response_to_id" />
     <input type="hidden" id="post-form-remote-image-url" name="remote_image_url" autocomplete="off" />
     <input type="hidden" id="post-form-image-cache" name="image_cache" autocomplete="off" />
     <div id="picture_pupB"></div>

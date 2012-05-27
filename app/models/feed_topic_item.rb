@@ -36,7 +36,7 @@ class FeedTopicItem
       root_type = post.root_type == 'Topic' ? post.class.name : post.root_type
 
       updates = {"$set" => { :last_response_time => Time.now, :root_type => root_type, }}
-      updates["$addToSet"] = { "mentions" => { "$each" => post.mentioned_topic_ids } }
+      updates["$addToSet"] = { "mentions" => { "$each" => post.topic_mention_ids } }
 
       FeedTopicItem.collection.update({:root_id => root_id}, updates, {:upsert => true})
     end

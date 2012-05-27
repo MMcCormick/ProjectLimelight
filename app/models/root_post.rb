@@ -1,4 +1,7 @@
 class RootPost
+  include Mongoid::Document
+  include Mongoid::CachedJson
+
   # push_item is the pushed post FeedUserItem, FeedLikeItem, etc
   attr_accessor :root, :push_item, :like_responses, :activity_responses, :public_responses, :personal_responses, :public_talking, :personal_talking
 
@@ -34,11 +37,11 @@ class RootPost
             :id => root.id.to_s,
             :public_talking => public_talking,
             :personal_talking => personal_talking,
-            :root => root.as_json(options),
-            :like_responses => like_responses.map {|r| r.as_json(options)},
-            :activity_responses => activity_responses.map {|r| r.as_json(options)},
-            :public_responses => public_responses.map {|r| r.as_json(options)},
-            :personal_responses => personal_responses.map {|r| r.as_json(options)},
+            :root => root.as_json(:properties => :public),
+            :like_responses => like_responses.map {|r| r.as_json(:properties => :public)},
+            :activity_responses => activity_responses.map {|r| r.as_json(:properties => :public)},
+            :public_responses => public_responses.map {|r| r.as_json(:properties => :public)},
+            :personal_responses => personal_responses.map {|r| r.as_json(:properties => :public)},
             :reasons => push_item ? generate_reasons(push_item.reasons) : []
     }
   end

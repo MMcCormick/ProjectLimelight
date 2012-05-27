@@ -23,7 +23,7 @@ class TopicsController < ApplicationController
     @title = "All Topics"
     @description = "A list of all the topics on Limelight."
 
-    render :json => @topics.map {|t| t.as_json}
+    render :json => @topics.map {|t| t.as_json(:properties => :public)}
   end
 
   def show
@@ -43,7 +43,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render :json => @this.to_json }
+      format.json { render :json => @this.to_json(:properties => :public) }
     end
 
   end

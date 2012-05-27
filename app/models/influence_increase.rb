@@ -1,5 +1,6 @@
 class InfluenceIncrease
   include ModelUtilitiesHelper
+  include Mongoid::CachedJson
 
   attr_accessor :id, :amount, :topic_id, :topic, :object_type, :action, :user_id, :user, :triggered_by_id, :triggered_by, :reason, :post_id, :post, :created_at_pretty
 

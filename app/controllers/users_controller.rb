@@ -24,7 +24,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.js {
-        render :json => @this.as_json
+        render :json => @this.as_json(:properties => :public)
       }
       format.html
     end
@@ -180,7 +180,7 @@ class UsersController < ApplicationController
       Notification.where(:_id => {"$in" => ids}).update_all(:read => true)
     end
 
-    render :json => notifications.map {|n| n.as_json}
+    render :json => notifications.map {|n| n.as_json(:properties => :public)}
   end
 
 end

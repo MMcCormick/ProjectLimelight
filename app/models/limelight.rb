@@ -104,9 +104,9 @@ module Limelight #:nodoc:
     end
 
     def filepath
-      if ['UserSnippet','UserMention','User'].include? self.class.name
+      if self.class.name == 'User'
         path = 'users'
-      elsif ['TopicSnippet','TopicMention','Topic'].include? self.class.name
+      elsif self.class.name == 'Topic'
         path = 'topics'
       else
         path = self.class.name.to_url.pluralize
@@ -121,25 +121,17 @@ module Limelight #:nodoc:
 
     def image_url(mode, size=nil, version=nil, original=false)
       version = active_image_version unless version
-      if ["User", "UserSnippet", "UserMention"].include?(self.class.name) && (use_fb_image || status == 'twitter')
+      if self.class.name == 'User' && use_fb_image
         if mode == :square
-          if status == 'twitter'
-            "https://api.twitter.com/1/users/profile_image?screen_name=#{username}&size=bigger"
-          else
-            "http://graph.facebook.com/#{fbuid}/picture?type=square"
-          end
+          "http://graph.facebook.com/#{fbuid}/picture?type=square"
         else
-          if status == 'twitter'
-            "https://api.twitter.com/1/users/profile_image?screen_name=#{username}&size=original"
-          else
-            "http://graph.facebook.com/#{fbuid}/picture?type=#{size}"
-          end
+          "http://graph.facebook.com/#{fbuid}/picture?type=#{size}"
         end
       else
         if image_versions == 0
-          if ["User", "UserSnippet", "UserMention"].include?(self.class.name)
+          if self.class.name == 'User'
             "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
-          elsif ["Topic", "TopicSnippet", "TopicMention"].include?(self.class.name)
+          elsif self.class.name == 'Twitter'
             if use_freebase_image
               "https://usercontent.googleapis.com/freebase/v1/image#{freebase_id}?maxheight=#{size_dimensions[size]}&maxwidth=#{size_dimensions[size]}&mode=#{mode == :fit ? 'fit' : 'fillcropmid'}&pad=true"
             else
@@ -247,61 +239,25 @@ module Limelight #:nodoc:
     end
   end
 
-  # Include this module to get sentiment functionality for root level documents.
-  # @example Add sentiment support to a document.
-  #   require "limelight"
-  #   class Topic
-  #     include Limelight::Sentiment
-  #   end
-  module Sentiment
-    extend ActiveSupport::Concern
-
-    included do
-      SENTIMENTS = ['positive', 'negative', 'neutral']
-
-      field :sentiments_count, :default => {}
-    end
-
-    def add_sentiment(user_id, sentiment)
-      if SENTIMENTS.include?(sentiment)
-        self.sentiments_count[sentiment] ||= 0
-        self.sentiments_count[sentiment] += 1
-      end
-    end
-
-    def remove_sentiment(user_id, sentiment)
-      if SENTIMENTS.include?(sentiment)
-        self.sentiments_count[sentiment] -= 1
-      end
-    end
-  end
-
   module Mentions
     extend ActiveSupport::Concern
 
     included do
       field :primary_topic_mention
 
-      embeds_many :user_mentions, as: :user_mentionable
-      embeds_many :topic_mentions, as: :topic_mentionable, :class_name => "TopicMention"
       embeds_many :pre_mentions, as: :topic_mentionable, :class_name => "TopicMention"
 
-      attr_accessor :primary_topic_pm, :mention1, :mention2, :mention1_id, :mention2_id, :first_response
-      attr_accessible :mention1, :mention2, :mention1_id, :mention2_id, :first_response
+      has_and_belongs_to_many :topic_mentions, :inverse_of => nil, :class_name => 'Topic'
+      has_and_belongs_to_many :user_mentions, :inverse_of => nil, :class_name => 'User'
+
+      attr_accessor :topic_mention_names, :first_response, :primary_topic_pm
+      attr_accessible :topic_mention_ids, :user_mention_ids, :topic_mention_names, :first_response
 
       before_create :set_mentions
     end
 
     def mentions_topic?(id)
-      !!topic_mentions.detect{|mention| mention.id == id}
-    end
-
-    def mentioned_topics
-      Topic.where(:_id.in => mentioned_topic_ids)
-    end
-
-    def mentioned_topic_ids
-      topic_mentions.map{|m| m.id}
+      topic_mention_ids.include?(id)
     end
 
     #
@@ -312,7 +268,7 @@ module Limelight #:nodoc:
       self.primary_topic_pm = -1
 
       if first_response
-        self.topic_mentions = parent.topic_mentions
+        self.topic_mention_ids = parent.topic_mention_ids
       else
         set_user_mentions
         set_topic_mentions
@@ -332,45 +288,18 @@ module Limelight #:nodoc:
       end
 
       # Find the users
-      users = User.where(:slug.in => found_users)
-
-      users.each do |user|
-        self.user_mentions.build({id: user.id, public_id: user.public_id, username: user.username, first_name: user.first_name, last_name: user.last_name})
-      end
+      self.user_mentions = User.where(:slug.in => found_users)
     end
 
     def set_topic_mentions
-      existing_ids = []
-      new_names = []
-      [[mention1, mention1_id], [mention2, mention2_id]].each do |m|
-        unless m[0].blank?
-          if m[1] == "0"
-            new_names << m[0]
-          elsif m[1].blank?
-            existing = Topic.where("aliases.slug" => m[0].to_url).order_by(:score, :desc).first
-            if existing
-              existing_ids << existing.id
-            else
-              new_names << m[0]
-            end
-          else
-            existing_ids << m[1]
-          end
+      topic_mentions.each do |topic|
+        if !primary_topic_pm || topic.score > primary_topic_pm
+          self.primary_topic_mention = topic.id
+          self.primary_topic_pm = topic.score
         end
       end
-      existing_ids.uniq!
-      new_names.uniq!
 
-      save_topic_mentions(existing_ids) if existing_ids.length > 0
-      save_new_topic_mentions(new_names) if new_names.length > 0
-    end
-
-    def save_topic_mentions(found_topics)
-      # Add the found topics as snippets
-      mentions = Topic.where(:_id.in => found_topics)
-      mentions.each do |topic|
-        save_topic_mention(topic)
-      end
+      save_new_topic_mentions(topic_mention_names) if topic_mention_names && topic_mention_names.length > 0
     end
 
     # takes an array of new topic names
@@ -400,34 +329,16 @@ module Limelight #:nodoc:
           end
         end
 
-        save_topic_mention(found_topic) if found_topic
-      end
-    end
-
-    def save_topic_mention(topic)
-      existing = topic_mentions.detect{|mention| mention.id == topic.id}
-      unless existing
-        payload = {:public_id => topic.public_id, :name => topic.name, :slug => topic.slug, :freebase_id => topic.freebase_id, :use_freebase_image => topic.use_freebase_image }
-        payload["first_mention"] = true if !topic.talking_ids.include?(user.id)
-        mention = self.topic_mentions.build(payload)
-        mention.id = topic.id
-        mention.image_versions = topic.image_versions
-        mention.active_image_version = topic.active_image_version
-
-        if !primary_topic_pm || topic.score > primary_topic_pm
-          self.primary_topic_mention = topic.id
-          self.primary_topic_pm = topic.score
-        end
+        topic_mentions << found_topic if found_topic
       end
     end
 
     def bubble_up
-      if response_to
-        root_post = Post.where(:_id => response_to.id).first
+      if response_to_id
         topic_mentions.each do |mention|
-          root_post.suggest_mention(mention)
+          response_to.suggest_mention(mention)
         end
-        root_post.save
+        response_to.save
       end
     end
 
@@ -440,8 +351,7 @@ module Limelight #:nodoc:
         if root_pre_mention
           root_pre_mention.score += 1
           if root_pre_mention.score >= TopicMention.threshold
-            m = self.topic_mentions.build(root_pre_mention.attributes)
-            m.id = mention.id
+            m = self.topic_mentions_ids << root_pre_mention.id
             root_pre_mention.destroy
             FeedTopicItem.post_create(self)
             FeedUserItem.add_mention(self, mention.id)
@@ -453,7 +363,7 @@ module Limelight #:nodoc:
     end
 
     def remove_topic_mention(topic)
-      self.topic_mentions.find(topic.id).delete
+      self.topic_mention_ids.delete(topic.id)
       save
       FeedUserItem.unpush_post_through_topic(self, topic)
     end
@@ -498,7 +408,7 @@ module Limelight #:nodoc:
 
       if defined?(topic_mentions) && !topic_mentions.empty?
         sum = 0
-        mentioned_topics.each { |t| sum += t.user_percentile(current_user.id) ? t.user_percentile(current_user.id) : 0 }
+        topic_mentions.each { |t| sum += t.user_percentile(current_user.id) ? t.user_percentile(current_user.id) : 0 }
         if type == :new
           amt += amt > 1 ? (sum / (8 * topic_mentions.length)) : -(sum / (8 * topic_mentions.length))
         else
@@ -544,17 +454,28 @@ module Limelight #:nodoc:
           topic_amt = type == :new ? 1 : amt
           affected_topic_ids = []
 
-          topic_mentions.each do |mention|
-            if type != :new || (type == :new && mention.first_mention)
-              affected_topic_ids << mention.id
+          topic_mentions.each do |topic|
+            if type != :new || (type == :new && !topic.talking_ids.include?(user_id))
+              affected_topic_ids << topic.id
 
-              action.pop_snippets.new(:amount => topic_amt, :id => mention.id, :object_type => "Topic")
-              Pusher[mention.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
+              action.pop_snippets.new(:amount => topic_amt, :id => topic.id, :object_type => "Topic")
+              Pusher[topic.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
 
-              topic = mentioned_topics.detect{|t| t.id == mention.id}
               if topic.score >= 0 && topic.influencers.length >= 3
-                Resque.enqueue_in(10.minutes, RecalculateInfluence, mention.id.to_s)
+                Resque.enqueue_in(10.minutes, RecalculateInfluence, topic.id.to_s)
               end
+
+              # send the influence increase
+              increase = InfluenceIncrease.new(
+                      :amount => 1,
+                      :topic_id => topic.id,
+                      :object_type => 'Talk',
+                      :action => :new,
+                      :topic => topic
+              )
+              increase.id = topic.name
+
+              Pusher[user_id.to_s].trigger('influence_change', increase.to_json)
             end
           end
           # Update the popularities on affected objects
@@ -564,7 +485,11 @@ module Limelight #:nodoc:
               {
                 "$inc" => {
                   :score => topic_amt,
+                  :response_count => 1,
                   "influencers."+user_id.to_s+".influence" => topic_amt
+                },
+                "$push" => {
+                  :talking_ids => user_id
                 }
               },
               {:upsert => true, :multi => true}

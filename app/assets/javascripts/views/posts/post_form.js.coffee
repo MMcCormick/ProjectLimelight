@@ -67,9 +67,18 @@ class LL.Views.PostForm extends Backbone.View
 
     e.preventDefault()
 
-    attributes = {}
-    for input in $(@el).find('textarea, input[type="text"], input[type="hidden"]')
+    attributes = {
+      'topic_mention_ids': []
+      'topic_mention_names': []
+    }
+    for input in $(@el).find('textarea, input[type="text"], input[type="hidden"], :not(.topic-mention, .topic-mention-id)')
       attributes[$(input).attr('name')] = $(input).val()
+
+    for input in $(@el).find('.topic-mention')
+      if $(input).next().val() && $(input).next().val() != '0'
+        attributes['topic_mention_ids'].push $(input).next().val()
+      else if $(input).val() && $(input).val() != ''
+        attributes['topic_mention_names'].push $(input).val()
 
     self = @
     @collection.create attributes,

@@ -2,6 +2,7 @@ class User
   include Mongoid::Document
   include Mongoid::Paranoia
   include Mongoid::Timestamps::Updated
+  include Mongoid::CachedJson
   include Mongoid::Slug
   include Limelight::Images
   include ModelUtilitiesHelper
@@ -112,6 +113,7 @@ class User
   has_many :comments
   has_many :popularity_actions
   has_many :topic_con_sugs
+  has_one  :invite_code
 
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio, :invite_code_id
@@ -141,7 +143,7 @@ class User
 
   # Return the users slug instead of their ID
   def to_param
-    self.slug.downcase
+    username ? username.downcase : ''
   end
 
   def created_at
@@ -259,11 +261,7 @@ class User
     case target.class.name
       when 'User'
         is_following_user?(target.id)
-      when 'UserSnippet'
-        is_following_user?(target.id)
       when 'Topic'
-        is_following_topic?(target.id)
-      when 'TopicSnippet'
         is_following_topic?(target.id)
     end
   end
@@ -516,19 +514,11 @@ class User
   end
 
   def update_social_denorms
-    user_snippet_updates = { "user_snippet.fbuid" => self.fbuid }
-    user_mention_updates = { "user_mentions.$.fbuid" => self.fbuid }
     object_user_updates = { "object_user.fbuid" => self.fbuid }
     triggered_by_updates = { "triggered_by.$.fbuid" => self.fbuid }
-    user_snippet_updates["user_snippet.twuid"] = self.twuid
-    user_mention_updates["user_mentions.$.twuid"] = self.twuid
     object_user_updates["object_user.twuid"] = self.twuid
     triggered_by_updates["triggered_by.$.twuid"] = self.twuid
 
-    Post.where(:user_id => id).update_all(user_snippet_updates)
-    Post.where("user_mentions._id" => id).update_all(user_mention_updates)
-    Post.where("likes._id" => id).update_all(user_mention_updates)
-    Comment.where(:user_id => id).update_all(user_snippet_updates)
     Notification.where("object_user._id" => id).update_all(object_user_updates)
     Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
   end
@@ -594,45 +584,73 @@ class User
     }
   end
 
-  def as_json(options={})
-    data = {
-            :id => id.to_s,
-            :type => 'User',
-            :public_id => public_id,
-            :slug => username ? username.downcase : '',
-            :username => username,
-            :first_name => first_name,
-            :last_name => last_name,
-            :score => score,
-            :following_users_count => following_users_count,
-            :following_topics_count => following_topics_count,
-            :followers_count => followers_count,
-            :unread_notification_count => unread_notification_count,
-            :images => User.json_images(self),
-            :status => status,
-            :url => status == 'twitter' ? "http://twitter.com/#{username}" : "/users/#{to_param}",
-            :created_at => created_at.to_i,
-            :created_at_pretty => pretty_time(created_at)
-    }
+  json_fields \
+    :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
+    :type => { :definition => lambda { |instance| 'User' }, :properties => :short, :versions => [ :v1 ] },
+    :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
+    :username => { :properties => :short, :versions => [ :v1 ] },
+    :first_name => { :properties => :short, :versions => [ :v1 ] },
+    :last_name => { :properties => :short, :versions => [ :v1 ] },
+    :score => { :properties => :short, :versions => [ :v1 ] },
+    :following_users_count => { :properties => :short, :versions => [ :v1 ] },
+    :following_topics_count => { :properties => :short, :versions => [ :v1 ] },
+    :followers_count => { :properties => :short, :versions => [ :v1 ] },
+    :unread_notification_count => { :properties => :short, :versions => [ :v1 ] },
+    :images => { :definition => lambda { |instance| User.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
+    :status => { :properties => :short, :versions => [ :v1 ] },
+    :url => { :definition => lambda { |instance| "/users/#{to_param}" }, :properties => :short, :versions => [ :v1 ] },
+    :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
+    :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
+    :created_at_short => { :definition => lambda { |instance| instance.short_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
+    :following_topics => { :properties => :public, :versions => [ :v1 ] },
+    :following_users => { :properties => :public, :versions => [ :v1 ] },
+    :tutorial_step => { :properties => :public, :versions => [ :v1 ] },
+    :tutorial1_step => { :properties => :public, :versions => [ :v1 ] },
+    :username_reset => { :properties => :public, :versions => [ :v1 ] },
+    :facebook_id => { :definition => :fbuid, :properties => :public, :versions => [ :v1 ] },
+    :twitter_id => { :definition => :twuid, :properties => :public, :versions => [ :v1 ] },
+    :roles => { :properties => :public, :versions => [ :v1 ] },
+    :invite_code => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
 
-    if options[:show_extra]
-      data.merge!(
-              :following_users => following_users,
-              :following_topics => following_topics,
-              :tutorial_step => tutorial_step,
-              :tutorial1_step => tutorial1_step,
-              :username_reset => username_reset,
-              :facebook_id => fbuid,
-              :twitter_id => twuid,
-              :roles => roles,
-      )
-
-      code = InviteCode.where(:user_id => id).first
-      data[:invite_code] = code ? {:code => code.code, :remaining => code.remaining} : {}
-    end
-
-    data
-  end
+  #def as_json(options={})
+  #  data = {
+  #          :id => id.to_s,
+  #          :type => 'User',
+  #          :public_id => public_id,
+  #          :slug => username ? username.downcase : '',
+  #          :username => username,
+  #          :first_name => first_name,
+  #          :last_name => last_name,
+  #          :score => score,
+  #          :following_users_count => following_users_count,
+  #          :following_topics_count => following_topics_count,
+  #          :followers_count => followers_count,
+  #          :unread_notification_count => unread_notification_count,
+  #          :images => User.json_images(self),
+  #          :status => status,
+  #          :url => status == 'twitter' ? "http://twitter.com/#{username}" : "/users/#{to_param}",
+  #          :created_at => created_at.to_i,
+  #          :created_at_pretty => pretty_time(created_at)
+  #  }
+  #
+  #  if options[:show_extra]
+  #    data.merge!(
+  #            :following_users => following_users,
+  #            :following_topics => following_topics,
+  #            :tutorial_step => tutorial_step,
+  #            :tutorial1_step => tutorial1_step,
+  #            :username_reset => username_reset,
+  #            :facebook_id => fbuid,
+  #            :twitter_id => twuid,
+  #            :roles => roles,
+  #    )
+  #
+  #    code = InviteCode.where(:user_id => id).first
+  #    data[:invite_code] = code ? {:code => code.code, :remaining => code.remaining} : {}
+  #  end
+  #
+  #  data
+  #end
 
   class << self
 
@@ -790,45 +808,35 @@ class User
   end
 
   def update_denorms
-    user_snippet_updates = {}
+    update = false
     object_user_updates = {}
     triggered_by_updates = {}
-    user_mention_updates = {}
     if username_changed?
-      user_snippet_updates["user_snippet.username"] = self.username
-      user_mention_updates["user_mentions.$.username"] = self.username
+      update = true
       object_user_updates["object_user.username"] = self.username
       triggered_by_updates["triggered_by.$.username"] = self.username
     end
     if status_changed?
-      user_snippet_updates["user_snippet.status"] = self.status
-      #user_mention_updates["user_mentions.$.status"] = self.username
+      update = true
       object_user_updates["object_user.status"] = self.status
       triggered_by_updates["triggered_by.$.status"] = self.status
     end
     if first_name_changed?
-      user_snippet_updates["user_snippet.first_name"] = self.first_name
-      user_mention_updates["user_mentions.$.first_name"] = self.first_name
+      update = true
       object_user_updates["object_user.first_name"] = self.first_name
       triggered_by_updates["triggered_by.$.first_name"] = self.first_name
     end
     if last_name_changed?
-      user_snippet_updates["user_snippet.last_name"] = self.last_name
-      user_mention_updates["user_mentions.$.last_name"] = self.last_name
+      update = true
       object_user_updates["object_user.last_name"] = self.last_name
       triggered_by_updates["triggered_by.$.last_name"] = self.last_name
     end
     if use_fb_image_changed?
-      user_snippet_updates["user_snippet.use_fb_image"] = self.use_fb_image
-      user_mention_updates["user_mentions.$.use_fb_image"] = self.use_fb_image
+      update = true
       object_user_updates["object_user.use_fb_image"] = self.use_fb_image
       triggered_by_updates["triggered_by.$.use_fb_image"] = self.use_fb_image
     end
-    unless user_snippet_updates.empty?
-      Post.where(:user_id => id).update_all(user_snippet_updates)
-      Post.where("user_mentions._id" => id).update_all(user_mention_updates)
-      Post.where("likes._id" => id).update_all(user_mention_updates)
-      Comment.where(:user_id => id).update_all(user_snippet_updates)
+    if update
       Notification.where("object_user._id" => id).update_all(object_user_updates)
       Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
       neo4j_update

@@ -5,6 +5,7 @@ class Topic
   include Mongoid::Slug
   include Mongoid::Paranoia
   include Mongoid::Timestamps::Updated
+  include Mongoid::CachedJson
   include Limelight::Acl
   include Limelight::Images
   include ImageHelper
@@ -29,17 +30,9 @@ class Topic
                   youre youve your yours yourself yourselves)
   class << self; attr_accessor :type_of_id, :related_to_id, :limelight_id, :limelight_feedback_id, :stop_words end
 
-  # Denormilized:
-  # Post.topic_mentions.name
-  # TopicConnectionSnippet.topic_name
-  field :name
-
-  # Denormilized:
-  # Topic.aliases
-  # TopicMention.slug
-  # TopicConnectionSnippet.topic_slug
   slug :name
 
+  field :name
   field :summary
   field :short_name
   field :status, :default => 'active'
@@ -484,7 +477,7 @@ class Topic
 
   def disconnect
     # remove mentions of this topic (also removes from user feeds)
-    Post.where("topic_mentions._id" => id).each do |object|
+    Post.where("topic_mention_ids" => id).each do |object|
       object.remove_topic_mention(self)
     end
 
@@ -560,25 +553,21 @@ class Topic
     }
   end
 
-  def as_json(options={})
-    {
-            :id => id.to_s,
-            :slug => to_param,
-            :type => 'Topic',
-            :name => name,
-            :summary => short_summary,
-            :score => score,
-            :followers_count => followers_count,
-            :created_at => created_at.to_i,
-            :created_at_pretty => pretty_time(created_at),
-            :images => Topic.json_images(self),
-            :primary_type => primary_type,
-            :aliases => visible_aliases,
-            :websites => all_websites,
-            :freebase_url => freebase_url
-
-    }
-  end
+  json_fields \
+    :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
+    :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
+    :type => { :definition => lambda { |instance| 'Topic' }, :properties => :short, :versions => [ :v1 ] },
+    :name => { :properties => :short, :versions => [ :v1 ] },
+    :summary => { :properties => :short, :versions => [ :v1 ] },
+    :score => { :properties => :short, :versions => [ :v1 ] },
+    :followers_count => { :properties => :short, :versions => [ :v1 ] },
+    :primary_type => { :properties => :short, :versions => [ :v1 ] },
+    :images => { :definition => lambda { |instance| Topic.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
+    :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
+    :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
+    #:aliases => { :definition => :visible_aliases, :properties => :public, :versions => [ :v1 ] },
+    :websites => { :definition => :all_websites, :properties => :public, :versions => [ :v1 ] },
+    :freebase_url => { :definition => :all_websites, :properties => :public, :versions => [ :v1 ] }
 
   class << self
 
@@ -725,49 +714,19 @@ class Topic
   #TODO: check that soulmate gets updated if this topic is a type for another topic
   def update_denorms
     soulmate = nil
-    topic_mention_updates = {}
     primary_type_updates = {}
 
     if name_changed?
       soulmate = true
-      topic_mention_updates["topic_mentions.$.name"] = self.name
       primary_type_updates["primary_type"] = name
     end
 
     if name_changed? || slug_changed? || slugged_attributes_changed?
       soulmate = true
-      topic_mention_updates["topic_mentions.$.slug"] = self.slug
     end
 
     if short_name_changed?
       soulmate = true
-      objects = Post.where('topic_mentions.id' => id)
-      objects.each do |object|
-        object.name.gsub!(/\##{short_name_was}/, "##{short_name}")
-        object.content.gsub!(/\##{short_name_was}/, "##{short_name}")
-        existing = object.topic_mentions.detect{|mention| mention.id == id}
-        if existing
-          existing.short_name = short_name
-        end
-        object.save
-      end
-    end
-
-    if image_versions_changed? || active_image_version_changed?
-      topic_mention_updates["topic_mentions.$.image_versions"] = self.image_versions
-      topic_mention_updates["topic_mentions.$.active_image_version"] = self.active_image_version
-    end
-
-    if use_freebase_image_changed?
-      topic_mention_updates["topic_mentions.$.use_freebase_image"] = self.use_freebase_image
-    end
-
-    if freebase_id_changed?
-      topic_mention_updates["topic_mentions.$.freebase_id"] = self.freebase_id
-    end
-
-    unless topic_mention_updates.empty?
-      Post.where("topic_mentions._id" => id).update_all(topic_mention_updates)
     end
 
     unless primary_type_updates.empty?

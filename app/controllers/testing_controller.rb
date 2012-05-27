@@ -7,6 +7,8 @@ class TestingController < ApplicationController
 
     Resque.enqueue(TestJob)
 
+    #feed = Feedzirra::Feed.fetch_and_parse("http://feeds.washingtonpost.com/rss/world")
+    #foo = 'bar'
     #facebook = Topic.where(:name => 'Xbox Live').first
     #facebook.fetch_freebase
 

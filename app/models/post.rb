@@ -3,6 +3,7 @@ require "limelight"
 class Post
   include Mongoid::Document
   include Mongoid::Timestamps::Updated
+  include Mongoid::CachedJson
   include Limelight::Acl
   include Limelight::Mentions
   include Limelight::Popularity
@@ -12,9 +13,6 @@ class Post
 
   cache
 
-  # Denormilized:
-  # Notification.object
-  #TODO: bug: each core object type currently validates the length of content, but after creation content_raw is copied to content.
   field :title
   field :description
   field :content
@@ -35,23 +33,23 @@ class Post
 
   auto_increment :public_id
 
-  embeds_one :user_snippet, :as => :user_assignable, :class_name => 'UserSnippet'
-  embeds_one :response_to, :as => :core_object_assignable, :class_name => 'PostSnippet'
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
-  embeds_many :likes, :as => :user_assignable, :class_name => 'UserSnippet'
 
+  has_many   :comments
+  belongs_to :response_to, :class_name => 'Post'
   belongs_to :user
+  has_and_belongs_to_many :likes, :inverse_of => nil, :class_name => 'User'
 
-  validates :user_id, :status, :presence => true
+  validates :user, :status, :presence => true
   validate :title_length, :content_length, :unique_source
 
-  attr_accessible :title, :content, :parent, :parent_id, :source_name, :source_url, :source_video_id, :source_title, :source_content, :embed_html, :tweet_content, :tweet, :tweet_id, :standalone_tweet
-  attr_accessor :parent, :parent_id, :source_name, :source_url, :source_video_id, :source_title, :source_content, :tweet_content, :tweet
+  attr_accessible :title, :content, :response_to_id, :source_name, :source_url, :source_video_id, :source_title, :source_content, :embed_html, :tweet_content, :tweet, :tweet_id, :standalone_tweet
+  attr_accessor :source_name, :source_url, :source_video_id, :source_title, :source_content, :tweet_content, :tweet
 
   #default_scope where('status' => 'active')
 
   before_validation :set_source_snippet
-  before_create :save_remote_image, :denormalize_user, :current_user_own, :send_tweet, :set_response_to, :set_root
+  before_create :save_remote_image, :current_user_own, :send_tweet, :set_root
   after_create :process_images, :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
   after_save :update_denorms
   before_destroy :disconnect
@@ -67,8 +65,8 @@ class Post
       [ :_type, Mongo::DESCENDING ],
     ]
   )
-  index "topic_mentions"
-  index "user_mentions"
+  #index "topic_mentions"
+  #index "user_mentions"
   index "likes"
   index "sources"
   index(
@@ -105,12 +103,9 @@ class Post
     unless self.class.name == 'Talk' || content.blank?
       user.talks.create(
               :content => content,
-              :parent => self,
+              :response_to => self,
               :first_talk => true,
-              :mention1 => mention1,
-              :mention2 => mention2,
-              :mention1_id => mention1_id,
-              :mention2_id => mention2_id,
+              :topic_mention_ids => topic_mention_ids
       )
     end
   end
@@ -171,9 +166,8 @@ class Post
   end
 
   def remove_mention(topic)
-    mention = self.topic_mentions.find(topic.id)
+    mention = self.topic_mention_ids.delete(topic.id)
     if mention
-      mention.delete
       FeedUserItem.unpush_post_through_topic(self, topic)
       FeedTopicItem.unpush_post_through_topic(self, topic)
       Neo4j.post_remove_topic_mention(self, topic)
@@ -188,18 +182,12 @@ class Post
 
   # Likes
   def liked_by?(user_id)
-    likes.where(:_id => user_id).first
+    likes.include?(user_id)
   end
 
   def add_to_likes(user)
-    like = liked_by? user.id
-    if like
-      false
-    elsif user_id == user.id
-      nil
-    else
-      like = self.likes.new(user.attributes.merge({:fbuid => user.fbuid, :twuid => user.twuid, :use_fb_image => user.use_fb_image}))
-      like.id = user.id
+    unless user_id == user.id || liked_by?(user.id)
+      self.likes << user
       user.likes_count += 1
       amount = add_pop_action(:lk, :a, user)
       Resque.enqueue(Neo4jPostLike, user.id.to_s, id.to_s)
@@ -216,17 +204,14 @@ class Post
   end
 
   def remove_from_likes(user)
-    like = liked_by? user.id
-    if like
-      like.destroy
+    if liked_by?(user.id)
+      self.likes.delete(user.id)
       user.likes_count -= 1
       add_pop_action(:lk, :r, user)
       Resque.enqueue(Neo4jPostUnlike, user.id.to_s, id.to_s)
       Resque.enqueue(PushUnlike, id.to_s, user.id.to_s)
 
       true
-    else
-      false
     end
   end
 
@@ -257,27 +242,13 @@ class Post
   # RESPONSES
   ##
 
-  def set_response_to
-    if parent || !parent_id.blank?
-      unless parent
-        self.parent = Post.find(parent_id)
-      end
-      if parent
-        self.response_to = PostSnippet.new(:name => parent.title, :type => parent._type, :public_id => parent.public_id)
-        self.response_to.id = parent.id
-      end
-    end
-  end
-
   #TODO: background these response count functions
 
   def update_response_counts(u_id=nil)
-    u_id ||= user_snippet.id
+    u_id ||= user_id
     if response_to
-      parent ||= Post.find(response_to.id)
-      parent.register_response(u_id)
+      response_to.register_response(u_id)
     end
-    register_topic_responses(u_id)
   end
 
   def register_response(u_id)
@@ -285,16 +256,6 @@ class Post
       self.talking_ids << u_id
       self.response_count =  response_count.to_i + 1
       save
-    end
-  end
-
-  def register_topic_responses(u_id)
-    mentioned_topics.each do |topic|
-      unless topic.talking_ids.include?(u_id)
-        topic.talking_ids << u_id
-        topic.response_count += 1
-        topic.save
-      end
     end
   end
 
@@ -308,11 +269,11 @@ class Post
   end
 
   def action_log_create
-    ActionPost.create(:action => 'create', :from_id => user_snippet.id, :to_id => id, :to_type => self.class.name)
+    ActionPost.create(:action => 'create', :from_id => user_id, :to_id => id, :to_type => self.class.name)
   end
 
   def action_log_delete
-    ActionPost.create(:action => 'delete', :from_id => user_snippet.id, :to_id => id, :to_type => self.class.name)
+    ActionPost.create(:action => 'delete', :from_id => user_id, :to_id => id, :to_type => self.class.name)
   end
 
   def feed_post_create
@@ -340,7 +301,7 @@ class Post
   def set_root
     if response_to
       self.root_id = response_to.id
-      self.root_type = response_to.type
+      self.root_type = response_to._type
     elsif self.class.name == 'Talk' && primary_topic_mention
       self.root_id = primary_topic_mention
       self.root_type = 'Topic'
@@ -381,43 +342,65 @@ class Post
             "Post Score" => score,
             "Post Response Count" => response_count,
             "Post Created At" => created_at,
-            "Post Is Root?" => response_to ? true : false,
-            "Post Root Type" => response_to ? root_type : nil,
+            "Post Is Root?" => response_to_id ? true : false,
+            "Post Root Type" => response_to_id ? root_type : nil,
             "Post From Twitter?" => standalone_tweet ? true : false
     }
   end
 
-  def as_json(options={})
-    data = {
-            :id => id.to_s,
-            :slug => to_param,
-            :type => _type,
-            :title => title,
-            :content => content,
-            :score => score,
-            :talking_count => response_count,
-            :liked => options[:user] && liked_by?(options[:user].id) ? true : false,
-            :created_at => created_at.to_i,
-            :created_at_pretty => pretty_time(created_at),
-            :created_at_short => short_time(created_at),
-            :video => json_video,
-            :video_autoplay => json_video(true),
-            :primary_source => sources.first,
-            :topic_mentions => topic_mentions.map {|m| m.as_json },
-            :images => json_images,
-            :user => user.as_json,
-            :likes_count => likes.length,
-            :likes => likes.last(5).map {|u| u.as_json}
-    }
+  json_fields \
+    :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
+    :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
+    :type => { :definition => :_type, :properties => :short, :versions => [ :v1 ] },
+    :title => { :properties => :short, :versions => [ :v1 ] },
+    :content => { :properties => :short, :versions => [ :v1 ] },
+    :score => { :properties => :short, :versions => [ :v1 ] },
+    :response_count => { :properties => :short, :versions => [ :v1 ] },
+    :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
+    :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
+    :created_at_short => { :definition => lambda { |instance| instance.short_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
+    :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
+    :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
+    :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
+    :likes_count => { :definition => lambda { |instance| instance.like_ids.length }, :properties => :short, :versions => [ :v1 ] },
+    :likes => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
+    :user => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
+    :topic_mentions => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
+    :user_mentions => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
+    :comments => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
 
-    if options[:comment_threads] && options[:comment_threads][id.to_s]
-      data[:comments] = options[:comment_threads][id.to_s].map {|c| c.as_json}
-    else
-      data[:comments] = []
-    end
 
-    data
-  end
+  #def as_json(options={})
+  #  data = {
+  #          :id => id.to_s,
+  #          :slug => to_param,
+  #          :type => _type,
+  #          :title => title,
+  #          :content => content,
+  #          :score => score,
+  #          :talking_count => response_count,
+  #          :liked => options[:user] && liked_by?(options[:user].id) ? true : false,
+  #          :created_at => created_at.to_i,
+  #          :created_at_pretty => pretty_time(created_at),
+  #          :created_at_short => short_time(created_at),
+  #          :video => json_video,
+  #          :video_autoplay => json_video(true),
+  #          :primary_source => sources.first,
+  #          :topic_mentions => topic_mentions.map {|m| m.as_json },
+  #          :images => json_images,
+  #          :user => user.as_json,
+  #          :likes_count => likes.length,
+  #          :likes => likes.last(5).map {|u| u.as_json}
+  #  }
+  #
+  #  if options[:comment_threads] && options[:comment_threads][id.to_s]
+  #    data[:comments] = options[:comment_threads][id.to_s].map {|c| c.as_json}
+  #  else
+  #    data[:comments] = []
+  #  end
+  #
+  #  data
+  #end
 
   def json_video(autoplay=nil)
     unless embed_html.blank?
@@ -454,10 +437,10 @@ class Post
     end
 
     # Build and return a post based on params (does not save)
-    def post(params, user_id)
+    def post(params, user)
       if params[:type] && ['Video', 'Picture', 'Link', 'Talk'].include?(params[:type])
         post = Kernel.const_get(params[:type]).new(params)
-        post.user_id = user_id
+        post.user = user
       else
         post = Post.new
       end
@@ -466,7 +449,7 @@ class Post
 
     def friend_responses(id, user, page, limit)
       if user
-        Post.where(:root_id => id, :_type => 'Talk', "user_snippet._id" => {"$in" => user.following_users})
+        Post.where(:root_id => id, :_type => 'Talk', "user_id" => {"$in" => user.following_users})
             .order_by(:_id, :desc)
             .skip((page-1)*limit).limit(limit)
       else
@@ -485,14 +468,10 @@ class Post
     def public_responses_no_friends(id, page, limit, user)
       posts = Post.public_responses(id, page, limit)
       if user
-        posts.select{|p| !user.is_following_user?(p.user_snippet.id) }
+        posts.select{|p| !user.is_following_user?(p.user_id) }
       else
         posts
       end
-    end
-
-    def for_show_page(parent_id)
-      Post.where(:root_id => parent_id).order_by(:_id, :desc)
     end
 
     # returns the latest posts site wide
@@ -768,21 +747,6 @@ class Post
   end
 
   protected
-
-  # Set some denormilized user data
-  def denormalize_user
-    self.build_user_snippet(
-            :public_id => user.public_id,
-            :username => user.username,
-            :status => user.status,
-            :first_name => user.first_name,
-            :last_name => user.last_name,
-            :fbuid => user.fbuid,
-            :twuid => user.twuid,
-            :use_fb_image => user.use_fb_image
-    )
-    self.user_snippet.id = user.id
-  end
 
   def current_user_own
     grant_owner(user.id)

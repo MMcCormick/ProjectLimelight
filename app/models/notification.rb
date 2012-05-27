@@ -1,6 +1,7 @@
 class Notification
   include Mongoid::Document
   include Mongoid::Timestamps::Updated
+  include Mongoid::CachedJson
 
   include ModelUtilitiesHelper
 
@@ -12,11 +13,12 @@ class Notification
   field :read, :default => false
   field :emailed, :default => false
   field :pushed, :default => false
-  field :user_id
+  field :comment_id
 
-  embeds_one :triggered_by, as: :user_assignable, :class_name => 'UserSnippet'
-  embeds_one :object, :as => :post_assignable, :class_name => 'PostSnippet'
-  embeds_one :object_user, :as => :user_assignable, :class_name => 'UserSnippet'
+  belongs_to :triggered_by, :class_name => 'User'
+  belongs_to :object, :class_name => 'Post'
+  belongs_to :object_user, :class_name => 'User'
+  belongs_to :user
 
   index(
     [
@@ -31,43 +33,10 @@ class Notification
   )
 
 
-  belongs_to :user
+
 
   def created_at
     id.generation_time
-  end
-
-  def add_triggered_by(triggered_by_user)
-    self.triggered_by.create(
-            :_id => triggered_by_user.id,
-            :username => triggered_by_user.username,
-            :first_name => triggered_by_user.first_name,
-            :last_name => triggered_by_user.last_name,
-            :public_id => triggered_by_user.public_id
-    )
-    true
-  end
-
-  def triggered_users_notify_count
-    users_count = 0
-    triggered_by.each {|triggered_user| users_count += 1 unless triggered_by_emailed.include?(triggered_user.id) }
-    users_count
-  end
-
-  def triggered_users_notify_string
-    string = ''
-    users = Array.new
-    triggered_by.each {|triggered_user| users << triggered_user unless triggered_by_emailed.include?(triggered_user.id) }
-    users.each_with_index do |user, i|
-      if i == users.length - 1 && users.length > 1
-        string += ' and '
-      end
-      string += user.fullname
-      if i < users.length - 1 && users.length > 2
-        string += ', '
-      end
-    end
-    string
   end
 
   def notification_text
@@ -87,22 +56,19 @@ class Notification
     end
   end
 
-  def as_json(options={})
-    {
-            :id => id.to_s,
-            :read => read,
-            :user_id => user_id.to_s,
-            :message => message,
-            :type => type,
-            :sentence => notification_text,
-            :created_at => created_at,
-            :created_at_pretty => pretty_time(created_at),
-            :created_at_day => pretty_day(created_at),
-            :triggered_by => triggered_by.as_json,
-            :object => object.as_json,
-            :object_user => object_user.as_json
-    }
-  end
+  json_fields \
+    :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
+    :read => { :properties => :short, :versions => [ :v1 ] },
+    :user_id => { :properties => :short, :versions => [ :v1 ] },
+    :message => { :properties => :short, :versions => [ :v1 ] },
+    :type => { :properties => :short, :versions => [ :v1 ] },
+    :sentence => { :definition => :notification_text, :properties => :short, :versions => [ :v1 ] },
+    :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
+    :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
+    :created_at_short => { :definition => lambda { |instance| instance.short_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
+    :triggered_by => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
+    :object => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
+    :object_user => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
 
   class << self
 
@@ -139,47 +105,14 @@ class Notification
       else
         new_notification = true
         notification = Notification.new(
-                :user_id => target_user.id,
                 :type => type,
                 :message => message
         )
-
-        if triggered_by_user
-          notification.triggered_by = UserSnippet.new(
-              :username => triggered_by_user.username,
-              :first_name => triggered_by_user.first_name,
-              :last_name => triggered_by_user.last_name,
-              :public_id => triggered_by_user.public_id,
-              :fbuid => triggered_by_user.fbuid,
-              :twuid => triggered_by_user.twuid,
-              :use_fb_image => triggered_by_user.use_fb_image
-
-          )
-          notification.triggered_by.id = triggered_by_user.id
-        end
-
-        if object
-          notification.object = PostSnippet.new
-          notification.object.type = object._type
-          notification.object.name = object.name
-          notification.object.public_id = object.public_id
-          notification.object.id = object.id
-          notification.object.comment_id = comment.id if comment
-        end
-
-        if object_user
-          notification.object_user = UserSnippet.new(
-              :username => object_user.username,
-              :first_name => object_user.first_name,
-              :last_name => object_user.last_name,
-              :public_id => object_user.public_id,
-              :fbuid => object_user.fbuid,
-              :twuid => object_user.twuid,
-              :use_fb_image => object_user.use_fb_image
-          )
-          notification.object_user.id = object_user.id
-        end
-
+        notification.user = target_user
+        notification.triggered_by = triggered_by_user if triggered_by_user
+        notification.object = object if object
+        notification.object_user = object if object_user
+        notification.comment_id = comment.id if comment
         notification.notify = notify
       end
 
@@ -210,13 +143,13 @@ class Notification
       # find the notification
       notification = Notification.where(:user_id => target_user.id)
       if object
-        notification = notification.where('object._id' => object.id)
+        notification = notification.where('object_id' => object.id)
         if comment
-          notification = notification.where('object.comment_id' => comment.id)
+          notification = notification.where('comment_id' => comment.id)
         end
       end
       if triggered_by_user
-        notification = notification.where("triggered_by._id" => triggered_by_user._id)
+        notification = notification.where("triggered_by_id" => triggered_by_user._id)
       end
       notification = notification.where(:type => type).first
 

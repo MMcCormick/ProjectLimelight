@@ -33,6 +33,9 @@ gem 'backbone-on-rails'
 gem 'mixpanel' # analytics
 gem 'feedzirra'
 gem 'ken' # freebase
+gem 'mongoid-cached-json'
+gem 'mongoid_collection_snapshot'
+
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'
@@ -85,6 +88,7 @@ platforms :ruby do
 
   group :development do
     gem "foreman"
+    gem 'pry-rails'
   end
 end
 

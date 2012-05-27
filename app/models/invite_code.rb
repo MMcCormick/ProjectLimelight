@@ -2,6 +2,7 @@ require 'securerandom'
 
 class InviteCode
   include Mongoid::Document
+  include Mongoid::CachedJson
   include Mongoid::Timestamps::Updated
 
   cache
@@ -9,7 +10,6 @@ class InviteCode
   field :code
   field :allotted, :type => Integer
   field :used, :type => Integer, :default => 0
-  field :user_id
 
   validates_presence_of :code, :allotted
   validates_uniqueness_of :code
@@ -19,7 +19,8 @@ class InviteCode
 
   before_validation :generate
 
-  index :user_id
+  belongs_to :user
+
   index :code
 
   def created_at
@@ -47,4 +48,9 @@ class InviteCode
     self.used += 1
     save
   end
+
+  json_fields \
+    :code => { :properties => :short, :versions => [ :v1 ] },
+    :allotted => { :properties => :short, :versions => [ :v1 ] },
+    :used => { :properties => :short, :versions => [ :v1 ] }
 end

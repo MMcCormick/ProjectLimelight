@@ -9,5 +9,5 @@ class LL.Views.PrettyTime extends Backbone.View
       self.render()
 
   render: =>
-    $(@el).html(humaneDate(new Date(@time*1000)))
+    $(@el).html(humaneDate(new Date(@time*1000), null, if @format == 'extended' then 0 else 1))
     @

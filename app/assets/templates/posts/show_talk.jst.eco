@@ -8,7 +8,7 @@
     <div class="actions-created">
       <span class='actions'></span>
       <span class="created-at">
-        <%= @post.get('created_at_pretty') %>
+        <%= @post.get('created_at_short') %>
       </span>
     </div>
 

@@ -345,7 +345,7 @@ class LL.Router extends Backbone.Router
     if _.include(['Video','Link','Picture'], $('#this').data('type'))
       data = new LL.Models.Post($('#this').data('this'))
     else
-      data = null
+      data = {'id':id}
 
     post = new LL.Models.Post(data)
 
@@ -366,7 +366,7 @@ class LL.Router extends Backbone.Router
     if $('#this').data('type') == 'Talk'
       data = new LL.Models.Post($('#this').data('this'))
     else
-      data = null
+      data = {'id':id}
 
     post = new LL.Models.Post(data)
 

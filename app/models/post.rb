@@ -363,6 +363,7 @@ class Post
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
     :likes_count => { :definition => lambda { |instance| instance.like_ids.length }, :properties => :short, :versions => [ :v1 ] },
+    :primary_source => { :definition => lambda { |instance| instance.sources.first }, :properties => :short, :versions => [ :v1 ] },
     :user => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :topic_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :user_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] },

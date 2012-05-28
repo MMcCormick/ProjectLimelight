@@ -1,4 +1,4 @@
-<div class='section' class="post-root">
+<div class='section post-root'>
   <div class='meat'>
     <% if @post.get('primary_source'): %>
         <h1 class="title">
@@ -20,7 +20,7 @@
         <% else: %>
           <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
         <% end %>
-        <%= @post.get('created_at_pretty') %>
+        <%= @post.get('created_at_short') %>
       </span>
     </div>
 

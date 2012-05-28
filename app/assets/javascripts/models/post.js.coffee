@@ -4,14 +4,12 @@ class LL.Models.Post extends Backbone.Model
   name: 'post'
 
   initialize: ->
-    if @get('user')
-      @set('user', new LL.Models.User(@get('user')))
+    @set('user', new LL.Models.User(@get('user')))
 
     mentions = []
     if @get('topic_mentions')
       for mention in @get('topic_mentions')
-        mentions.push(new LL.Models.User(mention))
-
+        mentions.push(new LL.Models.Topic(mention))
     @set('topic_mentions', mentions)
 
     likes = []
@@ -20,12 +18,10 @@ class LL.Models.Post extends Backbone.Model
         likes.push(new LL.Models.User(user))
     @set('likes', likes)
 
-    if !@get('comments')
-      @set('comments', [])
-
     comments = []
-    for comment in @get('comments')
-      comments.push(new LL.Models.Comment(comment))
+    if @get('comments')
+      for comment in @get('comments')
+        comments.push(new LL.Models.Comment(comment))
     @set('comments', comments)
 
   scorePretty: ->

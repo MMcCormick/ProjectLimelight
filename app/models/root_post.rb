@@ -37,11 +37,11 @@ class RootPost
             :id => root.id.to_s,
             :public_talking => public_talking,
             :personal_talking => personal_talking,
-            :root => root.as_json(:properties => :public),
-            :like_responses => like_responses.map {|r| r.as_json(:properties => :public)},
-            :activity_responses => activity_responses.map {|r| r.as_json(:properties => :public)},
-            :public_responses => public_responses.map {|r| r.as_json(:properties => :public)},
-            :personal_responses => personal_responses.map {|r| r.as_json(:properties => :public)},
+            :root => root.as_json(options),
+            :like_responses => like_responses.map {|r| r.as_json(options)},
+            :activity_responses => activity_responses.map {|r| r.as_json(options)},
+            :public_responses => public_responses.map {|r| r.as_json(options)},
+            :personal_responses => personal_responses.map {|r| r.as_json(options)},
             :reasons => push_item ? generate_reasons(push_item.reasons) : []
     }
   end

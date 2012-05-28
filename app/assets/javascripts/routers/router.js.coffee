@@ -62,15 +62,16 @@ class LL.Router extends Backbone.Router
 
       LL.App.renderScreen('user_feed', id)
 
-      feed = new LL.Views.PostsFeed(collection: LL.App.UserFeed)
+      collection = new LL.Collections.UserFeed
+      feed = new LL.Views.PostsFeed(collection: collection)
       feed.channel = "#{user.get('id')}_realtime"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
-      LL.App.UserFeed.id = id
-      LL.App.UserFeed.page = 1
-      LL.App.UserFeed.sort_value = 'newest'
-      LL.App.UserFeed.fetch({data: {id: user.get('id'), sort: 'newest'}})
+      collection.id = id
+      collection.page = 1
+      collection.sort_value = 'newest'
+      collection.fetch({data: {id: user.get('id'), sort: 'newest'}})
 
   activityFeed: (id=0) ->
 
@@ -98,14 +99,15 @@ class LL.Router extends Backbone.Router
 
       LL.App.renderScreen('activity_feed', user.get('id'))
 
-      feed = new LL.Views.PostsFeed(collection: LL.App.ActivityFeed)
+      collection = new LL.Collections.ActivityFeed
+      feed = new LL.Views.PostsFeed(collection: collection)
       feed.channel = "#{user.get('id')}_activity"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
-      LL.App.ActivityFeed.id = user.get('id')
-      LL.App.ActivityFeed.page = 1
-      LL.App.ActivityFeed.fetch({data: {id: user.get('id')}})
+      collection.id = user.get('id')
+      collection.page = 1
+      collection.fetch({data: {id: user.get('id')}})
 
   likeFeed: (id=0) ->
     if id == 0
@@ -129,14 +131,15 @@ class LL.Router extends Backbone.Router
 
       LL.App.renderScreen('like_feed', user.get('id'))
 
-      feed = new LL.Views.PostsFeed(collection: LL.App.LikeFeed)
+      collection = new LL.Collections.LikeFeed
+      feed = new LL.Views.PostsFeed(collection: collection)
       feed.channel = "#{user.get('id')}_likes"
       LL.App.Feed = feed
       screen['components'].push(feed)
 
-      LL.App.LikeFeed.id = user.get('id')
-      LL.App.LikeFeed.page = 1
-      LL.App.LikeFeed.fetch({data: {id: user.get('id')}})
+      collection.id = user.get('id')
+      collection.page = 1
+      collection.fetch({data: {id: user.get('id')}})
 
   userInfluence: (id=0) ->
     if id == 0
@@ -297,14 +300,15 @@ class LL.Router extends Backbone.Router
 
       LL.App.renderScreen('topic_feed', topic.get('id'))
 
-      feed = new LL.Views.PostsFeed(collection: LL.App.TopicFeed)
+      collection = new LL.Collections.TopicFeed
+      feed = new LL.Views.PostsFeed(collection: collection)
       LL.App.Feed = feed
       screen['components'].push(feed)
 
-      LL.App.TopicFeed.id = topic.get('id')
-      LL.App.TopicFeed.page = 1
-      LL.App.TopicFeed.sort_value = 'newest'
-      LL.App.TopicFeed.fetch({data: {id: topic.get('id'), sort: 'newest'}})
+      collection.id = topic.get('id')
+      collection.page = 1
+      collection.sort_value = 'newest'
+      collection.fetch({data: {id: topic.get('id'), sort: 'newest'}})
 
   topicFollowers: (id) ->
     topic = new LL.Models.Topic($('#this').data('this'))

@@ -12,7 +12,7 @@ class LL.Views.SplashPage extends Backbone.View
     login_form = new LL.Views.UserLoginForm(el: $(@el).find('.login-form form'))
     login_form.splash = @
 
-    register_form = new LL.Views.UserRegisterForm(collection: LL.App.Users, el: $(@el).find('.beta-register form'))
+    register_form = new LL.Views.UserRegisterForm(collection: new LL.Collections.Users, el: $(@el).find('.beta-register form'))
     register_form.splash = @
 
     invite_form = new LL.Views.UserUseInviteForm(el: $(@el).find('#new_invite_code'))

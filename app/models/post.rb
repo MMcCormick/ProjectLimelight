@@ -363,44 +363,11 @@ class Post
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
     :likes_count => { :definition => lambda { |instance| instance.like_ids.length }, :properties => :short, :versions => [ :v1 ] },
+    :user => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
+    :topic_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
+    :user_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :likes => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
-    :user => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
-    :topic_mentions => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
-    :user_mentions => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
     :comments => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
-
-
-  #def as_json(options={})
-  #  data = {
-  #          :id => id.to_s,
-  #          :slug => to_param,
-  #          :type => _type,
-  #          :title => title,
-  #          :content => content,
-  #          :score => score,
-  #          :talking_count => response_count,
-  #          :liked => options[:user] && liked_by?(options[:user].id) ? true : false,
-  #          :created_at => created_at.to_i,
-  #          :created_at_pretty => pretty_time(created_at),
-  #          :created_at_short => short_time(created_at),
-  #          :video => json_video,
-  #          :video_autoplay => json_video(true),
-  #          :primary_source => sources.first,
-  #          :topic_mentions => topic_mentions.map {|m| m.as_json },
-  #          :images => json_images,
-  #          :user => user.as_json,
-  #          :likes_count => likes.length,
-  #          :likes => likes.last(5).map {|u| u.as_json}
-  #  }
-  #
-  #  if options[:comment_threads] && options[:comment_threads][id.to_s]
-  #    data[:comments] = options[:comment_threads][id.to_s].map {|c| c.as_json}
-  #  else
-  #    data[:comments] = []
-  #  end
-  #
-  #  data
-  #end
 
   def json_video(autoplay=nil)
     unless embed_html.blank?

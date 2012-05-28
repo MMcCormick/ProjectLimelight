@@ -15,19 +15,6 @@ class LL.Views.App extends Backbone.View
     # The currently active feed
     @Feed = null
 
-    # set the global collections
-    @Users = new LL.Collections.Users
-    @UserFeed = new LL.Collections.UserFeed
-    @ActivityFeed = new LL.Collections.ActivityFeed
-    @LikeFeed = new LL.Collections.LikeFeed
-    @Notifications = new LL.Collections.UserNotifications
-
-    @Posts = new LL.Collections.Posts
-
-    @Topics = new LL.Collections.Topics
-    @TopicFeed = new LL.Collections.TopicFeed
-    @TopicSuggestions = new LL.Collections.TopicSuggestions
-
     # The global modal view
     @Modal = new LL.Views.Modal
 
@@ -40,8 +27,8 @@ class LL.Views.App extends Backbone.View
     @event_subscriptions = {}
 
     # Hover Tabs
-    @topic_hover_tabs = {}
-    @user_hover_tabs = {}
+    @topic_hover_tabs = []
+    @user_hover_tabs = []
 
     # set the current user
     @current_user = if $('#me').length > 0 then new LL.Models.User($('#me').data('user')) else null
@@ -55,8 +42,6 @@ class LL.Views.App extends Backbone.View
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).resize ->
       self.calculateSiteWidth()
-
-
 
   newScreen: (name, id) =>
     @screens["#{name}_#{id}"] = {
@@ -148,16 +133,21 @@ class LL.Views.App extends Backbone.View
     self = @
 
     $(e.target).oneTime 1000, 'topic-hover', ->
-      topic = new LL.Models.Topic({'id': $(e.currentTarget).data('id')})
+      id = $(e.currentTarget).data('id')
+      return if _.include(self.topic_hover_tabs, id)
 
+      topic = new LL.Models.Topic({'id': id})
       tab = new LL.Views.TopicHoverTab(model: topic)
 
       target = $(e.currentTarget).find('h1,h2,h3,h4,h5').first()
       if target.length == 0
         target = $(e.currentTarget)
 
+      console.log target
+
       tab.setTarget(target)
       tab.render()
+      self.topic_hover_tabs.push id
 
   stopTopicHoverTab: (e) =>
     $(e.target).stopTime 'topic-hover'
@@ -166,8 +156,10 @@ class LL.Views.App extends Backbone.View
     self = @
 
     $(e.target).oneTime 1000, 'user-hover', ->
-      user = new LL.Models.User({'id': $(e.currentTarget).data('id')})
+      id = $(e.currentTarget).data('id')
+      return if _.include(self.user_hover_tabs, id)
 
+      user = new LL.Models.User({'id': id})
       tab = new LL.Views.UserHoverTab(model: user)
 
       target = $(e.currentTarget).find('h1,h2,h3,h4,h5').first()
@@ -176,6 +168,7 @@ class LL.Views.App extends Backbone.View
 
       tab.setTarget(target)
       tab.render()
+      self.user_hover_tabs.push id
 
   stopUserHoverTab: (e) =>
     $(e.target).stopTime 'user-hover'

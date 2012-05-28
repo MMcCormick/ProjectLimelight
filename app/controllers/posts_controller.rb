@@ -109,7 +109,7 @@ class PostsController < ApplicationController
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.feed(user.id, params[:sort], page)
-    render :json => posts.map {|p| p.as_json(:properties => :public)}
+    render :json => posts.map {|p| p.as_json(:properties => :short)}
   end
 
   # The user like feed
@@ -127,7 +127,7 @@ class PostsController < ApplicationController
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.activity_feed(user.id, page)
-    render :json => posts.map {|p| p.as_json(:properties => :public)}
+    render :json => posts.map {|p| p.as_json(:properties => :short)}
   end
 
   # Topic feeds...
@@ -138,7 +138,7 @@ class PostsController < ApplicationController
     page = params[:p] ? params[:p].to_i : 1
     topic_ids = Neo4j.pull_from_ids(topic.id).to_a
     posts = Post.topic_feed(topic_ids << topic.id, (signed_in? ? current_user.id : nil), params[:sort], page)
-    render :json => posts.map {|p| p.as_json(:properties => :public)}
+    render :json => posts.map {|p| p.as_json(:properties => :short)}
   end
 
   # Post responses from a users friends

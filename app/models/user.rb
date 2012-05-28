@@ -602,55 +602,15 @@ class User
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
     :created_at_short => { :definition => lambda { |instance| instance.short_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
+    :facebook_id => { :definition => :fbuid, :properties => :short, :versions => [ :v1 ] },
+    :twitter_id => { :definition => :twuid, :properties => :short, :versions => [ :v1 ] },
+    :roles => { :properties => :short, :versions => [ :v1 ] },
     :following_topics => { :properties => :public, :versions => [ :v1 ] },
     :following_users => { :properties => :public, :versions => [ :v1 ] },
     :tutorial_step => { :properties => :public, :versions => [ :v1 ] },
     :tutorial1_step => { :properties => :public, :versions => [ :v1 ] },
     :username_reset => { :properties => :public, :versions => [ :v1 ] },
-    :facebook_id => { :definition => :fbuid, :properties => :public, :versions => [ :v1 ] },
-    :twitter_id => { :definition => :twuid, :properties => :public, :versions => [ :v1 ] },
-    :roles => { :properties => :public, :versions => [ :v1 ] },
     :invite_code => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
-
-  #def as_json(options={})
-  #  data = {
-  #          :id => id.to_s,
-  #          :type => 'User',
-  #          :public_id => public_id,
-  #          :slug => username ? username.downcase : '',
-  #          :username => username,
-  #          :first_name => first_name,
-  #          :last_name => last_name,
-  #          :score => score,
-  #          :following_users_count => following_users_count,
-  #          :following_topics_count => following_topics_count,
-  #          :followers_count => followers_count,
-  #          :unread_notification_count => unread_notification_count,
-  #          :images => User.json_images(self),
-  #          :status => status,
-  #          :url => status == 'twitter' ? "http://twitter.com/#{username}" : "/users/#{to_param}",
-  #          :created_at => created_at.to_i,
-  #          :created_at_pretty => pretty_time(created_at)
-  #  }
-  #
-  #  if options[:show_extra]
-  #    data.merge!(
-  #            :following_users => following_users,
-  #            :following_topics => following_topics,
-  #            :tutorial_step => tutorial_step,
-  #            :tutorial1_step => tutorial1_step,
-  #            :username_reset => username_reset,
-  #            :facebook_id => fbuid,
-  #            :twitter_id => twuid,
-  #            :roles => roles,
-  #    )
-  #
-  #    code = InviteCode.where(:user_id => id).first
-  #    data[:invite_code] = code ? {:code => code.code, :remaining => code.remaining} : {}
-  #  end
-  #
-  #  data
-  #end
 
   class << self
 

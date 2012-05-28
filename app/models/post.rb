@@ -26,7 +26,6 @@ class Post
   field :embed_html # video embeds
   field :tweet_id
   field :standalone_tweet, :default => false
-  field :pushed_users, :default => [] # the users this post has been pushed to
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
   field :neo4j_id
   field :category
@@ -182,7 +181,7 @@ class Post
 
   # Likes
   def liked_by?(user_id)
-    likes.include?(user_id)
+    like_ids.include?(user_id)
   end
 
   def add_to_likes(user)
@@ -205,7 +204,7 @@ class Post
 
   def remove_from_likes(user)
     if liked_by?(user.id)
-      self.likes.delete(user.id)
+      self.like_ids.delete(user.id)
       user.likes_count -= 1
       add_pop_action(:lk, :r, user)
       Resque.enqueue(Neo4jPostUnlike, user.id.to_s, id.to_s)
@@ -331,6 +330,9 @@ class Post
     og_namespace + ":post"
   end
 
+  def primary_source
+    sources.first
+  end
 
   ##########
   # JSON
@@ -362,12 +364,12 @@ class Post
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
-    :likes_count => { :definition => lambda { |instance| instance.like_ids.length }, :properties => :short, :versions => [ :v1 ] },
-    :primary_source => { :definition => lambda { |instance| instance.sources.first }, :properties => :short, :versions => [ :v1 ] },
+    :likes => { :definition => lambda { |instance| instance.like_ids }, :properties => :short, :versions => [ :v1 ] },
+    :primary_source => { :type => :reference, :definition => :primary_source, :properties => :short, :versions => [ :v1 ] },
     :user => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :topic_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :user_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
-    :likes => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
+    :recent_likes => { :type => :reference, :definition => lambda { |instance| instance.likes.limit(5) }, :properties => :short, :versions => [ :v1 ] },
     :comments => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
 
   def json_video(autoplay=nil)

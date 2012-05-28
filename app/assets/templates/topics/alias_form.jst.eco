@@ -6,7 +6,6 @@
   <% for topic_alias in @topic.get('aliases'): %>
     <div class="alias">
       <div class='name'><%= topic_alias.name %></div>
-      <% console.log(topic_alias) %>
       <div class="ooac-btn" data-val="<%= if topic_alias.ooac == true then "false" else "true" %>" data-id='<%= topic_alias._id %>'>
         <%= if topic_alias.ooac == true then "[remove one of a kind]" else "[make one of a kind]" %>
       </div>

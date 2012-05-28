@@ -100,7 +100,6 @@ class FeedUserItem
 
         unless item
           new_push = true
-          post.pushed_users << u.id.to_s
           post.pushed_users_count += 1
           item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
         end
@@ -164,7 +163,6 @@ class FeedUserItem
 
           unless item
             new_push = true
-            post.pushed_users << u.id.to_s
             post.pushed_users_count += 1
             item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
             item.last_response_time = Time.now
@@ -215,7 +213,6 @@ class FeedUserItem
           if item.reasons.length == 0
             item.delete
             post.pushed_users_count -= 1
-            post.pushed_users.delete(u.id.to_s)
           else
             item.save
           end
@@ -249,7 +246,6 @@ class FeedUserItem
 
         unless item
           new_push = true
-          post.pushed_users << u.id.to_s
           post.pushed_users_count += 1
           item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
         end
@@ -286,7 +282,6 @@ class FeedUserItem
         if item.reasons.length == 0
           item.delete
           post.pushed_users_count -= 1
-          post.pushed_users.delete(u.id.to_s)
         else
           item.save
         end

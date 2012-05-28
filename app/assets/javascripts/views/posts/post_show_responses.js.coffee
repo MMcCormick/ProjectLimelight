@@ -5,7 +5,6 @@ class LL.Views.PostShowResponses extends Backbone.View
     @collection.on('reset', @render)
 
   render: =>
-    console.log @type
     if @type == 'FriendResponses'
       $(@el).addClass('friend-responses').prepend('<div class="top"><h4>Friends Talking</h4></div><input type="text" placeholder="Talk about this!" autocomplete="off" spellcheck="false"><div class="meat"></div>')
     else

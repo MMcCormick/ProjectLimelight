@@ -137,13 +137,12 @@ class LL.Views.App extends Backbone.View
       return if _.include(self.topic_hover_tabs, id)
 
       topic = new LL.Models.Topic({'id': id})
+      console.log topic
       tab = new LL.Views.TopicHoverTab(model: topic)
 
       target = $(e.currentTarget).find('h1,h2,h3,h4,h5').first()
       if target.length == 0
         target = $(e.currentTarget)
-
-      console.log target
 
       tab.setTarget(target)
       tab.render()

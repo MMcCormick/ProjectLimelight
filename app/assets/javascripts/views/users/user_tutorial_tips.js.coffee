@@ -75,7 +75,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
             return
       else
         return
-    console.log @target
+
     @currentTip = @target.qtip
                     hide: false
                     position:

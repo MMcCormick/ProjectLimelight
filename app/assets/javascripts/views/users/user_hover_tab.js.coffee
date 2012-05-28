@@ -37,7 +37,6 @@ class LL.Views.UserHoverTab extends Backbone.View
           $(self.el).find('.stat1').html(score.render().el)
 
           $(self.el).find('.bottom').append(talk.render().el).append(follow.render().el)
-
           $(self.el)
 
     @target.qtip('show')

@@ -23,8 +23,8 @@ class LL.Views.TalkShow extends Backbone.View
       $(@el).find('.half-sections').append(topic_section.render().el)
 
       user_section = new LL.Views.UserSectionList()
-      user_section.users = @model.get('likes')
-      user_section.count = @model.get('likes_count')
+      user_section.users = @model.get('recent_likes')
+      user_section.count = @model.get('likes').length
       $(@el).find('.half-sections').append(user_section.render().el)
 
       @comments = new LL.Collections.Comments

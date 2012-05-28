@@ -25,7 +25,6 @@ class LL.Views.AddMentionForm extends Backbone.View
           html += "<div class='topic-type'>#{data.data.type}</div>"
         html
       selectCallback: (term, data, type) ->
-        console.log $(self.el).find('.tc-auto')
         $(self.el).find('.topic_name').val(data.term).next().val(data.id)
 
     @

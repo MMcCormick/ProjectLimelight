@@ -20,7 +20,7 @@
         <% else: %>
           <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
         <% end %>
-        <%= @post.get('created_at_short') %>
+        <%= @post.get('created_at_pretty') %>
       </span>
     </div>
 

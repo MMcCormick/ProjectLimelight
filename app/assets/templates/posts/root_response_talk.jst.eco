@@ -6,6 +6,6 @@
 <div class='when top-right'></div>
 <div class="actions">
   <% if @talk.get('user').get('status') == 'active': %>
-    <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>
+    <span class="comment-form">+Comment (<span><%= @talk.get('response_count') %></span>)</span>
   <% end %>
 </div>

@@ -18,7 +18,7 @@
 
   <div class='when top-right'></div>
   <div class="actions">
-    <span class="comment-form">+Comment (<%= @talk.get('talking_count') %>)</span>
+    <span class="comment-form">+Comment (<%= @talk.get('response_count') %>)</span>
   </div>
 </div>
 

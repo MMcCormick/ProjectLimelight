@@ -6,6 +6,6 @@
   </p>
   <div class='when top-right'></div>
   <span class="actions">
-    <span class="comment-form">+Comment (<span><%= @talk.get('talking_count') %></span>)</span>
+    <span class="comment-form">+Comment (<span><%= @talk.get('response_count') %></span>)</span>
   </span>
 </div>

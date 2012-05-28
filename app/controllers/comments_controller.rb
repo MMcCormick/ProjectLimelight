@@ -3,17 +3,17 @@ class CommentsController < ApplicationController
 
   def index
     comments = Comment.threaded_with_field(params[:id])
-    render :json => comments.map {|c| c.as_json}
+    render :json => comments.map {|c| c.as_json(:properties => :all)}
   end
 
   def create
-    talk = Talk.find(params[:talk_id])
-    comment = talk.comments.new(params)
-    comment.user_id = current_user.id
+    talk = Post.find(params[:talk_id])
+    comment = current_user.comments.new(params)
+    comment.post_id = talk.id
 
     if comment.save
       track_mixpanel("New Comment", current_user.mixpanel_data)
-      Pusher[talk.id.to_s].trigger('new_comment', comment.as_json)
+      Pusher[talk.id.to_s].trigger('new_comment', comment.as_json(:properties => :all))
       comment.send_notifications(current_user)
       response = build_ajax_response(:ok, nil, "Comment created!")
       render json: response, :status => 201

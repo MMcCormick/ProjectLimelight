@@ -40,7 +40,7 @@ class LL.Views.UserHeaderNav extends Backbone.View
     if @notifications
       @notifications.togglePanel()
     else
-      collection = new LL.Collections.Notification
+      collection = new LL.Collections.UserNotifications
       @notifications = new LL.Views.UserNotifications(collection: collection)
       collection.fetch()
 

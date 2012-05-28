@@ -7,9 +7,9 @@ class LL.Views.TopicEdit extends Backbone.View
     @model.on('change', @render)
 
   render: =>
-#    unless @model.get('aliases')
-#      LL.App.Topics.findOrCreate(@model.get('id'), null, true)
-#      return @
+    unless @model.get('aliases')
+      @model.fetch({data: {id: @model.get('id')}, success: (model, response) -> model.set(response) })
+      return @
 
     self = @
 

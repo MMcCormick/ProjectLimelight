@@ -26,10 +26,6 @@ class LL.Views.App extends Backbone.View
     @subscriptions = {}
     @event_subscriptions = {}
 
-    # Hover Tabs
-    @topic_hover_tabs = []
-    @user_hover_tabs = []
-
     # set the current user
     @current_user = if $('#me').length > 0 then new LL.Models.User($('#me').data('user')) else null
 
@@ -133,11 +129,7 @@ class LL.Views.App extends Backbone.View
     self = @
 
     $(e.target).oneTime 1000, 'topic-hover', ->
-      id = $(e.currentTarget).data('id')
-      return if _.include(self.topic_hover_tabs, id)
-
-      topic = new LL.Models.Topic({'id': id})
-      console.log topic
+      topic = new LL.Models.Topic({'id': $(e.currentTarget).data('id')})
       tab = new LL.Views.TopicHoverTab(model: topic)
 
       target = $(e.currentTarget).find('h1,h2,h3,h4,h5').first()
@@ -146,7 +138,6 @@ class LL.Views.App extends Backbone.View
 
       tab.setTarget(target)
       tab.render()
-      self.topic_hover_tabs.push id
 
   stopTopicHoverTab: (e) =>
     $(e.target).stopTime 'topic-hover'
@@ -155,10 +146,7 @@ class LL.Views.App extends Backbone.View
     self = @
 
     $(e.target).oneTime 1000, 'user-hover', ->
-      id = $(e.currentTarget).data('id')
-      return if _.include(self.user_hover_tabs, id)
-
-      user = new LL.Models.User({'id': id})
+      user = new LL.Models.User({'id': $(e.currentTarget).data('id')})
       tab = new LL.Views.UserHoverTab(model: user)
 
       target = $(e.currentTarget).find('h1,h2,h3,h4,h5').first()
@@ -167,7 +155,6 @@ class LL.Views.App extends Backbone.View
 
       tab.setTarget(target)
       tab.render()
-      self.user_hover_tabs.push id
 
   stopUserHoverTab: (e) =>
     $(e.target).stopTime 'user-hover'

@@ -19,12 +19,15 @@ class LL.Views.TopicHoverTab extends Backbone.View
     follow = new LL.Views.FollowButton(model: self.model)
 
     @target.qtip
+      overwrite: false
       position:
         my: 'top left'
         at: 'bottom left'
         viewport: $(window)
       style:
         classes: 'ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-limelight hover-tab'
+      show:
+        ready: true
       hide:
         fixed: true
         delay: 300
@@ -36,8 +39,9 @@ class LL.Views.TopicHoverTab extends Backbone.View
 
           $(self.el).find('.bottom').append(talk.render().el).append(follow.render().el)
           $(self.el)
-
-    @target.qtip('show')
+      events:
+        hide: (e,api) ->
+          $(e.target).qtip('destroy')
 
     @
 

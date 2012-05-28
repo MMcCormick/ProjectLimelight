@@ -1,10 +1,9 @@
 class LL.Models.User extends Backbone.Model
   url: '/api/users'
+  keepInSync: true
+  name: 'user'
 
   initialize: ->
-
-  parse: (resp, xhr) ->
-    LL.App.Users.findOrCreate(resp.id, new LL.Models.User(resp))
 
   following: (model) ->
     if model.get('type') == 'User'

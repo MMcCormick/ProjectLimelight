@@ -1,21 +1,23 @@
 class LL.Models.Post extends Backbone.Model
   url: '/api/posts'
+  keepInSync: true
+  name: 'post'
 
   initialize: ->
     if @get('user')
-      @set('user', LL.App.Users.findOrCreate(@get('user').id, new LL.Models.User(@get('user'))))
+      @set('user', new LL.Models.User(@get('user')))
 
     mentions = []
     if @get('topic_mentions')
       for mention in @get('topic_mentions')
-        mentions.push(LL.App.Topics.findOrCreate(mention.id, mention))
+        mentions.push(new LL.Models.User(mention))
 
     @set('topic_mentions', mentions)
 
     likes = []
     if @get('likes')
       for user in @get('likes')
-        likes.push(LL.App.Users.findOrCreate(user.id, user))
+        likes.push(new LL.Models.User(user))
     @set('likes', likes)
 
     if !@get('comments')
@@ -25,10 +27,6 @@ class LL.Models.Post extends Backbone.Model
     for comment in @get('comments')
       comments.push(new LL.Models.Comment(comment))
     @set('comments', comments)
-
-  # check if it's in the master identity map
-  parse: (resp, xhr) ->
-    LL.App.Posts.findOrCreate(resp.id, new LL.Models.Post(resp))
 
   scorePretty: ->
     parseInt @get('score')

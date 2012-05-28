@@ -25,8 +25,8 @@ class LL.Views.InfluenceIncreases extends Backbone.View
     unless LL.App.get_event_subscription(@model.get('id'), 'influence_change')
       channel.bind 'influence_change', (data) ->
         $(self.el).oneTime 1500, 'influence', ->
-          influence = self.collection.findOrCreate(data.id, data)
-          influence.set('topic', LL.App.Topics.findOrCreate(influence.get('topic').id, influence.get('topic')))
+          influence = new LL.Models.InfluenceIncrease(data)
+          influence.set('topic', new LL.Models.Topic(influence.get('topic')))
           self.prependInfluence(influence, true)
 
       LL.App.subscribe_event(@model.get('id'), 'influence_change')

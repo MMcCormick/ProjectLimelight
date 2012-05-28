@@ -15,7 +15,7 @@ class LL.Views.PostFormPreview extends Backbone.View
     if model
       if model.get('id')
         embedly = new LL.Models.Embedly()
-        embedly.set('limelight_post', LL.App.Posts.findOrCreate(model.get('id'), new LL.Models.Post(model)))
+        embedly.set('limelight_post', new LL.Models.Post(model))
         @setData(embedly)
       else
         @setData(model)

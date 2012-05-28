@@ -43,7 +43,7 @@ class LL.Router extends Backbone.Router
       user = LL.App.current_user
       @showTipTutorial('user_feed')
     else
-      user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
+      user = new LL.Models.User($('#this').data('this'))
 
     # Only load the feed if it's new
     if LL.App.findScreen('user_feed', id)
@@ -79,7 +79,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
+      user = new LL.Models.User($('#this').data('this'))
 
     # Only load the feed if it's new
     if LL.App.findScreen('activity_feed', user.get('id'))
@@ -111,7 +111,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
+      user = new LL.Models.User($('#this').data('this'))
 
     if LL.App.findScreen('like_feed', user.get('id'))
       LL.App.showScreen('like_feed', user.get('id'))
@@ -142,7 +142,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
+      user = new LL.Models.User($('#this').data('this'))
 
     if LL.App.findScreen('user_influence', user.get('id'))
       LL.App.showScreen('user_influence', user.get('id'))
@@ -182,7 +182,7 @@ class LL.Router extends Backbone.Router
     view = new LL.Views.UserSettings()
 
   userFollowers: (id) ->
-    user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
+    user = new LL.Models.User($('#this').data('this'))
 
     if LL.App.findScreen('user_followers', user.get('id'))
       LL.App.showScreen('user_followers', user.get('id'))
@@ -209,7 +209,7 @@ class LL.Router extends Backbone.Router
       collection.fetch({data: {id: user.get('id')}})
 
   userFollowingUsers: (id) ->
-    user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
+    user = new LL.Models.User($('#this').data('this'))
 
     if LL.App.findScreen('user_following_users', user.get('id'))
       LL.App.showScreen('user_following_users', user.get('id'))
@@ -236,7 +236,7 @@ class LL.Router extends Backbone.Router
       collection.fetch({data: {id: user.get('id')}})
 
   userFollowingTopics: (id) ->
-    user = LL.App.Users.findOrCreate($('#this').data('this').id, new LL.Models.User($('#this').data('this')))
+    user = new LL.Models.User($('#this').data('this'))
 
     if LL.App.findScreen('user_following_topics', user.get('id'))
       LL.App.showScreen('user_following_topics', user.get('id'))
@@ -279,7 +279,7 @@ class LL.Router extends Backbone.Router
 
     @hideModal()
 
-    topic = LL.App.Topics.findOrCreate($('#this').data('this').id, $('#this').data('this'))
+    topic = new LL.Models.Topic($('#this').data('this'))
 
     if LL.App.findScreen('topic_feed', topic.get('id'))
       LL.App.showScreen('topic_feed', topic.get('id'))
@@ -307,7 +307,7 @@ class LL.Router extends Backbone.Router
       LL.App.TopicFeed.fetch({data: {id: topic.get('id'), sort: 'newest'}})
 
   topicFollowers: (id) ->
-    topic = LL.App.Topics.findOrCreate($('#this').data('this').id, $('#this').data('this'))
+    topic = new LL.Models.Topic($('#this').data('this'))
 
     if LL.App.findScreen('topic_followers', topic.get('id'))
       LL.App.showScreen('topic_followers', topic.get('id'))
@@ -343,7 +343,7 @@ class LL.Router extends Backbone.Router
     else
       data = null
 
-    post = LL.App.Posts.findOrCreate(id, data)
+    post = new LL.Models.Post(data)
 
     if LL.App.Feed
       if LL.App.Modal.get(id)
@@ -364,7 +364,7 @@ class LL.Router extends Backbone.Router
     else
       data = null
 
-    post = LL.App.Posts.findOrCreate(id, data)
+    post = new LL.Models.Post(data)
 
     if LL.App.Feed
       if LL.App.Modal.get(id)

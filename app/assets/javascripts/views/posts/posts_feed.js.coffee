@@ -109,7 +109,7 @@ class LL.Views.PostsFeed extends Backbone.View
       unless LL.App.get_event_subscription(root_id, 'new_response')
         channel.bind 'new_response', (data) ->
           if root_post.get('root')
-            post = LL.App.Posts.findOrCreate(data.id, new LL.Models.Post(data))
+            post = new LL.Models.Post(data)
             if LL.App.current_user.get('id') == post.get('user').id || LL.App.current_user.following(post.get('user').id)
               root_post.get('personal_responses').push(post)
             else

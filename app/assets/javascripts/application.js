@@ -8,8 +8,9 @@
 //= require modernizr-load-polyfills
 //= require jquery_ujs
 //= require json2
+//= require amplify.store
 //= require underscore
-//= require backbone
+//= require backbone-with-identity-map
 //= require limelight
 //= require_tree ../templates
 //= require_tree ./models

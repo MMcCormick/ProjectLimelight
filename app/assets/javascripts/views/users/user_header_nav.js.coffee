@@ -29,7 +29,7 @@ class LL.Views.UserHeaderNav extends Backbone.View
         channel.bind 'new_notification', (data) ->
           self.model.set('unread_notification_count', self.model.get('unread_notification_count') + 1)
           if self.notifications
-            notification = self.notifications.collection.findOrCreate(data.id, new LL.Models.Notification(data))
+            notification = new LL.Models.Notification(data)
           createGrowl(false, "#{data.triggered_by.username} #{data.sentence}", 'Notification', 'green')
 
         LL.App.subscribe_event("#{self.model.get('id')}_private", 'new_notification')

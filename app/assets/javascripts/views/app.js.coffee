@@ -44,7 +44,7 @@ class LL.Views.App extends Backbone.View
     @user_hover_tabs = {}
 
     # set the current user
-    @current_user = if $('#me').length > 0 then @Users.findOrCreate($('#me').data('user').id, new LL.Models.User($('#me').data('user'))) else null
+    @current_user = if $('#me').length > 0 then new LL.Models.User($('#me').data('user')) else null
 
     # listen to the private user channgel
     if @current_user
@@ -148,7 +148,7 @@ class LL.Views.App extends Backbone.View
     self = @
 
     $(e.target).oneTime 1000, 'topic-hover', ->
-      topic = LL.App.Topics.findOrCreate($(e.currentTarget).data('id'))
+      topic = new LL.Models.Topic({'id': $(e.currentTarget).data('id')})
 
       tab = new LL.Views.TopicHoverTab(model: topic)
 
@@ -166,7 +166,7 @@ class LL.Views.App extends Backbone.View
     self = @
 
     $(e.target).oneTime 1000, 'user-hover', ->
-      user = LL.App.Users.findOrCreate($(e.currentTarget).data('id'))
+      user = new LL.Models.User({'id': $(e.currentTarget).data('id')})
 
       tab = new LL.Views.UserHoverTab(model: user)
 

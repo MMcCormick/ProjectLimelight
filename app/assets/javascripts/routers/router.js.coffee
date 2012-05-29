@@ -364,8 +364,8 @@ class LL.Router extends Backbone.Router
 
 
   talkShow: (id) ->
-    if $('#this').data('type') == 'Talk'
-      post = new LL.Models.Post($('#this').data('this') && $('#this').data('this').id == id)
+    if $('#this').data('type') == 'Talk' && $('#this').data('this').id == id
+      post = new LL.Models.Post($('#this').data('this'))
     else
       post = new LL.Models.Post({'id':id})
       post.fetch(

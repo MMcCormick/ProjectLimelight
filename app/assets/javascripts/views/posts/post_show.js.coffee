@@ -15,8 +15,6 @@ class LL.Views.PostShow extends Backbone.View
     @publicResponses.type = 'PublicResponses'
     @loaded = null
 
-    @model.on('change', @render)
-
   render: =>
     return unless @model
     $(@el).html(@template(post: @model))

@@ -41,7 +41,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
     @tip = true
     @button = 'Next'
     @content = '
-      This widget is a realtime view of the topic influence you\'re gaining as people like what you post.
+      A realtime view of the topic influence you\'re gaining as people like what you post about various topics.
       <br /><br />
       More topic influence means that more people will see what you post about that topic.
     '
@@ -58,6 +58,8 @@ class LL.Views.UserTutorialTips extends Backbone.View
       <br /><br />
       For each post, we show you what people you\'re following are saying about it, and what other users
       are saying about it.
+      <br /><br />  +
+      To see your feed sorted by popularity click the \'Popular\' button in the top right.
     '
 
   renderTip: =>

@@ -1,0 +1,39 @@
+production:
+  host: <%= ENV['MONGOID_HOST'] %>
+  port: <%= ENV['MONGOID_PORT'] %>
+  username: <%= ENV['MONGOID_USERNAME'] %>
+  password: <%= ENV['MONGOID_PASSWORD'] %>
+  database: <%= ENV['MONGOID_DATABASE'] %>
+  raise_not_found_error: false
+  # slaves:
+  #   - host: slave1.local
+  #     port: 27018
+  #   - host: slave2.local
+  #     port: 27019
+
+development:
+  host: localhost
+  database: limelight_development
+  raise_not_found_error: false
+  autocreate_indexes: true
+
+#development:
+#  host: ds029947.mongolab.com
+#  port: 29947
+#  username: heroku_app2036400
+#  password: qdhis08fo5qj9m87r0mc77qa0
+#  database: heroku_app2036400
+
+test:
+  host: localhost
+  database: limelight_test
+  raise_not_found_error: false
+  autocreate_indexes: true
+
+staging:
+  host: <%= ENV['MONGOID_HOST'] %>
+  port: <%= ENV['MONGOID_PORT'] %>
+  username: <%= ENV['MONGOID_USERNAME'] %>
+  password: <%= ENV['MONGOID_PASSWORD'] %>
+  database: <%= ENV['MONGOID_DATABASE'] %>
+  raise_not_found_error: false

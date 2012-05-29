@@ -2,7 +2,6 @@ require "limelight"
 
 class Topic
   include Mongoid::Document
-  include Mongoid::Slug
   include Mongoid::Paranoia
   include Mongoid::Timestamps::Updated
   include Mongoid::CachedJson
@@ -11,8 +10,6 @@ class Topic
   include ImageHelper
 
   include ModelUtilitiesHelper
-
-  cache
 
   @type_of_id = "4eb82a1caaf9060120000081"
   @related_to_id = "4f0a51745b1dc3000500016f"
@@ -30,9 +27,8 @@ class Topic
                   youre youve your yours yourself yourselves)
   class << self; attr_accessor :type_of_id, :related_to_id, :limelight_id, :limelight_feedback_id, :stop_words end
 
-  slug :name
-
   field :name
+  field :slug
   field :summary
   field :short_name
   field :status, :default => 'active'
@@ -59,42 +55,35 @@ class Topic
   field :neo4j_id
   field :is_category, :default => false
 
-  auto_increment :public_id
-
-  belongs_to :user
+  belongs_to :user, index: true
   embeds_many :aliases, :as => :has_alias, :class_name => 'TopicAlias'
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 50 }
   validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
   validates_each :name do |record, attr, value|
-    if Topic.stop_words.include?(value) || !Topic.deleted.where("aliases.slug" => value.to_url).first.nil?
+    if Topic.stop_words.include?(value) || !Topic.deleted.where("aliases.slug" => value.parameterize).first.nil?
       record.errors.add attr, "This topic name is not permitted."
     end
   end
 
   attr_accessible :name, :summary, :aliases, :short_name
 
-  before_create :init_alias
+  before_create :titleize_name, :generate_slug, :init_alias
   after_create :neo4j_create, :add_to_soulmate, :fetch_external_data
   before_update :update_name_alias
   after_update :update_denorms
   before_destroy :remove_from_soulmate, :disconnect
 
-  index [[ :slug, Mongo::ASCENDING ]]
-  index [[ :public_id, Mongo::DESCENDING ]]
-  index [[ :score, Mongo::DESCENDING ]]
-  index [[ :short_name, Mongo::ASCENDING ]]
-  index :aliases
-  index :primary_type_id
+  index({ :slug => 1 })
+  index({ :score => -1 })
+  index({ :response_count => -1 })
+  index({ :primary_type_id => 1 })
+  index({ "aliases.slug" => 1, :primary_type_id => 1 })
 
   # Return the topic slug instead of its ID
   def to_param
     self.slug
-  end
-
-  def encoded_id
-    public_id.to_i.to_s(36)
   end
 
   def created_at
@@ -103,6 +92,24 @@ class Topic
 
   def title
     name
+  end
+
+  def titleize_name
+    self.name = name.titleize
+  end
+
+  def generate_slug
+    possible = name.parameterize.gsub('-', ' ').titleize.gsub(' ', '')
+    found = Topic.where(:slug => possible).first
+    if found
+      count = 0
+      while found
+        count += 1
+        possible = name.parameterize.gsub('-', ' ').titleize.gsub(' ', '') + count
+        found = Topic.where(:slug => possible).first
+      end
+    end
+    self.slug = possible
   end
 
   def freebase_guid
@@ -128,14 +135,14 @@ class Topic
       # make sure the names match up at least a little bit
       if search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 800)
         search['result'].each do |s|
-          if s['name'].to_url.include?(name.to_url) && s['score'] >= 50
+          if s['name'].parameterize.include?(name.parameterize) && s['score'] >= 50
             freebase_search = s
             break
           end
         end
         unless freebase_search
           freebase_search = search['result'].first
-          freebase_search = nil unless (search['result'].first['name'].to_url.include?(name.to_url) && search['result'].first['score'] > 100) || search['result'].first['score'] >= 1500
+          freebase_search = nil unless (search['result'].first['name'].parameterize.include?(name.parameterize) && search['result'].first['score'] > 100) || search['result'].first['score'] >= 1500
         end
       end
     else
@@ -143,14 +150,14 @@ class Topic
       return unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 800)
 
       search['result'].each do |s|
-        if s['name'].to_url == name.to_url && s['score'] >= 50
+        if s['name'].parameterize == name.parameterize && s['score'] >= 50
           freebase_search = s
           break
         end
       end
       # make sure the names match up at least a little bit
       unless !search || freebase_search
-        return unless (search['result'].first['name'].to_url.include?(name.to_url) && search['result'].first['score'] > 100) || search['result'].first['score'] >= 1500
+        return unless (search['result'].first['name'].parameterize.include?(name.parameterize) && search['result'].first['score'] > 100) || search['result'].first['score'] >= 1500
         freebase_search = search['result'].first
       end
 
@@ -181,7 +188,7 @@ class Topic
     # try to connect types
     type_connection = TopicConnection.find(Topic.type_of_id)
     if freebase_search && freebase_search['notable'] && (overwrite_primary_type || !primary_type_id)
-      type_topic = Topic.where("aliases.slug" => freebase_search['notable']['name'].to_url).first
+      type_topic = Topic.where("aliases.slug" => freebase_search['notable']['name'].parameterize).first
       unless type_topic
         type_topic = Topic.new
         type_topic.name = freebase_search['notable']['name']
@@ -191,7 +198,7 @@ class Topic
       set_primary_type(type_topic.name, type_topic.id)
       TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
     elsif freebase_object.types && freebase_object.types.length > 0
-      type_names = freebase_object.types.map{|t| t.name.to_url}
+      type_names = freebase_object.types.map{|t| t.name.parameterize}
       type_topics = Topic.where("aliases.slug" => {"$in" => type_names}, :is_topic_type => true).to_a
       type_topics.each do |t|
         next if primary_type_id || primary_type_id == t.id
@@ -234,18 +241,18 @@ class Topic
   end
 
   def get_alias name
-    self.aliases.detect{|a| a.slug == name.to_url}
+    self.aliases.detect{|a| a.slug == name.parameterize}
   end
 
   def add_alias(new_alias, ooac=false, hidden=false)
     return unless new_alias && !new_alias.blank?
 
     unless get_alias new_alias
-      #existing = Topic.where('aliases.slug' => new_alias.to_url, 'ooac' => true).first
+      #existing = Topic.where('aliases.slug' => new_alias.parameterize, 'ooac' => true).first
       #if existing
       #  return "The '#{existing.name}' topic has a one of a kind alias with this name."
       #else
-        self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.to_url, :hash => new_alias.to_url.gsub('-', ''), :ooac => ooac, :hidden => hidden)
+        self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize, :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
         Resque.enqueue(SmCreateTopic, id.to_s)
         return true
       #end
@@ -258,7 +265,7 @@ class Topic
     return unless old_alias && !old_alias.blank?
     new_aliases = []
     aliases.each do |a|
-      if a.slug != old_alias.to_url
+      if a.slug != old_alias.parameterize
         new_aliases << a
       end
     end
@@ -270,7 +277,7 @@ class Topic
     found = self.aliases.detect{|a| a.id.to_s == alias_id}
     if found
       if ooac == true
-        existing = Topic.where('aliases.slug' => name.to_url).to_a
+        existing = Topic.where('aliases.slug' => name.parameterize).to_a
         if existing.length > 1
           names = []
           existing.each {|t| names << t.name if t.id != id}
@@ -279,7 +286,7 @@ class Topic
         end
       end
       found.name = name unless name.blank?
-      found.slug = name.to_url unless name.blank?
+      found.slug = name.parameterize unless name.blank?
       found.ooac = ooac
       found.hidden = hidden
       Resque.enqueue(SmCreateTopic, id.to_s)
@@ -314,23 +321,17 @@ class Topic
   end
 
   def has_alias? name
-    aliases.detect {|data| data.slug == name.to_url}
+    aliases.detect {|data| data.slug == name.parameterize}
   end
 
   def also_known_as
     also_known_as = Array.new
     aliases.each do |also|
-      if also.slug != name.to_url && also.slug != name.pluralize.to_url && also.slug != name.singularize.to_url && also.slug != short_name
+      if also.slug != name.parameterize && also.slug != name.pluralize.parameterize && also.slug != name.singularize.parameterize && also.slug != short_name
         also_known_as << also.name
       end
     end
     also_known_as
-  end
-
-  class << self
-    def find_by_encoded_id(id)
-      where(:public_id => id.to_i(36)).first
-    end
   end
 
   #
@@ -399,7 +400,6 @@ class Topic
     topic_mention_updates["topic_mentions.$.name"] = name
     topic_mention_updates["topic_mentions.$.slug"] = slug
     topic_mention_updates["topic_mentions.$._id"] = id
-    topic_mention_updates["topic_mentions.$.public_id"] = public_id
     Post.where("topic_mentions._id" => aliased_topic.id).update_all(topic_mention_updates)
 
     # NEO4J: Move Connections
@@ -417,29 +417,30 @@ class Topic
     end
 
     # PUSH FEEDS
-    FeedTopicItem.collection.update(
-            { "mentions" => aliased_topic.id },
-            {
-                    "$set" => { "mentions.$" => id },
-                    "$rename" => {"responses."+aliased_topic.id.to_s => "responses."+id.to_s}
-            },
-            {:multi => true}
-    )
-    FeedTopicItem.collection.update(
-            { "root_mentions" => aliased_topic.id},
-            { "$set" => {"root_mentions.$" => id}},
-            {:multi => true}
-    )
-    FeedLikeItem.collection.update(
-            { "root_id" => aliased_topic.id },
-            { "$set" => {:root_id => id}},
-            {:multi => true}
-    )
-    FeedContributeItem.collection.update(
-            { "root_id" => aliased_topic.id },
-            { "$set" => {:root_id => id}},
-            {:multi => true}
-    )
+    # NOTE!!!! When merge is re-done, cannot use the queries below because of mongoid 3.0
+    #FeedTopicItem.collection.update(
+    #        { "mentions" => aliased_topic.id },
+    #        {
+    #                "$set" => { "mentions.$" => id },
+    #                "$rename" => {"responses."+aliased_topic.id.to_s => "responses."+id.to_s}
+    #        },
+    #        {:multi => true}
+    #)
+    #FeedTopicItem.collection.update(
+    #        { "root_mentions" => aliased_topic.id},
+    #        { "$set" => {"root_mentions.$" => id}},
+    #        {:multi => true}
+    #)
+    #FeedLikeItem.collection.update(
+    #        { "root_id" => aliased_topic.id },
+    #        { "$set" => {:root_id => id}},
+    #        {:multi => true}
+    #)
+    #FeedContributeItem.collection.update(
+    #        { "root_id" => aliased_topic.id },
+    #        { "$set" => {:root_id => id}},
+    #        {:multi => true}
+    #)
 
     # Update primary_type_id's on other topics
     Topic.where(:primary_type_id => aliased_topic.id).update_all(:primary_type_id => id, :primary_type => name)
@@ -492,7 +493,15 @@ class Topic
     end
 
     # update those users following this topic
-    User.collection.update({:following_topics => id}, {"$pull" => {"following_topics" => id}, "$inc" => {"following_topics_count" => -1}})
+    User.where(:following_topics => id).
+        update_all(
+          "$inc" => {
+            :following_topics_count => -1,
+          },
+          "$pull" => {
+            :following_topics => id
+          }
+        )
 
     # remove from topic feeds
     FeedTopicItem.topic_destroy(self)
@@ -593,7 +602,7 @@ class Topic
 
     # Checks if there is an untyped topic with an alias equal to the name. If so, returns that topic, if not, returns new topic
     def find_untyped_or_create(name, user)
-      alias_topic = Topic.where("aliases.slug" => name.to_url, "primary_type_id" => {"$exists" => false}).first
+      alias_topic = Topic.where("aliases.slug" => name.parameterize, "primary_type_id" => {"$exists" => false}).first
       if alias_topic
         alias_topic
       else
@@ -629,7 +638,7 @@ class Topic
         if ooac == true
           hash_query['aliases.ooac'] = true
         end
-        matches = Topic.where(:status => 'active').any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).order_by([[:pm, :desc]])
+        matches = Topic.where(:status => 'active').any_of({:short_name => {'$in' => (with_counts ? word_combos.keys : word_combos)}}, {'aliases.hash' => hash_query}).desc(:pm)
         matches = matches.limit(limit) if limit
       else
         matches = []
@@ -721,7 +730,7 @@ class Topic
       primary_type_updates["primary_type"] = name
     end
 
-    if name_changed? || slug_changed? || slugged_attributes_changed?
+    if name_changed? || slug_changed?
       soulmate = true
     end
 

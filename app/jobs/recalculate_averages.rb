@@ -20,13 +20,13 @@ class RecalculateAverages
       return {amount: average};
     };"
 
-    @results = PopularityResults.collection.map_reduce(map, reduce, :out => "popularity_averages")
-
     averages = SiteData.where(:name => 'object_averages').first
     averages = SiteData.new(:name => 'object_averages') unless averages
-    @results.find().each do |doc|
+
+    @results = PopularityResults.map_reduce(map, reduce).out(:replace => "popularity_averages").each do |doc|
       averages.data[doc['_id']] = doc['value']['amount']
     end
+
     averages.save
   end
 

@@ -109,7 +109,7 @@ module Limelight #:nodoc:
       elsif self.class.name == 'Topic'
         path = 'topics'
       else
-        path = self.class.name.to_url.pluralize
+        path = self.class.name.downcase.pluralize
       end
 
       "#{path}/#{id.to_s}"
@@ -283,7 +283,7 @@ module Limelight #:nodoc:
       # Searches for strings following @username. Returns an array of usernames.
       content.scan(/\@([0-9a-zA-Z]*)/).each do |user|
         unless found_users.include? user[0]
-          found_users << user[0].to_url
+          found_users << user[0].parameterize
         end
       end
 
@@ -292,20 +292,20 @@ module Limelight #:nodoc:
     end
 
     def set_topic_mentions
+      save_new_topic_mentions(topic_mention_names) if topic_mention_names && topic_mention_names.length > 0
+
       topic_mentions.each do |topic|
         if !primary_topic_pm || topic.score > primary_topic_pm
           self.primary_topic_mention = topic.id
           self.primary_topic_pm = topic.score
         end
       end
-
-      save_new_topic_mentions(topic_mention_names) if topic_mention_names && topic_mention_names.length > 0
     end
 
     # takes an array of new topic names
     def save_new_topic_mentions(topic_mention_names)
       # See if any of the new topic slugs are already in the DB. Check through topic aliases! Only connect to topics without a type assigned.
-      new_topic_mentions = topic_mention_names.map {|name| [name, name.to_url]}
+      new_topic_mentions = topic_mention_names.map {|name| [name, name.parameterize]}
 
       topic_slugs = new_topic_mentions.map {|data| data[1]}
       # topics with matching aliases that are NOT already typed
@@ -329,7 +329,7 @@ module Limelight #:nodoc:
           end
         end
 
-        topic_mentions << found_topic if found_topic
+        self.topic_mentions << found_topic if found_topic
       end
     end
 
@@ -439,12 +439,8 @@ module Limelight #:nodoc:
         # Update user if not a link, video, or picture and this is not a :new action
         elsif !["Link", "Video", "Picture"].include?(self.class.name)
           action.pop_snippets.new(:amount => amt, :id => user_id, :object_type => "User")
-          User.collection.update(
-            {:_id => user_id},
-            {
-              "$inc" => { :score => amt }
-            }
-          )
+          user.score += amt # the post's user (creator)
+          user.save
           Resque.enqueue_in(10.minutes, ScoreUpdate, 'User', user_id.to_s)
           Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => amt})
         end
@@ -475,25 +471,23 @@ module Limelight #:nodoc:
               )
               increase.id = topic.name
 
-              Pusher[user_id.to_s].trigger('influence_change', increase.to_json)
+              Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
             end
           end
+
           # Update the popularities on affected objects
           unless affected_topic_ids.empty?
-            Topic.collection.update(
-              {:_id => {"$in" => affected_topic_ids}},
-              {
-                "$inc" => {
-                  :score => topic_amt,
-                  :response_count => 1,
-                  "influencers."+user_id.to_s+".influence" => topic_amt
-                },
-                "$push" => {
-                  :talking_ids => user_id
-                }
-              },
-              {:upsert => true, :multi => true}
-            )
+            Topic.collection.where(:_id => {"$in" => affected_topic_ids}).
+                  update_all(
+                    "$inc" => {
+                      :score => topic_amt,
+                      :response_count => 1,
+                      "influencers."+user_id.to_s+".influence" => topic_amt
+                    },
+                    "$push" => {
+                      :talking_ids => user_id
+                    }
+                  )
             affected_topic_ids.each do |tid|
               Resque.enqueue_in(10.minutes, ScoreUpdate, 'Topic', tid.to_s)
             end

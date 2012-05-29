@@ -13,6 +13,7 @@ class LL.Views.PostsFeed extends Backbone.View
     # A tile is the backbone view representing one tile on the feed
     @tiles = []
 
+    @default_text = 'There are no items in this feed'
     @on_add = 'append'
     @collection.on('reset', @render)
     @collection.on('add', @handleNewPost)
@@ -29,7 +30,7 @@ class LL.Views.PostsFeed extends Backbone.View
     self = @
 
     if @collection.models.length == 0
-      $(@el).append("<div class='none'>There are no items in this feed</div>")
+      $(@el).append("<div class='none'>#{@default_text}</div>")
     else
       $(@el).remove('.none')
 

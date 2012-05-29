@@ -1,6 +1,6 @@
 class LL.Models.InfluenceIncrease extends Backbone.Model
-  keepInSync: true
-  name: 'influence-increase'
+#  keepInSync: true
+#  name: 'influence-increase'
 
   initialize: =>
     if @get('user')

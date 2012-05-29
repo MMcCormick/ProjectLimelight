@@ -12,8 +12,8 @@ class AutoFollowFBLikes
           fb_page = fb.get_object(like['id'])
           next if !fb_page || fb_page['likes'] < 500
 
-          topic = Topic.where("aliases.slug" => like['name'].to_url).order_by(:score, :desc).first
-          type = Topic.where("aliases.slug" => like['category'].to_url).order_by(:score, :desc).first
+          topic = Topic.where("aliases.slug" => like['name'].parameterize).desc(:score).first
+          type = Topic.where("aliases.slug" => like['category'].parameterize).desc(:score).first
 
           unless type
             type = Topic.new

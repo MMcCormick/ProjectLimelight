@@ -25,14 +25,14 @@ class TopicConSug
 
   before_update :acceptance
 
-  index(
-    [
-      [ :topic1_id, Mongo::DESCENDING ],
-      [ :topic2_id, Mongo::DESCENDING ],
-      [ :con_id, Mongo::ASCENDING ]
-    ]
-  )
-  index [[ :topic2_id, Mongo::DESCENDING ]]
+  #index(
+  #  [
+  #    [ :topic1_id, Mongo::DESCENDING ],
+  #    [ :topic2_id, Mongo::DESCENDING ],
+  #    [ :con_id, Mongo::ASCENDING ]
+  #  ]
+  #)
+  #index [[ :topic2_id, Mongo::DESCENDING ]]
 
   def unique_suggestion
     if TopicConSug.exists?(conditions: { topic1_id: topic1_id, topic2_id: topic2_id, con_id: con_id, pull_from: pull_from,

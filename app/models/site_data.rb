@@ -4,6 +4,6 @@ class SiteData
   field :name
   field :data, :default => {}
 
-  index :name
+  index({ :name => 1 })
 
 end

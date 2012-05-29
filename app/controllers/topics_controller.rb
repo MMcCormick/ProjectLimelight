@@ -7,7 +7,12 @@ class TopicsController < ApplicationController
   def index
     @topics = Topic.all
     if params[:sort]
-      @topics = @topics.order_by(params[:sort][0], params[:sort][1])
+      if params[:sort][1] == 'desc'
+        @topics = @topics.desc(params[:sort][0])
+      else
+        @topics = @topics.asc(params[:sort][0])
+      end
+
     end
 
     if params[:limit] && params[:limit].to_i < 100
@@ -29,9 +34,9 @@ class TopicsController < ApplicationController
   def show
     # Doesn't use find_by_slug() because it doesn't work after Topic.unscoped (deleted topics are ignored)
     if params[:slug]
-      @this = Topic.unscoped.find_by_slug(params[:slug])
+      @this = Topic.where(:slug => params[:slug]).first
     else
-      @this = Topic.unscoped.find(params[:id])
+      @this = Topic.find(params[:id])
     end
 
     not_found("Topic not found") unless @this
@@ -71,7 +76,7 @@ class TopicsController < ApplicationController
   end
 
   def edit
-    @topic = Topic.find_by_slug(params[:id])
+    @topic = Topic.where(:slug => params[:id]).first
     not_found("Topic not found") unless @topic
     authorize! :edit, @topic
 
@@ -98,7 +103,7 @@ class TopicsController < ApplicationController
 
   def destroy
     authorize! :manage, :all
-    if topic = Topic.find_by_slug(params[:id])
+    if topic = Topic.where(:slug => params[:id]).first
       topic.destroy
       response = build_ajax_response(:ok, nil, "Topic deleted")
       status = 200
@@ -111,7 +116,7 @@ class TopicsController < ApplicationController
   end
 
   def suggestions
-    @user = params[:id] ? User.find_by_slug(params[:id]) : current_user
+    @user = params[:id] ? User.where(:username => params[:id]).first : current_user
 
     not_found("User not found") unless @user
 
@@ -125,7 +130,7 @@ class TopicsController < ApplicationController
 
     @title = @topic.name + " followers"
     @description = "A list of all users who are following" + @topic.name
-    followers = User.where(:following_topics => @topic.id).order_by(:slug, :asc)
+    followers = User.where(:following_topics => @topic.id).asc(:slug)
     render :json => followers.map {|u| u.as_json}
   end
 
@@ -231,7 +236,7 @@ class TopicsController < ApplicationController
   def merge
     topic = Topic.find(params[:target_id])
     authorize! :update, topic
-    aliased_topic = Topic.find_by_slug(params[:id])
+    aliased_topic = Topic.where(:slug => params[:id]).first
 
     unless topic.id == aliased_topic.id
       topic.merge(aliased_topic)

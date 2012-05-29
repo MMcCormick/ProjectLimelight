@@ -8,10 +8,10 @@ class NewsletterMailer < ActionMailer::Base
     interests = Neo4j.user_interests(user.id, 20)
     interests = interests[:specific].map{ |i| BSON::ObjectId(i[:data]['id']) }
 
-    talks = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Talk').order_by([[:p, :desc]]).limit(3).to_a
-    links = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Link').order_by([[:p, :desc]]).limit(3).to_a
-    pictures = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Picture').order_by([[:p, :desc]]).limit(3).to_a
-    videos = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Video').order_by([[:p, :desc]]).limit(3).to_a
+    talks = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Talk').desc(:p).limit(3).to_a
+    links = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Link').desc(:p).limit(3).to_a
+    pictures = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Picture').desc(:p).limit(3).to_a
+    videos = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Video').desc(:p).limit(3).to_a
 
     obj_ids = []
     [talks, links, pictures, videos].each do |objs|

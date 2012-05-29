@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     authorize! :manage, :all if params[:require_admin]
 
     if params[:slug]
-      @this = User.find_by_slug(params[:slug])
+      @this = User.where(:slug => params[:slug]).first
     else
       @this = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
     end
@@ -87,19 +87,19 @@ class UsersController < ApplicationController
   end
 
   def user_influence_increases
-    @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+    @user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
     not_found("User not found") unless @user
     increases = @user.influence_increases(params[:limit].to_i, params[:with_post] == "true")
     render :json => increases.map {|i| i.as_json(:user => current_user)}
   end
 
   def influencer_topics
-    topics = Topic.where("influencers.#{params[:id]}.influencer" => true).order_by("influencers.#{params[:id]}.influence", :desc)
+    topics = Topic.where("influencers.#{params[:id]}.influencer" => true).desc("influencers.#{params[:id]}.influence")
     render :json => topics.map { |t| InfluencerTopic.new({ :topic => t.as_json }.merge(t.influencers[params[:id]])) }, status: 200
   end
 
   def almost_influencer_topics
-    topics = Topic.where("influencers.#{params[:id]}.influencer" => false).order_by("influencers.#{params[:id]}.offset", :asc).limit(10).to_a
+    topics = Topic.where("influencers.#{params[:id]}.influencer" => false).asc("influencers.#{params[:id]}.offset").limit(10).to_a
     render :json => topics.map { |t| InfluencerTopic.new({ :topic => t.as_json }.merge(t.influencers[params[:id]])) }, status: 200
   end
 
@@ -114,7 +114,7 @@ class UsersController < ApplicationController
 
     @title = (signed_in? && current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
     @description = "A list of all users who are following" + @user.username
-    followers = User.where(:following_users => @user.id).order_by(:slug, :asc)
+    followers = User.where(:following_users => @user.id).asc(:slug)
     render :json => followers.map {|u| u.as_json}
   end
 
@@ -124,7 +124,7 @@ class UsersController < ApplicationController
 
     @title = "Users " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all users who are being followed by" + @user.username
-    following_users = User.where(:_id.in => @user.following_users).order_by(:slug, :asc)
+    following_users = User.where(:_id.in => @user.following_users).asc(:slug)
     render :json => following_users.map {|u| u.as_json}
   end
 
@@ -134,7 +134,7 @@ class UsersController < ApplicationController
 
     @title = "Topics " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all topics " + @user.username + " follows"
-    following_topics = Topic.where(:_id.in => @user.following_topics).order_by(:name, :asc)
+    following_topics = Topic.where(:_id.in => @user.following_topics).asc(:name)
     render :json => following_topics.map {|u| u.as_json}
   end
 
@@ -145,7 +145,7 @@ class UsersController < ApplicationController
   # Includes core objects mentioning this user
   def feed
     if signed_in?
-      @user = params[:id] && params[:id] != "0" ? User.find_by_slug(params[:id]) : current_user
+      @user = params[:id] && params[:id] != "0" ? User.where(:slug => params[:id]).first : current_user
 
       not_found("User not found") unless @user
 
@@ -173,7 +173,7 @@ class UsersController < ApplicationController
   def notifications
     not_found("User not found") unless current_user
 
-    notifications = Notification.where(:user_id => current_user.id).order_by(:_id, :desc).limit(20).to_a
+    notifications = Notification.where(:user_id => current_user.id).desc(:_id).limit(20).to_a
 
     ids = notifications.map {|n| n.id}
     if ids.length > 0

@@ -11,7 +11,7 @@ class LL.Views.UserInfluence extends Backbone.View
     @increases = new LL.Collections.InfluenceIncreases()
     @increasesView = new LL.Views.InfluenceIncreasesFull(collection: @increases)
     $('.increases .meat').append(@increasesView.render().el)
-    @increases.fetch({data: {id: @user.get('slug'), limit: 10, with_post: true}})
+    @increases.fetch({data: {id: @user.get('id'), limit: 10, with_post: true}})
 
     @influencerTopics = new LL.Collections.InfluencerTopics()
     @influencerTopicsView = new LL.Views.InfluencerTopicsFull(collection: @influencerTopics)

@@ -1,8 +1,6 @@
 class PopularityAction
   include Mongoid::Document
 
-  cache
-
   field :t, :as => :type
   field :st, :as => :subtype
   field :uid, :as => :user_id
@@ -11,7 +9,7 @@ class PopularityAction
 
   embeds_many :pop_snippets, :as => :pop_ac_snip
 
-  index [[ :et, Mongo::DESCENDING ]]
+  index({ :et => -1 })
 
   belongs_to :user
 

@@ -3,11 +3,8 @@ class User
   include Mongoid::Paranoia
   include Mongoid::Timestamps::Updated
   include Mongoid::CachedJson
-  include Mongoid::Slug
   include Limelight::Images
   include ModelUtilitiesHelper
-
-  cache
 
   @marc_id = "4eb9cda1cddc7f4068000042"
   @matt_id = "4ebf1748cddc7f0c9f000002"
@@ -20,8 +17,7 @@ class User
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   ## Database authenticatable
-  field :email,              :type => String, :null => false
-  field :encrypted_password, :type => String, :null => false
+  field :encrypted_password, :type => String
 
   ## Trackable
   field :sign_in_count,      :type => Integer
@@ -42,31 +38,10 @@ class User
   ## Rememberable
   field :remember_created_at, :type => Time
 
-  # Denormilized:
-  # Post.user_snippet.username
-  # Post.user_mentions.username
-  # Notification.object_user.username
-  # Notification.triggered_by.username
-  # Comment.user_snippet.username
   field :username
-  slug :username
-
-  # Denormilized:
-  # Post.user_snippet.first_name
-  # Post.user_mentions.first_name
-  # Notification.object_user.first_name
-  # Notification.triggered_by.first_name
-  # Comment.user_snippet.first_name
+  field :slug
   field :first_name
-
-  # Denormilized:
-  # Post.user_snippet.last_name
-  # Post.user_mentions.last_name
-  # Notification.object_user.last_name
-  # Notification.triggered_by.last_name
-  # Comment.user_snippet.last_name
   field :last_name
-
   field :status, :default => 'active'
   field :email
   field :gender
@@ -99,8 +74,6 @@ class User
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id
 
-  auto_increment :public_id
-
   embeds_many :social_connects
 
   has_many :posts
@@ -129,17 +102,17 @@ class User
     user.validate :username_change
   end
 
+  before_create :generate_slug
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff, :send_personal_email
   after_update :update_denorms
   before_destroy :remove_from_soulmate
 
-  index [[ :slug, Mongo::ASCENDING ]]
-  index [[ :public_id, Mongo::DESCENDING ]]
-  index [[ :score, Mongo::DESCENDING ]]
-  index :email
-  index :following_topics
-  index :following_users
-  index "social_connects"
+  index({ :slug => 1 })
+  index({ :email => 1 })
+  index({ :following_topics => 1 })
+  index({ :following_users => 1 })
+  index({ :following_users => 1 })
+  index({ "social_connects" => 1 })
 
   # Return the users slug instead of their ID
   def to_param
@@ -148,6 +121,10 @@ class User
 
   def created_at
     id.generation_time
+  end
+
+  def generate_slug
+    self.slug = username.downcase
   end
 
   def is_active?
@@ -299,7 +276,7 @@ class User
       user.followers_count -= 1
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s, 'users', 'users')
       Resque.enqueue(SmUserUnfollowUser, id.to_s, user.id.to_s)
-      Resque.enqueue(PushUnfollowUser, id.to_s, user.id.to_s)
+      #Resque.enqueue(PushUnfollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
 
       user.save
@@ -344,7 +321,7 @@ class User
       self.following_topics_count -= 1
       topic.followers_count -= 1
       Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s, 'users', 'topics')
-      Resque.enqueue(PushUnfollowTopic, id.to_s, topic.id.to_s)
+      #Resque.enqueue(PushUnfollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       topic.save
 
@@ -470,7 +447,7 @@ class User
 
   def influence_increases(limit, full=false)
     increases = []
-    actions = PopularityAction.where("pop_snippets._id" => id, "pop_snippets.ot" => 'Topic').order_by(:et, :desc).limit(limit)
+    actions = PopularityAction.where("pop_snippets._id" => id, "pop_snippets.ot" => 'Topic').desc(:et).limit(limit)
 
     actions.each do |action|
       action.pop_snippets.each do |snip|

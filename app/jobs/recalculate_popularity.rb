@@ -28,8 +28,6 @@ class RecalculatePopularity
       return result;
     };"
 
-    @results = PopularityAction.collection.map_reduce(map, reduce, :query => {:et => {'$gte' => Chronic.parse("three months ago").utc.to_i}}, :out => "popularity_results")
-
     averages = SiteData.where(:name => 'object_averages').first
     if averages
       averages.data.delete('User')
@@ -51,7 +49,7 @@ class RecalculatePopularity
       }
     end
 
-    @results.find().each do |doc|
+    @results = PopularityAction.where(:et => {'$gte' => Chronic.parse("three months ago").utc.to_i}).map_reduce(map, reduce).out(:replace => "popularity_results").each do |doc|
       # Normalize the popularity
       normalized_value = doc["value"]["amount"]
       case doc["value"]["type"]

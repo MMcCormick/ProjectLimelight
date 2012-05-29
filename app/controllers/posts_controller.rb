@@ -7,11 +7,7 @@ class PostsController < ApplicationController
   end
 
   def show
-    if params[:encoded_id]
-      @this = Post.unscoped.find_by_encoded_id(params[:id])
-    else
-      @this = Post.unscoped.find(params[:id])
-    end
+    @this = Post.find(params[:id])
 
     not_found("Post not found") unless @this
 
@@ -53,7 +49,7 @@ class PostsController < ApplicationController
         @post.user_mentions.each do |u|
           notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
           if notification
-            Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.to_json)
+            Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.as_json)
           end
         end
       end
@@ -75,7 +71,7 @@ class PostsController < ApplicationController
   end
 
   def disable
-    post = Post.find_by_encoded_id(params[:id])
+    post = Post.find(params[:id])
     if post
       authorize! :update, post
       post.disable
@@ -183,7 +179,7 @@ class PostsController < ApplicationController
       topic = Topic.find(params[:topic_id])
       not_found("Topic not found") unless topic
     else
-      topic = Topic.where("aliases.slug" => params[:topic_name].to_url, "primary_type_id" => {"$exists" => false}).first
+      topic = Topic.where("aliases.slug" => params[:topic_name].parameterize, "primary_type_id" => {"$exists" => false}).first
       unless topic
         topic = current_user.topics.build({name: params[:topic_name]})
         topic.save

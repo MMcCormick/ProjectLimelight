@@ -4,5 +4,5 @@
 
 <div class='meat'>
   <div class="code"><%= @user.get('invite_code').code %></div>
-  <div class="remaining"><%= @user.get('invite_code').remaining %> Remaining</div>
+  <div class="remaining"><%= @user.get('invite_code').allotted - @user.get('invite_code').used %> Remaining</div>
 </div>

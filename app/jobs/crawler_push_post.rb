@@ -54,12 +54,12 @@ class CrawlerPushPost
             if e['disambiguated'] && e['disambiguated']['freebase']
               topic = Topic.where(:freebase_guid => e['disambiguated']['freebase']).first
               unless topic # didn't find the topic with the freebase guid, check names
-                topic = Topic.where("aliases.slug" => e['disambiguated']['name'].to_url, :primary_type_id => {'$exists' => true}).order_by(:response_count, :desc).first
+                topic = Topic.where("aliases.slug" => e['disambiguated']['name'].parameterize, :primary_type_id => {'$exists' => true}).desc(:response_count).first
                 topic.freebase_guid = e['disambiguated']['freebase'] if topic
               end
             else
-              name = e['disambiguated'] ? e['disambiguated']['name'].to_url : e['text'].to_url
-              topic = Topic.where("aliases.slug" => name, :primary_type_id => {'$exists' => true}).order_by(:response_count, :desc).first
+              name = e['disambiguated'] ? e['disambiguated']['name'].parameterize : e['text'].parameterize
+              topic = Topic.where("aliases.slug" => name, :primary_type_id => {'$exists' => true}).desc(:response_count).first
             end
 
             unless topic # create the topic if it's not already in the DB, and freebase has a decent match for it
@@ -98,7 +98,7 @@ class CrawlerPushPost
       # get topics in the news title
       combinations = CrawlerPushPost.combinalities(link_data['title'])
 
-      extra_topics = Topic.where("aliases.slug" => {"$in" => combinations.map{|c| c.to_url}}).order_by(:response_count, :desc)
+      extra_topics = Topic.where("aliases.slug" => {"$in" => combinations.map{|c| c.parameterize}}).desc(:response_count)
       extra_topics.each do |t|
         unless t.freebase_id
           Resque.enqueue(TopicFetchExternalData, t.id.to_s)
@@ -106,7 +106,7 @@ class CrawlerPushPost
         end
 
         # skip this topic if we already have a topic with this topics id, this topics name, or a topic whos aliases include this topics name
-        next if topics.detect{|t2| t2.id == t.id || t2.name.to_url == t.name.to_url || t2.aliases.detect {|a| a.slug == t.name.to_url}}
+        next if topics.detect{|t2| t2.id == t.id || t2.name.parameterize == t.name.parameterize || t2.aliases.detect {|a| a.slug == t.name.parameterize}}
         topics << t
       end
 
@@ -118,7 +118,7 @@ class CrawlerPushPost
       # delete less specific topics ("Facebook IPO" should take precedence over "Facebook")
       delete_at_ids = []
       topics.each do |t|
-        found = topics.detect{|t2| t2.id != t.id && t.name.to_url.include?(t2.name.to_url)}
+        found = topics.detect{|t2| t2.id != t.id && t.name.parameterize.include?(t2.name.parameterize)}
         delete_at_ids << found.id if found
       end
       topics.delete_if {|t| delete_at_ids.include?(t.id)} if delete_at_ids.length > 0
@@ -137,7 +137,7 @@ class CrawlerPushPost
         response[:title] = response[:title].split(' ')
 
         # find and take out any provider names at the end of string
-        if response[:title].last.gsub(' ', '').to_url.include? (link_data['provider_name'].gsub(' ', '').to_url)
+        if response[:title].last.gsub(' ', '').parameterize.include? (link_data['provider_name'].gsub(' ', '').parameterize)
           response[:title].pop
           if ['-', '|', '--', '/', '\\'].include?(response[:title].last)
             response[:title].pop
@@ -145,7 +145,7 @@ class CrawlerPushPost
         end
 
         # find and take out any provider names at the start of string
-        if response[:title].first.gsub(' ', '').to_url.include? (link_data['provider_name'].gsub(' ', '').to_url)
+        if response[:title].first.gsub(' ', '').parameterize.include? (link_data['provider_name'].gsub(' ', '').parameterize)
           response[:title].shift
           if ['-', '|', '--', '/', '\\'].include?(response[:title].first)
             response[:title].shift
@@ -186,7 +186,7 @@ class CrawlerPushPost
         next if used_ids.include?(t.id.to_s)
         puts "used"
         used_ids << t.id.to_s
-        post.save_topic_mention(t)
+        post.topic_mentions << t unless post.topic_mention_ids.include?(t.id)
       end
 
       if post.save

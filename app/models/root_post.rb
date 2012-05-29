@@ -42,7 +42,7 @@ class RootPost
             :activity_responses => activity_responses.map {|r| r.as_json(options)},
             :public_responses => public_responses.map {|r| r.as_json(options)},
             :personal_responses => personal_responses.map {|r| r.as_json(options)},
-            :reasons => push_item ? generate_reasons(push_item.reasons) : []
+            :reasons => push_item && root.class.name != 'Topic' ? generate_reasons(push_item.reasons) : []
     }
   end
 end

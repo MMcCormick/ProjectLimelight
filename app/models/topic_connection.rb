@@ -2,8 +2,6 @@ class TopicConnection
   include Mongoid::Document
   include Mongoid::Timestamps::Updated
 
-  cache
-
   field :name
   field :reverse_name, :default => nil
   field :inline
@@ -11,18 +9,18 @@ class TopicConnection
   field :reverse_pull_from, :default => false, :type => Boolean
   field :user_id
 
-  belongs_to :user
+  belongs_to :user, index: true
 
   validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
   validates :user_id, :presence => true
 
   attr_accessible :name, :reverse_name, :pull_from, :reverse_pull_from, :inline
 
-  index [[ :name, Mongo::ASCENDING ]]
+  index({ :name => 1 })
 
   # Return the topic slug instead of its ID
   def to_param
-    self.name.to_url
+    self.name.parameterize
   end
 
   def created_at

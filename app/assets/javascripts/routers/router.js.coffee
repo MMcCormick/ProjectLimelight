@@ -64,6 +64,7 @@ class LL.Router extends Backbone.Router
 
       collection = new LL.Collections.UserFeed
       feed = new LL.Views.PostsFeed(collection: collection)
+      feed.default_text = "Streaming posts from #{user.get('following_topics_count')} topics and #{user.get('following_users_count')} users... Follow more things to expand your feed!"
       feed.channel = "#{user.get('id')}_realtime"
       LL.App.Feed = feed
       screen['components'].push(feed)
@@ -364,11 +365,15 @@ class LL.Router extends Backbone.Router
 
   talkShow: (id) ->
     if $('#this').data('type') == 'Talk'
-      data = new LL.Models.Post($('#this').data('this'))
+      post = new LL.Models.Post($('#this').data('this') && $('#this').data('this').id == id)
     else
-      data = {'id':id}
-
-    post = new LL.Models.Post(data)
+      post = new LL.Models.Post({'id':id})
+      post.fetch(
+        {data: {id: post.get('id')}},
+        success: (model, response) ->
+          model.set(response, {silent: true})
+          model.trigger('reset')
+      )
 
     if LL.App.Feed
       if LL.App.Modal.get(id)

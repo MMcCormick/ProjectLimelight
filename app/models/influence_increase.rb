@@ -22,19 +22,19 @@ class InfluenceIncrease
             :id => topic.name,
             :_id => topic.id.to_s,
             :name => topic.name,
-            :public_id => topic.public_id,
             :slug => topic.slug
     }
   end
 
   def as_json(options={})
     {
-            :id => topic_id.to_s,
+            :id => BSON::ObjectId.new.to_s,
             :amount => amount,
             :reason => reason,
             :topic => topic.as_json,
             :user => user.as_json,
             :action => action,
+            :topic_id => topic_id.to_s,
             :post => post ? post.as_json(:user => options[:user]) : nil,
             :triggered_by => triggered_by ? triggered_by.as_json() : nil,
             :created_at_pretty => created_at_pretty
@@ -44,7 +44,7 @@ class InfluenceIncrease
   class << self
     def influence_increases
       increases = []
-      actions = PopularityAction.order_by(:et, :desc).limit(75)
+      actions = PopularityAction.desc(:et).limit(75)
       actions.each do |action|
         action.pop_snippets.each do |snip|
           if snip.ot == "Topic" && snip.a > 0
@@ -61,8 +61,8 @@ class InfluenceIncrease
 
       topics = {}
       users = {}
-      tmp_topics = Topic.where(:_id.in => increases.map{|i| i.topic_id})
-      tmp_users = User.where(:_id.in => increases.map{|i| i.user_id})
+      tmp_topics = Topic.where(:_id => {"$in" => increases.map{|i| i.topic_id}})
+      tmp_users = User.where(:_id => {"$in" => increases.map{|i| i.user_id}})
       tmp_topics.each {|t| topics[t.id.to_s] = t}
       tmp_users.each {|u| users[u.id.to_s] = u}
 

@@ -1,6 +1,6 @@
-<img src='<%= @notification.get('triggered_by').images.square.small %>' />
+<img src='<%= @notification.get('triggered_by').get('images').square.small %>' />
 <div class='content'>
-  <a class="ulink" data-id="<%= @notification.get('triggered_by').id %>" href="/users/<%= @notification.get('triggered_by').username %>"><%= @notification.get('triggered_by').username %></a>
+  <a class="ulink" data-id="<%= @notification.get('triggered_by').get('id') %>" href="/users/<%= @notification.get('triggered_by').get('username') %>"><%= @notification.get('triggered_by').get('username') %></a>
   <%= @notification.get('sentence') %>
 </div>
 <div class='time'>

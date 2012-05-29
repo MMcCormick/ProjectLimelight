@@ -8,7 +8,7 @@ namespace :limelight_neo4j do
     topics.each do |t|
       node = Neo4j.neo.get_node_index('topics', 'uuid', t.id.to_s)
       unless node
-        node = Neo4j.neo.create_node('uuid' => t.id.to_s, 'type' => 'topic', 'name' => t.name, 'slug' => t.slug, 'public_id' => t.public_id)
+        node = Neo4j.neo.create_node('uuid' => t.id.to_s, 'type' => 'topic', 'name' => t.name, 'slug' => t.slug)
       end
       Neo4j.neo.add_node_to_index('topics', 'uuid', t.id.to_s, node)
       t.save
@@ -21,7 +21,7 @@ namespace :limelight_neo4j do
       # add the user node
       node = Neo4j.neo.get_node_index('users', 'uuid', u.id.to_s)
       unless node
-        node = Neo4j.neo.create_node('uuid' => u.id.to_s, 'type' => 'user', 'username' => u.username, 'slug' => u.slug, 'public_id' => u.public_id)
+        node = Neo4j.neo.create_node('uuid' => u.id.to_s, 'type' => 'user', 'username' => u.username, 'slug' => u.slug)
       end
       Neo4j.neo.add_node_to_index('users', 'uuid', u.id.to_s, node)
 

@@ -7,16 +7,14 @@ class Comment
   include Limelight::Acl
   include ModelUtilitiesHelper
 
-  cache
-
   field :content
   field :status, :default => "active"
   field :parent_id
   field :depth, :default => 0
   field :path, :default => ""
 
-  belongs_to :post
-  belongs_to :user
+  belongs_to :post, index: true
+  belongs_to :user, index: true
 
   validates :post, :presence => true
   validates :content, :length => { :minimum => 3, :maximum => 200, :message => :length }

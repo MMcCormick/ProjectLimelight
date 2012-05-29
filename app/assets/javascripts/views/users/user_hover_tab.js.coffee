@@ -2,11 +2,9 @@ class LL.Views.UserHoverTab extends Backbone.View
   template: JST['users/hover_tab']
 
   initialize: ->
-    @model.on("change", @render)
 
   render: =>
     self = @
-
     score = new LL.Views.Score(model: self.model)
 
     talk = new LL.Views.TalkButton()

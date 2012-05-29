@@ -6,21 +6,9 @@ class FeedTopicItem
   field :mentions
   field :p, :default => 0
 
-  index [[ :root_id, Mongo::DESCENDING ]]
-  index(
-    [
-      [ :root_type, Mongo::ASCENDING ],
-      [ :mentions, Mongo::DESCENDING ],
-      [ :p, Mongo::DESCENDING ]
-    ]
-  )
-  index(
-    [
-      [ :root_type, Mongo::DESCENDING ],
-      [ :mentions, Mongo::DESCENDING ],
-      [ :last_response_time, Mongo::DESCENDING ]
-    ]
-  )
+  index({ :root_id => -1 })
+  index({ :mentions => 1, :last_response_time => -1 })
+  index({ :mentions => 1, :p => -1 })
 
   def created_at
     id.generation_time
@@ -35,10 +23,10 @@ class FeedTopicItem
       root_id = post.root_type == 'Topic' ? post.id : post.root_id
       root_type = post.root_type == 'Topic' ? post.class.name : post.root_type
 
-      updates = {"$set" => { :last_response_time => Time.now, :root_type => root_type, }}
-      updates["$addToSet"] = { "mentions" => { "$each" => post.topic_mention_ids } }
-
-      FeedTopicItem.collection.update({:root_id => root_id}, updates, {:upsert => true})
+      item = FeedTopicItem.find_or_initialize_by(:root_id => root_id)
+      item.root_type = root_type
+      item.mentions = post.topic_mention_ids
+      item.save
     end
 
     def push_post_through_topic(post, topic)
@@ -69,7 +57,7 @@ class FeedTopicItem
       # warning: do not use post.is_root? in this function, since topic roots are excluded
       root_id = post.root_type == 'Topic' ? post.id : post.root_id
 
-      FeedTopicItem.destroy_all(conditions: { :root_id => post.id }) if root_id == post.id
+      FeedTopicItem.where(:root_id => post.id).delete if root_id == post.id
     end
 
     def topic_destroy(topic)

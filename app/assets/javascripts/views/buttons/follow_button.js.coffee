@@ -9,7 +9,7 @@ class LL.Views.FollowButton extends Backbone.View
   initialize: ->
     if !LL.App.current_user
       @model.set('following', false)
-    else if !@model.get('following')
+    else
       @model.set('following', LL.App.current_user.following(@model))
 
     @model.bind('change:following', @render)
@@ -38,6 +38,24 @@ class LL.Views.FollowButton extends Backbone.View
         $(self.el).addClass('disabled')
       success: (data) ->
         self.model.set('following', !self.model.get('following'))
+
+        if self.model.get('type') == 'User'
+          users = LL.App.current_user.get('following_users')
+          if self.model.get('following')
+            users.push(self.model.get('id'))
+          else
+            users.splice($.inArray(self.model.get('id'), users),1)
+
+          LL.App.current_user.set('following_users', users)
+        else
+          topics = LL.App.current_user.get('following_topics')
+          if self.model.get('following')
+            topics.push(self.model.get('id'))
+          else
+            topics.splice($.inArray(self.model.get('id'), topics),1)
+
+          LL.App.current_user.set('following_topics', topics)
+
         if self.model.get('following') then $(self.el).addClass('gray') else $(self.el).removeClass('gray')
       error: (jqXHR, textStatus, errorThrown) ->
         $(self.el).removeClass('disabled')

@@ -20,20 +20,7 @@ class Notification
   belongs_to :object_user, :class_name => 'User'
   belongs_to :user
 
-  index(
-    [
-      [ :user_id, Mongo::ASCENDING ],
-    ]
-  )
-  index(
-    [
-      [ :user_id, Mongo::ASCENDING ],
-      [ :type, Mongo::ASCENDING ]
-    ]
-  )
-
-
-
+  index({ :user_id => 1, :type => 1 })
 
   def created_at
     id.generation_time
@@ -66,9 +53,9 @@ class Notification
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
     :created_at_short => { :definition => lambda { |instance| instance.short_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
-    :triggered_by => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
-    :object => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
-    :object_user => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
+    :triggered_by => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
+    :object => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
+    :object_user => { :type => :reference, :properties => :short, :versions => [ :v1 ] }
 
   class << self
 

@@ -5,8 +5,6 @@ class InviteCode
   include Mongoid::CachedJson
   include Mongoid::Timestamps::Updated
 
-  cache
-
   field :code
   field :allotted, :type => Integer
   field :used, :type => Integer, :default => 0
@@ -19,9 +17,9 @@ class InviteCode
 
   before_validation :generate
 
-  belongs_to :user
+  belongs_to :user, index: true
 
-  index :code
+  index({ :code => 1 })
 
   def created_at
     id.generation_time

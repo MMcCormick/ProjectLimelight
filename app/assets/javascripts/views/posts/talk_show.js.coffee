@@ -5,11 +5,10 @@ class LL.Views.TalkShow extends Backbone.View
 
   initialize: ->
     @loaded = null
-    @model.on('change', @render)
+    @model.on('reset', @render)
 
   render: =>
     if @model.get('user')
-
       $(@el).html(@template(post: @model))
 
       like = new LL.Views.LikeButton(model: @model)
@@ -42,7 +41,7 @@ class LL.Views.TalkShow extends Backbone.View
     else
       $(@el).html('Loading...')
 
-    if LL.App.Feed
+    if LL.App.Feed || !@loaded
       $(@el).addClass('modal')
 
     @

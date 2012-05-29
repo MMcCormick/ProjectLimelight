@@ -4,10 +4,10 @@ class WeeklyEmail
   @queue = :slow
 
   def self.perform
-    talks = FeedTopicItem.where(:root_type => 'Talk').order_by([[:p, :desc]]).limit(3).to_a
-    links = FeedTopicItem.where(:root_type => 'Link').order_by([[:p, :desc]]).limit(3).to_a
-    pictures = FeedTopicItem.where(:root_type => 'Picture').order_by([[:p, :desc]]).limit(3).to_a
-    videos = FeedTopicItem.where(:root_type => 'Video').order_by([[:p, :desc]]).limit(3).to_a
+    talks = FeedTopicItem.where(:root_type => 'Talk').desc(:p).limit(3).to_a
+    links = FeedTopicItem.where(:root_type => 'Link').desc(:p).limit(3).to_a
+    pictures = FeedTopicItem.where(:root_type => 'Picture').desc(:p).limit(3).to_a
+    videos = FeedTopicItem.where(:root_type => 'Video').desc(:p).limit(3).to_a
 
     obj_ids = []
     [talks, links, pictures, videos].each do |objs|

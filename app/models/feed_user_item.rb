@@ -12,29 +12,10 @@ class FeedUserItem
   field :rel, :default => 0
   field :reasons, :default => []
 
-  index [[ :root_id, Mongo::DESCENDING ]]
-  index :responses
-  index(
-    [
-      [ :feed_id, Mongo::DESCENDING ],
-      [ :root_id, Mongo::DESCENDING ],
-      [ :rel, Mongo::DESCENDING ]
-    ]
-  )
-  index(
-    [
-      [ :feed_id, Mongo::DESCENDING ],
-      [ :root_type, Mongo::DESCENDING ],
-      [ :rel, Mongo::DESCENDING ]
-    ]
-  )
-  index(
-    [
-      [ :feed_id, Mongo::DESCENDING ],
-      [ :root_type, Mongo::DESCENDING ],
-      [ :last_response_time, Mongo::DESCENDING ]
-    ]
-  )
+  index({ :root_id => -1, :feed_id => -1 }, { :unique => true })
+  index({ :feed_id => -1, :last_response_time => -1 })
+  index({ :feed_id => -1, :rel => -1 })
+  index({ :responses => -1 })
 
   def created_at
     id.generation_time
@@ -71,8 +52,7 @@ class FeedUserItem
 
   class << self
 
-    # foo
-    def push_post_through_users(post)
+    def push_post_through_users(post, single_user=nil)
       user_mention_ids = post.user_mentions.map{|um| um.id}
 
       # make the root post
@@ -81,33 +61,33 @@ class FeedUserItem
         root_post.root = post
       else
         root_post.root = post.root
+        root_post.personal_responses << post
       end
 
       root_post.public_talking = root_post.root.response_count
 
       # the potential users this post can be pushed to
       # take care of user mentions and users that are following the user that posted this
-      user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_id})
+      if single_user
+        user_feed_users = [single_user]
+      else
+        user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_id})
+      end
 
-      # do not consider users this post has already been pushed to
-      user_feed_users = user_feed_users.where(:_id => {"$nin" => post.pushed_users}) if post.pushed_users.length > 0
 
       # push to these users
       user_feed_users.each do |u|
         item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 
-        new_push = false
-
         unless item
-          new_push = true
           post.pushed_users_count += 1
           item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
+          item.root_type = post.root_type
         end
 
-        item.root_type = post.root_type
         item.last_response_time = Time.now
         item.responses ||= []
-        item.responses << post.id unless post.is_root?
+        item.responses << post.id unless post.is_root? || item.responses.include?(post.id)
 
         # add following user reason
         item.add_reason('fu', post.user) if u.following_users.include?(post.user_id)
@@ -120,7 +100,7 @@ class FeedUserItem
         root_post.push_item = item
 
         # if it's a new feed post, push it to the users feed
-        Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:user => u)) if new_push
+        Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :public))
       end
 
       post.save
@@ -136,7 +116,8 @@ class FeedUserItem
     end
 
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)
-    def push_post_through_topic(post, push_topic)
+    # optionally push for a single user
+    def push_post_through_topic(post, push_topic, single_user=nil)
       return if post.class.name == 'Talk'
 
       neo4j_topic_ids = Neo4j.pulled_from_ids([push_topic.neo4j_id])
@@ -148,29 +129,31 @@ class FeedUserItem
         root_post.root = post
       else
         root_post.root = post.root
+        root_post.public_responses << post
       end
 
       root_post.public_talking = root_post.root.response_count
 
       topics.each do |topic|
         # the potential users this post can be pushed to
-        user_feed_users = User.only(:id, :following_topics).where(:following_topics => topic.id)
+        if single_user
+          user_feed_users = [single_user]
+        else
+          user_feed_users = User.only(:id, :following_topics).where(:following_topics => topic.id)
+        end
 
         user_feed_users.each do |u|
           item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 
-          new_push = false
-
           unless item
-            new_push = true
             post.pushed_users_count += 1
             item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
             item.last_response_time = Time.now
+            item.root_type = post.root_type
           end
 
-          item.root_type = post.root_type
           item.responses ||= []
-          item.responses << post.id unless post.is_root?
+          item.responses << post.id unless post.is_root? || item.responses.include?(post.id)
 
           # add following topic reason
           if push_topic.id == topic.id && u.following_topics && u.following_topics.include?(topic.id)
@@ -184,7 +167,7 @@ class FeedUserItem
           root_post.push_item = item
 
           # if it's a new feed post, push it to the users feed
-          Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:user => u)) if new_push
+          Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :short))
         end
       end
 
@@ -192,7 +175,7 @@ class FeedUserItem
     end
 
     # used when a topic is removed from a post
-    def unpush_post_through_topic(post, unpush_topic)
+    def unpush_post_through_topic(post, unpush_topic, single_user=nil)
       return if post.class.name == 'Talk'
 
       neo4j_topic_ids = Neo4j.pulled_from_ids([unpush_topic.neo4j_id])
@@ -200,7 +183,11 @@ class FeedUserItem
 
       topics.each do |topic|
         # the potential users this post can be pushed to
-        user_feed_users = User.only(:id, :following_topics).where(:following_topics => topic.id)
+        if single_user
+          user_feed_users = [single_user]
+        else
+          user_feed_users = User.only(:id, :following_topics).where(:following_topics => topic.id)
+        end
 
         user_feed_users.each do |u|
           item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
@@ -231,6 +218,7 @@ class FeedUserItem
         root_post.root = post
       else
         root_post.root = post.root
+        root_post.personal_responses << post
       end
 
       root_post.public_talking = root_post.root.response_count
@@ -242,10 +230,7 @@ class FeedUserItem
 
         item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 
-        new_push = false
-
         unless item
-          new_push = true
           post.pushed_users_count += 1
           item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
         end
@@ -260,7 +245,7 @@ class FeedUserItem
 
         root_post.push_item = item
 
-        Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:user => u)) if new_push
+        Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :short))
       end
 
       post.save
@@ -316,26 +301,34 @@ class FeedUserItem
     end
 
     def follow(user, target)
-      #if target.class.name == 'Topic'
-      #  core_objects = Post.where('topic_mentions._id' => target.id)
-      #else
-      #  core_objects = Post.any_of({:user_id => target.id}, {'likes._id' => target.id})
-      #end
-      #core_objects.each do |post|
-      #  unless user.id == post.user_snippet.id
-      #    unless target.class.name == 'Topic' && post.class.name == 'Talk' && !post.is_popular
-      #
-      #      updates = {"$set" => { :root_type => post.root_type, :last_response_time => post.created_at }}
-      #      updates["$addToSet"] = { :responses => post.id } unless post.is_root?
-      #      updates["$inc"] = { :strength => 1, :ds => 1 }
-      #
-      #      FeedUserItem.collection.update({:feed_id => user.id, :root_id => post.root_id }, updates, {:upsert => true})
-      #    end
-      #  end
-      #end
+      if target.class.name == 'Topic'
+        core_objects = Post.where(:topic_mention_ids => target.id).limit(10)
+      else
+        core_objects = Post.any_of({:user_id => target.id}, {:likes_ids => target.id}).limit(10)
+      end
+      core_objects.each do |post|
+        if target.class.name == 'Topic'
+          push_post_through_topic(post, target, user)
+        else
+          push_post_through_users(post, user)
+        end
+      end
     end
 
     def unfollow(user, target)
+      #if target.class.name == 'Topic'
+      #  core_objects = Post.where(:topic_mention_ids => target.id).limit(5)
+      #else
+      #  core_objects = Post.any_of({:user_id => target.id}, {:likes_ids => target.id}).limit(5)
+      #end
+      #core_objects.each do |post|
+      #  if target.class.name == 'Topic'
+      #    push_post_through_topic(post, target, user)
+      #  else
+      #    push_post_through_user(post, user)
+      #  end
+      #end
+
       #if target.class.name == 'Topic'
       #  core_objects = Post.where('topic_mentions._id' => target.id)
       #else

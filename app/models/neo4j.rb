@@ -65,7 +65,7 @@ class Neo4j
     end
 
     def find_or_create_category(name)
-      topic = Topic.where("aliases.slug" => name.to_url).first
+      topic = Topic.where("aliases.slug" => name.parameterize).first
 
       unless !topic || topic.is_category
         topic.is_category = true

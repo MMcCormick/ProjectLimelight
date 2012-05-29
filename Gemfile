@@ -8,9 +8,7 @@ gem 'rails', '3.2.3'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'
-gem 'mongoid', '2.4.10' # MongoDB
-gem 'mongoid_slug' # Automatic MongoDB slugs
-gem 'mongoid_auto_inc' # Auto incrementing fields in mongoid
+gem 'mongoid', '3.0.0.rc', :require => 'mongoid' # MongoDB
 gem 'devise' # Authentication
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
@@ -18,8 +16,8 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'koala', '1.4.1' # facebook graph api support
 gem 'twitter' # twitter api support
-gem 'resque', '1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
-gem 'resque-scheduler', '2.0.0h', :require => 'resque_scheduler' # scheduled resque jobs
+gem 'resque' #'1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
+gem 'resque-scheduler', '2.0.0.h', :require => 'resque_scheduler' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'resque_mailer'
 gem 'chronic' # Date/Time management
@@ -33,8 +31,8 @@ gem 'backbone-on-rails'
 gem 'mixpanel' # analytics
 gem 'feedzirra'
 gem 'ken' # freebase
-gem 'mongoid-cached-json'
-gem 'mongoid_collection_snapshot'
+gem 'mongoid-cached-json', :git => 'git://github.com/marbemac/mongoid-cached-json.git'
+#gem 'mongoid_collection_snapshot'
 
 
 group :assets do
@@ -82,9 +80,10 @@ platforms :ruby do
   gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
   #gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
   gem 'heroku'
-  gem 'rpm_contrib', '2.1.9' # extra instrumentation for the new relic rpm agent
-  gem 'newrelic-redis', '1.3.2' # new relic redis instrumentation
-  gem 'newrelic-faraday'
+  gem 'newrelic_rpm'
+  #gem 'rpm_contrib', '2.1.11' # extra instrumentation for the new relic rpm agent
+  #gem 'newrelic-redis', '1.3.2' # new relic redis instrumentation
+  #gem 'newrelic-faraday'
 
   group :development do
     gem "foreman"

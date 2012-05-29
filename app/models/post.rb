@@ -11,8 +11,6 @@ class Post
   include ModelUtilitiesHelper
   include VideosHelper
 
-  cache
-
   field :title
   field :description
   field :content
@@ -30,14 +28,12 @@ class Post
   field :neo4j_id
   field :category
 
-  auto_increment :public_id
-
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
 
   has_many   :comments
-  belongs_to :response_to, :class_name => 'Post'
-  belongs_to :user
-  has_and_belongs_to_many :likes, :inverse_of => nil, :class_name => 'User'
+  belongs_to :response_to, :class_name => 'Post', index: true
+  belongs_to :user, index: true
+  has_and_belongs_to_many :likes, :inverse_of => nil, :class_name => 'User', index: true
 
   validates :user, :status, :presence => true
   validate :title_length, :content_length, :unique_source
@@ -57,35 +53,16 @@ class Post
   # MCM: chill out obama
   # MBM: lolz
   # MBM: YES WE DID
-  index [[ :public_id, Mongo::DESCENDING ]]
-  index (
-    [
-      [ :root_id, Mongo::DESCENDING ],
-      [ :_type, Mongo::DESCENDING ],
-    ]
-  )
-  #index "topic_mentions"
-  #index "user_mentions"
-  index "likes"
-  index "sources"
-  index(
-      [
-        [ :user_id, Mongo::DESCENDING ],
-        [ "likes", Mongo::DESCENDING ]
-      ]
-    ) # used in FeedUserItem
+  index({ :root_id => -1, :_type => 1 })
+  index({ :topic_mentions => -1 })
+  index({ "sources.url" => 1 })
 
   def to_param
     id.to_s
-    #"#{encoded_id}-#{name.parameterize[0..40].chomp('-')}"
   end
 
   def created_at
     id.generation_time
-  end
-
-  def encoded_id
-    public_id.to_i.to_s(36)
   end
 
   # short version of the contnet "foo bar foo bar..." used in notifications etc.
@@ -102,7 +79,7 @@ class Post
     unless self.class.name == 'Talk' || content.blank?
       user.talks.create(
               :content => content,
-              :response_to => self,
+              :response_to_id => id,
               :first_talk => true,
               :topic_mention_ids => topic_mention_ids
       )
@@ -128,7 +105,7 @@ class Post
   end
 
   def add_source(source)
-    found = sources.detect{|existing| existing.name && existing.name.to_url == source.name.to_url}
+    found = sources.detect{|existing| existing.name && existing.name.parameterize == source.name.parameterize}
     unless found
       self.sources << source
     end
@@ -276,13 +253,14 @@ class Post
   end
 
   def feed_post_create
-    Resque.enqueue(PushPostToFeeds, id.to_s)
+    #Resque.enqueue(PushPostToFeeds, id.to_s)
+    push_to_feeds
   end
 
   def push_to_feeds
     FeedUserItem.push_post_through_users(self)
-    FeedUserItem.push_post_through_topics(self) unless response_to || topic_mentions.empty?
-    FeedTopicItem.post_create(self) unless response_to || topic_mentions.empty?
+    FeedUserItem.push_post_through_topics(self) unless response_to_id || topic_mention_ids.empty?
+    FeedTopicItem.post_create(self) unless response_to_id || topic_mention_ids.empty?
     FeedContributeItem.create(self)
   end
 
@@ -293,12 +271,12 @@ class Post
 
   def push_disable
     FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
-    FeedTopicItem.post_disable(self) unless response_to || topic_mentions.empty?
+    FeedTopicItem.post_disable(self) unless response_to_id || topic_mention_ids.empty?
     FeedContributeItem.disable(self)
   end
 
   def set_root
-    if response_to
+    if response_to_id
       self.root_id = response_to.id
       self.root_type = response_to._type
     elsif self.class.name == 'Talk' && primary_topic_mention
@@ -315,15 +293,11 @@ class Post
   end
 
   def root
-    if root_type == 'Topic'
-      Topic.find(root_id)
-    else
-      Post.find(root_id)
-    end
+    root_type == 'Topic' ? Topic.find(root_id) : Post.find(root_id)
   end
 
   def standalone_talk?
-    _type == "Talk" && !response_to
+    _type == "Talk" && !response_to_id
   end
 
   def og_type
@@ -402,10 +376,6 @@ class Post
 
 
   class << self
-    def find_by_encoded_id(id)
-      where(:public_id => id.to_i(36)).first
-    end
-
     # Build and return a post based on params (does not save)
     def post(params, user)
       if params[:type] && ['Video', 'Picture', 'Link', 'Talk'].include?(params[:type])
@@ -420,7 +390,7 @@ class Post
     def friend_responses(id, user, page, limit)
       if user
         Post.where(:root_id => id, :_type => 'Talk', "user_id" => {"$in" => user.following_users})
-            .order_by(:_id, :desc)
+            .desc(:_id)
             .skip((page-1)*limit).limit(limit)
       else
         []
@@ -431,7 +401,7 @@ class Post
     # TODO: Cache this
     def public_responses(id, page, limit)
       Post.where(:root_id => id, :_type => 'Talk')
-          .order_by(:_id, :desc)
+          .desc(:_id)
           .skip((page-1)*limit).limit(limit)
     end
 
@@ -446,7 +416,7 @@ class Post
 
     # returns the latest posts site wide
     def global_stream(page)
-      items = Post.where(:status => 'active').order_by(:_id, :desc)
+      items = Post.where(:status => 'active').desc(:_id)
       items = items.skip((page-1)*20).limit(20)
 
       return_objects = []
@@ -479,9 +449,9 @@ class Post
     def feed(feed_id, sort, page)
       items = FeedUserItem.where(:feed_id => feed_id)
       if sort == 'newest'
-        items = items.order_by(:last_response_time, :desc)
+        items = items.desc(:last_response_time)
       else
-        items = items.order_by(:rel, :desc)
+        items = items.desc(:rel)
       end
       items = items.skip((page-1)*20).limit(20)
 
@@ -544,14 +514,14 @@ class Post
     end
 
     def activity_feed(feed_id, page)
-      items = FeedContributeItem.where(:feed_id => feed_id).order_by(:last_response_time, :desc)
+      items = FeedContributeItem.where(:feed_id => feed_id).desc(:last_response_time)
       items = items.skip((page-1)*20).limit(20)
 
       build_activity_feed(items)
     end
 
     def like_feed(feed_id, page)
-      items = FeedLikeItem.where(:feed_id => feed_id).order_by(:last_response_time, :desc)
+      items = FeedLikeItem.where(:feed_id => feed_id).desc(:last_response_time)
       items = items.skip((page-1)*20).limit(20)
 
       build_like_feed(items)
@@ -561,9 +531,9 @@ class Post
       items = FeedTopicItem.where(:mentions => {'$in' => feed_ids})
 
       if sort == 'newest'
-        items = items.order_by(:last_response_time, :desc)
+        items = items.desc(:last_response_time)
       else
-        items = items.order_by(:p, :desc)
+        items = items.desc(:p)
       end
 
       items = items.skip((page-1)*20).limit(20)
@@ -654,7 +624,7 @@ class Post
 
         next unless root_post.root
 
-        root_post.activity_responses = activity_responses[root_post.root.id.to_s] ? activity_responses[root_post.root.id.to_s] : []
+        root_post.activity_responses = activity_responses[root_post.root.id.to_s] ? activity_responses[root_post.root.id.to_s].reverse : []
 
         return_objects << root_post
       end

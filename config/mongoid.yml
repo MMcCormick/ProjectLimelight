@@ -62,7 +62,7 @@ development:
 staging:
   sessions:
     default:
-      uri: <%= ENV['MONGOID_HOST'] %>
+      uri: <%= ENV['MONGOLAB_URI'] %>
   options:
     identity_map_enabled: true
     raise_not_found_error: false
@@ -72,7 +72,7 @@ staging:
 production:
   sessions:
     default:
-      uri: <%= ENV['MONGOID_HOST'] %>
+      uri: <%= ENV['MONGOLAB_URI'] %>
   options:
     identity_map_enabled: true
     raise_not_found_error: false

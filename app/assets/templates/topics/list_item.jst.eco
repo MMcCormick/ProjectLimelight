@@ -1,4 +1,4 @@
-<a href="/<%= @topic.get('slug') %>" class='tlink' data-id='<%= @topic.get('id') %>'>
+<a href="<%= @topic.get('url') %>" class='tlink' data-id='<%= @topic.get('id') %>'>
   <img src='<%= @topic.get('images').square.small %>' />
   <h5><%= @topic.get('name') %></h5>
 </a>

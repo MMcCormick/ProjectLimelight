@@ -4,7 +4,7 @@
 
 <div class='meat'>
   <% for topic in @topics: %>
-    <a class="tlink" href="/<%= topic.get('slug') %>" data-id="<%= topic.get('id') %>">
+    <a class="tlink" href="<%= topic.get('url') %>" data-id="<%= topic.get('id') %>">
       <img src='<%= topic.get('images').square.small %>' />
     </a>
   <% end %>

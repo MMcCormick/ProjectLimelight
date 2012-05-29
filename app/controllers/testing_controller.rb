@@ -5,14 +5,13 @@ class TestingController < ApplicationController
   def test
     authorize! :manage, :all
 
-    #Resque.enqueue(TestJob)
+    Resque.enqueue(TestJob)
 
-    post = Post.first
-    updates = {"$set" => { :feed_id => post.user_id, :root_id => post.root_id, :root_type => post.root_type, :last_response_time => Time.now }}
-    updates["$addToSet"] = { :responses => post.id } unless post.is_root?
-    updates["$inc"] = { :strength => 1 }
-
-    FeedContributeItem.collection.where(:feed_id => BSON::ObjectId('4fc22cc7dfe294fa2a4aa268'), :root_id => post.root_id).upsert(:feed_id => post.user_id, :root_id => post.root_id)
+    topics = Topic.all
+    topics.each do |t|
+      t.generate_slug
+      t.save
+    end
 
     #feed = Feedzirra::Feed.fetch_and_parse("http://feeds.washingtonpost.com/rss/world")
     #foo = 'bar'

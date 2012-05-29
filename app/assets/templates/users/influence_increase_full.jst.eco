@@ -1,9 +1,9 @@
-<a href="/<%= @influence.get('topic').get('slug') %>" class='tlink' data-id='<%= @influence.get('topic').get('id') %>'>
+<a href="<%= @influence.get('topic').get('url') %>" class='tlink' data-id='<%= @influence.get('topic').get('id') %>'>
   <img src="<%= @influence.get('topic').get('images').square.small %>">
 </a>
 <div class="amount">
   +<%= parseInt(@influence.get('amount')) %> pts in
-  <a href="/<%= @influence.get('topic').get('slug') %>" class='tlink' data-id='<%= @influence.get('topic').get('id') %>'><%= @influence.get('topic').get('name') %></a>
+  <a href="<%= @influence.get('topic').get('url') %>" class='tlink' data-id='<%= @influence.get('topic').get('id') %>'><%= @influence.get('topic').get('name') %></a>
   <span class="when"><%= @influence.get('created_at_pretty') %></span>
 </div>
 <div class="name">

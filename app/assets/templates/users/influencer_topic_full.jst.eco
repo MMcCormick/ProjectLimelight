@@ -1,4 +1,4 @@
-<a class="tlink" href="/<%= @influencer_topic.get('topic').get('slug') %>" data-id='<%= @influencer_topic.get('topic').get('id') %>'>
+<a class="tlink" href="<%= @influencer_topic.get('topic').get('url') %>" data-id='<%= @influencer_topic.get('topic').get('id') %>'>
   <img src='<%= @influencer_topic.get('topic').get('images').square.small %>' />
   <h4>
     <%= @influencer_topic.get('topic').get('name') %>

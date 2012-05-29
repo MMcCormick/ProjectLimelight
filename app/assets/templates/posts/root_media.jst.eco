@@ -31,7 +31,7 @@
       <% end %>
       <% for mention, i in @post.get('topic_mentions'): %>
         <span>
-          <a class="tlink" data-id='<%= mention.get('id') %>' href="/<%= mention.get('slug') %>">
+          <a class="tlink" data-id='<%= mention.get('id') %>' href="<%= mention.get('url') %>">
             <%= mention.get('name') %>
           </a>
           <% if LL.App.current_user && LL.App.current_user.hasRole('admin'): %>

@@ -1,4 +1,4 @@
-<a class="tlink" href="/<%= @almost_influencer_topic.get('topic').get('slug') %>" data-id='<%= @almost_influencer_topic.get('topic').get('id') %>'>
+<a class="tlink" href="<%= @almost_influencer_topic.get('topic').get('url') %>" data-id='<%= @almost_influencer_topic.get('topic').get('id') %>'>
   <img src='<%= @almost_influencer_topic.get('topic').get('images').square.small %>' />
   <h4>
     <%= @almost_influencer_topic.get('topic').get('name') %>

@@ -34,7 +34,7 @@ class TopicsController < ApplicationController
   def show
     # Doesn't use find_by_slug() because it doesn't work after Topic.unscoped (deleted topics are ignored)
     if params[:slug]
-      @this = Topic.where(:slug => params[:slug]).first
+      @this = Topic.where(:slug => params[:slug].parameterize).first
     else
       @this = Topic.find(params[:id])
     end
@@ -103,7 +103,7 @@ class TopicsController < ApplicationController
 
   def destroy
     authorize! :manage, :all
-    if topic = Topic.where(:slug => params[:id]).first
+    if topic = Topic.where(:slug => params[:id].parameterize).first
       topic.destroy
       response = build_ajax_response(:ok, nil, "Topic deleted")
       status = 200

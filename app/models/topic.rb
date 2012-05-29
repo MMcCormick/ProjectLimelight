@@ -28,6 +28,7 @@ class Topic
   class << self; attr_accessor :type_of_id, :related_to_id, :limelight_id, :limelight_feedback_id, :stop_words end
 
   field :name
+  field :pretty_slug
   field :slug
   field :summary
   field :short_name
@@ -83,7 +84,7 @@ class Topic
 
   # Return the topic slug instead of its ID
   def to_param
-    self.slug
+    self.pretty_slug
   end
 
   def created_at
@@ -100,16 +101,17 @@ class Topic
 
   def generate_slug
     possible = name.parameterize.gsub('-', ' ').titleize.gsub(' ', '')
-    found = Topic.where(:slug => possible).first
-    if found
+    found = Topic.where(:slug => possible.parameterize).first
+    if found && found.id != id
       count = 0
       while found
         count += 1
-        possible = name.parameterize.gsub('-', ' ').titleize.gsub(' ', '') + count
-        found = Topic.where(:slug => possible).first
+        possible = "name.parameterize.gsub('-', ' ').titleize.gsub(' ', '')#{count}"
+        found = Topic.where(:slug => possible.parameterize).first
       end
     end
-    self.slug = possible
+    self.pretty_slug = possible
+    self.slug = possible.parameterize
   end
 
   def freebase_guid
@@ -163,10 +165,10 @@ class Topic
 
       freebase_object = Ken::Topic.get(freebase_search['mid'])
       return unless freebase_object
-
-      existing_topic = Topic.where(:freebase_id => freebase_object.id).first
-      return if existing_topic && existing_topic.id != id
     end
+
+    existing_topic = Topic.where(:freebase_id => freebase_object.id).first
+    return if existing_topic && existing_topic.id != id
 
     # basics
     self.freebase_id = freebase_object.id
@@ -564,8 +566,9 @@ class Topic
 
   json_fields \
     :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
-    :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
+    :slug => { :properties => :short, :versions => [ :v1 ] },
     :type => { :definition => lambda { |instance| 'Topic' }, :properties => :short, :versions => [ :v1 ] },
+    :url => { :definition => lambda { |instance| "/#{instance.to_param}" }, :properties => :short, :versions => [ :v1 ] },
     :name => { :properties => :short, :versions => [ :v1 ] },
     :summary => { :definition => :short_summary, :properties => :short, :versions => [ :v1 ] },
     :score => { :properties => :short, :versions => [ :v1 ] },

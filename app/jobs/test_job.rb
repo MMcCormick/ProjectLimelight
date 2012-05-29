@@ -7,20 +7,22 @@ class TestJob
     FeedUserItem.all.delete
     FeedTopicItem.all.delete
     FeedContributeItem.all.delete
+    FeedLikeItem.all.delete
+    Comment.all.delete
     PopularityAction.all.delete
 
-    User.update_all(:score => 0)
-    Topic.update_all(:score => 0)
+    User.update_all(:score => 0.0, :likes_count => 0, :unread_notification_count => 0, :clout => 1, )
 
     @destroyed = 0
     @updated = 0
     topics = Topic.all
     topics.each do |t|
       primary_for = Topic.where(:primary_type_id => t.id)
-      if primary_for.length == 0 && t.followers_count == 0 && !t.fb_page_id && !t.is_category
+      if primary_for.length == 0 && t.followers_count == 0 && !t.fb_page_id && !t.is_category && !t.primary_type_id
         t.destroy!
         @destroyed += 1
       else
+        t.score = 0.0
         t.talking_ids = []
         t.response_count = 0
         t.influencers = {}

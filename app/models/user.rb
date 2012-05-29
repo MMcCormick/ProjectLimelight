@@ -116,7 +116,7 @@ class User
 
   # Return the users slug instead of their ID
   def to_param
-    username ? username.downcase : ''
+    username
   end
 
   def created_at
@@ -124,7 +124,7 @@ class User
   end
 
   def generate_slug
-    self.slug = username.downcase
+    self.slug = username.parameterize
   end
 
   def is_active?
@@ -575,7 +575,7 @@ class User
     :unread_notification_count => { :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| User.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
     :status => { :properties => :short, :versions => [ :v1 ] },
-    :url => { :definition => lambda { |instance| "/users/#{to_param}" }, :properties => :short, :versions => [ :v1 ] },
+    :url => { :definition => lambda { |instance| "/users/#{instance.to_param}" }, :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
     :created_at_short => { :definition => lambda { |instance| instance.short_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },

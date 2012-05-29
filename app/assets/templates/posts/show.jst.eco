@@ -18,7 +18,7 @@
         <% if @post.get('user').get('id') == '4f971b6ccddc7f1480000046': %>
           Limelight
         <% else: %>
-          <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
+          <a class="ulink" href="<%= @post.get('user').get('url') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
         <% end %>
         <%= @post.get('created_at_pretty') %>
       </span>

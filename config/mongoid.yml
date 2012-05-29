@@ -5,7 +5,7 @@ development:
     default:
       # Defines the name of the default database that Mongoid can connect to.
       # (required).
-      database: limelight_development
+#      database: limelight_development
       # Provides the hosts the default session can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
@@ -62,7 +62,11 @@ development:
 staging:
   sessions:
     default:
-      uri: <%= ENV['MONGOLAB_URI'] %>
+      hosts:
+        - <%= ENV['MONGOID_HOST'] %>
+      database: <%= ENV['MONGOID_DATABASE'] %>
+      username: <%= ENV['MONGOID_USERNAME'] %>
+      password: <%= ENV['MONGOID_PASSWORD'] %>
   options:
     identity_map_enabled: true
     raise_not_found_error: false
@@ -72,7 +76,11 @@ staging:
 production:
   sessions:
     default:
-      uri: <%= ENV['MONGOLAB_URI'] %>
+      hosts:
+        - <%= ENV['MONGOID_HOST'] %>
+      database: <%= ENV['MONGOID_DATABASE'] %>
+      username: <%= ENV['MONGOID_USERNAME'] %>
+      password: <%= ENV['MONGOID_PASSWORD'] %>
   options:
     identity_map_enabled: true
     raise_not_found_error: false

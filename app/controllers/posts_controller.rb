@@ -163,7 +163,7 @@ class PostsController < ApplicationController
 
     authorize! :update, post
 
-    post.remove_mention(topic)
+    post.remove_topic_mention(topic)
     post.save
 
     render :json => build_ajax_response(:ok)
@@ -186,11 +186,8 @@ class PostsController < ApplicationController
       end
     end
 
-    post.topic_mentions << topic
+    post.add_topic_mention(topic)
     post.save
-    FeedUserItem.push_post_through_topic(post, topic)
-    FeedTopicItem.push_post_through_topic(post, topic)
-    Neo4j.post_add_topic_mention(post, topic)
 
     render :json => build_ajax_response(:ok)
   end

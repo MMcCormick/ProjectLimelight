@@ -14,7 +14,7 @@ class TopicMention
   field :freebase_id
   field :use_freebase_image
 
-  attr_accessible :name, :slug, :short_name, :score, :first_mention, :freebase_id, :use_freebase_image
+  attr_accessible :name, :slug, :short_name, :first_mention, :freebase_id, :use_freebase_image
 
   embedded_in :topic_mentionable, polymorphic: true
 

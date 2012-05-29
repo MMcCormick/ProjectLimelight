@@ -106,7 +106,7 @@ class Topic
       count = 0
       while found
         count += 1
-        possible = "name.parameterize.gsub('-', ' ').titleize.gsub(' ', '')#{count}"
+        possible = name.parameterize.gsub('-', ' ').titleize.gsub(' ', '') + count.to_s
         found = Topic.where(:slug => possible.parameterize).first
       end
     end
@@ -482,6 +482,7 @@ class Topic
     # remove mentions of this topic (also removes from user feeds)
     Post.where("topic_mention_ids" => id).each do |object|
       object.remove_topic_mention(self)
+      object.save
     end
 
     # remove from neo4j

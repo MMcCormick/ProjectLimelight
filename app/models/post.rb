@@ -141,15 +141,6 @@ class Post
     end
   end
 
-  def remove_mention(topic)
-    mention = self.topic_mention_ids.delete(topic.id)
-    if mention
-      FeedUserItem.unpush_post_through_topic(self, topic)
-      FeedTopicItem.unpush_post_through_topic(self, topic)
-      Neo4j.post_remove_topic_mention(self, topic)
-    end
-  end
-
   def send_tweet
     if @tweet == '1' && @tweet_content && !@tweet_content.blank? && user.twitter
       user.twitter.update(@tweet_content)

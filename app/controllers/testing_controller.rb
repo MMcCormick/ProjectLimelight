@@ -5,7 +5,7 @@ class TestingController < ApplicationController
   def test
     authorize! :manage, :all
 
-    Resque.enqueue(TestJob)
+    #Resque.enqueue(TestJob)
 
     topics = Topic.all
     topics.each do |t|

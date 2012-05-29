@@ -335,37 +335,44 @@ module Limelight #:nodoc:
 
     def bubble_up
       if response_to_id
-        topic_mentions.each do |mention|
-          response_to.suggest_mention(mention)
+        topic_mentions.each do |topic|
+          response_to.suggest_mention(topic)
         end
         response_to.save
       end
     end
 
-    def suggest_mention(mention)
-      root_mention = topic_mentions.find(mention.id)
-      if root_mention
-        root_mention.score += 1
-      else
-        root_pre_mention = pre_mentions.find(mention.id)
+    def suggest_mention(topic)
+      unless topic_mention_ids.include?(topic.id)
+        root_pre_mention = pre_mentions.find(topic.id)
         if root_pre_mention
           root_pre_mention.score += 1
           if root_pre_mention.score >= TopicMention.threshold
-            m = self.topic_mentions_ids << root_pre_mention.id
-            root_pre_mention.destroy
-            FeedTopicItem.post_create(self)
-            FeedUserItem.add_mention(self, mention.id)
+            add_topic_mention(topic)
           end
         else
-          self.pre_mentions.build(mention.attributes)
+          pre_m = self.pre_mentions.build(topic.attributes)
+          pre_m.id = topic.id
         end
       end
     end
 
+    def add_topic_mention(topic)
+      self.topic_mentions << topic
+      pre_mention = pre_mentions.find(topic.id)
+      pre_mention.destroy if pre_mention
+      FeedUserItem.push_post_through_topic(self, topic)
+      FeedTopicItem.push_post_through_topic(self, topic)
+      Neo4j.post_add_topic_mention(self, topic)
+    end
+
     def remove_topic_mention(topic)
-      self.topic_mention_ids.delete(topic.id)
-      save
-      FeedUserItem.unpush_post_through_topic(self, topic)
+      mention = self.topic_mention_ids.delete(topic.id)
+      if mention
+        FeedUserItem.unpush_post_through_topic(self, topic)
+        FeedTopicItem.unpush_post_through_topic(self, topic)
+        Neo4j.post_remove_topic_mention(self, topic)
+      end
     end
   end
 

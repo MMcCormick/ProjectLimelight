@@ -31,7 +31,7 @@ gem 'backbone-on-rails'
 gem 'mixpanel' # analytics
 gem 'feedzirra'
 gem 'ken' # freebase
-gem 'mongoid-cached-json', :git => 'git://github.com/marbemac/mongoid-cached-json.git'
+gem 'mongoid-cached-json'
 #gem 'mongoid_collection_snapshot'
 
 

@@ -50,6 +50,15 @@ class TestJob
         end
       end
 
+      t.generate_slug
+
+      if t.freebase_guid
+        t.freebase_guid = t.freebase_guid.split('.').last
+        t.freebase_guid = "#" + t.freebase_guid unless t.freebase_guid[0] == '#'
+      end
+
+      t.save
+
       t.freebase_repopulate(true, true, true)
     end
 

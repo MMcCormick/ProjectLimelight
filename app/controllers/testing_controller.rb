@@ -5,19 +5,11 @@ class TestingController < ApplicationController
   def test
     authorize! :manage, :all
 
-    topics = Topic.all
-    topics.each do |t|
-      t.generate_slug
-      t.save
-    end
-
-    topics = Topic.where(:freebase_guid => {"$exists" => true})
-    topics.each do |t|
-      t.freebase_guid = t.freebase_guid.split('.').last
-      t.save
-    end
-
     Resque.enqueue(TestJob)
+
+    #topic = Topic.find('4fc5ac6e2619465c0c000001')
+    #topic.freebase_repopulate
+    #foo = 'foo'
 
     #topic = Topic.where(:freebase_guid => {"$exists" => true}).first
     #test = topic.freebase

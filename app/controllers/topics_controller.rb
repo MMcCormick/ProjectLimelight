@@ -234,11 +234,29 @@ class TopicsController < ApplicationController
   end
 
   def update_freebase
-    topic = Topic.find(params[:target_id])
+    topic = Topic.find(params[:id])
     not_found("Topic not found") unless topic
     authorize! :update, topic
 
-    #topic.freebase_id =
+    topic.freebase_mid = params[:freebase_mid]
+    text = params[:text] && params[:text] == 'true' ? true : false
+    aliases = params[:aliases] && params[:aliases] == 'true' ? true : false
+    primary = params[:primary_type] && params[:primary_type] == 'true' ? true : false
+    images = params[:images] && params[:images] == 'true' ? true : false
+    topic.freebase_repopulate(text, aliases, primary, images)
+
+    render :json => build_ajax_response(:ok, nil, "Freebase Updated")
+  end
+
+  def delete_freebase
+    topic = Topic.find(params[:id])
+    not_found("Topic not found") unless topic
+    authorize! :update, topic
+
+    topic.delete_freebase
+    topic.save
+
+    render :json => build_ajax_response(:ok, nil, "Freebase Deleted")
   end
 
   def merge

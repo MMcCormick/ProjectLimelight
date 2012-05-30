@@ -50,6 +50,7 @@ class Topic
   field :freebase_guid
   field :freebase_mid
   field :freebase_url
+  field :freebase_deleted # if we manually deleted freebase info from this topic, can only re-enable by assigning an mid and repopulating
   field :use_freebase_image, :default => false
   field :wikipedia
   field :website
@@ -142,7 +143,19 @@ class Topic
     end
   end
 
+  def delete_freebase
+    self.freebase_id = nil
+    self.freebase_mid = nil
+    self.freebase_guid = nil
+    self.freebase_url = nil
+    self.freebase_deleted = true
+    self.use_freebase_image = false
+    self.websites_extra = []
+  end
+
   def freebase_repopulate(overwrite_text=false, overwrite_aliases=false, overwrite_primary_type=false, overwrite_image=false)
+    return if !freebase_mid && freebase_deleted
+
     # get or find the freebase object
     freebase_search = nil
     freebase_object = freebase
@@ -231,20 +244,20 @@ class Topic
         end
       end
     end
-    #
-    ## update the image
-    #if image_versions == 0 || overwrite_image
-    #  self.active_image_version = 0
-    #  self.use_freebase_image = true
-    #end
-    #
-    ## overwrite certain things
-    #self.name = (freebase_object['name'] ? freebase_object['name'] : freebase_object['text']) if !name || overwrite_text
-    #self.summary = freebase_object['description']  if !summary || overwrite_text
-    #
-    #if overwrite_aliases && freebase_object['aliases'] && freebase_object['aliases'].length > 0
-    #  update_aliases freebase_object['aliases']
-    #end
+
+    # update the image
+    if image_versions == 0 || overwrite_image
+      self.active_image_version = 0
+      self.use_freebase_image = true
+    end
+
+    # overwrite certain things
+    self.name = (freebase_object['name'] ? freebase_object['name'] : freebase_object['text']) if !name || overwrite_text
+    self.summary = freebase_object['description']  if !summary || overwrite_text
+
+    if overwrite_aliases && freebase_object['aliases'] && freebase_object['aliases'].length > 0
+      update_aliases freebase_object['aliases']
+    end
 
     save
   end
@@ -591,7 +604,7 @@ class Topic
     :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
     :aliases => { :type => :reference, :definition => :visible_aliases, :properties => :public, :versions => [ :v1 ] },
     :websites => { :definition => :all_websites, :properties => :public, :versions => [ :v1 ] },
-    :freebase_url => { :definition => :all_websites, :properties => :public, :versions => [ :v1 ] }
+    :freebase_url => { :properties => :public, :versions => [ :v1 ] }
 
   class << self
 

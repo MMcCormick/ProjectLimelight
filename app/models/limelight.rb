@@ -131,7 +131,7 @@ module Limelight #:nodoc:
         if image_versions == 0
           if self.class.name == 'User'
             "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
-          elsif self.class.name == 'Twitter'
+          elsif self.class.name == 'Topic'
             if use_freebase_image
               "https://usercontent.googleapis.com/freebase/v1/image#{freebase_id}?maxheight=#{size_dimensions[size]}&maxwidth=#{size_dimensions[size]}&mode=#{mode == :fit ? 'fit' : 'fillcropmid'}&pad=true"
             else

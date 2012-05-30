@@ -11,6 +11,7 @@ class LL.Views.TopicFreebaseForm extends Backbone.View
   initialize: ->
 
   render: =>
+    console.log @model
     $(@el).html(@template(topic: @model))
     @
 
@@ -20,14 +21,13 @@ class LL.Views.TopicFreebaseForm extends Backbone.View
     e.preventDefault()
 
     attributes = {
-      id: @model.get('id')
       freebase_mid: $(@el).find('.freebase-mid').val()
     }
     for input in $(@el).find('input[type="checkbox"]')
       attributes[$(input).attr('name')] = $(input).val() if $(input).is(':checked')
 
     self = @
-    $.ajax '/api/topics/freebase',
+    $.ajax "/api/topics/#{@model.get('id')}/freebase",
       type: 'put'
       data: attributes
       beforeSend: ->
@@ -46,19 +46,16 @@ class LL.Views.TopicFreebaseForm extends Backbone.View
 
     e.preventDefault()
 
-    attributes = {id: @model.get('id'), name: $(e.target).prev('.name').text()}
-
     self = @
-    $.ajax '/api/topics/aliases',
+    $.ajax "/api/topics/#{@model.get('id')}/freebase",
       type: 'delete'
-      data: attributes
       beforeSend: ->
-        $(e.target).addClass('disabled').text('Submitting...')
+        $(e.target).addClass('disabled').text('Deleting...')
       success: (data) ->
-        $(e.target).parent().remove()
+        $(e.currentTarget).parent().remove()
         globalSuccess(data)
       error: (jqXHR, textStatus, errorThrown) ->
-        $(e.target).removeClass('disabled').text('delete')
+        $(e.currentTarget).removeClass('disabled').text('[delete]')
         globalError(jqXHR, $(self.el))
       complete: ->
-        $(e.target).removeClass('disabled').text('delete')
+        $(e.target).removeClass('disabled').text('[delete]')

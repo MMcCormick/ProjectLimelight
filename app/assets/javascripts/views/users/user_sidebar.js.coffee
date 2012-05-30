@@ -13,7 +13,7 @@ class LL.Views.UserSidebar extends Backbone.View
     $(@el).append(talk.render().el)
 
     # Invite Code
-    if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id')
+    if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') && LL.App.current_user.get('invite_code')
       invite = new LL.Views.UserSidebarInvite(model: LL.App.current_user)
       $(@el).append(invite.render().el)
 

@@ -122,6 +122,11 @@ class Topic
   end
 
   def freebase
+    if freebase_guid && freebase_uid[0] != '#'
+      self.freebase_guid = "#" + freebase_guid.split('.').last
+      save
+    end
+
     if freebase_id || freebase_guid || freebase_mid
       query = {}
       query[:type] = "/common/topic" unless is_topic_type || is_category

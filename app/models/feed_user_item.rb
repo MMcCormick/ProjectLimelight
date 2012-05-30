@@ -158,16 +158,18 @@ class FeedUserItem
           # add following topic reason
           if push_topic.id == topic.id && u.following_topics && u.following_topics.include?(topic.id)
             item.add_reason('ft', topic)
-          else # following topic related to another topic you're following
+          elsif u.following_topics.include?(topic.id) # following topic related to another topic you're following
             item.add_reason('frt', topic, push_topic)
           end
 
-          item.save if item.reasons.length > 0
+          if item.reasons.length > 0
+            item.save
 
-          root_post.push_item = item
+            root_post.push_item = item
 
-          # if it's a new feed post, push it to the users feed
-          Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :short))
+            # if it's a new feed post, push it to the users feed
+            Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :short))
+          end
         end
       end
 

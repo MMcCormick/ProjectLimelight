@@ -453,7 +453,7 @@ module Limelight #:nodoc:
         end
 
         # Update mentioned topics if applicable
-        if defined?(topic_mentions) && !topic_mentions.empty?
+        if topic_mention_ids.length > 0
           topic_amt = type == :new ? 1 : amt
           affected_topic_ids = []
 
@@ -469,13 +469,12 @@ module Limelight #:nodoc:
               end
 
               # send the influence increase
-              increase = InfluenceIncrease.new(
-                      :amount => 1,
-                      :topic_id => topic.id,
-                      :object_type => 'Talk',
-                      :action => :new,
-                      :topic => topic
-              )
+              increase = InfluenceIncrease.new
+              increase.amount = 1
+              increase.topic_id = topic.id
+              increase.object_type = 'Talk'
+              increase.action = :new
+              increase.topic = topic
               increase.id = topic.name
 
               Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))

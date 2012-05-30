@@ -244,8 +244,7 @@ class Post
   end
 
   def feed_post_create
-    #Resque.enqueue(PushPostToFeeds, id.to_s)
-    push_to_feeds
+    Resque.enqueue(PushPostToFeeds, id.to_s)
   end
 
   def push_to_feeds

@@ -5,13 +5,24 @@ class TestingController < ApplicationController
   def test
     authorize! :manage, :all
 
-    Resque.enqueue(TestJob)
+    #Resque.enqueue(TestJob)
 
     topics = Topic.all
     topics.each do |t|
+      t.freebase_repopulate(true, true, true)
       t.generate_slug
       t.save
     end
+
+    topics = Topic.where(:freebase_guid => {"$exists" => true})
+    topics.each do |t|
+      t.freebase_guid = t.freebase_guid.split('.').last
+      t.save
+    end
+
+    #topic = Topic.where(:freebase_guid => {"$exists" => true}).first
+    #test = topic.freebase
+    #test = Ken::Topic.get('/organization/organization')
 
     #feed = Feedzirra::Feed.fetch_and_parse("http://feeds.washingtonpost.com/rss/world")
     #foo = 'bar'
@@ -20,8 +31,16 @@ class TestingController < ApplicationController
 
     #search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=google")
 
-    #resource = Ken.get('/en/google')
+    #resource = Ken::Topic.get('/en/google')
+    #t = Ken.session.mqlread({
+    #      :id => '/en/facebook',
+    #      :type => "/common/topic",
+    #      :mid => nil,
+    #      :guid => nil,
+    #      :notable_for => []
+    #    }, {:extended => true})
     #types = resource.types
+    #test = resource.mid
     #foo = 'bar'
     #resource.views.each do |view|
     #  type = view.type

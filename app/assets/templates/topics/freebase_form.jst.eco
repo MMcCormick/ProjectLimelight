@@ -1,0 +1,44 @@
+<div class="top">
+  <h4>Freebase</h4>
+</div>
+
+<div class="meat">
+  <% if @topic.get('freebase_url'): %>
+    <div class="existing">
+      <div class='name'><a href="<%= @topic.get('freebase_url') %>"><%= @topic.get('freebase_url') %></a></div>
+      <div class='delete' data-id='<%= @topic.get('id') %>'>[delete]</div>
+    </div>
+  <% end %>
+
+  <form>
+    <div class="">
+      <label for="alias">Connect Freebase</label>
+      <input type="text" name="freebase_name" class='freebase-autocomplete' id='freebase-autocomplete-<%= @topic.get('id') %>' />
+      <input type="hidden" name="freebase_mid" class='freebase-mid' />
+    </div>
+
+    <div class="check">
+      <input type="checkbox" name="primary_type" value="true">
+      <label for="primary_type">Overwrite primary type?</label>
+    </div>
+
+    <div class="check">
+      <input type="checkbox" name="text" value="true">
+      <label for="text">Overwrite text (name and summary)?</label>
+    </div>
+
+    <div class="check">
+      <input type="checkbox" name="aliases" value="true">
+      <label for="aliases">Overwrite aliases?</label>
+    </div>
+
+    <div class="check">
+      <input type="checkbox" name="images" value="true">
+      <label for="images">Overwrite images?</label>
+    </div>
+
+    <div class="actions">
+      <div class="submit btn btn-success">Connect</div>
+    </div>
+  </form>
+</div>

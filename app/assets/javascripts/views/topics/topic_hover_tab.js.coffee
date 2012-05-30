@@ -8,7 +8,6 @@ class LL.Views.TopicHoverTab extends Backbone.View
 
   render: =>
     self = @
-    console.log 'render'
     score = new LL.Views.Score(model: self.model)
 
     talk = new LL.Views.TalkButton()

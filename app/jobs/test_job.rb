@@ -50,7 +50,7 @@ class TestJob
         end
       end
 
-      t.fetch_freebase(true, true, true)
+      t.freebase_repopulate(true, true, true)
     end
 
     crawlers = CrawlerSource.all

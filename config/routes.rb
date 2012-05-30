@@ -43,6 +43,7 @@ ProjectLimelight::Application.routes.draw do
       get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'
+      put 'freebase' => 'topics#update_freebase'
       post '' => 'topics#create', :as => :topics
       put '' => 'topics#update'
       get '' => 'topics#show'

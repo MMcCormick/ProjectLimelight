@@ -4,6 +4,6 @@ class TopicFetchExternalData
 
   def self.perform(topic_id)
     topic = Topic.find(topic_id)
-    topic.fetch_freebase(true) if topic
+    topic.freebase_repopulate(true) if topic
   end
 end

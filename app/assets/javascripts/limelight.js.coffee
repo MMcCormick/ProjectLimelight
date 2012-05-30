@@ -26,6 +26,17 @@ window.LL =
 
 jQuery ->
 
+  $('.freebase-autocomplete').livequery ->
+    $(@).each (i,val) ->
+      $(val).suggest(
+        key: 'AIzaSyCWYALjkKapMjYcrKlvLRYuihb6VxAlGQQ'
+        scoring: 'entity'
+        flyout: true
+        zIndex: 10000
+      ).bind 'fb-select', (e,data) ->
+        $(e.currentTarget).next().val(data.mid)
+
+
   # Start up Backbone
   LL.init()
 

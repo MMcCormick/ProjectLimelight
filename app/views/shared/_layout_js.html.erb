@@ -17,6 +17,9 @@
   var pusher = new Pusher('<%= Pusher.key %>');
 </script>
 
+<!-- Freebase -->
+<script type="text/javascript" src="https://www.gstatic.com/freebase/suggest/3_1/suggest.min.js"></script>
+
 <%= javascript_include_tag "application" %>
 
 <%= yield :js %>

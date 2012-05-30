@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
-#ruby '1.9.3'
+ruby '1.9.3'
 
-gem 'bundler'
+gem 'bundler', '1.2.0.pre.1'
 gem 'thin'
 gem 'rails', '3.2.3'
 gem 'jquery-rails'
@@ -30,7 +30,7 @@ gem 'neography' # neo4j graph database
 gem 'backbone-on-rails'
 gem 'mixpanel' # analytics
 gem 'feedzirra'
-gem 'ken' # freebase
+gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 #gem 'mongoid_collection_snapshot'
 

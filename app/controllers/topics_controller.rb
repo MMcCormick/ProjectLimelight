@@ -233,6 +233,14 @@ class TopicsController < ApplicationController
     render :json => build_ajax_response(:ok, nil, "Image Updated", nil, {:url => url})
   end
 
+  def update_freebase
+    topic = Topic.find(params[:target_id])
+    not_found("Topic not found") unless topic
+    authorize! :update, topic
+
+    #topic.freebase_id =
+  end
+
   def merge
     topic = Topic.find(params[:target_id])
     authorize! :update, topic

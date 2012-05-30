@@ -46,8 +46,9 @@ class Topic
   field :fb_page_id
   field :dbpedia
   field :opencyc
-  field :freebase_guid
   field :freebase_id
+  field :freebase_guid
+  field :freebase_mid
   field :freebase_url
   field :use_freebase_image, :default => false
   field :wikipedia
@@ -114,40 +115,32 @@ class Topic
     self.slug = possible.parameterize
   end
 
-  def freebase_guid
-    if read_attribute(:freebase_guid)
-      "/guid/#{read_attribute(:freebase_guid).split('.').last}"
-    end
-  end
-
   def fetch_external_data
     Resque.enqueue(TopicFetchExternalData, id.to_s)
   end
 
-  def fetch_freebase(overwrite_text=false, overwrite_aliases=false, overwrite_primary_type=false, overwrite_image=false)
+  def freebase
+    if freebase_id || freebase_guid || freebase_mid
+      query = {}
+      query[:type] = "/common/topic" unless is_topic_type || is_category
+      query[:notable_for] = [] unless is_topic_type || is_category
+      query[:id] = freebase_id ? freebase_id : nil
+      query[:guid] = !freebase_id && freebase_guid ? freebase_guid : nil
+      query[:mid] = !freebase_id && !freebase_guid && freebase_mid ? freebase_mid : nil
+      result = Ken.session.mqlread(query)
+      if result
+        result2 = Ken::Topic.get(result['mid'])
+        result.merge!(result2.data.as_json) if result2
+      end
+    end
+  end
+
+  def freebase_repopulate(overwrite_text=false, overwrite_aliases=false, overwrite_primary_type=false, overwrite_image=false)
     # get or find the freebase object
     freebase_search = nil
-    if freebase_guid || freebase_id
-      freebase_object = freebase_guid ? Ken::Topic.get(freebase_guid) : Ken::Topic.get(freebase_id)
+    freebase_object = freebase
 
-      return unless freebase_object
-
-      search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=1&query=#{URI::encode(name)}")
-
-      # make sure the names match up at least a little bit
-      if search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 800)
-        search['result'].each do |s|
-          if s['name'].parameterize.include?(name.parameterize) && s['score'] >= 50
-            freebase_search = s
-            break
-          end
-        end
-        unless freebase_search
-          freebase_search = search['result'].first
-          freebase_search = nil unless (search['result'].first['name'].parameterize.include?(name.parameterize) && search['result'].first['score'] > 100) || search['result'].first['score'] >= 1500
-        end
-      end
-    else
+    unless freebase_object
       search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(name)}")
       return unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 800)
 
@@ -163,23 +156,26 @@ class Topic
         freebase_search = search['result'].first
       end
 
-      freebase_object = Ken::Topic.get(freebase_search['mid'])
+      self.freebase_mid = freebase_search['mid']
+      freebase_object = self.freebase
       return unless freebase_object
     end
 
-    existing_topic = Topic.where(:freebase_id => freebase_object.id).first
+    existing_topic = Topic.where(:freebase_guid => freebase_object['guid']).first
     return if existing_topic && existing_topic.id != id
 
     # basics
-    self.freebase_id = freebase_object.id
-    self.freebase_url = freebase_object.url
-    self.summary = freebase_object.description unless summary
+    self.freebase_id = freebase_object['id']
+    self.freebase_guid = freebase_object['guid']
+    self.freebase_mid = freebase_object['mid']
+    self.freebase_url = freebase_object['url']
+    self.summary = freebase_object['description'] unless summary
 
     # store extra websites
-    freebase_object.webpages.each do |w|
+    freebase_object['webpage'].each do |w|
       if w['text'] == '{name}'
         self.website = w['url']
-      elsif ['Wikipedia','New York Times','Crunchbase'].include?(w['text']) && !websites_extra.detect{|we| we['name'] == w['text']}
+      elsif ['wikipedia','new york times','crunchbase','imdb'].include?(w['text'].downcase) && !websites_extra.detect{|we| we['name'] == w['text']}
         self.websites_extra << {
                 'name' => w['text'],
                 'url' => w['url']
@@ -187,25 +183,48 @@ class Topic
       end
     end
 
-    # try to connect types
+    # try to connect primary type
     type_connection = TopicConnection.find(Topic.type_of_id)
-    if freebase_search && freebase_search['notable'] && (overwrite_primary_type || !primary_type_id)
-      type_topic = Topic.where("aliases.slug" => freebase_search['notable']['name'].parameterize).first
+    if freebase_object['notable_for'] && freebase_object['notable_for'].length > 0 && (overwrite_primary_type || !primary_type_id)
+      type_topic = Topic.where(:freebase_id => freebase_object['notable_for'][0]).first
+
+      # if we didn't find the type topic, fetch it from freebase and check the name
+      freebase_type_topic = nil
       unless type_topic
-        type_topic = Topic.new
-        type_topic.name = freebase_search['notable']['name']
-        type_topic.user_id = User.marc_id
-        type_topic.save
+        freebase_type_topic = Ken.session.mqlread({ :id => freebase_object['notable_for'][0], :mid => nil, :name => nil })
+        if freebase_type_topic
+          type_topic = Topic.where("aliases.slug" => freebase_type_topic['name'].parameterize).first
+        end
       end
-      set_primary_type(type_topic.name, type_topic.id)
-      TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
-    elsif freebase_object.types && freebase_object.types.length > 0
-      type_names = freebase_object.types.map{|t| t.name.parameterize}
-      type_topics = Topic.where("aliases.slug" => {"$in" => type_names}, :is_topic_type => true).to_a
-      type_topics.each do |t|
-        next if primary_type_id || primary_type_id == t.id
-        set_primary_type(t.name, t.id) unless primary_type_id
-        TopicConnection.add(type_connection, self, t, User.marc_id, {:pull => false, :reverse_pull => true})
+
+      if type_topic || freebase_type_topic
+        new_type = false
+        unless type_topic
+          type_topic = Topic.new
+          type_topic.user_id = User.marc_id
+          new_type = true
+        end
+
+        if freebase_type_topic
+          extra = Ken::Topic.get(freebase_type_topic['mid'])
+          freebase_type_topic.merge!(extra.data.as_json) if extra
+          type_topic.freebase_mid = freebase_type_topic['mid']
+          type_topic.freebase_id = freebase_type_topic['id']
+          type_topic.freebase_guid = freebase_type_topic['guid']
+          type_topic.freebase_url = freebase_type_topic['url']
+          type_topic.name = freebase_type_topic['text'] ? freebase_type_topic['text'] : freebase_type_topic['name']
+          type_topic.summary = freebase_type_topic['description'] unless type_topic.summary
+          new_type = true
+        end
+
+        if type_topic.freebase_id == '/law/invention'
+          foo = 'bar'
+        end
+
+        type_topic.save if new_type
+
+        set_primary_type(type_topic.name, type_topic.id)
+        TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
       end
     end
 
@@ -216,18 +235,11 @@ class Topic
     end
 
     # overwrite certain things
-    if overwrite_text
-      existing_name = Topic.where(:name => freebase_object.name, :primary_type_id => {"$exists" => false}).first
-      self.name = freebase_object.name unless existing_name
-      self.summary = freebase_object.description
-    end
+    self.name = (freebase_object['name'] ? freebase_object['name'] : freebase_object['text']) if !name || overwrite_text
+    self.summary = freebase_object['description']  if !summary || overwrite_text
 
-    if overwrite_aliases && freebase_object.aliases.length > 0
-      self.aliases = []
-      init_alias
-      freebase_object.aliases.each do |a|
-        add_alias(a)
-      end
+    if overwrite_aliases && freebase_object['aliases'] && freebase_object['aliases'].length > 0
+      update_aliases freebase_object['aliases']
     end
 
     save
@@ -243,21 +255,16 @@ class Topic
   end
 
   def get_alias name
-    self.aliases.detect{|a| a.slug == name.parameterize}
+    self.aliases.where(:slug => name.parameterize).first
   end
 
   def add_alias(new_alias, ooac=false, hidden=false)
     return unless new_alias && !new_alias.blank?
 
     unless get_alias new_alias
-      #existing = Topic.where('aliases.slug' => new_alias.parameterize, 'ooac' => true).first
-      #if existing
-      #  return "The '#{existing.name}' topic has a one of a kind alias with this name."
-      #else
-        self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize, :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
-        Resque.enqueue(SmCreateTopic, id.to_s)
-        return true
-      #end
+      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize, :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
+      Resque.enqueue(SmCreateTopic, id.to_s)
+      true
     else
       'This topic already has that alias.'
     end

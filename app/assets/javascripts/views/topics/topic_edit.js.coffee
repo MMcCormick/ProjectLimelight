@@ -44,6 +44,9 @@ class LL.Views.TopicEdit extends Backbone.View
           name = if data.data then data.data.slug else ''
           self.addTopic($(val), data.term, data.id, name)
 
+    freebase_form = new LL.Views.TopicFreebaseForm(model: @model)
+    $(@el).append(freebase_form.render().el)
+
     @
 
   addTopic: (target, name, id, slug) =>

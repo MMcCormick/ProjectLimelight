@@ -52,10 +52,10 @@ class CrawlerPushPost
 
             entities << e
             if e['disambiguated'] && e['disambiguated']['freebase']
-              topic = Topic.where(:freebase_guid => e['disambiguated']['freebase']).first
+              topic = Topic.where(:freebase_guid => e['disambiguated']['freebase'].split('.').last).first
               unless topic # didn't find the topic with the freebase guid, check names
                 topic = Topic.where("aliases.slug" => e['disambiguated']['name'].parameterize, :primary_type_id => {'$exists' => true}).desc(:response_count).first
-                topic.freebase_guid = e['disambiguated']['freebase'] if topic
+                topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if topic
               end
             else
               name = e['disambiguated'] ? e['disambiguated']['name'].parameterize : e['text'].parameterize
@@ -74,7 +74,7 @@ class CrawlerPushPost
 
               topic.user_id = User.marc_id
               if e['disambiguated']
-                topic.freebase_guid = e['disambiguated']['freebase'] if e['disambiguated']['freebase']
+                topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if e['disambiguated']['freebase']
                 topic.dbpedia = e['disambiguated']['dbpedia'] if e['disambiguated']['dbpedia']
                 topic.opencyc = e['disambiguated']['opencyc'] if e['disambiguated']['opencyc']
               end

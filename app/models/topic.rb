@@ -122,7 +122,7 @@ class Topic
   end
 
   def freebase
-    if freebase_guid && freebase_uid[0] != '#'
+    if freebase_guid && freebase_guid[0] != '#'
       self.freebase_guid = "#" + freebase_guid.split('.').last
       save
     end

@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     authorize! :manage, :all if params[:require_admin]
 
     if params[:slug]
-      @this = User.where(:slug => params[:slug].parameterize).first
+      @this = User.where(:slug_pretty => params[:slug].parameterize).first
     else
       @this = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
     end

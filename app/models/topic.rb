@@ -28,7 +28,8 @@ class Topic
   class << self; attr_accessor :type_of_id, :related_to_id, :limelight_id, :limelight_feedback_id, :stop_words end
 
   field :name
-  field :pretty_slug
+  field :url_pretty
+  field :slug_pretty
   field :slug
   field :summary
   field :short_name
@@ -79,6 +80,7 @@ class Topic
   before_destroy :remove_from_soulmate, :disconnect
 
   index({ :slug => 1 })
+  index({ :slug_pretty => 1 })
   index({ :score => -1 })
   index({ :response_count => -1 })
   index({ :primary_type_id => 1 })
@@ -88,7 +90,7 @@ class Topic
 
   # Return the topic slug instead of its ID
   def to_param
-    self.pretty_slug
+    self.url_pretty
   end
 
   def created_at
@@ -104,17 +106,18 @@ class Topic
   end
 
   def generate_slug
-    possible = name.parameterize.gsub('-', ' ').titleize.gsub(' ', '')
+    possible = name.parameterize
     found = Topic.where(:slug => possible.parameterize).first
     if found && found.id != id
       count = 0
-      while found
+      while found && found.id != id
         count += 1
-        possible = name.parameterize.gsub('-', ' ').titleize.gsub(' ', '') + count.to_s
+        possible = name.parameterize + '-' + count.to_s
         found = Topic.where(:slug => possible.parameterize).first
       end
     end
-    self.pretty_slug = possible
+    self.url_pretty = possible.gsub('-', ' ').titleize.gsub(' ', '')
+    self.slug_pretty = possible.parameterize.gsub('-', '')
     self.slug = possible.parameterize
   end
 
@@ -238,9 +241,11 @@ class Topic
         end
 
         if type_topic.name && !type_topic.name.blank?
-          type_topic.save if new_type
-          set_primary_type(type_topic.name, type_topic.id)
-          TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
+          saved = new_type ? type_topic.save : false
+          if saved
+            set_primary_type(type_topic.name, type_topic.id)
+            TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
+          end
         end
       end
     end
@@ -279,7 +284,7 @@ class Topic
     return unless new_alias && !new_alias.blank?
 
     unless get_alias new_alias
-      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize.gsub('-', ''), :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
+      self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize, :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
       Resque.enqueue(SmCreateTopic, id.to_s)
       true
     else

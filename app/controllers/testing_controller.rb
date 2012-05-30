@@ -5,7 +5,18 @@ class TestingController < ApplicationController
   def test
     authorize! :manage, :all
 
-    Resque.enqueue(TestJob)
+    #Resque.enqueue(TestJob)
+
+    topics = Topic.all
+    topics.each do |t|
+      t.generate_slug
+      t.aliases.each do |a|
+        a.slug = a.name.parameterize
+        a.hash = a.name.parameterize.gsub('-', '')
+      end
+      t.save
+      Resque.enqueue(SmCreateTopic, t.id.to_s)
+    end
 
     #topic = Topic.find('4fc5ac6e2619465c0c000001')
     #topic.freebase_repopulate

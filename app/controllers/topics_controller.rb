@@ -34,7 +34,7 @@ class TopicsController < ApplicationController
   def show
     # Doesn't use find_by_slug() because it doesn't work after Topic.unscoped (deleted topics are ignored)
     if params[:slug]
-      @this = Topic.where(:slug => params[:slug].parameterize).first
+      @this = Topic.where(:slug_pretty => params[:slug].parameterize).first
     else
       @this = Topic.find(params[:id])
     end
@@ -76,7 +76,7 @@ class TopicsController < ApplicationController
   end
 
   def edit
-    @topic = Topic.where(:slug => params[:id]).first
+    @topic = Topic.where(:slug_pretty => params[:id].parameterize).first
     not_found("Topic not found") unless @topic
     authorize! :edit, @topic
 
@@ -103,7 +103,7 @@ class TopicsController < ApplicationController
 
   def destroy
     authorize! :manage, :all
-    if topic = Topic.where(:slug => params[:id].parameterize).first
+    if topic = Topic.where(:slug_pretty => params[:id].parameterize).first
       topic.destroy
       response = build_ajax_response(:ok, nil, "Topic deleted")
       status = 200
@@ -262,7 +262,7 @@ class TopicsController < ApplicationController
   def merge
     topic = Topic.find(params[:target_id])
     authorize! :update, topic
-    aliased_topic = Topic.where(:slug => params[:id]).first
+    aliased_topic = Topic.where(:slug_pretty => params[:id].parameterize).first
 
     unless topic.id == aliased_topic.id
       topic.merge(aliased_topic)

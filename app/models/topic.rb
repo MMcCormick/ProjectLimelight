@@ -81,6 +81,8 @@ class Topic
   index({ :score => -1 })
   index({ :response_count => -1 })
   index({ :primary_type_id => 1 })
+  index({ :freebase_guid => 1 }, { :sparse => true })
+  index({ :freebase_id => 1 }, { :sparse => true })
   index({ "aliases.slug" => 1, :primary_type_id => 1 })
 
   # Return the topic slug instead of its ID
@@ -199,7 +201,7 @@ class Topic
 
       if type_topic || freebase_type_topic
         new_type = false
-        unless type_topic
+        if freebase_type_topic && !type_topic
           type_topic = Topic.new
           type_topic.user_id = User.marc_id
           new_type = true
@@ -217,30 +219,27 @@ class Topic
           new_type = true
         end
 
-        if type_topic.freebase_id == '/law/invention'
-          foo = 'bar'
+        if type_topic.name && !type_topic.name.blank?
+          type_topic.save if new_type
+          set_primary_type(type_topic.name, type_topic.id)
+          TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
         end
-
-        type_topic.save if new_type
-
-        set_primary_type(type_topic.name, type_topic.id)
-        TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
       end
     end
-
-    # update the image
-    if image_versions == 0 || overwrite_image
-      self.active_image_version = 0
-      self.use_freebase_image = true
-    end
-
-    # overwrite certain things
-    self.name = (freebase_object['name'] ? freebase_object['name'] : freebase_object['text']) if !name || overwrite_text
-    self.summary = freebase_object['description']  if !summary || overwrite_text
-
-    if overwrite_aliases && freebase_object['aliases'] && freebase_object['aliases'].length > 0
-      update_aliases freebase_object['aliases']
-    end
+    #
+    ## update the image
+    #if image_versions == 0 || overwrite_image
+    #  self.active_image_version = 0
+    #  self.use_freebase_image = true
+    #end
+    #
+    ## overwrite certain things
+    #self.name = (freebase_object['name'] ? freebase_object['name'] : freebase_object['text']) if !name || overwrite_text
+    #self.summary = freebase_object['description']  if !summary || overwrite_text
+    #
+    #if overwrite_aliases && freebase_object['aliases'] && freebase_object['aliases'].length > 0
+    #  update_aliases freebase_object['aliases']
+    #end
 
     save
   end

@@ -143,6 +143,6 @@ class TestJob
         u.save
 
       end
-
+    end
   end
 end

@@ -17,9 +17,11 @@ class Neo4j
         like = self.neo.create_relationship('like', node1, post_node)
         self.neo.add_relationship_to_index('users', 'like', "#{user_id}-#{post_id}", like) if like
 
-        # increase affinity to the post creator
-        node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
-        Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, 1, false, nil) if node1 && node2
+        # increase affinity to the post creator unless submitted by bot
+        unless post.user_id.to_s == User.limelight_user_id
+          node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
+          Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, 1, false, nil) if node1 && node2
+        end
 
         # increase affinity to mentioned users
         post.user_mentions.each do |m|
@@ -47,8 +49,10 @@ class Neo4j
         Neo4j.neo.remove_relationship_from_index('users', rel1)
 
         # decrease affinity to the post creator
-        node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
-        Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, -1, false, nil) if node1 && node2
+        unless post.user_id.to_s == User.limelight_user_id
+          node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
+          Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, -1, false, nil) if node1 && node2
+        end
 
         # decrease affinity to mentioned users
         post.user_mentions.each do |m|
@@ -92,7 +96,7 @@ class Neo4j
       post.save
 
       # connect it to it's overall category if present
-      if post.category
+      if post.category && !post.category.blank?
         category_node = find_or_create_category(post.category)
         Neo4j.neo.create_relationship('categorized in', post_node, category_node)
       end
@@ -137,10 +141,23 @@ class Neo4j
     def follow_create(node1_id, node2_id, node1_index, node2_index)
       node1 = self.neo.get_node_index(node1_index, 'uuid', node1_id)
       node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
+
+      unless node1
+        target = Kernel.const_get(node1_index.singularize.capitalize).find(node1_id)
+        node1 = target.neo4j_create
+      end
+
+      unless node2
+        target = Kernel.const_get(node2_index.singularize.capitalize).find(node2_id)
+        node2 = target.neo4j_create
+      end
+
       if node1 && node2
         follow = self.neo.create_relationship('follow', node1, node2)
         self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", follow) if follow
         self.update_affinity(node1_id, node2_id, node1, node2, 10, false, nil, 'positive', false) if follow
+      else
+        foo = 'bar'
       end
     end
 
@@ -166,7 +183,9 @@ class Neo4j
       Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{topic.id.to_s}", rel2)
 
       # increase the creators affinity to these topics
-      Neo4j.update_affinity(post.user_id.to_s, topic.id.to_s, creator_node, mention_node, 1, false, false)
+      unless post.user_id.to_s == User.limelight_user_id
+        Neo4j.update_affinity(post.user_id.to_s, topic.id.to_s, creator_node, mention_node, 1, false, false)
+      end
 
       unless topic_nodes
         topic_nodes = []

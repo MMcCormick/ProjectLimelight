@@ -84,6 +84,7 @@ class Topic
   index({ :score => -1 })
   index({ :response_count => -1 })
   index({ :primary_type_id => 1 })
+  index({ :fb_page_id => 1 })
   index({ :freebase_guid => 1 }, { :sparse => true })
   index({ :freebase_id => 1 }, { :sparse => true })
   index({ "aliases.slug" => 1, :primary_type_id => 1 })

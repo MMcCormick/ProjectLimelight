@@ -7,15 +7,75 @@ class TestingController < ApplicationController
 
     #Resque.enqueue(TestJob)
 
-    topics = Topic.all
-    topics.each do |t|
-      t.generate_slug
-      t.aliases.each do |a|
-        a.slug = a.name.parameterize
-        a.hash = a.name.parameterize.gsub('-', '')
+    Topic.all.update(:followers_count => 0)
+
+    users = User.all
+    users.each do |u|
+      node = Neo4j.neo.get_node_index('users', 'uuid', u.id.to_s)
+      if node
+        nodes = Neo4j.neo.get_node_relationships(node, 'all', 'like')
+        if nodes
+          nodes.each do |n|
+            Neo4j.neo.delete_relationship(n)
+          end
+        end
+        nodes = Neo4j.neo.get_node_relationships(node, 'all', 'affinity')
+        if nodes
+          nodes.each do |n|
+            Neo4j.neo.delete_relationship(n)
+          end
+        end
+        nodes = Neo4j.neo.get_node_relationships(node, 'all', 'follow')
+        if nodes
+          nodes.each do |n|
+            Neo4j.neo.delete_relationship(n)
+          end
+        end
+        nodes = Neo4j.neo.get_node_relationships(node, 'all', 'mentions')
+        if nodes
+          nodes.each do |n|
+            Neo4j.neo.delete_relationship(n)
+          end
+        end
+        nodes = Neo4j.neo.get_node_relationships(node, 'all', 'created')
+        if nodes
+          nodes.each do |n|
+            Neo4j.neo.delete_relationship(n)
+          end
+        end
+        nodes = Neo4j.neo.get_node_relationships(node, 'all', 'talked')
+        if nodes
+          nodes.each do |n|
+            Neo4j.neo.delete_relationship(n)
+          end
+        end
+
+        u.following_users.each do |fu|
+          fun = User.find(fu)
+          if fun
+            Neo4j.follow_create(u.id.to_s, fun.id.to_s, 'users', 'users')
+          else
+            u.following_users.delete(fu)
+          end
+          u.following_users_count = u.following_users.length
+        end
+
+        u.following_topics.each do |fu|
+          fut = Topic.find(fu)
+
+          if fut
+            fut.followers_count += 1
+            fut.save
+            Neo4j.follow_create(u.id.to_s, fut.id.to_s, 'users', 'topics')
+          else
+            u.following_topics.delete(fu)
+          end
+          u.following_topics_count = u.following_topics.length
+        end
+
+        u.save
+
       end
-      t.save
-      Resque.enqueue(SmCreateTopic, t.id.to_s)
     end
 
     #topic = Topic.find('4fc5ac6e2619465c0c000001')

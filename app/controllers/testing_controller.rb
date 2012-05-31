@@ -8,6 +8,7 @@ class TestingController < ApplicationController
     #Resque.enqueue(TestJob)
 
     Topic.all.update(:followers_count => 0)
+    User.all.update(:followers_count => 0)
 
     users = User.all
     users.each do |u|
@@ -53,6 +54,8 @@ class TestingController < ApplicationController
         u.following_users.each do |fu|
           fun = User.find(fu)
           if fun
+            fun.followers_count += 1
+            fun.save
             Neo4j.follow_create(u.id.to_s, fun.id.to_s, 'users', 'users')
           else
             u.following_users.delete(fu)

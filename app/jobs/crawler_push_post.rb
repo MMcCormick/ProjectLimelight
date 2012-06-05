@@ -10,10 +10,10 @@ class CrawlerPushPost
       return [] unless string && !string.blank?
 
       # generate the word combinations in the tweet (to find topics based on) and remove short words
-      words = (string.split - Topic.stop_words).join(' ').gsub('-', ' ').downcase.gsub("'s", '').gsub(/[^a-z1-9 ]/, '').split.select { |w| w.length > 2 }.join(' ')
+      words = (string.split - Topic.stop_words).join(' ').gsub('-', ' ').downcase.gsub("'s", '').gsub(/[^a-z0-9 ]/, '').split.select { |w| w.length > 2 || w.match(/[0-9]/) }.join(' ')
       words = words.split(" ")
-      singular_words = words.map{|w| w.singularize}
-      words = singular_words
+      #singular_words = words.map{|w| w.singularize}
+      #words = singular_words
       combinaties = []
       i=0
       while i <= words.length-1

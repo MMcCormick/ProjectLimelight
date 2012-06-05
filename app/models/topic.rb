@@ -198,14 +198,16 @@ class Topic
     self.summary = freebase_object['description'] unless summary
 
     # store extra websites
-    freebase_object['webpage'].each do |w|
-      if w['text'] == '{name}'
-        self.website = w['url']
-      elsif ['wikipedia','new york times','crunchbase','imdb'].include?(w['text'].downcase) && !websites_extra.detect{|we| we['name'] == w['text']}
-        self.websites_extra << {
-                'name' => w['text'],
-                'url' => w['url']
-        }
+    if freebase_object['webpage']
+      freebase_object['webpage'].each do |w|
+        if w['text'] == '{name}'
+          self.website = w['url']
+        elsif ['wikipedia','new york times','crunchbase','imdb'].include?(w['text'].downcase) && !websites_extra.detect{|we| we['name'] == w['text']}
+          self.websites_extra << {
+                  'name' => w['text'],
+                  'url' => w['url']
+          }
+        end
       end
     end
 

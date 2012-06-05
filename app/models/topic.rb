@@ -72,6 +72,7 @@ class Topic
   end
 
   attr_accessible :name, :summary, :aliases, :short_name
+  attr_accessor :skip_fetch_external
 
   before_create :titleize_name, :generate_slug, :init_alias
   after_create :neo4j_create, :add_to_soulmate, :fetch_external_data
@@ -123,7 +124,7 @@ class Topic
   end
 
   def fetch_external_data
-    Resque.enqueue(TopicFetchExternalData, id.to_s)
+    Resque.enqueue(TopicFetchExternalData, id.to_s) unless skip_fetch_external
   end
 
   def freebase
@@ -144,6 +145,7 @@ class Topic
         result2 = Ken::Topic.get(result['mid'])
         result.merge!(result2.data.as_json) if result2
       end
+      result
     end
   end
 
@@ -226,6 +228,7 @@ class Topic
         if freebase_type_topic && !type_topic
           type_topic = Topic.new
           type_topic.user_id = User.marc_id
+          type_topic.skip_fetch_external = true
           new_type = true
         end
 
@@ -262,7 +265,7 @@ class Topic
     self.summary = freebase_object['description']  if !summary || overwrite_text
 
     if overwrite_aliases && freebase_object['aliases'] && freebase_object['aliases'].length > 0
-      update_aliases freebase_object['aliases']
+      update_aliases(freebase_object['aliases'])
     end
 
     save
@@ -277,14 +280,14 @@ class Topic
     add_alias(name, false, true)
   end
 
-  def get_alias name
+  def get_alias(name)
     self.aliases.where(:slug => name.parameterize).first
   end
 
   def add_alias(new_alias, ooac=false, hidden=false)
     return unless new_alias && !new_alias.blank?
 
-    unless get_alias new_alias
+    unless get_alias(new_alias)
       self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize, :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
       Resque.enqueue(SmCreateTopic, id.to_s)
       true
@@ -337,11 +340,11 @@ class Topic
   end
 
   def update_name_alias
-    if short_name_changed?
-      update_aliases(also_known_as)
-      remove_alias(short_name_was)
-      add_alias(short_name)
-    end
+    #if short_name_changed?
+    #  update_aliases(also_known_as)
+    #  remove_alias(short_name_was)
+    #  add_alias(short_name)
+    #end
     if name_changed?
       if name_was
         remove_alias(name_was.pluralize)
@@ -768,9 +771,9 @@ class Topic
       soulmate = true
     end
 
-    if short_name_changed?
-      soulmate = true
-    end
+    #if short_name_changed?
+    #  soulmate = true
+    #end
 
     unless primary_type_updates.empty?
       Topic.where("primary_type_id" => id).each do |topic|

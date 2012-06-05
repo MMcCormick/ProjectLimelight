@@ -246,7 +246,7 @@ class Topic
 
         if type_topic.name && !type_topic.name.blank?
           saved = new_type ? type_topic.save : false
-          if saved
+          if saved || !new_type
             set_primary_type(type_topic.name, type_topic.id)
             TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
           end

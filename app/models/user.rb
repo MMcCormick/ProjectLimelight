@@ -104,6 +104,7 @@ class User
 
   before_create :generate_slug
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff, :send_personal_email
+  before_update :update_slug
   after_update :update_denorms
   before_destroy :remove_from_soulmate
 
@@ -125,6 +126,12 @@ class User
 
   def generate_slug
     self.slug = username.parameterize
+  end
+
+  def update_slug
+    if username_changed?
+      generate_slug
+    end
   end
 
   def is_active?

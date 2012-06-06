@@ -64,7 +64,9 @@ class Topic
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 50 }
-  validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
+  #validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
+  validates :slug_pretty, :uniqueness => { :case_sensitive => false, :message => 'This pretty slug is already in use' }
+  validates :slug, :uniqueness => { :case_sensitive => false, :message => 'This slug is already in use' }
   validates_each :name do |record, attr, value|
     if Topic.stop_words.include?(value) || !Topic.deleted.where("aliases.slug" => value.parameterize).first.nil?
       record.errors.add attr, "This topic name is not permitted."
@@ -76,7 +78,7 @@ class Topic
 
   before_create :titleize_name, :generate_slug, :init_alias
   after_create :neo4j_create, :add_to_soulmate, :fetch_external_data
-  before_update :update_name_alias
+  before_validation :update_name_alias, :update_url
   after_update :update_denorms
   before_destroy :remove_from_soulmate, :disconnect
 
@@ -249,6 +251,12 @@ class Topic
         if type_topic.name && !type_topic.name.blank?
           saved = new_type ? type_topic.save : false
           if saved || !new_type
+
+            if primary_type_id
+              old_type_topic = Topic.find(primary_type_id)
+              TopicConnection.remove(type_connection, self, old_type_topic) if old_type_topic
+            end
+
             set_primary_type(type_topic.name, type_topic.id)
             TopicConnection.add(type_connection, self, type_topic, User.marc_id, {:pull => false, :reverse_pull => true})
           end
@@ -354,6 +362,13 @@ class Topic
       end
       add_alias(name.pluralize, false, true)
       add_alias(name.singularize, false, true)
+      self.slug = name.parameterize
+    end
+  end
+
+  def update_url
+    if url_pretty_changed?
+      self.slug_pretty = url_pretty.parameterize.gsub('-', '')
     end
   end
 
@@ -603,8 +618,9 @@ class Topic
   json_fields \
     :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
     :slug => { :properties => :short, :versions => [ :v1 ] },
-    :type => { :definition => lambda { |instance| 'Topic' }, :properties => :short, :versions => [ :v1 ] },
+    :url_pretty => { :properties => :short, :versions => [ :v1 ] },
     :url => { :definition => lambda { |instance| "/#{instance.to_param}" }, :properties => :short, :versions => [ :v1 ] },
+    :type => { :definition => lambda { |instance| 'Topic' }, :properties => :short, :versions => [ :v1 ] },
     :name => { :properties => :short, :versions => [ :v1 ] },
     :summary => { :definition => :short_summary, :properties => :short, :versions => [ :v1 ] },
     :score => { :properties => :short, :versions => [ :v1 ] },
@@ -613,7 +629,8 @@ class Topic
     :images => { :definition => lambda { |instance| Topic.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
-    :aliases => { :type => :reference, :definition => :visible_aliases, :properties => :public, :versions => [ :v1 ] },
+    :visible_alias_count => { :definition => lambda { |instance| instance.visible_aliases.length }, :properties => :public, :versions => [ :v1 ]},
+    :aliases => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
     :websites => { :definition => :all_websites, :properties => :public, :versions => [ :v1 ] },
     :freebase_url => { :properties => :public, :versions => [ :v1 ] }
 

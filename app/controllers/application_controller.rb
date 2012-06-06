@@ -87,6 +87,7 @@ class ApplicationController < ActionController::Base
   # open graph tags
   def build_og_tags(title, type, url, image, desc, extra={})
     og_tags = []
+    og_tags << ["fb:app_id", title]
     og_tags << ["og:title", title]
     og_tags << ["og:type", type]
     og_tags << ["og:url", url]

@@ -16,6 +16,11 @@
       <textarea name="summary"><%= @topic.get('summary') %></textarea>
     </div>
 
+    <div class="field">
+      <label for="url_pretty">URL</label>
+      <input type="text" name="url_pretty" value="<%= @topic.get('url_pretty') %>">
+    </div>
+
     <div class="actions">
       <div type="submit" class="submit btn btn-success">Update</div>
     </div>

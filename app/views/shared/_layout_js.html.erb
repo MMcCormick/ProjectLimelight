@@ -14,7 +14,8 @@
 //    WEB_SOCKET_DEBUG = true;
   <% end %>
 
-  var pusher = new Pusher('<%= Pusher.key %>');
+  WEB_SOCKET_SUPPRESS_CROSS_DOMAIN_SWF_ERROR = true;
+  var pusher = new Pusher('<%= Pusher.key %>', { encrypted: true });
 </script>
 
 <!-- Freebase -->

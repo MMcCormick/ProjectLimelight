@@ -3,9 +3,7 @@
   <!--[if IE 7]>    <html class="no-js ie7 oldie" xmlns:fb="http://ogp.me/ns/fb#" lang="en"> <![endif]-->
   <!--[if IE 8]>    <html class="no-js ie8 oldie" xmlns:fb="http://ogp.me/ns/fb#" lang="en"> <![endif]-->
   <!--[if gt IE 8]><!--> <html class="no-js" xmlns:fb="http://ogp.me/ns/fb#" lang="en"> <!--<![endif]-->
-  <head>
-    <%= render :partial => 'shared/head' %>
-  </head>
+  <%= render :partial => 'shared/head' %>
   <body id="<%= params[:controller].parameterize %>-c" class="three">
 
     <%= render 'shared/header' if (signed_in? && current_user.tutorial_step == 0) || !signed_in? && params[:controller] %>

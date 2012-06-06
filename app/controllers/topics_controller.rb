@@ -90,12 +90,13 @@ class TopicsController < ApplicationController
     @topic = Topic.find(params[:id])
     authorize! :update, @topic
 
-    original_slug = @topic.slug
+    original_slug = @topic.slug_pretty
     @topic.name = params[:name] if params[:name]
     @topic.summary = params[:summary] if params[:summary]
+    @topic.url_pretty = params[:url_pretty] if params[:url_pretty]
 
     if @topic.save
-      render json: build_ajax_response(:ok, (original_slug != @topic.slug) ? topic_path(@topic) : nil, 'Topic was successfully updated.'), :status => :ok
+      render json: build_ajax_response(:ok, (original_slug != @topic.slug_pretty) ? topic_path(@topic) : nil, 'Topic was successfully updated.'), :status => :ok
     else
       render json: build_ajax_response(:error, nil, 'Topic could not be updated', @topic.errors), status: :unprocessable_entity
     end
@@ -103,16 +104,13 @@ class TopicsController < ApplicationController
 
   def destroy
     authorize! :manage, :all
-    if topic = Topic.where(:slug_pretty => params[:id].parameterize).first
-      topic.destroy
-      response = build_ajax_response(:ok, nil, "Topic deleted")
-      status = 200
-    else
-      response = build_ajax_response(:error, nil, "Topic not found")
-      status = 400
-    end
+    topic = Topic.find(params[:id])
 
-    render json: response, status: status
+    not_found("Topic not found") unless topic
+
+    topic.destroy!
+
+    render :json => build_ajax_response(:ok, nil, "Topic deleted"), :status => 200
   end
 
   def suggestions
@@ -157,8 +155,9 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:id])
     authorize! :update, topic
 
-    ooac = params[:ooac] == "true" ? true : false
-    result = topic.add_alias(params[:alias], ooac)
+    ooac = params[:ooac] && params[:ooac] == "true" ? true : false
+    hidden = params[:hidden] && params[:hidden] == "true" ? true : false
+    result = topic.add_alias(params[:alias], ooac, hidden)
 
     if result == true
       if topic.save
@@ -180,9 +179,10 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:id])
     authorize! :update, topic
 
-    ooac = params[:ooac] == 'true' ? true : false
+    ooac = params[:ooac] && params[:ooac] == 'true' ? true : false
+    hidden = params[:hidden] && params[:hidden] == 'true' ? true : false
 
-    result = topic.update_alias(params[:alias_id], params[:name], ooac)
+    result = topic.update_alias(params[:alias_id], params[:name], ooac, hidden)
     if result == true
       if topic.save
         response = build_ajax_response(:ok, nil, "Alias updated!")
@@ -238,6 +238,8 @@ class TopicsController < ApplicationController
     not_found("Topic not found") unless topic
     authorize! :update, topic
 
+    topic.freebase_id = nil
+    topic.freebase_guid = nil
     topic.freebase_mid = params[:freebase_mid]
     text = params[:text] && params[:text] == 'true' ? true : false
     aliases = params[:aliases] && params[:aliases] == 'true' ? true : false

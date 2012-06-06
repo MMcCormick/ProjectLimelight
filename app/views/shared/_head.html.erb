@@ -1,40 +1,43 @@
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<head <%= Rails.env.production? ? 'prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# project_limelight: http://ogp.me/ns/fb/project_limelight#"' : 'prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# limelight_staging: http://ogp.me/ns/fb/limelight_staging#"' %>>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-<title><%= title %></title>
+  <title><%= title %></title>
 
-<meta name="description" content="<%= description %>">
-<meta name="author" content="">
+  <meta name="description" content="<%= description %>">
+  <meta name="author" content="">
 
-<!-- Mobile viewport optimized: j.mp/bplateviewport -->
-<meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<!-- Open Graph -->
-<% if @og_tags %>
-  <% @og_tags.each do |tag| %>
-    <meta property=<%= tag[0] %> content="<%= tag[1] %>" />
+  <!-- Open Graph -->
+  <% if @og_tags %>
+    <% @og_tags.each do |tag| %>
+      <meta property=<%= tag[0] %> content="<%= tag[1] %>" />
+    <% end %>
+    <meta property="og:site_name" content="Limelight" />
+    <meta property="fb:admins" content="1229430023" />
+    <meta property="fb:app_id" content="<%= Rails.env.production? ? '185721368181340' : '321754267851647' %>" />
   <% end %>
-  <meta property="og:site_name" content="Limelight" />
-  <meta property="fb:admins" content="1229430023" />
-<% end %>
 
-<!-- Google Tags -->
-<meta itemprop="name" content="Limelight">
-<meta itemprop="description" content="Connect through topics.">
-<meta itemprop="image" content="http://static.p-li.me.s3.amazonaws.com/assets/images/splash-logo.png">
+  <!-- Google Tags -->
+  <meta itemprop="name" content="Limelight">
+  <meta itemprop="description" content="Connect through topics.">
+  <meta itemprop="image" content="http://static.p-li.me.s3.amazonaws.com/assets/images/splash-logo.png">
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-<%= stylesheet_link_tag "application" %>
-<!--[if lt IE 9]>
-  <%= stylesheet_link_tag "ie" %>
-  <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
-<![endif]-->
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <%= stylesheet_link_tag "application" %>
+  <!--[if lt IE 9]>
+    <%= stylesheet_link_tag "ie" %>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+  <![endif]-->
 
-<!-- Freebase -->
-<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/freebase/suggest/3_1/suggest.min.css" />
+  <!-- Freebase -->
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/freebase/suggest/3_1/suggest.min.css" />
 
-<%= csrf_meta_tags %>
+  <%= csrf_meta_tags %>
 
-<%= yield :head %>
+  <%= yield :head %>
 
-<script src="http://static.p-li.me/assets/modernizr.js"></script>
+  <script src="http://static.p-li.me/assets/modernizr.js"></script>
+</head>

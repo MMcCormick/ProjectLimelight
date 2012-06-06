@@ -31,6 +31,7 @@ class TopicConnection
 
     # pulla is a hash of format { :pull => Boolean, :reverse_pull => Boolean }
     # TODO: improve error detection - return false and don't save topics if no connection was created?
+    # TODO: use batch operations
     def add(connection, topic1, topic2, user_id, pulla=nil)
       rel1 = Neo4j.get_connection(connection.id, topic1.id, topic2.id)
       unless rel1

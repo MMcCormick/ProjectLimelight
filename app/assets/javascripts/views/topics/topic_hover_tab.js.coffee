@@ -8,13 +8,15 @@ class LL.Views.TopicHoverTab extends Backbone.View
 
   render: =>
     self = @
-    score = new LL.Views.Score(model: self.model)
+    score = new LL.Views.Score(model: @model)
+
+    destroy = new LL.Views.TopicDestroyButton(model: @model)
 
     talk = new LL.Views.TalkButton()
-    talk.topic1 = self.model
+    talk.topic1 = @model
     talk.button = true
 
-    follow = new LL.Views.FollowButton(model: self.model)
+    follow = new LL.Views.FollowButton(model: @model)
 
     @target.qtip
       overwrite: false
@@ -35,7 +37,7 @@ class LL.Views.TopicHoverTab extends Backbone.View
 
           $(self.el).find('.stat1').html(score.render().el)
 
-          $(self.el).find('.bottom').append(talk.render().el).append(follow.render().el)
+          $(self.el).find('.bottom').append(destroy.render().el).append(talk.render().el).append(follow.render().el)
           $(self.el)
       events:
         hide: (e,api) ->

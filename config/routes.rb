@@ -45,6 +45,7 @@ ProjectLimelight::Application.routes.draw do
       get 'index' => 'topics#index'
       put ':id/freebase' => 'topics#update_freebase'
       delete ':id/freebase' => 'topics#delete_freebase'
+      delete '' => 'topics#destroy'
       post '' => 'topics#create', :as => :topics
       put '' => 'topics#update'
       get '' => 'topics#show'

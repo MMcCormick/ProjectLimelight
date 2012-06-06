@@ -64,9 +64,10 @@ class Topic
 
   validates :user_id, :presence => true
   validates :name, :presence => true, :length => { :minimum => 2, :maximum => 50 }
-  #validates :short_name, :uniqueness => true, :unless => "short_name.blank?"
   validates :slug_pretty, :uniqueness => { :case_sensitive => false, :message => 'This pretty slug is already in use' }
   validates :slug, :uniqueness => { :case_sensitive => false, :message => 'This slug is already in use' }
+  validates :freebase_guid, :uniqueness => { :case_sensitive => false, :allow_blank => true, :message => 'This freebase guid is already in use' }
+  validates :freebase_id, :uniqueness => { :case_sensitive => false, :allow_blank => true, :message => 'This freebase id is already in use' }
   validates_each :name do |record, attr, value|
     if Topic.stop_words.include?(value) || !Topic.deleted.where("aliases.slug" => value.parameterize).first.nil?
       record.errors.add attr, "This topic name is not permitted."
@@ -786,7 +787,7 @@ class Topic
       primary_type_updates["primary_type"] = name
     end
 
-    if name_changed? || slug_changed?
+    if name_changed? || slug_changed? || url_pretty_changed?
       soulmate = true
     end
 
@@ -796,8 +797,10 @@ class Topic
 
     unless primary_type_updates.empty?
       Topic.where("primary_type_id" => id).each do |topic|
-        topic.set_primary_type(name, id)
-        topic.save
+        unless topic.id == id
+          topic.set_primary_type(name, id)
+          topic.save
+        end
       end
     end
 

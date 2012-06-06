@@ -14,6 +14,38 @@
   <% end %>
 </script>
 
+<% unless Rails.env.development? %>
+  <!-- Start of Woopra Code -->
+  <script type="text/javascript">
+  function woopraReady(tracker) {
+      tracker.setDomain('<%= Rails.env.production? ? "projectlimelight.com" : "staging.projectlimelight.com" %>');
+      tracker.setIdleTimeout(300000);
+
+      <% if signed_in? %>
+        tracker.addVisitorProperty('email','<%= current_user.email %>');
+        tracker.addVisitorProperty('gravatar','<%= current_user.image_url(:square, :small) %>');
+        <% if current_user.fullname %>
+          tracker.addVisitorProperty('name','<%= current_user.fullname %>');
+        <% else %>
+          tracker.addVisitorProperty('name','<%= current_user.username %>');
+        <% end %>
+      <% end %>
+
+      tracker.track();
+      return false;
+  }
+  (function() {
+      var wsc = document.createElement('script');
+      wsc.src = document.location.protocol+'//static.woopra.com/js/woopra.js';
+      wsc.type = 'text/javascript';
+      wsc.async = true;
+      var ssc = document.getElementsByTagName('script')[0];
+      ssc.parentNode.insertBefore(wsc, ssc);
+  })();
+  </script>
+  <!-- End of Woopra Code -->
+<% end %>
+
 <!-- Facebook -->
 <div id="fb-root"></div>
 <script>(function(d, s, id) {

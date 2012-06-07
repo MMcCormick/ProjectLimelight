@@ -38,10 +38,10 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.2.8)
-    airbrake (3.1.0)
+    airbrake (3.1.1)
       activesupport
       builder
-    anjlab-bootstrap-rails (2.0.4.0)
+    anjlab-bootstrap-rails (2.0.4.1)
       railties (>= 3.0)
       sass
     arel (3.0.2)
@@ -58,9 +58,9 @@ GEM
       jquery-rails
       railties (>= 3.1)
     bcrypt-ruby (3.0.1)
-    bson (1.6.2)
-    bson_ext (1.6.2)
-      bson (~> 1.6.2)
+    bson (1.6.4)
+    bson_ext (1.6.4)
+      bson (~> 1.6.4)
     builder (3.0.0)
     cancan (1.6.7)
     chronic (0.6.7)
@@ -210,7 +210,7 @@ GEM
     omniauth-twitter (0.0.11)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
-    origin (1.0.0.rc)
+    origin (1.0.0)
     orm_adapter (0.0.7)
     os (0.9.6)
     polyglot (0.3.3)
@@ -286,6 +286,7 @@ GEM
       railties (>= 3.0)
       rspec (~> 2.10.0)
     ruby-hmac (0.4.0)
+    ruby-prof (0.11.2)
     rubyzip (0.9.8)
     rufus-scheduler (2.0.16)
       tzinfo (>= 0.3.23)
@@ -375,6 +376,7 @@ DEPENDENCIES
   resque_mailer
   rmagick
   rspec-rails
+  ruby-prof
   sass-rails (~> 3.2.3)
   soulmate (= 0.1.3)
   thin

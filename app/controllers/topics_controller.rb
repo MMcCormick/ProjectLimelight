@@ -104,11 +104,23 @@ class TopicsController < ApplicationController
 
   def destroy
     authorize! :manage, :all
-    topic = Topic.find(params[:id])
-
-    not_found("Topic not found") unless topic
-
-    topic.destroy!
+    if params[:id]
+      topic = Topic.find(params[:id])
+      not_found("Topic not found") unless topic
+      topic.destroy!
+    elsif params[:ids]
+      topics = Topic.where(:_id => {"$in" => params[:ids]})
+      merge = params[:merge] ? Topic.find(params[:merge]) : nil
+      topics.each do |topic|
+        if merge
+          posts = Post.where(:topic_mention_ids => topic.id)
+          posts.each do |p|
+            p.add_topic_mention(merge)
+          end
+        end
+        topic.destroy!
+      end
+    end
 
     render :json => build_ajax_response(:ok, nil, "Topic deleted"), :status => 200
   end
@@ -283,5 +295,33 @@ class TopicsController < ApplicationController
     end
 
     render json: response, :status => status
+  end
+
+  def duplicates
+    map    = %Q{
+      function() {
+        emit(this.name, {id: this._id});
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        var result = [];
+        values.forEach(function(value) {
+          result.push(value.id);
+        });
+        return result.join('-');
+      }
+    }
+
+    @topic_groups = []
+
+    Topic.map_reduce(map, reduce).out(:inline => 1).each do |doc|
+      if doc['value'].is_a?(String)
+        @topic_groups << Topic.where(:_id => {"$in" => doc['value'].split('-')}).desc(:response_count).to_a
+      end
+    end
+
+    @topic_groups.sort_by! {|a| a.length}
+    @topic_groups.reverse!
   end
 end

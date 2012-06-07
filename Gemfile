@@ -88,6 +88,7 @@ platforms :ruby do
   group :development do
     gem "foreman"
     gem 'pry-rails'
+    gem 'ruby-prof'
   end
 end
 

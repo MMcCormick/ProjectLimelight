@@ -186,3 +186,40 @@
     margin: 10px;
   }
 }
+
+#topics-c {
+  .duplicates-c {
+    h4 {
+      margin: 0 0 15px 0;
+      text-align: center;
+      width: 670px;
+    }
+    .content-tile {
+      .check-all {
+        color: $link;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .meat {
+        ul {
+          list-style: none;
+        }
+        li {
+          @include clearfix();
+          .radio {
+            margin: 0 8px 0 0;
+            position: relative;
+            top: 1px;
+          }
+          > div {
+            width: 14%;
+            float: left;
+          }
+        }
+        .delete {
+          margin: 15px 0 0 0;
+        }
+      }
+    }
+  }
+}

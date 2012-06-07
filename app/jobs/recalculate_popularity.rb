@@ -49,7 +49,7 @@ class RecalculatePopularity
       }
     end
 
-    @results = PopularityAction.where(:et => {'$gte' => Chronic.parse("three months ago").utc.to_i}).map_reduce(map, reduce).out(:replace => "popularity_results").each do |doc|
+    PopularityAction.where(:et => {'$gte' => Chronic.parse("three months ago").utc.to_i}).map_reduce(map, reduce).out(:replace => "popularity_results").each do |doc|
       # Normalize the popularity
       normalized_value = doc["value"]["amount"]
       case doc["value"]["type"]

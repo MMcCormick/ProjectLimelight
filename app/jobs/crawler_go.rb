@@ -9,7 +9,7 @@ class CrawlerGo
       sources.each do |s|
         feed = Feedzirra::Feed.fetch_and_parse(s.url)
 
-        next unless feed && feed != '0'
+        next unless feed && feed != 0 && feed != '0'
 
         # skip this source if it has not beed modified since our last crawl
         if (feed.etag == s.etag) || (s.last_modified && feed.last_modified == s.last_modified)

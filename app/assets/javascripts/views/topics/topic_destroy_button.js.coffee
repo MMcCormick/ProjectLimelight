@@ -20,7 +20,7 @@ class LL.Views.TopicDestroyButton extends Backbone.View
 
     self = @
 
-    r = confirm("Are you sure you want to permanently destroy the '#{@model.get('name')} topic?!")
+    r = confirm("Are you sure you want to permanently destroy the '#{@model.get('name')}' topic?!")
     if r == true
 
       $.ajax '/api/topics',

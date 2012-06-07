@@ -145,7 +145,8 @@ ProjectLimelight::Application.routes.draw do
     get 'privacy' => 'pages#privacy', :as => :privacy
     get 'terms' => 'pages#terms', :as => :terms
     get 'help' => 'pages#help', :as => :help
-    get 'admin' => 'pages#admin', :as => :admin
+    get 'admin' => 'pages#admin', :as => :admin, :require_admin => true
+    get 'admin/topics/duplicates' => 'topics#duplicates', :as => :admin_topic_duplicates
     get 'admin/posts/stream' => 'users#show', :as => :admin_post_stream, :require_admin => true
   end
 

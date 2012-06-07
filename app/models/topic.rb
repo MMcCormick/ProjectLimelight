@@ -309,18 +309,12 @@ class Topic
 
   def remove_alias old_alias
     return unless old_alias && !old_alias.blank?
-    new_aliases = []
-    aliases.each do |a|
-      if a.slug != old_alias.parameterize
-        new_aliases << a
-      end
-    end
-    self.aliases = new_aliases
+    self.aliases.where(:slug => name.parameterize).delete
     Resque.enqueue(SmCreateTopic, id.to_s)
   end
 
   def update_alias(alias_id, name, ooac, hidden=false)
-    found = self.aliases.detect{|a| a.id.to_s == alias_id}
+    found = self.aliases.find(alias_id)
     if found
       if ooac == true
         existing = Topic.where('aliases.slug' => name.parameterize).to_a

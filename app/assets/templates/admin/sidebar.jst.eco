@@ -6,6 +6,11 @@
       </a>
     </li>
     <li>
+      <a class='<%= 'on' if @page == 'admin_topic_duplicates' %>' href="/pages/admin/topics/duplicates">
+        Manage Duplicate Topics<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
       <a class='<%= 'on' if @page == 'admin_manage_crawlers' %>' href="/crawler_sources">
         Manage Crawler Sources<i class="icon icon-chevron-right"></i>
       </a>

@@ -358,12 +358,14 @@ module Limelight #:nodoc:
     end
 
     def add_topic_mention(topic)
-      self.topic_mentions << topic
-      pre_mention = pre_mentions.find(topic.id)
-      pre_mention.destroy if pre_mention
-      FeedUserItem.push_post_through_topic(self, topic)
-      FeedTopicItem.push_post_through_topic(self, topic)
-      Neo4j.post_add_topic_mention(self, topic)
+      unless topic_mention_ids.include?(topic.id)
+        self.topic_mentions << topic
+        pre_mention = pre_mentions.find(topic.id)
+        pre_mention.destroy if pre_mention
+        FeedUserItem.push_post_through_topic(self, topic)
+        FeedTopicItem.push_post_through_topic(self, topic)
+        Neo4j.post_add_topic_mention(self, topic)
+      end
     end
 
     def remove_topic_mention(topic)

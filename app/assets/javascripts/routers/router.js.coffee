@@ -12,6 +12,7 @@ class LL.Router extends Backbone.Router
     'pages/admin': 'adminHome'
     'topics/new': 'adminManageTopics'
     'crawler_sources': 'adminManageCrawlers'
+    'pages/admin/topics/duplicates': 'adminTopicDuplicates'
     'pages/admin/posts/stream': 'adminPostStream'
     'pages/:name': 'staticPage'
     'settings': 'settings'
@@ -451,6 +452,29 @@ class LL.Router extends Backbone.Router
 
       LL.App.renderScreen('admin_manage_crawlers', id)
 
+  adminTopicDuplicates: ->
+
+    @hideModal()
+
+    user = LL.App.current_user
+    id = user.get('id')
+
+    # Only load the feed if it's new
+    if LL.App.findScreen('admin_topic_duplicates', id)
+      LL.App.showScreen('admin_topic_duplicates', id)
+    else
+      screen = LL.App.newScreen('admin_topic_duplicates', id)
+
+      sidebar = LL.App.findSidebar('admin', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('admin', id, user)
+      screen['sidebar'] = sidebar
+
+      duplicates = new LL.Views.TopicDuplicates()
+      screen['components'].push(duplicates)
+
+      LL.App.renderScreen('admin_topic_duplicates', id)
+
   adminPostStream: ->
 
     @hideModal()
@@ -490,12 +514,12 @@ class LL.Router extends Backbone.Router
   #######
 
   _trackPageview: ->
-    url = Backbone.history.getFragment()
+#    url = Backbone.history.getFragment()
 #    _gaq.push(['_trackPageview', "/#{url}"])
 
   hideModal: ->
     LL.App.Modal.hide()
-    $('.modal, .content-tile').remove()
+    $('.modal, .content-tile.modal').remove()
 
   splashPage: ->
 

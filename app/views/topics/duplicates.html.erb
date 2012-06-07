@@ -1,0 +1,33 @@
+<h4>Delete checked topics in each group. If you select a radio button for a topic, then for each deleted topic (the checked ones), their posts will be transferred to the radio button topic.</h4>
+
+<% @topic_groups.each_with_index do |topic_group,i| %>
+  <div class='content-tile'>
+    <div class="section static-page">
+      <div class="top">
+        <h3>
+          <%= topic_group[0].name %> (<%= topic_group.length %> versions)
+          <span class='check-all'>[check all]</span>
+        </h3>
+      </div>
+      <div class="meat">
+        <ul>
+          <% topic_group.each do |topic| %>
+          <li>
+            <div class='first'>
+              <input type="radio" name="group<%= i %>" class='radio' data-id='<%= topic.id.to_s %>' />
+              <input type='checkbox' autocomplete='off' data-id='<%= topic.id.to_s %>' />
+            </div>
+            <div><a href="<%= topic_path(topic)  %>" target="_blank">Link</a></div>
+            <div><%= topic.response_count.to_i %>resp</div>
+            <div><%= topic.score.to_i %>pts</div>
+            <div>/<%= topic.to_param %></div>
+            <div><%= topic.primary_type ? topic.primary_type : '&nbsp;'.html_safe %></div>
+            <div><%= topic.freebase_id ? 'Yes Freebase' : '' %></div>
+          </li>
+          <% end %>
+        </ul>
+        <div class='delete btn btn-danger'>Destroy Checked Topics</div>
+      </div>
+    </div>
+  </div>
+<% end %>

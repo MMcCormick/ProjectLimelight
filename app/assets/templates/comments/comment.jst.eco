@@ -3,7 +3,6 @@
   <a class="ulink" data-id="<%= @comment.get('user').get('id') %>" href="<%= @comment.get('user').get('url') %>">
     <%= @comment.get('user').get('username') %>
   </a>
-  <span><%= @comment.get('created_at_short') %></span>
 </div>
 <p>
   <%= @comment.get('content') %>

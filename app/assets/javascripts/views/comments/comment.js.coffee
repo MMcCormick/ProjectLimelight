@@ -7,4 +7,10 @@ class LL.Views.Comment extends Backbone.View
 
   render: ->
     $(@el).html(@template(comment: @model))
+
+    prettyTime = new LL.Views.PrettyTime()
+    prettyTime.format = 'short'
+    prettyTime.time = @model.get('created_at')
+    $(@el).find('.when').append(prettyTime.render().el)
+
     @

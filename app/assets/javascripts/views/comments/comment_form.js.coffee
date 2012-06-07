@@ -31,18 +31,25 @@ class LL.Views.CommentForm extends Backbone.View
     @collection.create attributes,
       wait: true
       beforeSend: ->
-        $(self.el).find('textarea, .btn-success').addClass('disabled').text('Submitting...')
+        $(self.el).find('textarea, .btn-success').addClass('disabled')
+        $(self.el).find('.btn-success').text('Submitting...')
       success: (data) ->
-        $(self.el).find('textarea, .btn-success').removeClass('disabled').text('Submit')
+        $(self.el).find('textarea, .btn-success').removeClass('disabled')
+        $(self.el).find('textarea').text('').blur()
+        $(self.el).find('.btn-success').text('Submit')
         self.model.trigger('new_comment')
         createGrowl false, "Comment created", 'Success', 'green'
         globalSuccess(data)
         self.destroyForm()
       error: (jqXHR, textStatus, errorThrown) ->
-        $(self.el).find('textarea, .btn-success').removeClass('disabled').text('Submit')
+        $(self.el).find('textarea, .btn-success').removeClass('disabled')
+        $(self.el).find('textarea').text('').blur()
+        $(self.el).find('.btn-success').text('Submit')
         globalError(textStatus, $(self.el))
       complete: ->
-        $(self.el).find('textarea, .btn-success').removeClass('disabled').text('Submit')
+        $(self.el).find('textarea, .btn-success').removeClass('disabled')
+        $(self.el).find('textarea').text('').blur()
+        $(self.el).find('.btn-success').text('Submit')
 
   catchEnter: (e) =>
     if e.keyCode == 13

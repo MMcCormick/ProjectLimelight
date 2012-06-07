@@ -98,7 +98,7 @@ class Notification
         notification.user = target_user
         notification.triggered_by = triggered_by_user if triggered_by_user
         notification.object = object if object
-        notification.object_user = object if object_user
+        notification.object_user = object_user if object_user
         notification.comment_id = comment.id if comment
         notification.notify = notify
       end

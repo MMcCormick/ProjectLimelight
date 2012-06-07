@@ -23,18 +23,6 @@ class LikesController < ApplicationController
           if notification
             Pusher["#{object.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
           end
-
-          object.topic_mentions.each do |mention|
-            increase = InfluenceIncrease.new
-            increase.amount = like_success
-            increase.topic_id = mention.id
-            increase.object_type = 'Talk'
-            increase.action = :lk
-            increase.id = mention.name
-            increase.topic = mention
-
-            Pusher[object.user_id.to_s].trigger('influence_change', increase.to_json)
-          end
         end
 
         response = build_ajax_response(:ok, nil, nil, nil, {:target => '.like_'+object.id.to_s, :toggle_classes => ['likeB', 'unlikeB']})

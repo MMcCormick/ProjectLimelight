@@ -473,10 +473,10 @@ module Limelight #:nodoc:
                 affected_influence_ids << topic.id
 
                 increase = InfluenceIncrease.new
-                increase.amount = 1
+                increase.amount = topic_amt
                 increase.topic_id = topic.id
                 increase.object_type = 'Talk'
-                increase.action = :new
+                increase.action = type
                 increase.topic = topic
                 increase.id = topic.name
 

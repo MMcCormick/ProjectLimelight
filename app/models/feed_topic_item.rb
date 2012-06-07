@@ -4,6 +4,7 @@ class FeedTopicItem
   field :root_id
   field :root_type
   field :mentions
+  field :last_response_time, :default => Time.now
   field :p, :default => 0
 
   index({ :root_id => -1 })
@@ -16,14 +17,13 @@ class FeedTopicItem
 
   class << self
 
-    #TODO: latest response time?
-
     def post_create(post)
       # warning: do not use post.is_root? in this function, since topic roots are excluded
       root_id = post.root_type == 'Topic' ? post.id : post.root_id
       root_type = post.root_type == 'Topic' ? post.class.name : post.root_type
 
       item = FeedTopicItem.find_or_initialize_by(:root_id => root_id)
+      item.last_response_time = Time.now
       item.root_type = root_type
       item.mentions = post.topic_mention_ids
       item.save

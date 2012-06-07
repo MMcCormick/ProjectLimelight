@@ -3,6 +3,4 @@
   <a class="ulink" data-id="<%= @notification.get('triggered_by').get('id') %>" href="/users/<%= @notification.get('triggered_by').get('username') %>"><%= @notification.get('triggered_by').get('username') %></a>
   <%= @notification.get('sentence') %>
 </div>
-<div class='time'>
-  <%= @notification.get('created_at_pretty') %>
-</div>
+<div class='when'></div>

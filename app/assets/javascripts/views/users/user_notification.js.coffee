@@ -16,6 +16,11 @@ class LL.Views.UserNotification extends Backbone.View
     if @model.get('read') == false
       $(@el).addClass('unread')
 
+    prettyTime = new LL.Views.PrettyTime()
+    prettyTime.format = 'extended'
+    prettyTime.time = @model.get('created_at')
+    $(@el).find('.when').append(prettyTime.render().el)
+
     @
 
   showRelevant: (e) =>

@@ -424,10 +424,9 @@ module Limelight #:nodoc:
       end
 
       change_pop(amt) unless type == :new
-
-      #Resque.enqueue(AddPopAction, id.to_s, type, subtype, user_id.to_s, amt)
+      #Resque.enqueue(AddPopAction, id.to_s, type, subtype, current_user.id.to_s, amt)
+      #TODO: queueing this up in resque causes the pusher part not to work... (I think, maybe not, test later)
       add_pop_action_helper(type, subtype, current_user, amt)
-
       amt
     end
 
@@ -456,6 +455,7 @@ module Limelight #:nodoc:
         if topic_mention_ids.length > 0
           topic_amt = type == :new ? 1 : amt
           affected_topic_ids = []
+          affected_influence_ids = []
 
           topic_mentions.each do |topic|
             if type != :new || (type == :new && !topic.talking_ids.include?(user_id))
@@ -469,15 +469,19 @@ module Limelight #:nodoc:
               end
 
               # send the influence increase
-              increase = InfluenceIncrease.new
-              increase.amount = 1
-              increase.topic_id = topic.id
-              increase.object_type = 'Talk'
-              increase.action = :new
-              increase.topic = topic
-              increase.id = topic.name
+              if self.class.name == 'Talk'
+                affected_influence_ids << topic.id
 
-              Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
+                increase = InfluenceIncrease.new
+                increase.amount = 1
+                increase.topic_id = topic.id
+                increase.object_type = 'Talk'
+                increase.action = :new
+                increase.topic = topic
+                increase.id = topic.name
+
+                Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
+              end
             end
           end
 
@@ -487,8 +491,7 @@ module Limelight #:nodoc:
                   update_all(
                     "$inc" => {
                       :score => topic_amt,
-                      :response_count => 1,
-                      "influencers."+user_id.to_s+".influence" => topic_amt
+                      :response_count => 1
                     },
                     "$push" => {
                       :talking_ids => user_id
@@ -497,6 +500,15 @@ module Limelight #:nodoc:
             affected_topic_ids.each do |tid|
               Resque.enqueue_in(10.minutes, ScoreUpdate, 'Topic', tid.to_s)
             end
+          end
+
+          unless affected_influence_ids.empty?
+            Topic.collection.where(:_id => {"$in" => affected_topic_ids}).
+              update_all(
+                "$inc" => {
+                  "influencers."+user_id.to_s+".influence" => topic_amt
+                }
+              )
           end
         end
 

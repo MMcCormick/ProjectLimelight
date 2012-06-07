@@ -20,6 +20,6 @@ class PopularityAction
   before_create :set_time
 
   def set_time
-    self.epoch_time = Time.now.to_i
+    self.epoch_time = Time.now.utc.to_i
   end
 end

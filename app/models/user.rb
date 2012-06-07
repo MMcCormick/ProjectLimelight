@@ -370,12 +370,12 @@ class User
     hour = Time.now.hour
     variation = rand(7200)
     if hour < 11
-      delay = Chronic.parse('Today at 11AM').to_i - Time.now.to_i + variation
+      delay = Chronic.parse('Today at 11AM').to_i - Time.now.utc.to_i + variation
       Resque.enqueue_in(delay, SendPersonalWelcome, id.to_s, "today")
     elsif hour >= 11 && hour < 18
       Resque.enqueue_in(1.hours + variation, SendPersonalWelcome, id.to_s, "today")
     else
-      delay = Chronic.parse('Tomorrow at 11AM').to_i - Time.now.to_i + variation
+      delay = Chronic.parse('Tomorrow at 11AM').to_i - Time.now.utc.to_i + variation
       Resque.enqueue_in(delay, SendPersonalWelcome, id.to_s, "today")
     end
   end

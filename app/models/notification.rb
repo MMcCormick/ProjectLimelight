@@ -84,7 +84,6 @@ class Notification
       new_notification = false
       if notification
         new_notification = true if notification.read == true
-        notification.created_at = Time.now
         notification.update_count += 1
         notification.read = false
         notification.emailed = false

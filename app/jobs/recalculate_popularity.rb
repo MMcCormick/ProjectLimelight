@@ -6,7 +6,7 @@ class RecalculatePopularity
 
   def self.perform
     map    = "function() {
-      var hours = (#{Time.now.to_i} - this.et) / 3600;
+      var hours = (#{Time.now.utc.to_i} - this.et) / 3600;
       if (hours < 1) { hours = 1 }
       this.pop_snippets.forEach(function(snippet) {
         if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {

@@ -71,7 +71,7 @@ class Comment
     # If you want to build out an internal balanced score, pass that field in,
     # and be sure to index it on the database.
     def threaded_with_field(post_id)
-      comments = Comment.where(:post_id => post_id).desc(:created_at)
+      comments = Comment.where(:post_id => post_id).desc(:_id)
       #results, map = [], {}
       #comments.each do |comment|
       #  if comment.parent_id.blank?

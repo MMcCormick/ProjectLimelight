@@ -22,7 +22,7 @@ module ModelUtilitiesHelper
 
   # 1m, 4h, 2d, 3m, etc.
   def short_time(date)
-    a = Time.now.to_i - date.to_i
+    a = Time.now.utc.to_i - date.to_i
 
     case a
       when 0..3600 then "#{(a/60).to_i}m"

@@ -5,11 +5,11 @@ class UserMailer < ActionMailer::Base
 
   def welcome_email(user_id)
     @user = User.find(user_id)
-    mail(:to => "#{@user.fullname} <#{@user.email}>", :subject => "#{@user.first_name && !@user.first_name.blank? ? @user.first_name : @user.username}, welcome to Limelight")
+    mail(:to => "#{@user.fullname} <#{@user.email}>", :bcc => "support@projectlimelight.com", :subject => "#{@user.first_name && !@user.first_name.blank? ? @user.first_name : @user.username}, welcome to Limelight")
   end
 
   def beta_signup_email(email)
-    mail(:to => email, :subject => "Thanks for signing up for the Limelight Beta!")
+    mail(:to => email, :bcc => "support@projectlimelight.com", :subject => "Thanks for signing up for the Limelight Beta!")
   end
 
   def matt_welcome(user_id)

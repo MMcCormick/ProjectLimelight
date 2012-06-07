@@ -12,6 +12,7 @@ class LL.Views.PostForm extends Backbone.View
       "keypress #post-form-fetch-url": "monitorUrlEnter"
       "paste #post-form-content": "checkUrl"
       "paste #post-form-fetch-url": "fetchEmbedly"
+      "blur .topic-mention": "clearTopic"
 
   initialize: ->
     @collection = new LL.Collections.Posts()
@@ -106,7 +107,7 @@ class LL.Views.PostForm extends Backbone.View
     $(@el).find('#post-form-remote-image-url').val(@model.get('remote_image_url'))
     $(@el).find('#post-form-image-cache').val(@model.get('image_cache'))
 
-  addTopic: (target, name, id, slug) =>
+  addTopic: (target, name, id) =>
     target.val(name).next().val(id)
 
   updateType: =>
@@ -135,6 +136,10 @@ class LL.Views.PostForm extends Backbone.View
       $(@el).find('.preview').show()
 
     @model.set('type', $(e.target).data('type'))
+
+  clearTopic: (e) =>
+    if $.trim($(e.currentTarget).val()) == ''
+      $(e.currentTarget).next().val('')
 
   removeEmbedly: =>
     @preview.cancelPreview()

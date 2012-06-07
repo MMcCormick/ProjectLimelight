@@ -39,7 +39,7 @@ class LL.Views.TalkButton extends Backbone.View
     view.render()
 
     if @topic1
-      view.addTopic($(view.el).find('#post-form-mention1'), @topic1.get('name'), @topic1.get('id'), @topic1.get('id'))
+      view.addTopic($(view.el).find('#post-form-mention1'), @topic1.get('name'), @topic1.get('id'))
 
     setTimeout ->
       view.focusTalk()

@@ -3,6 +3,7 @@ class LL.Views.Modal extends Backbone.View
 
   events:
     "click": "navBack"
+    "click .close": "navBack"
 
   initialize: ->
     self = @

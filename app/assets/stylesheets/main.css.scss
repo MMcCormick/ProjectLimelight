@@ -826,7 +826,13 @@ header {
     margin: 20px auto 0 auto;
     top: auto;
     left: auto;
-    position: static;
+    position: relative;
+
+    > .close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+    }
   }
   .half-sections {
     @include clearfix();

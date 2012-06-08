@@ -3,6 +3,9 @@ class LL.Views.TalkShow extends Backbone.View
   id: 'talk-show'
   className: 'content-tile'
 
+  events:
+    "click .close": "navBack"
+
   initialize: ->
     @loaded = null
     @model.on('reset', @render)
@@ -42,6 +45,9 @@ class LL.Views.TalkShow extends Backbone.View
       $(@el).html('Loading...')
 
     if LL.App.Feed || !@loaded
-      $(@el).addClass('modal')
+      $(@el).addClass('modal').append('<div class="close">x</div>')
 
     @
+
+  navBack: (e) =>
+    history.back()

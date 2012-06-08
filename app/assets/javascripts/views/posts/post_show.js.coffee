@@ -5,6 +5,7 @@ class LL.Views.PostShow extends Backbone.View
 
   events:
     "click .friend-responses input": "showTalkForm"
+    "click .close": "navBack"
 
   initialize: ->
     @friendResponsesCollection = new LL.Collections.PostFriendResponses()
@@ -56,6 +57,7 @@ class LL.Views.PostShow extends Backbone.View
 
     if LL.App.Feed
       $(@el).addClass('modal')
+      $(@el).addClass('modal').append('<div class="close">x</div>')
 
     @
 
@@ -65,3 +67,6 @@ class LL.Views.PostShow extends Backbone.View
       return
 
     $(@el).find('.talk-form').fadeIn(250).find('textarea').focus()
+
+  navBack: (e) =>
+    history.back()

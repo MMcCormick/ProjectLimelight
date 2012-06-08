@@ -364,6 +364,7 @@ class User
 
   def send_welcome_email
     UserMailer.welcome_email(self.id.to_s).deliver
+    UserMailer.welcome_email_admins(self.id.to_s).deliver
   end
 
   def send_personal_email

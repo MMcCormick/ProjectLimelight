@@ -4,6 +4,7 @@ class BetaSignupsController < ApplicationController
 
     if signup.save
       UserMailer.beta_signup_email(params[:email]).deliver
+      UserMailer.beta_signup_email_admins(params[:email]).deliver
       track_mixpanel("Request Beta Invite", {})
       response = build_ajax_response(:ok, nil, nil)
       status = 201

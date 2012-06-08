@@ -300,7 +300,11 @@ class TopicsController < ApplicationController
   def duplicates
     map    = %Q{
       function() {
-        emit(this.name, {id: this._id});
+        var name = this.name.toLowerCase();
+        name = name.replace(/[^-a-zA-Z0-9,&\s]+/ig, '');
+        name = name.replace(/-/gi, "_");
+        name = name.replace(/\s/gi, "-");
+        emit(name, {id: this._id});
       }
     }
     reduce = %Q{

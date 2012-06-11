@@ -13,7 +13,7 @@ class LL.Views.TopicPageHeader extends Backbone.View
       }
       {
         content: "<span>#{@model.get('followers_count')}</span> Followers"
-        url: "/#{@model.get('slug')}/followers"
+        url: "/#{@model.get('url')}/followers"
         on: (if @page == 'followers' then true else false)
       }
     ]

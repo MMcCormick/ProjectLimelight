@@ -8,7 +8,7 @@ class LL.Views.TopicPageHeader extends Backbone.View
     header.links = [
       {
         content: "Feed"
-        url: (if LL.App.current_user == @model then '/' else "/#{@model.get('slug')}")
+        url: (if LL.App.current_user == @model then '/' else "#{@model.get('url')}")
         on: (if @page == 'feed' then true else false)
       }
       {

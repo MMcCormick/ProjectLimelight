@@ -52,7 +52,7 @@ class FeedUserItem
 
   class << self
 
-    def push_post_through_users(post, single_user=nil)
+    def push_post_through_users(post, single_user=nil, backlog=false)
       user_mention_ids = post.user_mentions.map{|um| um.id}
 
       # make the root post
@@ -85,7 +85,7 @@ class FeedUserItem
           item.root_type = post.root_type
         end
 
-        item.last_response_time = Time.now
+        item.last_response_time = backlog ? post.created_at : Time.now
         item.responses ||= []
         item.responses << post.id unless post.is_root? || item.responses.include?(post.id)
 
@@ -100,7 +100,9 @@ class FeedUserItem
         root_post.push_item = item
 
         # if it's a new feed post, push it to the users feed
-        Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :public))
+        unless backlog
+          Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :public))
+        end
       end
 
       post.save
@@ -117,7 +119,7 @@ class FeedUserItem
 
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)
     # optionally push for a single user
-    def push_post_through_topic(post, push_topic, single_user=nil)
+    def push_post_through_topic(post, push_topic, single_user=nil, backlog=false)
       return if post.class.name == 'Talk'
 
       neo4j_topic_ids = Neo4j.pulled_from_ids([push_topic.neo4j_id])
@@ -148,7 +150,7 @@ class FeedUserItem
           unless item
             post.pushed_users_count += 1
             item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
-            item.last_response_time = Time.now
+            item.last_response_time = backlog ? post.created_at : Time.now
             item.root_type = post.root_type
           end
 
@@ -168,7 +170,9 @@ class FeedUserItem
             root_post.push_item = item
 
             # if it's a new feed post, push it to the users feed
-            Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :short))
+            unless backlog
+              Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :short))
+            end
           end
         end
       end
@@ -310,9 +314,9 @@ class FeedUserItem
       end
       core_objects.each do |post|
         if target.class.name == 'Topic'
-          push_post_through_topic(post, target, user)
+          push_post_through_topic(post, target, user, true)
         else
-          push_post_through_users(post, user)
+          push_post_through_users(post, user, true)
         end
       end
     end

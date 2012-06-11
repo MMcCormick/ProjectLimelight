@@ -125,7 +125,7 @@ GEM
       net-ssh (>= 2.1.4)
       nokogiri (>= 1.4.4)
       ruby-hmac
-    foreman (0.46.0)
+    foreman (0.47.0)
       thor (>= 0.13.6)
     formatador (0.2.3)
     fssm (0.2.9)
@@ -266,9 +266,8 @@ GEM
       redis (>= 2.0.1)
       resque (>= 1.19.0)
       rufus-scheduler
-    resque_mailer (2.0.3)
-      actionmailer (>= 3.0.0)
-      resque (>= 1.2.3)
+    resque_mailer (2.1.0)
+      actionmailer (~> 3.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rmagick (2.13.1)
@@ -370,7 +369,7 @@ DEPENDENCIES
   rack
   rack-contrib
   rails (= 3.2.5)
-  resque
+  resque (= 1.20.0)
   resque-loner
   resque-scheduler (= 2.0.0.h)
   resque_mailer

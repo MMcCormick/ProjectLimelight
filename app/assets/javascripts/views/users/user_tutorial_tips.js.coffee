@@ -30,7 +30,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
     @content = '
       Click this button to talk about whatever videos, articles, pictures, or topics interest you.
       <br /><br />
-      Add topics to your posts to reach more people and gain influence in those topics!
+      Tag topics in your posts to reach more people and gain influence in those topics!
     '
 
   tutorial12: =>

@@ -28,11 +28,11 @@
 
     <div class="mentions">
       <div>
-        <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Add topic..." />
+        <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
         <input class='topic-mention-id' type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
       </div>
       <div>
-        <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Add topic..." />
+        <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
         <input class='topic-mention-id' type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
       </div>
     </div>

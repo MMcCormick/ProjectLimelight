@@ -47,11 +47,11 @@ class LL.Views.AddMentionForm extends Backbone.View
       beforeSend: ->
         $(self.el).find('.btn-success').addClass('disabled').text('Submitting...')
       success: (data) ->
-        $(self.el).find('.btn-success').removeClass('disabled').text('Add Topic')
+        $(self.el).find('.btn-success').removeClass('disabled').text('Tag Topic')
         $(self.el).hide()
         globalSuccess(data)
       error: (jqXHR, textStatus, errorThrown) ->
-        $(self.el).find('.btn-success').removeClass('disabled').text('Add Topic')
+        $(self.el).find('.btn-success').removeClass('disabled').text('Tag Topic')
         globalError(jqXHR, $(self.el))
       complete: ->
-        $(self.el).find('.btn-success').removeClass('disabled').text('Add Topic')
+        $(self.el).find('.btn-success').removeClass('disabled').text('Tag Topic')

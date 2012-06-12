@@ -13,7 +13,7 @@ class InfluenceIncrease
       when :lk
         "#{@topic[:name]}"
       when :new
-        "Talked about #{@topic[:name]} for the first time"
+        "Posted about #{@topic[:name]} for the first time"
     end
   end
 

@@ -5,6 +5,12 @@ class UsersController < ApplicationController
 
   respond_to :html, :json
 
+  def index
+    authorize! :manage, :all
+    users = User.all().desc(:id)
+    render :json => users.map {|u| u.as_json}
+  end
+
   def show
     authorize! :manage, :all if params[:require_admin]
 

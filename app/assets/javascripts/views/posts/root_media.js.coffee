@@ -31,7 +31,7 @@ class LL.Views.RootMedia extends Backbone.View
 
     view = new LL.Views.PostForm()
     view.modal = true
-    view.placeholder_text = "Talk about this #{@model.get('type')}..."
+    view.placeholder_text = "Post about this #{@model.get('type')}..."
     view.render().el
     i = 1
     for topic in @model.get('topic_mentions')

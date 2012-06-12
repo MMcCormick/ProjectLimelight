@@ -19,7 +19,7 @@ class LL.Views.PostForm extends Backbone.View
 
     @modal = false
     @initial_text = ''
-    @placeholder_text = 'What do you want to talk about?'
+    @placeholder_text = 'Post something!'
 
     @model = new LL.Models.PostForm()
     @model.on('change', @updateFields)

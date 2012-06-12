@@ -26,7 +26,7 @@ class LL.Views.RootTopic extends Backbone.View
 
     view = new LL.Views.PostForm()
     view.modal = true
-    view.placeholder_text = "Talk about #{@model.get('name')}..."
+    view.placeholder_text = "Post about #{@model.get('name')}..."
     view.render().el
     view.addTopic($(view.el).find('#post-form-mention1'), @model.get('name'), @model.get('id'))
     $(view.el).find('.icons').remove()

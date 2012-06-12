@@ -14,6 +14,7 @@ class LL.Router extends Backbone.Router
     'crawler_sources': 'adminManageCrawlers'
     'pages/admin/topics/duplicates': 'adminTopicDuplicates'
     'pages/admin/posts/stream': 'adminPostStream'
+    'pages/admin/users/index': 'userIndex'
     'pages/:name': 'staticPage'
     'settings': 'settings'
     'activity': 'activityFeed'
@@ -508,6 +509,29 @@ class LL.Router extends Backbone.Router
       $('body').everyTime 5000, ->
         feed.on_add = 'prepend'
         stream.fetch {add: true}
+
+  userIndex: (id) ->
+    user = new LL.Models.User($('#this').data('this'))
+
+    if LL.App.findScreen('user_index', user.get('id'))
+      LL.App.showScreen('user_index', user.get('id'))
+    else
+      screen = LL.App.newScreen('user_index', user.get('id'))
+
+      sidebar = LL.App.findSidebar('admin', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('admin', id, user)
+      screen['sidebar'] = sidebar
+
+      collection = new LL.Collections.UsersAll()
+      feed = new LL.Views.UserList(collection: collection, model: user)
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('user_index', user.get('id'))
+
+      collection.id = user.get('id')
+      collection.page = 1
+      collection.fetch()
 
   #######
   # MISC

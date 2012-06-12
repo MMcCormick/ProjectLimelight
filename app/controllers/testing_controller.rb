@@ -3,6 +3,10 @@ require "net/http"
 class TestingController < ApplicationController
 
   def test
+    UserMailer.marc_welcome(User.matt_id, "today").deliver
+  end
+
+  def foo
     authorize! :manage, :all
 
     Resque.enqueue(TestJob)

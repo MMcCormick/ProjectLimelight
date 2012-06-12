@@ -130,7 +130,7 @@ $feedFontColor: $grayDark;
     font-weight: bold;
     color: $feedFontColor;
   }
-  .mentions {
+  > .mentions {
     .tlink {
       @include single-text-shadow(#888, 0, 1px, 2px);
       &:hover {

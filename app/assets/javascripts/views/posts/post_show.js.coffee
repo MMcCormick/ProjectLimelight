@@ -4,16 +4,12 @@ class LL.Views.PostShow extends Backbone.View
   className: 'content-tile'
 
   events:
-    "click .friend-responses input": "showTalkForm"
+    "click .post-responses input": "showTalkForm"
     "click .close": "navBack"
 
   initialize: ->
-    @friendResponsesCollection = new LL.Collections.PostFriendResponses()
-    @publicResponsesCollection = new LL.Collections.PostPublicResponses()
-    @friendResponses = new LL.Views.PostShowResponses(collection: @friendResponsesCollection)
-    @friendResponses.type = 'FriendResponses'
-    @publicResponses = new LL.Views.PostShowResponses(collection: @publicResponsesCollection)
-    @publicResponses.type = 'PublicResponses'
+    @responsesCollection = new LL.Collections.PostResponses()
+    @responses = new LL.Views.PostShowResponses(collection: @responsesCollection)
     @loaded = null
 
   render: =>
@@ -35,11 +31,16 @@ class LL.Views.PostShow extends Backbone.View
     user_section.count = @model.get('likes').length
     $(@el).find('.half-sections').append(user_section.render().el)
 
-    $(@el).find('.post-responses').append(@friendResponses.el).append(@publicResponses.el)
+    $(@el).find('.post-responses').append(@responses.el)
+
+    unless @loaded
+      @responsesCollection.fetch({data: {id: @model.get('id')}})
+
+    @loaded = true
 
     view = new LL.Views.PostForm()
     view.placeholder_text = "Talk about this #{@model.get('type')}..."
-    $(@el).find('.post-responses .talk-form').html(view.render().el)
+    $(@el).find('.post-responses .top').after(view.render().el)
     i = 1
     for topic in @model.get('topic_mentions')
       view.addTopic($(view.el).find("#post-form-mention#{i}"), topic.get('name'), topic.get('id'))
@@ -47,13 +48,6 @@ class LL.Views.PostShow extends Backbone.View
       i++
     view.model.set('parent_id', @model.get('id'))
     $(view.el).find('.icons').remove()
-
-    unless @loaded
-
-      @friendResponsesCollection.fetch({data: {id: @model.get('id')}})
-      @publicResponsesCollection.fetch({data: {id: @model.get('id')}})
-
-    @loaded = true
 
     if LL.App.Feed
       $(@el).addClass('modal')
@@ -66,7 +60,7 @@ class LL.Views.PostShow extends Backbone.View
       LL.LoginBox.showModal()
       return
 
-    $(@el).find('.talk-form').fadeIn(250).find('textarea').focus()
+    $(@el).find('#post-form').fadeIn(250).find('textarea').focus()
 
   navBack: (e) =>
     history.back()

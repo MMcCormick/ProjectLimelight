@@ -92,7 +92,7 @@ module Limelight #:nodoc:
     end
 
     def size_dimensions
-      {:small => 50, :normal => 100, :large => 250}
+      {:small => 50, :normal => 100, :large => 300}
     end
 
     def available_sizes

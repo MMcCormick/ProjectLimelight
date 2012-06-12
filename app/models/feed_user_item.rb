@@ -61,17 +61,18 @@ class FeedUserItem
         root_post.root = post
       else
         root_post.root = post.root
-        root_post.personal_responses << post
+        root_post.feed_responses << post
       end
 
-      root_post.public_talking = root_post.root.response_count
+      #root_post.public_talking = root_post.root.response_count
 
       # the potential users this post can be pushed to
       # take care of user mentions and users that are following the user that posted this
       if single_user
         user_feed_users = [single_user]
       else
-        user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_id})
+        user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_id}).to_a
+        user_feed_users << post.user # add this post to this users own feed
       end
 
 
@@ -94,6 +95,9 @@ class FeedUserItem
 
         # add mentioned reason
         item.add_reason('m', post.user) if user_mention_ids.include?(u.id)
+
+        # add created reason
+        item.add_reason('c', post.user) if u.id == post.user_id
 
         item.save if item.reasons.length > 0
 
@@ -224,10 +228,10 @@ class FeedUserItem
         root_post.root = post
       else
         root_post.root = post.root
-        root_post.personal_responses << post
+        root_post.feed_responses << post
       end
 
-      root_post.public_talking = root_post.root.response_count
+      #root_post.public_talking = root_post.root.response_count
 
       user_feed_users = User.only(:id, :username, :following_users).where(:following_users => user.id)
 

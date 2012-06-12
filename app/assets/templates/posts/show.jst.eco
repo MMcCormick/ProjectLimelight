@@ -49,5 +49,11 @@
 <div class='half-sections'></div>
 
 <div class="section post-responses">
-  <div class='talk-form'></div>
+
+  <div class="top">
+    <h4>Talking About This</h4>
+  </div>
+
+  <input type="text" placeholder="Talk about this!" autocomplete="off" spellcheck="false">
+
 </div>

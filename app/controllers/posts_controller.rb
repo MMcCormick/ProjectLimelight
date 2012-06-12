@@ -137,20 +137,11 @@ class PostsController < ApplicationController
     render :json => posts.map {|p| p.as_json(:properties => :short)}
   end
 
-  # Post responses from a users friends
-  def friend_responses
+  def responses
     post = Post.find(params[:id])
     not_found("Post not found") unless post
     page = params[:p] ? params[:p].to_i : 1
-    posts = Post.friend_responses(post.id, current_user, page, 50)
-    render :json => posts.map {|p| p.as_json(:properties => :all)}
-  end
-
-  def public_responses
-    post = Post.find(params[:id])
-    not_found("Post not found") unless post
-    page = params[:p] ? params[:p].to_i : 1
-    posts = Post.public_responses_no_friends(post.id, page, 50, current_user)
+    posts = Post.public_responses(post.id, page, 50)
     render :json => posts.map {|p| p.as_json(:properties => :all)}
   end
 

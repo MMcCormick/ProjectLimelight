@@ -14,7 +14,7 @@ class LL.Views.RootResponseTalk extends Backbone.View
     $(@el).html(@template(talk: @model))
 
     prettyTime = new LL.Views.PrettyTime()
-    prettyTime.format = 'short'
+    prettyTime.format = 'extended'
     prettyTime.time = @model.get('created_at')
     $(@el).find('.when').prepend(prettyTime.render().el)
 

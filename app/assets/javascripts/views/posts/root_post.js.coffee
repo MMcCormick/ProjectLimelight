@@ -1,6 +1,7 @@
 class LL.Views.RootPost extends Backbone.View
   tagName: 'li'
   className: 'tile'
+  template: JST['posts/tile']
 
   events:
     "click .root .img, .talking, h5": "postShow"
@@ -12,8 +13,7 @@ class LL.Views.RootPost extends Backbone.View
     "click .mentions .add": "showAddMention"
 
   initialize: ->
-    @public_responses = null
-    @personal_responses = null
+    @feed_responses = null
     @activity_responses = null
     @like_responses = null
     @hovering = false
@@ -26,25 +26,31 @@ class LL.Views.RootPost extends Backbone.View
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
   render: ->
-    if @model.get('root')
-      $(@el).addClass(@model.get('root').get('type').toLowerCase())
-      switch @model.get('root').get('type')
-        when 'Topic'
-          root_view = new LL.Views.RootTopic(model: @model.get('root'))
-        when 'Talk'
-          root_view = new LL.Views.RootTalk(model: @model.get('root'))
-        else
-          root_view = new LL.Views.RootMedia(model: @model.get('root'))
+    if @model.get('root').get('type') == 'Topic'
+      mentions = new LL.Views.PostMentions(model: [@model.get('root')])
+      $(@el).append(mentions.render().el)
+    else
+      mentions = new LL.Views.PostMentions(model: @model.get('root').get('topic_mentions'))
+      $(@el).append(mentions.render().el)
 
-      $(@el).append(root_view.render().el)
+    $(@el).addClass(@model.get('root').get('type').toLowerCase())
+    switch @model.get('root').get('type')
+#        when 'Topic'
+#          root_view = new LL.Views.RootTopic(model: @model.get('root'))
+      when 'Talk'
+        root_view = new LL.Views.RootTalk(model: @model.get('root'))
+      else
+        root_view = new LL.Views.RootMedia(model: @model.get('root'))
 
-      if @model.get('reasons').length > 0
-        reason_div = $('<div/>').addClass('reasons').html("<div class='ll-tan-earmark'></div><ul></ul>")
-        first = 'first'
-        for reason in @model.get('reasons')
-          reason_div.find('ul').append("<li class='#{first}'>#{reason}</li>")
-          first = ''
-        $(@el).append(reason_div)
+    $(@el).append(root_view.render().el)
+
+    if @model.get('reasons').length > 0
+      reason_div = $('<div/>').addClass('reasons').html("<div class='ll-tan-earmark'></div><ul></ul>")
+      first = 'first'
+      for reason in @model.get('reasons')
+        reason_div.find('ul').append("<li class='#{first}'>#{reason}</li>")
+        first = ''
+      $(@el).find('.root').append(reason_div)
 
     @renderResponses()
 
@@ -77,28 +83,14 @@ class LL.Views.RootPost extends Backbone.View
 
     @activity_responses.render()
 
-    if !@personal_responses
-      personal_responses_view = new LL.Views.RootResponses(model: @model)
-      personal_responses_view.type = 'personal'
-      personal_responses_view.target = $(@el)
-      @personal_responses = personal_responses_view
-      if @model.get('personal_responses').length > 0
+    if !@feed_responses
+      feed_responses_view = new LL.Views.RootResponses(model: @model)
+      feed_responses_view.type = 'feed'
+      @feed_responses = feed_responses_view
+      if @model.get('feed_responses').length > 0
         hasResponses = true
 
-    @personal_responses.render()
-
-    if !@public_responses
-      public_responses_view = new LL.Views.RootResponses(model: @model)
-      public_responses_view.type = 'public'
-      public_responses_view.target = $(@el)
-      @public_responses = public_responses_view
-      if @model.get('public_responses').length > 0
-        hasResponses = true
-
-    @public_responses.render()
-
-    if hasResponses == true
-      $(@el).find('.root').append("<div class='response-divider'><div class='ll-grey-arrow-up'></div></div>")
+    $(@el).append(@feed_responses.render().el)
 
   moveToTop: =>
     $(@el).html('')
@@ -111,6 +103,8 @@ class LL.Views.RootPost extends Backbone.View
   showHover: (e) =>
     # remove the green background that slowly fades out after a new post is pushed
     $(@el).removeClass('fade-new').find('.root').stop(true, true)
+
+    return unless $(e.currentTarget).parent().hasClass('tile')
 
     self = @
     $(@el).oneTime 500, 'post-tile-hover', ->

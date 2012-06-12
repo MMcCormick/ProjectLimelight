@@ -16,9 +16,62 @@ $feedFontColor: $grayDark;
   }
 }
 
+.tile,
+.response-talk {
+  .mentions {
+    position: relative;
+    padding: 0 1px 0 15px;
+    min-height: 22px;
+
+    .tlink {
+      white-space: nowrap;
+      display: inline-block;
+      padding: 0 15px 4px 0;
+      font-size: 12px;
+      color: #FBFBFB;
+      font-weight: bold;
+    }
+    .delete {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      top: 1px;
+      margin: 0 15px 0 -15px;
+      display: none;
+    }
+    .add {
+      cursor: pointer;
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      display: none;
+    }
+    .mention-add-form {
+      display: none;
+      padding: 5px;
+      background: #FFF;
+
+      input {
+        @include border-radius(1px);
+        margin: 0px;
+      }
+      .btn {
+        font-size: 12px;
+        padding: 2px 7px;
+      }
+    }
+    &:hover {
+      .delete,
+      .add {
+        display: inline-block;
+      }
+    }
+  }
+}
+
 .tile {
-  @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-  margin-bottom: 15px;
+  //@include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+  margin-bottom: $feedColumnMargin + 10;
   position: relative;
 
   &.fade-new {
@@ -44,7 +97,7 @@ $feedFontColor: $grayDark;
     .ll-tan-earmark {
       position: absolute;
       top: 0px;
-      left: 222px;
+      left: 302px;
     }
     ul {
       display: none;
@@ -55,7 +108,7 @@ $feedFontColor: $grayDark;
       position: absolute;
       z-index: 110;
       list-style: none;
-      width: 218px;
+      width: 298px;
       border-bottom: 1px solid #DDD;
 
       li {
@@ -73,42 +126,6 @@ $feedFontColor: $grayDark;
       }
     }
   }
-  .mentions {
-    color: $grayDark;
-    position: relative;
-
-    .tlink {
-      white-space: nowrap;
-      color: $grayDark;
-    }
-    .delete {
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      top: 1px;
-    }
-    .add {
-      cursor: pointer;
-      position: absolute;
-      top: 13px;
-      left: 60px;
-    }
-    .mention-add-form {
-      display: none;
-      padding: 5px 0 10px 0;
-      border-bottom: 1px solid #DDD;
-      margin-bottom: 5px;
-
-      input {
-        @include border-radius(1px);
-        width: 200px;
-      }
-      .btn {
-        font-size: 12px;
-        padding: 2px 7px;
-      }
-    }
-  }
   .ulink {
     font-weight: bold;
     color: $feedFontColor;
@@ -121,19 +138,17 @@ $feedFontColor: $grayDark;
 
     h5 {
       cursor: pointer;
-      padding: 7px 15px 7px;
-      border-bottom: 1px solid #EEE;
-      font-size: 13px;
+      padding: 10px 15px 7px;
+      font-size: 12px;
       line-height: 19px;
-      &:hover {
-        background: #F9F9F9;
-        border-bottom-color: #DDD;
-      }
+      //&:hover {
+      //  background: #F9F9F9;
+      //  border-bottom-color: #DDD;
+      //}
     }
     .when {
       color: $grayLight;
       font-size: 11px;
-      margin: 9px 0 0 16px;
       a {
         color: $grayDark;
       }
@@ -150,7 +165,7 @@ $feedFontColor: $grayDark;
 
       img {
         @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-        max-width: 210px;
+        max-width: 290px;
       }
       .ll-video-play {
         position: absolute;
@@ -180,19 +195,6 @@ $feedFontColor: $grayDark;
         font-size: 13px;
       }
     }
-    .response-divider {
-      width: 240px;
-      height: 10px;
-      margin: 10px 0 -10px 0;
-      position: relative;
-      border-bottom: 1px solid #EEE;
-      .ll-grey-arrow-up {
-        position: absolute;
-        top: 0px;
-        left: 50%;
-        margin-left: -10px;
-      }
-    }
     &.link,
     &.video,
     &.picture,
@@ -205,6 +207,9 @@ $feedFontColor: $grayDark;
       }
       .mentions {
 
+      }
+      .when {
+        margin: -2px 0 0 15px;
       }
     }
     &.topic {
@@ -228,11 +233,99 @@ $feedFontColor: $grayDark;
         }
       }
     }
+    &.talk {
+      padding: 10px 15px 8px 66px;
+      min-height: 42px;
+      position: relative;
+
+      > img {
+        @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        top: 10px;
+        left: 15px;
+      }
+      .ulink {
+        font-size: 12px;
+      }
+      p {
+        font-size: 12px;
+      }
+      .when {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+      }
+      .actions {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        padding: 0;
+        display: none;
+        background: #FFF;
+
+        .comment-form,
+        .like {
+          cursor: pointer;
+          &:hover {
+            color: $greenDarker;
+          }
+        }
+        .comment-form,
+        .like,
+        .score-pts {
+          font-size: 11px;
+          font-weight: normal;
+          margin: 0 0 0 5px;
+          span {
+            font-size: 11px;
+          }
+        }
+      }
+      &:hover {
+        .actions {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .responses {
+    @include clearfix();
+    background-color: #FBFBFB;
+
+    .talk {
+      margin: 0 2px 2px 2px;
+      padding: 10px 13px 8px 65px;
+      background: #E9F3F6;
+
+      .mentions {
+        min-height: 0px;
+        padding: 4px 0 0 0;
+        margin: 4px 0 -7px 0;
+        border-top: 1px dashed #FFF;
+
+        .tlink {
+          color: $grayDark;
+        }
+      }
+      > img {
+        left: 13px;
+      }
+      .when {
+        right: 13px;
+      }
+      .actions {
+        right: 13px;
+        background: #E9F3F6;
+      }
+    }
   }
 
   .bottom-sheet {
     position: absolute;
-    bottom: 1px;
+    bottom: 0px;
     left: 0px;
     width: 100%;
     padding: 0;
@@ -246,16 +339,10 @@ $feedFontColor: $grayDark;
       top: 9px;
       width: 210px;
       padding: 0 15px;
-      .mentions,
       .actions {
         left: 0px;
         padding-left: 0px;
         padding-right: 0px;
-      }
-      .mentions {
-        .head {
-          left: 0px;
-        }
       }
     }
     .bg {
@@ -267,28 +354,6 @@ $feedFontColor: $grayDark;
       width: 100%;
       height: 100%;
       z-index: -1;
-    }
-    .source {
-      font-size: 11px;
-      padding: 5px 15px;
-
-      a {
-        color: $grayDark;
-        font-weight: bold;
-      }
-    }
-    .mentions {
-      padding: 26px 15px 5px 15px;
-      position: relative;
-
-      .head {
-        position: absolute;
-        top: 8px;
-        left: 15px;
-        color: $grayLight;
-        font-size: 11px;
-        cursor: default;
-      }
     }
     .actions {
       padding: 5px 15px 7px 15px;
@@ -310,117 +375,6 @@ $feedFontColor: $grayDark;
         border: none;
         background: none;
         text-shadow: none;
-      }
-    }
-  }
-
-  // Talks (root and responses)
-  .root-talk,
-  .response-talk {
-    position: relative;
-    min-height: 30px;
-    font-size: 12px;
-
-    img {
-      position: absolute;
-      top: 2px;
-      left: 0px;
-      height: 30px;
-      width: 30px;
-      background-color: #444;
-      z-index: 100;
-    }
-    .ulink {
-      font-size: 13px;
-      margin: 0 0 2px 0;
-      display: block;
-    }
-    p {
-      position: relative;
-      top: -1px;
-      line-height: 16px;
-      color: #444;
-      &:hover {
-        cursor: pointer;
-        color: #000;
-      }
-    }
-    .top-right {
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      font-size: 10px;
-      color: $grayLight;
-
-      .score-pts {
-        margin: 0 5px 0 0;
-        span {
-          font-weight: normal;
-        }
-      }
-      .when {
-
-      }
-    }
-    .actions {
-      position: absolute;
-      top: -1px;
-      right: 0px;
-      padding: 0;
-      display: none;
-
-      .comment-form,
-      .like {
-        cursor: pointer;
-        &:hover {
-          color: $greenDarker;
-        }
-      }
-      .comment-form,
-      .like,
-      .score-pts {
-        font-size: 11px;
-        font-weight: normal;
-        margin: 0 0 0 5px;
-        span {
-          font-size: 11px;
-        }
-      }
-    }
-
-    &:hover {
-      .actions {
-        display: block;
-      }
-    }
-  }
-  .root-talk {
-    padding: 0 0 9px 40px;
-    .top-right {
-      top: -10px;
-      right: 5px;
-    }
-    .actions {
-      background: #FFF;
-    }
-  }
-  .root.talk {
-    padding: 10px 15px 0;
-  }
-  .responses {
-    background-color: #FBFBFB;
-    padding: 10px 15px 0;
-
-    .talking {
-      font-weight: bold;
-      font-size: 11px;
-      margin: -3px 0 7px 0;
-      cursor: default;
-    }
-    .response-talk {
-      padding: 0 0 10px 40px;
-      .actions {
-        background-color: #FBFBFB;
       }
     }
   }

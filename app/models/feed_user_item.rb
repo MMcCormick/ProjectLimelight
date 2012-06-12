@@ -135,10 +135,10 @@ class FeedUserItem
         root_post.root = post
       else
         root_post.root = post.root
-        root_post.public_responses << post
+        root_post.feed_responses << post
       end
 
-      root_post.public_talking = root_post.root.response_count
+      #root_post.public_talking = root_post.root.response_count
 
       topics.each do |topic|
         # the potential users this post can be pushed to

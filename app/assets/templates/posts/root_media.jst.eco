@@ -1,13 +1,13 @@
-<h5>
-  <%= @post.get('title') %>
-</h5>
+<% if @post.get('type') == 'Link' || @post.get('type') == 'Video': %>
+  <h5><%= @post.get('title') %></h5>
 
-<div class='when'>
-  <% if @post.get('primary_source'): %>
-    via
-    <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
-  <% end %>
-</div>
+  <div class='when'>
+    <% if @post.get('primary_source'): %>
+      via
+      <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
+    <% end %>
+  </div>
+<% end %>
 
 <% if @post.get('images'): %>
   <div class='img'>
@@ -17,6 +17,18 @@
       <div class='ll-video-play'></div>
     <% end %>
     <div class='bg'></div>
+  </div>
+<% end %>
+
+<% if @post.get('type') == 'Picture': %>
+  <% if @post.get('title'): %>
+    <div class='bottom-title'><%=  @post.get('title') %></div>
+  <% end %>
+  <div class='when'>
+    <% if @post.get('primary_source'): %>
+      via
+      <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
+    <% end %>
   </div>
 <% end %>
 

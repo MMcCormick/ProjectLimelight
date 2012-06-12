@@ -7,7 +7,12 @@ class LL.Views.FeedColumn extends Backbone.View
 
   appendPost: (view) ->
     view.column = @
-    $(@el).append(view.render().el)
+
+    if $(@el).find('.column-fixed').length == 0
+      $(@el).append(view.render().el)
+    else
+      $(@el).find('.column-fixed').after(view.render().el)
+
     @height = $(@el).height()
 
   prependPost: (view) ->

@@ -134,11 +134,11 @@ $feedFontColor: $grayDark;
   .root {
     position: relative;
     background: #FFF;
-    padding: 0 0 10px 0;
+    padding: 10px 0;
 
     h5 {
       cursor: pointer;
-      padding: 10px 15px 7px;
+      padding: 0 15px 0;
       font-size: 12px;
       line-height: 19px;
       //&:hover {
@@ -155,7 +155,7 @@ $feedFontColor: $grayDark;
     }
     .img {
       padding: 5px;
-      margin: 3px 0 -1px 10px;
+      margin: 0 0 0 10px;
       position: relative;
       cursor: pointer;
       overflow-y: auto;
@@ -188,11 +188,20 @@ $feedFontColor: $grayDark;
         }
       }
     }
+    .bottom-title {
+      margin: 10px 0 0 15px;
+    }
     .score-pts {
       font-size: 11px;
       margin
       span {
         font-size: 13px;
+      }
+    }
+    &.link,
+    &.video {
+      > .img {
+        margin-top: 5px;
       }
     }
     &.link,
@@ -209,7 +218,7 @@ $feedFontColor: $grayDark;
 
       }
       .when {
-        margin: -2px 0 0 15px;
+        margin: 5px 0 0 15px;
       }
     }
     &.topic {

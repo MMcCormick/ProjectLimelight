@@ -442,6 +442,27 @@ class Neo4j
       #suggestions
     end
 
+    def topic_similarity(topics)
+      start_query = []
+      match_query = []
+      letter = "a"
+      topics.each do |t|
+        start_query << "#{letter}=node(#{t.neo4j_id})"
+        match_query << "p#{letter}=shortestPath(:RELATED|TYPE_OF)"
+        letter = letter.succ
+      end
+
+      query = "
+        START #{combos}}
+        MATCH topic-[r:affinity]-related
+        WHERE related.type = 'topic' and has(r.weight)
+        RETURN related, SUM(r.weight)
+        orDER BY SUM(r.weight) desc
+        LIMIT #{limit}
+      "
+      ids = self.neo.execute_query(query)
+    end
+
     # related topic, used in the topic sidebar
     def topic_related(topic_id, limit)
       query = "

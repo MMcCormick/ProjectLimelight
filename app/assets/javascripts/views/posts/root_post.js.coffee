@@ -35,8 +35,6 @@ class LL.Views.RootPost extends Backbone.View
 
     $(@el).addClass(@model.get('root').get('type').toLowerCase())
     switch @model.get('root').get('type')
-#        when 'Topic'
-#          root_view = new LL.Views.RootTopic(model: @model.get('root'))
       when 'Talk'
         root_view = new LL.Views.RootTalk(model: @model.get('root'))
       else
@@ -70,8 +68,7 @@ class LL.Views.RootPost extends Backbone.View
       @like_responses = like_responses_view
       if @model.get('like_responses').length > 0
         hasResponses = true
-
-    @like_responses.render()
+      $(@el).append(@like_responses.render().el)
 
     if !@activity_responses
       activity_responses_view = new LL.Views.RootResponses(model: @model)
@@ -80,8 +77,7 @@ class LL.Views.RootPost extends Backbone.View
       @activity_responses = activity_responses_view
       if @model.get('activity_responses').length > 0
         hasResponses = true
-
-    @activity_responses.render()
+      $(@el).append(@activity_responses.render().el)
 
     if !@feed_responses
       feed_responses_view = new LL.Views.RootResponses(model: @model)
@@ -89,8 +85,7 @@ class LL.Views.RootPost extends Backbone.View
       @feed_responses = feed_responses_view
       if @model.get('feed_responses').length > 0
         hasResponses = true
-
-    $(@el).append(@feed_responses.render().el)
+      $(@el).append(@feed_responses.render().el)
 
   moveToTop: =>
     $(@el).html('')

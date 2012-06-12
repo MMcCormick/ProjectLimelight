@@ -518,6 +518,8 @@ class User
         registeredFriends = User.where("social_connects.uid" => {"$in" => friends_uids}, 'social_connects.provider' => 'facebook')
         registeredFriends.each do |friend|
           friend.follow_user(self) if friend.auto_follow_fb
+          notification = Notification.add(friend, :follow, true, self)
+          Pusher["#{friend.id.to_s}_private"].trigger('new_notification', notification.to_json) if notification
           follow_user(friend) if self.auto_follow_fb
         end
         save :validate => false
@@ -536,6 +538,8 @@ class User
         registeredFollowing = User.where("social_connects.uid" => {"$in" => following_ids}, 'social_connects.provider' => 'twitter')
         registeredFollowing.each do |following|
           follow_user(following)
+          notification = Notification.add(following, :follow, true, self)
+          Pusher["#{following.id.to_s}_private"].trigger('new_notification', notification.to_json) if notification
         end
         save :validate => false
       end
@@ -703,7 +707,7 @@ class User
       user.save :validate => false if user
 
       if user && new_connect
-        Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s)
+        Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s) if !username.blank?
 
         if connect.provider == 'facebook'
           Resque.enqueue(AutoFollowFBLikes, user.id.to_s)
@@ -760,6 +764,9 @@ class User
       update = true
       object_user_updates["object_user.username"] = self.username
       triggered_by_updates["triggered_by.$.username"] = self.username
+      if username_was.blank?
+        Resque.enqueue(AutoFollow, self.id.to_s, social_connects.first.provider.to_s)
+      end
     end
     if status_changed?
       update = true

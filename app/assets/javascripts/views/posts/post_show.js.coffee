@@ -22,6 +22,11 @@ class LL.Views.PostShow extends Backbone.View
     score = new LL.Views.Score(model: @model)
     $(@el).find('.actions').prepend(score.render().el)
 
+    prettyTime = new LL.Views.PrettyTime()
+    prettyTime.format = 'extended'
+    prettyTime.time = @model.get('created_at')
+    $(@el).find('.when').html(prettyTime.render().el)
+
     topic_section = new LL.Views.TopicSectionList()
     topic_section.topics = @model.get('topic_mentions')
     $(@el).find('.half-sections').append(topic_section.render().el)

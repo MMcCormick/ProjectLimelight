@@ -1,9 +1,11 @@
 <div class='section post-root'>
   <div class='meat'>
     <% if @post.get('primary_source'): %>
-        <h1 class="title">
-          <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('title') %></a>
-        </h1>
+        <% if @post.get('title'): %>
+          <h1 class="title">
+            <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('title') %></a>
+          </h1>
+        <% end %>
         <a class="source" target="_blank" href="<%= @post.get('primary_source').url %>">
           View on <span><%= @post.get('primary_source').name %></span>
         </a>
@@ -20,7 +22,7 @@
         <% else: %>
           <a class="ulink" href="<%= @post.get('user').get('url') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
         <% end %>
-        <%= @post.get('created_at_pretty') %>
+        <span class='when'></span>
       </span>
     </div>
 

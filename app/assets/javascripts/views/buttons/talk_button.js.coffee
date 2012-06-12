@@ -12,7 +12,7 @@ class LL.Views.TalkButton extends Backbone.View
     @topic2 = null
 
   render: =>
-    $(@el).html('+Talk')
+    $(@el).html('+Post')
 
     if @button == true
       $(@el).addClass('btn btn-success')

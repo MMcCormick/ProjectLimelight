@@ -9,7 +9,7 @@ class LL.Views.UserSidebarTalk extends Backbone.View
   initialize: ->
 
   render: ->
-    placeholder = if LL.App.current_user == @model then 'Talk about something!' else "Talk with @#{@model.get('username')}!"
+    placeholder = if LL.App.current_user == @model then 'Post about something!' else "Post @#{@model.get('username')}!"
     $(@el).html(@template(user: @model, placeholder: placeholder))
     $(@el).updatePolyfill()
     @

@@ -13,7 +13,7 @@
     <% if @influence.get('post').get('user') == LL.App.current_user : %>
       your
     <% else : %>
-      <%= @influence.get('post').get('user').get('username') %>'s talk
+      <%= @influence.get('post').get('user').get('username') %>'s post
     <% end %>
     "<span class="plink"><%= @influence.get('post').get('content') %></span>"
   <% else: %>

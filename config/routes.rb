@@ -11,6 +11,7 @@ ProjectLimelight::Application.routes.draw do
         delete '' => 'follows#destroy', :type => 'User'
       end
 
+      get 'index' => 'users#index'
       get 'notifications' => 'users#notifications'
       get 'following_users' => 'users#following_users'
       get 'following_topics' => 'users#following_topics'
@@ -145,6 +146,7 @@ ProjectLimelight::Application.routes.draw do
     get 'terms' => 'pages#terms', :as => :terms
     get 'help' => 'pages#help', :as => :help
     get 'admin' => 'pages#admin', :as => :admin, :require_admin => true
+    get 'admin/users/index' => 'users#show', :as => :user_index, :require_admin => true
     get 'admin/topics/duplicates' => 'topics#duplicates', :as => :admin_topic_duplicates
     get 'admin/posts/stream' => 'users#show', :as => :admin_post_stream, :require_admin => true
   end

@@ -9,7 +9,7 @@ class LL.Views.TopicSidebarTalk extends Backbone.View
   initialize: ->
 
   render: ->
-    placeholder = "Talk about #{@model.get('name')}!"
+    placeholder = "Post about #{@model.get('name')}!"
     $(@el).html(@template(user: @model, placeholder: placeholder))
     $(@el).updatePolyfill()
     @
@@ -21,7 +21,7 @@ class LL.Views.TopicSidebarTalk extends Backbone.View
 
     view = new LL.Views.PostForm()
     view.modal = true
-    view.placeholder_text = "Talk about #{@model.get('name')}..."
+    view.placeholder_text = "Post about #{@model.get('name')}..."
     view.render().el
     view.addTopic($(view.el).find('#post-form-mention1'), @model.get('name'), @model.get('id'))
     setTimeout ->

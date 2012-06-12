@@ -22,7 +22,7 @@
 
 <div class='bottom-sheet <%= "static" unless @post.get('images') %>'>
   <div class='actions'>
-    <span class='talk-form'>+Talk</span>
+    <span class='talk-form'>+Post</span>
   </div>
 
   <div class='bg'></div>

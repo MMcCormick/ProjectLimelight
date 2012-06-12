@@ -5,8 +5,7 @@ html {
 
 body {
   $sidebarWidth: 250px;
-  $baseWidth: 750px;
-  $columnWidth: 255px;
+  $baseWidth: 930px;
 
   background: #B8CFD6;
   color: $grayDark;
@@ -38,7 +37,7 @@ body {
     }
   }
   &.three {
-    $baseWidthThree: $baseWidth + $columnWidth;
+    $baseWidthThree: $baseWidth + $feedColumnWidth;
     .wrapper {
       width: $baseWidthThree;
       .content {
@@ -57,7 +56,7 @@ body {
     }
   }
   &.four {
-    $baseWidthFour: $baseWidth + $columnWidth * 2;
+    $baseWidthFour: $baseWidth + $feedColumnWidth * 2;
     .wrapper {
       width: $baseWidthFour;
       .content {
@@ -76,7 +75,7 @@ body {
     }
   }
   &.five {
-    $baseWidthFive: $baseWidth + $columnWidth * 3;
+    $baseWidthFive: $baseWidth + $feedColumnWidth * 3;
     .wrapper {
       width: $baseWidthFive;
       .content {
@@ -251,11 +250,11 @@ header {
       @include border-radius(2px);
       position: absolute;
       top: 5px;
-      font-size: 18px;
+      font-size: 16px;
     }
     .talk {
       left: 250px;
-      padding: 7px 14px 7px 12px;
+      padding: 7px 14px 7px 14px;
     }
     .login {
       padding: 7px 12px;
@@ -628,8 +627,8 @@ header {
     cursor: default;
   }
   .column {
-    width: 240px;
-    margin: 0 15px 0 0;
+    width: $feedColumnWidth - $feedColumnMargin;
+    margin: 0 $feedColumnMargin 0 0;
     float: left;
     overflow: hidden;
 

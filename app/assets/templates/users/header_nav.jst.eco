@@ -23,10 +23,10 @@
       <a href="/">Feed</a>
     </li>
     <li>
-      <a href="<%= "/likes" %>">Likes</a>
+      <a href="<%= "/activity" %>">Activity</a>
     </li>
     <li>
-      <a href="<%= "/activity" %>">Activity</a>
+      <a href="<%= "/likes" %>">Likes</a>
     </li>
     <li>
       <a href="<%= "/influence" %>">Influence</a>

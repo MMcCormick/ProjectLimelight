@@ -54,8 +54,7 @@ class LL.Views.PostsFeed extends Backbone.View
         post = self.collection.get(data.id)
         if post
           tmp_post = new LL.Models.RootPost(data)
-          post.set('personal_responses', tmp_post.get('personal_responses'))
-          post.set('public_responses', tmp_post.get('public_responses'))
+          post.set('feed_responses', tmp_post.get('feed_responses'))
           post.trigger('move_to_top')
         else
           post = new LL.Models.RootPost(data)
@@ -75,7 +74,7 @@ class LL.Views.PostsFeed extends Backbone.View
       column.height = $(column.el).height()
 
   arrangeColumns: =>
-    column_count = Math.floor($('#feed').width() / 230)
+    column_count = Math.floor($('#feed').width() / 320)
 
     for num in [1..column_count]
       column = new LL.Views.FeedColumn()
@@ -111,10 +110,7 @@ class LL.Views.PostsFeed extends Backbone.View
         channel.bind 'new_response', (data) ->
           if root_post.get('root')
             post = new LL.Models.Post(data)
-            if LL.App.current_user.get('id') == post.get('user').id || LL.App.current_user.following(post.get('user').id)
-              root_post.get('personal_responses').push(post)
-            else
-              root_post.get('public_responses').unshift(post)
+            root_post.get('feed_responses').unshift(post)
             root_post.get('root').trigger('new_response')
         LL.App.subscribe_event(root_id, 'new_response')
 
@@ -134,11 +130,12 @@ class LL.Views.PostsFeed extends Backbone.View
 
   appendPost: (root_post) =>
     column = @chooseColumn()
-    tile = new LL.Views.RootPost(model: root_post)
-    @tiles.push tile
-    column.appendPost tile
+    if root_post.get('root') && root_post.get('root').get("type") != 'Topic'
+      tile = new LL.Views.RootPost(model: root_post)
+      @tiles.push tile
+      column.appendPost tile
 
-    @addPost(root_post)
+      @addPost(root_post)
 
     @
 

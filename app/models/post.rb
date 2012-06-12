@@ -269,9 +269,9 @@ class Post
     if response_to_id
       self.root_id = response_to.id
       self.root_type = response_to._type
-    elsif self.class.name == 'Talk' && primary_topic_mention
-      self.root_id = primary_topic_mention
-      self.root_type = 'Topic'
+    #elsif self.class.name == 'Talk' && primary_topic_mention
+    #  self.root_id = primary_topic_mention
+    #  self.root_type = 'Topic'
     else
       self.root_id = id
       self.root_type = _type
@@ -457,24 +457,15 @@ class Post
         else
           item_ids << i.root_id
         end
-        item_ids += i.responses.last(2) if i.responses
       end
 
       topics = {}
       posts = {}
-      personal_responses = {}
       tmp_topics = topic_ids.length > 0 ? Topic.where(:_id => {'$in' => topic_ids}) : []
       tmp_posts = Post.where(:_id => {'$in' => item_ids})
 
       tmp_topics.each {|t| topics[t.id.to_s] = t}
-      tmp_posts.each do |p|
-        if p.root_id != p.id
-          personal_responses[p.root_id.to_s] ||= []
-          personal_responses[p.root_id.to_s] << p
-        else
-          posts[p.id.to_s] = p
-        end
-      end
+      tmp_posts.each {|p| posts[p.id.to_s] = p }
 
       return_objects = []
       items.each do |i|
@@ -488,13 +479,12 @@ class Post
 
         next unless root_post.root
 
-        root_post.personal_responses = personal_responses[root_post.root.id.to_s] ? personal_responses[root_post.root.id.to_s].reverse : []
-        root_post.public_talking = root_post.root.response_count
+        #root_post.public_talking = root_post.root.response_count
 
-        #get the public responses
-        root_post.public_responses = []
-        unless i.root_type == 'Talk' || root_post.public_talking == 0
-          root_post.public_responses = Post.public_responses(root_post.root.id, 1, 2)
+        # get the public responses
+        root_post.feed_responses = []
+        unless i.root_type == 'Talk' || root_post.root.response_count == 0
+          root_post.feed_responses = Post.public_responses(root_post.root.id, 1, 4)
         end
 
         return_objects << root_post
@@ -540,15 +530,11 @@ class Post
         item_ids += user_i.responses.last(2) if user_i && user_i.responses
       end
 
-      personal_responses = {}
       posts = {}
       tmp_posts = Post.where(:_id => {'$in' => item_ids})
 
       tmp_posts.each do |p|
-        if p.root_id != p.id && p.root_type != 'Topic'
-          personal_responses[p.root_id.to_s] ||= []
-          personal_responses[p.root_id.to_s] << p
-        else
+        if p.root_id == p.id
           posts[p.id.to_s] = p
         end
       end
@@ -560,13 +546,13 @@ class Post
 
         next unless root_post.root
 
-        root_post.personal_responses = personal_responses[root_post.root.id.to_s] ? personal_responses[root_post.root.id.to_s] : []
-        root_post.public_talking = root_post.root.response_count
+        #root_post.personal_responses = personal_responses[root_post.root.id.to_s] ? personal_responses[root_post.root.id.to_s] : []
+        #root_post.public_talking = root_post.root.response_count
 
         # get the public responses
-        root_post.public_responses = []
-        unless i.root_type == 'Talk' || root_post.public_talking == 0
-          root_post.public_responses = Post.public_responses(root_post.root.id, 1, 2)
+        root_post.feed_responses = []
+        unless i.root_type == 'Talk' || root_post.root.response_count == 0
+          root_post.feed_responses = Post.public_responses(root_post.root.id, 1, 4)
         end
 
         return_objects << root_post

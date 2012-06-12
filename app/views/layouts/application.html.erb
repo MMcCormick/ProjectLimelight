@@ -4,7 +4,7 @@
   <!--[if IE 8]>    <html class="no-js ie8 oldie" xmlns:fb="http://ogp.me/ns/fb#" lang="en"> <![endif]-->
   <!--[if gt IE 8]><!--> <html class="no-js" xmlns:fb="http://ogp.me/ns/fb#" lang="en"> <!--<![endif]-->
   <%= render :partial => 'shared/head' %>
-  <body id="<%= params[:controller].parameterize %>-c" class="three">
+  <body id="<%= params[:controller].parameterize %>-c" class="two">
 
     <%= render 'shared/header' if (signed_in? && current_user.tutorial_step == 0) || !signed_in? && params[:controller] %>
 

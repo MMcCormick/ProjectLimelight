@@ -7,9 +7,7 @@
 
     <div class="actions-created">
       <span class='actions'></span>
-      <span class="created-at">
-        <%= @post.get('created_at_pretty') %>
-      </span>
+      <span class="when"></span>
     </div>
 
     <img class='user-image' src='<%= @post.get('user').get('images').square.small %>' />

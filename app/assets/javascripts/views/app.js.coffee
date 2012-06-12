@@ -112,9 +112,9 @@ class LL.Views.App extends Backbone.View
 #    if width >= 1475
 #      className = 'five'
     if width >= 1235
-      className = 'four'
-    else #if width >= 995
       className = 'three'
+    else #if width >= 995
+      className = 'two'
 #    else
 #      className = 'two'
 

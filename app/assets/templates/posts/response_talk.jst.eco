@@ -3,20 +3,13 @@
 <div class='body'>
   <div>
     <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
+    <div class='when'></div>
   </div>
 
   <p>
     <%= @talk.get('content') %>
   </p>
-  <% if @talk.get('topic_mentions').length > 0: %>
-    <span class="mentions">
-      <% for mention, i in @talk.get('topic_mentions'): %>
-        <a class="tlink" data-id='<%= mention.get('id') %>' href="<%= mention.get('url') %>"><%= mention.get('name') %></a><%= "," if i + 1 < @talk.get('topic_mentions').length %>
-      <% end %>
-    </span>
-  <% end %>
 
-  <div class='when top-right'></div>
   <div class="actions">
     <span class="comment-form">+Comment (<%= @talk.get('response_count') %>)</span>
   </div>

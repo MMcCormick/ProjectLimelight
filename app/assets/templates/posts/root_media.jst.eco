@@ -1,13 +1,13 @@
-<h5>
-  <%= @post.get('title') %>
-</h5>
+<% if @post.get('type') == 'Link' || @post.get('type') == 'Video': %>
+  <h5><%= @post.get('title') %></h5>
 
-<div class='when'>
-  <% if @post.get('primary_source'): %>
-    via
-    <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
-  <% end %>
-</div>
+  <div class='when'>
+    <% if @post.get('primary_source'): %>
+      via
+      <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
+    <% end %>
+  </div>
+<% end %>
 
 <% if @post.get('images'): %>
   <div class='img'>
@@ -20,29 +20,19 @@
   </div>
 <% end %>
 
-<div class='bottom-sheet <%= "static" unless @post.get('images') %>'>
-  <% if @post.get('topic_mentions').length > 0: %>
-    <div class="mentions">
-      <div class='head'>
-        TOPICS
-      </div>
-      <% if LL.App.current_user && LL.App.current_user.hasRole('admin'): %>
-        <div class='ll-green-plus add' title='Add a topic mention.'></div>
-      <% end %>
-      <% for mention, i in @post.get('topic_mentions'): %>
-        <span>
-          <a class="tlink" data-id='<%= mention.get('id') %>' href="<%= mention.get('url') %>">
-            <%= mention.get('name') %>
-          </a>
-          <% if LL.App.current_user && LL.App.current_user.hasRole('admin'): %>
-            <div class='ll-grey-x delete' data-id='<%= mention.get('id') %>' title='Delete topic mention.'></div>
-          <% end %>
-          <%= "," if i + 1 < @post.get('topic_mentions').length %>
-        </span>
-      <% end %>
-    </div>
+<% if @post.get('type') == 'Picture': %>
+  <% if @post.get('title'): %>
+    <div class='bottom-title'><%=  @post.get('title') %></div>
   <% end %>
+  <div class='when'>
+    <% if @post.get('primary_source'): %>
+      via
+      <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a>
+    <% end %>
+  </div>
+<% end %>
 
+<div class='bottom-sheet <%= "static" unless @post.get('images') %>'>
   <div class='actions'>
     <span class='talk-form'>+Post</span>
   </div>

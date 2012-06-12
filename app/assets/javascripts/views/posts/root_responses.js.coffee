@@ -6,13 +6,8 @@ class LL.Views.RootResponses extends Backbone.View
   initialize: ->
 
   render: =>
-    if @type == 'personal'
-      responses = @model.get('personal_responses')
-      className = 'personal-responses'
-      if @model.get('personal_talking') == 0
-        talking = null
-      else
-        talking = "Friends"
+    if @type == 'feed'
+      responses = @model.get('feed_responses')
     else if @type == 'like'
       responses = @model.get('like_responses')
       className = 'like-responses'
@@ -21,30 +16,23 @@ class LL.Views.RootResponses extends Backbone.View
       responses = @model.get('activity_responses')
       className = 'activity-responses'
       talking = ""
-    else
-      responses = @model.get('public_responses')
-      className = 'public-responses'
-      if @model.get('public_talking') == 0
-        talking = ''
-      else
-        talking = "People"
 
     $(@el).remove()
 
     if responses.length > 0
-      $(@el).addClass(className).html(@template(talking: talking))
+      $(@el).html(@template(talking: talking))
 
       for post in responses
         @appendResponse(post)
 
-      if @type == 'public'
-        @target.append($(@el))
-      else
-        @target.find('.root').after($(@el))
-
     @
 
   appendResponse: (post) =>
-    response_view = new LL.Views.RootResponseTalk(model: post)
+    response_view = new LL.Views.RootTalk(model: post)
     $(@el).append(response_view.render().el)
+
+    if post.get('topic_mentions').length > 0
+      mentions = new LL.Views.PostMentions(model: post.get('topic_mentions'))
+      $(response_view.el).find('p').after(mentions.render().el)
+
     @

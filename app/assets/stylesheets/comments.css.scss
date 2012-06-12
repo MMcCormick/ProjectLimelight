@@ -2,7 +2,7 @@
   @include clearfix();
   background: #F9F9F9;
   padding: 0;
-  border-top: 1px solid #DDD;
+  border: 1px solid #DDD;
   display: none;
   position: relative;
   margin: 0 -15px -10px -15px;
@@ -16,7 +16,6 @@
     position: relative;
     padding: 9px 0 10px 55px;
     min-height: 30px;
-    border-bottom: 1px solid #DDD;
 
     img {
       position: absolute;

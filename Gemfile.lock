@@ -135,7 +135,7 @@ GEM
       netrc (~> 0.7.1)
       rest-client (~> 1.6.1)
       rubyzip
-    hike (1.2.0)
+    hike (1.2.1)
     hpricot (0.8.6)
     httparty (0.8.1)
       multi_json
@@ -169,7 +169,7 @@ GEM
       moped (~> 1.0.0.rc)
       origin (~> 1.0.0.rc)
       tzinfo (~> 0.3.22)
-    mongoid-cached-json (1.2.0)
+    mongoid-cached-json (1.2.1)
       activesupport
       bson_ext
       hpricot
@@ -223,7 +223,7 @@ GEM
     pusher (0.9.4)
       multi_json (~> 1.0)
       signature (~> 0.1.2)
-    rack (1.4.1)
+    rack (1.4.0)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-contrib (1.1.0)

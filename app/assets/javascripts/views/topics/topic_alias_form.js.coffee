@@ -47,7 +47,7 @@ class LL.Views.TopicAliasForm extends Backbone.View
 
     e.preventDefault()
 
-    attributes = {id: @model.get('id'), name: $(e.target).prev('.name').text()}
+    attributes = {id: @model.get('id'), name: $(e.target).parent().find('.name').text()}
 
     self = @
     $.ajax '/api/topics/aliases',
@@ -69,7 +69,7 @@ class LL.Views.TopicAliasForm extends Backbone.View
 
     e.preventDefault()
 
-    attributes = {id: @model.get('id'), alias_id: $(e.target).data('id'), name: $(e.target).prev('.name').text(), ooac: $(e.target).data('val') }
+    attributes = {id: @model.get('id'), alias_id: $(e.target).data('id'), name: $(e.target).parent().find('.name').text(), hidden: $(e.currentTarget).data('val') }
 
     self = @
     $.ajax '/api/topics/aliases',

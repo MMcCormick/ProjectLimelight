@@ -1,3 +1,3 @@
-class LL.Collections.PostPublicResponses extends Backbone.Collection
-  url: '/api/posts/public_responses'
+class LL.Collections.PostResponses extends Backbone.Collection
+  url: '/api/posts/responses'
   model: LL.Models.Post

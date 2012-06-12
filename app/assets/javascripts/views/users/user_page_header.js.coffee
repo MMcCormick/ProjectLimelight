@@ -12,14 +12,14 @@ class LL.Views.UserPageHeader extends Backbone.View
         on: (if @page == 'feed' then true else false)
       }
       {
-        content: "Likes"
-        url: (if LL.App.current_user == @model then '/likes' else "/users/#{@model.get('slug')}/likes")
-        on: (if @page == 'likes' then true else false)
-      }
-      {
         content: "Activity"
         url: (if LL.App.current_user == @model then '/activity' else "/users/#{@model.get('slug')}")
         on: (if @page == 'activity' then true else false)
+      }
+      {
+        content: "Likes"
+        url: (if LL.App.current_user == @model then '/likes' else "/users/#{@model.get('slug')}/likes")
+        on: (if @page == 'likes' then true else false)
       }
       {
         content: "Influence"
@@ -43,8 +43,8 @@ class LL.Views.UserPageHeader extends Backbone.View
       }
     ]
 
-    if @page == 'feed'
-      header.showSorting = true
+#    if @page == 'feed'
+#      header.showSorting = true
 
     header.render()
     @

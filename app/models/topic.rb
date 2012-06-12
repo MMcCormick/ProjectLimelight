@@ -309,7 +309,7 @@ class Topic
 
   def remove_alias old_alias
     return unless old_alias && !old_alias.blank?
-    self.aliases.where(:slug => name.parameterize).delete
+    self.aliases.where(:name => name).delete
     Resque.enqueue(SmCreateTopic, id.to_s)
   end
 

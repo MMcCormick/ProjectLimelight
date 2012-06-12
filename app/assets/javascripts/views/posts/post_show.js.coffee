@@ -39,7 +39,7 @@ class LL.Views.PostShow extends Backbone.View
     @loaded = true
 
     view = new LL.Views.PostForm()
-    view.placeholder_text = "Talk about this #{@model.get('type')}..."
+    view.placeholder_text = "Post about this #{@model.get('type')}..."
     $(@el).find('.post-responses .top').after(view.render().el)
     i = 1
     for topic in @model.get('topic_mentions')

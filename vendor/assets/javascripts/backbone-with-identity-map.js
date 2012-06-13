@@ -170,6 +170,26 @@
   Events.bind   = Events.on;
   Events.unbind = Events.off;
 
+  // IDENTITY MAP
+  Backbone.CacheStore = {
+
+    get: function(key){
+      this._store || this.reset();
+      return this._store[key];
+    },
+
+    set: function(key, object){
+      this._store || this.reset();
+      this._store[key] = object;
+    },
+
+    reset: function(){
+      this._store = new Object;
+    }
+
+  }
+  // END IDENTITY MAP
+
   // Backbone.Model
   // --------------
 
@@ -183,11 +203,13 @@
     var foundExisting = false;
     var instance;
     if(attributes.id && this.keepInSync ){
-      instance = amplify.store.memory(this.name + "/" + attributes.id);
-      if (instance !== undefined) {
+      instance = Backbone.CacheStore.get(this.name + "/" + attributes.id);
+      if (instance === undefined) {
+        instance = this;
+      }
+      else {
         foundExisting = true;
-        attributes = instance;
-        this.cid = attributes['cid']
+        return instance
       }
     }
     // END IDENTITY MAP
@@ -198,15 +220,7 @@
     }
     if (options && options.collection) this.collection = options.collection;
 
-    // IDENTITY MAP
-    if (foundExisting) {
-      this.cid = attributes['cid'];
-    }
-    else {
-      this.cid = _.uniqueId('c');
-    }
-
-    // END IDENTITY MAP
+    this.cid = _.uniqueId('c');
     this.attributes = {};
     this._escapedAttributes = {};
     this.changed = {};
@@ -222,9 +236,8 @@
 
     // IDENTITY MAP
     if(this.keepInSync && !foundExisting){
-      attributes['cid'] = this.cid;
       // Store the new instance
-      amplify.store.memory(this.name + "/" + attributes.id, this);
+      Backbone.CacheStore.set(this.name + "/" + attributes.id, this);
     }
     // END IDENTITY MAP
   };

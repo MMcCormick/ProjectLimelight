@@ -179,7 +179,8 @@ class CrawlerPushPost
         end
       end
 
-      post = Post.post(response, User.limelight_user_id)
+      post = Kernel.const_get(response[:type]).new(response)
+      post.user_id = BSON::ObjectId(User.limelight_user_id)
       post.category = crawler_source.category if crawler_source.category && !crawler_source.category.blank?
       used_ids = []
       puts "starting topic loop"

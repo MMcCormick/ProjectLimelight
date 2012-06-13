@@ -10,7 +10,6 @@ class LL.Views.LikeButton extends Backbone.View
     @model.bind('change:liked', @render)
 
   render: =>
-    console.log @model
     $(@el).html(@template(model: @model))
 
     @

@@ -8,6 +8,7 @@ class Post
   include Limelight::Mentions
   include Limelight::Popularity
   include Limelight::Images
+  include Limelight::Throttle
   include ModelUtilitiesHelper
   include VideosHelper
 

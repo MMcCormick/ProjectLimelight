@@ -8,7 +8,7 @@
     <% end %>
     <div class="modal-body">
       <div class='errors'></div>
-      <textarea id="comment-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Add comment..."></textarea>
+      <textarea id="comment-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Type comment and press enter..."></textarea>
       <input type="hidden" id="post-form-parent-id" name="talk_id" value="<%= @model.get('id') %>" />
     </div>
     <div class="modal-footer">
@@ -20,7 +20,7 @@
 
   <% else: %>
     <div class='errors'></div>
-    <textarea id="comment-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Add comment..."></textarea>
+    <textarea id="comment-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Type comment and press enter..."></textarea>
     <input type="hidden" id="post-form-parent-id" name="talk_id" value="<%= @model.get('id') %>" />
   <% end %>
 </form>

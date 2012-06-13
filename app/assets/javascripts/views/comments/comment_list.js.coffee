@@ -31,6 +31,10 @@ class LL.Views.CommentList extends Backbone.View
   prependComment: (comment) =>
     comment_view = new LL.Views.Comment(model: comment)
     $(@el).find('ul').prepend(comment_view.render().el)
+
+    $(@el).find('li').removeClass('first')
+    $(@el).find('li:first').addClass('first')
+
     @
 
   appendComment: (comment) =>
@@ -39,4 +43,8 @@ class LL.Views.CommentList extends Backbone.View
 
     comment_view = new LL.Views.Comment(model: comment)
     $(@el).find('ul').append(comment_view.render().el)
+
+    $(@el).find('li').removeClass('first')
+    $(@el).find('li:first').addClass('first')
+
     @

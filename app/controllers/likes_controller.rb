@@ -13,8 +13,10 @@ class LikesController < ApplicationController
         # post to facebook open graph
         fb = current_user.facebook
         if fb
-          object_url = object.class.name == 'Talk' ? talk_url(:id => object.id) : post_url(:id => object.id)
-          Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', 'post', object_url)
+          unless object._type == 'Talk'
+            object_url = post_url(:id => object.id)
+            Resque.enqueue(OpenGraphCreate, current_user.id.to_s, object.id.to_s, object.class.name, 'like', 'post', object_url)
+          end
         end
 
         # send the influence pusher notification

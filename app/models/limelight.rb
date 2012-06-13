@@ -526,4 +526,25 @@ module Limelight #:nodoc:
       Pusher[id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
     end
   end
+
+  # Include this module to get Throttling functionality for models.
+  # @example Add ACL support to a document.
+  #   require "limelight"
+  #   class Person
+  #     include Limelight::Throttle
+  #   end
+  module Throttle
+    extend ActiveSupport::Concern
+
+    included do
+      validate :throttle_check
+    end
+
+    def throttle_check
+      last = Kernel.const_get(self.class.name).where(:user_id => user_id).last
+      if Time.now - last.created_at < 15
+        errors.add(:limited, "You must wait at least 10 sections before posting another #{self.class.name}")
+      end
+    end
+  end
 end

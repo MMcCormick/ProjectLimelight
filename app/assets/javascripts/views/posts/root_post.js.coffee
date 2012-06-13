@@ -13,15 +13,13 @@ class LL.Views.RootPost extends Backbone.View
     "click .mentions .add": "showAddMention"
 
   initialize: ->
-    @feed_responses = null
-    @activity_responses = null
-    @like_responses = null
+    @responses = null
     @hovering = false
     @opened = false
     @addMentionForm = null
 
-    @model.get('root').on('new_response', @renderResponses)
     @model.on('move_to_top', @moveToTop)
+    @model.on('new_response', @prependResponse)
 
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
@@ -59,33 +57,25 @@ class LL.Views.RootPost extends Backbone.View
       LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
 
   renderResponses: =>
-    hasResponses = false
-
-    if !@like_responses
+    if !@responses && @model.get('like_responses').length > 0
       like_responses_view = new LL.Views.RootResponses(model: @model)
       like_responses_view.type = 'like'
       like_responses_view.target = $(@el)
-      @like_responses = like_responses_view
-      if @model.get('like_responses').length > 0
-        hasResponses = true
-      $(@el).append(@like_responses.render().el)
+      @responses = like_responses_view
 
-    if !@activity_responses
+    if !@responses && @model.get('activity_responses').length > 0
       activity_responses_view = new LL.Views.RootResponses(model: @model)
       activity_responses_view.type = 'activity'
       activity_responses_view.target = $(@el)
-      @activity_responses = activity_responses_view
-      if @model.get('activity_responses').length > 0
-        hasResponses = true
-      $(@el).append(@activity_responses.render().el)
+      @responses = activity_responses_view
 
-    if !@feed_responses
+    if !@responses && @model.get('feed_responses').length > 0
       feed_responses_view = new LL.Views.RootResponses(model: @model)
       feed_responses_view.type = 'feed'
-      @feed_responses = feed_responses_view
-      if @model.get('feed_responses').length > 0
-        hasResponses = true
-      $(@el).append(@feed_responses.render().el)
+      @responses = feed_responses_view
+
+    if @responses
+      $(@el).append(@responses.render().el)
 
   moveToTop: =>
     $(@el).html('')
@@ -138,3 +128,9 @@ class LL.Views.RootPost extends Backbone.View
       $(e.currentTarget).after(@addMentionForm.render().el)
 
     $(@addMentionForm.el).fadeToggle(200)
+
+  prependResponse: (post) =>
+    if @responses
+      @responses.prependResponse(post)
+    else
+      @renderResponses()

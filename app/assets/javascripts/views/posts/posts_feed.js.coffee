@@ -12,6 +12,7 @@ class LL.Views.PostsFeed extends Backbone.View
 
     # A tile is the backbone view representing one tile on the feed
     @tiles = []
+    @columns = []
 
     @default_text = 'There are no items in this feed'
     @on_add = 'append'
@@ -53,8 +54,6 @@ class LL.Views.PostsFeed extends Backbone.View
       channel.bind 'new_post', (data) ->
         post = self.collection.get(data.id)
         if post
-          tmp_post = new LL.Models.RootPost(data)
-          post.set('feed_responses', tmp_post.get('feed_responses'))
           post.trigger('move_to_top')
         else
           post = new LL.Models.RootPost(data)
@@ -84,7 +83,7 @@ class LL.Views.PostsFeed extends Backbone.View
 
   chooseColumn: =>
     min_height = 9999999999999
-    for column in @.columns
+    for column in @columns
       if column.height <= min_height
         chosen = column
         min_height = column.height
@@ -111,7 +110,8 @@ class LL.Views.PostsFeed extends Backbone.View
           if root_post.get('root')
             post = new LL.Models.Post(data)
             root_post.get('feed_responses').unshift(post)
-            root_post.get('root').trigger('new_response')
+            root_post.trigger('new_response', post)
+
         LL.App.subscribe_event(root_id, 'new_response')
 
   prependPost: (root_post) =>

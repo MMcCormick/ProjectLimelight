@@ -26,7 +26,7 @@ class LL.Views.RootTalk extends Backbone.View
     @
 
   postShow: (e) =>
-    return if $(e.target).is('a,input,textarea')
+    return if $(e.target).is('a,input,textarea,.like')
 #    LL.Router.navigate("talks/#{@model.get('id')}", trigger: true)
 #    user_section = new LL.Views.UserSectionList()
 #    user_section.users = @model.get('recent_likes')

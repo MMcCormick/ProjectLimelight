@@ -357,6 +357,7 @@ class LL.Router extends Backbone.Router
         LL.App.Modal.setActive(id).show()
       else
         view = new LL.Views.PostShow(model: post)
+        view.render()
         LL.App.Modal.add(id, view).setActive(id).show()
     else
       view = new LL.Views.PostShow(model: post)

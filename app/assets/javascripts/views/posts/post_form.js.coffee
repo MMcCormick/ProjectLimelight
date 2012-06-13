@@ -72,7 +72,7 @@ class LL.Views.PostForm extends Backbone.View
       'topic_mention_ids': []
       'topic_mention_names': []
     }
-    for input in $(@el).find('.include-in-submit')
+    for input in $(@el).find('textarea, input[type="text"], input[type="hidden"], :not(.topic-mention, .topic-mention-id)')
       attributes[$(input).attr('name')] = $(input).val()
 
     for input in $(@el).find('.topic-mention')

@@ -130,6 +130,7 @@ class LL.Views.RootPost extends Backbone.View
     $(@addMentionForm.el).fadeToggle(200)
 
   prependResponse: (post) =>
+    console.log 'foo'
     if @responses
       @responses.prependResponse(post)
     else

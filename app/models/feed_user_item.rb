@@ -117,7 +117,7 @@ class FeedUserItem
         root_post.push_item = item
 
         # if it's a new feed post
-        unless backlog
+        unless backlog || (!new_item && post.user_id == u.id)
           Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.as_json(:properties => :public))
         end
       end

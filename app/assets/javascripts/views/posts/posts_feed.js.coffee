@@ -107,9 +107,11 @@ class LL.Views.PostsFeed extends Backbone.View
 
       unless LL.App.get_event_subscription(root_id, 'new_response')
         channel.bind 'new_response', (data) ->
+          console.log data
           if root_post.get('root')
             post = new LL.Models.Post(data)
             root_post.get('feed_responses').unshift(post)
+            console.log 'foo'
             root_post.trigger('new_response', post)
 
         LL.App.subscribe_event(root_id, 'new_response')

@@ -50,6 +50,7 @@ class PostsController < ApplicationController
 
       if @post.valid? && (!@response || @response.valid?)
         @post.save
+
         FeedUserItem.push_post_through_users(@post, current_user, false)
 
         if @response
@@ -61,9 +62,11 @@ class PostsController < ApplicationController
         track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.mixpanel_data))
         track_mixpanel("New Post", current_user.mixpanel_data.merge(@response.mixpanel_data)) if @response
 
-        if @response || @post.class.name == 'Talk'
+        if @response || @post.response_to_id || @post.class.name == 'Talk'
           if @response
             Pusher[@response.root_id.to_s].trigger('new_response', @response.to_json(:properties => :public))
+          elsif @post.response_to_id
+            Pusher[@post.root_id.to_s].trigger('new_response', @post.to_json(:properties => :public))
           end
 
           # send mention notifications

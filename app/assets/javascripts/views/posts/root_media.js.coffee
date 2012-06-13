@@ -30,8 +30,14 @@ class LL.Views.RootMedia extends Backbone.View
       return
 
     view = new LL.Views.PostForm()
-    view.modal = true
+    view.with_header = false
+    view.cancel_buttons = true
     view.placeholder_text = "Post about this #{@model.get('type')}..."
-    view.render().el
+    view.close_callback = @closePost
+    view.preview.show_preview = false
+    $(@el).after(view.render().el)
     view.preview.setResponse(@model)
     $(view.el).find('.icons').remove()
+
+  closePost: (form) =>
+    $(form.el).remove();

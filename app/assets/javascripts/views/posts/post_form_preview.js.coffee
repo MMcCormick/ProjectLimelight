@@ -8,6 +8,7 @@ class LL.Views.PostFormPreview extends Backbone.View
 
   initialize: ->
     @loaded = false
+    @show_preview = true
     @collection.on('reset', @render)
 
   render: =>
@@ -24,12 +25,13 @@ class LL.Views.PostFormPreview extends Backbone.View
     @
 
   setData: (model) =>
-    $(@el).html(@template(model: model))
+    if @show_preview
+      $(@el).html(@template(model: model))
 
-    $('#fetch-url-btn').removeClass('disabled').text('Fetch URL')
-    if !@loaded
-      $(@el).insertAfter(@target)
-      @loaded = true
+      $('#fetch-url-btn').removeClass('disabled').text('Fetch URL')
+      if !@loaded
+        $(@el).insertAfter(@target)
+        @loaded = true
 
     if model.get('limelight_post')
       @post_form_model.set({
@@ -47,7 +49,7 @@ class LL.Views.PostFormPreview extends Backbone.View
     # initialize images
     if !model.get('limelight_post') && model.get('type') != 'Video' && model.get('images').length > 0
       @post_form_model.set('remote_image_url', model.get('images')[0].url)
-      if model.get('images').length > 1
+      if model.get('images').length > 1 && @show_preview
         $(@el).find('.media img:gt(0)').hide() # hide all images but the first one
         $(@el).find('.switcher').show() # show the switcher
 

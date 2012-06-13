@@ -18,6 +18,10 @@ class LL.Views.PostForm extends Backbone.View
     @collection = new LL.Collections.Posts()
 
     @modal = false
+    @with_header = true
+    @cancel_buttons = false
+    @close_callback = null
+    @show_preview = true
     @initial_text = ''
     @placeholder_text = 'Post something!'
 
@@ -30,7 +34,7 @@ class LL.Views.PostForm extends Backbone.View
     @preview.post_form_model = @model
 
   render: =>
-    $(@el).html(@template(modal: @modal, initial_text: @initial_text, placeholder_text: @placeholder_text))
+    $(@el).html(@template(modal: @modal, cancel_buttons: @cancel_buttons, with_header: @with_header, initial_text: @initial_text, placeholder_text: @placeholder_text))
     @preview.target = $(@el).find('.preview')
 
     # setTimeout to wait for the modal animation so that the autocomplete can position itself correctly
@@ -96,7 +100,11 @@ class LL.Views.PostForm extends Backbone.View
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
 
   destroyForm: ->
-    $(@el).modal('hide')
+    if @modal
+      $(@el).modal('hide')
+    else if @close_callback
+      @close_callback(@)
+
 
   updateFields: =>
     $(@el).find('#post-form-source-url').val(@model.get('source_url'))

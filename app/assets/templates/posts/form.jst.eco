@@ -1,10 +1,15 @@
 <form>
+  <div class='top-bg stripe-hb'></div>
+
+  <% if @with_header: %>
   <div class="modal-header">
-    <% if @modal: %>
+    <% if @modal || @cancel_buttons: %>
       <a class="close" data-dismiss="modal">×</a>
     <% end %>
-    <h3>+Post</h3>
+    <h4>+Post</h4>
   </div>
+  <% end %>
+
   <div class="modal-body">
     <div class='errors'></div>
     <div class="main-content">
@@ -21,33 +26,20 @@
       </div>
     </div>
 
-    <!--<div class="tweet_content hide">-->
-      <!--<div class="head">tweet</div>-->
-      <%#= f.text_area :tweet_content, :spellcheck => false, :autocomplete => :off %>
-    <!--</div>-->
-
     <div class="mentions">
       <div>
-        <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
-        <input class='topic-mention-id' type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
+        <div class='tm-wrap'>
+          <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
+          <input class='topic-mention-id' type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
+        </div>
       </div>
       <div>
-        <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
-        <input class='topic-mention-id' type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
+        <div class='tm-wrap two'>
+          <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
+          <input class='topic-mention-id' type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
+        </div>
       </div>
     </div>
-
-    <!--<%# unless signed_in? && current_user.get_social_connect('twitter') %>-->
-      <!--<div class="connect_twitter" data-auth='<%#= user_omniauth_authorize_path(:twitter) %>'>-->
-        <!--Connect Twitter-->
-        <!--<div class="twitter-bird-small"></div>-->
-      <!--</div>-->
-    <!--<%# else %>-->
-      <!--<div class="tweet">-->
-        <!--<%#= f.check_box :tweet, :autocomplete => :off %>-->
-        <!--tweet this-->
-      <!--</div>-->
-    <!--<%# end %>-->
 
     <input type="hidden" id="post-form-source-url" name="source_url" />
     <input type="hidden" id="post-form-source-name" name="source_name" />
@@ -61,9 +53,8 @@
   </div>
   <div class="modal-footer">
     <div class="btn btn-success submit" data-loading-text='Submitting...'>Submit</div>
-    <% if @modal: %>
+    <% if @modal || @cancel_buttons: %>
       <span class="cancel btn">Cancel</span>
     <% end %>
   </div>
-
 </form>

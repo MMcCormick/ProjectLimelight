@@ -8,7 +8,7 @@
   <div class="modal-body">
     <div class='errors'></div>
     <div class="main-content">
-      <textarea id="post-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="<%= @placeholder_text %>"><%= @initial_text %></textarea>
+      <textarea id="post-form-content" class='include-in-submit' spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="<%= @placeholder_text %>"><%= @initial_text %></textarea>
       <div class='preview'>
         <input id="post-form-fetch-url" type="text" placeholder='Paste URL to fetch...' autocomplete='off' />
         <div class='btn' id='fetch-url-btn'>Fetch URL</div>
@@ -49,14 +49,14 @@
       <!--</div>-->
     <!--<%# end %>-->
 
-    <input type="hidden" id="post-form-source-url" name="source_url" />
-    <input type="hidden" id="post-form-source-name" name="source_name" />
-    <input type="hidden" id="post-form-source-vid" name="source_video_id" />
-    <input type="hidden" id="post-form-embed" name="embed_html" />
-    <input type="hidden" id="post-form-type" name="type" value="Talk" />
-    <input type="hidden" id="post-form-parent-id" name="response_to_id" />
-    <input type="hidden" id="post-form-remote-image-url" name="remote_image_url" autocomplete="off" />
-    <input type="hidden" id="post-form-image-cache" name="image_cache" autocomplete="off" />
+    <input type="hidden" id="post-form-source-url" name="source_url" class='include-in-submit' />
+    <input type="hidden" id="post-form-source-name" name="source_name" class='include-in-submit' />
+    <input type="hidden" id="post-form-source-vid" name="source_video_id" class='include-in-submit' />
+    <input type="hidden" id="post-form-embed" name="embed_html" class='include-in-submit' />
+    <input type="hidden" id="post-form-type" name="type" value="Talk" class='include-in-submit' />
+    <input type="hidden" id="post-form-parent-id" name="response_to_id" class='include-in-submit' />
+    <input type="hidden" id="post-form-remote-image-url" name="remote_image_url" autocomplete="off" class='include-in-submit' />
+    <input type="hidden" id="post-form-image-cache" name="image_cache" autocomplete="off" class='include-in-submit' />
     <div id="picture_pupB"></div>
   </div>
   <div class="modal-footer">

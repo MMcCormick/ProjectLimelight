@@ -541,8 +541,8 @@ module Limelight #:nodoc:
     end
 
     def throttle_check
-      last = Kernel.const_get(self.class.name).where(:user_id => user_id).last
-      if Time.now - last.created_at < 15
+      last = Kernel.const_get(self.class.name).where(:user_id => user_id).desc(:_id).limit(1).first
+      if last && Time.now - last.created_at < 15
         errors.add(:limited, "You must wait at least 10 sections before posting another #{self.class.name}")
       end
     end

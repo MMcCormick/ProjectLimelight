@@ -10,8 +10,8 @@ class LL.Views.TopicSidebar extends Backbone.View
     $(@el).append("<img class='profile-image' src='#{@model.get('images').fit.large}' />")
 
     # Talk form
-    talk = new LL.Views.TopicSidebarTalk(model: @model)
-    $(@el).append(talk.render().el)
+#    talk = new LL.Views.TopicSidebarTalk(model: @model)
+#    $(@el).append(talk.render().el)
 
     # Topic sidebar
     if @model.get('summary') || @model.get('aliases').length > 0 || (LL.App.current_user && LL.App.current_user.hasRole('admin'))

@@ -519,6 +519,7 @@ class User
         registeredFriends.each do |friend|
           if friend.auto_follow_fb
             friend.follow_user(self)
+            friend.save
           end
           if self.auto_follow_fb
             if follow_user(friend)
@@ -536,6 +537,7 @@ class User
         registeredFollowers = User.where("social_connects.uid" => {"$in" => follower_ids}, 'social_connects.provider' => 'twitter').to_a
         registeredFollowers.each do |follower|
           follower.follow_user(self) if follower.auto_follow_tw
+          follower.save
         end
 
         if self.auto_follow_tw
@@ -714,7 +716,7 @@ class User
       user.save :validate => false if user
 
       if user && new_connect
-        Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s) if !username.blank?
+        Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s) unless user.username.blank?
 
         if connect.provider == 'facebook'
           Resque.enqueue(AutoFollowFBLikes, user.id.to_s)

@@ -86,9 +86,9 @@ module Limelight #:nodoc:
       field :image_versions, :default => 0
       field :active_image_version, :default => 0
       field :processing_image, :default => false
+      field :remote_image_url
 
       attr_accessible :remote_image_url
-      attr_accessor :remote_image_url
     end
 
     def size_dimensions
@@ -128,7 +128,7 @@ module Limelight #:nodoc:
           "http://graph.facebook.com/#{fbuid}/picture?type=#{size}"
         end
       else
-        if image_versions == 0
+        if version == 0
           if self.class.name == 'User'
             "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
           elsif self.class.name == 'Topic'
@@ -137,7 +137,8 @@ module Limelight #:nodoc:
             else
               "#{S3['image_prefix']}/defaults/topics/#{size}.gif"
             end
-
+          elsif !remote_image_url.blank?
+            "#{remote_image_url}"
           end
         else
           if processing_image
@@ -155,13 +156,13 @@ module Limelight #:nodoc:
 
     # Saves a new set of images from the remote_image_url currently specified on the model
     def save_remote_image(force=false)
-      unless @remote_image_url.blank?
+      unless remote_image_url.blank?
         target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
 
         begin
           AWS::S3::S3Object.store(
             target,
-            open(@remote_image_url).read,
+            open(remote_image_url).read,
             S3['image_bucket']
           )
         rescue => e
@@ -182,8 +183,8 @@ module Limelight #:nodoc:
     end
 
     def process_images
-      if processing_image
-        Resque.enqueue(ProcessImages, id.to_s, self.class.name, active_image_version)
+      if processing_image || (!remote_image_url.blank? && active_image_version == 0)
+        Resque.enqueue(ProcessImages, id.to_s, self.class.name, remote_image_url)
       end
     end
 
@@ -524,6 +525,29 @@ module Limelight #:nodoc:
       self.score += amt
       Resque.enqueue_in(10.minutes, ScoreUpdate, 'Post', id.to_s)
       Pusher[id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
+    end
+  end
+
+  # Include this module to get Throttling functionality for models.
+  # @example Add ACL support to a document.
+  #   require "limelight"
+  #   class Person
+  #     include Limelight::Throttle
+  #   end
+  module Throttle
+    extend ActiveSupport::Concern
+
+    included do
+      validate :throttle_check
+    end
+
+    def throttle_check
+      unless persisted? || user_id.to_s == User.limelight_user_id
+        last = Kernel.const_get(self.class.name).where(:user_id => user_id).desc(:_id).limit(1).first
+        if last && Time.now - last.created_at < 15
+          errors.add(:limited, "You must wait at least 10 sections before posting another #{self.class.name}")
+        end
+      end
     end
   end
 end

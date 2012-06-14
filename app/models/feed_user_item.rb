@@ -80,21 +80,34 @@ class FeedUserItem
       user_feed_users.each do |u|
         item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 
+        new_item = false
         unless item
-          post.pushed_users_count += 1
+          post.pushed_users_count += 1 if post.user_id != u.id
           item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
           item.root_type = post.root_type
+          new_item = true
         end
 
-        item.last_response_time = backlog ? post.created_at : Time.now
+        # don't update this items response time to now if it's just a user responding to a post already in their feed
+        if post.user_id != u.id || new_item == true
+          item.last_response_time = backlog ? post.created_at : Time.now
+        end
         item.responses ||= []
         item.responses << post.id unless post.is_root? || item.responses.include?(post.id)
 
-        # add following user reason
-        item.add_reason('fu', post.user) if u.following_users.include?(post.user_id)
+        if post.is_root?
+          # add following user reason
+          item.add_reason('fu', post.user) if u.following_users.include?(post.user_id)
 
-        # add mentioned reason
-        item.add_reason('m', post.user) if user_mention_ids.include?(u.id)
+          # add mentioned reason
+          item.add_reason('m', post.user) if user_mention_ids.include?(u.id)
+        else
+          # add following user who is talking reason
+          item.add_reason('fut', post.user) if u.following_users.include?(post.user_id)
+
+          # add mentioned by a user talking about this reason
+          item.add_reason('mt', post.user) if user_mention_ids.include?(u.id)
+        end
 
         # add created reason
         item.add_reason('c', post.user) if u.id == post.user_id
@@ -103,9 +116,9 @@ class FeedUserItem
 
         root_post.push_item = item
 
-        # if it's a new feed post, push it to the users feed
-        unless backlog
-          Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :public))
+        # if it's a new feed post
+        unless backlog || (!new_item && post.user_id == u.id)
+          Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.as_json(:properties => :public))
         end
       end
 
@@ -113,7 +126,7 @@ class FeedUserItem
     end
 
     def push_post_through_topics(post)
-      return if post.class.name == 'Talk'
+      #return if post.class.name == 'Talk'
 
       # push through topics
       post.topic_mentions.each do |topic|
@@ -124,7 +137,7 @@ class FeedUserItem
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)
     # optionally push for a single user
     def push_post_through_topic(post, push_topic, single_user=nil, backlog=false)
-      return if post.class.name == 'Talk'
+      #return if post.class.name == 'Talk'
 
       neo4j_topic_ids = Neo4j.pulled_from_ids([push_topic.neo4j_id])
       topics = Topic.where(:_id => {"$in" => [push_topic.id] + neo4j_topic_ids.map{|t| t[1]}})
@@ -149,6 +162,8 @@ class FeedUserItem
         end
 
         user_feed_users.each do |u|
+          next if u.id == post.user_id # don't distribute posters own posts based on the topics they're following
+
           item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 
           unless item
@@ -175,7 +190,7 @@ class FeedUserItem
 
             # if it's a new feed post, push it to the users feed
             unless backlog
-              Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :short))
+              Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.as_json(:properties => :short))
             end
           end
         end
@@ -200,6 +215,8 @@ class FeedUserItem
         end
 
         user_feed_users.each do |u|
+          next if u.id == post.user_id # don't distribute posters own posts based on the topics they're following
+
           item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 
           next unless item
@@ -249,7 +266,12 @@ class FeedUserItem
         item.last_response_time = Time.now
         item.responses ||= []
         item.responses << post.id unless post.is_root?
-        item.add_reason('lk', user)
+
+        if post.is_root?
+          item.add_reason('lk', user)
+        else
+          item.add_reason('lkt', user)
+        end
 
         item.save if item.reasons.length > 0
 
@@ -272,7 +294,11 @@ class FeedUserItem
 
         next unless item
 
-        item.remove_reason('lk', user)
+        if post.is_root?
+          item.remove_reason('lk', user)
+        else
+          item.remove_reason('lkt', user)
+        end
 
         if item.reasons.length == 0
           item.delete

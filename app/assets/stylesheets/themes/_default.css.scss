@@ -77,3 +77,6 @@ form {
 .modal {
   @include border-radius(0px);
 }
+.modal-backdrop {
+  background: #666;
+}

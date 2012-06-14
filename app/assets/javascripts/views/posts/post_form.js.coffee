@@ -3,8 +3,10 @@ class LL.Views.PostForm extends Backbone.View
   id: 'post-form'
 
   events:
+      "focus textarea": "changeMinimal"
       "click .submit": "createPost"
       "click .cancel": "destroyForm"
+      "click .close": "destroyForm"
       "click .icons .icon:not(.cancel-preview)": "activateType"
       "click .icons .cancel-preview": "removeEmbedly"
       "click #fetch-url-btn": "fetchEmbedly"
@@ -17,9 +19,14 @@ class LL.Views.PostForm extends Backbone.View
   initialize: ->
     @collection = new LL.Collections.Posts()
 
-    @modal = false
-    @initial_text = ''
-    @placeholder_text = 'Post something!'
+    @modal = false # display in a modal box?
+    @with_header = true # show the header
+    @cancel_buttons = false # display close/cancel buttons?
+    @close_callback = null # optional close callback, must be a function
+    @show_preview = true # show post previews? (links, pictures, videos)
+    @minimal = false # only show the input field
+    @initial_text = '' # initial text to show in the textarea
+    @placeholder_text = 'Post something!' # initial placeholder text to show in the text area
 
     @model = new LL.Models.PostForm()
     @model.on('change', @updateFields)
@@ -30,7 +37,7 @@ class LL.Views.PostForm extends Backbone.View
     @preview.post_form_model = @model
 
   render: =>
-    $(@el).html(@template(modal: @modal, initial_text: @initial_text, placeholder_text: @placeholder_text))
+    $(@el).html(@template(modal: @modal, cancel_buttons: @cancel_buttons, with_header: @with_header, initial_text: @initial_text, placeholder_text: @placeholder_text))
     @preview.target = $(@el).find('.preview')
 
     # setTimeout to wait for the modal animation so that the autocomplete can position itself correctly
@@ -60,6 +67,9 @@ class LL.Views.PostForm extends Backbone.View
     , 1200
 
     $(@el).updatePolyfill()
+
+    if @minimal
+      $(@el).addClass('minimal')
 
     @
 
@@ -96,7 +106,14 @@ class LL.Views.PostForm extends Backbone.View
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
 
   destroyForm: ->
-    $(@el).modal('hide')
+    if @modal
+      $(@el).modal('hide')
+    else if @minimal
+      $(@el).addClass('minimal')
+      @render()
+    else if @close_callback
+      @close_callback(@)
+
 
   updateFields: =>
     $(@el).find('#post-form-source-url').val(@model.get('source_url'))
@@ -169,6 +186,8 @@ class LL.Views.PostForm extends Backbone.View
 
     # Need to use a timeout to wait until the paste content is in the input
     setTimeout ->
+      $(self.el).find('.preview').show()
+
       return if $('#fetch-url-btn').hasClass('disabled')
 
       return unless $(self.el).find('#post-form-fetch-url').val().length > 5
@@ -191,3 +210,6 @@ class LL.Views.PostForm extends Backbone.View
   validateUrl: (val) =>
     # http://stackoverflow.com/questions/6927719/url-regex-does-not-work-in-javascript
     val.match(/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/i)
+
+  changeMinimal: (e) =>
+    $(@el).removeClass('minimal')

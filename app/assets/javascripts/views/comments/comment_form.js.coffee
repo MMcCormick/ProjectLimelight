@@ -1,6 +1,6 @@
 class LL.Views.CommentForm extends Backbone.View
   template: JST['comments/form']
-  id: 'comment-form'
+  className: 'comment-form'
 
   events:
       "click .submit": "createComment"

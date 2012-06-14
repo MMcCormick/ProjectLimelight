@@ -646,159 +646,6 @@ header {
   }
 }
 
-#post-form {
-  .main-content {
-    @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
-    $transition: border linear .2s, box-shadow linear .2s;
-    @include transition($transition);
-    @include border-radius(3px);
-    border: 1px solid #CCCCCC;
-    width: 400px;
-    margin: 0 0 30px 0;
-    position: relative;
-
-    .icons {
-      position: absolute;
-      bottom: -19px;
-      left: 9px;
-
-      .icon {
-        float: left;
-        margin: 0 10px 0 0;
-        cursor: pointer;
-        height: 12px;
-
-        &:on {
-          cursor: default;
-        }
-      }
-      .cancel-preview {
-        display: none;
-      }
-    }
-    textarea,
-    input {
-      @include box-shadow(none);
-      border: none;
-      resize: none;
-      margin: 0px;
-      padding: 8px;
-    }
-    #post-form-content {
-      height: 84px;
-      width: 384px;
-    }
-    .preview {
-      position: relative;
-      overflow: none;
-      display: none;
-    }
-    #post-form-fetch-url {
-      width: 295px;
-      border-top: 1px dashed #CCC;
-      padding-right: 90px;
-    }
-    #fetch-url-btn {
-      @include border-radius(0px);
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      padding: 8px 10px;
-      border-right: 0px;
-    }
-    .preview-data {
-      position: relative;
-      padding: 0 0 20px 0;
-      border-top: 1px dashed #CCC;
-
-      .media {
-        width: 115px;
-        height: 100px;
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        text-align: right;
-
-        img {
-          max-width: 100px;
-        }
-      }
-      #post-form-title {
-        width: 270px;
-        height: 84px;
-      }        
-      .title {
-        min-height: 85px;
-        padding: 8px;
-        width: 250px;
-
-        p {
-          font-size: 16px;
-          margin: 0;
-        }
-        div {
-          font-size: 12px;
-          color: #999;
-        }
-      }
-      .switcher {
-        background: rgba(255,255,255,.9);
-        position: absolute;
-        top: 85px;
-        right: 7px;
-        width: 100px;
-
-        .left {
-          margin: 0 0 0 1px;
-          cursor: pointer;
-        }
-        .right {
-          margin: 0px;
-          cursor: pointer;
-        }
-        .help {
-          color: #444;
-          font-size: 10px;
-          position: relative;
-          top: -2px;
-          cursor: default;
-        }
-      }
-    }
-  }
-  .mentions {
-    > div {
-      position: relative;
-    }
-    img {
-      position: absolute;
-      top: 1px;
-      left: 1px;
-    }
-    .topic-mention {
-      @include box-shadow(none);
-      margin: 0px;
-      padding: 6px 5px 6px 10px;
-      width: 195px;
-      &:focus {
-        border-color: #CCC;
-      }
-    }
-    #post-form-mention1 {
-      @include border-radius(3px 3px 0 0);
-      border-bottom: none;
-    }
-    #post-form-mention2 {
-      @include border-radius(0 0 3px 3px);
-    }
-  }
-  .btn-success {
-    padding: 5px 10px;
-  }
-}
-
 .ll-modal {
   background-color: rgba(0,0,0,0.8);
   position: fixed;
@@ -892,5 +739,14 @@ header {
   }
   #feed {
     margin-top: 0px;
+  }
+}
+
+.stripe-hb {
+  height: 4px;
+  width: 100%;
+  background: {
+    image: image-url("stripe-horizontal-border.gif");
+    repeat: repeat-x;
   }
 }

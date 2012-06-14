@@ -8,6 +8,7 @@ class Post
   include Limelight::Mentions
   include Limelight::Popularity
   include Limelight::Images
+  include Limelight::Throttle
   include ModelUtilitiesHelper
   include VideosHelper
 
@@ -44,8 +45,8 @@ class Post
   #default_scope where('status' => 'active')
 
   before_validation :set_source_snippet
-  before_create :save_remote_image, :current_user_own, :send_tweet, :set_root
-  after_create :process_images, :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :add_first_talk
+  before_create :current_user_own, :send_tweet, :set_root
+  after_create :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :process_images, :add_initial_pop
   after_save :update_denorms
   before_destroy :disconnect
 
@@ -72,18 +73,6 @@ class Post
       short += '...'
     end
     short
-  end
-
-  # After a root post create, if there is content then create a linked talk for the user
-  def add_first_talk
-    unless self.class.name == 'Talk' || content.blank?
-      user.talks.create(
-              :content => content,
-              :response_to_id => id,
-              :first_talk => true,
-              :topic_mention_ids => topic_mention_ids
-      )
-    end
   end
 
   def set_source_snippet
@@ -269,9 +258,6 @@ class Post
     if response_to_id
       self.root_id = response_to.id
       self.root_type = response_to._type
-    #elsif self.class.name == 'Talk' && primary_topic_mention
-    #  self.root_id = primary_topic_mention
-    #  self.root_type = 'Topic'
     else
       self.root_id = id
       self.root_type = _type
@@ -343,7 +329,7 @@ class Post
   end
 
   def json_images
-    if image_versions > 0
+    if image_versions > 0 || !remote_image_url.blank?
       {
         :original => image_url(nil, nil, nil, true),
         :fit => {
@@ -366,22 +352,9 @@ class Post
 
 
   class << self
-    # Build and return a post based on params (does not save)
-    def post(params, user)
-      if params[:type] && ['Video', 'Picture', 'Link', 'Talk'].include?(params[:type])
-        post = Kernel.const_get(params[:type]).new(params)
-        post.user = user
-      else
-        post = Post.new
-      end
-      post
-    end
-
     def friend_responses(id, user, page, limit)
       if user
-        Post.where(:root_id => id, :_type => 'Talk', "user_id" => {"$in" => user.following_users})
-            .desc(:_id)
-            .skip((page-1)*limit).limit(limit)
+        Post.where(:root_id => id, :_type => 'Talk', "user_id" => {"$in" => user.following_users}).desc(:_id).skip((page-1)*limit).limit(limit)
       else
         []
       end
@@ -414,12 +387,10 @@ class Post
         root_post = RootPost.new
         root_post.root = i
 
-        root_post.public_talking = root_post.root.response_count
-
         #get the public responses
-        root_post.public_responses = []
-        unless i.root_type == 'Talk' || root_post.public_talking == 0
-          root_post.public_responses = Post.public_responses(root_post.root.id, 1, 2)
+        root_post.feed_responses = []
+        unless i.root_type == 'Talk' || root_post.root.response_count == 0
+          root_post.feed_responses = Post.public_responses(root_post.root.id, 1, 2)
         end
 
         return_objects << root_post
@@ -443,7 +414,7 @@ class Post
       else
         items = items.desc(:rel)
       end
-      items = items.skip((page-1)*20).limit(20)
+      items = items.skip((page-1)*20).limit(20).to_a
 
       build_user_feed(items)
     end

@@ -5,6 +5,7 @@ class Comment
   include Mongoid::Timestamps::Updated
   include Mongoid::CachedJson
   include Limelight::Acl
+  include Limelight::Throttle
   include ModelUtilitiesHelper
 
   field :content

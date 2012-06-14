@@ -31,57 +31,60 @@ class CrawlerPushPost
     def perform(url, crawler_source_id)
       crawler_source = CrawlerSource.find(crawler_source_id)
 
-      # extract topics from the link with alchemy api
-      postData = Net::HTTP.post_form(
-              URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
-              {
-                      :url => url,
-                      :apikey => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
-                      :outputMode => 'json',
-                      #:sourceText => 'cleaned',
-                      :maxRetrieve => 5
-              }
-      )
-      tmp_entities = JSON.parse(postData.body)['entities']
       entities = []
       topics = []
 
-      if tmp_entities
-        tmp_entities.each do |e|
-          if e['relevance'].to_f >= 0.60
+      # extract topics from the link with alchemy api
+      if Rails.env.production?
+        postData = Net::HTTP.post_form(
+                URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
+                {
+                        :url => url,
+                        :apikey => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
+                        :outputMode => 'json',
+                        #:sourceText => 'cleaned',
+                        :maxRetrieve => 5
+                }
+        )
+        tmp_entities = JSON.parse(postData.body)['entities']
 
-            entities << e
-            if e['disambiguated'] && e['disambiguated']['freebase']
-              topic = Topic.where(:freebase_guid => e['disambiguated']['freebase'].split('.').last).first
-              unless topic # didn't find the topic with the freebase guid, check names
-                topic = Topic.where("aliases.slug" => e['disambiguated']['name'].parameterize, :primary_type_id => {'$exists' => true}).desc(:response_count).first
-                topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if topic
+        if tmp_entities
+          tmp_entities.each do |e|
+            if e['relevance'].to_f >= 0.60
+
+              entities << e
+              if e['disambiguated'] && e['disambiguated']['freebase']
+                topic = Topic.where(:freebase_guid => e['disambiguated']['freebase'].split('.').last).first
+                unless topic # didn't find the topic with the freebase guid, check names
+                  topic = Topic.where("aliases.slug" => e['disambiguated']['name'].parameterize, :primary_type_id => {'$exists' => true}).desc(:response_count).first
+                  topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if topic
+                end
+              else
+                name = e['disambiguated'] ? e['disambiguated']['name'].parameterize : e['text'].parameterize
+                topic = Topic.where("aliases.slug" => name, :primary_type_id => {'$exists' => true}).desc(:response_count).first
               end
-            else
-              name = e['disambiguated'] ? e['disambiguated']['name'].parameterize : e['text'].parameterize
-              topic = Topic.where("aliases.slug" => name, :primary_type_id => {'$exists' => true}).desc(:response_count).first
+
+              unless topic # create the topic if it's not already in the DB, and freebase has a decent match for it
+                topic = Topic.new
+                topic.name = e['disambiguated'] ? e['disambiguated']['name'] : e['text']
+
+                # check freebase if there is no freebase id returned from alchemy api
+                unless e['disambiguated'] && e['disambiguated']['freebase']
+                  search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(topic.name)}")
+                  next unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 100)
+                end
+
+                topic.user_id = User.marc_id
+                if e['disambiguated']
+                  topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if e['disambiguated']['freebase']
+                  topic.dbpedia = e['disambiguated']['dbpedia'] if e['disambiguated']['dbpedia']
+                  topic.opencyc = e['disambiguated']['opencyc'] if e['disambiguated']['opencyc']
+                end
+              end
+
+              topic.save
+              topics << topic if topic && topic.valid?
             end
-
-            unless topic # create the topic if it's not already in the DB, and freebase has a decent match for it
-              topic = Topic.new
-              topic.name = e['disambiguated'] ? e['disambiguated']['name'] : e['text']
-
-              # check freebase if there is no freebase id returned from alchemy api
-              unless e['disambiguated'] && e['disambiguated']['freebase']
-                search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(topic.name)}")
-                next unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 100)
-              end
-
-              topic.user_id = User.marc_id
-              if e['disambiguated']
-                topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if e['disambiguated']['freebase']
-                topic.dbpedia = e['disambiguated']['dbpedia'] if e['disambiguated']['dbpedia']
-                topic.opencyc = e['disambiguated']['opencyc'] if e['disambiguated']['opencyc']
-              end
-            end
-
-            topic.save
-            topics << topic if topic && topic.valid?
           end
         end
       end
@@ -176,7 +179,8 @@ class CrawlerPushPost
         end
       end
 
-      post = Post.post(response, User.limelight_user_id)
+      post = Kernel.const_get(response[:type]).new(response)
+      post.user_id = BSON::ObjectId(User.limelight_user_id)
       post.category = crawler_source.category if crawler_source.category && !crawler_source.category.blank?
       used_ids = []
       puts "starting topic loop"

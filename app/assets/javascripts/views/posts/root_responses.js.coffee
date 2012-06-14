@@ -3,8 +3,6 @@ class LL.Views.RootResponses extends Backbone.View
   tagName: 'div'
   className: 'responses'
 
-  initialize: ->
-
   render: =>
     if @type == 'feed'
       responses = @model.get('feed_responses')
@@ -34,5 +32,16 @@ class LL.Views.RootResponses extends Backbone.View
     if post.get('topic_mentions').length > 0
       mentions = new LL.Views.PostMentions(model: post.get('topic_mentions'))
       $(response_view.el).find('p').after(mentions.render().el)
+
+    @
+
+  prependResponse: (post) =>
+    response_view = new LL.Views.RootTalk(model: post)
+    $(@el).prepend($(response_view.render().el).hide())
+    if post.get('topic_mentions').length > 0
+      mentions = new LL.Views.PostMentions(model: post.get('topic_mentions'))
+      $(response_view.el).find('p').after(mentions.render().el)
+
+    $(response_view.el).show("slide", { direction: 'left' }, 500)
 
     @

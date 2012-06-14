@@ -12,8 +12,10 @@ class LL.Views.PostsFeed extends Backbone.View
 
     # A tile is the backbone view representing one tile on the feed
     @tiles = []
+    @columns = []
 
     @default_text = 'There are no items in this feed'
+    @type = null
     @on_add = 'append'
     @collection.on('reset', @render)
     @collection.on('add', @handleNewPost)
@@ -44,6 +46,25 @@ class LL.Views.PostsFeed extends Backbone.View
 
       LL.App.calculateSiteWidth()
 
+    if LL.App.current_user
+      view = new LL.Views.PostForm()
+      view.minimal = true
+      view.cancel_buttons = true
+      if @type == 'user'
+        if @model.get('id') == LL.App.current_user.get('id')
+          view.placeholder_text = "What do you want to say?"
+        else
+          view.placeholder_text = "Talk with @#{@model.get('username')}!"
+          view.initial_text = "@#{@model.get('username')} "
+      else if @type == 'topic'
+        view.placeholder_text = "Post about #{@model.get('name')}!"
+
+      tile = $('<div/>').addClass('tile column-fixed').html(view.render().el)
+      $(@el).find('.column:first').prepend(tile)
+
+      if @type == 'topic'
+        view.addTopic($(view.el).find('#post-form-mention1'), @model.get('name'), @model.get('id'))
+
     # listen to the channel for new posts
     channel = LL.App.get_subscription(@channel)
     unless channel
@@ -53,8 +74,6 @@ class LL.Views.PostsFeed extends Backbone.View
       channel.bind 'new_post', (data) ->
         post = self.collection.get(data.id)
         if post
-          tmp_post = new LL.Models.RootPost(data)
-          post.set('feed_responses', tmp_post.get('feed_responses'))
           post.trigger('move_to_top')
         else
           post = new LL.Models.RootPost(data)
@@ -84,7 +103,7 @@ class LL.Views.PostsFeed extends Backbone.View
 
   chooseColumn: =>
     min_height = 9999999999999
-    for column in @.columns
+    for column in @columns
       if column.height <= min_height
         chosen = column
         min_height = column.height
@@ -108,10 +127,13 @@ class LL.Views.PostsFeed extends Backbone.View
 
       unless LL.App.get_event_subscription(root_id, 'new_response')
         channel.bind 'new_response', (data) ->
+          console.log data
           if root_post.get('root')
             post = new LL.Models.Post(data)
             root_post.get('feed_responses').unshift(post)
-            root_post.get('root').trigger('new_response')
+            console.log 'foo'
+            root_post.trigger('new_response', post)
+
         LL.App.subscribe_event(root_id, 'new_response')
 
   prependPost: (root_post) =>

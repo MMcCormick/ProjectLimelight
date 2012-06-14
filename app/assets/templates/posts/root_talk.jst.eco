@@ -1,9 +1,20 @@
-<img src="<%= @talk.get('user').get('images').square.small %>">
-<a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
-<p>
-  <%= @talk.get('content') %>
-</p>
-<div class='when top-right'></div>
-<span class="actions">
-  <span class="comment-form">+Comment (<span><%= @talk.get('response_count') %></span>)</span>
-</span>
+<div class='top'>
+  <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
+  <p>
+    <%= @talk.get('content') %>
+  </p>
+  <% if @talk.get('response_count') > 0: %>
+
+  <% else: %>
+
+  <% end %>
+  <img src="<%= @talk.get('user').get('images').square.small %>">
+  <div class='when top-right'></div>
+  <span class="actions"></span>
+</div>
+
+<div class='bottom'>
+  <div class='likes'></div>
+</div>
+
+

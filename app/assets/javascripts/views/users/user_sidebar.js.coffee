@@ -9,8 +9,8 @@ class LL.Views.UserSidebar extends Backbone.View
     $(@el).append("<img class='profile-image' src='#{@model.get('images').fit.large}' />")
 
     # User talk form
-    talk = new LL.Views.UserSidebarTalk(model: @model)
-    $(@el).append(talk.render().el)
+#    talk = new LL.Views.UserSidebarTalk(model: @model)
+#    $(@el).append(talk.render().el)
 
     # Invite Code
     if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') && LL.App.current_user.get('invite_code')
@@ -27,7 +27,6 @@ class LL.Views.UserSidebar extends Backbone.View
     if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') && (!@model.get('facebook_id') || !@model.get('twitter_id'))
       connect = new LL.Views.UserSidebarSocialConnect(model: LL.App.current_user)
       $(@el).append(connect.render().el)
-
 
     # Topic suggestions
 #    if LL.App.current_user == @model

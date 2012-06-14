@@ -65,7 +65,8 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('user_feed', id)
 
       collection = new LL.Collections.UserFeed
-      feed = new LL.Views.PostsFeed(collection: collection)
+      feed = new LL.Views.PostsFeed(collection: collection, model: user)
+      feed.type = 'user'
       feed.default_text = "Streaming posts from #{user.get('following_topics_count')} topics and #{user.get('following_users_count')} users... Follow more things to expand your feed!"
       feed.channel = "#{user.get('id')}_realtime"
       LL.App.Feed = feed
@@ -103,7 +104,8 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('activity_feed', user.get('id'))
 
       collection = new LL.Collections.ActivityFeed
-      feed = new LL.Views.PostsFeed(collection: collection)
+      feed = new LL.Views.PostsFeed(collection: collection, model: user)
+      feed.type = 'user'
       feed.channel = "#{user.get('id')}_activity"
       LL.App.Feed = feed
       screen['components'].push(feed)
@@ -304,7 +306,8 @@ class LL.Router extends Backbone.Router
       LL.App.renderScreen('topic_feed', topic.get('id'))
 
       collection = new LL.Collections.TopicFeed
-      feed = new LL.Views.PostsFeed(collection: collection)
+      feed = new LL.Views.PostsFeed(collection: collection, model: topic)
+      feed.type = 'topic'
       LL.App.Feed = feed
       screen['components'].push(feed)
 

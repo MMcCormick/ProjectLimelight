@@ -15,6 +15,7 @@ class LL.Views.PostsFeed extends Backbone.View
     @columns = []
 
     @default_text = 'There are no items in this feed'
+    @type = null
     @on_add = 'append'
     @collection.on('reset', @render)
     @collection.on('add', @handleNewPost)
@@ -44,6 +45,25 @@ class LL.Views.PostsFeed extends Backbone.View
         @appendPost(root_post)
 
       LL.App.calculateSiteWidth()
+
+    if LL.App.current_user
+      view = new LL.Views.PostForm()
+      view.minimal = true
+      view.cancel_buttons = true
+      if @type == 'user'
+        if @model.get('id') == LL.App.current_user.get('id')
+          view.placeholder_text = "What do you want to say?"
+        else
+          view.placeholder_text = "Talk with @#{@model.get('username')}!"
+          view.initial_text = "@#{@model.get('username')} "
+      else if @type == 'topic'
+        view.placeholder_text = "Post about #{@model.get('name')}!"
+
+      tile = $('<div/>').addClass('tile column-fixed').html(view.render().el)
+      $(@el).find('.column:first').prepend(tile)
+
+      if @type == 'topic'
+        view.addTopic($(view.el).find('#post-form-mention1'), @model.get('name'), @model.get('id'))
 
     # listen to the channel for new posts
     channel = LL.App.get_subscription(@channel)

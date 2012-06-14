@@ -18,12 +18,12 @@
         <input id="post-form-fetch-url" type="text" placeholder='Paste URL to fetch...' autocomplete='off' />
         <div class='btn' id='fetch-url-btn'>Fetch URL</div>
       </div>
-      <div class='icons'>
-        <div class="icon ll-icon-link" rel='tooltip' title='Add Link' data-type='Link'></div>
-        <div class="icon ll-icon-picture" rel='tooltip' title='Add Picture' data-type='Picture'></div>
-        <div class="icon ll-icon-video" rel='tooltip' title='Add Video' data-type='Video'></div>
-        <i class="cancel-preview icon icon-remove" rel='tooltip' title='Cancel Link'></i>
-      </div>
+      <!--<div class='icons'>-->
+        <!--<div class="icon ll-icon-link" rel='tooltip' title='Add Link' data-type='Link'></div>-->
+        <!--<div class="icon ll-icon-picture" rel='tooltip' title='Add Picture' data-type='Picture'></div>-->
+        <!--<div class="icon ll-icon-video" rel='tooltip' title='Add Video' data-type='Video'></div>-->
+        <!--<i class="cancel-preview icon icon-remove" rel='tooltip' title='Cancel Link'></i>-->
+      <!--</div>-->
     </div>
 
     <div class="mentions">

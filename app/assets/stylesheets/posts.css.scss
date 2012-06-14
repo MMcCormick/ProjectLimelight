@@ -194,6 +194,19 @@ $postFontColor: $grayDark;
     padding: 5px 10px;
     margin-left: 0px;
   }
+
+  &.minimal {
+    .mentions,
+    .preview,
+    .modal-footer,
+    .close
+     {
+       display: none;
+     }
+    #post-form-content {
+      height: 20px;
+    }
+  }
 }
 
 #post-show {

@@ -20,7 +20,12 @@ class LL.Views.FeedColumn extends Backbone.View
 
     self = @
     $(view.el).css({'position':'absolute','visibility':'hidden','display':'block'})
-    $(@el).prepend(view.el)
+
+    if $(@el).find('.column-fixed').length == 0
+      $(@el).prepend(view.el)
+    else
+      $(@el).find('.column-fixed').after(view.el)
+
 
     setTimeout ->
       height = $(view.el).outerHeight()

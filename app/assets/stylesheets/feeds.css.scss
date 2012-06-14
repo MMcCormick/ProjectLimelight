@@ -74,6 +74,12 @@ $feedFontColor: $grayDark;
   margin-bottom: $feedColumnMargin + 10;
   position: relative;
 
+  &.column-fixed {
+    margin-top: 23px;
+    #post-form {
+      padding: 0px;
+    }
+  }
   &.fade-new {
     .root {
       background: #E2F6DF;

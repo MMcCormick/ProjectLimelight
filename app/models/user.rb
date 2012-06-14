@@ -517,29 +517,36 @@ class User
         friends_uids = friends.map{|friend| friend['id']}
         registeredFriends = User.where("social_connects.uid" => {"$in" => friends_uids}, 'social_connects.provider' => 'facebook')
         registeredFriends.each do |friend|
-          friend.follow_user(self) if friend.auto_follow_fb
-          notification = Notification.add(friend, :follow, true, self)
-          Pusher["#{friend.id.to_s}_private"].trigger('new_notification', notification.to_json) if notification
-          follow_user(friend) if self.auto_follow_fb
+          if friend.auto_follow_fb
+            friend.follow_user(self)
+          end
+          if self.auto_follow_fb
+            if follow_user(friend)
+              notification = Notification.add(friend, :follow, true, self)
+              Pusher["#{friend.id.to_s}_private"].trigger('new_notification', notification.to_json) if notification
+            end
+          end
         end
         save :validate => false
       end
-    elsif provider == "twitter" && self.auto_follow_tw
+    elsif provider == "twitter"
       tw = twitter
       if tw
-        follower_ids = tw.follower_ids.collection
-        registeredFollowers = User.where("social_connects.uid" => {"$in" => follower_ids}, 'social_connects.provider' => 'twitter')
+        follower_ids = tw.follower_ids.collection.map{|id| id.to_s}
+        registeredFollowers = User.where("social_connects.uid" => {"$in" => follower_ids}, 'social_connects.provider' => 'twitter').to_a
         registeredFollowers.each do |follower|
-          follower.follow_user(self)
+          follower.follow_user(self) if follower.auto_follow_tw
         end
-        save :validate => false
 
-        following_ids = tw.friend_ids.collection.map{|id| id.to_s}
-        registeredFollowing = User.where("social_connects.uid" => {"$in" => following_ids}, 'social_connects.provider' => 'twitter')
-        registeredFollowing.each do |following|
-          follow_user(following)
-          notification = Notification.add(following, :follow, true, self)
-          Pusher["#{following.id.to_s}_private"].trigger('new_notification', notification.to_json) if notification
+        if self.auto_follow_tw
+          following_ids = tw.friend_ids.collection.map{|id| id.to_s}
+          registeredFollowing = User.where("social_connects.uid" => {"$in" => following_ids}, 'social_connects.provider' => 'twitter')
+          registeredFollowing.each do |following|
+            if follow_user(following)
+              notification = Notification.add(following, :follow, true, self)
+              Pusher["#{following.id.to_s}_private"].trigger('new_notification', notification.to_json) if notification
+            end
+          end
         end
         save :validate => false
       end
@@ -764,7 +771,7 @@ class User
       update = true
       object_user_updates["object_user.username"] = self.username
       triggered_by_updates["triggered_by.$.username"] = self.username
-      if username_was.blank?
+      if username_was.blank? && !social_connects.empty?
         Resque.enqueue(AutoFollow, self.id.to_s, social_connects.first.provider.to_s)
       end
     end

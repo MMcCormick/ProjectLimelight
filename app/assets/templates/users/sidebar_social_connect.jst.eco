@@ -15,7 +15,7 @@
 
   <div class='social-connect twitter <%= "on" if @user.get('twitter_id') %>'>
     <div class='status'><%= if @user.get('twitter_id') then 'Twitter Connected!' else 'Not Connected' %></div>
-    <a href="<%= if @user.get('twitter_id') then '#' else '/users/auth/twitter' %>">
+    <a href="<%= if @user.get('twitter_id') then '#' else '/users/auth/twitter?x_auth_access_type=read' %>">
       <img src="/assets/images/twitter-connect-button.gif" />
     </a>
   </div>

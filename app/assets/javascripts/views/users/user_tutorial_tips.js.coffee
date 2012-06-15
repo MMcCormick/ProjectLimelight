@@ -20,46 +20,82 @@ class LL.Views.UserTutorialTips extends Backbone.View
 
     @
 
+#  tutorial12: =>
+#    @target = $('#sidebar-influences')
+#    @title = 'Topic Influence'
+#    @my = 'left middle'
+#    @at = 'right middle'
+#    @tip = true
+#    @button = 'Next'
+#    @content = '
+#      A realtime view of the topic influence you\'re gaining as people like what you post about various topics.
+#      <br /><br />
+#      More topic influence means that more people will see what you post about that topic.
+#    '
+
   tutorial11: =>
-    @target = $('.navbar .talk')
-    @title = 'Speak Your Mind'
-    @my = 'top center'
-    @at = 'bottom center'
+    @target = $('#page-header .feed')
+    @title = 'Your Feed'
+    @my = 'top middle'
+    @at = 'bottom middle'
     @tip = true
     @button = 'Next'
     @content = '
-      Click this button to talk about whatever videos, articles, pictures, or topics interest you.
+      This is your home on Limelight.
       <br /><br />
-      Tag topics in your posts to reach more people and gain influence in those topics!
+      Limelight creates your feed based on the users AND topics you\'re following.
     '
 
   tutorial12: =>
-    @target = $('#sidebar-influences')
-    @title = 'Topic Influence'
-    @my = 'left middle'
-    @at = 'right middle'
+    @target = $('#page-header .activity')
+    @title = 'Your Activity'
+    @my = 'top middle'
+    @at = 'bottom middle'
     @tip = true
     @button = 'Next'
     @content = '
-      A realtime view of the topic influence you\'re gaining as people like what you post about various topics.
+      You can find all of your previous posts in your Activity feed.
       <br /><br />
-      More topic influence means that more people will see what you post about that topic.
+      Click on a user to view their activity feed.
     '
 
   tutorial13: =>
-    @target = $('#feed')
-    @title = 'Your Feed'
+    @target = $('#page-header .likes')
+    @title = 'Your Likes'
     @my = 'top middle'
-    @at = 'top middle'
-    @tip = false
+    @at = 'bottom middle'
+    @tip = true
+    @button = 'Next'
+    @content = '
+      Posts you like on Limelight get added to your Likes feed.
+      <br /><br />
+      Every user has a Likes feed, which can be accessed by clicking this button on their profile.
+    '
+
+  tutorial14: =>
+    @target = $('#page-header .topics')
+    @title = 'Things You\'re Following'
+    @my = 'top middle'
+    @at = 'bottom right'
+    @tip = true
+    @button = 'Next'
+    @content = '
+      On Limelight you can follow users and topics.
+      <br /><br />
+      The users and topics you\'re following determine what is shown in your feed.
+    '
+
+  tutorial15: =>
+    @target = $('.column .tile #post-form')
+    @title = 'What do you want to say?'
+    @my = 'left center'
+    @at = 'right center'
+    @tip = true
     @button = 'Finish'
     @content = '
-      Limelight creates your feed based on the users and the topics that you\'re following.
+      Your post can be just text (like a Tweet), or it can include a cool picture, video, or link.
       <br /><br />
-      For each post, we show you what people you\'re following are saying about it, and what other users
-      are saying about it.
-      <br /><br />  +
-      To see your feed sorted by popularity click the \'Popular\' button in the top right.
+      Tag a topic in your post to reach that topic\'s followers!
     '
 
   renderTip: =>
@@ -73,6 +109,10 @@ class LL.Views.UserTutorialTips extends Backbone.View
             @tutorial12()
           when 3
             @tutorial13()
+          when 4
+            @tutorial14()
+          when 5
+            @tutorial15()
           else
             return
       else
@@ -84,8 +124,11 @@ class LL.Views.UserTutorialTips extends Backbone.View
                       my: @my
                       at: @at
                     style:
-                      tip: @tip
+                      tip:
+                        width: 12
+                        height: 12
                       classes: 'ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-limelight tutorial-tip'
+
                     content:
                       text: "
                         <div class='top'>#{@title}</div>
@@ -101,7 +144,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
   nextTip: =>
     switch @page
       when 'user_feed'
-        if @step == 3
+        if @step == 5
           @step = 0
         else
           @step += 1

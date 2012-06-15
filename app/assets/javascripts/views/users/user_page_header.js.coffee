@@ -17,15 +17,15 @@ class LL.Views.UserPageHeader extends Backbone.View
         on: (if @page == 'activity' then true else false)
       }
       {
-        content: "Likes"
+        content: "<span>#{@model.get('likes_count')}</span> Likes"
         url: (if LL.App.current_user == @model then '/likes' else "/users/#{@model.get('slug')}/likes")
         on: (if @page == 'likes' then true else false)
       }
-      {
-        content: "Influence"
-        url: (if LL.App.current_user == @model then '/influence' else "/users/#{@model.get('slug')}/influence")
-        on: (if @page == 'influence' then true else false)
-      }
+#      {
+#        content: "Influence"
+#        url: (if LL.App.current_user == @model then '/influence' else "/users/#{@model.get('slug')}/influence")
+#        on: (if @page == 'influence' then true else false)
+#      }
       {
         content: "<span>#{@model.get('following_topics_count')}</span> Topics"
         url: "/users/#{@model.get('slug')}/following/topics"

@@ -3,7 +3,7 @@
   way by sharing your invite code with your friends and your social networks!
 </div>
 
-<h4>Your Invite Code</h4>
+<h4>Your Invite Code (you can access this code later)</h4>
 <div class='code'>
   <%= @user.get('invite_code').code %>
 </div>

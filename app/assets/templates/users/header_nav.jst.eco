@@ -28,9 +28,9 @@
     <li>
       <a href="<%= "/likes" %>">Likes</a>
     </li>
-    <li>
-      <a href="<%= "/influence" %>">Influence</a>
-    </li>
+    <!--<li>-->
+      <!--<a href="<%= "/influence" %>">Influence</a>-->
+    <!--</li>-->
     <li>
       <a href="/settings">Settings</a>
     </li>

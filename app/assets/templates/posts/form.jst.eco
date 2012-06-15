@@ -53,7 +53,13 @@
   </div>
   <div class="modal-footer">
     <div class='stats'>
-      <div class='you'>This post will go to your <%= LL.App.current_user.get('followers_count') %> followers</div>
+
+      <div class='you'>
+        This post will go to your <%= LL.App.current_user.get('followers_count') %> followers
+        <% if LL.App.current_user.get('followers_count') > 0: %>
+          (hmm, maybe invite a friend?)
+        <% end %>
+      </div>
       <div class='topic-default'>Add topics to reach more users</div>
     </div>
     <div class="btn btn-success submit" data-loading-text='Submitting...'>Submit</div>

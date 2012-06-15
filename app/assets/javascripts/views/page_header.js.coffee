@@ -29,7 +29,7 @@ class LL.Views.PageHeader extends Backbone.View
       $(@el).find('.sorting').show()
 
     for link in @links
-      $(@el).find('.links').append("<li><a class='#{if link.on then 'on' else ''}' href='#{link.url}'>#{link.content}</a></li>")
+      $(@el).find('.links').append("<li><a class='#{link.content.toLowerCase()} #{if link.on then 'on' else ''}' href='#{link.url}'>#{link.content}</a></li>")
 
   handleLinkClick: (e) =>
     if $(e.currentTarget).hasClass('on')

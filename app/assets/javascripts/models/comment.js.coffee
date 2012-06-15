@@ -1,7 +1,7 @@
 class LL.Models.Comment extends Backbone.Model
-  url: '/api/comments'
   keepInSync: true
   name: 'comment'
+  urlRoot: "/api/comments"
 
   initialize: ->
     if @get('user')

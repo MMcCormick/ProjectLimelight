@@ -33,6 +33,8 @@ $postFontColor: $grayDark;
     @include border-radius(0px);
     background: #F9F9F9;
     padding: 1px;
+    padding: 7px;
+    text-align: left;
   }
   .errors {
     padding: 2px 0 0 0;
@@ -157,7 +159,7 @@ $postFontColor: $grayDark;
   }
   .mentions {
     @include clearfix();
-    border-top: 1px dotted #999;
+    border-top: 1px solid #EEE;
     padding: 0;
     background: #FFF;
 
@@ -169,7 +171,7 @@ $postFontColor: $grayDark;
       .tm-wrap {
         padding: 0 7px;
         &.two {
-          border-left: 1px dotted #999;
+          border-left: 1px solid #EEE;
         }
       }
     }
@@ -193,6 +195,15 @@ $postFontColor: $grayDark;
     @include border-radius(0px);
     padding: 5px 10px;
     margin-left: 0px;
+  }
+
+  .stats {
+    background: #F9F9F9;
+    font-size: 13px;
+    color: #999;
+    cursor: default;
+    text-align: left;
+    margin: 0 0 7px 1px;
   }
 
   &.minimal {

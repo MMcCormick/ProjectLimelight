@@ -92,6 +92,7 @@ class LL.Views.PostForm extends Backbone.View
         attributes['topic_mention_names'].push $(input).val()
 
     self = @
+
     @collection.create attributes,
       wait: true
       beforeSend: ->
@@ -126,6 +127,23 @@ class LL.Views.PostForm extends Backbone.View
 
   addTopic: (target, name, id) =>
     target.val(name).next().val(id)
+    self = @
+    if id != "0"
+      topic = new LL.Models.Topic({id: id})
+      if topic.get('followers_count')
+        @addTopicStat(topic)
+      else
+        topic.fetch(success: (model, response) -> self.addTopicStat(model))
+
+  addTopicStat: (topic) =>
+    $(@el).find(".topic-default").hide()
+    unless $(@el).find(".stats .t-#{topic.get('id')}").length > 0
+      $(@el).find(".stats").append("<div class='topic-stat t-#{topic.get('id')}'>+#{topic.get('followers_count')} user#{if topic.get('followers_count') != 1 then 's' else ''} following #{topic.get('name')}</div>")
+
+  removeTopicStat: (topic) =>
+    $(@el).find(".stats .t-#{topic.get('id')}").remove()
+    if $(@el).find('.stats .topic-stat').length == 0
+      $(@el).find(".topic-default").show()
 
   updateType: =>
     $(@el).find('#post-form-type').val(@model.get('type'))
@@ -156,6 +174,8 @@ class LL.Views.PostForm extends Backbone.View
 
   clearTopic: (e) =>
     if $.trim($(e.currentTarget).val()) == ''
+      topic = new LL.Models.Topic({id: $(e.currentTarget).next().val()})
+      @removeTopicStat(topic)
       $(e.currentTarget).next().val('')
 
   removeEmbedly: =>

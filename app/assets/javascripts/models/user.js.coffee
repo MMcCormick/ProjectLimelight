@@ -1,7 +1,7 @@
 class LL.Models.User extends Backbone.Model
-  url: '/api/users'
   keepInSync: true
   name: 'user'
+  urlRoot: "/api/users"
 
   initialize: ->
 

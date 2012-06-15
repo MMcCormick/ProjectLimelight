@@ -52,6 +52,10 @@
     <div id="picture_pupB"></div>
   </div>
   <div class="modal-footer">
+    <div class='stats'>
+      <div class='you'>This post will go to your <%= LL.App.current_user.get('followers_count') %> followers</div>
+      <div class='topic-default'>Add topics to reach more users</div>
+    </div>
     <div class="btn btn-success submit" data-loading-text='Submitting...'>Submit</div>
     <% if @modal || @cancel_buttons: %>
       <span class="cancel btn">Cancel</span>

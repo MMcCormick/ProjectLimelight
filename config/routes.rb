@@ -49,6 +49,7 @@ ProjectLimelight::Application.routes.draw do
       delete '' => 'topics#destroy'
       post '' => 'topics#create', :as => :topics
       put '' => 'topics#update'
+      get ':id' => 'topics#show'
       get '' => 'topics#show'
     end
 

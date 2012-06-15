@@ -1,9 +1,10 @@
 class LL.Models.Topic extends Backbone.Model
-  url: '/api/topics'
   keepInSync: true
   name: 'topic'
+  urlRoot: "/api/topics"
 
   initialize: ->
+
 
   scorePretty: ->
     parseInt @get('score')

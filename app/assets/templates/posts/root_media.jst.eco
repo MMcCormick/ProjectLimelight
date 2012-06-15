@@ -32,10 +32,8 @@
   </div>
 <% end %>
 
-<div class='bottom-sheet <%= "static" unless @post.get('images') %>'>
+<div class='bottom-sheet'>
   <div class='actions'>
-    <span class='talk-form'>+Post</span>
+    <span class='talk-form'>+Repost</span>
   </div>
-
-  <div class='bg'></div>
 </div>

@@ -29,15 +29,19 @@ class LL.Views.RootMedia extends Backbone.View
       LL.LoginBox.showModal()
       return
 
+    if $(@el).next().attr('id') == 'post-form'
+      return
+
     view = new LL.Views.PostForm()
     view.with_header = false
     view.cancel_buttons = true
-    view.placeholder_text = "Post about this #{@model.get('type')}..."
+    view.placeholder_text = "Repost this #{@model.get('type')} to #{LL.App.current_user.get('followers_count')} followers..."
     view.close_callback = @closePost
     view.preview.show_preview = false
-    $(@el).after(view.render().el)
+    $(@el).after($(view.render().el).hide())
     view.preview.setResponse(@model)
     $(view.el).find('.icons').remove()
+    $(view.el).slideDown(300)
 
   closePost: (form) =>
     $(form.el).remove();

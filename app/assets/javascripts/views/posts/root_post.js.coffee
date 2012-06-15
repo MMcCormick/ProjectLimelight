@@ -6,7 +6,6 @@ class LL.Views.RootPost extends Backbone.View
   events:
     "click .root .img, .talking, h5": "postShow"
     "mouseenter .root": "showHover"
-    "mouseleave .root": "hideHover"
     "mouseenter .reasons": "showReasons"
     "mouseleave .reasons": "hideReasons"
     "click .mentions .delete": "deleteMention"
@@ -88,18 +87,6 @@ class LL.Views.RootPost extends Backbone.View
   showHover: (e) =>
     # remove the green background that slowly fades out after a new post is pushed
     $(@el).removeClass('fade-new').find('.root').stop(true, true)
-
-    return unless $(e.currentTarget).parent().hasClass('tile')
-
-    self = @
-    $(@el).oneTime 500, 'post-tile-hover', ->
-      $(self.el).find('.bottom-sheet').slideDown 200
-
-  hideHover: (e) =>
-    return if $(e.target).hasClass('.bottom-sheet')
-
-    $(@el).stopTime 'post-tile-hover'
-    $(@el).find('.bottom-sheet').slideUp 200
 
   showReasons: (e) =>
     $(@el).find('.reasons ul').fadeIn(200)

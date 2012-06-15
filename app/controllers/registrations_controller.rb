@@ -1,6 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
+  # Is this used? Similar to UsersController create action
   def create
     params[:user] = {
             :username => params[:username],
@@ -8,7 +9,7 @@ class RegistrationsController < Devise::RegistrationsController
             :password => params[:password]
     }
     build_resource
-    resource.invite_code_id = session[:invite_code]
+    resource.invite_code_id = BSON::ObjectId(session[:invite_code])
 
     if resource.save
       if resource.active_for_authentication?

@@ -38,7 +38,7 @@ class UsersController < ApplicationController
 
   def create
     user = User.new_with_session(params, session)
-    user.invite_code_id = session[:invite_code]
+    user.invite_code_id = BSON::ObjectId(session[:invite_code])
     user.origin = 'limelight'
 
     if user.save

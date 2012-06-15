@@ -3,7 +3,7 @@ require "net/http"
 class TestingController < ApplicationController
 
   def test
-    UserMailer.marc_welcome(User.matt_id, "today").deliver
+    current_user.auto_follow("twitter")
   end
 
   def foo

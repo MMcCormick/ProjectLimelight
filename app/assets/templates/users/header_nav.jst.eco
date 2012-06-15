@@ -6,7 +6,9 @@
 
   <div class='numbers'>
     <span class='notifications' rel="tooltip" data-placement='bottom' title='<%= @user.get('unread_notification_count') %> Unread Notifications'>
-      <span><%= @user.get('unread_notification_count') %></span>
+      <span class="<%= if (@user.get('unread_notification_count')) > 0 then 'unread' else '' %>">
+        <%= @user.get('unread_notification_count') %>
+      </span>
     </span>
   </div>
 

@@ -11,8 +11,10 @@ class CrawlerGo
 
         next unless feed && feed != 0 && feed != '0'
 
+        next unless feed.etag || feed.last_modified
+
         # skip this source if it has not beed modified since our last crawl
-        if (feed.etag == s.etag) || (s.last_modified && feed.last_modified == s.last_modified)
+        if (feed.etag && feed.etag == s.etag) || (s.last_modified && s.last_modified && feed.last_modified == s.last_modified)
           s.last_modified = feed.last_modified
           s.etag = feed.etag
           s.last_crawled = Time.now

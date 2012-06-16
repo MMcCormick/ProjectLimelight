@@ -60,7 +60,7 @@
           (hmm, maybe invite a friend?)
         <% end %>
       </div>
-      <div class='topic-default'>Add topics to reach more users</div>
+      <div class='topic-default'>Tag topics to reach more users</div>
     </div>
     <div class="btn btn-success submit" data-loading-text='Submitting...'>Submit</div>
     <% if @modal || @cancel_buttons: %>

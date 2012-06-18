@@ -4,7 +4,7 @@ ruby '1.9.3'
 
 gem 'bundler', '1.2.0.pre.1'
 gem 'thin'
-gem 'rails', '3.2.5'
+gem 'rails', '3.2.6'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'
@@ -33,6 +33,7 @@ gem 'feedzirra'
 gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem "rack-timeout"
+gem 'switch_user  '
 #gem 'mongoid_collection_snapshot'
 
 
@@ -85,6 +86,7 @@ platforms :ruby do
   #gem 'rpm_contrib', '2.1.11' # extra instrumentation for the new relic rpm agent
   #gem 'newrelic-redis', '1.3.2' # new relic redis instrumentation
   #gem 'newrelic-faraday'
+  gem 'brakeman'
 
   group :development do
     gem "foreman"

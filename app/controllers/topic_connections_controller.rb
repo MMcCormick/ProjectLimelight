@@ -87,14 +87,13 @@ class TopicConnectionsController < ApplicationController
   def remove
     topic1 = Topic.find(params[:topic1_id])
     authorize! :update, topic1
-    original_slug = topic1.slug
     connection = TopicConnection.find(params[:connection_id])
     topic2 = Topic.find(params[:topic2_id])
 
     if topic1 && topic2 && connection
       TopicConnection.remove(connection, topic1, topic2)
       if topic1.save
-        response = build_ajax_response(:ok, (original_slug != topic1.slug) ? edit_topic_path(topic1) : nil, "Connection removed!")
+        response = build_ajax_response(:ok, nil, "Connection removed!")
         status = 201
       else
         response = build_ajax_response(:error, nil, "Could not remove connection", topic1.errors)

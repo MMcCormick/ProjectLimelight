@@ -677,7 +677,9 @@ class Topic
         end
       end
 
-      result.map {|k,v| v}
+      results = result.map {|k,v| v}
+      results.delete_if {|r| r[:topics].empty?}
+      results
     end
 
     # Checks if there is an untyped topic with an alias equal to the name. If so, returns that topic, if not, returns new topic

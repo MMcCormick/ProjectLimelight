@@ -59,7 +59,6 @@ class User
   field :unread_notification_count, :type => Integer, :default => 0
   field :clout, :default => 1
   field :bio
-  field :invite_code_id
   field :tutorial_step, :default => 1, :type => Integer
   field :tutorial1_step, :default => 1, :type => Integer # user feed tutorial
   # Email settings: 2 = immediate email, 1 = daily digest, 0 = off
@@ -71,6 +70,7 @@ class User
   field :use_fb_image, :default => false
   field :auto_follow_fb, :default => true
   field :auto_follow_tw, :default => true
+  field :used_invite_code_id
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id
 
@@ -89,7 +89,7 @@ class User
   has_one  :invite_code
 
   attr_accessor :login
-  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio, :invite_code_id
+  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio, :used_invite_code_id
 
   with_options :if => :is_active? do |user|
     user.validates :username, :uniqueness => { :case_sensitive => false, :message => 'Username is already taken' },
@@ -192,9 +192,9 @@ class User
   end
 
   def validate_invite_code
-    invite = InviteCode.find(invite_code_id)
-    unless invite && invite.usable?
-      errors.add :invite_code_id, "Please enter a valid invite code"
+    used_invite = used_invite_code_id ? InviteCode.find(used_invite_code_id) : nil
+    unless used_invite && used_invite.usable?
+      errors.add :used_invite_code_id, "Please enter a valid invite code"
     end
   end
 
@@ -446,10 +446,14 @@ class User
   end
 
   def invite_stuff
-    InviteCode.create(:user_id => id, :allotted => 3)
-    if invite_code_id
-      invite = InviteCode.find(invite_code_id)
-      invite.redeem
+    unless invite_code
+      InviteCode.create(:user_id => id, :allotted => 3)
+    end
+
+
+    if used_invite_code_id
+      used_invite = InviteCode.find(used_invite_code_id)
+      used_invite.redeem if used_invite
     end
   end
 
@@ -694,7 +698,7 @@ class User
         #end
 
         user = User.new(
-                :username => username, :invite_code_id => invite.id,
+                :username => username, :used_invite_code_id => invite.id,
                 :first_name => extra["first_name"], :last_name => extra["last_name"],
                 :gender => gender, :email => info["email"], :password => Devise.friendly_token[0,20]
         )

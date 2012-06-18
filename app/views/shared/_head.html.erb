@@ -37,6 +37,10 @@
 
   <%= csrf_meta_tags %>
 
+  <% if Rails.env.production? %>
+    <%= airbrake_javascript_notifier %>
+  <% end %>
+
   <%= yield :head %>
 
   <script src="http://static.p-li.me/assets/modernizr.js"></script>

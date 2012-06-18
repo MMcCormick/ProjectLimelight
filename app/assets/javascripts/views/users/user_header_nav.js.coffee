@@ -46,6 +46,7 @@ class LL.Views.UserHeaderNav extends Backbone.View
 
   updateNotificationCount: =>
     $(@el).find('.notifications span').text(@model.get('unread_notification_count')).attr('data-original-title', "#{@model.get('unread_notification_count')} Unread Notifications")
+    $(@el).find('.notifications span').removeClass('unread').addClass(if (@model.get('unread_notification_count') > 0) then 'unread' else '')
 
   showLogin: =>
     LL.LoginBox.showModal()

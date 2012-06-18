@@ -31,7 +31,7 @@ class LL.Views.UserTutorial2 extends Backbone.View
 
   appendTopic: (topic) =>
     follow_button = new LL.Views.FollowButton(model: topic)
-    $(".topic-#{topic.get('id')}").append(follow_button.render().el)
+    $(@el).find(".topic-#{topic.get('id')}").append(follow_button.render().el)
 
   cancelClick: (e) ->
     e.preventDefault()

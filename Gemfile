@@ -33,7 +33,7 @@ gem 'feedzirra'
 gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem "rack-timeout"
-gem 'switch_user  '
+gem 'switch_user'
 #gem 'mongoid_collection_snapshot'
 
 

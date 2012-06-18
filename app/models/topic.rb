@@ -663,7 +663,7 @@ class Topic
 
     def top_by_category(limit)
       categories = Topic.where(:is_category => true).asc(:slug)
-      topics = Topic.where(:category_ids => {"$in" => categories.map{|c| c.id}}).desc(:score).limit(limit).to_a
+      topics = Topic.where(:category_ids => {"$in" => categories.map{|c| c.id}}).desc(:score).limit(100).to_a
       result = {}
       categories.each do |c|
         result[c.id.to_s] = {

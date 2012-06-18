@@ -50,6 +50,22 @@
 
     <div class='meat'>
       <div class="field">
+        <div class="setting-text">Auto-follow users I follow on Twitter</div>
+        <% if current_user.twuid %>
+          <div class="btn-group">
+            <div class="btn radio-btn <%= "btn-info" if current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="true">On</div>
+            <div class="btn radio-btn <%= "btn-info" unless current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="false">Off</div>
+          </div>
+        <% else %>
+          <div class='social-connect twitter'>
+            <a href="/users/auth/twitter" class='twitter'>
+              <img src="/assets/images/twitter-connect-button.gif" />
+            </a>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="field">
         <div class="setting-text">Auto-follow Facebook friends</div>
         <% if current_user.fbuid %>
           <div class="btn-group">
@@ -66,19 +82,18 @@
       </div>
 
       <div class="field">
-        <div class="setting-text">Auto-follow users you follow on Twitter</div>
-        <% if current_user.twuid %>
-          <div class="btn-group">
-            <div class="btn radio-btn <%= "btn-info" if current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="true">On</div>
-            <div class="btn radio-btn <%= "btn-info" unless current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="false">Off</div>
-          </div>
-        <% else %>
-          <div class='social-connect twitter'>
-              <a href="/users/auth/twitter" class='twitter'>
-                <img src="/assets/images/twitter-connect-button.gif" />
-              </a>
-          </div>
-        <% end %>
+        <div class="setting-text">Post my follows to Facebook (occasionally)</div>
+        <div class="btn-group">
+          <div class="btn radio-btn <%= "disabled" unless current_user.fbuid %> <%= "btn-info" if current_user.og_follows %>" name="og_follows" data-value="true">On</div>
+          <div class="btn radio-btn <%= "disabled" unless current_user.fbuid %> <%= "btn-info" unless current_user.og_follows %>" name="og_follows" data-value="false">Off</div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="setting-text">Post my likes to Facebook (occasionally)</div>
+        <div class="btn-group">
+          <div class="btn radio-btn <%= "disabled" unless current_user.fbuid %> <%= "btn-info" if current_user.og_likes %>" name="og_likes" data-value="true">On</div>
+          <div class="btn radio-btn <%= "disabled" unless current_user.fbuid %> <%= "btn-info" unless current_user.og_likes %>" name="og_likes" data-value="false">Off</div>
+        </div>
       </div>
     </div>
   </div>

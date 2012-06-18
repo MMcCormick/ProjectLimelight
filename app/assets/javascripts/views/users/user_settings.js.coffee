@@ -24,6 +24,11 @@ class LL.Views.UserSettings extends Backbone.View
         button.button('reset')
         button.toggleClass('btn-info')
         button.text(if button.hasClass('btn-info') then 'On' else 'Off')
+      success: (data) ->
+        globalSuccess(data)
+      error: (jqXHR, textStatus, errorThrown) ->
+        $(self.el).removeClass('disabled')
+        globalError(jqXHR)
 
   updateRadioSetting: (e) =>
     button = $(e.target)
@@ -45,3 +50,8 @@ class LL.Views.UserSettings extends Backbone.View
           button.button('reset')
           button.toggleClass('btn-info')
           button.siblings().removeClass('btn-info')
+        success: (data) ->
+          globalSuccess(data)
+        error: (jqXHR, textStatus, errorThrown) ->
+          $(self.el).removeClass('disabled')
+          globalError(jqXHR)

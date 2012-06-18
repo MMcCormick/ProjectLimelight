@@ -71,6 +71,8 @@ class User
   field :use_fb_image, :default => false
   field :auto_follow_fb, :default => true
   field :auto_follow_tw, :default => true
+  field :og_follows, :default => true
+  field :og_likes, :default => true
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id
 

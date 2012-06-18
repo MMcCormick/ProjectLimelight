@@ -7,9 +7,9 @@ class OpenGraphCreate
     og_id = fb.put_connections("me", "#{og_namespace}:#{action}", object_type.to_sym => object_url)
     if og_id && og_id['id']
       case action
-        when 'follow'
+        when 'follow' && user.og_follows
           ll_action = ActionFollow.where(:fid => user.id, :tid => target.id, :a => 'create').desc(:_id).first
-        when 'like'
+        when 'like' && user.og_likes
           ll_action = ActionLike.where(:fid => user.id, :tid => target.id, :a => 'create').desc(:_id).first
         else
           ll_action = nil

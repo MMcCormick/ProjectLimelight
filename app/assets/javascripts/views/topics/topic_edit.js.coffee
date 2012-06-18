@@ -19,6 +19,11 @@ class LL.Views.TopicEdit extends Backbone.View
     image_form = new LL.Views.TopicImageForm(model: @model)
     $(@el).append(image_form.render().el)
 
+    categories = new LL.Collections.TopicCategories
+    categories_form = new LL.Views.TopicCategoryForm(model: @model, collection: categories)
+    $(@el).append(categories_form.render().el)
+    categories.fetch()
+
     connections = new LL.Collections.TopicConnections
     connection_form = new LL.Views.TopicConnectionForm(model: @model, collection: connections)
     $(@el).append(connection_form.render().el)

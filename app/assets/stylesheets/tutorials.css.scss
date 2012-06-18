@@ -16,6 +16,7 @@
   }
   .modal-body {
     @include clearfix();
+    max-height: none;
   }
   .modal-footer {
     position: relative;
@@ -101,11 +102,53 @@
       cursor: default;
       margin: 20px 0 15px 0;
     }
-    .tlink {
-      cursor: default;
-    }
-    .load-more {
-      margin: 20px 0 10px 0;
+    .topic-list {
+
+      li {
+        height: auto;
+      }
+      .head {
+        @include single-text-shadow(#DDD, 0, 1px);
+        margin: 20px 0 0 5px;
+      }
+      ul {
+        @include clearfix();
+        overflow: hidden;
+        padding: 10px 0 20px 2px;
+        list-style: none;
+        height: 150px;
+
+        li {
+          @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+          float: left;
+          margin: 5px 10px 10px 0;
+          width: 120px;
+          border: 1px solid #EEE;
+
+          img {
+            display: block;
+            width: 120px;
+            height: 120px;
+          }
+          .name {
+            overflow: hidden;
+            border-top: 1px solid #EEE;
+            background: #F9F9F9;
+            padding: 8px;
+            color: #888;
+            h5 {
+              overflow: hidden;
+              white-space: nowrap;
+              font-size: 13px;
+            }
+          }
+          .follow {
+            position: absolute;
+            bottom: 40px;
+            left: 5px;
+          }
+        }
+      }
     }
   }
   #tutorial-3 {

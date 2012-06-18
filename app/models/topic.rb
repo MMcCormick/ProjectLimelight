@@ -58,8 +58,9 @@ class Topic
   field :websites_extra, :default => []
   field :neo4j_id
   field :is_category, :default => false
+  field :category_ids, :default => []
 
-  belongs_to :user, index: true
+  belongs_to :user, :index => true
   embeds_many :aliases, :as => :has_alias, :class_name => 'TopicAlias'
 
   validates :user_id, :presence => true
@@ -88,6 +89,8 @@ class Topic
   index({ :score => -1 })
   index({ :response_count => -1 })
   index({ :primary_type_id => 1 })
+  index({ :is_category => 1 })
+  index({ :category_ids => 1 })
   index({ :fb_page_id => 1 })
   index({ :freebase_guid => 1 }, { :sparse => true })
   index({ :freebase_id => 1 }, { :sparse => true })
@@ -309,7 +312,7 @@ class Topic
 
   def remove_alias old_alias
     return unless old_alias && !old_alias.blank?
-    self.aliases.where(:name => name).delete
+    self.aliases.where(:name => old_alias).delete
     Resque.enqueue(SmCreateTopic, id.to_s)
   end
 
@@ -595,6 +598,12 @@ class Topic
     response
   end
 
+  def add_category(id)
+    unless category_ids.include?(id)
+      self.category_ids << id
+    end
+  end
+
   ##########
   # JSON
   ##########
@@ -621,6 +630,7 @@ class Topic
     :score => { :properties => :short, :versions => [ :v1 ] },
     :followers_count => { :properties => :short, :versions => [ :v1 ] },
     :primary_type => { :properties => :short, :versions => [ :v1 ] },
+    :category_ids => { :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| Topic.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :created_at_pretty => { :definition => lambda { |instance| instance.pretty_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
@@ -650,6 +660,27 @@ class Topic
     ##########
     # END JSON
     ##########
+
+    def top_by_category(limit)
+      categories = Topic.where(:is_category => true).asc(:slug)
+      topics = Topic.where(:category_ids => {"$in" => categories.map{|c| c.id}}).desc(:score).limit(100).to_a
+      result = {}
+      categories.each do |c|
+        result[c.id.to_s] = {
+                :category => c,
+                :topics => []
+        }
+      end
+      topics.each do |t|
+        t.category_ids.each do |cid|
+          result[cid.to_s][:topics] << t
+        end
+      end
+
+      results = result.map {|k,v| v}
+      results.delete_if {|r| r[:topics].empty?}
+      results
+    end
 
     # Checks if there is an untyped topic with an alias equal to the name. If so, returns that topic, if not, returns new topic
     def find_untyped_or_create(name, user)

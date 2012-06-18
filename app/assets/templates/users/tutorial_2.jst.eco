@@ -1,10 +1,25 @@
 <div>
-  An important part of Limelight is following topics that interest you. A topic can be anything, and can be created
-  by anyone. Try following some popular topics below (the points measure the topic's popularity on Limelight). You can always unfollow topics later!
+  An important part of Limelight is following topics that interest you. The topics and users you follow determine what is shown
+  in your feed. A topic can be anything, and can be created by anyone. Try following some popular topics below. You can always unfollow topics later!
 </div>
 <br />
 <div>Please follow 3 or more topics below.</div>
 
-<h4>Popular Topics</h4>
-<ul class='topic-list unstyled'></ul>
-<div class='btn load-more' data-loading-text="fetching topics..." autocomplete='off'>Load More Topics</div>
+<ul class='topic-list unstyled'>
+  <% for item in @data: %>
+  <li>
+    <h1 class='head'><%= item.get('category').get('name') %></h1>
+
+    <ul>
+      <% for topic,i in item.get('topics'): %>
+        <li class='topic-<%= topic.get('id') %> <%= if i == 0 then "first" else "" %>' title='<%= topic.get('name') %>'>
+          <img src='<%= topic.get('images').square.large %>' />
+          <div class='name'>
+            <h5><%= topic.get('name') %></h5>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </li>
+  <% end %>
+</ul>

@@ -46,11 +46,14 @@ ProjectLimelight::Application.routes.draw do
       get 'followers' => 'topics#followers'
       get 'suggestions' => 'topics#suggestions'
       get 'index' => 'topics#index'
+      get 'categories' => 'topics#categories'
+      get 'top_by_category' => 'topics#top_by_category'
       put ':id/freebase' => 'topics#update_freebase'
       delete ':id/freebase' => 'topics#delete_freebase'
       delete '' => 'topics#destroy'
       post '' => 'topics#create', :as => :topics
       put '' => 'topics#update'
+      put ':id/categories' => 'topics#add_category'
       get ':id' => 'topics#show'
       get '' => 'topics#show'
     end

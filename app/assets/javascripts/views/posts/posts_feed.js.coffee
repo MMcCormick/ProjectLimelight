@@ -152,7 +152,7 @@ class LL.Views.PostsFeed extends Backbone.View
 
   appendPost: (root_post) =>
     column = @chooseColumn()
-    if root_post.get('root') && root_post.get('root').get("type") != 'Topic'
+    if root_post.get('root')
       tile = new LL.Views.RootPost(model: root_post)
       @tiles.push tile
       column.appendPost tile

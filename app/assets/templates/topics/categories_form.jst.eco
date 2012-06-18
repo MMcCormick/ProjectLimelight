@@ -1,0 +1,28 @@
+<div class="top">
+  <h4>Topic Categories</h4>
+</div>
+
+<div class="meat">
+  <ul class="unstyled">
+    <% for category in @categories: %>
+      <% if _.include(@topic.get('category_ids'), category.get('id')): %>
+      <li><%= category.get('name') %></li>
+      <% end %>
+    <% end %>
+  </ul>
+
+  <h4>Add a Category</h4>
+  <form>
+    <div class="errors"></div>
+
+    <select name='category'>
+      <% for category in @categories: %>
+      <option value="<%= category.get('id') %>"><%= category.get('name') %></option>
+      <% end %>
+    </select>
+
+    <div class="actions">
+      <div class="submit btn btn-success">Add Category</div>
+    </div>
+  </form>
+</div>

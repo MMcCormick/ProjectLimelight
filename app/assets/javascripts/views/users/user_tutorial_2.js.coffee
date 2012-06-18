@@ -9,16 +9,13 @@ class LL.Views.UserTutorial2 extends Backbone.View
 
   initialize: ->
     @title= 'Following Topics'
-    @topics = new LL.Collections.TopicList
-    @topics.on('reset', @appendTopics)
-    @topics.on('add', @appendTopic)
+    @topics = new LL.Collections.TopicsByCategory
+    @topics.on('reset', @render)
     @count = 0
-    @page = 1
-    @fetchTopics()
-    @loaded = false
+    @topics.fetch()
 
-  render: ->
-    $(@el).html(@template(user: @model))
+  render: =>
+    $(@el).html(@template(user: @model, data: @topics.models))
     @target = $(@el).find('.topic-list')
 
     @appendTopics()
@@ -28,25 +25,16 @@ class LL.Views.UserTutorial2 extends Backbone.View
     @
 
   appendTopics: =>
-    for topic in @topics.models
-      @appendTopic(topic)
+    for item in @topics.models
+      for topic in item.get('topics')
+        @appendTopic(topic)
 
   appendTopic: (topic) =>
-    $('.load-more').button('reset')
-
-    @odd = @count%2
-    @count += 1
-    view = new LL.Views.TopicListItem(model: topic)
-    view.odd = @odd
-
-    if @target
-      @target.append(view.render().el)
+    follow_button = new LL.Views.FollowButton(model: topic)
+    $(".topic-#{topic.get('id')}").append(follow_button.render().el)
 
   cancelClick: (e) ->
     e.preventDefault()
-
-  fetchTopics: =>
-    @topics.fetch({data: {sort: ['response_count', 'desc'], limit: 15, page: @page}})
 
   loadMore: (e) =>
     $('.load-more').button('loading')

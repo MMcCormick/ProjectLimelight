@@ -328,4 +328,30 @@ class TopicsController < ApplicationController
     @topic_groups.sort_by! {|a| a.length}
     @topic_groups.reverse!
   end
+
+  # return category topics
+  def categories
+    topics = Topic.where(:is_category => true)
+    render :json => topics.map {|t| t.as_json}
+  end
+
+  def add_category
+    topic = Topic.find(params[:id])
+    authorize! :update, topic
+
+    category = Topic.find(params[:category_id])
+
+    if category
+      topic.add_category(category.id)
+      topic.save
+      render :json => build_ajax_response(:ok, nil, "Topic Category Added")
+    else
+      render :json => build_ajax_response(:error, nil, "Category not found!")
+    end
+  end
+
+  def top_by_category
+    topics = Topic.top_by_category(15)
+    render :json => topics
+  end
 end

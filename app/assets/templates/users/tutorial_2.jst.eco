@@ -12,7 +12,7 @@
 
     <ul>
       <% for topic,i in item.get('topics'): %>
-        <li class='topic-<%= topic.get('id') %> <%= if i == 0 then "first" else "" %>' title='<%= topic.get('name') %>'>
+        <li class='topic-<%= topic.get('id') %>'>
           <img src='<%= topic.get('images').square.large %>' />
           <div class='name'>
             <h5><%= topic.get('name') %></h5>

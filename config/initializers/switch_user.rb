@@ -13,7 +13,7 @@ SwitchUser.setup do |config|
   # defaults to id
   # this hash is to allow you to specify a different column to
   # expose for instance a username on a User model instead of id
-  config.available_users_identifiers = { :user => :username }
+  config.available_users_identifiers = { :user => :id }
 
   # available_users_names is a hash,
   # keys in this hash should match a key in the available_users hash
@@ -25,14 +25,14 @@ SwitchUser.setup do |config|
   # else the request will be refused and returns "Permission Denied"
   # if you switch from "admin" to user, the current_user param is "admin"
   #config.controller_guard = lambda { |current_user, request| Rails.env.development? }
-  config.controller_guard = lambda { |current_user, request| Rails.env.production? and current_user and current_user.role?('admin') }
+  config.controller_guard = lambda { |current_user, request| Rails.env.development? || (Rails.env.production? and current_user and current_user.role?('admin')) }
 
   # view_guard is a block,
   # if it returns true, the switch user select box will be shown,
   # else the select box will not be shown
   # if you switch from admin to "user", the current_user param is "user"
   #config.view_guard = lambda { |current_user, request| Rails.env.development? }
-  config.view_guard = lambda { |current_user, request| Rails.env.production? and current_user and current_user.role?('admin') }
+  config.view_guard = lambda { |current_user, request| Rails.env.development? || (Rails.env.production? and current_user and current_user.role?('admin')) }
 
   # redirect_path is a block, it returns which page will be redirected
   # after switching a user.

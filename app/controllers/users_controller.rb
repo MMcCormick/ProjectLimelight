@@ -77,15 +77,22 @@ class UsersController < ApplicationController
     current_user.use_fb_image = params[:use_fb_image] == "true" if params[:use_fb_image]
     current_user.auto_follow_fb = params[:auto_follow_fb] == "true" if params[:auto_follow_fb]
     current_user.auto_follow_tw = params[:auto_follow_tw] == "true" if params[:auto_follow_tw]
+    current_user.og_follows = params[:og_follows] == "true" if params[:og_follows]
+    current_user.og_likes = params[:og_likes] == "true" if params[:og_likes]
 
     current_user.username = params[:username] if params[:username]
     current_user.unread_notification_count = params[:unread_notification_count] if params[:unread_notification_count]
 
-    if current_user.save
-      response = build_ajax_response(:ok)
-      status = 200
+    if current_user.changed?
+      if current_user.save
+        response = build_ajax_response(:ok, nil, "Setting updated")
+        status = 200
+      else
+        response = build_ajax_response(:error, nil, nil, current_user.errors)
+        status = :unprocessable_entity
+      end
     else
-      response = build_ajax_response(:error, nil, nil, current_user.errors)
+      response = build_ajax_response(:error, nil, "Setting could not be changed. Please contact support@projectlimelight.com")
       status = :unprocessable_entity
     end
 

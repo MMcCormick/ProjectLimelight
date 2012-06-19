@@ -19,6 +19,7 @@ class LL.Views.App extends Backbone.View
     @Modal = new LL.Views.Modal
 
     # The global screens & sidebars
+    @activeScreen = null
     @screens = {}
     @sidebars = {}
 
@@ -64,6 +65,8 @@ class LL.Views.App extends Backbone.View
         @sidebars["#{type}_#{id}"] = sidebar
 
   renderScreen: (name, id) =>
+    @hideActiveScreen()
+
     screen = @screens["#{name}_#{id}"]
 
     if screen['sidebar']
@@ -73,7 +76,11 @@ class LL.Views.App extends Backbone.View
     for component in screen['components']
       component.render()
 
+    @activeScreen = screen
+
   showScreen: (name, id) =>
+    @hideActiveScreen()
+
     screen = @screens["#{name}_#{id}"]
 
     if screen['sidebar']
@@ -82,7 +89,16 @@ class LL.Views.App extends Backbone.View
     for component in screen['components']
       $(component.el).show()
 
+    @activeScreen = screen
 
+  hideActiveScreen: =>
+    return unless @activeScreen
+
+    if @activeScreen['sidebar']
+      $(@activeScreen['sidebar'].el).hide()
+
+    for component in @activeScreen['components']
+      $(component.el).hide()
 
   # HANDLE PUSHER SUBSCRIPTIONS
   get_subscription: (id) =>

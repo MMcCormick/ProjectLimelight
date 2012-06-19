@@ -21,6 +21,8 @@ ProjectLimelight::Application.routes.draw do
       get 'influence_increases' => 'users#user_influence_increases'
       get 'influencer_topics' => 'users#influencer_topics'
       get 'almost_influencer_topics' => 'users#almost_influencer_topics'
+      get ':id/topic_activity' => 'users#topic_activity'
+      get ':id/topic_likes' => 'users#topic_likes'
       post '' => 'users#create'
       put '' => 'users#update'
       get '' => 'users#show'
@@ -132,14 +134,18 @@ ProjectLimelight::Application.routes.draw do
     get ':slug/following/users' => 'users#show', :as => :user_following_topics
     get ':slug/following/topics' => 'users#show', :as => :user_following_users
     get ':slug/followers' => 'users#show', :as => :user_followers
+    get ':slug/likes/:topic_id' => 'users#show', :as => :user_topic_likes
     get ':slug/likes' => 'users#show', :as => :user_likes
     get ':slug/influence' => 'users#show', :as => :user_influence
     get ':slug/feed' => 'users#show', :as => :user_feed
+    get ':slug/:topic_id' => 'users#show', :as => :user_topic_activity
     get ':slug' => 'users#show', :as => :user, :show_og => true
   end
   get 'settings' => 'users#settings', :as => :user_settings
+  get 'activity/:topic_id' => 'users#show'
   get 'activity' => 'users#show'
-  get 'likes' => 'users#show'
+  get 'likes/:topic_id' => 'users#show'
+  get 'likes/' => 'users#show'
   get 'influence' => 'users#show'
   get '/posts/:id' => 'posts#show', :as => :post
   get '/talks/:id' => 'posts#show', :as => :talk

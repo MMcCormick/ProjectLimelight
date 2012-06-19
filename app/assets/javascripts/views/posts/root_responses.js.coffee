@@ -9,7 +9,7 @@ class LL.Views.RootResponses extends Backbone.View
     else if @type == 'like'
       responses = @model.get('like_responses')
       className = 'like-responses'
-      talking = "#{@model.get('like_responses').length} #{(if @model.get('like_responses').length > 1 then 'Likes' else 'Like')}"
+      talking = ""
     else if @type == 'activity'
       responses = @model.get('activity_responses')
       className = 'activity-responses'

@@ -363,8 +363,7 @@ module Limelight #:nodoc:
         self.topic_mentions << topic
         pre_mention = pre_mentions.find(topic.id)
         pre_mention.destroy if pre_mention
-        FeedUserItem.push_post_through_topic(self, topic)
-        FeedTopicItem.push_post_through_topic(self, topic)
+        Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
         Neo4j.post_add_topic_mention(self, topic)
       end
     end
@@ -372,8 +371,7 @@ module Limelight #:nodoc:
     def remove_topic_mention(topic)
       mention = self.topic_mention_ids.delete(topic.id)
       if mention
-        FeedUserItem.unpush_post_through_topic(self, topic)
-        FeedTopicItem.unpush_post_through_topic(self, topic)
+        Resque.enqueue(PostRemoveTopic, self.id.to_s, topic.id.to_s)
         Neo4j.post_remove_topic_mention(self, topic)
       end
     end
@@ -490,8 +488,8 @@ module Limelight #:nodoc:
 
           # Update the popularities on affected objects
           unless affected_topic_ids.empty?
-            Topic.collection.where(:_id => {"$in" => affected_topic_ids}).
-                  update_all(
+            Topic.collection.find({:_id => {"$in" => affected_topic_ids}}).
+                  update_all({
                     "$inc" => {
                       :score => topic_amt,
                       :response_count => 1
@@ -499,19 +497,19 @@ module Limelight #:nodoc:
                     "$push" => {
                       :talking_ids => user_id
                     }
-                  )
+                  })
             affected_topic_ids.each do |tid|
               Resque.enqueue_in(10.minutes, ScoreUpdate, 'Topic', tid.to_s)
             end
           end
 
           unless affected_influence_ids.empty?
-            Topic.collection.where(:_id => {"$in" => affected_topic_ids}).
-              update_all(
+            Topic.collection.find({:_id => {"$in" => affected_topic_ids}}).
+              update_all({
                 "$inc" => {
                   "influencers."+user_id.to_s+".influence" => topic_amt
                 }
-              )
+              })
           end
         end
 

@@ -55,6 +55,7 @@ class User
   field :following_topics_count, :type => Integer, :default => 0
   field :following_topics, :default => []
   field :followers_count, :type => Integer, :default => 0
+  field :posts_count, :default => 0
   field :likes_count, :type => Integer, :default => 0
   field :unread_notification_count, :type => Integer, :default => 0
   field :clout, :default => 1
@@ -73,6 +74,8 @@ class User
   field :used_invite_code_id
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id
+  field :topic_activity, :default => {} # keeps track of how many posts a user has in topics (just counts)
+  field :topic_likes, :default => {} # keeps track of how many likes a user has in topics (just counts)
 
   embeds_many :social_connects
 
@@ -342,6 +345,81 @@ class User
     FeedUserItem.unfollow(self, topic)
   end
 
+  def topic_activity_add(topic_id)
+    self.topic_activity[topic_id.to_s] ||= 0
+    self.topic_activity[topic_id.to_s] += 1
+    self.topic_activity = Hash[topic_activity.sort_by{|id,count| count}.reverse]
+  end
+
+  def topic_activity_subtract(topic_id)
+    if topic_activity[topic_id.to_s]
+      self.topic_activity[topic_id.to_s] -= 1
+      self.topic_activity = Hash[topic_activity.sort_by{|id,count| count}.reverse]
+    end
+  end
+
+  def topic_activity_recalculate
+    self.topic_activity = {}
+    posts.each do |p|
+      p.topic_mention_ids.each do |t|
+        topic_activity_add(t)
+      end
+    end
+  end
+
+  def topics_by_activity
+    topics = Topic.where(:_id => {"$in" => topic_activity.map{|k,v| k}})
+    results = []
+    topic_activity.each do |id,count|
+      topic = topics.find(id)
+      if topic
+        results << {
+                :count => count,
+                :topic => topic
+        }
+      end
+    end
+    results
+  end
+
+  def topic_likes_add(topic_id)
+    self.topic_likes[topic_id.to_s] ||= 0
+    self.topic_likes[topic_id.to_s] += 1
+    self.topic_likes = Hash[topic_likes.sort_by{|id,count| count}.reverse]
+  end
+
+  def topic_likes_subtract(topic_id)
+    if topic_likes[topic_id.to_s]
+      self.topic_likes[topic_id.to_s] -= 1
+      self.topic_likes = Hash[topic_likes.sort_by{|id,count| count}.reverse]
+    end
+  end
+
+  def topic_likes_recalculate
+    self.topic_likes = {}
+    likes = Post.where(:like_ids => id)
+    likes.each do |p|
+      p.topic_mention_ids.each do |t|
+        topic_likes_add(t)
+      end
+    end
+  end
+
+  def topics_by_likes
+    topics = Topic.where(:_id => {"$in" => topic_likes.map{|k,v| k}})
+    results = []
+    topic_likes.each do |id,count|
+      topic = topics.find(id)
+      if topic
+        results << {
+                :count => count,
+                :topic => topic
+        }
+      end
+    end
+    results
+  end
+
   def name
     username
   end
@@ -589,7 +667,7 @@ class User
   json_fields \
     :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
     :type => { :definition => lambda { |instance| 'User' }, :properties => :short, :versions => [ :v1 ] },
-    :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
+    :slug => { :properties => :short, :versions => [ :v1 ] },
     :username => { :properties => :short, :versions => [ :v1 ] },
     :first_name => { :properties => :short, :versions => [ :v1 ] },
     :last_name => { :properties => :short, :versions => [ :v1 ] },

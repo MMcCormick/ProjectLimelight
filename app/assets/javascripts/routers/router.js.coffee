@@ -4,8 +4,10 @@ class LL.Router extends Backbone.Router
     'users/:id/following/users': 'userFollowingUsers'
     'users/:id/followers': 'userFollowers'
     'users/:id/likes': 'likeFeed'
+    'users/:id/likes/:id': 'likeFeed'
     'users/:id/influence': 'userInfluence'
     'users/:id/feed': 'userFeed'
+    'users/:id/:topic_id': 'activityFeed'
     'users/:id': 'activityFeed'
     'posts/:id': 'postShow'
     'talks/:id': 'talkShow'
@@ -17,7 +19,9 @@ class LL.Router extends Backbone.Router
     'pages/admin/users/index': 'userIndex'
     'pages/:name': 'staticPage'
     'settings': 'settings'
+    'activity/:topic_id': 'myTopicActivity'
     'activity': 'activityFeed'
+    'likes/:topic_id': 'myTopicLikes'
     'likes': 'likeFeed'
     'influence': 'userInfluence'
     ':id/followers': 'topicFollowers'
@@ -77,8 +81,10 @@ class LL.Router extends Backbone.Router
       collection.sort_value = 'newest'
       collection.fetch({data: {id: user.get('id'), sort: 'newest'}})
 
-  activityFeed: (id=0) ->
+  myTopicActivity: (topic_id=0) ->
+    @activityFeed(0, topic_id)
 
+  activityFeed: (id=0, topic_id=0) ->
     @hideModal()
 
     if id == 0
@@ -87,10 +93,10 @@ class LL.Router extends Backbone.Router
       user = new LL.Models.User($('#this').data('this'))
 
     # Only load the feed if it's new
-    if LL.App.findScreen('activity_feed', user.get('id'))
-      LL.App.showScreen('activity_feed', user.get('id'))
+    if LL.App.findScreen('activity_feed', user.get('id')+topic_id)
+      LL.App.showScreen('activity_feed', user.get('id')+topic_id)
     else
-      screen = LL.App.newScreen('activity_feed', user.get('id'))
+      screen = LL.App.newScreen('activity_feed', user.get('id')+topic_id)
 
       page_header = new LL.Views.UserPageHeader(model: user)
       page_header.page = 'activity'
@@ -101,7 +107,15 @@ class LL.Router extends Backbone.Router
         sidebar = LL.App.createSidebar('user', user.get('id'), user)
       screen['sidebar'] = sidebar
 
-      LL.App.renderScreen('activity_feed', user.get('id'))
+      LL.App.renderScreen('activity_feed', user.get('id')+topic_id)
+
+      topic_activity_collection = new LL.Collections.UserTopicActivity
+      topic_activity_collection.user = user
+      topic_activity = new LL.Views.PostsFeedTopicRibbon(collection: topic_activity_collection, model: user)
+      topic_activity.active = topic_id
+      topic_activity.type = 'activity'
+      screen['components'].push(topic_activity)
+      topic_activity_collection.fetch(data: {topic_id: topic_id})
 
       collection = new LL.Collections.ActivityFeed
       feed = new LL.Views.PostsFeed(collection: collection, model: user)
@@ -112,9 +126,15 @@ class LL.Router extends Backbone.Router
 
       collection.id = user.get('id')
       collection.page = 1
-      collection.fetch({data: {id: user.get('id')}})
+      collection.topic_id = topic_id
+      collection.fetch({data: {id: user.get('id'), topic_id: topic_id}})
 
-  likeFeed: (id=0) ->
+  myTopicLikes: (topic_id=0) ->
+    @likeFeed(0, topic_id)
+
+  likeFeed: (id=0, topic_id=0) ->
+    @hideModal()
+
     if id == 0
       user = LL.App.current_user
     else
@@ -136,6 +156,14 @@ class LL.Router extends Backbone.Router
 
       LL.App.renderScreen('like_feed', user.get('id'))
 
+      topic_likes_collection = new LL.Collections.UserTopicLikes
+      topic_likes_collection.user = user
+      topic_likes = new LL.Views.PostsFeedTopicRibbon(collection: topic_likes_collection, model: user)
+      topic_likes.active = topic_id
+      topic_likes.type = 'likes'
+      screen['components'].push(topic_likes)
+      topic_likes_collection.fetch(data: {topic_id: topic_id})
+
       collection = new LL.Collections.LikeFeed
       feed = new LL.Views.PostsFeed(collection: collection)
       feed.channel = "#{user.get('id')}_likes"
@@ -144,7 +172,8 @@ class LL.Router extends Backbone.Router
 
       collection.id = user.get('id')
       collection.page = 1
-      collection.fetch({data: {id: user.get('id')}})
+      collection.topic_id = topic_id
+      collection.fetch({data: {id: user.get('id'), topic_id: topic_id}})
 
   userInfluence: (id=0) ->
     if id == 0

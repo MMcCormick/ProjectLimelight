@@ -16,6 +16,36 @@ $feedFontColor: $grayDark;
   }
 }
 
+#feed-ribbon {
+  @include border-radius(1px);
+  @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+  overflow-y: hidden;
+  overflow-x: auto;
+  padding: 10px 15px;
+  margin: 30px 19px 5px 5px;
+  background: #F9F9F9;
+  display: none;
+
+  .topic-ribbon {
+    @include clearfix();
+    list-style: none;
+    white-space: nowrap;
+
+    li {
+      margin: 0 25px 0 0;
+      display: inline-block;
+
+      &.on {
+        font-weight: bold;
+        a {
+          color: #444;
+          cursor: default;
+        }
+      }
+    }
+  }
+}
+
 .tile,
 .response-talk {
   .mentions {

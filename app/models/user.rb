@@ -677,6 +677,7 @@ class User
     :following_users_count => { :properties => :short, :versions => [ :v1 ] },
     :following_topics_count => { :properties => :short, :versions => [ :v1 ] },
     :followers_count => { :properties => :short, :versions => [ :v1 ] },
+    :posts_count => { :properties => :short, :versions => [ :v1 ] },
     :likes_count => { :properties => :short, :versions => [ :v1 ] },
     :unread_notification_count => { :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| User.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },

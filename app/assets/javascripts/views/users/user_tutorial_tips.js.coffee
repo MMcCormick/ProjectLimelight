@@ -47,16 +47,18 @@ class LL.Views.UserTutorialTips extends Backbone.View
     '
 
   tutorial12: =>
-    @target = $('#page-header .activity')
-    @title = 'Your Activity'
+    @target = $('#page-header .posts')
+    @title = 'Your Posts'
     @my = 'top middle'
     @at = 'bottom middle'
     @tip = true
     @button = 'Next'
     @content = '
-      You can find all of your previous posts in your Activity feed.
+      You can find all of your previous posts here.
       <br /><br />
-      Click on a user to view their activity feed.
+      Your posts are automatically organized around the topics you tag in them.
+      <br /><br />
+      Click on a user to view their posts.
     '
 
   tutorial13: =>
@@ -67,9 +69,11 @@ class LL.Views.UserTutorialTips extends Backbone.View
     @tip = true
     @button = 'Next'
     @content = '
-      Posts you like on Limelight get added to your Likes feed.
+      When you like a post on Limelight it is added to your Likes.
       <br /><br />
-      Every user has a Likes feed, which can be accessed by clicking this button on their profile.
+      Similar to your posts, Limelight organizes your Likes around topics.
+      <br /><br />
+      Every user has Likes, which can be accessed by clicking this "Likes" button on their profile.
     '
 
   tutorial14: =>

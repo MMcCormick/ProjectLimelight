@@ -18,7 +18,7 @@ class LL.Views.UserTutorial extends Backbone.View
 
     @displayActive(true)
 
-    if @step < 4
+    if @step < 3
       next = new LL.Views["UserTutorial#{@step+1}"](model: LL.App.current_user)
       next.parent = @
       @nextView = next
@@ -47,7 +47,7 @@ class LL.Views.UserTutorial extends Backbone.View
     if @step == 2 && @followCount < 3 && $('.follow').length > 0
       $(@el).find('.next').addClass('disabled').text('Follow 3 Topics First')
 
-    if @step == 4
+    if @step == 3
       setTimeout ->
         $('.next').text('Finish!')
       , 400
@@ -78,7 +78,7 @@ class LL.Views.UserTutorial extends Backbone.View
           createGrowl(false, 'Please follow at least 3 topics before moving on', 'Woops', 'red')
       return
 
-    if @step < 4
+    if @step < 3
 
       @step += 1
 
@@ -96,7 +96,7 @@ class LL.Views.UserTutorial extends Backbone.View
 
       @displayActive()
 
-      if @step < 4
+      if @step < 3
         next = new LL.Views["UserTutorial#{@step+1}"](model: LL.App.current_user)
         next.parent = @
         @nextView = next

@@ -58,7 +58,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
       <br /><br />
       Your posts are automatically organized around the topics you tag in them.
       <br /><br />
-      Click on a user to view their posts.
+      You can click on any user to view their posts.
     '
 
   tutorial13: =>
@@ -99,7 +99,9 @@ class LL.Views.UserTutorialTips extends Backbone.View
     @content = '
       Your post can be just text (like a Tweet), or it can include a cool picture, video, or link.
       <br /><br />
-      Tag a topic in your post to reach that topic\'s followers!
+      Tag a topic in your post to reach that topic\'s followers.
+      <br /><br />
+      Try clicking this box, adding the "Limelight" topic, and giving us some quick feedback! Or you can just press finish.
     '
 
   renderTip: =>

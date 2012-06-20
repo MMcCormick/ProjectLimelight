@@ -49,7 +49,7 @@ class LL.Router extends Backbone.Router
       user = LL.App.current_user
       @showTipTutorial('user_feed')
     else
-      user = new LL.Models.User($('#this').data('this'))
+      user = new LL.Models.User(current_object)
 
     # Only load the feed if it's new
     if LL.App.findScreen('user_feed', id)
@@ -90,7 +90,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = new LL.Models.User($('#this').data('this'))
+      user = new LL.Models.User(current_object)
 
     # Only load the feed if it's new
     if LL.App.findScreen('activity_feed', user.get('id')+topic_id)
@@ -138,7 +138,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = new LL.Models.User($('#this').data('this'))
+      user = new LL.Models.User(current_object)
 
     if LL.App.findScreen('like_feed', user.get('id'))
       LL.App.showScreen('like_feed', user.get('id'))
@@ -179,7 +179,7 @@ class LL.Router extends Backbone.Router
     if id == 0
       user = LL.App.current_user
     else
-      user = new LL.Models.User($('#this').data('this'))
+      user = new LL.Models.User(current_object)
 
     if LL.App.findScreen('user_influence', user.get('id'))
       LL.App.showScreen('user_influence', user.get('id'))
@@ -219,7 +219,7 @@ class LL.Router extends Backbone.Router
     view = new LL.Views.UserSettings()
 
   userFollowers: (id) ->
-    user = new LL.Models.User($('#this').data('this'))
+    user = new LL.Models.User(current_object)
 
     if LL.App.findScreen('user_followers', user.get('id'))
       LL.App.showScreen('user_followers', user.get('id'))
@@ -246,7 +246,7 @@ class LL.Router extends Backbone.Router
       collection.fetch({data: {id: user.get('id')}})
 
   userFollowingUsers: (id) ->
-    user = new LL.Models.User($('#this').data('this'))
+    user = new LL.Models.User(current_object)
 
     if LL.App.findScreen('user_following_users', user.get('id'))
       LL.App.showScreen('user_following_users', user.get('id'))
@@ -273,7 +273,7 @@ class LL.Router extends Backbone.Router
       collection.fetch({data: {id: user.get('id')}})
 
   userFollowingTopics: (id) ->
-    user = new LL.Models.User($('#this').data('this'))
+    user = new LL.Models.User(current_object)
 
     if LL.App.findScreen('user_following_topics', user.get('id'))
       LL.App.showScreen('user_following_topics', user.get('id'))
@@ -316,7 +316,7 @@ class LL.Router extends Backbone.Router
 
     @hideModal()
 
-    topic = new LL.Models.Topic($('#this').data('this'))
+    topic = new LL.Models.Topic(current_object)
 
     if LL.App.findScreen('topic_feed', topic.get('id'))
       LL.App.showScreen('topic_feed', topic.get('id'))
@@ -346,7 +346,7 @@ class LL.Router extends Backbone.Router
       collection.fetch({data: {id: topic.get('id'), sort: 'newest'}})
 
   topicFollowers: (id) ->
-    topic = new LL.Models.Topic($('#this').data('this'))
+    topic = new LL.Models.Topic(current_object)
 
     if LL.App.findScreen('topic_followers', topic.get('id'))
       LL.App.showScreen('topic_followers', topic.get('id'))
@@ -377,8 +377,8 @@ class LL.Router extends Backbone.Router
   #######
 
   postShow: (id) ->
-    if _.include(['Video','Link','Picture'], $('#this').data('type'))
-      data = new LL.Models.Post($('#this').data('this'))
+    if typeof current_object != 'undefined' && _.include(['Video','Link','Picture'], current_object.type)
+      data = new LL.Models.Post(current_object)
     else
       data = {'id':id}
 
@@ -399,8 +399,8 @@ class LL.Router extends Backbone.Router
 
 
   talkShow: (id) ->
-    if $('#this').data('type') == 'Talk' && $('#this').data('this').id == id
-      post = new LL.Models.Post($('#this').data('this'))
+    if typeof current_object != 'undefined' && current_object.type == 'Talk' && current_object.id == id
+      post = new LL.Models.Post(current_object)
     else
       post = new LL.Models.Post({'id':id})
       post.fetch(
@@ -544,7 +544,7 @@ class LL.Router extends Backbone.Router
         stream.fetch {add: true}
 
   userIndex: (id) ->
-    user = new LL.Models.User($('#this').data('this'))
+    user = new LL.Models.User(current_object)
 
     if LL.App.findScreen('user_index', user.get('id'))
       LL.App.showScreen('user_index', user.get('id'))

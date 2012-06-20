@@ -50,11 +50,19 @@
     <%= render :partial => 'shared/social_tools' %>
 
     <% if defined? @this %>
-      <div id='this' data-this="<%= @this.to_json(:properties => :public) %>" data-type="<%= @this.class.name %>"></div>
+      <script type="text/javascript" charset="utf-8">
+        //<![CDATA[
+        var current_object = <%= raw @this.to_json(:properties => :public).gsub('/', '\/') %>;
+        // ]]>
+      </script>
     <% end %>
 
     <% if signed_in? %>
-      <div id='me' data-user="<%= current_user.to_json(:properties => :public) %>"></div>
+      <script type="text/javascript" charset="utf-8">
+        //<![CDATA[
+        var current_user = <%= raw current_user.to_json(:properties => :public).gsub('/', '\/') %>;
+        // ]]>
+      </script>
     <% else %>
       <%= render 'users/splash', :extra_class => 'hide' %>
     <% end %>

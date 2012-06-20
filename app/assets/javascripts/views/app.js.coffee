@@ -28,7 +28,8 @@ class LL.Views.App extends Backbone.View
     @event_subscriptions = {}
 
     # set the current user
-    @current_user = if $('#me').length > 0 then new LL.Models.User($('#me').data('user')) else null
+    console.log
+    @current_user = if typeof current_user != 'undefined' then new LL.Models.User(current_user) else null
 
     # listen to the private user channgel
     if @current_user

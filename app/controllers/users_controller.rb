@@ -29,10 +29,8 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      format.js {
-        render :json => @this.as_json(:properties => :public)
-      }
       format.html
+      format.js { render :json => @this.as_json(:properties => :public) }
     end
   end
 

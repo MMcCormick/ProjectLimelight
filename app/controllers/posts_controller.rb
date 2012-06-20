@@ -27,7 +27,7 @@ class PostsController < ApplicationController
     @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, extra)
 
     respond_to do |format|
-      format.js { render :json => @this.to_json(:properties => :public) }
+      format.js { render :json => {:foo => 'bar'} }
       format.html
     end
   end

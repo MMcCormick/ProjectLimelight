@@ -27,7 +27,7 @@ class PostsController < ApplicationController
     @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, extra)
 
     respond_to do |format|
-      format.js { render :json => {:foo => 'bar'} }
+      format.js { render :json => {:accepts => request.env["HTTP_ACCEPT"], :agent => request.env["HTTP_USER_AGENT"]} }
       format.html
     end
   end

@@ -6,66 +6,7 @@
   <%= render :partial => 'shared/head' %>
   <body id="<%= params[:controller].parameterize %>-c" class="two">
 
-    <%= render 'shared/header' if (signed_in? && current_user.tutorial_step == 0) || !signed_in? && params[:controller] %>
 
-    <div id="page-header">
-      <div class="container">
-        <div class='inner'>
-          <div class='top'>
-            <h1></h1>
-          </div>
-          <ul class='links unstyled'></ul>
-          <ul class='sorting unstyled'>
-            <li class='on' data-sort='newest'>Real-Time<span>/</span></li>
-            <li class='last' data-sort='popular'>Popular</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    
-    <div class="wrapper <%= params[:action].parameterize %>-c">
-      <div class="sidebar">
-        <%= yield :sidebar %>
-      </div>
-      <div class="content container-fluid">
-        <% flash.each do |name, msg| %>
-          <div class="alert alert-<%= name == :notice ? "success" : "error" %>">
-            <a class="close" data-dismiss="alert">×</a>
-            <%= msg %>
-          </div>
-        <% end %>
-        <div class='row-fluid'>
-          <div class='span12'>
-            <div id='feed-ribbon'></div>
-            <div id='feed'>
-              <%= yield %>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <%= render 'shared/layout_js' %>
-
-    <%= render :partial => 'shared/social_tools' %>
-
-    <% if defined? @this %>
-      <script type="text/javascript" charset="utf-8">
-        //<![CDATA[
-        var current_object = <%= raw @this.to_json(:properties => :public).gsub('/', '\/') %>;
-        // ]]>
-      </script>
-    <% end %>
-
-    <% if signed_in? %>
-      <script type="text/javascript" charset="utf-8">
-        //<![CDATA[
-        var current_user = <%= raw current_user.to_json(:properties => :public).gsub('/', '\/') %>;
-        // ]]>
-      </script>
-    <% else %>
-      <%= render 'users/splash', :extra_class => 'hide' %>
-    <% end %>
 
   </body>
 </html>

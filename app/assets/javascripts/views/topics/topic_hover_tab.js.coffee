@@ -30,7 +30,7 @@ class LL.Views.TopicHoverTab extends Backbone.View
         ready: true
       hide:
         fixed: true
-        delay: 300
+        delay: 200
       content:
         text: (api) ->
           $(self.el).html(self.template(topic: self.model))

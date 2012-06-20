@@ -12,12 +12,12 @@
 
   <!-- Open Graph -->
   <% if @og_tags %>
+    <meta property="fb:app_id" content="<%= Rails.env.production? ? '185721368181340' : '321754267851647' %>" />
+    <meta property="og:site_name" content="Limelight" />
+    <meta property="fb:admins" content="1229430023" />
     <% @og_tags.each do |tag| %>
       <meta property=<%= tag[0] %> content="<%= tag[1] %>" />
     <% end %>
-    <meta property="og:site_name" content="Limelight" />
-    <meta property="fb:admins" content="1229430023" />
-    <meta property="fb:app_id" content="<%= Rails.env.production? ? '185721368181340' : '321754267851647' %>" />
   <% end %>
 
   <!-- Google Tags -->

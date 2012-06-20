@@ -144,7 +144,7 @@ class LL.Views.App extends Backbone.View
   startTopicHoverTab: (e) =>
     self = @
 
-    $(e.target).oneTime 1000, 'topic-hover', ->
+    $(e.target).oneTime 150, 'topic-hover', ->
       topic = new LL.Models.Topic({'id': $(e.currentTarget).data('id')})
       tab = new LL.Views.TopicHoverTab(model: topic)
 
@@ -161,7 +161,7 @@ class LL.Views.App extends Backbone.View
   startUserHoverTab: (e) =>
     self = @
 
-    $(e.target).oneTime 1000, 'user-hover', ->
+    $(e.target).oneTime 150, 'user-hover', ->
       user = new LL.Models.User({'id': $(e.currentTarget).data('id')})
       tab = new LL.Views.UserHoverTab(model: user)
 

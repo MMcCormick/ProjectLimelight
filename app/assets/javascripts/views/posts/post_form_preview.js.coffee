@@ -35,7 +35,7 @@ class LL.Views.PostFormPreview extends Backbone.View
 
     if model.get('limelight_post')
       @post_form_model.set({
-        'type': 'Talk',
+        'type': 'Post',
         'parent_id': model.get('limelight_post').get('id')
       })
     else

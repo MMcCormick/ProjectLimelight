@@ -16,9 +16,9 @@ class LL.Views.PageHeader extends Backbone.View
     $(@el).show()
     $(@el).find('h1').text(@title)
 
-    if @showScore
-      score = new LL.Views.Score(model: @model)
-      $(@el).find('.top').append(score.render().el)
+#    if @showScore
+#      score = new LL.Views.Score(model: @model)
+#      $(@el).find('.top').append(score.render().el)
 
     if @showFollow
       if !LL.App.current_user || LL.App.current_user.get('id') != @model.get('id')

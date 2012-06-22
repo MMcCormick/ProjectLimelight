@@ -19,8 +19,8 @@ class LL.Views.PostShow extends Backbone.View
     like = new LL.Views.LikeButton(model: @model)
     $(@el).find('.actions').prepend(like.render().el)
 
-    score = new LL.Views.Score(model: @model)
-    $(@el).find('.actions').prepend(score.render().el)
+#    score = new LL.Views.Score(model: @model)
+#    $(@el).find('.actions').prepend(score.render().el)
 
     prettyTime = new LL.Views.PrettyTime()
     prettyTime.format = 'extended'

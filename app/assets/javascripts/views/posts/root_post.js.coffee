@@ -23,16 +23,9 @@ class LL.Views.RootPost extends Backbone.View
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
   render: ->
-    if @model.get('root').get('type') == 'Topic'
-      mentions = new LL.Views.PostMentions(model: [@model.get('root')])
-      $(@el).append(mentions.render().el)
-    else
-      mentions = new LL.Views.PostMentions(model: @model.get('root').get('topic_mentions'))
-      $(@el).append(mentions.render().el)
-
     $(@el).addClass(@model.get('root').get('type').toLowerCase())
     switch @model.get('root').get('type')
-      when 'Talk'
+      when 'Post'
         root_view = new LL.Views.RootTalk(model: @model.get('root'))
       else
         root_view = new LL.Views.RootMedia(model: @model.get('root'))
@@ -52,8 +45,7 @@ class LL.Views.RootPost extends Backbone.View
     @
 
   postShow: =>
-    unless @model.get('root').get('type') == 'Topic'
-      LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
+    LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
 
   renderResponses: =>
     if !@responses && @model.get('like_responses').length > 0
@@ -69,12 +61,12 @@ class LL.Views.RootPost extends Backbone.View
       @responses = activity_responses_view
 
     if !@responses && @model.get('feed_responses').length > 0
-      feed_responses_view = new LL.Views.RootResponses(model: @model)
+      feed_responses_view = new LL.Views.FeedReposts(model: @model)
       feed_responses_view.type = 'feed'
       @responses = feed_responses_view
 
     if @responses
-      $(@el).append(@responses.render().el)
+      $(@el).prepend(@responses.render().el)
 
   moveToTop: =>
     $(@el).html('')

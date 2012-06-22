@@ -32,8 +32,8 @@
   </div>
 <% end %>
 
-<div class='bottom-sheet'>
-  <div class='actions'>
-    <span class='talk-form'>+Repost</span>
-  </div>
-</div>
+<!--<div class='bottom-sheet'>-->
+  <!--<div class='actions'>-->
+    <!--<span class='talk-form'>+Repost</span>-->
+  <!--</div>-->
+<!--</div>-->

@@ -5,11 +5,17 @@ development:
     default:
       # Defines the name of the default database that Mongoid can connect to.
       # (required).
-      database: limelight_development
+
       # Provides the hosts the default session can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
         - localhost:27017
+      database: limelight_development
+#      hosts:
+#        - ds029947.mongolab.com:29947
+#      database: heroku_app2036400
+#      username: heroku_app2036400
+#      password: qdhis08fo5qj9m87r0mc77qa0
       options:
         # Change whether the session persists in safe mode by default.
         # (default: false)

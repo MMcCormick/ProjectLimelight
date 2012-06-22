@@ -1,12 +1,15 @@
 <div class='top'>
-  <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>"><%= @talk.get('user').get('username') %></a>
+  <a class="ulink" data-id="<%= @talk.get('user').get('id') %>" href="<%= @talk.get('user').get('url') %>">
+    <%= @talk.get('user').get('name') %>
+    <span>@<%= @talk.get('user').get('username') %></span>
+  </a>
 
   <p><%= @talk.get('content') %></p>
 
   <span class="actions">
-    <span class='expand'>Expand</span>
+    <!--<span class='expand'>Expand</span>-->
     <span class='add-comment'>
-      +Comment
+      Comment
       <% if @talk.get('response_count') > 0: %>
         <b>(<%= @talk.get('response_count') %>)</b>
       <% end %>

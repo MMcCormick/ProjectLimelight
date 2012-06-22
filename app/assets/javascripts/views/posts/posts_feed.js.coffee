@@ -121,7 +121,7 @@ class LL.Views.PostsFeed extends Backbone.View
   addPost: (root_post) =>
     self = @
 
-    if root_post.get('root').get('type') != 'Talk'
+    if root_post.get('root').get('type') != 'Post'
       root_id = root_post.get('root').get('id')
 
       channel = LL.App.get_subscription(root_id)

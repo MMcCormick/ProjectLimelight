@@ -149,7 +149,7 @@ class LL.Views.PostForm extends Backbone.View
     $(@el).find('#post-form-type').val(@model.get('type'))
     $(@el).find('.icons .icon').removeClass('on')
 
-    if @model.get('type') == 'Talk' && !@model.get('parent_id')
+    if @model.get('type') == 'Post' && !@model.get('parent_id')
       $(@el).find('.icons').removeClass('on').find('.cancel-preview').hide()
       $(@el).find('#post-form-fetch-url').val('').parent().hide()
     else

@@ -6,6 +6,15 @@
         Purpose of the stylesheet follows.
 */
 
+.ulink {
+  span {
+    position: relative;
+    color: #999;
+    font-weight: normal;
+    font-size: 11px;
+  }
+}
+
 .user-list {
   li {
     height: 50px;

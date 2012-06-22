@@ -244,8 +244,6 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      field :primary_topic_mention
-
       embeds_many :pre_mentions, as: :topic_mentionable, :class_name => "TopicMention"
 
       has_and_belongs_to_many :topic_mentions, :inverse_of => nil, :class_name => 'Topic'
@@ -266,14 +264,8 @@ module Limelight #:nodoc:
     #
 
     def set_mentions
-      self.primary_topic_pm = -1
-
-      if first_response
-        self.topic_mention_ids = parent.topic_mention_ids
-      else
-        set_user_mentions
-        set_topic_mentions
-      end
+      set_user_mentions
+      set_topic_mentions
     end
 
     # Checks @content_raw for user mentions
@@ -294,13 +286,6 @@ module Limelight #:nodoc:
 
     def set_topic_mentions
       save_new_topic_mentions(topic_mention_names) if topic_mention_names && topic_mention_names.length > 0
-
-      topic_mentions.each do |topic|
-        if !primary_topic_pm || topic.score > primary_topic_pm
-          self.primary_topic_mention = topic.id
-          self.primary_topic_pm = topic.score
-        end
-      end
     end
 
     # takes an array of new topic names
@@ -335,34 +320,34 @@ module Limelight #:nodoc:
     end
 
     def bubble_up
-      if response_to_id
-        topic_mentions.each do |topic|
-          response_to.suggest_mention(topic)
-        end
-        response_to.save
-      end
+      #if post_media_id
+      #  topic_mentions.each do |topic|
+      #    post_media.suggest_mention(topic)
+      #  end
+      #  post_media.save
+      #end
     end
 
     def suggest_mention(topic)
-      unless topic_mention_ids.include?(topic.id)
-        root_pre_mention = pre_mentions.find(topic.id)
-        if root_pre_mention
-          root_pre_mention.score += 1
-          if root_pre_mention.score >= TopicMention.threshold
-            add_topic_mention(topic)
-          end
-        else
-          pre_m = self.pre_mentions.build(topic.attributes)
-          pre_m.id = topic.id
-        end
-      end
+      #unless topic_mention_ids.include?(topic.id)
+      #  root_pre_mention = pre_mentions.find(topic.id)
+      #  if root_pre_mention
+      #    root_pre_mention.score += 1
+      #    if root_pre_mention.score >= TopicMention.threshold
+      #      add_topic_mention(topic)
+      #    end
+      #  else
+      #    pre_m = self.pre_mentions.build(topic.attributes)
+      #    pre_m.id = topic.id
+      #  end
+      #end
     end
 
     def add_topic_mention(topic)
       unless topic_mention_ids.include?(topic.id)
         self.topic_mentions << topic
-        pre_mention = pre_mentions.find(topic.id)
-        pre_mention.destroy if pre_mention
+        #pre_mention = pre_mentions.find(topic.id)
+        #pre_mention.destroy if pre_mention
         Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
         Neo4j.post_add_topic_mention(self, topic)
       end
@@ -470,19 +455,17 @@ module Limelight #:nodoc:
               end
 
               # send the influence increase
-              if self.class.name == 'Talk'
-                affected_influence_ids << topic.id
+              affected_influence_ids << topic.id
 
-                increase = InfluenceIncrease.new
-                increase.amount = topic_amt
-                increase.topic_id = topic.id
-                increase.object_type = 'Talk'
-                increase.action = type
-                increase.topic = topic
-                increase.id = topic.name
+              increase = InfluenceIncrease.new
+              increase.amount = topic_amt
+              increase.topic_id = topic.id
+              increase.object_type = 'Talk'
+              increase.action = type
+              increase.topic = topic
+              increase.id = topic.name
 
-                Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
-              end
+              Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
             end
           end
 
@@ -540,12 +523,12 @@ module Limelight #:nodoc:
     end
 
     def throttle_check
-      unless persisted? || user_id.to_s == User.limelight_user_id
-        last = Kernel.const_get(self.class.name).where(:user_id => user_id).desc(:_id).limit(1).first
-        if last && Time.now - last.created_at < 15
-          errors.add(:limited, "You must wait at least 10 sections before posting another #{self.class.name}")
-        end
-      end
+      #unless persisted? || user_id.to_s == User.limelight_user_id
+      #  last = Kernel.const_get(self.class.name).where(:user_id => user_id).desc(:_id).limit(1).first
+      #  if last && Time.now - last.created_at < 15
+      #    errors.add(:limited, "You must wait at least 10 sections before posting another #{self.class.name}")
+      #  end
+      #end
     end
   end
 end

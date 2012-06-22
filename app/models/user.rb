@@ -82,10 +82,7 @@ class User
   embeds_many :social_connects
 
   has_many :posts
-  has_many :links
-  has_many :videos
-  has_many :talks
-  has_many :pictures
+  has_many :post_media, :class_name => 'PostMedia'
   has_many :topics
   has_many :topic_connections
   has_many :comments
@@ -431,7 +428,7 @@ class User
   end
 
   def fullname
-    if first_name and last_name then "#{first_name} #{last_name}" else nil end
+    if first_name and last_name then "#{first_name} #{last_name}" else username end
   end
 
   def add_to_soulmate
@@ -671,6 +668,7 @@ class User
     :type => { :definition => lambda { |instance| 'User' }, :properties => :short, :versions => [ :v1 ] },
     :slug => { :properties => :short, :versions => [ :v1 ] },
     :username => { :properties => :short, :versions => [ :v1 ] },
+    :name => { :definition => :fullname, :properties => :short, :versions => [ :v1 ] },
     :first_name => { :properties => :short, :versions => [ :v1 ] },
     :last_name => { :properties => :short, :versions => [ :v1 ] },
     :score => { :properties => :short, :versions => [ :v1 ] },

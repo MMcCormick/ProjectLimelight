@@ -8,7 +8,7 @@ class LL.Views.TopicHoverTab extends Backbone.View
 
   render: =>
     self = @
-    score = new LL.Views.Score(model: @model)
+#    score = new LL.Views.Score(model: @model)
 
     destroy = new LL.Views.TopicDestroyButton(model: @model)
 
@@ -35,7 +35,7 @@ class LL.Views.TopicHoverTab extends Backbone.View
         text: (api) ->
           $(self.el).html(self.template(topic: self.model))
 
-          $(self.el).find('.stat1').html(score.render().el)
+#          $(self.el).find('.stat1').html(score.render().el)
 
           $(self.el).find('.bottom').append(destroy.render().el).append(talk.render().el).append(follow.render().el)
           $(self.el)

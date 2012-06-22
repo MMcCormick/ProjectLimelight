@@ -20,8 +20,8 @@ class LL.Views.UserHeaderNav extends Backbone.View
 
     # only if the user is signed in
     if @model
-      score = new LL.Views.Score(model: @model)
-      $(@el).find('.numbers').append(score.render().el)
+#      score = new LL.Views.Score(model: @model)
+#      $(@el).find('.numbers').append(score.render().el)
 
       # listen for notifications
       channel = LL.App.get_subscription("#{self.model.get('id')}_private")

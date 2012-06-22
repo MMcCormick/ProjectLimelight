@@ -37,8 +37,7 @@ class Comment
   end
 
   def add_to_count
-    post.response_count = post.response_count.to_i + 1
-    post.update_response_counts(user_id)
+    post.comment_count += 1
     post.save
   end
 

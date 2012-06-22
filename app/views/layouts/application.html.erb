@@ -6,14 +6,6 @@
   <%= render :partial => 'shared/head' %>
   <body id="<%= params[:controller].parameterize %>-c" class="two">
 
-    <% if Rails.env.production? && (!current_user || ![User.marc_id, User.matt_id].include?(current_user.id.to_s)) %>
-      <!-- ClickTale Top part -->
-      <script type="text/javascript">
-      var WRInitTime=(new Date()).getTime();
-      </script>
-      <!-- ClickTale end of Top part -->
-    <% end %>
-
     <%= render 'shared/header' if (signed_in? && current_user.tutorial_step == 0) || !signed_in? && params[:controller] %>
 
     <div id="page-header">
@@ -75,18 +67,5 @@
       <%= render 'users/splash', :extra_class => 'hide' %>
     <% end %>
 
-
-    <% if Rails.env.production? && (!current_user || ![User.marc_id, User.matt_id].include?(current_user.id.to_s)) %>
-      <!-- ClickTale Bottom part -->
-      <div id="ClickTaleDiv" style="display: none;"></div>
-      <script type="text/javascript">
-      if(document.location.protocol!='https:')
-        document.write(unescape("%3Cscript%20src='http://s.clicktale.net/WRd.js'%20type='text/javascript'%3E%3C/script%3E"));
-      </script>
-      <script type="text/javascript">
-      if(typeof ClickTale=='function') ClickTale(108,1,"www14");
-      </script>
-      <!-- ClickTale end of Bottom part -->
-    <% end %>
   </body>
 </html>

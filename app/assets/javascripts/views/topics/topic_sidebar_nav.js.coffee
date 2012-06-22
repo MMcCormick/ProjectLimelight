@@ -14,8 +14,8 @@ class LL.Views.TopicSidebarNav extends Backbone.View
     destroy = new LL.Views.TopicDestroyButton(model: @model)
     $(@el).find('.edit-btn').after(destroy.render().el)
 
-    score = new LL.Views.Score(model: @model)
-    $(@el).find('.actions').append(score.render().el)
+#    score = new LL.Views.Score(model: @model)
+#    $(@el).find('.actions').append(score.render().el)
 
     follow = new LL.Views.FollowButton(model: @model)
     $(@el).find('.actions').prepend(follow.render().el)

@@ -35,7 +35,7 @@ class EmbedlyController < ApplicationController
       end
     end
 
-    post = result && result['url'] ? Post.where('sources.url' => result['url']).first : nil
+    post = result && result['url'] ? PostMedia.where('sources.url' => result['url']).first : nil
     if post
       response = post.to_json(:user => current_user)
     end

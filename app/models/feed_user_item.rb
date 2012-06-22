@@ -60,11 +60,9 @@ class FeedUserItem
       if post.is_root?
         root_post.root = post
       else
-        root_post.root = post.root
+        root_post.root = post.post_media
         root_post.feed_responses << post
       end
-
-      #root_post.public_talking = root_post.root.response_count
 
       # the potential users this post can be pushed to
       # take care of user mentions and users that are following the user that posted this
@@ -82,7 +80,13 @@ class FeedUserItem
 
         new_item = false
         unless item
-          post.pushed_users_count += 1 if post.user_id != u.id
+          if post.user_id != u.id
+            post.pushed_users_count += 1
+            if post.post_media_id
+              post.post_media.pushed_users_count += 1
+              post.post_media.save
+            end
+          end
           item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
           item.root_type = post.root_type
           new_item = true
@@ -132,13 +136,19 @@ class FeedUserItem
       post.topic_mentions.each do |topic|
         push_post_through_topic(post, topic)
       end
+
+      # push through sources
+      if post.post_media_id
+        post.post_media.sources.each do |source|
+          topic = Topic.find(source.id)
+          push_post_through_topic(post, topic) if topic
+        end
+      end
     end
 
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)
     # optionally push for a single user
     def push_post_through_topic(post, push_topic, single_user=nil, backlog=false)
-      #return if post.class.name == 'Talk'
-
       neo4j_topic_ids = Neo4j.pulled_from_ids([push_topic.neo4j_id])
       topics = Topic.where(:_id => {"$in" => [push_topic.id] + neo4j_topic_ids.map{|t| t[1]}})
 
@@ -147,7 +157,7 @@ class FeedUserItem
       if post.is_root?
         root_post.root = post
       else
-        root_post.root = post.root
+        root_post.root = post.post_media
         root_post.feed_responses << post
       end
 
@@ -244,7 +254,7 @@ class FeedUserItem
       if post.is_root?
         root_post.root = post
       else
-        root_post.root = post.root
+        root_post.root = post.post_media
         root_post.feed_responses << post
       end
 

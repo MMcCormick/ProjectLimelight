@@ -19,6 +19,7 @@ class LL.Views.App extends Backbone.View
     @Modal = new LL.Views.Modal
 
     # The global screens & sidebars
+    @activeScreen = null
     @screens = {}
     @sidebars = {}
 
@@ -27,7 +28,8 @@ class LL.Views.App extends Backbone.View
     @event_subscriptions = {}
 
     # set the current user
-    @current_user = if $('#me').length > 0 then new LL.Models.User($('#me').data('user')) else null
+    console.log
+    @current_user = if typeof current_user != 'undefined' then new LL.Models.User(current_user) else null
 
     # listen to the private user channgel
     if @current_user
@@ -64,6 +66,8 @@ class LL.Views.App extends Backbone.View
         @sidebars["#{type}_#{id}"] = sidebar
 
   renderScreen: (name, id) =>
+    @hideActiveScreen()
+
     screen = @screens["#{name}_#{id}"]
 
     if screen['sidebar']
@@ -73,7 +77,11 @@ class LL.Views.App extends Backbone.View
     for component in screen['components']
       component.render()
 
+    @activeScreen = screen
+
   showScreen: (name, id) =>
+    @hideActiveScreen()
+
     screen = @screens["#{name}_#{id}"]
 
     if screen['sidebar']
@@ -82,7 +90,16 @@ class LL.Views.App extends Backbone.View
     for component in screen['components']
       $(component.el).show()
 
+    @activeScreen = screen
 
+  hideActiveScreen: =>
+    return unless @activeScreen
+
+    if @activeScreen['sidebar']
+      $(@activeScreen['sidebar'].el).hide()
+
+    for component in @activeScreen['components']
+      $(component.el).hide()
 
   # HANDLE PUSHER SUBSCRIPTIONS
   get_subscription: (id) =>
@@ -128,7 +145,7 @@ class LL.Views.App extends Backbone.View
   startTopicHoverTab: (e) =>
     self = @
 
-    $(e.target).oneTime 1000, 'topic-hover', ->
+    $(e.target).oneTime 150, 'topic-hover', ->
       topic = new LL.Models.Topic({'id': $(e.currentTarget).data('id')})
       tab = new LL.Views.TopicHoverTab(model: topic)
 
@@ -145,7 +162,7 @@ class LL.Views.App extends Backbone.View
   startUserHoverTab: (e) =>
     self = @
 
-    $(e.target).oneTime 1000, 'user-hover', ->
+    $(e.target).oneTime 150, 'user-hover', ->
       user = new LL.Models.User({'id': $(e.currentTarget).data('id')})
       tab = new LL.Views.UserHoverTab(model: user)
 

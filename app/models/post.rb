@@ -46,7 +46,7 @@ class Post
 
   before_validation :set_source_snippet
   before_create :current_user_own, :send_tweet, :set_root
-  after_create :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :process_images, :add_initial_pop
+  after_create :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :process_images, :add_initial_pop, :update_user_topic_activity
   after_save :update_denorms
   before_destroy :disconnect
 
@@ -141,13 +141,20 @@ class Post
     like_ids.include?(user_id)
   end
 
-  def add_to_likes(user)
-    unless user_id == user.id || liked_by?(user.id)
-      self.likes << user
-      user.likes_count += 1
-      amount = add_pop_action(:lk, :a, user)
-      Resque.enqueue(Neo4jPostLike, user.id.to_s, id.to_s)
-      Resque.enqueue(PushLike, id.to_s, user.id.to_s)
+  def add_to_likes(add_user)
+    unless user_id == add_user.id || liked_by?(add_user.id)
+      self.likes << add_user
+      add_user.likes_count += 1
+      amount = add_pop_action(:lk, :a, add_user)
+
+      Resque.enqueue(Neo4jPostLike, add_user.id.to_s, id.to_s)
+      Resque.enqueue(PushLike, id.to_s, add_user.id.to_s)
+
+      unless topic_mention_ids.empty?
+        topic_mention_ids.each do |t|
+          add_user.topic_likes_add(t)
+        end
+      end
 
       amount
     end
@@ -159,13 +166,19 @@ class Post
     FeedLikeItem.create(user, self)
   end
 
-  def remove_from_likes(user)
-    if liked_by?(user.id)
-      self.like_ids.delete(user.id)
-      user.likes_count -= 1
-      add_pop_action(:lk, :r, user)
-      Resque.enqueue(Neo4jPostUnlike, user.id.to_s, id.to_s)
-      Resque.enqueue(PushUnlike, id.to_s, user.id.to_s)
+  def remove_from_likes(remove_user)
+    if liked_by?(remove_user.id)
+      self.like_ids.delete(remove_user.id)
+      remove_user.likes_count -= 1
+      add_pop_action(:lk, :r, remove_user)
+      Resque.enqueue(Neo4jPostUnlike, remove_user.id.to_s, id.to_s)
+      Resque.enqueue(PushUnlike, id.to_s, remove_user.id.to_s)
+
+      unless topic_mention_ids.empty?
+        topic_mention_ids.each do |t|
+          remove_user.topic_likes_subtract(t)
+        end
+      end
 
       true
     end
@@ -282,6 +295,17 @@ class Post
 
   def primary_source
     sources.first
+  end
+
+
+  # updates the user topic activity hash (keeps track of the # of times a user has talked about various topics)
+  def update_user_topic_activity
+    unless topic_mention_ids.empty?
+      topic_mention_ids.each do |t|
+        user.topic_activity_add(t)
+      end
+      user.save
+    end
   end
 
   ##########
@@ -464,15 +488,26 @@ class Post
       return_objects
     end
 
-    def activity_feed(feed_id, page)
-      items = FeedContributeItem.where(:feed_id => feed_id).desc(:last_response_time)
+    def activity_feed(feed_id, page, topic=nil)
+
+      if topic
+        items = FeedContributeItem.where(:feed_id => feed_id, :topic_ids => topic.id)
+      else
+        items = FeedContributeItem.where(:feed_id => feed_id)
+      end
+
+      items = items.desc(:last_response_time)
       items = items.skip((page-1)*20).limit(20)
 
       build_activity_feed(items)
     end
 
-    def like_feed(feed_id, page)
-      items = FeedLikeItem.where(:feed_id => feed_id).desc(:last_response_time)
+    def like_feed(feed_id, page, topic=nil)
+      if topic
+        items = FeedLikeItem.where(:feed_id => feed_id, :topic_ids => topic.id)
+      else
+        items = FeedLikeItem.where(:feed_id => feed_id)
+      end
       items = items.skip((page-1)*20).limit(20)
 
       build_like_feed(items)

@@ -27,8 +27,8 @@ class PostsController < ApplicationController
     @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, extra)
 
     respond_to do |format|
-      format.js { render :json => @this.to_json(:properties => :public) }
       format.html
+      format.js { render :json => @this.to_json(:properties => :public) }
     end
   end
 
@@ -152,7 +152,8 @@ class PostsController < ApplicationController
     user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
-    posts = Post.like_feed(user.id, page)
+    topic = params[:topic_id] && params[:topic_id] != "0" ? Topic.where(:slug_pretty => params[:topic_id].parameterize).first : nil
+    posts = Post.like_feed(user.id, page, topic)
     render :json => posts.map {|p| p.as_json()}
   end
 
@@ -161,7 +162,8 @@ class PostsController < ApplicationController
     user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
-    posts = Post.activity_feed(user.id, page)
+    topic = params[:topic_id] && params[:topic_id] != "0" ? Topic.where(:slug_pretty => params[:topic_id].parameterize).first : nil
+    posts = Post.activity_feed(user.id, page, topic)
     render :json => posts.map {|p| p.as_json(:properties => :short)}
   end
 

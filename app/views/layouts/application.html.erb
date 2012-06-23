@@ -6,6 +6,14 @@
   <%= render :partial => 'shared/head' %>
   <body id="<%= params[:controller].parameterize %>-c" class="two">
 
+    <% if Rails.env.production? && (!current_user || ![User.marc_id, User.matt_id].include?(current_user.id.to_s)) %>
+      <!-- ClickTale Top part -->
+      <script type="text/javascript">
+      var WRInitTime=(new Date()).getTime();
+      </script>
+      <!-- ClickTale end of Top part -->
+    <% end %>
+
     <%= render 'shared/header' if (signed_in? && current_user.tutorial_step == 0) || !signed_in? && params[:controller] %>
 
     <div id="page-header">
@@ -22,7 +30,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="wrapper <%= params[:action].parameterize %>-c">
       <div class="sidebar">
         <%= yield :sidebar %>
@@ -36,6 +44,7 @@
         <% end %>
         <div class='row-fluid'>
           <div class='span12'>
+            <div id='feed-ribbon'></div>
             <div id='feed'>
               <%= yield %>
             </div>
@@ -49,14 +58,35 @@
     <%= render :partial => 'shared/social_tools' %>
 
     <% if defined? @this %>
-      <div id='this' data-this="<%= @this.to_json(:properties => :public) %>" data-type="<%= @this.class.name %>"></div>
+      <script type="text/javascript" charset="utf-8">
+        //<![CDATA[
+        var current_object = <%= raw @this.to_json(:properties => :public).gsub('/', '\/') %>;
+        // ]]>
+      </script>
     <% end %>
 
     <% if signed_in? %>
-      <div id='me' data-user="<%= current_user.to_json(:properties => :public) %>"></div>
+      <script type="text/javascript" charset="utf-8">
+        //<![CDATA[
+        var current_user = <%= raw current_user.to_json(:properties => :public).gsub('/', '\/') %>;
+        // ]]>
+      </script>
     <% else %>
       <%= render 'users/splash', :extra_class => 'hide' %>
     <% end %>
 
+
+    <% if Rails.env.production? && (!current_user || ![User.marc_id, User.matt_id].include?(current_user.id.to_s)) %>
+      <!-- ClickTale Bottom part -->
+      <div id="ClickTaleDiv" style="display: none;"></div>
+      <script type="text/javascript">
+      if(document.location.protocol!='https:')
+        document.write(unescape("%3Cscript%20src='http://s.clicktale.net/WRd.js'%20type='text/javascript'%3E%3C/script%3E"));
+      </script>
+      <script type="text/javascript">
+      if(typeof ClickTale=='function') ClickTale(108,1,"www14");
+      </script>
+      <!-- ClickTale end of Bottom part -->
+    <% end %>
   </body>
 </html>

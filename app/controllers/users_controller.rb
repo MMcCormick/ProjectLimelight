@@ -29,10 +29,8 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      format.js {
-        render :json => @this.as_json(:properties => :public)
-      }
       format.html
+      format.js { render :json => @this.as_json(:properties => :public) }
     end
   end
 
@@ -194,6 +192,60 @@ class UsersController < ApplicationController
     end
 
     render :json => notifications.map {|n| n.as_json(:properties => :public)}
+  end
+
+  def topic_activity
+    user = params[:id] && params[:id] != "0" ? User.where(:slug => params[:id]).first : current_user
+
+    not_found("User not found") unless user
+
+    activity = user.topics_by_activity
+
+    if params[:topic_id] && params[:topic_id] != "0"
+      existing = activity.detect{|a| a[:topic].slug_pretty == params[:topic_id].parameterize}
+      if existing
+        activity.delete(existing)
+        activity.unshift(existing)
+      else
+        topic = Topic.where(:slug_pretty => params[:topic_id].parameterize).first
+        if topic
+          count = user.topic_activity.detect{|id,count| id == params[:topic_id]}
+          activity.unshift({
+                  :count => count ? count : 0,
+                  :topic => topic
+          })
+        end
+      end
+    end
+
+    render :json => activity
+  end
+
+  def topic_likes
+    user = params[:id] && params[:id] != "0" ? User.where(:slug => params[:id]).first : current_user
+
+    not_found("User not found") unless user
+
+    activity = user.topics_by_likes
+
+    if params[:topic_id] && params[:topic_id] != "0"
+      existing = activity.detect{|a| a[:topic].slug_pretty == params[:topic_id].parameterize}
+      if existing
+        activity.delete(existing)
+        activity.unshift(existing)
+      else
+        topic = Topic.where(:slug_pretty => params[:topic_id].parameterize).first
+        if topic
+          count = user.topic_activity.detect{|id,count| id == params[:topic_id]}
+          activity.unshift({
+                  :count => count ? count : 0,
+                  :topic => topic
+          })
+        end
+      end
+    end
+
+    render :json => activity
   end
 
 end

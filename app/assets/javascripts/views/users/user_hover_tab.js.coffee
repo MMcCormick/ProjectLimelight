@@ -26,7 +26,7 @@ class LL.Views.UserHoverTab extends Backbone.View
         ready: true
       hide:
         fixed: true
-        delay: 300
+        delay: 200
       content:
         text: (api) ->
           $(self.el).html(self.template(user: self.model))

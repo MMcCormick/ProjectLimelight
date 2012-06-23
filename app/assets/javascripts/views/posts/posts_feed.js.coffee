@@ -10,6 +10,9 @@ class LL.Views.PostsFeed extends Backbone.View
     # Always start on page 1
     @page = 1
 
+    # Default to no specific topic id
+    @topic_id = null
+
     # A tile is the backbone view representing one tile on the feed
     @tiles = []
     @columns = []
@@ -131,7 +134,6 @@ class LL.Views.PostsFeed extends Backbone.View
           if root_post.get('root')
             post = new LL.Models.Post(data)
             root_post.get('feed_responses').unshift(post)
-            console.log 'foo'
             root_post.trigger('new_response', post)
 
         LL.App.subscribe_event(root_id, 'new_response')
@@ -168,6 +170,9 @@ class LL.Views.PostsFeed extends Backbone.View
 
       if @collection.sort_value
         data['sort'] = @collection.sort_value
+
+      if @collection.topic_id
+        data['topic_id'] = @collection.topic_id
 
       @on_add = 'append'
       @collection.fetch({add: true, data: data, success: @incrementPage})

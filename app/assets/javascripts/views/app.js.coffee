@@ -39,7 +39,9 @@ class LL.Views.App extends Backbone.View
 
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).resize ->
-      self.calculateSiteWidth()
+      $('body').stopTime 'resize'
+      $('body').oneTime 200, 'resize', ->
+        self.calculateSiteWidth()
 
   newScreen: (name, id) =>
     @screens["#{name}_#{id}"] = {
@@ -121,7 +123,7 @@ class LL.Views.App extends Backbone.View
 
 
   calculateSiteWidth: (force=false) =>
-    if force == false && $('#feed > .column').length == 0
+    if force == false && $('#feed .tile').length == 0
       return
 
     width = $(window).width()

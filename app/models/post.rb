@@ -151,9 +151,11 @@ class Post
   end
 
   def initialize_media(params)
+    return if (!params[:post_media_id] || params[:post_media_id].blank?) && !['Link','Picture','Video'].include?(params[:type])
+
     media = params[:post_media_id] ? PostMedia.find(params[:post_media_id]) : nil
     unless media
-      type = params[:type] && ['Link','Picture','Video'].include?(params[:type]) ? params[:type] : 'Link'
+      params[:type] = params[:type] && ['Link','Picture','Video'].include?(params[:type]) ? params[:type] : 'Link'
       media = Kernel.const_get(params[:type]).new(params)
       media.user = user
     end

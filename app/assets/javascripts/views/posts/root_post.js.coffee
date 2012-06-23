@@ -1,5 +1,5 @@
 class LL.Views.RootPost extends Backbone.View
-  tagName: 'li'
+  tagName: 'div'
   className: 'tile'
   template: JST['posts/tile']
 

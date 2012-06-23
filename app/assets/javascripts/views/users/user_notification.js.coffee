@@ -8,7 +8,6 @@ class LL.Views.UserNotification extends Backbone.View
   initialize: ->
 
   render: =>
-    console.log @model
     $(@el).html(@template(notification: @model))
 
     $(@el).addClass(@model.get('type'))

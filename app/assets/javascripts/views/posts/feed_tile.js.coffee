@@ -1,11 +1,11 @@
-class LL.Views.RootPost extends Backbone.View
+class LL.Views.FeedTile extends Backbone.View
   tagName: 'div'
   className: 'tile'
   template: JST['posts/tile']
 
   events:
     "click .root .img, .talking, h5": "postShow"
-    "mouseenter .root": "showHover"
+    "mouseenter": "cancelNewAnimation"
     "mouseenter .reasons": "showReasons"
     "mouseleave .reasons": "hideReasons"
     "click .mentions .delete": "deleteMention"
@@ -26,9 +26,9 @@ class LL.Views.RootPost extends Backbone.View
     $(@el).addClass(@model.get('root').get('type').toLowerCase())
     switch @model.get('root').get('type')
       when 'Post'
-        root_view = new LL.Views.RootTalk(model: @model.get('root'))
+        root_view = new LL.Views.FeedPost(model: @model.get('root'))
       else
-        root_view = new LL.Views.RootMedia(model: @model.get('root'))
+        root_view = new LL.Views.FeedMediaReposts(model: @model)
 
     $(@el).append(root_view.render().el)
 
@@ -40,33 +40,33 @@ class LL.Views.RootPost extends Backbone.View
         first = ''
       $(@el).find('.root').append(reason_div)
 
-    @renderResponses()
+#    @renderResponses()
 
     @
 
   postShow: =>
     LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
 
-  renderResponses: =>
-    if !@responses && @model.get('like_responses').length > 0
-      like_responses_view = new LL.Views.RootResponses(model: @model)
-      like_responses_view.type = 'like'
-      like_responses_view.target = $(@el)
-      @responses = like_responses_view
-
-    if !@responses && @model.get('activity_responses').length > 0
-      activity_responses_view = new LL.Views.RootResponses(model: @model)
-      activity_responses_view.type = 'activity'
-      activity_responses_view.target = $(@el)
-      @responses = activity_responses_view
-
-    if !@responses && @model.get('feed_responses').length > 0
-      feed_responses_view = new LL.Views.FeedReposts(model: @model)
-      feed_responses_view.type = 'feed'
-      @responses = feed_responses_view
-
-    if @responses
-      $(@el).prepend(@responses.render().el)
+#  renderResponses: =>
+#    if !@responses && @model.get('like_responses').length > 0
+#      like_responses_view = new LL.Views.RootResponses(model: @model)
+#      like_responses_view.type = 'like'
+#      like_responses_view.target = $(@el)
+#      @responses = like_responses_view
+#
+#    if !@responses && @model.get('activity_responses').length > 0
+#      activity_responses_view = new LL.Views.RootResponses(model: @model)
+#      activity_responses_view.type = 'activity'
+#      activity_responses_view.target = $(@el)
+#      @responses = activity_responses_view
+#
+#    if !@responses && @model.get('feed_responses').length > 0
+#      feed_responses_view = new LL.Views.FeedReposts(model: @model)
+#      feed_responses_view.type = 'feed'
+#      @responses = feed_responses_view
+#
+#    if @responses
+#      $(@el).prepend(@responses.render().el)
 
   moveToTop: =>
     $(@el).html('')
@@ -76,9 +76,9 @@ class LL.Views.RootPost extends Backbone.View
     else
       @column.prependPost @
 
-  showHover: (e) =>
-    # remove the green background that slowly fades out after a new post is pushed
-    $(@el).removeClass('fade-new').find('.root').stop(true, true)
+  cancelNewAnimation: (e) =>
+    # remove the red border that slowly fades out after a new post is pushed
+    $(@el).removeClass('new').stop(true, true)
 
   showReasons: (e) =>
     $(@el).find('.reasons ul').fadeIn(200)
@@ -109,7 +109,6 @@ class LL.Views.RootPost extends Backbone.View
     $(@addMentionForm.el).fadeToggle(200)
 
   prependResponse: (post) =>
-    console.log 'foo'
     if @responses
       @responses.prependResponse(post)
     else

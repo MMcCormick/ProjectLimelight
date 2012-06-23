@@ -35,6 +35,8 @@ class LL.Views.CommentList extends Backbone.View
     $(@el).find('li').removeClass('first')
     $(@el).find('li:first').addClass('first')
 
+    $('#feed').isotope('shiftColumnOfItem', $(@el).parents('.tile:first').get(0))
+
     @
 
   appendComment: (comment) =>
@@ -46,5 +48,7 @@ class LL.Views.CommentList extends Backbone.View
 
     $(@el).find('li').removeClass('first')
     $(@el).find('li:first').addClass('first')
+
+    $('#feed').isotope('shiftColumnOfItem', $(@el).parents('.tile:first').get(0))
 
     @

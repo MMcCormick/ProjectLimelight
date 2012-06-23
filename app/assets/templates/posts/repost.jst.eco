@@ -8,13 +8,37 @@
     </a>
   <% end %>
 
+  <span class='source'>via <a target="_blank" href="<%= @media.get('primary_source').url %>"><%= @media.get('primary_source').name %></a></span>
   <div class='when'></div>
+
+  <p><%= @post.get('content') %></p>
 </div>
 
-<p><%= @post.get('content') %></p>
 
-<span class="actions">
-  <!--<span class='expand'>Expand</span>-->
+<div class='media'>
+  <% if @media.get('type') == 'Link' || @media.get('type') == 'Video': %>
+    <h5><%= @media.get('title') %></h5>
+  <% end %>
+
+  <% if @media.get('images'): %>
+    <div class='img'>
+      <img src='<%= @media.get('images').fit.large %>' alt='' />
+
+      <% if @media.get('video'): %>
+        <div class='ll-video-play'></div>
+      <% end %>
+      <div class='bg'></div>
+    </div>
+  <% end %>
+
+  <% if @media.get('type') == 'Picture': %>
+    <% if @media.get('title'): %>
+      <div class='bottom-title'><%=  @post.get('title') %></div>
+    <% end %>
+  <% end %>
+</div>
+
+<div class='actions'>
   <span class='add-comment'>
     Comment
     <% if @post.get('comment_count') > 0: %>
@@ -22,8 +46,8 @@
     <% end %>
   </span>
   <span class='repost-btn'>Repost</span>
-</span>
+</div>
 
 <div class='bottom'>
-  <div class='likes'></div>
+
 </div>

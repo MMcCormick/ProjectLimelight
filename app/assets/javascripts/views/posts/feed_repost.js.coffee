@@ -1,5 +1,5 @@
 class LL.Views.FeedRepost extends Backbone.View
-  tagName: 'li'
+  tagName: 'div'
   className: 'repost'
   template: JST['posts/repost']
 
@@ -20,9 +20,6 @@ class LL.Views.FeedRepost extends Backbone.View
 
     like = new LL.Views.LikeButton(model: @model)
     $(@el).find('.actions').prepend(like.render().el)
-
-#    score = new LL.Views.Score(model: @model)
-#    $(@el).find('.actions').append(score.render().el)
 
     @
 

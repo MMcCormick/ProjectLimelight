@@ -1,0 +1,25 @@
+<div class='top'>
+  <a class="ulink" data-id="<%= @post.get('user').get('id') %>" href="<%= @post.get('user').get('url') %>">
+    <%= @post.get('user').get('name') %>
+    <span>@<%= @post.get('user').get('username') %></span>
+  </a>
+
+  <p><%= @post.get('content') %></p>
+
+  <span class="actions">
+    <!--<span class='expand'>Expand</span>-->
+    <span class='add-comment'>
+      Comment
+      <% if @post.get('response_count') > 0: %>
+        <b>(<%= @post.get('response_count') %>)</b>
+      <% end %>
+    </span>
+  </span>
+
+  <div class='when'></div>
+  <img src="<%= @post.get('user').get('images').square.small %>">
+</div>
+
+<div class='bottom'>
+  <div class='likes'></div>
+</div>

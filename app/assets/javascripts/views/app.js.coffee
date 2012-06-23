@@ -28,7 +28,6 @@ class LL.Views.App extends Backbone.View
     @event_subscriptions = {}
 
     # set the current user
-    console.log
     @current_user = if typeof current_user != 'undefined' then new LL.Models.User(current_user) else null
 
     # listen to the private user channgel
@@ -140,7 +139,7 @@ class LL.Views.App extends Backbone.View
     unless $('body').hasClass(className)
       $('body').removeClass('two three four five').addClass(className)
       $('.qtip').qtip('reposition')
-      @trigger('rearrange_columns')
+      $('#feed').isotope('reLayout')
 
 
 

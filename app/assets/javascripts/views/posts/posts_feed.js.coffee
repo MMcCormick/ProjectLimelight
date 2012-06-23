@@ -38,11 +38,14 @@ class LL.Views.PostsFeed extends Backbone.View
 
       LL.App.calculateSiteWidth()
 
-      $(@el).isotope
-        itemSelector: '.tile'
-        masonry:
-          columnWidth: 330
-        animationEngine: 'best-available'
+      setTimeout ->
+        $(self.el).isotope
+          animationEngine: 'best-available'
+          itemSelector: '.tile'
+          layoutMode: 'masonryColumnShift'
+          masonryColumnShift:
+            columnWidth: 330
+      , 100
 
     if LL.App.current_user
       view = new LL.Views.PostForm()
@@ -98,7 +101,6 @@ class LL.Views.PostsFeed extends Backbone.View
 
       unless LL.App.get_event_subscription(root_id, 'new_response')
         channel.bind 'new_response', (data) ->
-          console.log data
           if root_post.get('root')
             post = new LL.Models.Post(data)
             root_post.get('feed_responses').unshift(post)
@@ -107,11 +109,14 @@ class LL.Views.PostsFeed extends Backbone.View
         LL.App.subscribe_event(root_id, 'new_response')
 
   prependPost: (root_post, single=false) =>
-    tile = new LL.Views.RootPost(model: root_post)
-    $(@el).prepend(tile.render().el)
+    tile = new LL.Views.FeedTile(model: root_post)
+    $(@el).prepend($(tile.render().el).addClass('new'))
 
     if single
-      $(@el).isotope('reloadItems').isotope({ sortBy: 'original-order' })
+      self = @
+      setTimeout ->
+        $(self.el).isotope('reloadItems').isotope({ sortBy: 'original-order' })
+      , 100
 
     @addPost(root_post)
 
@@ -121,10 +126,13 @@ class LL.Views.PostsFeed extends Backbone.View
 
   appendPost: (root_post, single=false) =>
     if root_post.get('root')
-      tile = new LL.Views.RootPost(model: root_post)
+      tile = new LL.Views.FeedTile(model: root_post)
 
       if single
-        $(@el).isotope('insert', $(tile.render().el))
+        self = @
+        setTimeout ->
+          $(self.el).isotope('insert', $(tile.render().el))
+        , 100
       else
         $(@el).append(tile.render().el)
 

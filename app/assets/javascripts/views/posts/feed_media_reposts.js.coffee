@@ -1,7 +1,6 @@
-class LL.Views.RootTalk extends Backbone.View
-  template: JST['posts/root_talk']
+class LL.Views.FeedMediaReposts extends Backbone.View
   tagName: 'div'
-  className: 'root talk'
+  className: 'reposts'
 
   events:
     'click': 'postShow'
@@ -10,15 +9,10 @@ class LL.Views.RootTalk extends Backbone.View
     @model.on('new_comment', @incrementComment)
 
   render: ->
-    $(@el).html(@template(talk: @model))
-
-    prettyTime = new LL.Views.PrettyTime()
-    prettyTime.format = 'short'
-    prettyTime.time = @model.get('created_at')
-    $(@el).find('.when').prepend(prettyTime.render().el)
-
-    like = new LL.Views.LikeButton(model: @model)
-    $(@el).find('.actions').prepend(like.render().el)
+    for post in @model.get('feed_responses')
+      view = new LL.Views.FeedRepost(model: post)
+      view.media = @model.get('root')
+      $(@el).append(view.render().el)
 
     @
 

@@ -11,6 +11,7 @@
 //= require underscore
 //= require backbone-with-identity-map
 //= require jquery.isotope
+//= require jquery.isotope.masonry_shift
 //= require limelight
 //= require_tree ../templates
 //= require_tree ./models

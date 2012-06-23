@@ -622,22 +622,11 @@ header {
 }
 
 #feed {
-  @include clearfix();
   margin: 20px 0 0 5px;
 
   > h2 {
     margin: 0 0 15px 0;
     cursor: default;
-  }
-  .column {
-    width: $feedColumnWidth - $feedColumnMargin;
-    margin: 0 $feedColumnMargin 0 0;
-    float: left;
-    overflow: hidden;
-
-    &.last {
-      margin-right: -10px;
-    }
   }
 }
 

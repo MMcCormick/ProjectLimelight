@@ -11,7 +11,6 @@ class LL.Views.TopicFreebaseForm extends Backbone.View
   initialize: ->
 
   render: =>
-    console.log @model
     $(@el).html(@template(topic: @model))
     @
 

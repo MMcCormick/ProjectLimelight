@@ -3,7 +3,7 @@ require "net/http"
 class TestingController < ApplicationController
 
   def test
-    current_user.auto_follow("twitter")
+    User.invite!(:email => "matt@thewhoot.com")
   end
 
   def foo

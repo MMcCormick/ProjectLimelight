@@ -1,6 +1,6 @@
 <div class='section post-root'>
   <div class='meat'>
-    <a class="ulink" href="/users/<%= @post.get('user').get('id') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
+    <a class="ulink" href="/users/<%= @post.get('user').get('username') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
     <h1>
       <%= @post.get('content') %>
     </h1>

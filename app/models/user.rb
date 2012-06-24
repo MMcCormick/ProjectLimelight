@@ -527,7 +527,7 @@ class User
 
   def invite_stuff
     unless invite_code
-      InviteCode.create(:user_id => id, :allotted => 3)
+      self.create_invite_code(:allotted => 3)
     end
 
 

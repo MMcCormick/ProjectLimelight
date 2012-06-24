@@ -4,7 +4,7 @@ class LL.Views.UserTutorial3 extends Backbone.View
   id: 'tutorial-3'
 
   initialize: ->
-    @title= 'Posting on Limelight'
+    @title= 'Invite Friends'
 
   render: ->
     $(@el).html(@template(user: @model))

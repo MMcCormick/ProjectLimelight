@@ -10,7 +10,6 @@ gem 'rack'
 gem 'rack-contrib'
 gem 'mongoid', '3.0.0.rc', :require => 'mongoid' # MongoDB
 gem 'devise' # Authentication
-gem 'devise_invitable', '~> 1.0.0' # Invites (duh)
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
 gem 'omniauth-facebook'

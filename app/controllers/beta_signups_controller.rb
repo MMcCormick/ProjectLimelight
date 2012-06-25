@@ -1,11 +1,11 @@
 class BetaSignupsController < ApplicationController
   def create
-    signup = BetaSignup.new(params)
+    signup = BetaSignup.new(params.merge(:referer => session['referer']))
 
     if signup.save
       UserMailer.beta_signup_email(params[:email]).deliver
       UserMailer.beta_signup_email_admins(params[:email]).deliver
-      track_mixpanel("Request Beta Invite", {"Referer" => session['referer']})
+      track_mixpanel("Request Beta Invite", signup.mixpanel_data)
       response = build_ajax_response(:ok, nil, nil)
       status = 201
     else

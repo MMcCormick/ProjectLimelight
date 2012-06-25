@@ -7,7 +7,7 @@ class LL.Views.FeedPost extends Backbone.View
     'click': 'postShow'
 
   initialize: ->
-    @model.on('new_comment', @incrementComment)
+    @model.get('post').on('new_comment', @incrementComment)
 
   render: ->
     $(@el).html(@template(post: @model.get('post')))
@@ -16,6 +16,9 @@ class LL.Views.FeedPost extends Backbone.View
     prettyTime.format = 'short'
     prettyTime.time = @model.get('post').get('created_at')
     $(@el).find('.when').prepend(prettyTime.render().el)
+
+    mentions = new LL.Views.PostMentions(model: @model.get('post'))
+    $(@el).find('.actions').before(mentions.render().el)
 
     like = new LL.Views.LikeButton(model: @model)
     $(@el).find('.actions').prepend(like.render().el)
@@ -32,12 +35,11 @@ class LL.Views.FeedPost extends Backbone.View
         $('#feed').isotope('shiftColumnOfItem', $(self.el).parent().get(0))
     else
       if $(@el).find('.comment-list').length == 0
-        @comments = new LL.Collections.Comments
-        @comments_view = new LL.Views.CommentList(collection: @comments, model: @model.get('post'))
+        @comments_view = new LL.Views.CommentList(model: @model.get('post'))
         form = new LL.Views.CommentForm(model: @model.get('post'))
         form.minimal = true
         $(@el).find('.bottom').append(form.render().el).append(@comments_view.render().el)
-        @comments.fetch({data: {id: @model.get('post').get('id')}})
+        @model.get('post').fetchComments()
 
       $(@el).addClass('open', 100).find('.bottom').slideDown 100, ->
         $('#feed').isotope('shiftColumnOfItem', $(self.el).parent().get(0))

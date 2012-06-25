@@ -8,23 +8,25 @@ class LL.Views.FeedRepost extends Backbone.View
     "click .repost-btn": "loadPostForm"
 
   initialize: ->
-    @model.on('new_comment', @incrementComment)
+    @model.get('post').on('new_comment', @incrementComment)
 
   render: ->
     $(@el).html(@template(post: @model.get('post')))
 
     prettyTime = new LL.Views.PrettyTime()
     prettyTime.format = 'short'
-    prettyTime.time = @model.get('created_at')
+    prettyTime.time = @model.get('post').get('created_at')
     $(@el).find('.when').prepend(prettyTime.render().el)
 
-    like = new LL.Views.LikeButton(model: @model)
+    mentions = new LL.Views.PostMentions(model: @model.get('post'))
+    $(@el).find('.top').append(mentions.render().el)
+
+    like = new LL.Views.LikeButton(model: @model.get('post'))
     $(@el).find('.actions').prepend(like.render().el)
 
     @
 
   postShow: (e) =>
-    console.log $(e.target)
     return if $(e.target).is('a,h5,input,textarea,.bg,.img,img,.like,.repost-btn')
 
     self = @
@@ -34,12 +36,12 @@ class LL.Views.FeedRepost extends Backbone.View
         $('#feed').isotope('shiftColumnOfItem', $(self.el).parents('.tile:first').get(0))
     else
       if $(@el).find('.comment-list').length == 0
-        @comments = new LL.Collections.Comments
-        @comments_view = new LL.Views.CommentList(collection: @comments, model: @model)
-        form = new LL.Views.CommentForm(model: @model)
+        @comments_view = new LL.Views.CommentList(model: @model.get('post'))
+        form = new LL.Views.CommentForm(model: @model.get('post'))
         form.minimal = true
         $(@el).find('.bottom').append(form.render().el).append(@comments_view.render().el)
-        @comments.fetch({data: {id: @model.get('id')}})
+        console.log @model.get('post')
+        @model.get('post').fetchComments()
 
       $(@el).addClass('open', 100).find('.bottom').slideDown 100, ->
         $('#feed').isotope('shiftColumnOfItem', $(self.el).parents('.tile:first').get(0))
@@ -60,17 +62,13 @@ class LL.Views.FeedRepost extends Backbone.View
       return
 
     view = new LL.Views.PostForm()
-#    view.with_header = false
     view.cancel_buttons = true
     view.modal = true
-    view.placeholder_text = "Repost this #{@model.get('post').get('media').get('type')} to #{LL.App.current_user.get('followers_count')} followers..."
+    view.with_header = false
     view.close_callback = @closePost
-    view.preview.show_preview = true
-#    $(@el).after($(view.render().el).hide())
-    view.preview.setResponse(@model.get('post').get('media'))
     view.render()
+    view.preview.setResponse(@model.get('post').get('media'))
     $(view.el).find('.icons').remove()
-#    $(view.el).slideDown(300)
 
   closePost: (form) =>
     $(form.el).remove();

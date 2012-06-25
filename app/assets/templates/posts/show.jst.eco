@@ -28,9 +28,6 @@
             <b>(<span><%= @post.get('comment_count') %></span>)</b>
           <% end %>
         </span>
-        <% if @post.get('media'): %>
-          <span class='repost-btn'>Repost</span>
-        <% end %>
       </div>
     <% end %>
   </div>
@@ -89,7 +86,7 @@
 <div class='half-sections'></div>
 
 <div class='section comments'>
-  <div class='top'><h4><%= @post.get('comment_count') %> Comment<%= if @post.get('comment_count') != 1 then 's' else '' %></h4></div>
+  <div class='top'><h4><span><%= @post.get('comment_count') %></span> Comment<%= if @post.get('comment_count') != 1 then 's' else '' %></h4></div>
   <div class='meat'></div>
 </div>
 

@@ -31,3 +31,20 @@ class LL.Models.Post extends Backbone.Model
 
   scorePretty: ->
     parseInt @get('score')
+
+  fetchComments: =>
+    self = @
+    @comments = new LL.Collections.Comments
+    @comments.fetch data: {id: @get('id')}, success: (collection,response) ->
+      comments = []
+      for comment in response
+        comments.push(new LL.Models.Comment(comment))
+      self.set('comments', comments)
+      self.trigger('reset_comments')
+
+  addComment: (comment) =>
+    comments = @get('comments')
+    comment = new LL.Models.Comment(comment)
+    comments.push(comment)
+    @set('comments', comments)
+    @trigger('new_comment', comment)

@@ -2,11 +2,11 @@
  * Gritter for jQuery
  * http://www.boedesign.com/
  *
- * Copyright (c) 2011 Jordan Boesch
+ * Copyright (c) 2012 Jordan Boesch
  * Dual licensed under the MIT and GPL licenses.
  *
- * Date: December 8, 2011
- * Version: 1.7.3
+ * Date: February 24, 2012
+ * Version: 1.7.4
  */
 
 (function($){
@@ -20,8 +20,8 @@
 	* Set up global options that the user can over-ride
 	*/
 	$.gritter.options = {
-        position: '',
-        class_name: '', // could be set to 'gritter-light' to use white notifications
+		position: '',
+		class_name: '', // could be set to 'gritter-light' to use white notifications
 		fade_in_speed: 'medium', // how fast notifications fade in
 		fade_out_speed: 1000, // how fast the notices fade out
 		time: 6000 // hang on the screen for...
@@ -67,45 +67,50 @@
 	* @constructor (not really since its object literal)
 	*/
 	var Gritter = {
-	    
+		
 		// Public - options to over-ride with $.gritter.options in "add"
-        position: '',
+		position: '',
 		fade_in_speed: '',
 		fade_out_speed: '',
 		time: '',
-	    
+		
 		// Private - no touchy the private parts
 		_custom_timer: 0,
 		_item_count: 0,
 		_is_setup: 0,
 		_tpl_close: '<div class="gritter-close"></div>',
-		_tpl_item: '<div id="gritter-item-[[number]]" class="gritter-item-wrapper [[item_class]]" style="display:none"><div class="gritter-item"><div class="bg"></div>[[close]][[image]]<div class="[[class_name]]"><span class="gritter-title">[[username]]</span><p>[[text]]</p></div><div style="clear:both"></div></div></div>',
+		_tpl_title: '<span class="gritter-title">[[title]]</span>',
+		_tpl_item: '<div id="gritter-item-[[number]]" class="gritter-item-wrapper [[item_class]]" style="display:none"><div class="gritter-top"></div><div class="gritter-item">[[close]][[image]]<div class="[[class_name]]">[[title]]<p>[[text]]</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div>',
 		_tpl_wrap: '<div id="gritter-notice-wrapper"></div>',
-	    
+		
 		/**
 		* Add a gritter notification to the screen
 		* @param {Object} params The object that contains all the options for drawing the notification
 		* @return {Integer} The specific numeric id to that gritter notification
 		*/
 		add: function(params){
-	        
+			// Handle straight text
+			if(typeof(params) == 'string'){
+				params = {text:params};
+			}
+
 			// We might have some issues if we don't have a title or text!
-			if(!params.title || !params.text){
-				throw 'You need to fill out the first 2 params: "title" and "text"'; 
+			if(!params.text){
+				throw 'You must supply "text" parameter.'; 
 			}
 			
 			// Check the options and set them once
 			if(!this._is_setup){
 				this._runSetup();
 			}
-	        
+			
 			// Basics
-			var user = params.title, 
+			var title = params.title, 
 				text = params.text,
 				image = params.image || '',
 				sticky = params.sticky || false,
 				item_class = params.class_name || $.gritter.options.class_name,
-                position = $.gritter.options.position,
+				position = $.gritter.options.position,
 				time_alive = params.time || '';
 
 			this._verifyWrapper();
@@ -131,15 +136,21 @@
 				class_name = (image != '') ? 'gritter-with-image' : 'gritter-without-image';
 			
 			// String replacements on the template
+			if(title){
+				title = this._str_replace('[[title]]',title,this._tpl_title);
+			}else{
+				title = '';
+			}
+			
 			tmp = this._str_replace(
-				['[[username]]', '[[text]]', '[[close]]', '[[image]]', '[[number]]', '[[class_name]]', '[[item_class]]'],
-				[user, text, this._tpl_close, image_str, this._item_count, class_name, item_class], tmp
+				['[[title]]', '[[text]]', '[[close]]', '[[image]]', '[[number]]', '[[class_name]]', '[[item_class]]'],
+				[title, text, this._tpl_close, image_str, this._item_count, class_name, item_class], tmp
 			);
 
-            // If it's false, don't show another gritter message
+			// If it's false, don't show another gritter message
 			if(this['_before_open_' + number]() === false){
-                return false;
-            }
+				return false;
+			}
 
 			$('#gritter-notice-wrapper').addClass(position).append(tmp);
 			
@@ -148,7 +159,7 @@
 			item.fadeIn(this.fade_in_speed, function(){
 				Gritter['_after_open_' + number]($(this));
 			});
-	        
+			
 			if(!sticky){
 				this._setFadeTimer(item, number);
 			}
@@ -168,8 +179,13 @@
 				Gritter._hoverState($(this), event.type);
 			});
 			
+			// Clicking (X) makes the perdy thing close
+			$(item).find('.gritter-close').click(function(){
+				Gritter.removeSpecific(number, {}, null, true);
+			});
+			
 			return number;
-	    
+		
 		},
 		
 		/**
@@ -178,9 +194,9 @@
 		* @param {Integer} unique_id The ID of the element that was just deleted, use it for a callback
 		* @param {Object} e The jQuery element that we're going to perform the remove() action on
 		* @param {Boolean} manual_close Did we close the gritter dialog with the (X) button
-        */
+		*/
 		_countRemoveWrapper: function(unique_id, e, manual_close){
-		    
+			
 			// Remove it then run the callback function
 			e.remove();
 			this['_after_close_' + unique_id](e, manual_close);
@@ -203,9 +219,9 @@
 		_fade: function(e, unique_id, params, unbind_events){
 
 			var params = params || {},
-				fade = (typeof(params.fade) != 'undefined') ? params.fade : true;
+				fade = (typeof(params.fade) != 'undefined') ? params.fade : true,
 				fade_out_speed = params.speed || this.fade_out_speed,
-                manual_close = unbind_events;
+				manual_close = unbind_events;
 
 			this['_before_close_' + unique_id](e, manual_close);
 			
@@ -231,7 +247,7 @@
 				this._countRemoveWrapper(unique_id, e);
 				
 			}
-					    
+						
 		},
 		
 		/**
@@ -244,18 +260,12 @@
 			
 			// Change the border styles and add the (X) close button when you hover
 			if(type == 'mouseenter'){
-		    	
+				
 				e.addClass('hover');
 				
 				// Show close button
 				e.find('.gritter-close').show();
-				
-				// Clicking (X) makes the perdy thing close
-				e.find('.gritter-close').click(function(){
-					var unique_id = e.attr('id').split('-')[2];
-					Gritter.removeSpecific(unique_id, {}, e, true);
-				});
-			
+						
 			}
 			// Remove the border styles and hide (X) close button when you mouse out
 			else {
@@ -266,7 +276,7 @@
 				e.find('.gritter-close').hide();
 				
 			}
-		    
+			
 		},
 		
 		/**
@@ -298,7 +308,7 @@
 			
 			clearTimeout(this['_int_id_' + unique_id]);
 			e.stop().css({ opacity: '', height: '' });
-		    
+			
 		},
 		
 		/**
@@ -311,7 +321,7 @@
 				this[opt] = $.gritter.options[opt];
 			}
 			this._is_setup = 1;
-		    
+			
 		},
 		
 		/**
@@ -374,7 +384,7 @@
 					continue;
 				}
 				
-		        for (j = 0, fl = f.length; j < fl; j++){
+				for (j = 0, fl = f.length; j < fl; j++){
 					
 					temp = s[i] + '';
 					repl = ra ? (r[j] !== undefined ? r[j] : '') : r[0];
@@ -388,7 +398,7 @@
 			}
 			
 			return sa ? s : s[0];
-		    
+			
 		},
 		
 		/**
@@ -402,7 +412,7 @@
 			}
 		
 		}
-	    
+		
 	}
 	
 })(jQuery);

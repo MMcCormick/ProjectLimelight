@@ -15,7 +15,7 @@ class PostsController < ApplicationController
 
     @title = @this.name
     @description = @this.content
-    url = @this.class.name == 'Talk' ? talk_url(:id => @this.id) : post_url(:id => @this.id)
+    url = post_url(:id => @this.id)
     image_url = @this.class.name == 'Talk' ? @this.user.image_url(:fit, :large) : @this.image_url(:fit, :large)
     image_url = '' unless image_url
     extra = {"#{og_namespace}:display_name" => @this.class.name, "#{og_namespace}:score" => @this.score.to_i}
@@ -64,7 +64,7 @@ class PostsController < ApplicationController
 
       render :json => build_ajax_response(:ok, nil, "Your post has been submitted"), :status => 201
     else
-      errors = @post.post_media_id ? @post.post_media.errors.merge!(@post.errors) : @post.errors
+      errors = @post.post_media_id ? Hash[@post.post_media.errors].merge!(Hash[@post.errors]) : @post.errors
       response = build_ajax_response(:error, nil, "Post could not be created", errors)
       render :json => response, :status => :unprocessable_entity
     end

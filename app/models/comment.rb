@@ -43,13 +43,19 @@ class Comment
 
   def send_notifications(user)
     notification = Notification.add(post.user, :comment, true, user, nil, post, post.user, nil)
-    Pusher["#{post.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
+
+    unless post.user.id == user.id
+      Pusher["#{post.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
+    end
+
     siblings = Comment.where(:post_id => post.id)
     used_ids = []
     siblings.each do |sibling|
       unless used_ids.include?(sibling.user_id.to_s) || (post.user_id == sibling.user_id) || (sibling.user_id == user.id)
         notification = Notification.add(sibling.user, :also, true, user, nil, post, post.user, sibling)
-        Pusher["#{sibling.user_id.to_s}_private"].trigger('new_notification', notification.to_json)
+        unless sibling.user.id == user.id
+          Pusher["#{sibling.user_id.to_s}_private"].trigger('new_notification', notification.to_json)
+        end
       end
       used_ids << sibling.user_id.to_s
     end

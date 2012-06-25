@@ -46,59 +46,6 @@ $feedFontColor: $grayDark;
   }
 }
 
-.tile,
-.response-talk {
-  .mentions {
-    position: relative;
-    padding: 0 1px 0 15px;
-    min-height: 22px;
-
-    .tlink {
-      white-space: nowrap;
-      display: inline-block;
-      padding: 0 15px 4px 0;
-      font-size: 12px;
-      color: #FBFBFB;
-      font-weight: bold;
-    }
-    .delete {
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      top: 1px;
-      margin: 0 15px 0 -15px;
-      display: none;
-    }
-    .add {
-      cursor: pointer;
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      display: none;
-    }
-    .mention-add-form {
-      display: none;
-      padding: 5px;
-      background: #FFF;
-
-      input {
-        @include border-radius(1px);
-        margin: 0px;
-      }
-      .btn {
-        font-size: 12px;
-        padding: 2px 7px;
-      }
-    }
-    &:hover {
-      .delete,
-      .add {
-        display: inline-block;
-      }
-    }
-  }
-}
-
 .tile {
   margin-bottom: $feedColumnMargin + 10;
   position: relative;
@@ -151,17 +98,61 @@ $feedFontColor: $grayDark;
       }
     }
   }
+  .mentions {
+    position: relative;
+    padding: 0 0 2px 0;
+
+    > span {
+      position: relative;
+    }
+    .tlink {
+      white-space: nowrap;
+      display: inline-block;
+      padding: 0 15px 0 0;
+      font-size: 12px;
+      color: #999;
+      &:hover {
+        color: $blue !important;
+        text-decoration: underline;
+      }
+    }
+    .delete {
+      cursor: pointer;
+      display: none;
+      position: absolute;
+      top: 4px;
+      right: 5px;
+    }
+    .add {
+      cursor: pointer;
+      position: absolute;
+      top: 8px;
+      right: 4px;
+      display: none;
+    }
+    .mention-add-form {
+      display: none;
+      padding: 10px 0;
+
+      input {
+        @include border-radius(1px);
+        margin: 0px;
+      }
+      .btn {
+        font-size: 12px;
+        padding: 2px 7px;
+      }
+    }
+    &:hover {
+      .delete,
+      .add {
+        display: inline-block;
+      }
+    }
+  }
   .ulink {
     font-weight: bold;
     color: $feedFontColor;
-  }
-  > .mentions {
-    .tlink {
-      @include single-text-shadow(#888, 0, 1px, 2px);
-      &:hover {
-        @include single-text-shadow(none);
-      }
-    }
   }
   #post-form {
     background: #FFF;
@@ -196,9 +187,6 @@ $feedFontColor: $grayDark;
       }
       .ulink {
         font-size: 13px;
-        &:hover {
-          text-decoration: underline;
-        }
       }
       p {
         font-size: 13px;
@@ -209,12 +197,6 @@ $feedFontColor: $grayDark;
         position: absolute;
         top: 12px;
         right: 15px;
-      }
-      .tlink {
-        font-weight: normal;
-        &:hover {
-          text-decoration: underline;
-        }
       }
     }
   }
@@ -255,6 +237,10 @@ $feedFontColor: $grayDark;
           right: 0;
           color: #999;
           font-size: 11px;
+        }
+
+        .mentions {
+          padding: 1px 0 0 0;
         }
       }
       .media {
@@ -302,17 +288,7 @@ $feedFontColor: $grayDark;
         }
       }
       .actions {
-        color: #999;
         padding: 12px 15px 0 15px;
-        > span {
-          margin: 0 8px 0 0;
-          font-size: 12px;
-          &:hover {
-            cursor: pointer;
-            text-decoration: underline;
-          }
-        }
-
       }
       .bottom {
         .comment-form {
@@ -330,14 +306,16 @@ $feedFontColor: $grayDark;
     font-size: 12px;
     color: #999;
 
-    .expand,
-    .add-comment,
-    .like,
-    .score-pts {
+    > span {
+      color: #999;
       font-weight: normal;
-      margin: 0 7px 0 0;
+      margin: 0 8px 0 0;
       font-size: 12px;
       display: inline-block;
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
   }
 
@@ -372,7 +350,9 @@ $feedFontColor: $grayDark;
     .reposts {
       background: #F9F9F9;
     }
-
+    .tlink {
+      color: $blue;
+    }
     .actions {
       span {
         color: $greenDarker;

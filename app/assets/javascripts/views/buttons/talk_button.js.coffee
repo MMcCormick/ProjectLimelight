@@ -28,6 +28,7 @@ class LL.Views.TalkButton extends Backbone.View
 
     view = new LL.Views.PostForm()
     view.modal = true
+    view.with_header = false
     if @user
       view.initial_text += "@#{@user.get('username')} "
 

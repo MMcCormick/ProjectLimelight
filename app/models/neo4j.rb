@@ -114,11 +114,11 @@ class Neo4j
       Neo4j.neo.add_relationship_to_index('users', 'created', "#{post.user_id.to_s}-#{post.id.to_s}", rel1)
 
       post.user_mentions.each do |m|
-        # connect the post to it's mentioned users
-        mention_node = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
-        rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
-        Neo4j.neo.set_relationship_properties(rel2, {"type" => 'user'})
-        Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
+        ## connect the post to it's mentioned users
+        #mention_node = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
+        #rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
+        #Neo4j.neo.set_relationship_properties(rel2, {"type" => 'user'})
+        #Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
 
         # increase the creators affinity to these users
         Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 1, false, false)
@@ -181,13 +181,13 @@ class Neo4j
 
     def post_add_topic_mention(post, topic, post_node=nil, creator_node=nil, mention_node=nil, topic_nodes=nil)
       # connect the post to it's mentioned topics
-      mention_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless mention_node
-      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s) unless creator_node
-      post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s) unless post_node
+      #mention_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless mention_node
+      #creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s) unless creator_node
+      #post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s) unless post_node
 
-      rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
-      Neo4j.neo.set_relationship_properties(rel2, {"type" => 'topic'})
-      Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{topic.id.to_s}", rel2)
+      #rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
+      #Neo4j.neo.set_relationship_properties(rel2, {"type" => 'topic'})
+      #Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{topic.id.to_s}", rel2)
 
       # increase the creators affinity to these topics
       unless post.user_id.to_s == User.limelight_user_id

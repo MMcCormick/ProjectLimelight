@@ -24,5 +24,6 @@ class LL.Views.Header extends Backbone.View
       return
 
     view = new LL.Views.PostForm()
+    view.with_header = false
     view.modal = true
     view.render()

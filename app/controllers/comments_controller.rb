@@ -7,13 +7,13 @@ class CommentsController < ApplicationController
   end
 
   def create
-    talk = Post.find(params[:talk_id])
+    post = Post.find(params[:post_id])
     comment = current_user.comments.new(params)
-    comment.post_id = talk.id
+    comment.post_id = post.id
 
     if comment.save
       track_mixpanel("New Comment", current_user.mixpanel_data)
-      Pusher[talk.id.to_s].trigger('new_comment', comment.as_json(:properties => :all))
+      Pusher[post.id.to_s].trigger('new_comment', comment.as_json(:properties => :all))
       comment.send_notifications(current_user)
       response = build_ajax_response(:ok, nil, "Comment created!")
       render json: response, :status => 201

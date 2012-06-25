@@ -12,6 +12,7 @@ class LL.Views.PostShow extends Backbone.View
     @responsesCollection = new LL.Collections.PostResponses()
     @responses = new LL.Views.PostShowResponses(collection: @responsesCollection)
     @loaded = null
+    @model.on('new_comment', @incrementComment)
 
   render: =>
     return unless @model
@@ -34,17 +35,13 @@ class LL.Views.PostShow extends Backbone.View
     user_section.count = @model.get('likes').length
     $(@el).find('.half-sections').append(user_section.render().el)
 
-
-    @comments = new LL.Collections.Comments
-    @comments_view = new LL.Views.CommentList(collection: @comments, model: @model)
+    @comments_view = new LL.Views.CommentList(model: @model)
     form = new LL.Views.CommentForm(model: @model)
     form.minimal = true
     $(@el).find('.comments .meat').append(form.render().el).append(@comments_view.render().el)
 
-    if @model.get('comments') && @model.get('comments').length > 0 && !@loaded
-      @comments.add(@model.get('comments'))
-    else if !@loaded
-      @comments.fetch({data: {id: @model.get('id')}})
+    if @model.get('comments').length == 0 && !@loaded
+      @model.fetchComments()
 
     @loaded = true
 
@@ -80,3 +77,14 @@ class LL.Views.PostShow extends Backbone.View
 
   navBack: (e) =>
     history.back()
+
+  incrementComment: =>
+    count = $(@el).find('.add-comment span')
+    if count.length > 0
+      new_count = parseInt(count.text()) + 1
+      count.text(new_count)
+    else
+      new_count = 1
+      $(@el).find('.add-comment').append('<b>(<span>1</span>)</b>')
+
+    $(@el).find('.section.comments h4 span').text(new_count)

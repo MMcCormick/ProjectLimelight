@@ -4,8 +4,8 @@ class LL.Views.CommentList extends Backbone.View
   tagName: 'div'
 
   initialize: ->
-    @collection.on('reset', @render)
-    @collection.on('add', @appendComment)
+    @model.on('reset_comments', @render)
+    @model.on('new_comment', @appendComment)
 
     self = @
 
@@ -17,29 +17,35 @@ class LL.Views.CommentList extends Backbone.View
     unless LL.App.get_event_subscription("#{@model.get('id')}", 'new_comment')
       channel.bind 'new_comment', (data) ->
         comment = new LL.Models.Comment(data)
-        self.collection.add(comment)
+        self.model.addComment(comment)
 
   render: =>
     $(@el).html(@template())
-    if @collection.models.length > 0
+
+    if @model.get('comments').length > 0
       $(@el).fadeIn(200)
-      for comment in @collection.models
+      for comment in @model.get('comments')
         @prependComment(comment)
 
     @
 
   prependComment: (comment) =>
+    return unless comment
+
     comment_view = new LL.Views.Comment(model: comment)
     $(@el).find('ul').prepend(comment_view.render().el)
 
     $(@el).find('li').removeClass('first')
     $(@el).find('li:first').addClass('first')
 
-    $('#feed').isotope('shiftColumnOfItem', $(@el).parents('.tile:first').get(0))
+    if $(@el).parents('.tile:first').length > 0
+      $('#feed').isotope('shiftColumnOfItem', $(@el).parents('.tile:first').get(0))
 
     @
 
   appendComment: (comment) =>
+    return unless comment
+
     unless $(@el).is(':visible')
       $(@el).fadeIn(200)
 
@@ -49,6 +55,7 @@ class LL.Views.CommentList extends Backbone.View
     $(@el).find('li').removeClass('first')
     $(@el).find('li:first').addClass('first')
 
-    $('#feed').isotope('shiftColumnOfItem', $(@el).parents('.tile:first').get(0))
+    if $(@el).parents('.tile:first').length > 0
+      $('#feed').isotope('shiftColumnOfItem', $(@el).parents('.tile:first').get(0))
 
     @

@@ -10,8 +10,8 @@
     <!--<span class='expand'>Expand</span>-->
     <span class='add-comment'>
       Comment
-      <% if @post.get('response_count') > 0: %>
-        <b>(<%= @post.get('response_count') %>)</b>
+      <% if @post.get('comment_count') > 0: %>
+        <b>(<span><%= @post.get('comment_count') %></span>)</b>
       <% end %>
     </span>
   </span>

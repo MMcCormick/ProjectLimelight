@@ -88,7 +88,7 @@ class PostMedia
 
   def unique_source
     if sources.length > 0 && !sources.first.url.blank? && !persisted?
-      if Post.where('sources.url' => sources.first.url).first
+      if PostMedia.where('sources.url' => sources.first.url).first
         errors.add('Link', "Source has already been added to Limelight")
       end
     end

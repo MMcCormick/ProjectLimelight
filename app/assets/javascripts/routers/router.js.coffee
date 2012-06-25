@@ -10,7 +10,6 @@ class LL.Router extends Backbone.Router
     'users/:id/:topic_id': 'activityFeed'
     'users/:id': 'activityFeed'
     'posts/:id': 'postShow'
-    'talks/:id': 'talkShow'
     'pages/admin': 'adminHome'
     'topics/new': 'adminManageTopics'
     'crawler_sources': 'adminManageCrawlers'
@@ -377,7 +376,7 @@ class LL.Router extends Backbone.Router
   #######
 
   postShow: (id) ->
-    if typeof current_object != 'undefined' && _.include(['Video','Link','Picture'], current_object.type)
+    if typeof current_object != 'undefined' && _.include(['Post','Video','Link','Picture'], current_object.type)
       data = new LL.Models.Post(current_object)
     else
       data = {'id':id}
@@ -393,31 +392,6 @@ class LL.Router extends Backbone.Router
         LL.App.Modal.add(id, view).setActive(id).show()
     else
       view = new LL.Views.PostShow(model: post)
-      $('body').addClass('no-sidebar')
-      $('#feed').html(view.el)
-      view.render()
-
-
-  talkShow: (id) ->
-    if typeof current_object != 'undefined' && current_object.type == 'Talk' && current_object.id == id
-      post = new LL.Models.Post(current_object)
-    else
-      post = new LL.Models.Post({'id':id})
-      post.fetch(
-        {data: {id: post.get('id')}},
-        success: (model, response) ->
-          model.set(response, {silent: true})
-          model.trigger('reset')
-      )
-
-    if LL.App.Feed
-      if LL.App.Modal.get(id)
-        LL.App.Modal.setActive(id).show()
-      else
-        view = new LL.Views.TalkShow(model: post)
-        LL.App.Modal.add(id, view).setActive(id).show()
-    else
-      view = new LL.Views.TalkShow(model: post)
       $('body').addClass('no-sidebar')
       $('#feed').html(view.el)
       view.render()

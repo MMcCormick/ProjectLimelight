@@ -13,6 +13,7 @@ class LL.Views.PostsFeed extends Backbone.View
     # Default to no specific topic id
     @topic_id = null
 
+    @isotope_loaded = false
     @default_text = 'There are no items in this feed'
     @type = null
     @on_add = 'append'
@@ -39,12 +40,17 @@ class LL.Views.PostsFeed extends Backbone.View
       LL.App.calculateSiteWidth()
 
       setTimeout ->
+        if self.isotope_loaded == true
+          $(self.el).isotope('destroy')
+
         $(self.el).isotope
           animationEngine: 'best-available'
           itemSelector: '.tile'
           layoutMode: 'masonryColumnShift'
           masonryColumnShift:
             columnWidth: 330
+
+        self.isotope_loaded = true
       , 100
 
     if LL.App.current_user
@@ -92,8 +98,8 @@ class LL.Views.PostsFeed extends Backbone.View
   addPost: (root_post) =>
     self = @
 
-    if root_post.get('root').get('type') != 'Post'
-      root_id = root_post.get('root').get('id')
+    if root_post.get('post').get('type') != 'Post'
+      root_id = root_post.get('post').get('id')
 
       channel = LL.App.get_subscription(root_id)
       unless channel
@@ -101,9 +107,9 @@ class LL.Views.PostsFeed extends Backbone.View
 
       unless LL.App.get_event_subscription(root_id, 'new_response')
         channel.bind 'new_response', (data) ->
-          if root_post.get('root')
+          if root_post.get('post')
             post = new LL.Models.Post(data)
-            root_post.get('feed_responses').unshift(post)
+            root_post.get('posts').unshift(post)
             root_post.trigger('new_response', post)
 
         LL.App.subscribe_event(root_id, 'new_response')
@@ -125,7 +131,7 @@ class LL.Views.PostsFeed extends Backbone.View
     @
 
   appendPost: (root_post, single=false) =>
-    if root_post.get('root')
+    if root_post.get('post')
       tile = new LL.Views.FeedTile(model: root_post)
 
       if single

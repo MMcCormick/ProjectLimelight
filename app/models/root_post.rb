@@ -3,12 +3,9 @@ class RootPost
   include Mongoid::CachedJson
 
   # push_item is the pushed post FeedUserItem, FeedLikeItem, etc
-  attr_accessor :root, :push_item, :like_responses, :activity_responses, :feed_responses
+  attr_accessor :post, :push_item
 
   def initialize
-    @like_responses = []
-    @activity_responses = []
-    @feed_responses = []
     @push_item = nil
   end
 
@@ -38,13 +35,12 @@ class RootPost
   end
 
   def as_json(options={})
-    {
-            :id => root.id.to_s,
-            :root => root.as_json(options),
-            :like_responses => like_responses.map {|r| r.as_json(options)},
-            :activity_responses => activity_responses.map {|r| r.as_json(options)},
-            :feed_responses => feed_responses.map {|r| r.as_json(options)},
-            :reasons => push_item && root.class.name != 'Topic' ? generate_reasons(push_item.reasons) : []
+    data = {
+            :id => post.id.to_s,
+            :post => post.as_json(options),
+            :reasons => push_item ? generate_reasons(push_item.reasons) : []
     }
+
+    data
   end
 end

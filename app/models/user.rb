@@ -359,10 +359,12 @@ class User
 
   def topic_activity_recalculate
     self.topic_activity = {}
+    self.posts_count = 0
     posts.each do |p|
       p.topic_mention_ids.each do |t|
         topic_activity_add(t)
       end
+      self.posts_count += 1
     end
   end
 
@@ -396,11 +398,13 @@ class User
 
   def topic_likes_recalculate
     self.topic_likes = {}
+    self.likes_count = 0
     likes = Post.where(:like_ids => id)
     likes.each do |p|
       p.topic_mention_ids.each do |t|
         topic_likes_add(t)
       end
+      self.likes_count += 1
     end
   end
 

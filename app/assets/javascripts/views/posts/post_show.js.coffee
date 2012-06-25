@@ -4,8 +4,9 @@ class LL.Views.PostShow extends Backbone.View
   className: 'content-tile'
 
   events:
-    "click .post-responses input": "showTalkForm"
     "click .close": "navBack"
+    "click .repost-btn": "loadPostForm"
+    "click .add-comment": "focusCommentForm"
 
   initialize: ->
     @responsesCollection = new LL.Collections.PostResponses()
@@ -18,9 +19,6 @@ class LL.Views.PostShow extends Backbone.View
 
     like = new LL.Views.LikeButton(model: @model)
     $(@el).find('.actions').prepend(like.render().el)
-
-#    score = new LL.Views.Score(model: @model)
-#    $(@el).find('.actions').prepend(score.render().el)
 
     prettyTime = new LL.Views.PrettyTime()
     prettyTime.format = 'extended'
@@ -36,18 +34,19 @@ class LL.Views.PostShow extends Backbone.View
     user_section.count = @model.get('likes').length
     $(@el).find('.half-sections').append(user_section.render().el)
 
-    $(@el).find('.post-responses').append(@responses.el)
 
-    unless @loaded
-      @responsesCollection.fetch({data: {id: @model.get('id')}})
+    @comments = new LL.Collections.Comments
+    @comments_view = new LL.Views.CommentList(collection: @comments, model: @model)
+    form = new LL.Views.CommentForm(model: @model)
+    form.minimal = true
+    $(@el).find('.comments .meat').append(form.render().el).append(@comments_view.render().el)
+
+    if @model.get('comments') && @model.get('comments').length > 0 && !@loaded
+      @comments.add(@model.get('comments'))
+    else if !@loaded
+      @comments.fetch({data: {id: @model.get('id')}})
 
     @loaded = true
-
-    view = new LL.Views.PostForm()
-    view.placeholder_text = "Post about this #{@model.get('type')}..."
-    $(@el).find('.post-responses .top').after(view.render().el)
-    view.model.set('parent_id', @model.get('id'))
-    $(view.el).find('.icons').remove()
 
     if LL.App.Feed
       $(@el).addClass('modal')
@@ -55,12 +54,29 @@ class LL.Views.PostShow extends Backbone.View
 
     @
 
-  showTalkForm: =>
+  focusCommentForm: (e) =>
+    $(@el).find('.comment-form textarea').focus()
+
+  loadPostForm: =>
     unless LL.App.current_user
       LL.LoginBox.showModal()
       return
 
-    $(@el).find('#post-form').fadeIn(250).find('textarea').focus()
+    if $(@el).next().attr('id') == 'post-form'
+      return
+
+    view = new LL.Views.PostForm()
+#    view.with_header = false
+    view.cancel_buttons = true
+    view.modal = true
+    view.placeholder_text = "Repost this #{@model.get('media').get('type')} to #{LL.App.current_user.get('followers_count')} followers..."
+    view.close_callback = @closePost
+    view.preview.show_preview = true
+#    $(@el).after($(view.render().el).hide())
+    view.preview.setResponse(@model.get('media'))
+    view.render()
+    $(view.el).find('.icons').remove()
+#    $(view.el).slideDown(300)
 
   navBack: (e) =>
     history.back()

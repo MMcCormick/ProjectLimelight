@@ -59,7 +59,7 @@ class Comment
     :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
     :content => { :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
-    :user => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
+    :user => { :type => :reference, :properties => :short, :versions => [ :v1 ] }
 
 
   class << self

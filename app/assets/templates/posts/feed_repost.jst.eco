@@ -8,7 +8,7 @@
     </a>
   <% end %>
 
-  <span class='source'>via <a target="_blank" href="<%= @media.get('primary_source').url %>"><%= @media.get('primary_source').name %></a></span>
+  <span class='source'>via <a target="_blank" href="<%= @post.get('media').get('primary_source').url %>"><%= @post.get('media').get('primary_source').name %></a></span>
   <div class='when'></div>
 
   <p><%= @post.get('content') %></p>
@@ -16,23 +16,23 @@
 
 
 <div class='media'>
-  <% if @media.get('type') == 'Link' || @media.get('type') == 'Video': %>
-    <h5><%= @media.get('title') %></h5>
+  <% if @post.get('media').get('type') == 'Link' || @post.get('media').get('type') == 'Video': %>
+    <h5><%= @post.get('media').get('title') %></h5>
   <% end %>
 
-  <% if @media.get('images'): %>
+  <% if @post.get('media').get('images'): %>
     <div class='img'>
-      <img src='<%= @media.get('images').fit.large %>' alt='' />
+      <img src='<%= @post.get('media').get('images').fit.large %>' alt='' />
 
-      <% if @media.get('video'): %>
+      <% if @post.get('media').get('video'): %>
         <div class='ll-video-play'></div>
       <% end %>
       <div class='bg'></div>
     </div>
   <% end %>
 
-  <% if @media.get('type') == 'Picture': %>
-    <% if @media.get('title'): %>
+  <% if @post.get('media').get('type') == 'Picture': %>
+    <% if @post.get('media').get('title'): %>
       <div class='bottom-title'><%=  @post.get('title') %></div>
     <% end %>
   <% end %>
@@ -42,7 +42,7 @@
   <span class='add-comment'>
     Comment
     <% if @post.get('comment_count') > 0: %>
-      <b>(<%= @post.get('comment_count') %>)</b>
+      <b>(<span><%= @post.get('comment_count') %></span>)</b>
     <% end %>
   </span>
   <span class='repost-btn'>Repost</span>

@@ -1,3 +1,0 @@
-<% if @talking: %>
-  <div class='talking'><%= @talking %></div>
-<% end %>

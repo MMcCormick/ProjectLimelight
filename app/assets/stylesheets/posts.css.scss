@@ -225,259 +225,111 @@ $postFontColor: $grayDark;
     color: $postFontColor;
     font-weight: bold;
   }
-  h1 {
-    margin-bottom: 10px;
-  }
-  .source {
-    display: inline-block;
-    margin-bottom: 12px;
-    font-size: 16px;
-    color: $grayLight;
-    font-weight: normal;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
   h3 {
     margin: 5px 0 15px;
   }
-  .like,
-  .comment-form {
-    cursor: pointer;
-  }
-  .post-root {
+  .post {
     .meat {
-      padding: 15px;
+      position: relative;
+      padding: 15px 15px 15px 80px;
+      min-height: 50px;
     }
-    .actions-created {
-      font-size: 16px;
-
-      .actions {
-        .score-pts {
-          margin-right: 15px;
-        }
-
-        .like {
-          padding: 0;
-          font-size: 16px;
-          margin: 0 15px 0 0;
-          color: $greenDarker;
-          font-weight: bold;
-          border: none;
-          background: none;
-          text-shadow: none;
-        }
-      }
-    }
-    .existing-mentions {
-      float: right;
-      width: 235px;
-      height: 245px;
-      overflow-y: auto;
-
-      h3 {
-        margin: 0 0 10px 0;
-      }
-      .tlink {
-        display: table;
-        height: 40px;
-        margin-bottom: 10px;
-        img {
-          display: table-cell;
-          height: 40px;
-          width: 40px;
-        }
-        h5 {
-          display: table-cell;
-          margin: 0px;
-          padding: 0 10px;
-          vertical-align: middle;
-        }
-        .mention {
-          display: table-cell;
-          vertical-align: middle;
-          padding: 0 0 0 10px;
-        }
-      }
-    }
-  }
-  .post-media {
-    margin: 7px 0 0 0;
-    overflow-y: auto;
-    max-height: 750px;
-    text-align: center;
     img {
       @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-      max-width: 680px;
-    }
-  }
-  .response-talk {
-    padding: 10px 15px 8px 76px;
-    min-height: 42px;
-    position: relative;
-
-    > img {
-      @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
       position: absolute;
-      width: 50px;
-      height: 50px;
-      top: 10px;
+      top: 15px;
       left: 15px;
     }
-    .ulink {
-      font-size: 12px;
+    .user {
+      font-size: 18px;
     }
-    .when {
-      display: inline-block;
-      color: #999;
-      margin: 0 0 0 10px;
-      font-size: 12px;
-      cursor: default;
+    .source {
+      a {
+        color: #999;
+        &:hover {
+          color: $blue;
+        }
+      }
     }
     p {
-      font-size: 12px;
+      font-size: 16px;
+      line-height: 20px;
+      margin: 10px 0 0 0;
     }
-    .mentions {
-      padding: 0 0 0 0;
-      margin: 0 0 -7px 0;
-
-      .tlink {
-        color: $grayDark;
-      }
-    }
-    .actions {
+    .when {
       position: absolute;
-      top: 10px;
+      top: 15px;
       right: 15px;
-      padding: 0;
-      background: #FFF;
-
-      .comment-form,
-      .like {
-        cursor: pointer;
-        &:hover {
-          color: $greenDarker;
-        }
-      }
-      .comment-form,
-      .like,
-      .score-pts {
-        font-size: 12px;
-        font-weight: normal;
-        margin: 0 0 0 5px;
-        span {
-          font-size: 12px;
-        }
-      }
-    }
-    .comment-list {
-      margin: 15px 0 10px -60px;
-      background: #F6F6F6;
+      font-size: 18px;
+      cursor: default;
+      color: #999;
     }
   }
-}
-
-#talk-show {
-  .post-root {
+  .media {
     position: relative;
 
-    > .meat {
-      padding: 18px 20px 20px 85px;
-    }
-    .ulink {
-      display: block;
-      font-size: 24px;
-      font-weight: bold;
-      margin: 0 0 5px 0;
-    }
-    .user-image {
-      position: absolute;
-      top: 18px;
-      left: 20px;
-    }
-    .actions-created {
-      margin: 7px 0 0 0;
-      font-size: 16px;
-
-      .actions {
-        .score-pts {
-          margin-right: 15px;
+    .top {
+      padding: 15px;
+      .title {
+        font-size: 18px;
+        a:hover {
+          color: $blue;
         }
-
-        .like {
-          padding: 0;
-          font-size: 16px;
-          margin: 0 15px 0 0;
-          color: $greenDarker;
-          font-weight: bold;
-          border: none;
-          background: none;
-          text-shadow: none;
-          cursor: pointer;
+      }
+      .source {
+        margin-top: 12px;
+        font-size: 13px;
+        color: $grayLight;
+        font-weight: normal;
+        cursor: pointer;
+        &:hover {
+          text-decoration: underline;
+          color: $blue;
         }
       }
     }
-  }
-  .content {
-    .ulink {
-      font-size: 24px;
-      font-weight: bold;
-      color: $grayDark;
-      margin: 0 10px 0 0;
+    .post-media {
+      margin: 0;
+      overflow-y: auto;
+      max-height: 750px;
+      text-align: center;
+      img {
+        @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+        max-width: 680px;
+      }
+    }
+    &.link.with-image {
+      .top {
+        padding-left: 80px;
+      }
+      .post-media {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+      }
     }
   }
-  h1 {
-    display: inline-block;
-    font-size: 24px;
-    font-weight: normal;
-  }
-  #comment-form {
+  .actions {
     margin: 10px 0 0 0;
-
-    textarea {
-      width: 350px;
-      margin: 0 0 20px 0;
-    }
-  }
-}
-
-.section.post-responses {
-  @include clearfix();
-  padding: 0 0 10px 0;
-
-  #post-form {
-    display: none;
-    padding: 15px;
-    border-bottom: 1px solid #DDD;
-
-    .modal-header {
-      padding: 0;
-      border: none;
-    }
-    .modal-body {
-      padding: 0px 0 10px;
-      .main-content {
-        margin-bottom: 10px;
+    > span {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0 15px 0 0;
+      color: $greenDarker;
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
       }
     }
-    .modal-footer {
-      padding: 0;
-      background: transparent;
-      border: none;
-      width: 403px;
+  }
+  .comment-form {
+    textarea {
+      @include border-radius(0);
+      padding: 10px;
+      height: 60px;
+      width: 290px;
+      resize: none;
+      margin: 5px 0;
     }
-  }
-
-  input {
-    @include border-radius(0px);
-    margin: 15px 0 5px 15px;
-    width: 287px;
-    font-size: 16px;
-    padding: 8px 10px;
-    display: block;
-  }
-  .none {
-    padding: 0 0 20px 0;
   }
 }

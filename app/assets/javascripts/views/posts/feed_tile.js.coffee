@@ -4,7 +4,7 @@ class LL.Views.FeedTile extends Backbone.View
   template: JST['posts/tile']
 
   events:
-    "click .root .img, .talking, h5": "postShow"
+    "click .root .img, .bg, h5": "postShow"
     "mouseenter": "cancelNewAnimation"
     "mouseenter .reasons": "showReasons"
     "mouseleave .reasons": "hideReasons"
@@ -23,12 +23,11 @@ class LL.Views.FeedTile extends Backbone.View
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
   render: ->
-    $(@el).addClass(@model.get('root').get('type').toLowerCase())
-    switch @model.get('root').get('type')
-      when 'Post'
-        root_view = new LL.Views.FeedPost(model: @model.get('root'))
-      else
-        root_view = new LL.Views.FeedMediaReposts(model: @model)
+    if @model.get('post').get('media')
+      root_view = new LL.Views.FeedMediaReposts(model: @model)
+    else
+      root_view = new LL.Views.FeedPost(model: @model)
+
 
     $(@el).append(root_view.render().el)
 
@@ -45,7 +44,7 @@ class LL.Views.FeedTile extends Backbone.View
     @
 
   postShow: =>
-    LL.Router.navigate("posts/#{@model.get('root').get('id')}", trigger: true)
+    LL.Router.navigate("posts/#{@model.get('id')}", trigger: true)
 
 #  renderResponses: =>
 #    if !@responses && @model.get('like_responses').length > 0

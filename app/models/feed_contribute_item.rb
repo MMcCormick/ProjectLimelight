@@ -30,6 +30,8 @@ class FeedContributeItem
 
   class << self
     def create(post, backlog=true)
+      return if post.user_id.to_s == User.limelight_user_id
+
       item = FeedContributeItem.find_or_initialize_by(:feed_id => post.user_id, :root_id => post.root_id)
       unless item.responses.include?(post.id)
         item.root_type = post.root_type

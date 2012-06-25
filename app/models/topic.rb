@@ -294,8 +294,8 @@ class Topic
     add_alias(name, false, true)
   end
 
-  def get_alias(name)
-    self.aliases.where(:slug => name.parameterize).first
+  def get_alias(new_alias)
+    self.aliases.where(:slug => new_alias.parameterize).first
   end
 
   def add_alias(new_alias, ooac=false, hidden=false)
@@ -305,8 +305,6 @@ class Topic
       self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize, :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
       Resque.enqueue(SmCreateTopic, id.to_s)
       true
-    else
-      'This topic already has that alias.'
     end
   end
 

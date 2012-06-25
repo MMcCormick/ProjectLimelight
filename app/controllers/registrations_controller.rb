@@ -9,7 +9,7 @@ class RegistrationsController < Devise::RegistrationsController
             :password => params[:password]
     }
     build_resource
-    resource.invite_code_id = BSON::ObjectId(session[:invite_code])
+    resource.used_invite_code_id = BSON::ObjectId(session[:invite_code])
 
     if resource.save
       if resource.active_for_authentication?

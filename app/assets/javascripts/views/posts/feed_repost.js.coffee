@@ -1,7 +1,7 @@
 class LL.Views.FeedRepost extends Backbone.View
   tagName: 'div'
   className: 'repost'
-  template: JST['posts/repost']
+  template: JST['posts/feed_repost']
 
   events:
     'click': 'postShow'
@@ -11,7 +11,7 @@ class LL.Views.FeedRepost extends Backbone.View
     @model.on('new_comment', @incrementComment)
 
   render: ->
-    $(@el).html(@template(post: @model, media: @media))
+    $(@el).html(@template(post: @model.get('post')))
 
     prettyTime = new LL.Views.PrettyTime()
     prettyTime.format = 'short'
@@ -24,10 +24,14 @@ class LL.Views.FeedRepost extends Backbone.View
     @
 
   postShow: (e) =>
-    return if $(e.target).is('a,input,textarea,.like,.repost-btn')
+    console.log $(e.target)
+    return if $(e.target).is('a,h5,input,textarea,.bg,.img,img,.like,.repost-btn')
+
+    self = @
 
     if $(@el).find('.bottom').is(':visible')
-      $(@el).removeClass('open', 200).find('.bottom').slideUp(200)
+      $(@el).removeClass('open', 200).find('.bottom').slideUp 100, ->
+        $('#feed').isotope('shiftColumnOfItem', $(self.el).parents('.tile:first').get(0))
     else
       if $(@el).find('.comment-list').length == 0
         @comments = new LL.Collections.Comments
@@ -37,42 +41,15 @@ class LL.Views.FeedRepost extends Backbone.View
         $(@el).find('.bottom').append(form.render().el).append(@comments_view.render().el)
         @comments.fetch({data: {id: @model.get('id')}})
 
-      $(@el).addClass('open', 200).find('.bottom').slideDown(200)
+      $(@el).addClass('open', 100).find('.bottom').slideDown 100, ->
+        $('#feed').isotope('shiftColumnOfItem', $(self.el).parents('.tile:first').get(0))
 
   incrementComment: =>
-    $(@el).find('.comment-form span').text(parseInt($(@el).find('.comment-form span').text()) + 1)
-
-  commentForm: (e) =>
-    unless LL.App.current_user
-      LL.LoginBox.showModal()
-      return
-
-    self = @
-    view = new LL.Views.CommentForm(model: @model)
-    view.modal = true
-    view.qtip = @el
-
-    $(@el).qtip
-      position:
-        my: 'top middle'
-        at: 'bottom middle'
-        viewport: $(window)
-      style:
-        tip: true
-        classes: 'ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-limelight comment-tip'
-      show:
-        ready: true
-        effect: (offset) ->
-          $(@).slideDown(150) # "this" refers to the tooltip
-      hide: false
-      content:
-        text: (api) ->
-          $(view.render().el)
-      events:
-        show: (event,api) ->
-          setTimeout ->
-            $(event.delegateTarget).find('textarea').focus()
-          , 0
+    count = $(@el).find('.add-comment span')
+    if count.length > 0
+      count.text(parseInt(count.text()) + 1)
+    else
+      $(@el).find('.add-comment').append('<b>(<span>1</span>)</b>')
 
   loadPostForm: =>
     unless LL.App.current_user
@@ -83,15 +60,17 @@ class LL.Views.FeedRepost extends Backbone.View
       return
 
     view = new LL.Views.PostForm()
-    view.with_header = false
+#    view.with_header = false
     view.cancel_buttons = true
-    view.placeholder_text = "Repost this #{@model.get('type')} to #{LL.App.current_user.get('followers_count')} followers..."
+    view.modal = true
+    view.placeholder_text = "Repost this #{@model.get('post').get('media').get('type')} to #{LL.App.current_user.get('followers_count')} followers..."
     view.close_callback = @closePost
-    view.preview.show_preview = false
-    $(@el).after($(view.render().el).hide())
-    view.preview.setResponse(@media)
+    view.preview.show_preview = true
+#    $(@el).after($(view.render().el).hide())
+    view.preview.setResponse(@model.get('post').get('media'))
+    view.render()
     $(view.el).find('.icons').remove()
-    $(view.el).slideDown(300)
+#    $(view.el).slideDown(300)
 
   closePost: (form) =>
     $(form.el).remove();

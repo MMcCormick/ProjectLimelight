@@ -507,17 +507,17 @@ class User
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node(
-            'uuid' => id.to_s,
-            'type' => 'user',
-            'username' => username,
-            'created_at' => created_at.to_i,
-            'score' => score
-    )
-    Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
-    self.neo4j_id = node['self'].split('/').last
-    save
-    node
+    #node = Neo4j.neo.create_node(
+    #        'uuid' => id.to_s,
+    #        'type' => 'user',
+    #        'username' => username,
+    #        'created_at' => created_at.to_i,
+    #        'score' => score
+    #)
+    #Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
+    #self.neo4j_id = node['self'].split('/').last
+    #save
+    #node
   end
 
   def neo4j_update
@@ -529,7 +529,6 @@ class User
     unless invite_code
       self.create_invite_code(:allotted => 3)
     end
-
 
     if used_invite_code_id
       used_invite = InviteCode.find(used_invite_code_id)

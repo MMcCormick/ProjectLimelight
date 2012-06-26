@@ -1,8 +1,7 @@
 <div class='top'>
   <h5>Invite Code</h5>
 </div>
-
+<div class='bb'></div>
 <div class='meat'>
-  <div class="code"><%= @user.get('invite_code').code %></div>
-  <div class="remaining"><%= @user.get('invite_code').allotted - @user.get('invite_code').used %> Remaining</div>
+  <%= @user.get('invite_code').allotted - @user.get('invite_code').used %> Remaining - <%= @user.get('invite_code').code %>
 </div>

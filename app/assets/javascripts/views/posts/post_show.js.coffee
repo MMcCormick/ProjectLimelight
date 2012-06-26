@@ -63,17 +63,12 @@ class LL.Views.PostShow extends Backbone.View
       return
 
     view = new LL.Views.PostForm()
-#    view.with_header = false
     view.cancel_buttons = true
     view.modal = true
-    view.placeholder_text = "Repost this #{@model.get('media').get('type')} to #{LL.App.current_user.get('followers_count')} followers..."
+    view.with_header = false
     view.close_callback = @closePost
-    view.preview.show_preview = true
-#    $(@el).after($(view.render().el).hide())
-    view.preview.setResponse(@model.get('media'))
     view.render()
-    $(view.el).find('.icons').remove()
-#    $(view.el).slideDown(300)
+    view.preview.setResponse(@model.get('media'))
 
   navBack: (e) =>
     history.back()

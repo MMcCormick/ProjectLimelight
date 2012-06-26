@@ -68,7 +68,6 @@ class LL.Views.FeedRepost extends Backbone.View
     view.close_callback = @closePost
     view.render()
     view.preview.setResponse(@model.get('post').get('media'))
-    $(view.el).find('.icons').remove()
 
   closePost: (form) =>
     $(form.el).remove();

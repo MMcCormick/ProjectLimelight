@@ -22,7 +22,7 @@
     </li>
     <li class="divider"></li>
     <li>
-      <a href="/">My Feed</a>
+      <a href="/">Home</a>
     </li>
     <li>
       <a href="<%= "/activity" %>">My Posts</a>
@@ -30,18 +30,15 @@
     <li>
       <a href="<%= "/likes" %>">My Likes</a>
     </li>
-    <!--<li>-->
-      <!--<a href="<%= "/influence" %>">Influence</a>-->
-    <!--</li>-->
     <li>
       <a href="/settings">Settings</a>
     </li>
     <li class="divider"></li>
     <li>
-      <a href="<%= "/users/#{@user.get('slug')}/following/topics" %>">Following <%= @user.get('following_topics_count') %> Topics</a>
+      <a href="<%= "/users/#{@user.get('slug')}/topics" %>">Following <%= @user.get('following_topics_count') %> Topics</a>
     </li>
     <li>
-      <a href="<%= "/users/#{@user.get('slug')}/following/users" %>">Following <%= @user.get('following_users_count') %> Users</a>
+      <a href="<%= "/users/#{@user.get('slug')}/users" %>">Following <%= @user.get('following_users_count') %> Users</a>
     </li>
     <li>
       <a href="<%= "/users/#{@user.get('slug')}/followers" %>"><%= @user.get('followers_count') %> Followers</a>

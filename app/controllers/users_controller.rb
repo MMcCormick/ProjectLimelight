@@ -145,7 +145,13 @@ class UsersController < ApplicationController
 
     @title = "Topics " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
     @description = "A list of all topics " + @user.username + " follows"
-    following_topics = Topic.where(:_id.in => @user.following_topics).asc(:name)
+    following_topics = Topic.where(:_id.in => @user.following_topics).desc(:p)
+    if params[:limit]
+      following_topics = following_topics.limit(params[:limit])
+    end
+    if params[:page] && params[:limit]
+      following_topics = following_topics.skip(params[:page].to_i * params[:limit].to_i)
+    end
     render :json => following_topics.map {|u| u.as_json}
   end
 

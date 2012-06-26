@@ -17,24 +17,28 @@ $feedFontColor: $grayDark;
 }
 
 #feed-ribbon {
-  @include border-radius(1px);
-  @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-  overflow-y: hidden;
-  overflow-x: auto;
-  padding: 10px 15px;
-  margin: 30px 19px 5px 5px;
-  background: #F9F9F9;
+  margin: 20px 26px 0px 20px;
   display: none;
 
-  .topic-ribbon {
-    @include clearfix();
-    list-style: none;
-    white-space: nowrap;
-
+  .inner {
+    overflow: hidden;
+    height: 110px;
     li {
-      margin: 0 25px 0 0;
-      display: inline-block;
-
+      margin: 5px 5px 0 0;
+      float: left;
+      border: 1px solid #CCC;
+      width: 100px;
+      height: 100px;
+      img {
+        width: 100px;
+        height: 100px;
+      }
+      .name {
+        display: none;
+      }
+      .count {
+        display: none;
+      }
       &.on {
         font-weight: bold;
         a {
@@ -44,14 +48,33 @@ $feedFontColor: $grayDark;
       }
     }
   }
+  .show-more {
+    font-style: italic;
+    cursor: pointer;
+    color: $greenDarker;
+    display: inline-block;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .topic-ribbon.open {
+    .inner {
+      height: auto;
+    }
+  }
 }
 
 .tile {
   margin-bottom: $feedColumnMargin + 10;
   position: relative;
-  width: 310px;
+  width: 320px;
   float: left;
 
+  .post,
+  .repost {
+    @include single-box-shadow(rgba(34, 25, 25, 0.3), 0px, 1px, 2px);
+    background: #FFF;
+  }
   &.column-fixed {
     margin-top: 23px;
     #post-form {
@@ -178,7 +201,6 @@ $feedFontColor: $grayDark;
       min-height: 40px;
 
       > img {
-        @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
         position: absolute;
         width: 50px;
         height: 50px;
@@ -262,8 +284,7 @@ $feedFontColor: $grayDark;
           margin-top: 5px;
 
           img {
-            @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-            max-width: 279px;
+            max-width: 289px;
           }
           .ll-video-play {
             position: absolute;
@@ -346,10 +367,10 @@ $feedFontColor: $grayDark;
   }
 
   &:hover {
-    .post,
-    .reposts {
-      background: #F9F9F9;
-    }
+    //.post,
+    //.reposts {
+    //  background: #F9F9F9;
+    //}
     .tlink {
       color: $blue;
     }

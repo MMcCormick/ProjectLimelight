@@ -62,7 +62,7 @@ class LL.Router extends Backbone.Router
       screen['sidebar'] = sidebar
 
       page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'feed'
+      page_header.page = 'home'
       screen['components'].push(page_header)
 
       LL.App.renderScreen('user_feed', id)
@@ -98,7 +98,7 @@ class LL.Router extends Backbone.Router
       screen = LL.App.newScreen('activity_feed', user.get('id')+topic_id)
 
       page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'activity'
+      page_header.page = 'posts'
       screen['components'].push(page_header)
 
       sidebar = LL.App.findSidebar('user', user.get('id'))
@@ -226,7 +226,7 @@ class LL.Router extends Backbone.Router
       screen = LL.App.newScreen('user_followers', user.get('id'))
 
       page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'followers'
+      page_header.page = 'users'
       screen['components'].push(page_header)
 
       sidebar = LL.App.findSidebar('user', user.get('id'))
@@ -253,7 +253,7 @@ class LL.Router extends Backbone.Router
       screen = LL.App.newScreen('user_following_users', user.get('id'))
 
       page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'following_users'
+      page_header.page = 'users'
       screen['components'].push(page_header)
 
       sidebar = LL.App.findSidebar('user', user.get('id'))
@@ -280,7 +280,7 @@ class LL.Router extends Backbone.Router
       screen = LL.App.newScreen('user_following_topics', user.get('id'))
 
       page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'following_topics'
+      page_header.page = 'topics'
       screen['components'].push(page_header)
 
       sidebar = LL.App.findSidebar('user', user.get('id'))

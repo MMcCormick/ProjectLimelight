@@ -4,10 +4,14 @@ html {
 }
 
 body {
-  $sidebarWidth: 250px;
-  $baseWidth: 930px;
+  $sidebarWidth: 200px;
+  $baseWidth: 900px;
 
-  background: #B8CFD6;
+  background: #F9F9F9;
+  background: {
+    image: image-url("bg_textured.png");
+    repeat: repeat;
+  }
   color: $grayDark;
   position: relative;
   left: 0px;
@@ -150,7 +154,7 @@ h1, h2, h3, h4, h5, h6 {
       color: $grayDark;
     }
     &:hover.tlink {
-      color: $greenDarker;
+      color: $blue;
     }
   }
 }
@@ -174,9 +178,9 @@ form {
 .tlink {
   cursor: pointer;
   &:hover {
-    color: $greenDarker !important;
+    color: $blue;
     h1, h2, h3, h4, h5, h6 {
-      color: $greenDarker !important;
+      color: $blue;
     }
   }
 }
@@ -215,14 +219,14 @@ header {
     height: 43px;
 
     .brand {
-      @include single-text-shadow(#444, 0, 1px);
+      @include single-text-shadow(#000, 0, 1px);
       padding: 0 0 0 65px;
       font-size: 25px;
       position: relative;
       margin-left: 20px;
       line-height: 43px;
       font-weight: 300;
-      color: #FFF;
+      color: #FCFCFC;
 
       img {
         position: absolute;
@@ -233,27 +237,31 @@ header {
     .search {
       position: absolute;
       top: 5px;
-      left: 350px;
+      left: 330px;
       .add-on {
         @include border-radius(1px 0 0 1px);
         margin: 0 -5px 0 0;
-        padding: 9px 8px 5px 8px;
+        padding: 10px 10px 6px 9px;
+        border: none;
       }
       input {
+        @include box-shadow(none);
         @include border-radius(0 1px 1px 0);
-        padding: 7px 10px;
+        padding: 8px 10px;
         font-size: 14px;
+        border: none;
+        border-left: 1px solid #CCC;
       }
     }
     .talk,
     .login {
-      @include border-radius(2px);
+      @include border-radius(1px);
       position: absolute;
       top: 5px;
       font-size: 16px;
     }
     .talk {
-      left: 250px;
+      left: 233px;
       padding: 7px 14px 7px 14px;
     }
     .login {
@@ -266,27 +274,25 @@ header {
 #header-user-nav {
   position: absolute;
   top: 0px;
-  right: 10px;
+  right: 20px;
   font-size: 16px;
 
   .profile-img {
-    @include border-radius(1px);
-    background: $grayLightest;
-    padding: 2px;
     float: right;
     margin: 5px 5px 0 0;
 
     img {
       @include border-radius(1px);
-      width: 30px;
-      height: 30px;
+      width: 34px;
+      height: 34px;
       display: block;
     }
   }
   .numbers {
     @include border-radius(1px);
     float: right;
-    background: $grayLightest;
+    background: #FFF;
+    color: #444;
     height: 34px;
     margin: 5px 5px 0 0;
     padding: 0 10px;
@@ -308,27 +314,32 @@ header {
     }
   }
   .username {
+    @include single-text-shadow(#000, 0, 1px);
     float: right;
-    color: $grayLightest;
+    color: #FCFCFC;
     cursor: pointer;
     height: 32px;
     padding: 12px 10px 0 12px;
+    font-size: 17px;
     
     i {
-      margin: 3px 0 0 4px;
+      margin: 4px 0 0 5px;
     }
   }
 }
 
+.navbar-inner {
+  @include box-shadow(none);
+  border-bottom: 1px solid #FAFAFA;
+}
+
 #page-header {
-  @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-  @include single-text-shadow(#DDD, 0, 1px);
-  border-top: 1px solid #FFF;
-  background: $grayLightest;
+  background: #F0F0F0;
+  border-bottom: 1px solid #DDD;
   display: none;
-  height: 40px;
+  height: 115px;
   width: 100%;
-  margin: 65px 0 0 0;
+  margin: -15px 0 0 0;
   position: relative;
   z-index: 100;
 
@@ -340,80 +351,69 @@ header {
     position: relative;
   }
   .inner {
-    padding: 0 0 0 250px;
   }
   .top {
     position: absolute;
-    top: -55px;
-    height: 50px;
+    top: 0px;
+    left: 0px;
+    width: 166px;
+    height: 115px;
+    display: table;
+    text-align: right;
+    padding: 0 7px;
+  }
+  .inner-top {
+    display: table-cell;
+    vertical-align: middle;
   }
   h1 {
+    @include single-text-shadow(#CCC, 0, 1px);
     cursor: default;
-    float: left;
-    line-height: 50px;
-    margin: 0 15px 0 0;
+    line-height: 21px;
+    font-size: 20px;
+    font-weight: normal;
   }
-  .score-pts {
-    float: left;
-    display: block;
-    line-height: 50px;
-    font-size: 13px;
-    span {
-      font-size: 18px;
-    }
-  }
-  .follow {
-    margin: 11px 0 0 20px;
+  .subtitle {
+    cursor: default;
+    font-size: 14px;
+    margin: 5px 0 0 0;
   }
   .links {
-    float: left;
-    height: 40px;
+    margin: 30px 0 0 215px;
 
     li {
       float: left;
       position: relative;
+      width: 85px;
+      text-align: center;
     }
     a {
+      @include single-text-shadow(#CCC, 0, 1px);
       display: block;
-      line-height: 40px;
-      height: 40px;
       position: relative;
       font-size: 13px;
-      font-weight: 300px;
-      padding: 0 15px;
       color: #444;
-      overflow: hidden;
 
-      span {
-        font-weight: bold;
-      }
-      &:hover {
-        background: #C7E0A9;
+      .icon {
+        margin: 0 auto 7px auto;
       }
       &.on {
-        background-color: #C7E0A9;
-        @include background-image(linear-gradient(#C7E0A9, #E9F4DD));
         cursor: default;
-        border-right: 1px solid #CDC5C5;
-        border-left: 1px solid #CDC5C5;
-
-        &:before {
-          @include single-box-shadow(rgba(34, 25, 25, 0.1), 0, 0, 10px, $default-box-shadow-spread, inset);
-          /*box-shadow: 0 0 10px  inset;*/
-          position: absolute;
-          top: -10px;
-          bottom: -10px;
-          left: 0;
-          right: 0;
-          content: "";
-        }
+        font-weight: bold;
+      }
+      .ll-ph-carrot {
+        position: absolute;
+        left: 50%;
+        margin-left: -13px;
+        bottom: -21px;
       }
     }
   }
   .sorting {
-    float: right;
-    height: 40px;
     display: none;
+    top: 40px;
+    right: 10px;
+    position: absolute;
 
     li {
       position: relative;
@@ -449,69 +449,57 @@ header {
 
 .sidebar {
   float: left;
-  width: 220px;
-  margin: -105px 0 0 10px;
-  background-color: $IETransparentBlue;
-  background-color: rgba(255,255,255,0.4);
+  width: 170px;
+  margin: -10px 0 0 10px;
+  background-color: transparent;
+  text-align: right;
 
-  .section {
+  a {
+    color: #444;
+    &:hover {
+      color: $blue;
+    }
+  }
+  h5 {
+    @include single-text-shadow(#CCC, 0, 1px);
+    margin: 20px 7px 0 7px;
+    font-weight: normal;
+    cursor: default;
+    font-size: 15px;
+  }
+  .follow {
     @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+    margin: 20px 7px 0 0;
+    font-size: 15px;
+    padding: 4px 10px;
+  }
+  .section {
     @include clearfix();
 
-    background: #FFF;
-    margin: 10px;
+    margin: 20px 0 0 0;
     .top {
-      background: $grayLightest;
-      border-bottom: 1px solid #EEE;
-      padding: 8px 15px;
+      padding: 0 7px 5px 7px;
       h5 {
-        @include single-text-shadow(#DDD, 0, 1px);
-        font-weight: normal;
-        cursor: default;
+        margin: 0px;
       }
-      h5.sub {
-        font-weight: normal;
-        font-size: 13px;
-      }
+    }
+    .bb {
+      border-top: 1px solid #DDD;
+      border-bottom: 1px solid #FFF;
+      width: 100%;
+      height: 0px;
     }
     > .meat {
       @include clearfix();
-      padding: 10px 15px;
-      background: #FFF;
-      h5 {
-        margin: 15px 0 0 0;
-      }
+      padding: 5px 7px 0 7px;
+      text-align: right;
     }
   }
   .profile-image {
     @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
-    width: 200px;
-    margin: 10px 0 0 10px;
+    width: 170px;
     position: relative;
     z-index: 110;
-    background: #FFF;
-  }
-  .user-panel {
-    padding: 10px;
-    position: relative;
-    border-bottom: 1px solid #EEEEEE;
-
-    h4 {
-      margin: 0 0 3px 0;
-      cursor: default;
-    }
-    .score-pts {
-      font-size: 13px;
-      vertical-align: middle;
-      span {
-        font-size: 16px;
-      }
-    }
-    .follow {
-      font-size: 13px;
-      padding: 2px 9px;
-      margin: 0 0 0 10px;
-    }
   }
   .topic-panel {
     padding: 10px 10px 0 10px;
@@ -580,47 +568,59 @@ header {
       }
     }
   }
-  .sidebar-talk-form {
-    input {
-      @include border-radius(1px);
-      width: 152px;
-      margin: 5px 0;
-      padding: 6px 8px;
+  ul {
+    li {
+      @include clearfix();
+      margin: 0 0 5px 0;
+      a {
+        float: right;
+      }
+    }
+  }
+  .load-more {
+    font-style: italic;
+    cursor: pointer;
+    &:hover {
+      $color: $greenDarker;
+    }
+    &.disabled {
+      &:hover {
+        color: #444;
+      }
     }
   }
   .sidebar-footer {
     a {
-      margin-right: 10px;
+      margin-left: 10px;
     }
     .social {
       clear: both;
-      height: 0px;
       position: relative;
+      margin: 40px -26px 0 0;
 
       .fb-like,
       .twitter-share-button,
       .google {
-        position: absolute;
+        margin: 0 0 10px 0;
+        float: right;
+        width: 100px;
       }
       .fb-like {
-        left: 48px;
-        top: 41px;
+
       }
       .twitter-share-button {
-        left: 48px;
-        top: 76px;
+
       }
       .google {
-        left: 48px;
-        top: 110px;
+
       }
     }
   }
 }
 
 #feed {
-  margin: 20px 0 0 5px;
-
+  margin: 25px 0 0 20px;
+  overflow: visible !important;
   > h2 {
     margin: 0 0 15px 0;
     cursor: default;

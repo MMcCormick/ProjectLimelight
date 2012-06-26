@@ -48,7 +48,7 @@ class LL.Views.PostsFeed extends Backbone.View
           itemSelector: '.tile'
           layoutMode: 'masonryColumnShift'
           masonryColumnShift:
-            columnWidth: 330
+            columnWidth: 340
 
         self.isotope_loaded = true
       , 100

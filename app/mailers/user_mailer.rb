@@ -5,7 +5,7 @@ class UserMailer < ActionMailer::Base
 
   def welcome_email(user_id)
     @user = User.find(user_id)
-    mail(:to => "#{@user.fullname} <#{@user.email}>", :subject => "#{@user.first_name && !@user.first_name.blank? ? @user.first_name : @user.username}, welcome to Limelight")
+    mail(:to => "#{@user.fullname} <#{@user.email}>", :subject => "#{@user.first_or_username}, welcome to Limelight")
   end
 
   def welcome_email_admins(user_id)
@@ -19,6 +19,12 @@ class UserMailer < ActionMailer::Base
 
   def beta_signup_email_admins(email)
     mail(:to => 'support@projectlimelight.com', :subject => "[limelight invite request] #{email} requested an invite!")
+  end
+
+  def invite(user_id, email, code)
+    @user = User.find(user_id)
+    @code = code
+    mail(:to => email, :subject => "#{@user.first_or_username} invited you to Limelight!")
   end
 
   def matt_welcome(user_id)

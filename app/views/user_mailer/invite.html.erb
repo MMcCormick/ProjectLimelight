@@ -1,0 +1,17 @@
+<%
+ if Rails.env.development?
+   base = 'http://localhost:3000'
+ elsif Rails.env.staging?
+   base = 'http://staging.projectlimelight.com'
+ else
+   base = 'http://www.projectlimelight.com'
+ end
+%>
+
+<p>Hey There,</p>
+
+<p><%= @user.first_or_username %> has just sent you an invite to join Limelight!</p>
+
+<p>Just click this link to join: <%= invited_url(:code => @code) %></p>
+
+<p>If you have any issues, please don't hesitate to email support@projectlimelight.com.</p>

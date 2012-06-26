@@ -71,9 +71,10 @@ class User
   field :use_fb_image, :default => false
   field :auto_follow_fb, :default => true
   field :auto_follow_tw, :default => true
-  field :og_follows, :default => true
-  field :og_likes, :default => true
+  field :og_follows, :default => true # whether to push follows to open graph
+  field :og_likes, :default => true # ^ for likes
   field :used_invite_code_id
+  field :unlimited_code_id
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id
   field :topic_activity, :default => {} # keeps track of how many posts a user has in topics (just counts)
@@ -534,6 +535,17 @@ class User
       used_invite = InviteCode.find(used_invite_code_id)
       used_invite.redeem if used_invite
     end
+  end
+
+  def get_unlimited_code
+    if unlimited_code_id
+      unlimited = InviteCode.find(unlimited_code_id)
+    else
+      unlimited = InviteCode.new(:allotted => 0)
+      self.unlimited_code_id = unlimited.id
+      save
+    end
+    unlimited
   end
 
   def influence_increases(limit, full=false)

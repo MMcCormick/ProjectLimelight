@@ -26,7 +26,7 @@ gem 'airbrake' # Exception notification
 gem 'soulmate', '0.1.3', :require => 'soulmate/server' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
-gem 'neography' # neo4j graph database
+gem 'neography', '0.0.27' # neo4j graph database
 gem 'backbone-on-rails'
 gem 'mixpanel' # analytics
 gem 'feedzirra'

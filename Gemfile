@@ -83,6 +83,7 @@ platforms :ruby do
   #gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
   gem 'heroku'
   gem 'newrelic_rpm'
+  gem 'newrelic_moped'
   #gem 'rpm_contrib', '2.1.11' # extra instrumentation for the new relic rpm agent
   #gem 'newrelic-redis', '1.3.2' # new relic redis instrumentation
   #gem 'newrelic-faraday'

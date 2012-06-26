@@ -13,6 +13,7 @@ ProjectLimelight::Application.routes.draw do
         delete '' => 'follows#destroy', :type => 'User'
       end
 
+      post 'invite_by_email' => 'users#invite_by_email'
       get 'index' => 'users#index'
       get 'notifications' => 'users#notifications'
       get 'following_users' => 'users#following_users'
@@ -139,6 +140,7 @@ ProjectLimelight::Application.routes.draw do
     get ':slug/:topic_id' => 'users#show', :as => :user_topic_activity
     get ':slug' => 'users#show', :as => :user, :show_og => true
   end
+  get 'invited' => 'invite_codes#check', :as => :invited
   get 'settings' => 'users#settings', :as => :user_settings
   get 'activity/:topic_id' => 'users#show'
   get 'activity' => 'users#show'

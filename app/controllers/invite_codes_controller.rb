@@ -29,15 +29,27 @@ class InviteCodesController < ApplicationController
         response = build_ajax_response(:ok, nil, nil, nil, :invite_code_id => invite.id.to_s)
         status = 200
       else
-        invite.errors.add(:invite_code, "Sorry, that invite code has been used up")
+        error = "Sorry, that invite code has been used up"
+        invite.errors.add(:invite_code, error)
         response = build_ajax_response(:error, nil, nil, invite.errors)
         status = 422
       end
     else
-      response = build_ajax_response(:error, nil, nil, {:invite_code => "Sorry, that code is invalid"})
+      error = "Sorry, that code is invalid"
+      response = build_ajax_response(:error, nil, nil, {:invite_code => error})
       status = 422
     end
 
-    render json: response, status: status
+    respond_to do |format|
+      format.html do
+        if error
+          flash[:error] = error
+          redirect_to root_path
+        else
+          redirect_to root_path(:show => "register")
+        end
+      end
+      format.js { render json: response, status: status }
+    end
   end
 end

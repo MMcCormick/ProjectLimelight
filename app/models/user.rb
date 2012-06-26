@@ -71,9 +71,10 @@ class User
   field :use_fb_image, :default => false
   field :auto_follow_fb, :default => true
   field :auto_follow_tw, :default => true
-  field :og_follows, :default => true
-  field :og_likes, :default => true
+  field :og_follows, :default => true # whether to push follows to open graph
+  field :og_likes, :default => true # ^ for likes
   field :used_invite_code_id
+  field :unlimited_code_id
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id
   field :topic_activity, :default => {} # keeps track of how many posts a user has in topics (just counts)
@@ -508,17 +509,17 @@ class User
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node(
-            'uuid' => id.to_s,
-            'type' => 'user',
-            'username' => username,
-            'created_at' => created_at.to_i,
-            'score' => score
-    )
-    Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
-    self.neo4j_id = node['self'].split('/').last
-    save
-    node
+    #node = Neo4j.neo.create_node(
+    #        'uuid' => id.to_s,
+    #        'type' => 'user',
+    #        'username' => username,
+    #        'created_at' => created_at.to_i,
+    #        'score' => score
+    #)
+    #Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
+    #self.neo4j_id = node['self'].split('/').last
+    #save
+    #node
   end
 
   def neo4j_update
@@ -528,14 +529,24 @@ class User
 
   def invite_stuff
     unless invite_code
-      InviteCode.create(:user_id => id, :allotted => 3)
+      self.create_invite_code(:allotted => 3)
     end
-
 
     if used_invite_code_id
       used_invite = InviteCode.find(used_invite_code_id)
       used_invite.redeem if used_invite
     end
+  end
+
+  def get_unlimited_code
+    if unlimited_code_id
+      unlimited = InviteCode.find(unlimited_code_id)
+    else
+      unlimited = InviteCode.new(:allotted => 0)
+      self.unlimited_code_id = unlimited.id
+      save
+    end
+    unlimited
   end
 
   def influence_increases(limit, full=false)

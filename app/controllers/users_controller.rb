@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings, :topic_finder]
+  before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings, :topic_finder, :invite_by_email]
   include ModelUtilitiesHelper
   include ImageHelper
 
@@ -178,6 +178,10 @@ class UsersController < ApplicationController
       @show = params[:show] ? params[:show].to_sym : false
       @og_tags = build_og_tags("Limelight", "website", root_url, "http://static.p-li.me.s3.amazonaws.com/assets/images/splash-logo.png", @description)
 
+      if params[:code]
+        session[:invite_code]
+      end
+
       render "splash", :layout => "blank"
     end
   end
@@ -254,4 +258,12 @@ class UsersController < ApplicationController
     render :json => activity
   end
 
+  def invite_by_email
+    unlimited_code = current_user.get_unlimited_code
+    unlimited_code.increment_allotted(params[:emails].length)
+    params[:emails].each do |email|
+      UserMailer.invite(current_user.id.to_s, email, unlimited_code.code).deliver
+    end
+    render json: build_ajax_response(:ok), status: 201
+  end
 end

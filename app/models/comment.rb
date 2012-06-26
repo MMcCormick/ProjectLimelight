@@ -18,7 +18,7 @@ class Comment
   belongs_to :user, index: true
 
   validates :post, :presence => true
-  validates :content, :length => { :minimum => 3, :maximum => 200, :message => :length }
+  validates :content, :length => { :minimum => 3, :maximum => 500, :message => :length }
   validates :depth, :numericality => { :less_than_or_equal_to => 5 }
 
   before_validation :set_path

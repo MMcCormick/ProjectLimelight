@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :init, :set_user_time_zone
+  before_filter :init, :set_user_time_zone, :save_referer
 
   def authenticate_admin_user!
     unless can? :manage, :all
@@ -56,6 +56,14 @@ class ApplicationController < ActionController::Base
     path = session[:return_to] ? session[:return_to] : default
     session[:return_to] = nil
     path
+  end
+
+  def save_referer
+    unless signed_in?
+      unless session['referer']
+        session['referer'] = request.referer || 'none'
+      end
+    end
   end
 
   # Mixpanel

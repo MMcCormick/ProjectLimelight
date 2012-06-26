@@ -6,7 +6,7 @@ class InviteCode
   include Mongoid::Timestamps::Updated
 
   field :code
-  field :allotted, :type => Integer
+  field :allotted, :type => Integer, :default => 3
   field :used, :type => Integer, :default => 0
 
   validates_presence_of :code, :allotted
@@ -44,6 +44,11 @@ class InviteCode
 
   def redeem
     self.used += 1
+    save
+  end
+
+  def increment_allotted(amount=1)
+    self.allotted += amount
     save
   end
 

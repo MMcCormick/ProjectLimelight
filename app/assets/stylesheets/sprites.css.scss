@@ -94,6 +94,33 @@
     @include icon-sprite(ph-home-on);
   }
 }
+.ll-ph-feed {
+  @include icon-sprite(ph-feed-off);
+  width: 40px;
+  height: 40px;
+  &:hover,
+  &.on {
+    @include icon-sprite(ph-feed-on);
+  }
+}
+.ll-ph-likes {
+  @include icon-sprite(ph-likes-off);
+  width: 40px;
+  height: 40px;
+  &:hover,
+  &.on {
+    @include icon-sprite(ph-likes-on);
+  }
+}
+.ll-ph-connections {
+  @include icon-sprite(ph-connections-off);
+  width: 40px;
+  height: 40px;
+  &:hover,
+  &.on {
+    @include icon-sprite(ph-connections-on);
+  }
+}
 .ll-ph-posts {
   @include icon-sprite(ph-posts-off);
   width: 40px;

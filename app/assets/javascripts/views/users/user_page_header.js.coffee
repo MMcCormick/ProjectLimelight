@@ -7,25 +7,26 @@ class LL.Views.UserPageHeader extends Backbone.View
     header.links = [
       {
         class: 'posts'
-        content: "<span>#{@model.get('posts_count')}</span> Posts"
-        url: (if LL.App.current_user == @model then '/activity' else "/users/#{@model.get('slug')}")
+        content: "#{@model.get('posts_count')} Posts"
+        url: (if LL.App.current_user == @model then '/activity' else "#{@model.get('url')}")
         on: (if @page == 'posts' then true else false)
       }
-#      {
-#        content: "<span>#{@model.get('likes_count')}</span> Likes"
-#        url: (if LL.App.current_user == @model then '/likes' else "/users/#{@model.get('slug')}/likes")
-#        on: (if @page == 'likes' then true else false)
-#      }
+      {
+        class: 'likes'
+        content: "#{@model.get('likes_count')} Likes"
+        url: (if LL.App.current_user == @model then '/likes' else "#{@model.get('url')}/likes")
+        on: (if @page == 'likes' then true else false)
+      }
       {
         class: 'topics'
         content: "Topics"
-        url: (if LL.App.current_user == @model then '/topics' else "/users/#{@model.get('slug')}/topics")
+        url: (if LL.App.current_user == @model then '/topics' else "#{@model.get('url')}/topics")
         on: (if @page == 'topics' then true else false)
       }
       {
         class: 'users'
         content: "Users"
-        url: (if LL.App.current_user == @model then '/users' else "/users/#{@model.get('slug')}/users")
+        url: (if LL.App.current_user == @model then '/users' else "#{@model.get('url')}/users")
         on: (if @page == 'users' then true else false)
       }
     ]

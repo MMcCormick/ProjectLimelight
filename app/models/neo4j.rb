@@ -18,7 +18,7 @@ class Neo4j
         self.neo.add_relationship_to_index('users', 'like', "#{user_id}-#{post_id}", like) if like
 
         # increase affinity to the post creator unless submitted by bot
-        unless post.user_id.to_s == User.limelight_user_id
+        unless post.user_id.to_s == User.limelight_user_id || user_id == post.user_id
           node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
           Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, 1, false, nil) if node1 && node2
         end
@@ -49,7 +49,7 @@ class Neo4j
         Neo4j.neo.remove_relationship_from_index('users', rel1)
 
         # decrease affinity to the post creator
-        unless post.user_id.to_s == User.limelight_user_id
+        unless post.user_id.to_s == User.limelight_user_id || user_id == post.user_id
           node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
           Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, -1, false, nil) if node1 && node2
         end
@@ -115,7 +115,7 @@ class Neo4j
 
       post.user_mentions.each do |m|
         ## connect the post to it's mentioned users
-        #mention_node = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
+        mention_node = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
         #rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
         #Neo4j.neo.set_relationship_properties(rel2, {"type" => 'user'})
         #Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)

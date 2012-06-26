@@ -34,7 +34,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
 #    '
 
   tutorial11: =>
-    @target = $('#page-header .feed')
+    @target = $('#page-header .home')
     @title = 'Your Feed'
     @my = 'top middle'
     @at = 'bottom middle'
@@ -43,7 +43,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
     @content = '
       This is your home on Limelight.
       <br /><br />
-      Limelight creates your feed based on the users AND topics you\'re following.
+      Your feed streams the latest Limelight posts based on the users AND topics you\'re following.
     '
 
   tutorial12: =>
@@ -78,30 +78,43 @@ class LL.Views.UserTutorialTips extends Backbone.View
 
   tutorial14: =>
     @target = $('#page-header .topics')
-    @title = 'Things You\'re Following'
+    @title = 'Topic Hub'
     @my = 'top middle'
-    @at = 'bottom right'
+    @at = 'bottom middle'
     @tip = true
     @button = 'Next'
     @content = '
-      On Limelight you can follow users and topics.
+      On Limelight you can follow topics.
       <br /><br />
-      The users and topics you\'re following determine what is shown in your feed.
+      Manage the topics you follow here.
+      <br /><br />
+      Topics are part of what determines the posts shown in your feed.
     '
 
   tutorial15: =>
-    @target = $('.column .tile #post-form')
+    @target = $('#page-header .users')
+    @title = 'User Hub'
+    @my = 'top middle'
+    @at = 'bottom middle'
+    @tip = true
+    @button = 'Next'
+    @content = '
+      Manage the users you follow here.
+      <br /><br />
+      When you follow a user, their posts will show up in your feed.
+    '
+
+  tutorial16: =>
+    @target = $('.navbar .talk')
     @title = 'What do you want to say?'
-    @my = 'left center'
-    @at = 'right center'
+    @my = 'top middle'
+    @at = 'bottom middle'
     @tip = true
     @button = 'Finish'
     @content = '
-      Your post can be just text (like a Tweet), or it can include a cool picture, video, or link.
+      Your post can be text (like a Tweet), or a cool picture, video, or link.
       <br /><br />
-      Tag a topic in your post to reach that topic\'s followers.
-      <br /><br />
-      Try clicking this box, adding the "Limelight" topic, and giving us some quick feedback! Or you can just press finish.
+      Tag a topic in your post to and your post will be shown to that topic\'s followers.
     '
 
   renderTip: =>
@@ -119,6 +132,8 @@ class LL.Views.UserTutorialTips extends Backbone.View
             @tutorial14()
           when 5
             @tutorial15()
+          when 6
+            @tutorial16()
           else
             return
       else
@@ -150,7 +165,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
   nextTip: =>
     switch @page
       when 'user_feed'
-        if @step == 5
+        if @step == 6
           @step = 0
         else
           @step += 1

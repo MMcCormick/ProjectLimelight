@@ -523,7 +523,7 @@ class User
 
   def neo4j_update
     node = Neo4j.neo.get_node_index('users', 'uuid', id.to_s)
-    Neo4j.neo.set_node_properties(node, {'username' => username, 'slug' => slug}) if node
+    Neo4j.neo.set_node_properties(node, {'username' => username}) if node
   end
 
   def invite_stuff

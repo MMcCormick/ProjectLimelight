@@ -35,13 +35,13 @@
     </li>
     <li class="divider"></li>
     <li>
-      <a href="<%= "/users/#{@user.get('slug')}/topics" %>">Following <%= @user.get('following_topics_count') %> Topics</a>
+      <a href="<%= "/topics" %>">Following <%= @user.get('following_topics_count') %> Topics</a>
     </li>
     <li>
-      <a href="<%= "/users/#{@user.get('slug')}/users" %>">Following <%= @user.get('following_users_count') %> Users</a>
+      <a href="<%= "/users" %>">Following <%= @user.get('following_users_count') %> Users</a>
     </li>
     <li>
-      <a href="<%= "/users/#{@user.get('slug')}/followers" %>"><%= @user.get('followers_count') %> Followers</a>
+      <a href="<%= "/followers" %>"><%= @user.get('followers_count') %> Followers</a>
     </li>
     <li class="divider"></li>
     <li>

@@ -5,6 +5,7 @@ class LL.Views.UserList extends Backbone.View
 
   initialize: ->
     @pageTitle = ''
+    @half = false
     @collection.on('reset', @render)
     @collection.on('add', @appendUser)
 
@@ -13,10 +14,14 @@ class LL.Views.UserList extends Backbone.View
 
   render: =>
     $(@el).html(@template())
-    $('#feed').html(@el)
+
+    if @half
+      $(@el).addClass('half')
+
+    $('#feed').append(@el)
 
     if @pageTitle != ''
-      $(@el).before("<h2>#{@pageTitle}</h2>")
+      $(@el).find('.section').prepend("<div class='top'><h4>#{@pageTitle}</h4></div>")
 
     if @collection.models.length == 0
       $(@el).find('.section').append("<div class='none'>Hmm, there's nothing to show here</div>")

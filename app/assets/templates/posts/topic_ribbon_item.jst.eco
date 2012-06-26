@@ -1,10 +1,7 @@
-<a href="<%= if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') then "/activity#{@item.get('topic').get('url')}" else "#{@item.get('url')}#{@item.get('topic').get('url')}" %>">
-  <div class='name'><%= @item.get('topic').get('name') %></div>
-  <div class='count'><%= @item.get('count') %> Posts</div>
-
-  <% if @on: %>
-    <img src='<%= @item.get('topic').get('images').square.large %>' />
-  <% else: %>
-    <img src='<%= @item.get('topic').get('images').square.normal %>' />
-  <% end %>
+<a href="<%= if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') then "/activity#{@item.get('topic').get('url')}" else "#{@model.get('url')}#{@item.get('topic').get('url')}" %>">
+  <img src='<%= @image %>' />
+  <div class='text'>
+    <div class='subtitle'><%= @item.get('count') %> Post<%= if @item.get('count') != 1 then 's' else '' %></div>
+    <div class='name'><%= @item.get('topic').get('name') %></div>
+  </div>
 </a>

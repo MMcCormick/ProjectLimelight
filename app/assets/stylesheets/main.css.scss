@@ -539,12 +539,13 @@ header {
     }    
   }
   .menu {
-    margin: 0px;
+    margin: 10px 0 0 0;
     a {
       display: block;
-      padding: 7px 10px;
+      padding: 10px 30px 4px 0;
       border-top: 1px solid #EEEEEE;
       font-size: 16px;
+      width: 100px;
       position: relative;
 
       i {
@@ -552,7 +553,7 @@ header {
         position: absolute;
         top: 50%;
         right: 10px;
-        margin-top: -7px;
+        margin-top: -44px;
       }
       &.first {
         border-top: none;
@@ -565,7 +566,6 @@ header {
       }
       &.on {
         color: $linkColorHover;
-        background: #FFF;
         cursor: default;
       }
     }
@@ -651,13 +651,13 @@ header {
 }
 
 .content-tile {
-  background-color: $IETransparentBlue;
-  background-color: rgba(255,255,255,0.4);
-  padding: 3px 0 10px 0;
   text-align: left;
   display: inline-block;
 
   &.modal {
+    background-color: $IETransparentBlue;
+    background-color: rgba(255,255,255,0.4);
+    padding: 3px 0 10px 0;
     width: auto;
     max-height: none;
     margin: 20px auto 0 auto;
@@ -675,17 +675,23 @@ header {
     @include clearfix();
   }
   .section {
-    @include single-box-shadow(rgba(34, 25, 25, 0.4), 0px, 1px, 2px);
+    @include single-box-shadow(rgba(34, 25, 25, 0.2), 0px, 1px, 2px);
     background: #FFF;
     margin: 7px 10px 0 10px;
     width: 680px;
     clear: both;
+    border: 1px solid #DDD;
 
+    .none {
+      padding: 5px;
+    }
     .top {
-      background: #F9F9F9;
-      border-bottom: 1px solid #EEE;
+      background: #F0F0F0;
+      border-bottom: 1px solid #DDD;
       padding: 8px 15px;
       h4 {
+        @include single-text-shadow(#CCC, 0, 1px);
+        font-weight: normal;
         cursor: default;
       }
     }
@@ -721,6 +727,12 @@ header {
         background-color: transparent;
         border: none;
       }
+    }
+  }
+  &.half {
+    float: left;
+    .section {
+      width: 315px;
     }
   }
 }

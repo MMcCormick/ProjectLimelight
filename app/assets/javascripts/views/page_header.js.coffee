@@ -23,7 +23,7 @@ class LL.Views.PageHeader extends Backbone.View
       $(@el).find('.sorting').show()
 
     for link in @links
-      link_html = $('<li/>').html("<a class='#{if link.on then 'on' else ''}' href='#{link.url}'><div class='icon ll-ph-#{link.class} #{if link.on then 'on' else ''}'></div>#{link.content}</a>")
+      link_html = $('<li/>').addClass(link.class).html("<a class='#{if link.on then 'on' else ''}' href='#{link.url}'><div class='icon ll-ph-#{link.class} #{if link.on then 'on' else ''}'></div>#{link.content}</a>")
       if link.on
         link_html.find('a').append('<div class="ll-ph-carrot"></div>')
       $(@el).find('.links').append(link_html)

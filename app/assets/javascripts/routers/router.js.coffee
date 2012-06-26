@@ -1,8 +1,7 @@
 class LL.Router extends Backbone.Router
   routes:
-    'users/:id/following/topics': 'userFollowingTopics'
-    'users/:id/following/users': 'userFollowingUsers'
-    'users/:id/followers': 'userFollowers'
+    'users/:id/topics': 'userTopics'
+    'users/:id/users': 'userUsers'
     'users/:id/likes': 'likeFeed'
     'users/:id/likes/:id': 'likeFeed'
     'users/:id/influence': 'userInfluence'
@@ -22,8 +21,9 @@ class LL.Router extends Backbone.Router
     'activity': 'activityFeed'
     'likes/:topic_id': 'myTopicLikes'
     'likes': 'likeFeed'
-    'influence': 'userInfluence'
-    ':id/followers': 'topicFollowers'
+    'topics': 'userTopics'
+    'users': 'userUsers'
+    ':id/users': 'topicUsers'
     ':id': 'topicFeed'
     '': 'userFeed'
 
@@ -217,13 +217,13 @@ class LL.Router extends Backbone.Router
 
     view = new LL.Views.UserSettings()
 
-  userFollowers: (id) ->
+  userUsers: (id) ->
     user = new LL.Models.User(current_object)
 
-    if LL.App.findScreen('user_followers', user.get('id'))
-      LL.App.showScreen('user_followers', user.get('id'))
+    if LL.App.findScreen('user_users', user.get('id'))
+      LL.App.showScreen('user_users', user.get('id'))
     else
-      screen = LL.App.newScreen('user_followers', user.get('id'))
+      screen = LL.App.newScreen('user_users', user.get('id'))
 
       page_header = new LL.Views.UserPageHeader(model: user)
       page_header.page = 'users'
@@ -234,44 +234,29 @@ class LL.Router extends Backbone.Router
         sidebar = LL.App.createSidebar('user', user.get('id'), user)
       screen['sidebar'] = sidebar
 
-      collection = new LL.Collections.UserFollowers()
-      feed = new LL.Views.UserList(collection: collection, model: user)
-      screen['components'].push(feed)
+      collection1 = new LL.Collections.UserFollowingUsers()
+      feed1 = new LL.Views.UserList(collection: collection1, model: user)
+      feed1.pageTitle = "#{user.get('username')} is Following #{user.get('following_users_count')} Users"
+      feed1.half = true
+      screen['components'].push(feed1)
 
-      LL.App.renderScreen('user_followers', user.get('id'))
+      collection2 = new LL.Collections.UserFollowers()
+      feed2 = new LL.Views.UserList(collection: collection2, model: user)
+      feed2.pageTitle = "#{user.get('username')} has #{user.get('followers_count')} Followers"
+      feed2.half = true
+      screen['components'].push(feed2)
 
-      collection.id = user.get('id')
-      collection.page = 1
-      collection.fetch({data: {id: user.get('id')}})
+      LL.App.renderScreen('user_users', user.get('id'))
 
-  userFollowingUsers: (id) ->
-    user = new LL.Models.User(current_object)
+      collection1.id = user.get('id')
+      collection1.page = 1
+      collection1.fetch({data: {id: user.get('id')}})
 
-    if LL.App.findScreen('user_following_users', user.get('id'))
-      LL.App.showScreen('user_following_users', user.get('id'))
-    else
-      screen = LL.App.newScreen('user_following_users', user.get('id'))
+      collection2.id = user.get('id')
+      collection2.page = 1
+      collection2.fetch({data: {id: user.get('id')}})
 
-      page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'users'
-      screen['components'].push(page_header)
-
-      sidebar = LL.App.findSidebar('user', user.get('id'))
-      unless sidebar
-        sidebar = LL.App.createSidebar('user', user.get('id'), user)
-      screen['sidebar'] = sidebar
-
-      collection = new LL.Collections.UserFollowingUsers()
-      feed = new LL.Views.UserList(collection: collection, model: user)
-      screen['components'].push(feed)
-
-      LL.App.renderScreen('user_following_users', user.get('id'))
-
-      collection.id = user.get('id')
-      collection.page = 1
-      collection.fetch({data: {id: user.get('id')}})
-
-  userFollowingTopics: (id) ->
+  userTopics: (id) ->
     user = new LL.Models.User(current_object)
 
     if LL.App.findScreen('user_following_topics', user.get('id'))
@@ -290,6 +275,7 @@ class LL.Router extends Backbone.Router
 
       collection = new LL.Collections.UserFollowingTopics()
       feed = new LL.Views.TopicList(collection: collection, model: user)
+      feed.pageTitle = "#{user.get('username')} is Following #{user.get('following_topics_count')} Topics"
       screen['components'].push(feed)
 
       LL.App.renderScreen('user_following_topics', user.get('id'))
@@ -344,7 +330,7 @@ class LL.Router extends Backbone.Router
       collection.sort_value = 'newest'
       collection.fetch({data: {id: topic.get('id'), sort: 'newest'}})
 
-  topicFollowers: (id) ->
+  topicUsers: (id) ->
     topic = new LL.Models.Topic(current_object)
 
     if LL.App.findScreen('topic_followers', topic.get('id'))
@@ -363,6 +349,7 @@ class LL.Router extends Backbone.Router
 
       collection = new LL.Collections.TopicFollowers()
       feed = new LL.Views.UserList(collection: collection, model: topic)
+      feed.pageTitle = "#{topic.get('name')} has #{topic.get('followers_count')} Followers"
       screen['components'].push(feed)
 
       LL.App.renderScreen('topic_followers', topic.get('id'))

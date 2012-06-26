@@ -6,6 +6,7 @@ class LL.Views.FeedTopicRibbonItem extends Backbone.View
     self = @
 
   render: =>
-    $(@el).addClass("ribbon-#{@item.get('topic').get('url_pretty')}").html(@template(on: false, type: @type, model: @model, item: @item))
+    image = @item.get('topic').get('images').square.normal
+    $(@el).addClass("ribbon-#{@item.get('topic').get('url_pretty')}").html(@template(type: @type, model: @model, item: @item, image: image))
 
     @

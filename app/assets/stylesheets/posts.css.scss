@@ -291,12 +291,14 @@ $postFontColor: $grayDark;
       padding: 15px;
       .title {
         font-size: 18px;
+        line-height: 22px;
         a:hover {
           color: $blue;
         }
       }
       .source {
-        margin-top: 12px;
+        margin-top: 10px;
+        display: block;
         font-size: 13px;
         color: $grayLight;
         font-weight: normal;

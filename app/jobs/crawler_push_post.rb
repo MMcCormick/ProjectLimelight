@@ -50,7 +50,7 @@ class CrawlerPushPost
 
         if tmp_entities
           tmp_entities.each do |e|
-            if e['relevance'].to_f >= 0.60
+            if e['relevance'].to_f >= 0.80
 
               entities << e
               if e['disambiguated'] && e['disambiguated']['freebase']
@@ -179,21 +179,24 @@ class CrawlerPushPost
         end
       end
 
-      post = Kernel.const_get(response[:type]).new(response)
-      post.user_id = BSON::ObjectId(User.limelight_user_id)
+      user = User.find(User.limelight_user_id)
+      post = user.posts.new(response)
       post.category = crawler_source.category if crawler_source.category && !crawler_source.category.blank?
+      post.initialize_media(response)
       used_ids = []
       puts "starting topic loop"
       topics.each do |t|
         puts "topic #{t.name}"
-        break if used_ids.length > 4
+        break if used_ids.length >= 2
         next if used_ids.include?(t.id.to_s)
         puts "used"
         used_ids << t.id.to_s
         post.topic_mentions << t unless post.topic_mention_ids.include?(t.id)
       end
 
-      if post.save
+      if post.valid? && post.post_media.valid?
+        post.save
+        post.post_media.save
         puts "post saved"
         crawler_source.posts_added += 1
         crawler_source.save

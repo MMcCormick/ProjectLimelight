@@ -1,7 +1,7 @@
+<div class='bb'></div>
 <div class='top'>
   <h5><%- @title %></h5>
 </div>
-<div class='bb'></div>
 <div class='meat'>
   <ul class='unstyled'><li class='none'>None</li></ul>
   <div class='load-more'>Show More</div>

@@ -15,10 +15,11 @@ class LL.Views.UserSidebar extends Backbone.View
     # Invite Code
     if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') && LL.App.current_user.get('invite_code')
       invite = new LL.Views.UserSidebarInvite(model: LL.App.current_user)
-      $(@el).append(invite.render().el)
+      $(@el).append(invite.render().el).append("<div class='bb'></div>")
 
     # Other Following
     $(@el).append("<h5><a href='#{if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') then '/users' else @model.get('url')+'/users'}'>#{@model.get('followers_count')} Followers</a></h5>")
+    $(@el).append("<div class='bb'></div>")
     $(@el).append("<h5><a href='#{if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id') then '/users' else @model.get('url')+'/users'}'>Following #{@model.get('following_users_count')} Users</a></h5>")
 
     # Following Topics

@@ -1,8 +1,8 @@
+<div class='bb'></div>
+
 <div class='top'>
   <h5>Summary</h5>
 </div>
-
-<div class='bb'></div>
 
 <div class='meat'>
   <p><%= if @topic.get('summary') then @topic.get('summary') else 'No summary...' %></p>

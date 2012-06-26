@@ -17,7 +17,7 @@ class LL.Views.TopicSidebar extends Backbone.View
 #    $(@el).append(talk.render().el)
 
     follow = new LL.Views.FollowButton(model: @model)
-    $(@el).find('.actions').prepend(follow.render().el)
+    $(@el).append(follow.render().el)
 
     if LL.App.current_user && LL.App.current_user.hasRole('admin')
       admin = new LL.Views.TopicSidebarAdmin(model: @model)

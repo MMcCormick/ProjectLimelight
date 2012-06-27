@@ -22,7 +22,7 @@
 
   <% if @post.get('media').get('images'): %>
     <div class='img'>
-      <img src='<%= @post.get('media').get('images').fit.large %>' alt='' />
+      <img width='290' height='<%= if @post.get('media').get('images').ratio then 290 / @post.get('media').get('images').ratio else '' %>' src='<%= @post.get('media').get('images').fit.large %>' alt='' />
 
       <% if @post.get('media').get('video'): %>
         <div class='ll-video-play'></div>

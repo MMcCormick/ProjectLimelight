@@ -7,6 +7,11 @@ class TestingController < ApplicationController
 
     Resque.enqueue(TestJob)
 
+
+    #
+    #user = User.find(User.marc_id)
+    #user.save_remote_image('http://dogcareland.com/wp-content/uploads/2012/04/littleDogsRock.jpg')
+
     #FeedLikeItem.all.each do |p|
     #  if p.root_type != 'Post' && p.root_type != 'Talk'
     #    post = Post.find(p.root_id)

@@ -713,6 +713,7 @@ class User
 
     def json_images(model)
       {
+        :ratio => model.image_ratio,
         :original => model.image_url(nil, nil, nil, true),
         :fit => {
           :large => model.image_url(:fit, :large),
@@ -764,7 +765,7 @@ class User
           connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
 
           user.social_connects << connect
-          user.use_fb_image = true if omniauth['provider'] == 'facebook' && user.image_versions == 0
+          user.use_fb_image = true if omniauth['provider'] == 'facebook' && user.images.length == 0
           user.update_social_denorms
         end
         # Update the token
@@ -802,7 +803,7 @@ class User
         connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
         user.social_connects << connect
         user.origin = omniauth['provider']
-        user.use_fb_image = true if user.image_versions == 0
+        user.use_fb_image = true if user.images.length == 0
         user.update_social_denorms
       end
 

@@ -269,7 +269,7 @@ class Topic
     end
 
     # update the image
-    if image_versions == 0 || overwrite_image
+    if images.length == 0 || overwrite_image
       self.active_image_version = 0
       self.use_freebase_image = true
     end
@@ -650,6 +650,7 @@ class Topic
 
     def json_images(model)
       {
+        :ratio => model.image_ratio,
         :original => model.image_url(nil, nil, nil, true),
         :fit => {
           :large => model.image_url(:fit, :large),

@@ -87,12 +87,13 @@ module Limelight #:nodoc:
       field :active_image_version, :default => 0
       field :processing_image, :default => false
       field :remote_image_url
+      field :images, :default => []
 
       attr_accessible :remote_image_url
     end
 
     def size_dimensions
-      {:small => 50, :normal => 100, :large => 300}
+      {:small => 75, :normal => 150, :large => 500}
     end
 
     def available_sizes
@@ -101,6 +102,18 @@ module Limelight #:nodoc:
 
     def available_modes
       [:square, :fit]
+    end
+
+    def image_ratio(version=nil)
+      return nil if self.class.name == 'User' && use_fb_image
+      return nil if self.class.name == 'Topic' && use_freebase_image
+      return nil if images.length == 0 || (version && images.length <= version)
+
+      if version
+        images[version]['w'].to_f / images[version]['h'].to_f
+      else
+        images[0]['w'].to_f / images[0]['h'].to_f
+      end
     end
 
     def filepath
@@ -155,36 +168,41 @@ module Limelight #:nodoc:
     end
 
     # Saves a new set of images from the remote_image_url currently specified on the model
-    def save_remote_image(force=false)
-      unless remote_image_url.blank?
-        target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
+    def save_remote_image(url, force=false)
+      target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
 
-        begin
-          AWS::S3::S3Object.store(
-            target,
-            open(remote_image_url).read,
-            S3['image_bucket']
-          )
-        rescue => e
-          return
-        end
-
-        AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
-
-        self.image_versions += 1
-        self.active_image_version = image_versions
-        self.processing_image = true
-
-        if force
-          process_version(active_image_version)
-          self.processing_image = false
-        end
+      begin
+        AWS::S3::S3Object.store(
+          target,
+          open(url).read,
+          S3['image_bucket']
+        )
+      rescue => e
+        return
       end
+
+      AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
+
+      i = Magick::Image::read("#{S3['image_prefix']}/#{current_filepath}/original.png").first
+
+      self.images << {
+              :remote_url => url,
+              :w => i.columns,
+              :h => i.rows
+      }
+      self.active_image_version = self.images.length
+      self.processing_image = true
+
+      if force
+        process_version(active_image_version)
+        self.processing_image = false
+      end
+      save
     end
 
     def process_images
       if processing_image || (!remote_image_url.blank? && active_image_version == 0)
-        Resque.enqueue(ProcessImages, id.to_s, self.class.name)
+        Resque.enqueue(ProcessImages, id.to_s, self.class.name, 0, remote_image_url)
       end
     end
 

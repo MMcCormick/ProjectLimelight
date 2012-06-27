@@ -170,8 +170,9 @@ class PostMedia
   end
 
   def json_images
-    if image_versions > 0 || !remote_image_url.blank?
+    if images.length > 0 || !remote_image_url.blank?
       {
+        :ratio => image_ratio,
         :original => image_url(nil, nil, nil, true),
         :fit => {
             :large => image_url(:fit, :large),

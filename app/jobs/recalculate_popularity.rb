@@ -9,10 +9,10 @@ class RecalculatePopularity
       var hours = (#{Time.now.utc.to_i} - this.et) / 3600;
       if (hours < 1) { hours = 1 }
       this.pop_snippets.forEach(function(snippet) {
-        if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Talk' && snippet.rt == 'Topic')) {
+        if(snippet.ot == 'User' || snippet.ot == 'Topic' || (snippet.ot == 'Post' && snippet.rt == 'Topic')) {
           emit(snippet._id, {amount: snippet.a / Math.pow(hours, 0.15), type: snippet.ot});
         }
-        if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Talk')
+        if(snippet.ot == 'Video' || snippet.ot == 'Picture' || snippet.ot == 'Link' || snippet.ot == 'Post')
         {
           emit(snippet.rid, {amount: snippet.a / Math.pow(hours, 0.15), type: snippet.rt});
         }
@@ -37,7 +37,7 @@ class RecalculatePopularity
               :link => normalized_average/averages.data['Link'],
               :picture => normalized_average/averages.data['Picture'],
               :video => normalized_average/averages.data['Video'],
-              :talk => normalized_average/averages.data['Talk']
+              :post => normalized_average/averages.data['Post']
       }
     else
       normalized = {
@@ -45,7 +45,7 @@ class RecalculatePopularity
               :link => 1,
               :picture => 1,
               :video => 1,
-              :talk => 1
+              :post => 1
       }
     end
 
@@ -61,8 +61,8 @@ class RecalculatePopularity
           normalized_value = normalized[:picture] * normalized_value
         when 'Video'
           normalized_value = normalized[:video] * normalized_value
-        when 'Talk'
-          normalized_value = normalized[:talk] * normalized_value
+        when 'Post'
+          normalized_value = normalized[:post] * normalized_value
       end
 
       FeedTopicItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)

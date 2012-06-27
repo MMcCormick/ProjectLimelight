@@ -14,6 +14,7 @@ class PostMedia
   field :posted_ids, :default => [] # ids of users that have posted this
   field :posts_count, :default => 0 # how many reposts
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
+  field :comment_count, :default => 0 # deprecated
   field :neo4j_id
   field :status, :default => 'active'
 
@@ -99,7 +100,7 @@ class PostMedia
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post_media', 'subtype' => self.class.name, 'created_at' => created_at.to_i, 'score' => score)
+    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post_media', 'subtype' => self.class.name, 'created_at' => created_at.to_i, 'score' => score.to_i)
     Neo4j.neo.add_node_to_index('post_media', 'uuid', id.to_s, node)
 
     Resque.enqueue(Neo4jPostMediaCreate, id.to_s)

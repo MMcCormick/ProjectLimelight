@@ -508,7 +508,7 @@ class Topic
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'created_at' => created_at.to_i, 'score' => score)
+    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'created_at' => created_at.to_i, 'score' => score.to_i)
     Neo4j.neo.add_node_to_index('topics', 'uuid', id.to_s, node)
     self.neo4j_id = node['self'].split('/').last
     save
@@ -517,7 +517,7 @@ class Topic
 
   def neo4j_update
     node = Neo4j.neo.get_node_index('topics', 'uuid', id.to_s)
-    Neo4j.neo.set_node_properties(node, {'name' => name})
+    Neo4j.neo.set_node_properties(node, {'name' => name, 'score' => score.to_i})
   end
 
   def neo4j_node

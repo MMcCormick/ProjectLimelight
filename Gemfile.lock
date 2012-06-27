@@ -7,6 +7,16 @@ GIT
       extlib
       json
 
+GIT
+  remote: git://github.com/mongoid/mongoid.git
+  revision: 4b5762dd21ad2886e03168bebeb0f4b4c96726e8
+  specs:
+    mongoid (3.0.0.rc)
+      activemodel (~> 3.1)
+      moped (~> 1.0.0)
+      origin (~> 1.0.1)
+      tzinfo (~> 0.3.22)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -149,7 +159,7 @@ GEM
       rest-client (~> 1.6.1)
       rubyzip
     highline (1.6.13)
-    hike (1.2.0)
+    hike (1.2.1)
     hpricot (0.8.6)
     httparty (0.8.3)
       multi_json (~> 1.0)
@@ -179,11 +189,6 @@ GEM
       escape
       json
       rack
-    mongoid (3.0.0.rc)
-      activemodel (~> 3.1)
-      moped (~> 1.0.0.rc)
-      origin (~> 1.0.0.rc)
-      tzinfo (~> 0.3.22)
     mongoid-cached-json (1.2.1)
       activesupport
       bson_ext
@@ -240,7 +245,7 @@ GEM
     pusher (0.9.4)
       multi_json (~> 1.0)
       signature (~> 0.1.2)
-    rack (1.4.1)
+    rack (1.4.0)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-contrib (1.1.0)
@@ -385,7 +390,7 @@ DEPENDENCIES
   ken!
   koala (= 1.5)
   mixpanel
-  mongoid (= 3.0.0.rc)
+  mongoid!
   mongoid-cached-json
   neography (= 0.0.27)
   newrelic_moped

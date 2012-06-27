@@ -16,7 +16,7 @@ class RootPost
         when 'm' # you are mentioned
           pretty_reasons << "You were mentioned in this post"
         when 'mt' # you are mentioned by somebody talking about this post
-          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> mentioned you in a talk about this #{media.class.name}"
+          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> mentioned you in a talk about this #{@media.class.name}"
         when 'fu' # followed user posted this post
           pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> posted this"
         when 'fut' # followed user posted a talk about this post

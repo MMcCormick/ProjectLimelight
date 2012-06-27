@@ -358,7 +358,7 @@ class Neo4j
       pull_from = []
       if ids
         ids['data'].each do |id|
-          pull_from << BSON::ObjectId(id[0])
+          pull_from << Moped::BSON::ObjectId(id[0])
         end
       end
       pull_from
@@ -375,7 +375,7 @@ class Neo4j
       pull_from = []
       if ids
         ids['data'].each do |id|
-          pull_from << [BSON::ObjectId(id[0]),BSON::ObjectId(id[1])]
+          pull_from << [Moped::BSON::ObjectId(id[0]),Moped::BSON::ObjectId(id[1])]
         end
       end
       pull_from

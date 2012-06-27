@@ -1,7 +1,7 @@
 class FeedUserItem
   include Mongoid::Document
 
-  field :feed_id, :type => BSON::ObjectId
+  field :feed_id
   field :root_id
   field :root_type
   field :ds, :default => 0
@@ -68,7 +68,6 @@ class FeedUserItem
         user_feed_users << post.user # add this post to this users own feed
       end
 
-
       # push to these users
       user_feed_users.each do |u|
         item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
@@ -111,7 +110,9 @@ class FeedUserItem
         # add created reason
         item.add_reason('c', post.user) if u.id == post.user_id
 
-        item.save if item.reasons.length > 0
+        next if item.reasons.length == 0
+
+        item.save
 
         root_post.push_item = item
 

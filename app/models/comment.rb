@@ -13,6 +13,7 @@ class Comment
   field :parent_id
   field :depth, :default => 0
   field :path, :default => ""
+  field :talk_id
 
   belongs_to :post, index: true
   belongs_to :user, index: true

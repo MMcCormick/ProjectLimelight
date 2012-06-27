@@ -1,7 +1,7 @@
 class FeedContributeItem
   include Mongoid::Document
 
-  field :user_id, :type => BSON::ObjectId
+  field :user_id
   field :root_id
   field :root_type
   field :strength, :default => 0

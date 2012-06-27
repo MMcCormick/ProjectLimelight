@@ -21,6 +21,7 @@ class Post
   field :category
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
   field :neo4j_id
+  field :response_count # deprecated
   field :comment_count, :default => 0
 
   field :status, :default => 'active'
@@ -69,6 +70,7 @@ class Post
   end
 
   def add_initial_pop
+    return unless status == 'active'
     add_pop_action(:new, :a, user)
   end
 
@@ -163,6 +165,14 @@ class Post
       media.user = user
     end
 
+    # hijack this post if it was originally submitted by limelight
+    if media.user_id.to_s == User.limelight_user_id && post.user_id.to_s != User.limelight_user_id
+      media.user_id = post.user_id
+      media.posted_ids = []
+      media.posts_count = 0
+      media.save
+    end
+
     self.post_media = media if media
   end
 
@@ -178,7 +188,9 @@ class Post
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post', 'created_at' => created_at.to_i, 'score' => score)
+    return unless status == 'active'
+
+    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post', 'created_at' => created_at.to_i, 'score' => score.to_i)
     Neo4j.neo.add_node_to_index('posts', 'uuid', id.to_s, node)
 
     Resque.enqueue(Neo4jPostCreate, id.to_s)
@@ -187,6 +199,7 @@ class Post
   end
 
   def action_log_create
+    return unless status == 'active'
     ActionPost.create(:action => 'create', :from_id => user_id, :to_id => id, :to_type => self.class.name)
   end
 
@@ -195,6 +208,7 @@ class Post
   end
 
   def feed_post_create
+    return unless status == 'active'
     Resque.enqueue(PushPostToFeeds, id.to_s)
   end
 
@@ -242,6 +256,7 @@ class Post
 
   # updates the user topic activity hash (keeps track of the # of times a user has talked about various topics)
   def update_user_topic_activity
+    return unless status == 'active'
     user.posts_count += 1
     unless topic_mention_ids.empty?
       topic_mention_ids.each do |t|

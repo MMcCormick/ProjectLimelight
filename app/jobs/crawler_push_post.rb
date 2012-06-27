@@ -35,59 +35,59 @@ class CrawlerPushPost
       topics = []
 
       # extract topics from the link with alchemy api
-      if Rails.env.production?
-        postData = Net::HTTP.post_form(
-                URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
-                {
-                        :url => url,
-                        :apikey => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
-                        :outputMode => 'json',
-                        #:sourceText => 'cleaned',
-                        :maxRetrieve => 5
-                }
-        )
-        tmp_entities = JSON.parse(postData.body)['entities']
-
-        if tmp_entities
-          tmp_entities.each do |e|
-            if e['relevance'].to_f >= 0.80
-
-              entities << e
-              if e['disambiguated'] && e['disambiguated']['freebase']
-                topic = Topic.where(:freebase_guid => e['disambiguated']['freebase'].split('.').last).first
-                unless topic # didn't find the topic with the freebase guid, check names
-                  topic = Topic.where("aliases.slug" => e['disambiguated']['name'].parameterize, :primary_type_id => {'$exists' => true}).desc(:response_count).first
-                  topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if topic
-                end
-              else
-                name = e['disambiguated'] ? e['disambiguated']['name'].parameterize : e['text'].parameterize
-                topic = Topic.where("aliases.slug" => name, :primary_type_id => {'$exists' => true}).desc(:response_count).first
-              end
-
-              unless topic # create the topic if it's not already in the DB, and freebase has a decent match for it
-                topic = Topic.new
-                topic.name = e['disambiguated'] ? e['disambiguated']['name'] : e['text']
-
-                # check freebase if there is no freebase id returned from alchemy api
-                unless e['disambiguated'] && e['disambiguated']['freebase']
-                  search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(topic.name)}")
-                  next unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 100)
-                end
-
-                topic.user_id = User.marc_id
-                if e['disambiguated']
-                  topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if e['disambiguated']['freebase']
-                  topic.dbpedia = e['disambiguated']['dbpedia'] if e['disambiguated']['dbpedia']
-                  topic.opencyc = e['disambiguated']['opencyc'] if e['disambiguated']['opencyc']
-                end
-              end
-
-              topic.save
-              topics << topic if topic && topic.valid?
-            end
-          end
-        end
-      end
+      #if Rails.env.production?
+      #  postData = Net::HTTP.post_form(
+      #          URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
+      #          {
+      #                  :url => url,
+      #                  :apikey => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
+      #                  :outputMode => 'json',
+      #                  #:sourceText => 'cleaned',
+      #                  :maxRetrieve => 5
+      #          }
+      #  )
+      #  tmp_entities = JSON.parse(postData.body)['entities']
+      #
+      #  if tmp_entities
+      #    tmp_entities.each do |e|
+      #      if e['relevance'].to_f >= 0.80
+      #
+      #        entities << e
+      #        if e['disambiguated'] && e['disambiguated']['freebase']
+      #          topic = Topic.where(:freebase_guid => e['disambiguated']['freebase'].split('.').last).first
+      #          unless topic # didn't find the topic with the freebase guid, check names
+      #            topic = Topic.where("aliases.slug" => e['disambiguated']['name'].parameterize, :primary_type_id => {'$exists' => true}).desc(:response_count).first
+      #            topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if topic
+      #          end
+      #        else
+      #          name = e['disambiguated'] ? e['disambiguated']['name'].parameterize : e['text'].parameterize
+      #          topic = Topic.where("aliases.slug" => name, :primary_type_id => {'$exists' => true}).desc(:response_count).first
+      #        end
+      #
+      #        unless topic # create the topic if it's not already in the DB, and freebase has a decent match for it
+      #          topic = Topic.new
+      #          topic.name = e['disambiguated'] ? e['disambiguated']['name'] : e['text']
+      #
+      #          # check freebase if there is no freebase id returned from alchemy api
+      #          unless e['disambiguated'] && e['disambiguated']['freebase']
+      #            search = HTTParty.get("https://www.googleapis.com/freebase/v1/search?lang=en&limit=3&query=#{URI::encode(topic.name)}")
+      #            next unless search && search['result'] && search['result'].first && ((search['result'].first['notable'] && search['result'].first['score'] >= 50) || search['result'].first['score'] >= 100)
+      #          end
+      #
+      #          topic.user_id = User.marc_id
+      #          if e['disambiguated']
+      #            topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if e['disambiguated']['freebase']
+      #            topic.dbpedia = e['disambiguated']['dbpedia'] if e['disambiguated']['dbpedia']
+      #            topic.opencyc = e['disambiguated']['opencyc'] if e['disambiguated']['opencyc']
+      #          end
+      #        end
+      #
+      #        topic.save
+      #        topics << topic if topic && topic.valid?
+      #      end
+      #    end
+      #  end
+      #end
 
       # grab info with embedly
       begin
@@ -99,32 +99,32 @@ class CrawlerPushPost
       end
 
       # get topics in the news title
-      combinations = CrawlerPushPost.combinalities(link_data['title'])
-
-      extra_topics = Topic.where("aliases.slug" => {"$in" => combinations.map{|c| c.parameterize}}).desc(:response_count)
-      extra_topics.each do |t|
-        unless t.freebase_id
-          Resque.enqueue(TopicFetchExternalData, t.id.to_s)
-          next
-        end
-
-        # skip this topic if we already have a topic with this topics id, this topics name, or a topic whos aliases include this topics name
-        next if topics.detect{|t2| t2.id == t.id || t2.name.parameterize == t.name.parameterize || t2.aliases.detect {|a| a.slug == t.name.parameterize}}
-        topics << t
-      end
-
-      if topics.length == 0
-        puts "no topics found"
-        return
-      end
-
-      # delete less specific topics ("Facebook IPO" should take precedence over "Facebook")
-      delete_at_ids = []
-      topics.each do |t|
-        found = topics.detect{|t2| t2.id != t.id && t.name.parameterize.include?(t2.name.parameterize)}
-        delete_at_ids << found.id if found
-      end
-      topics.delete_if {|t| delete_at_ids.include?(t.id)} if delete_at_ids.length > 0
+      #combinations = CrawlerPushPost.combinalities(link_data['title'])
+      #
+      #extra_topics = Topic.where("aliases.slug" => {"$in" => combinations.map{|c| c.parameterize}}).desc(:response_count)
+      #extra_topics.each do |t|
+      #  unless t.freebase_id
+      #    Resque.enqueue(TopicFetchExternalData, t.id.to_s)
+      #    next
+      #  end
+      #
+      #  # skip this topic if we already have a topic with this topics id, this topics name, or a topic whos aliases include this topics name
+      #  next if topics.detect{|t2| t2.id == t.id || t2.name.parameterize == t.name.parameterize || t2.aliases.detect {|a| a.slug == t.name.parameterize}}
+      #  topics << t
+      #end
+      #
+      #if topics.length == 0
+      #  puts "no topics found"
+      #  return
+      #end
+      #
+      ## delete less specific topics ("Facebook IPO" should take precedence over "Facebook")
+      #delete_at_ids = []
+      #topics.each do |t|
+      #  found = topics.detect{|t2| t2.id != t.id && t.name.parameterize.include?(t2.name.parameterize)}
+      #  delete_at_ids << found.id if found
+      #end
+      #topics.delete_if {|t| delete_at_ids.include?(t.id)} if delete_at_ids.length > 0
 
       # Build the initial post data structure
       response = {
@@ -181,29 +181,25 @@ class CrawlerPushPost
 
       user = User.find(User.limelight_user_id)
       post = user.posts.new(response)
+      post.status = 'pending'
       post.category = crawler_source.category if crawler_source.category && !crawler_source.category.blank?
       post.initialize_media(response)
-      used_ids = []
-      puts "starting topic loop"
-      topics.each do |t|
-        puts "topic #{t.name}"
-        break if used_ids.length >= 2
-        next if used_ids.include?(t.id.to_s)
-        puts "used"
-        used_ids << t.id.to_s
-        post.topic_mentions << t unless post.topic_mention_ids.include?(t.id)
-      end
+      #used_ids = []
+      #puts "starting topic loop"
+      #topics.each do |t|
+      #  puts "topic #{t.name}"
+      #  break if used_ids.length >= 2
+      #  next if used_ids.include?(t.id.to_s)
+      #  puts "used"
+      #  used_ids << t.id.to_s
+      #  post.topic_mentions << t unless post.topic_mention_ids.include?(t.id)
+      #end
 
-      if post.valid? && post.post_media.valid?
-        post.save
-        post.post_media.save
-        puts "post saved"
-        crawler_source.posts_added += 1
-        crawler_source.save
-      else
-        puts "errors"
-        puts post.errors.to_a
-      end
+      post.save :validate => false
+      post.post_media.save
+      puts "post saved"
+      crawler_source.posts_added += 1
+      crawler_source.save
     end
   end
 end

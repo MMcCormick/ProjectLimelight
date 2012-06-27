@@ -253,7 +253,7 @@ module Limelight #:nodoc:
       attr_accessible :topic_mention_ids, :user_mention_ids, :topic_mention_names, :first_response
 
       before_validation :set_mentions
-      validates :topic_mention_ids, :length => { :minimum => 1, :maximum => 2, :message => 'You must add 1-2 topics to your post.' }
+      validates :topic_mention_ids, :on => :create, :length => { :minimum => 1, :maximum => 2, :message => 'You must add 1-2 topics to your post.' }
     end
 
     def mentions_topic?(id)
@@ -265,8 +265,10 @@ module Limelight #:nodoc:
     #
 
     def set_mentions
-      set_user_mentions
-      set_topic_mentions
+      unless persisted?
+        set_user_mentions
+        set_topic_mentions
+      end
     end
 
     # Checks @content_raw for user mentions

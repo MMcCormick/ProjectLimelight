@@ -4,9 +4,48 @@ class TestJob
 
   def self.perform()
 
-    FeedTopicItem.delete_all
-    FeedContributeItem.delete_all
-    FeedUserItem.delete_all
+    PostMedia.all.each do |p|
+      if p.remote_image_url && !p.remote_image_url.blank?
+        p.active_image_versions = 0
+        p.save
+        Resque.enqueue(ProcessImages, p.id.to_s, p.class.name)
+      end
+    end
+
+    #u = User.find('4feb2ec918b8f10300000014')
+    #u.neo4j_create
+    #u.following_users_count = 0
+    #u.following_topics_count = 0
+    #
+    #u.following_users.each do |u2_id|
+    #  u2 = User.find(u2_id)
+    #  if u2
+    #    u.following_users_count += 1
+    #    ActionFollow.create(:action => 'create', :from_id => u.id, :to_id => u2.id, :to_type => 'User')
+    #    Resque.enqueue(Neo4jFollowCreate, u.id.to_s, u2.id.to_s, 'users', 'users')
+    #  else
+    #    u.following_users.delete(u2_id)
+    #  end
+    #end
+    #u.following_topics.each do |t_id|
+    #  t = Topic.find(t_id)
+    #  if t
+    #    u.following_topics_count += 1
+    #    ActionFollow.create(:action => 'create', :from_id => u.id, :to_id => t.id, :to_type => 'Topic')
+    #    Resque.enqueue(Neo4jFollowCreate, u.id.to_s, t.id.to_s, 'users', 'topics')
+    #  else
+    #    u.following_topics.delete(t_id)
+    #  end
+    #end
+    #u.save
+    #
+    #u.topic_likes_recalculate
+    #u.topic_activity_recalculate
+    #u.save
+
+    #FeedTopicItem.delete_all
+    #FeedContributeItem.delete_all
+    #FeedUserItem.delete_all
     #FeedLikeItem.delete_all
     #
     ## delete stupid posts
@@ -149,12 +188,12 @@ class TestJob
     #  end
     #end
     #
-    puts 'push posts to feeds'
-    Post.all.asc(:_id).each do |p|
-      puts p.id.to_s
-      p.push_to_feeds
-      #Resque.enqueue(PushPostToFeeds, p.id.to_s)
-    end
+    #puts 'push posts to feeds'
+    #Post.all.asc(:_id).each do |p|
+    #  puts p.id.to_s
+    #  p.push_to_feeds
+    #  #Resque.enqueue(PushPostToFeeds, p.id.to_s)
+    #end
     #
     #puts 'recalc user counts'
     #User.all.each do |u|

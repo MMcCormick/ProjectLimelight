@@ -184,7 +184,7 @@ module Limelight #:nodoc:
 
     def process_images
       if processing_image || (!remote_image_url.blank? && active_image_version == 0)
-        Resque.enqueue(ProcessImages, id.to_s, self.class.name, remote_image_url)
+        Resque.enqueue(ProcessImages, id.to_s, self.class.name)
       end
     end
 

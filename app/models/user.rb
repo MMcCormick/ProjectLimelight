@@ -595,13 +595,13 @@ class User
   end
 
   def update_social_denorms
-    object_user_updates = { "object_user.fbuid" => self.fbuid }
-    triggered_by_updates = { "triggered_by.$.fbuid" => self.fbuid }
-    object_user_updates["object_user.twuid"] = self.twuid
-    triggered_by_updates["triggered_by.$.twuid"] = self.twuid
-
-    Notification.where("object_user._id" => id).update_all(object_user_updates)
-    Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
+    #object_user_updates = { "object_user.fbuid" => self.fbuid }
+    #triggered_by_updates = { "triggered_by.$.fbuid" => self.fbuid }
+    #object_user_updates["object_user.twuid"] = self.twuid
+    #triggered_by_updates["triggered_by.$.twuid"] = self.twuid
+    #
+    #Notification.where("object_user._id" => id).update_all(object_user_updates)
+    #Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
   end
 
   def auto_follow (provider)
@@ -866,39 +866,25 @@ class User
 
   def update_denorms
     update = false
-    object_user_updates = {}
-    triggered_by_updates = {}
     if username_changed?
       update = true
-      object_user_updates["object_user.username"] = self.username
-      triggered_by_updates["triggered_by.$.username"] = self.username
       if username_was.blank? && !social_connects.empty?
         Resque.enqueue(AutoFollow, self.id.to_s, social_connects.first.provider.to_s)
       end
     end
     if status_changed?
       update = true
-      object_user_updates["object_user.status"] = self.status
-      triggered_by_updates["triggered_by.$.status"] = self.status
     end
     if first_name_changed?
       update = true
-      object_user_updates["object_user.first_name"] = self.first_name
-      triggered_by_updates["triggered_by.$.first_name"] = self.first_name
     end
     if last_name_changed?
       update = true
-      object_user_updates["object_user.last_name"] = self.last_name
-      triggered_by_updates["triggered_by.$.last_name"] = self.last_name
     end
     if use_fb_image_changed?
       update = true
-      object_user_updates["object_user.use_fb_image"] = self.use_fb_image
-      triggered_by_updates["triggered_by.$.use_fb_image"] = self.use_fb_image
     end
     if update
-      Notification.where("object_user._id" => id).update_all(object_user_updates)
-      Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
       neo4j_update
       Resque.enqueue(SmCreateUser, id.to_s)
     end

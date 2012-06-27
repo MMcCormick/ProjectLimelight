@@ -48,11 +48,13 @@ class TestJob
     #FeedContributeItem.delete_all
     #FeedUserItem.delete_all
     #FeedLikeItem.delete_all
+    #User.update_all(:score => 0)
     #
     ## delete stupid posts
     #Post.each do |p|
     #  comments = Comment.where(:talk_id => p.id)
-    #  if comments.length.to_i == 0 && p.like_ids.length == 0 && p.response_count.to_i == 0 && p.user_id.to_s == User.limelight_user_id
+    #  responses = Post.where(:response_to_id => p.id)
+    #  if comments.length.to_i == 0 && p.like_ids.length == 0 && responses.length == 0 && p.user_id.to_s == User.limelight_user_id
     #    Post.collection.find(:_id => p.id).remove()
     #  else
     #    p.comment_count = 0
@@ -123,7 +125,7 @@ class TestJob
     #    end
     #  end
     #end
-    #
+
     #Post.collection.find({"_type" => {"$exists" => true}}).update_all({"$unset" => {"_type" => 1}})
     #
     #puts 'connecting posts to post media'
@@ -145,12 +147,17 @@ class TestJob
     #
     #      new_media.save
     #
-    #      unless p.content.blank?
+    #      p.post_media_id = new_media.id
+    #      responses = Post.where(:response_to_id => p.id)
+    #      responses.each do |r|
+    #        r.post_media_id = new_media.id
+    #        r.save
+    #      end
+    #
+    #      if p.user_id != User.limelight_user_id
     #        Post.collection.find(:_id => p.id).remove()
     #        next
     #      end
-    #
-    #      p.post_media_id = new_media.id
     #    end
     #
     #    if p.topic_mention_ids.length > 2
@@ -162,7 +169,7 @@ class TestJob
     #  ActionPost.create(:action => 'create', :from_id => p.user_id, :to_id => p.id, :to_type => 'Post')
     #  p.add_pop_action(:new, :a, p.user)
     #end
-    #
+
     ## reassign media
     #Post.all.each do |p|
     #  if p.response_to_id && !p.post_media_id
@@ -171,6 +178,13 @@ class TestJob
     #      p.post_media_id = post.post_media_id
     #      p.save
     #    end
+    #  end
+    #end
+    #
+    ## delete useless ones again
+    #Post.all.each do |p|
+    #  if ['Link','Picture','Video'].include?(p['root_type']) && p['root_id'] == p.id && !p.content.blank?
+    #    Post.collection.find(:_id => p.id).remove()
     #  end
     #end
 
@@ -188,14 +202,41 @@ class TestJob
     #    Resque.enqueue(PushLike, p.id.to_s, u.id.to_s)
     #  end
     #end
-
+    #
     #puts 'push posts to feeds'
     #Post.all.asc(:_id).each do |p|
-    #  puts p.id.to_s
-    #  p.push_to_feeds
-    #  #Resque.enqueue(PushPostToFeeds, p.id.to_s)
+    #  Resque.enqueue(PushPostToFeeds, p.id.to_s)
     #end
     #
+
+    #Post.all.each do |p|
+    #  dup = Post.where(:content => p.content)
+    #  dup.each do |d|
+    #    unless d.id == p.id
+    #      d.destroy
+    #      Post.collection.find(:_id => d.id).remove()
+    #    end
+    #  end
+    #end
+    #
+    #Post.all.each do |p|
+    #  if p.response_to_id && p.post_media_id
+    #    media = PostMedia.find(p.post_media_id)
+    #    if media && !media.remote_image_url || media.remote_image_url.blank?
+    #      url = URI.parse("http://img.p-li.me/#{media.class.name.downcase.pluralize}/#{p.response_to_id}/1/original.png")
+    #      req = Net::HTTP.new(url.host, url.port)
+    #      res = req.request_head(url.path)
+    #      if res.code == "200"
+    #        media.remote_image_url = "http://img.p-li.me/#{media.class.name.downcase.pluralize}/#{p.response_to_id}/1/original.png"
+    #        media.active_image_version = 0
+    #        media.image_versions = 0
+    #        media.save
+    #        media.process_images
+    #      end
+    #    end
+    #  end
+    #end
+
     #puts 'recalc user counts'
     #User.all.each do |u|
     #  u.topic_likes_recalculate

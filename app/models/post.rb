@@ -75,6 +75,11 @@ class Post
   end
 
   def content_length
+    if !post_media_id || !post_media
+      if content.length == 0
+        errors.add(:content, "You must paste a link or talk about something")
+      end
+    end
     if content && content.length > 280
       errors.add(:content, "Content cannot be more than 280 characters long")
     end

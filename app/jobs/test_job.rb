@@ -6,7 +6,7 @@ class TestJob
 
     PostMedia.all.each do |p|
       if p.remote_image_url && !p.remote_image_url.blank?
-        p.active_image_versions = 0
+        p.active_image_version = 0
         p.save
         Resque.enqueue(ProcessImages, p.id.to_s, p.class.name)
       end

@@ -166,8 +166,8 @@ class Post
     end
 
     # hijack this post if it was originally submitted by limelight
-    if media.user_id.to_s == User.limelight_user_id && post.user_id.to_s != User.limelight_user_id
-      media.user_id = post.user_id
+    if media.user_id.to_s == User.limelight_user_id && user_id.to_s != User.limelight_user_id
+      media.user_id = user_id
       media.posted_ids = []
       media.posts_count = 0
       media.save

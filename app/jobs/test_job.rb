@@ -7,6 +7,7 @@ class TestJob
     PostMedia.all.each do |p|
       if p.remote_image_url && !p.remote_image_url.blank?
         p.active_image_version = 0
+        p.image_versions = 0
         p.save
         Resque.enqueue(ProcessImages, p.id.to_s, p.class.name)
       end
@@ -122,12 +123,12 @@ class TestJob
     #    end
     #  end
     #end
-
+    #
     #Post.collection.find({"_type" => {"$exists" => true}}).update_all({"$unset" => {"_type" => 1}})
     #
     #puts 'connecting posts to post media'
     #Post.all.asc(:_id).each do |p|
-    #  puts p.id.to_s
+    #
     #  if ['Link','Picture','Video'].include?(p['root_type'])
     #
     #    if p['root_id'] == p.id
@@ -144,6 +145,11 @@ class TestJob
     #
     #      new_media.save
     #
+    #      unless p.content.blank?
+    #        Post.collection.find(:_id => p.id).remove()
+    #        next
+    #      end
+    #
     #      p.post_media_id = new_media.id
     #    end
     #
@@ -156,7 +162,7 @@ class TestJob
     #  ActionPost.create(:action => 'create', :from_id => p.user_id, :to_id => p.id, :to_type => 'Post')
     #  p.add_pop_action(:new, :a, p.user)
     #end
-
+    #
     ## reassign media
     #Post.all.each do |p|
     #  if p.response_to_id && !p.post_media_id
@@ -167,12 +173,7 @@ class TestJob
     #    end
     #  end
     #end
-    #
-    #puts 'rebuilding neo4j posts'
-    #PostMedia.all.each do |p|
-    #  p.neo4j_create
-    #end
-    #
+
     #puts 'rebuilding neo4j posts'
     #Post.all.each do |p|
     #  p.neo4j_create
@@ -187,7 +188,7 @@ class TestJob
     #    Resque.enqueue(PushLike, p.id.to_s, u.id.to_s)
     #  end
     #end
-    #
+
     #puts 'push posts to feeds'
     #Post.all.asc(:_id).each do |p|
     #  puts p.id.to_s

@@ -6,7 +6,7 @@
 </div>
 <div class='middle'>
   <div class='image'>
-    <img src='<%= @topic.get('images').fit.normal %>' />
+    <img height='100' width='100' src='<%= @topic.get('images').fit.normal %>' />
   </div>
   <div class='right'>
     <div class='stats'>

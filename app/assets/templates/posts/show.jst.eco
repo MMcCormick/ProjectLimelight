@@ -74,7 +74,7 @@
     <% else if @post.get('media').get('images'): %>
       <div class='post-media'>
         <% if @post.get('media').get('type') == 'Link': %>
-          <img src='<%= @post.get('media').get('images').square.small %>' />
+          <img height='50' width='50' src='<%= @post.get('media').get('images').square.small %>' />
         <% else: %>
           <img src='<%= @post.get('media').get('images').original %>' />
         <% end %>

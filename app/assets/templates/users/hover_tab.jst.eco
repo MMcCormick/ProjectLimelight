@@ -1,7 +1,7 @@
 <div class='top'><%= @user.get('username') %></div>
 <div class='middle'>
   <div class='image'>
-    <img src='<%= @user.get('images').fit.normal %>' />
+    <img height='100' width='100' src='<%= @user.get('images').fit.normal %>' />
   </div>
   <div class='right'>
     <div class='stats'>

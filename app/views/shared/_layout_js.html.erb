@@ -1,6 +1,6 @@
 <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="/offline/javascripts/jquery1.7.1.js"><\/script>')</script>
+<script src="http://static.p-li.me/jquery1.7.2.js"></script>
+<script>window.jQuery || document.write('<script src="/offline/javascripts/jquery1.7.2.js"><\/script>')</script>
 
 <script src="http://js.pusher.com/1.12/pusher.min.js"></script>
 <script>window.Pusher || document.write('<script src="/offline/javascripts/pusher1.12.js"><\/script>')</script>
@@ -18,9 +18,9 @@
   var pusher = new Pusher('<%= Pusher.key %>', { encrypted: true });
 </script>
 
+<%= javascript_include_tag "application" %>
+
 <!-- Freebase -->
 <script type="text/javascript" src="https://www.gstatic.com/freebase/suggest/3_1/suggest.min.js"></script>
-
-<%= javascript_include_tag "application" %>
 
 <%= yield :js %>

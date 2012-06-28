@@ -714,6 +714,8 @@ class User
     def json_images(model)
       {
         :ratio => model.image_ratio,
+        :w => model.image_width,
+        :h => model.image_height,
         :original => model.image_url(nil, nil, nil, true),
         :fit => {
           :large => model.image_url(:fit, :large),

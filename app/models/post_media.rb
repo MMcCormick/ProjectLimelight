@@ -173,6 +173,8 @@ class PostMedia
     if images.length > 0 || !remote_image_url.blank?
       {
         :ratio => image_ratio,
+        :w => image_width,
+        :h => image_height,
         :original => image_url(nil, nil, nil, true),
         :fit => {
             :large => image_url(:fit, :large),

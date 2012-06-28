@@ -9,9 +9,20 @@ class LL.Views.FeedRepost extends Backbone.View
 
   initialize: ->
     @model.get('post').on('new_comment', @incrementComment)
+    @img_w = null
+    @img_h = null
 
   render: ->
-    $(@el).html(@template(post: @model.get('post')))
+
+    if @model.get('post').get('media').get('images').width >= 300
+      @img_w = 300
+    else if @model.get('post').get('media').get('images').width
+      @img_w = @model.get('post').get('media').get('images').width
+
+    if @model.get('post').get('media').get('images').ratio && @img_w
+      @img_h = @img_w / @model.get('post').get('media').get('images').ratio
+
+    $(@el).html(@template(post: @model.get('post'), img_w: @img_w, img_h: @img_h))
 
     prettyTime = new LL.Views.PrettyTime()
     prettyTime.format = 'short'

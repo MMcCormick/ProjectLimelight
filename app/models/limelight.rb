@@ -116,6 +116,30 @@ module Limelight #:nodoc:
       end
     end
 
+    def image_width(version=nil)
+      return nil if self.class.name == 'User' && use_fb_image
+      return nil if self.class.name == 'Topic' && use_freebase_image
+      return nil if images.length == 0 || (version && images.length <= version)
+
+      if version
+        images[version]['w']
+      else
+        images[0]['w']
+      end
+    end
+
+    def image_height(version=nil)
+      return nil if self.class.name == 'User' && use_fb_image
+      return nil if self.class.name == 'Topic' && use_freebase_image
+      return nil if images.length == 0 || (version && images.length <= version)
+
+      if version
+        images[version]['h']
+      else
+        images[0]['h']
+      end
+    end
+
     def filepath
       if self.class.name == 'User'
         path = 'users'

@@ -1,3 +1,26 @@
+<div class='media <%= if @post.get('media').get('images') then 'with-image' else '' %>'>
+  <% if @post.get('media').get('type') == 'Link' || @post.get('media').get('type') == 'Video': %>
+    <h5><%= @post.get('media').get('title') %></h5>
+  <% end %>
+
+  <% if @post.get('media').get('images'): %>
+    <div class='img'>
+      <img width='<%= @img_w %>' height='<%= @img_h %>' src='<%= @post.get('media').get('images').fit.large %>' alt='' />
+
+      <% if @post.get('media').get('video'): %>
+        <div class='ll-video-play'></div>
+      <% end %>
+      <div class='bg'></div>
+    </div>
+  <% end %>
+
+  <% if @post.get('media').get('type') == 'Picture': %>
+    <% if @post.get('media').get('title'): %>
+      <div class='bottom-title'><%=  @post.get('title') %></div>
+    <% end %>
+  <% end %>
+</div>
+
 <div class='top'>
   <% if @post.get('user').get('username') == 'limelight_bot': %>
     <b>Limelight</b>
@@ -12,30 +35,6 @@
   <div class='when'></div>
 
   <p><%= @post.get('content') %></p>
-</div>
-
-
-<div class='media'>
-  <% if @post.get('media').get('type') == 'Link' || @post.get('media').get('type') == 'Video': %>
-    <h5><%= @post.get('media').get('title') %></h5>
-  <% end %>
-
-  <% if @post.get('media').get('images'): %>
-    <div class='img'>
-      <img width='290' height='<%= if @post.get('media').get('images').ratio then 290 / @post.get('media').get('images').ratio else '' %>' src='<%= @post.get('media').get('images').fit.large %>' alt='' />
-
-      <% if @post.get('media').get('video'): %>
-        <div class='ll-video-play'></div>
-      <% end %>
-      <div class='bg'></div>
-    </div>
-  <% end %>
-
-  <% if @post.get('media').get('type') == 'Picture': %>
-    <% if @post.get('media').get('title'): %>
-      <div class='bottom-title'><%=  @post.get('title') %></div>
-    <% end %>
-  <% end %>
 </div>
 
 <div class='actions'>

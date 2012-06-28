@@ -76,7 +76,7 @@ class Post
 
   def content_length
     if !post_media_id || !post_media
-      if content.length == 0
+      if content && content.length == 0
         errors.add(:content, "You must paste a link or talk about something")
       end
     end

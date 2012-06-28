@@ -28,6 +28,7 @@ class LL.Views.PostsFeed extends Backbone.View
 
   render: =>
     self = @
+    console.log('render')
 
     if @collection.models.length == 0
       $(@el).append("<div class='none'>#{@default_text}</div>")

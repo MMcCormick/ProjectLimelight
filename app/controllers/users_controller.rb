@@ -266,4 +266,13 @@ class UsersController < ApplicationController
     end
     render json: build_ajax_response(:ok), status: 201
   end
+
+  #def contacts
+  #  contacts = request.env['omnicontacts.contacts']
+  #  if contacts.blank?
+  #    render json: build_ajax_response(:error, nil, "No contacts found"), status: 400
+  #  else
+  #    render json: build_ajax_response(:ok, nil, nil, nil, :data => contacts.as_json), status: 200
+  #  end
+  #end
 end

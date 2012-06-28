@@ -17,6 +17,7 @@ class PostMedia
   field :comment_count, :default => 0 # deprecated
   field :neo4j_id
   field :status, :default => 'active'
+  field :embed_html # video embeds deprecated
 
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
 

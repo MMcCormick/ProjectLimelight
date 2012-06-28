@@ -38,7 +38,7 @@
   <%= csrf_meta_tags %>
 
   <% if Rails.env.production? %>
-    <%= airbrake_javascript_notifier %>
+    <%#= airbrake_javascript_notifier %>
   <% end %>
 
   <%= yield :head %>

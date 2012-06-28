@@ -309,6 +309,8 @@ $feedFontColor: $grayDark;
 
           img {
             max-width: 300px;
+            display: block;
+            margin: auto;
           }
           .ll-video-play {
             position: absolute;

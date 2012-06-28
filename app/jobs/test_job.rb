@@ -4,47 +4,18 @@ class TestJob
 
   def self.perform()
 
-    User.all.unset(:images)
-    Post.all.unset(:images)
-    PostMedia.all.unset(:images)
-    Topic.all.unset(:images)
+    Post.all.each do |p|
+      comments = Comment.where(:post_id => p.id)
+      p.comment_count = comments.length
+      p.save
+    end
 
-    User.where(:image_versions.gt => 0).each do |u|
-      url = URI.parse("http://img.p-li.me/users/#{u.id.to_s}/#{u.active_image_version}/original.png")
-      req = Net::HTTP.new(url.host, url.port)
-      res = req.request_head(url.path)
-      if res.code == "200"
-        tmp = u.active_image_version
-        u.active_image_version = 0
-        u.image_versions = 0
-        u.save
-        Resque.enqueue(ProcessImages, u.id.to_s, u.class.name, 0, "http://img.p-li.me/users/#{u.id.to_s}/#{tmp}/original.png")
+    Notification.each do |n|
+      unless n.triggered_by
+        n.delete
       end
     end
-    PostMedia.where(:image_versions.gt => 0).each do |u|
-      url = URI.parse("http://img.p-li.me/#{u.class.name.downcase.pluralize}/#{u.id.to_s}/#{u.active_image_version}/original.png")
-      req = Net::HTTP.new(url.host, url.port)
-      res = req.request_head(url.path)
-      if res.code == "200"
-        tmp = u.active_image_version
-        u.active_image_version = 0
-        u.image_versions = 0
-        u.save
-        Resque.enqueue(ProcessImages, u.id.to_s, u.class.name, 0, "http://img.p-li.me/#{u.class.name.downcase.pluralize}/#{u.id.to_s}/#{tmp}/original.png")
-      end
-    end
-    Topic.where(:image_versions.gt => 0).each do |u|
-      url = URI.parse("http://img.p-li.me/#{u.class.name.downcase.pluralize}/#{u.id.to_s}/#{u.active_image_version}/original.png")
-      req = Net::HTTP.new(url.host, url.port)
-      res = req.request_head(url.path)
-      if res.code == "200"
-        tmp = u.active_image_version
-        u.active_image_version = 0
-        u.image_versions = 0
-        u.save
-        Resque.enqueue(ProcessImages, u.id.to_s, u.class.name, 0, "http://img.p-li.me/#{u.class.name.downcase.pluralize}/#{u.id.to_s}/#{tmp}/original.png")
-      end
-    end
+
     #PostMedia.all.each do |p|
     #  if p.remote_image_url && !p.remote_image_url.blank? && p.active_image_version == 0
     #    Resque.enqueue(ProcessImages, p.id.to_s, p.class.name, 0, p.remote_image_url)

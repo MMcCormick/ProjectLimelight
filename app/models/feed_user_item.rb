@@ -53,7 +53,7 @@ class FeedUserItem
   class << self
 
     def push_post_through_users(post, single_user=nil, backlog=false)
-      user_mention_ids = post.user_mentions.map{|um| um.id}
+      user_mention_ids = post.user_mention_ids
 
       # make the root post
       root_post = RootPost.new
@@ -64,7 +64,13 @@ class FeedUserItem
       if single_user
         user_feed_users = [single_user]
       else
-        user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_id}).to_a
+        # if the post starts with a user mention, only push it to the creator and the mentioned users
+        if post.personal_mention?
+          user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}).to_a
+        else
+          user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_id}).to_a
+        end
+
         user_feed_users << post.user # add this post to this users own feed
       end
 
@@ -126,7 +132,8 @@ class FeedUserItem
     end
 
     def push_post_through_topics(post)
-      #return if post.class.name == 'Talk'
+      # if the post starts with a user mention, don't push it to topics
+      return if post.personal_mention?
 
       # push through topics
       post.topic_mentions.each do |topic|
@@ -145,6 +152,9 @@ class FeedUserItem
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)
     # optionally push for a single user
     def push_post_through_topic(post, push_topic, single_user=nil, backlog=false)
+      # if the post starts with a user mention, don't push it to topics
+      return if post.personal_mention?
+
       neo4j_topic_ids = Neo4j.pulled_from_ids([push_topic.neo4j_id])
       topics = Topic.where(:_id => {"$in" => [push_topic.id] + neo4j_topic_ids.map{|t| t[1]}})
 
@@ -270,6 +280,8 @@ class FeedUserItem
         core_objects = Post.any_of({:user_id => target.id}, {:likes_ids => target.id}).limit(10)
       end
       core_objects.each do |post|
+        next if post.personal_mention?
+
         if target.class.name == 'Topic'
           push_post_through_topic(post, target, user, true)
         else

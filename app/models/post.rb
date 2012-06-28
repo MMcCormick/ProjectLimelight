@@ -224,6 +224,11 @@ class Post
     FeedContributeItem.create(self)
   end
 
+  # does this post start with a user mention?
+  def personal_mention?
+    user_mention_ids.length > 0 && content.strip[0] == '@'
+  end
+
   #def disable
   #  self.status = 'disabled'
   #  Resque.enqueue(PushPostDisable, id.to_s)

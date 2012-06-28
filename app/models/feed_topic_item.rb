@@ -18,7 +18,8 @@ class FeedTopicItem
   class << self
 
     def post_create(post)
-      # warning: do not use post.is_root? in this function, since topic roots are excluded
+      return if post.personal_mention?
+
       item = FeedTopicItem.find_or_initialize_by(:root_id => post.root_id)
       item.last_response_time = Time.now
       item.root_type = post.root_type
@@ -34,6 +35,8 @@ class FeedTopicItem
     end
 
     def push_post_through_topic(post, topic)
+      return if post.personal_mention?
+
       items = FeedTopicItem.where(:root_id => post.root_id)
       items.each do |item|
         unless item.mentions.detect{|i| i == topic.id}

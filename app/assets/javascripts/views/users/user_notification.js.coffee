@@ -27,4 +27,4 @@ class LL.Views.UserNotification extends Backbone.View
 
     if @model.get('type') == 'mention' || @model.get('type') == 'repost' || @model.get('type') == 'comment' || @model.get('type') == 'also'
       LL.App.Feed = true
-      LL.Router.navigate("talks/#{@model.get('object').id}", trigger: true)
+      LL.Router.navigate("posts/#{@model.get('object').id}", trigger: true)

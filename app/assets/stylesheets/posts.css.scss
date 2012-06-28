@@ -4,6 +4,7 @@ $postFontColor: $grayDark;
   &.modal {
     width: 380px;
     margin-left: -190px;
+    margin-top: -295px;
   }
   form {
     position: relative;
@@ -12,11 +13,6 @@ $postFontColor: $grayDark;
   .top-bg {
     position: absolute;
     top: 0px;
-    left: 0px;
-  }
-  .bottom-bg {
-    position: absolute;
-    bottom: 0px;
     left: 0px;
   }
   .modal-header {
@@ -28,6 +24,7 @@ $postFontColor: $grayDark;
   }
   .modal-body {
     padding: 0px;
+    max-height: 600px;
   }
   .modal-footer {
     @include border-radius(0px);
@@ -39,29 +36,39 @@ $postFontColor: $grayDark;
   .step {
     position: relative;
 
-    .counter {
-      @include border-radius(1px);
-      background: $blue;
-      color: #FFF;
-      padding: 3px 10px;
-      font-size: 16px;
-      cursor: default;
-      display: inline-block;
-      margin: 10px;
-      padding: 3px 7px;
+    .top {
+      background: #F9F9F9;
+      margin: 10px 10px 0 10px;
+      border: 1px solid #DDD;
+      border-bottom: none;
+
+      .counter {
+        background: $blue;
+        color: #FFF;
+        padding: 6px 10px;
+        font-size: 16px;
+        cursor: default;
+        display: inline-block;
+      }
+      .desc {
+        @include single-text-shadow(#CCC, 0, 1px);
+        position: absolute;
+        top: 7px;
+        left: 50px;
+        font-size: 13px;
+        cursor: default;
+        color: #555;
+      }
     }
-    .desc {
-      position: absolute;
-      top: 13px;
-      left: 40px;
-      font-size: 14px;
-      cursor: default;
-      color: #555;
+    &.two {
+      .top {
+        margin-top: -6px;
+      }
     }
   }
   .errors {
     padding: 0;
-    margin: 0 10px;
+    margin: 10px 10px 0 10px;
 
     .alert {
       @include border-radius(0px);
@@ -98,65 +105,90 @@ $postFontColor: $grayDark;
     position: relative;
     overflow: none;
     display: none;
-    border-top: 1px solid #DDD;
-    border-left: 1px solid #DDD;
-    border-right: 1px solid #DDD;
+    border: 1px solid #DDD;
     padding: 0 90px 0 5px;
-    background: #F9F9F9;
-    margin: 15px 10px -10px 10px;
-  }
-  #post-form-fetch-url {
-    width: 100%;
-    padding: 6px 0;
-    background: #F9F9F9;
-  }
-  #fetch-url-btn {
-    @include border-radius(0px);
-    position: absolute;
-    top: -1px;
-    right: 0px;
-    padding: 6px 10px;
-    z-index: 5;
+    margin: 10px auto;
+    width: 210px;
+
+    #post-form-fetch-url {
+      width: 100%;
+      padding: 6px 0;
+    }
+    #fetch-url-btn {
+      @include border-radius(0px);
+      position: absolute;
+      top: -1px;
+      right: 0px;
+      padding: 6px 10px;
+      z-index: 5;
+    }
   }
   .preview-data {
     position: relative;
-    padding: 0 5px;
-    border: 1px solid #DDD;
-    margin: 10px;
-    background: #F9F9F9;
-    min-height: 90px;
+    margin: 10px 10px 5px 10px;
+    padding: 0 0 15px 0;
+    border-bottom: 1px dashed #DDD;
 
+    h5 {
+    }
     .media {
-      width: 115px;
-      height: 100px;
-      position: absolute;
-      right: 5px;
-      top: 10px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      text-align: right;
+      width: 300px;
+      margin: auto;
 
-      img {
-        max-width: 100px;
+      .img-wrap {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
-    }
-    .title {
-      padding: 7px;
-    }
-    .info {
-      padding: 0 115px 0 0;
-      #post-form-title {
-        width: 100%;
-        height: 90px;
-        padding: 7px 0;
-        background: #F9F9F9;
+      textarea {
+        @include single-text-shadow(#CCC, 0, 1px);
+        width: 300px;
+        font-weight: bold;
+        font-size: 13px;
+      }
+      .img-wrap {
+        display: none;
+      }
+      &.with-image {
+        @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
+        border: 1px dashed #DDD;
+        position: relative;
+        .img-wrap {
+          display: block;
+        }
+        img {
+          max-width: 300px;
+          display: block;
+          margin: auto;
+        }
+        h5 {
+          @include single-text-shadow(#666, 0, 1px);
+          @include background-image(linear-gradient(transparent, rgba(0, 0, 0, 0.1) 15%,rgba(0, 0, 0, 0.2) 25%, rgba(0, 0, 0, 0.4) 50%,rgba(0, 0, 0, 0.6) 75%, rgba(0, 0, 0, 0.8)));
+          color: #FFF;
+          position: absolute;
+          bottom: 0px;
+          left: 0px;
+          z-index: 5;
+          padding: 25px 15px 10px 15px;
+          width: 268px;
+          cursor: default;
+
+          textarea {
+            @include single-text-shadow(#666, 0, 1px);
+            border: none;
+            width: 100%;
+            color: #FFF;
+
+            background: transparent;
+            height: 38px;
+          }
+        }
       }
     }
     .switcher {
-      position: absolute;
-      top: 85px;
-      right: 5px;
-      width: 100px;
+      display: none;
+      text-align: center;
+      margin: 10px 0 0 0;
 
       .left {
         margin: 0 0 0 1px;
@@ -168,10 +200,19 @@ $postFontColor: $grayDark;
       }
       .help {
         color: #444;
-        font-size: 10px;
+        font-size: 12px;
         position: relative;
         top: -2px;
         cursor: default;
+      }
+      .cancel-image {
+        color: #a1271d;
+        display: inline-block;
+        font-size: 12px;
+        position: relative;
+        top: -2px;
+        margin: 0 0 0 35px;
+        cursor: pointer;
       }
     }
   }

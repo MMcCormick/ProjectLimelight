@@ -20,16 +20,20 @@
     <div class='errors'></div>
 
     <div class='step one'>
-      <div class='counter'>1</div>
-      <div class='desc'>What do you want to say? Optionally paste a URL.</div>
+      <div class='top'>
+        <div class='counter'>1</div>
+        <div class='desc'>What do you want to say? Optionally paste a URL.</div>
+      </div>
       <div class="main-content">
         <textarea id="post-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="<%= @placeholder_text %>"><%= @initial_text %></textarea>
       </div>
     </div>
 
     <div class='step two'>
-      <div class='counter'>2</div>
-      <div class='desc'>What is this about? Tag 1-2 topics.</div>
+      <div class='top'>
+        <div class='counter'>2</div>
+        <div class='desc'>What is this about? Tag 1-2 topics.</div>
+      </div>
       <div class="mentions">
         <div>
           <div class='tm-wrap'>

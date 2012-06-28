@@ -1,31 +1,38 @@
 <% if @model.get('limelight_post'): %>
-  <% if @model.get('limelight_post').get('images'): %>
-    <div class="media">
-      <img src="<%= @model.get('limelight_post').get('images').square.small %>" alt="" />
-    </div>
-  <% end %>
+
+  <div class="media <%= if @model.get('limelight_post').get('images') then 'with-image' else '' %>">
+    <% if @model.get('limelight_post').get('images'): %>
+      <div class='img-wrap'>
+        <img src="<%= @model.get('limelight_post').get('images').fit.large %>" />
+      </div>
+
+      <% if @model.get('limelight_post').get('title'): %>
+        <h5>
+          <%= @model.get('limelight_post').get('title') %>
+        </h5>
+      <% end %>
+    <% end %>
+  </div>
+
 <% else: %>
-  <% if @model.get('images').length > 0: %>
-    <div class="media">
+
+  <div class="media <%= if @model.get('images').length > 0 then 'with-image' else '' %>">
+    <div class='img-wrap'>
       <% for image in @model.get('images'): %>
-        <img src="<%= image.url %>" alt="" />
+        <img src="<%= image.url %>" />
       <% end %>
     </div>
-  <% end %>
-<% end %>
 
-<div class="info">
-  <% if @model.get('limelight_post'): %>
-    <div class="title">
-      <p><%= @model.get('limelight_post').get('title') %></p>
-      <!--<div>Originally posted to limelight about <%= @model.get('limelight_post').get('created_at_pretty') %></div>-->
-    </div>
-  <% else: %>
-    <textarea id="post-form-title" spellcheck="false" autocomplete="off" name="title" placeholder='Title...'><%= @model.get('title') %></textarea>
-  <% end %>
-</div>
-<div class="switcher hide">
-  <i class="icon-chevron-left left"></i>
-  <span class="help">choose image</span>
-  <i class="icon-chevron-right right"></i>
-</div>
+    <h5>
+      <textarea id="post-form-title" spellcheck="false" autocomplete="off" name="title" placeholder='Post Title...'><%= @model.get('title') %></textarea>
+    </h5>
+  </div>
+
+  <div class='switcher'>
+    <i class="icon-chevron-left left"></i>
+    <span class="help">choose image</span>
+    <i class="icon-chevron-right right"></i>
+    <div class='cancel-image'>don't use an image</div>
+  </div>
+
+<% end %>

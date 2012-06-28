@@ -5,6 +5,7 @@ class LL.Views.PostFormPreview extends Backbone.View
   events:
     "click .switcher .left": "rotateImageLeft"
     "click .switcher .right": "rotateImageRight"
+    "click .switcher .cancel-image": "cancelImage"
 
   initialize: ->
     @loaded = false
@@ -92,3 +93,9 @@ class LL.Views.PostFormPreview extends Backbone.View
     visible.hide()
     next.show()
     @post_form_model.set('remote_image_url', next.attr('src'))
+
+  cancelImage: (e) =>
+    $(@el).find('.media').removeClass('with-image')
+    $(@el).find('.switcher').hide()
+    @post_form_model.set('remote_image_url', '')
+

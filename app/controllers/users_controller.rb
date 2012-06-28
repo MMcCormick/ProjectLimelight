@@ -150,7 +150,7 @@ class UsersController < ApplicationController
       following_topics = following_topics.limit(params[:limit])
     end
     if params[:page] && params[:limit]
-      following_topics = following_topics.skip(params[:page].to_i * params[:limit].to_i)
+      following_topics = following_topics.skip((params[:page].to_i-1) * params[:limit].to_i)
     end
     render :json => following_topics.map {|u| u.as_json}
   end

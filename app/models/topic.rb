@@ -70,7 +70,7 @@ class Topic
   validates :freebase_guid, :uniqueness => { :case_sensitive => false, :allow_blank => true, :message => 'This freebase guid is already in use' }
   validates :freebase_id, :uniqueness => { :case_sensitive => false, :allow_blank => true, :message => 'This freebase id is already in use' }
   validates_each :name do |record, attr, value|
-    if Topic.stop_words.include?(value) || !Topic.deleted.where("aliases.slug" => value.parameterize).first.nil?
+    if Topic.stop_words.include?(value)
       record.errors.add attr, "This topic name is not permitted."
     end
   end
@@ -78,8 +78,9 @@ class Topic
   attr_accessible :name, :summary, :aliases, :short_name
   attr_accessor :skip_fetch_external
 
-  before_create :titleize_name, :generate_slug, :init_alias
+  before_create :init_alias
   after_create :neo4j_create, :add_to_soulmate, :fetch_external_data
+  before_validation :titleize_name, :generate_slug, :on => :create
   before_validation :update_name_alias, :update_url
   after_update :update_denorms
   before_destroy :remove_from_soulmate, :disconnect
@@ -358,7 +359,6 @@ class Topic
       end
       add_alias(name.pluralize, false, true)
       add_alias(name.singularize, false, true)
-      self.slug = name.parameterize
     end
   end
 

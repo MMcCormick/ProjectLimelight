@@ -8,6 +8,17 @@ class TestJob
       comments = Comment.where(:post_id => p.id)
       p.comment_count = comments.length
       p.save
+
+      if p.personal_mention?
+        FeedTopicItem.where(:root_id => p.id).each do |ti|
+          ti.delete
+        end
+        FeedUserItem.where(:root_id => p.id).each do |ui|
+          unless p.user_mention_ids.include?(ui.feed_id) || p.user_id == ui.feed_id
+            ui.delete
+          end
+        end
+      end
     end
 
     Notification.each do |n|

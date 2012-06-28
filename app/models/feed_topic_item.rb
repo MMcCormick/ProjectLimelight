@@ -60,6 +60,7 @@ class FeedTopicItem
     end
 
     def post_destroy(post)
+      # TODO: needs to work with root media versus posts
       FeedTopicItem.where(:root_id => post.id).delete if post.root_id == post.id
     end
 

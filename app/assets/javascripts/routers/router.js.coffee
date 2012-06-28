@@ -18,6 +18,7 @@ class LL.Router extends Backbone.Router
     'pages/admin/posts/stream': 'adminPostStream'
     'pages/admin/users/index': 'userIndex'
     'pages/:name': 'staticPage'
+    'omnicontacts/:provider/callback': 'inviteContacts'
     'settings': 'settings'
     'activity/:topic_id': 'myTopicActivity'
     'activity': 'activityFeed'

@@ -226,6 +226,9 @@ GEM
     omniauth-twitter (0.0.11)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
+    omnicontacts (0.2.1)
+      json
+      rack
     origin (1.0.0)
     orm_adapter (0.1.0)
     os (0.9.6)
@@ -390,6 +393,7 @@ DEPENDENCIES
   newrelic_rpm
   omniauth-facebook
   omniauth-twitter
+  omnicontacts
   pry-rails
   pusher
   rack

@@ -168,6 +168,7 @@ ProjectLimelight::Application.routes.draw do
   # Invites
   resources :invite_codes, :only => [:create, :new]
   post '/invite_codes/check' => 'invite_codes#check', :as => :check_invite_code
+  get '/contacts/:provider/callback' => 'users#show', :as => :show_contacts
 
   # Crawler
   resources :crawler_sources

@@ -18,7 +18,7 @@
   <% if @model.get('limelight_post'): %>
     <div class="title">
       <p><%= @model.get('limelight_post').get('title') %></p>
-      <div>Originally posted to limelight about <%= @model.get('limelight_post').get('created_at_pretty') %></div>
+      <!--<div>Originally posted to limelight about <%= @model.get('limelight_post').get('created_at_pretty') %></div>-->
     </div>
   <% else: %>
     <textarea id="post-form-title" spellcheck="false" autocomplete="off" name="title" placeholder='Title...'><%= @model.get('title') %></textarea>

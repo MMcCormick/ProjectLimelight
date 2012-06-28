@@ -5,6 +5,6 @@ class LL.Views.PostMentions extends Backbone.View
 
   render: ->
     if @model
-      $(@el).html(@template(mentions: @model))
+      $(@el).html(@template(mentions: @model.get('topic_mentions')))
 
     @

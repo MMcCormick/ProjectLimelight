@@ -18,7 +18,7 @@ class Neo4j
         self.neo.add_relationship_to_index('users', 'like', "#{user_id}-#{post_id}", like) if like
 
         # increase affinity to the post creator unless submitted by bot
-        unless post.user_id.to_s == User.limelight_user_id
+        unless post.user_id.to_s == User.limelight_user_id || user_id == post.user_id
           node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
           Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, 1, false, nil) if node1 && node2
         end
@@ -49,7 +49,7 @@ class Neo4j
         Neo4j.neo.remove_relationship_from_index('users', rel1)
 
         # decrease affinity to the post creator
-        unless post.user_id.to_s == User.limelight_user_id
+        unless post.user_id.to_s == User.limelight_user_id || user_id == post.user_id
           node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
           Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, -1, false, nil) if node1 && node2
         end
@@ -87,6 +87,15 @@ class Neo4j
       topic.neo4j_node
     end
 
+    def post_media_create(post_media)
+      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post_media.user_id.to_s)
+
+      post_node = Neo4j.neo.get_node_index('post_media', 'uuid', post_media.id.to_s)
+
+      post_media.neo4j_id = post_node[0]['self'].split('/').last
+      post_media.save
+    end
+
     def post_create(post)
       creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
 
@@ -105,11 +114,11 @@ class Neo4j
       Neo4j.neo.add_relationship_to_index('users', 'created', "#{post.user_id.to_s}-#{post.id.to_s}", rel1)
 
       post.user_mentions.each do |m|
-        # connect the post to it's mentioned users
+        ## connect the post to it's mentioned users
         mention_node = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
-        rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
-        Neo4j.neo.set_relationship_properties(rel2, {"type" => 'user'})
-        Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
+        #rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
+        #Neo4j.neo.set_relationship_properties(rel2, {"type" => 'user'})
+        #Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{m.id.to_s}", rel2)
 
         # increase the creators affinity to these users
         Neo4j.update_affinity(post.user_id.to_s, m.id.to_s, creator_node, mention_node, 1, false, false)
@@ -127,12 +136,12 @@ class Neo4j
         post_add_topic_mention(post, m, post_node, creator_node, mention_node[:node], topic_nodes)
       end
 
-      if post.response_to
-        parent_node = Neo4j.neo.get_node_index('posts', 'uuid', post.response_to.id.to_s)
+      if post.post_media
+        parent_node = Neo4j.neo.get_node_index('post_media', 'uuid', post.post_media_id.to_s)
         if parent_node
-          talk_rel = Neo4j.neo.create_relationship('talked', creator_node, parent_node)
-          Neo4j.neo.set_relationship_properties(talk_rel, {"created_at" => Time.now.utc.to_i})
-          Neo4j.neo.add_relationship_to_index('users', 'talked', "#{post.user_id.to_s}-#{post.response_to.id.to_s}", talk_rel)
+          media_rel = Neo4j.neo.create_relationship('media', post_node, parent_node)
+          Neo4j.neo.set_relationship_properties(media_rel, {"created_at" => Time.now.utc.to_i})
+          Neo4j.neo.add_relationship_to_index('posts', 'media', "#{post.id.to_s}-#{post.post_media_id.to_s}", media_rel)
         end
       end
     end
@@ -156,8 +165,6 @@ class Neo4j
         follow = self.neo.create_relationship('follow', node1, node2)
         self.neo.add_relationship_to_index('users', 'follow', "#{node1_id}-#{node2_id}", follow) if follow
         self.update_affinity(node1_id, node2_id, node1, node2, 10, false, nil, 'positive', false) if follow
-      else
-        foo = 'bar'
       end
     end
 
@@ -174,13 +181,13 @@ class Neo4j
 
     def post_add_topic_mention(post, topic, post_node=nil, creator_node=nil, mention_node=nil, topic_nodes=nil)
       # connect the post to it's mentioned topics
-      mention_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless mention_node
-      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s) unless creator_node
-      post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s) unless post_node
+      #mention_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless mention_node
+      #creator_node = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s) unless creator_node
+      #post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s) unless post_node
 
-      rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
-      Neo4j.neo.set_relationship_properties(rel2, {"type" => 'topic'})
-      Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{topic.id.to_s}", rel2)
+      #rel2 = Neo4j.neo.create_relationship('mentions', post_node, mention_node)
+      #Neo4j.neo.set_relationship_properties(rel2, {"type" => 'topic'})
+      #Neo4j.neo.add_relationship_to_index('posts', 'mentions', "#{post.id.to_s}-#{topic.id.to_s}", rel2)
 
       # increase the creators affinity to these topics
       unless post.user_id.to_s == User.limelight_user_id
@@ -351,7 +358,7 @@ class Neo4j
       pull_from = []
       if ids
         ids['data'].each do |id|
-          pull_from << BSON::ObjectId(id[0])
+          pull_from << Moped::BSON::ObjectId(id[0])
         end
       end
       pull_from
@@ -368,7 +375,7 @@ class Neo4j
       pull_from = []
       if ids
         ids['data'].each do |id|
-          pull_from << [BSON::ObjectId(id[0]),BSON::ObjectId(id[1])]
+          pull_from << [Moped::BSON::ObjectId(id[0]),Moped::BSON::ObjectId(id[1])]
         end
       end
       pull_from

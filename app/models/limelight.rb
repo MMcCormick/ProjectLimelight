@@ -87,12 +87,13 @@ module Limelight #:nodoc:
       field :active_image_version, :default => 0
       field :processing_image, :default => false
       field :remote_image_url
+      field :images, :default => []
 
       attr_accessible :remote_image_url
     end
 
     def size_dimensions
-      {:small => 50, :normal => 100, :large => 300}
+      {:small => 75, :normal => 150, :large => 500}
     end
 
     def available_sizes
@@ -101,6 +102,18 @@ module Limelight #:nodoc:
 
     def available_modes
       [:square, :fit]
+    end
+
+    def image_ratio(version=nil)
+      return nil if self.class.name == 'User' && use_fb_image
+      return nil if self.class.name == 'Topic' && use_freebase_image
+      return nil if images.length == 0 || (version && images.length <= version)
+
+      if version
+        images[version]['w'].to_f / images[version]['h'].to_f
+      else
+        images[0]['w'].to_f / images[0]['h'].to_f
+      end
     end
 
     def filepath
@@ -155,36 +168,41 @@ module Limelight #:nodoc:
     end
 
     # Saves a new set of images from the remote_image_url currently specified on the model
-    def save_remote_image(force=false)
-      unless remote_image_url.blank?
-        target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
+    def save_remote_image(url, force=false)
+      target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
 
-        begin
-          AWS::S3::S3Object.store(
-            target,
-            open(remote_image_url).read,
-            S3['image_bucket']
-          )
-        rescue => e
-          return
-        end
-
-        AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
-
-        self.image_versions += 1
-        self.active_image_version = image_versions
-        self.processing_image = true
-
-        if force
-          process_version(active_image_version)
-          self.processing_image = false
-        end
+      begin
+        AWS::S3::S3Object.store(
+          target,
+          open(url).read,
+          S3['image_bucket']
+        )
+      rescue => e
+        return
       end
+
+      AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
+
+      i = Magick::Image::read("#{S3['image_prefix']}/#{current_filepath}/original.png").first
+
+      self.images << {
+              :remote_url => url,
+              :w => i.columns,
+              :h => i.rows
+      }
+      self.active_image_version = self.images.length
+      self.processing_image = true
+
+      if force
+        process_version(active_image_version)
+        self.processing_image = false
+      end
+      save
     end
 
     def process_images
       if processing_image || (!remote_image_url.blank? && active_image_version == 0)
-        Resque.enqueue(ProcessImages, id.to_s, self.class.name, remote_image_url)
+        Resque.enqueue(ProcessImages, id.to_s, self.class.name, 0, remote_image_url)
       end
     end
 
@@ -244,8 +262,6 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      field :primary_topic_mention
-
       embeds_many :pre_mentions, as: :topic_mentionable, :class_name => "TopicMention"
 
       has_and_belongs_to_many :topic_mentions, :inverse_of => nil, :class_name => 'Topic'
@@ -254,7 +270,8 @@ module Limelight #:nodoc:
       attr_accessor :topic_mention_names, :first_response, :primary_topic_pm
       attr_accessible :topic_mention_ids, :user_mention_ids, :topic_mention_names, :first_response
 
-      before_create :set_mentions
+      before_validation :set_mentions
+      validates :topic_mention_ids, :on => :create, :length => { :minimum => 1, :maximum => 2, :message => 'You must add 1-2 topics to your post.' }
     end
 
     def mentions_topic?(id)
@@ -266,11 +283,7 @@ module Limelight #:nodoc:
     #
 
     def set_mentions
-      self.primary_topic_pm = -1
-
-      if first_response
-        self.topic_mention_ids = parent.topic_mention_ids
-      else
+      unless persisted?
         set_user_mentions
         set_topic_mentions
       end
@@ -294,13 +307,6 @@ module Limelight #:nodoc:
 
     def set_topic_mentions
       save_new_topic_mentions(topic_mention_names) if topic_mention_names && topic_mention_names.length > 0
-
-      topic_mentions.each do |topic|
-        if !primary_topic_pm || topic.score > primary_topic_pm
-          self.primary_topic_mention = topic.id
-          self.primary_topic_pm = topic.score
-        end
-      end
     end
 
     # takes an array of new topic names
@@ -335,34 +341,34 @@ module Limelight #:nodoc:
     end
 
     def bubble_up
-      if response_to_id
-        topic_mentions.each do |topic|
-          response_to.suggest_mention(topic)
-        end
-        response_to.save
-      end
+      #if post_media_id
+      #  topic_mentions.each do |topic|
+      #    post_media.suggest_mention(topic)
+      #  end
+      #  post_media.save
+      #end
     end
 
     def suggest_mention(topic)
-      unless topic_mention_ids.include?(topic.id)
-        root_pre_mention = pre_mentions.find(topic.id)
-        if root_pre_mention
-          root_pre_mention.score += 1
-          if root_pre_mention.score >= TopicMention.threshold
-            add_topic_mention(topic)
-          end
-        else
-          pre_m = self.pre_mentions.build(topic.attributes)
-          pre_m.id = topic.id
-        end
-      end
+      #unless topic_mention_ids.include?(topic.id)
+      #  root_pre_mention = pre_mentions.find(topic.id)
+      #  if root_pre_mention
+      #    root_pre_mention.score += 1
+      #    if root_pre_mention.score >= TopicMention.threshold
+      #      add_topic_mention(topic)
+      #    end
+      #  else
+      #    pre_m = self.pre_mentions.build(topic.attributes)
+      #    pre_m.id = topic.id
+      #  end
+      #end
     end
 
     def add_topic_mention(topic)
       unless topic_mention_ids.include?(topic.id)
         self.topic_mentions << topic
-        pre_mention = pre_mentions.find(topic.id)
-        pre_mention.destroy if pre_mention
+        #pre_mention = pre_mentions.find(topic.id)
+        #pre_mention.destroy if pre_mention
         Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
         Neo4j.post_add_topic_mention(self, topic)
       end
@@ -470,19 +476,17 @@ module Limelight #:nodoc:
               end
 
               # send the influence increase
-              if self.class.name == 'Talk'
-                affected_influence_ids << topic.id
+              affected_influence_ids << topic.id
 
-                increase = InfluenceIncrease.new
-                increase.amount = topic_amt
-                increase.topic_id = topic.id
-                increase.object_type = 'Talk'
-                increase.action = type
-                increase.topic = topic
-                increase.id = topic.name
+              increase = InfluenceIncrease.new
+              increase.amount = topic_amt
+              increase.topic_id = topic.id
+              increase.object_type = 'Talk'
+              increase.action = type
+              increase.topic = topic
+              increase.id = topic.name
 
-                Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
-              end
+              Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
             end
           end
 
@@ -541,9 +545,9 @@ module Limelight #:nodoc:
 
     def throttle_check
       unless persisted? || user_id.to_s == User.limelight_user_id
-        last = Kernel.const_get(self.class.name).where(:user_id => user_id).desc(:_id).limit(1).first
+        last = Post.where(:user_id => user_id).desc(:_id).first
         if last && Time.now - last.created_at < 15
-          errors.add(:limited, "You must wait at least 10 sections before posting another #{self.class.name}")
+          errors.add(:limited, "You must wait at least 10 sections before posting again")
         end
       end
     end

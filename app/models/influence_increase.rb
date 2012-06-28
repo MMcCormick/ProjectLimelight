@@ -28,7 +28,7 @@ class InfluenceIncrease
 
   def as_json(options={})
     {
-            :id => BSON::ObjectId.new.to_s,
+            :id => Moped::BSON::ObjectId.new.to_s,
             :amount => amount,
             :reason => reason,
             :topic => topic.as_json,

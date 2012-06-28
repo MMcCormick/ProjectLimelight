@@ -15,7 +15,7 @@ class PostsController < ApplicationController
 
     @title = @this.name
     @description = @this.content
-    url = @this.class.name == 'Talk' ? talk_url(:id => @this.id) : post_url(:id => @this.id)
+    url = post_url(:id => @this.id)
     image_url = @this.class.name == 'Talk' ? @this.user.image_url(:fit, :large) : @this.image_url(:fit, :large)
     image_url = '' unless image_url
     extra = {"#{og_namespace}:display_name" => @this.class.name, "#{og_namespace}:score" => @this.score.to_i}
@@ -33,69 +33,39 @@ class PostsController < ApplicationController
   end
 
   def create
+    @post = current_user.posts.new(params)
+    if params[:type] != 'Post' || params[:post_media_id]
+      @post.initialize_media(params)
+    end
 
-    if params[:type] && ['Video', 'Picture', 'Link', 'Talk'].include?(params[:type])
-      @post = Kernel.const_get(params[:type]).new(params)
-      @post.user = current_user
-      @response = nil
+    if @post.valid? && (!@post.post_media_id || @post.post_media.valid?)
+      @post.save
 
-      if ['Link','Picture','Video'].include?(@post.class.name) && !@post.content.blank?
-        @response = Talk.new(
-                :content => @post.content,
-                :first_talk => true,
-                :topic_mention_ids => @post.topic_mention_ids
-        )
-        @response.user = current_user
+      FeedUserItem.push_post_through_users(@post, current_user, false)
+
+      if @post.post_media
+        @post.post_media.save
       end
 
-      if @post.valid? && (!@response || @response.valid?)
-        @post.save
+      track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.mixpanel_data))
+      track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.post_media.mixpanel_data)) if @post.post_media_id
 
-        FeedUserItem.push_post_through_users(@post, current_user, false)
-
-        if @response
-          @response.response_to_id = @post.id
-          @response.save
-          @response.bubble_up
-        end
-
-        track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.mixpanel_data))
-        track_mixpanel("New Post", current_user.mixpanel_data.merge(@response.mixpanel_data)) if @response
-
-        if @response || @post.response_to_id || @post.class.name == 'Talk'
-          if @response
-            Pusher[@response.root_id.to_s].trigger('new_response', @response.to_json(:properties => :public))
-          elsif @post.response_to_id
-            Pusher[@post.root_id.to_s].trigger('new_response', @post.to_json(:properties => :public))
-          end
-
-          # send mention notifications
-          if @post.class.name == 'Talk'
-            @post.user_mentions.each do |u|
-              notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
-              if notification
-                Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.as_json)
-              end
-            end
-          end
-          if @response
-            @response.user_mentions.each do |u|
-              notification = Notification.add(u, :mention, true, current_user, nil, @response, @response.user)
-              if notification
-                Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.as_json)
-              end
-            end
-          end
-        end
-
-        render :json => build_ajax_response(:ok, nil, "Your post has been submitted"), :status => 201
-      else
-        errors = @response ? @response.errors.merge!(@post.errors) : @post.errors
-        response = build_ajax_response(:error, nil, "Post could not be created", errors)
-        render :json => response, :status => :unprocessable_entity
+      if @post.post_media_id
+        Pusher[@post.post_media_id.to_s].trigger('new_response', @post.to_json(:properties => :public))
       end
+
+      # send mention notifications
+      @post.user_mentions.each do |u|
+        notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
+        if notification
+          Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.as_json)
+        end
+      end
+
+      render :json => build_ajax_response(:ok, nil, "Your post has been submitted"), :status => 201
     else
-      response = build_ajax_response(:error, nil, "Woops there was an error, please try closing/opening the post form and re-submitting.")
+      errors = @post.post_media_id ? Hash[@post.post_media.errors].merge!(Hash[@post.errors]) : @post.errors
+      response = build_ajax_response(:error, nil, "Post could not be created", errors)
       render :json => response, :status => :unprocessable_entity
     end
   end

@@ -1,0 +1,13 @@
+<div class='bb'></div>
+
+<div class='top'>
+  <h5>Websites</h5>
+</div>
+
+<div class='meat'>
+  <ul class='unstyled'>
+    <% for website in @topic.get('websites'): %>
+      <li><a href="<%= website.url %>" target="_blank" rel="nofollow"><%= website.name %></a></li>
+    <% end %>
+  </ul>
+</div>

@@ -10,8 +10,8 @@ $grayDark: #444;
 
 // Navbar
 $navbarHeight: 45px;
-$navbarBackground: $blueDarker;
-$navbarBackgroundHighlight: $blue;
+$navbarBackground: #474747;
+$navbarBackgroundHighlight: #444;
 
 // Grid
 $gridColumnWidth: 70px;
@@ -26,3 +26,14 @@ $zindexTooltip: 10000;
 body { padding-top: 60px; }
 
 //@import "responsive";
+
+// tmp
+input:-moz-placeholder{
+  color: #999999;
+}
+input:-ms-input-placeholder{
+  color: #999999;
+}
+input:-webkit-input-placeholder{
+  color: #999999;
+}

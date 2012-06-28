@@ -4,39 +4,34 @@ class LL.Views.PageHeader extends Backbone.View
   events:
     'click .links a': 'handleLinkClick'
     'click .sorting li': 'handleSort'
+    'mouseenter .links a': 'linkEnter'
+    'mouseleave .links a': 'linkLeave'
 
   initialize: ->
     @title = ''
+    @subtitle = null
     @links = []
-    @showScore = false
-    @showFollow = false
     @showSorting = false
 
   render: =>
     $(@el).show()
     $(@el).find('h1').text(@title)
-
-    if @showScore
-      score = new LL.Views.Score(model: @model)
-      $(@el).find('.top').append(score.render().el)
-
-    if @showFollow
-      if !LL.App.current_user || LL.App.current_user.get('id') != @model.get('id')
-        follow = new LL.Views.FollowButton(model: @model)
-        $(@el).find('.top').append(follow.render().el)
+    if @subtitle
+      $(@el).find('.subtitle').text(@subtitle)
 
     if @showSorting == true
       $(@el).find('.sorting').show()
 
     for link in @links
-      $(@el).find('.links').append("<li><a class='#{link.content.toLowerCase()} #{if link.on then 'on' else ''}' href='#{link.url}'>#{link.content}</a></li>")
+      link_html = $('<li/>').addClass(link.class).html("<a class='#{if link.on then 'on' else ''}' href='#{link.url}'><div class='icon ll-ph-#{link.class} #{if link.on then 'on' else ''}'></div>#{link.content}</a>")
+      if link.on
+        link_html.find('a').append('<div class="ll-ph-carrot"></div>')
+      $(@el).find('.links').append(link_html)
 
   handleLinkClick: (e) =>
     if $(e.currentTarget).hasClass('on')
       e.preventDefault()
       return false
-
-    $(e.currentTarget).effect("highlight", {color: '#88B925'}, 300)
 
   handleSort: (e) =>
     return if $(e.currentTarget).hasClass('on')
@@ -50,3 +45,10 @@ class LL.Views.PageHeader extends Backbone.View
     LL.App.Feed.collection.page = 1
     LL.App.Feed.collection.sort_value = $(e.currentTarget).data('sort')
     LL.App.Feed.collection.fetch({data: {id: LL.App.Feed.collection.id, sort: LL.App.Feed.collection.sort_value}})
+
+  linkEnter: (e) =>
+    $(e.currentTarget).find('.icon').addClass('on')
+
+  linkLeave: (e) =>
+    unless $(e.currentTarget).hasClass('on')
+      $(e.currentTarget).find('.icon').removeClass('on')

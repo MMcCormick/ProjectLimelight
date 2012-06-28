@@ -4,13 +4,15 @@ class LL.Views.PostShow extends Backbone.View
   className: 'content-tile'
 
   events:
-    "click .post-responses input": "showTalkForm"
     "click .close": "navBack"
+    "click .repost-btn": "loadPostForm"
+    "click .add-comment": "focusCommentForm"
 
   initialize: ->
     @responsesCollection = new LL.Collections.PostResponses()
     @responses = new LL.Views.PostShowResponses(collection: @responsesCollection)
     @loaded = null
+    @model.on('new_comment', @incrementComment)
 
   render: =>
     return unless @model
@@ -18,9 +20,6 @@ class LL.Views.PostShow extends Backbone.View
 
     like = new LL.Views.LikeButton(model: @model)
     $(@el).find('.actions').prepend(like.render().el)
-
-    score = new LL.Views.Score(model: @model)
-    $(@el).find('.actions').prepend(score.render().el)
 
     prettyTime = new LL.Views.PrettyTime()
     prettyTime.format = 'extended'
@@ -36,18 +35,15 @@ class LL.Views.PostShow extends Backbone.View
     user_section.count = @model.get('likes').length
     $(@el).find('.half-sections').append(user_section.render().el)
 
-    $(@el).find('.post-responses').append(@responses.el)
+    @comments_view = new LL.Views.CommentList(model: @model)
+    form = new LL.Views.CommentForm(model: @model)
+    form.minimal = true
+    $(@el).find('.comments .meat').append(form.render().el).append(@comments_view.render().el)
 
-    unless @loaded
-      @responsesCollection.fetch({data: {id: @model.get('id')}})
+    if @model.get('comments').length == 0 && !@loaded
+      @model.fetchComments()
 
     @loaded = true
-
-    view = new LL.Views.PostForm()
-    view.placeholder_text = "Post about this #{@model.get('type')}..."
-    $(@el).find('.post-responses .top').after(view.render().el)
-    view.model.set('parent_id', @model.get('id'))
-    $(view.el).find('.icons').remove()
 
     if LL.App.Feed
       $(@el).addClass('modal')
@@ -55,12 +51,35 @@ class LL.Views.PostShow extends Backbone.View
 
     @
 
-  showTalkForm: =>
+  focusCommentForm: (e) =>
+    $(@el).find('.comment-form textarea').focus()
+
+  loadPostForm: =>
     unless LL.App.current_user
       LL.LoginBox.showModal()
       return
 
-    $(@el).find('#post-form').fadeIn(250).find('textarea').focus()
+    if $(@el).next().attr('id') == 'post-form'
+      return
+
+    view = new LL.Views.PostForm()
+    view.cancel_buttons = true
+    view.modal = true
+    view.with_header = false
+    view.close_callback = @closePost
+    view.render()
+    view.preview.setResponse(@model.get('media'))
 
   navBack: (e) =>
     history.back()
+
+  incrementComment: =>
+    count = $(@el).find('.add-comment span')
+    if count.length > 0
+      new_count = parseInt(count.text()) + 1
+      count.text(new_count)
+    else
+      new_count = 1
+      $(@el).find('.add-comment').append('<b>(<span>1</span>)</b>')
+
+    $(@el).find('.section.comments h4 span').text(new_count)

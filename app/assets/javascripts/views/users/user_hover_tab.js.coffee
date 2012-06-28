@@ -5,7 +5,7 @@ class LL.Views.UserHoverTab extends Backbone.View
 
   render: =>
     self = @
-    score = new LL.Views.Score(model: self.model)
+#    score = new LL.Views.Score(model: self.model)
 
     talk = new LL.Views.TalkButton()
     talk.user = self.model
@@ -31,7 +31,7 @@ class LL.Views.UserHoverTab extends Backbone.View
         text: (api) ->
           $(self.el).html(self.template(user: self.model))
 
-          $(self.el).find('.stat1').html(score.render().el)
+#          $(self.el).find('.stat1').html(score.render().el)
 
           $(self.el).find('.bottom').append(talk.render().el).append(follow.render().el)
           $(self.el)

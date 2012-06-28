@@ -1,7 +1,10 @@
 class LL.Views.PostsFeedTopicRibbon extends Backbone.View
   template: JST['posts/topic_ribbon']
   className: 'topic-ribbon'
-  tagName: 'ul'
+  tagName: 'div'
+
+  events:
+    'click .show-more': 'toggleOpen'
 
   initialize: ->
     self = @
@@ -23,26 +26,21 @@ class LL.Views.PostsFeedTopicRibbon extends Backbone.View
 
     $('#feed-ribbon').show().append(@el)
 
+    $(@el).find('.topic-ribbon').isotope
+      animationEngine: 'best-available'
+      itemSelector: 'li'
+      layoutMode: 'masonry'
+
+    if @collection.models.length > 5
+      $(@el).append("<div class='show-more'>View all topics #{@model.get('username')} is posting in</div>")
+
     @
 
   appendItem: (item) =>
-    elem = $('<li/>').addClass("ribbon-#{item.get('topic').get('url_pretty')}")
-    link = $('<a/>').html("<div>#{item.get('topic').get('name')}</div>")
-
-    if @type == 'activity'
-      link.append("<div>#{item.get('count')} Posts</div>")
-      if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id')
-        link.attr('href', "/activity#{item.get('topic').get('url')}")
-      else
-        link.attr('href', "#{@model.get('url')}#{item.get('topic').get('url')}")
-    else
-      link.append("<div>#{item.get('count')} Likes</div>")
-      if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id')
-        link.attr('href', "/likes#{item.get('topic').get('url')}")
-      else
-        link.attr('href', "#{@model.get('url')}/likes#{item.get('topic').get('url')}")
-
-    $(@el).append(elem.html(link))
+    view = new LL.Views.FeedTopicRibbonItem(model: @model)
+    view.item = item
+    view.type = @type
+    $(@el).find('ul').append(view.render().el)
 
     @
 
@@ -67,3 +65,9 @@ class LL.Views.PostsFeedTopicRibbon extends Backbone.View
     @page = 1
     @tiles = []
     $(@el).html('')
+
+  toggleOpen: (e) =>
+    if $(@el).hasClass('open')
+      $(@el).removeClass('open', 200).find('.show-more').text("View all topics #{@model.get('username')} is posting in")
+    else
+      $(@el).addClass('open', 200).find('.show-more').text("Hide topics #{@model.get('username')} is posting in")

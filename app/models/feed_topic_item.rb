@@ -3,7 +3,7 @@ class FeedTopicItem
 
   field :root_id
   field :root_type
-  field :mentions
+  field :mentions, :default => []
   field :last_response_time, :default => Time.now
   field :p, :default => 0
 
@@ -19,30 +19,33 @@ class FeedTopicItem
 
     def post_create(post)
       # warning: do not use post.is_root? in this function, since topic roots are excluded
-      root_id = post.root_type == 'Topic' ? post.id : post.root_id
-      root_type = post.root_type == 'Topic' ? post.class.name : post.root_type
-
-      item = FeedTopicItem.find_or_initialize_by(:root_id => root_id)
+      item = FeedTopicItem.find_or_initialize_by(:root_id => post.root_id)
       item.last_response_time = Time.now
-      item.root_type = root_type
-      item.mentions = post.topic_mention_ids
+      item.root_type = post.root_type
+      item.mentions += post.topic_mention_ids
+      if post.post_media_id
+        item.mentions += post.post_media.sources.map {|s| s.id}
+      end
+      item.mentions.uniq!
+
+      return unless item.mentions.length > 0
+
       item.save
     end
 
     def push_post_through_topic(post, topic)
-      root_id = post.root_type == 'Topic' ? post.id : post.root_id
-      items = FeedTopicItem.where(:root_id => root_id)
+      items = FeedTopicItem.where(:root_id => post.root_id)
       items.each do |item|
         unless item.mentions.detect{|i| i == topic.id}
           item.mentions << topic.id
         end
+        item.mentions.uniq!
         item.save
       end
     end
 
     def unpush_post_through_topic(post, topic)
-      root_id = post.root_type == 'Topic' ? post.id : post.root_id
-      items = FeedTopicItem.where(:root_id => root_id)
+      items = FeedTopicItem.where(:root_id => post.root_id)
       items.each do |item|
         item.mentions.delete(topic.id)
         if item.mentions.length == 0
@@ -54,10 +57,7 @@ class FeedTopicItem
     end
 
     def post_destroy(post)
-      # warning: do not use post.is_root? in this function, since topic roots are excluded
-      root_id = post.root_type == 'Topic' ? post.id : post.root_id
-
-      FeedTopicItem.where(:root_id => post.id).delete if root_id == post.id
+      FeedTopicItem.where(:root_id => post.id).delete if post.root_id == post.id
     end
 
     def topic_destroy(topic)

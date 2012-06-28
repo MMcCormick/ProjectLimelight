@@ -1,7 +1,7 @@
 class FeedContributeItem
   include Mongoid::Document
 
-  field :user_id, :type => BSON::ObjectId
+  field :user_id
   field :root_id
   field :root_type
   field :strength, :default => 0
@@ -29,7 +29,9 @@ class FeedContributeItem
   end
 
   class << self
-    def create(post, backlog=false)
+    def create(post, backlog=true)
+      return if post.user_id.to_s == User.limelight_user_id
+
       item = FeedContributeItem.find_or_initialize_by(:feed_id => post.user_id, :root_id => post.root_id)
       unless item.responses.include?(post.id)
         item.root_type = post.root_type
@@ -82,8 +84,7 @@ class FeedContributeItem
     end
 
     def post_destroy(post)
-      root_id = post.root_type == 'Topic' ? post.id : post.root_id
-      FeedContributeItem.where(:root_id => root_id).destroy
+      FeedContributeItem.where(:root_id => post.root_id).destroy
     end
   end
 end

@@ -1,9 +1,6 @@
-class Link < Post
+class Link < PostMedia
 
   validate :has_valid_url
   validates :title, :presence => true
 
-  def name
-    title
-  end
 end

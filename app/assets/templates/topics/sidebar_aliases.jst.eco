@@ -1,0 +1,15 @@
+<div class='bb'></div>
+
+<div class='top'>
+  <h5>Also Known As</h5>
+</div>
+
+<div class='meat'>
+  <ul class='unstyled'>
+    <% for name in @topic.get('aliases'): %>
+      <% unless name.hidden: %>
+      <li><%= name.name %></li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>

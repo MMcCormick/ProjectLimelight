@@ -6,7 +6,7 @@ class LL.Views.PostForm extends Backbone.View
       "focus textarea": "changeMinimal"
       "click .submit": "createPost"
       "click .cancel": "destroyForm"
-      "click .close": "destroyForm"
+#      "click .close": "destroyForm"
       "click .icons .icon:not(.cancel-preview)": "activateType"
       "click .icons .cancel-preview": "removeEmbedly"
       "click #fetch-url-btn": "fetchEmbedly"
@@ -26,7 +26,7 @@ class LL.Views.PostForm extends Backbone.View
     @show_preview = true # show post previews? (links, pictures, videos)
     @minimal = false # only show the input field
     @initial_text = '' # initial text to show in the textarea
-    @placeholder_text = 'Post something!' # initial placeholder text to show in the text area
+    @placeholder_text = '280 character limit...' # initial placeholder text to show in the text area
 
     @model = new LL.Models.PostForm()
     @model.on('change', @updateFields)
@@ -39,6 +39,7 @@ class LL.Views.PostForm extends Backbone.View
   render: =>
     $(@el).html(@template(modal: @modal, cancel_buttons: @cancel_buttons, with_header: @with_header, initial_text: @initial_text, placeholder_text: @placeholder_text))
     @preview.target = $(@el).find('.preview')
+    @preview.post_form = @el
 
     # setTimeout to wait for the modal animation so that the autocomplete can position itself correctly
     self = @
@@ -149,7 +150,7 @@ class LL.Views.PostForm extends Backbone.View
     $(@el).find('#post-form-type').val(@model.get('type'))
     $(@el).find('.icons .icon').removeClass('on')
 
-    if @model.get('type') == 'Talk' && !@model.get('parent_id')
+    if @model.get('type') == 'Post' && !@model.get('parent_id')
       $(@el).find('.icons').removeClass('on').find('.cancel-preview').hide()
       $(@el).find('#post-form-fetch-url').val('').parent().hide()
     else

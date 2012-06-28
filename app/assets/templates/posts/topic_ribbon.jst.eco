@@ -1,15 +1,19 @@
-<li class='on'>
-  <% if @type == 'activity': %>
-    <% if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id'): %>
-      <a href="/activity">All</a>
-    <% else: %>
-      <a href="<%= @model.get('url') %>">All</a>
-    <% end %>
-  <% else: %>
-    <% if @model: %>
-      <a href="/likes">All</a>
-    <% else: %>
-      <a href="<%= @model.get('url') %>/likes">All</a>
-    <% end %>
-  <% end %>
-</li>
+<div class='inner'>
+  <ul class='unstyled'>
+    <li class='on all'>
+      <% if @type == 'activity': %>
+        <% if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id'): %>
+          <a href="/activity">All Posts</a>
+        <% else: %>
+          <a href="<%= @model.get('url') %>">All Posts</a>
+        <% end %>
+      <% else: %>
+        <% if @model: %>
+          <a href="/likes">All Posts</a>
+        <% else: %>
+          <a href="<%= @model.get('url') %>/likes">All Posts</a>
+        <% end %>
+      <% end %>
+    </li>
+  </ul>
+</div>

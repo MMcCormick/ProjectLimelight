@@ -3,12 +3,9 @@ class RootPost
   include Mongoid::CachedJson
 
   # push_item is the pushed post FeedUserItem, FeedLikeItem, etc
-  attr_accessor :root, :push_item, :like_responses, :activity_responses, :feed_responses
+  attr_accessor :post, :push_item
 
   def initialize
-    @like_responses = []
-    @activity_responses = []
-    @feed_responses = []
     @push_item = nil
   end
 
@@ -16,18 +13,14 @@ class RootPost
     pretty_reasons = []
     reasons.each do |item|
       case item['t']
-        when 'lk' # follwed user liked this post
-          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> liked #{root.class.name}"
-        when 'lkt' # follwed user liked a talk about this post
-          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> liked a talk about this #{root.class.name}"
         when 'm' # you are mentioned
-          pretty_reasons << "You were mentioned in this #{root.class.name}"
-        when 'mt' # you are mentioned by somebody talking about this root
-          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> mentioned you in a talk about this #{root.class.name}"
+          pretty_reasons << "You were mentioned in this post"
+        when 'mt' # you are mentioned by somebody talking about this post
+          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> mentioned you in a talk about this #{@media.class.name}"
         when 'fu' # followed user posted this post
-          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> posted this #{root.class.name}"
-        when 'fut' # followed user posted a talk about this root
-          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> talked about this #{root.class.name}"
+          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> posted this"
+        when 'fut' # followed user posted a talk about this post
+          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> posted about this"
         when 'ft' # followed topic mentioned
           pretty_reasons << "You follow <a href='#{item['s']}' class='tlink' data-id='#{item['id']}'>#{item['n']}</a>"
         when 'frt' # topic related to a followed topic mentioned (pull from relation only)
@@ -38,13 +31,12 @@ class RootPost
   end
 
   def as_json(options={})
-    {
-            :id => root.id.to_s,
-            :root => root.as_json(options),
-            :like_responses => like_responses.map {|r| r.as_json(options)},
-            :activity_responses => activity_responses.map {|r| r.as_json(options)},
-            :feed_responses => feed_responses.map {|r| r.as_json(options)},
-            :reasons => push_item && root.class.name != 'Topic' ? generate_reasons(push_item.reasons) : []
+    data = {
+            :id => post.id.to_s,
+            :post => post.as_json(options),
+            :reasons => push_item ? generate_reasons(push_item.reasons) : []
     }
+
+    data
   end
 end

@@ -4,7 +4,7 @@ class RecalculateInfluence
   @queue = :slow
 
   def self.perform(topic_id)
-    topic = Topic.find(BSON::ObjectId(topic_id))
+    topic = Topic.find(Moped::BSON::ObjectId(topic_id))
 
     array = topic.influencers.dup.to_a
     array = array.sort{ |a,b| a[1]["influence"] <=> b[1]["influence"] }

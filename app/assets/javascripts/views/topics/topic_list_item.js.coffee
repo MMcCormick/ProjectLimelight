@@ -11,7 +11,7 @@ class LL.Views.TopicListItem extends Backbone.View
     follow = new LL.Views.FollowButton(model: @model)
     $(@el).find('.follow-c').html(follow.render().el)
 
-    score = new LL.Views.Score(model: @model)
-    $(@el).append(score.render().el)
+#    score = new LL.Views.Score(model: @model)
+#    $(@el).append(score.render().el)
 
     @

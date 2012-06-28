@@ -2,6 +2,13 @@
  * gritter
  */
 
+#gritter-notice-wrapper {
+  top: 65px;
+}
+.gritter-top,
+.gritter-bottom {
+  display: none;
+}
 .gritter-item {
   @include single-box-shadow(#999, 1px, 1px, 3px);
   @include border-radius(3px);

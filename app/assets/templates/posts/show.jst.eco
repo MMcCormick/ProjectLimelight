@@ -1,48 +1,83 @@
-<div class='section post-root'>
+<div class='section post'>
   <div class='meat'>
-    <% if @post.get('primary_source'): %>
-        <% if @post.get('title'): %>
-          <h1 class="title">
-            <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('title') %></a>
-          </h1>
-        <% end %>
-        <a class="source" target="_blank" href="<%= @post.get('primary_source').url %>">
-          View on <span><%= @post.get('primary_source').name %></span>
+    <span class='user'>
+      <% if @post.get('user').get('username') == 'limelight_bot': %>
+        <b>Limelight</b>
+      <% else: %>
+        <a class="ulink" data-id="<%= @post.get('user').get('id') %>" href="<%= @post.get('user').get('url') %>">
+          <%= @post.get('user').get('name') %>
+          <span>@<%= @post.get('user').get('username') %></span>
         </a>
-    <% else: %>
-      <h1 class="title"><%= @post.get('title') %></h1>
+      <% end %>
+    </span>
+
+    <% if @post.get('media'): %>
+      <span class='source'>via <a target="_blank" href="<%= @post.get('media').get('primary_source').url %>"><%= @post.get('media').get('primary_source').name %></a></span>
     <% end %>
 
-    <div class="actions-created">
-      <span class='actions'></span>
-      <span class="created-at">
-        Originally posted by
-        <% if @post.get('user').get('id') == '4f971b6ccddc7f1480000046': %>
-          Limelight
-        <% else: %>
-          <a class="ulink" href="<%= @post.get('user').get('url') %>" data-id='<%= @post.get('user').get('id') %>'><%= @post.get('user').get('username') %></a>
-        <% end %>
-        <span class='when'></span>
-      </span>
-    </div>
+    <div class='when'></div>
+    <img src="<%= @post.get('user').get('images').square.small %>">
 
-    <div class="c"></div>
+    <p><%= @post.get('content') %></p>
+
+    <% unless @post.get('media'): %>
+      <div class='actions'>
+        <span class='add-comment'>
+          Comment
+          <% if @post.get('comment_count') > 0: %>
+            <b>(<span><%= @post.get('comment_count') %></span>)</b>
+          <% end %>
+        </span>
+      </div>
+    <% end %>
   </div>
 </div>
 
-<% if @post.get('video') || @post.get('images'): %>
-  <div class='section'>
-    <% if @post.get('video'): %>
-      <div class='post-media'>
-        <% if LL.App.Feed: %>
-          <%- @post.get('video_autoplay') %>
-        <% else: %>
-          <%- @post.get('video') %>
+<% if @post.get('media'): %>
+  <div class='section media <%= @post.get('media').get('type').toLowerCase() %> <%= if @post.get('media').get('images') then 'with-image' else '' %>'>
+
+    <div class='top'>
+      <% if @post.get('media').get('primary_source'): %>
+          <% if @post.get('media').get('title'): %>
+            <h1 class="title">
+              <a target="_blank" href="<%= @post.get('media').get('primary_source').url %>"><%= @post.get('media').get('title') %></a>
+            </h1>
+          <% end %>
+          <a class="source" target="_blank" href="<%= @post.get('media').get('primary_source').url %>">
+            View on <span><%= @post.get('media').get('primary_source').name %></span>
+          </a>
+      <% else: %>
+        <h1 class="title"><%= @post.get('media').get('title') %></h1>
+      <% end %>
+
+      <div class='actions'>
+        <span class='add-comment'>
+          Comment
+          <% if @post.get('comment_count') > 0: %>
+            <b>(<span><%= @post.get('comment_count') %></span>)</b>
+          <% end %>
+        </span>
+        <% if @post.get('media'): %>
+          <span class='repost-btn'>Repost</span>
         <% end %>
       </div>
-    <% else if @post.get('images'): %>
+    </div>
+
+    <% if @post.get('media').get('video'): %>
       <div class='post-media'>
-        <img src='<%= @post.get('images').original %>' />
+        <% if LL.App.Feed: %>
+          <%- @post.get('media').get('video_autoplay') %>
+        <% else: %>
+          <%- @post.get('media').get('video') %>
+        <% end %>
+      </div>
+    <% else if @post.get('media').get('images'): %>
+      <div class='post-media'>
+        <% if @post.get('media').get('type') == 'Link': %>
+          <img src='<%= @post.get('media').get('images').square.small %>' />
+        <% else: %>
+          <img src='<%= @post.get('media').get('images').original %>' />
+        <% end %>
       </div>
     <% end %>
   </div>
@@ -50,12 +85,17 @@
 
 <div class='half-sections'></div>
 
-<div class="section post-responses">
-
-  <div class="top">
-    <h4>Talking About This</h4>
-  </div>
-
-  <input type="text" placeholder="Talk about this!" autocomplete="off" spellcheck="false">
-
+<div class='section comments'>
+  <div class='top'><h4><span><%= @post.get('comment_count') %></span> Comment<%= if @post.get('comment_count') != 1 then 's' else '' %></h4></div>
+  <div class='meat'></div>
 </div>
+
+<!--<div class="section post-responses">-->
+
+  <!--<div class="top">-->
+    <!--<h4>Talking About This</h4>-->
+  <!--</div>-->
+
+  <!--<input type="text" placeholder="Talk about this!" autocomplete="off" spellcheck="false">-->
+
+<!--</div>-->

@@ -269,7 +269,7 @@ class Topic
     end
 
     # update the image
-    if image_versions == 0 || overwrite_image
+    if images.length == 0 || overwrite_image
       self.active_image_version = 0
       self.use_freebase_image = true
     end
@@ -294,8 +294,8 @@ class Topic
     add_alias(name, false, true)
   end
 
-  def get_alias(name)
-    self.aliases.where(:slug => name.parameterize).first
+  def get_alias(new_alias)
+    self.aliases.where(:slug => new_alias.parameterize).first
   end
 
   def add_alias(new_alias, ooac=false, hidden=false)
@@ -305,8 +305,6 @@ class Topic
       self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize, :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
       Resque.enqueue(SmCreateTopic, id.to_s)
       true
-    else
-      'This topic already has that alias.'
     end
   end
 
@@ -510,7 +508,7 @@ class Topic
   end
 
   def neo4j_create
-    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'slug' => slug, 'created_at' => created_at.to_i, 'score' => score)
+    node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'created_at' => created_at.to_i, 'score' => score.to_i)
     Neo4j.neo.add_node_to_index('topics', 'uuid', id.to_s, node)
     self.neo4j_id = node['self'].split('/').last
     save
@@ -519,7 +517,7 @@ class Topic
 
   def neo4j_update
     node = Neo4j.neo.get_node_index('topics', 'uuid', id.to_s)
-    Neo4j.neo.set_node_properties(node, {'name' => name, 'slug' => slug})
+    Neo4j.neo.set_node_properties(node, {'name' => name, 'score' => score.to_i})
   end
 
   def neo4j_node
@@ -652,6 +650,7 @@ class Topic
 
     def json_images(model)
       {
+        :ratio => model.image_ratio,
         :original => model.image_url(nil, nil, nil, true),
         :fit => {
           :large => model.image_url(:fit, :large),

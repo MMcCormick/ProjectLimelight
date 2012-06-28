@@ -132,12 +132,10 @@ ProjectLimelight::Application.routes.draw do
   get '/users/auth/:provider' => 'omniauth_callbacks#passthru'
 
   scope 'users' do
-    get ':slug/following/users' => 'users#show', :as => :user_following_topics
-    get ':slug/following/topics' => 'users#show', :as => :user_following_users
-    get ':slug/followers' => 'users#show', :as => :user_followers
+    get ':slug/users' => 'users#show', :as => :user_topics
+    get ':slug/topics' => 'users#show', :as => :user_users
     get ':slug/likes/:topic_id' => 'users#show', :as => :user_topic_likes
     get ':slug/likes' => 'users#show', :as => :user_likes
-    get ':slug/influence' => 'users#show', :as => :user_influence
     get ':slug/feed' => 'users#show', :as => :user_feed
     get ':slug/:topic_id' => 'users#show', :as => :user_topic_activity
     get ':slug' => 'users#show', :as => :user, :show_og => true
@@ -148,9 +146,9 @@ ProjectLimelight::Application.routes.draw do
   get 'activity' => 'users#show'
   get 'likes/:topic_id' => 'users#show'
   get 'likes/' => 'users#show'
-  get 'influence' => 'users#show'
-  get '/posts/:id' => 'posts#show', :as => :post
-  get '/talks/:id' => 'posts#show', :as => :talk
+  get 'users' => 'users#show'
+  get 'topics' => 'users#show'
+  get 'posts/:id' => 'posts#show', :as => :post
 
   # Pages
   scope 'pages' do
@@ -175,7 +173,7 @@ ProjectLimelight::Application.routes.draw do
 
   # Topics
   get 'topics/new' => 'topics#new', :as => :new_topic
-  get ':slug/followers' => 'topics#show', :as => :topic_followers
+  get ':slug/users' => 'topics#show', :as => :topic_users
   get ':slug' => 'topics#show', :as => :topic #(catch all)
 
   root :to => 'users#feed'

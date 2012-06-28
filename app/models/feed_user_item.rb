@@ -1,7 +1,7 @@
 class FeedUserItem
   include Mongoid::Document
 
-  field :feed_id, :type => BSON::ObjectId
+  field :feed_id
   field :root_id
   field :root_type
   field :ds, :default => 0
@@ -57,14 +57,7 @@ class FeedUserItem
 
       # make the root post
       root_post = RootPost.new
-      if post.is_root?
-        root_post.root = post
-      else
-        root_post.root = post.root
-        root_post.feed_responses << post
-      end
-
-      #root_post.public_talking = root_post.root.response_count
+      root_post.post = post
 
       # the potential users this post can be pushed to
       # take care of user mentions and users that are following the user that posted this
@@ -75,14 +68,19 @@ class FeedUserItem
         user_feed_users << post.user # add this post to this users own feed
       end
 
-
       # push to these users
       user_feed_users.each do |u|
         item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
 
         new_item = false
         unless item
-          post.pushed_users_count += 1 if post.user_id != u.id
+          if post.user_id != u.id
+            post.pushed_users_count += 1
+            if post.post_media_id
+              post.post_media.pushed_users_count += 1
+              post.post_media.save
+            end
+          end
           item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
           item.root_type = post.root_type
           new_item = true
@@ -112,7 +110,9 @@ class FeedUserItem
         # add created reason
         item.add_reason('c', post.user) if u.id == post.user_id
 
-        item.save if item.reasons.length > 0
+        next if item.reasons.length == 0
+
+        item.save
 
         root_post.push_item = item
 
@@ -132,24 +132,25 @@ class FeedUserItem
       post.topic_mentions.each do |topic|
         push_post_through_topic(post, topic)
       end
+
+      # push through sources
+      if post.post_media_id
+        post.post_media.sources.each do |source|
+          topic = Topic.find(source.id)
+          push_post_through_topic(post, topic) if topic
+        end
+      end
     end
 
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)
     # optionally push for a single user
     def push_post_through_topic(post, push_topic, single_user=nil, backlog=false)
-      #return if post.class.name == 'Talk'
-
       neo4j_topic_ids = Neo4j.pulled_from_ids([push_topic.neo4j_id])
       topics = Topic.where(:_id => {"$in" => [push_topic.id] + neo4j_topic_ids.map{|t| t[1]}})
 
       # make the root post
       root_post = RootPost.new
-      if post.is_root?
-        root_post.root = post
-      else
-        root_post.root = post.root
-        root_post.feed_responses << post
-      end
+      root_post.post = post
 
       #root_post.public_talking = root_post.root.response_count
 
@@ -231,80 +232,6 @@ class FeedUserItem
             item.save
           end
 
-        end
-      end
-
-      post.save
-    end
-
-    def like(user, post)
-
-      # make the root post
-      root_post = RootPost.new
-      if post.is_root?
-        root_post.root = post
-      else
-        root_post.root = post.root
-        root_post.feed_responses << post
-      end
-
-      #root_post.public_talking = root_post.root.response_count
-
-      user_feed_users = User.only(:id, :username, :following_users).where(:following_users => user.id)
-
-      user_feed_users.each do |u|
-        next if u.id == post.user_id
-
-        item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
-
-        unless item
-          post.pushed_users_count += 1
-          item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
-        end
-
-        item.root_type = post.root_type
-        item.last_response_time = Time.now
-        item.responses ||= []
-        item.responses << post.id unless post.is_root?
-
-        if post.is_root?
-          item.add_reason('lk', user)
-        else
-          item.add_reason('lkt', user)
-        end
-
-        item.save if item.reasons.length > 0
-
-        root_post.push_item = item
-
-        Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.to_json(:properties => :short))
-      end
-
-      post.save
-
-    end
-
-    def unlike(user, post)
-      user_feed_users = User.only(:id, :following_topics, :following_users).where(:following_users => user.id)
-
-      user_feed_users.each do |u|
-        next if u.id == post.user_id
-
-        item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
-
-        next unless item
-
-        if post.is_root?
-          item.remove_reason('lk', user)
-        else
-          item.remove_reason('lkt', user)
-        end
-
-        if item.reasons.length == 0
-          item.delete
-          post.pushed_users_count -= 1
-        else
-          item.save
         end
       end
 

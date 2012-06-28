@@ -90,7 +90,7 @@ describe TalksController do
         it "should redirect to the talk show page (json)" do
           post :create, :talk => {"content" => "blah blah"}, :format => :json
           response.response_code.should == 201
-          JSON.parse(response.body)['redirect'].should == talk_path(talk)
+          JSON.parse(response.body)['redirect'].should == post_path(talk)
           JSON.parse(response.body)['status'].should == "ok"
         end
       end

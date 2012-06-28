@@ -28,7 +28,6 @@ class LL.Views.App extends Backbone.View
     @event_subscriptions = {}
 
     # set the current user
-    console.log
     @current_user = if typeof current_user != 'undefined' then new LL.Models.User(current_user) else null
 
     # listen to the private user channgel
@@ -39,7 +38,9 @@ class LL.Views.App extends Backbone.View
 
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).resize ->
-      self.calculateSiteWidth()
+      $('body').stopTime 'resize'
+      $('body').oneTime 200, 'resize', ->
+        self.calculateSiteWidth()
 
   newScreen: (name, id) =>
     @screens["#{name}_#{id}"] = {
@@ -121,7 +122,7 @@ class LL.Views.App extends Backbone.View
 
 
   calculateSiteWidth: (force=false) =>
-    if force == false && $('#feed > .column').length == 0
+    if force == false && $('#feed .tile').length == 0
       return
 
     width = $(window).width()
@@ -138,7 +139,7 @@ class LL.Views.App extends Backbone.View
     unless $('body').hasClass(className)
       $('body').removeClass('two three four five').addClass(className)
       $('.qtip').qtip('reposition')
-      @trigger('rearrange_columns')
+      $('#feed').isotope('reLayout')
 
 
 

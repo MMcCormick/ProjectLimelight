@@ -39,9 +39,8 @@ class AutoFollowFBLikes
             topic.summary = fb_page['about'] unless topic.summary
             topic.user_id = User.marc_id unless topic.user_id
 
-            if topic.image_versions.to_i == 0 && fb_page['picture']
-              topic.remote_image_url = fb_page['picture']
-              topic.save_remote_image(true)
+            if topic.images.length.to_i == 0 && fb_page['picture']
+              topic.save_remote_image(fb_page['picture'], true)
             end
 
             saved = topic.save

@@ -16,7 +16,7 @@ class LL.Views.PostFormPreview extends Backbone.View
     if model
       if model.get('id')
         embedly = new LL.Models.Embedly()
-        embedly.set('limelight_post', new LL.Models.Post(model))
+        embedly.set('limelight_post', new LL.Models.PostMedia(model))
         @setData(embedly)
       else
         @setData(model)
@@ -26,6 +26,7 @@ class LL.Views.PostFormPreview extends Backbone.View
 
   setData: (model) =>
     if @show_preview
+
       $(@el).html(@template(model: model))
 
       $('#fetch-url-btn').removeClass('disabled').text('Fetch URL')
@@ -35,7 +36,7 @@ class LL.Views.PostFormPreview extends Backbone.View
 
     if model.get('limelight_post')
       @post_form_model.set({
-        'type': 'Talk',
+        'type': 'Post',
         'parent_id': model.get('limelight_post').get('id')
       })
     else
@@ -58,6 +59,13 @@ class LL.Views.PostFormPreview extends Backbone.View
       @post_form_model.set('embed', model.get('video'))
       if model.get('images').length > 0
         @post_form_model.set('remote_image_url', model.get('images')[0].url)
+
+    # change the help text
+    if model.get('limelight_post')
+      console.log $(@post_form).find('.step.one .desc')
+      $(@post_form).find('.step.one .desc').text("Say something about this #{model.get('limelight_post').get('type')} (optional)")
+    else
+      $(@post_form).find('.step.one .desc').text("Say something about this #{model.get('type')} (optional)")
 
   setResponse: (model) ->
     embedly = new LL.Models.Embedly()

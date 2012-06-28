@@ -6,7 +6,7 @@ class NewsletterMailer < ActionMailer::Base
 
   def weekly_email(user, pop_talks, pop_links, pop_pics, pop_vids)
     interests = Neo4j.user_interests(user.id, 20)
-    interests = interests[:specific].map{ |i| BSON::ObjectId(i[:data]['id']) }
+    interests = interests[:specific].map{ |i| Moped::BSON::ObjectId(i[:data]['id']) }
 
     talks = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Talk').desc(:p).limit(3).to_a
     links = FeedTopicItem.where(:mentions.in => interests, :root_type => 'Link').desc(:p).limit(3).to_a

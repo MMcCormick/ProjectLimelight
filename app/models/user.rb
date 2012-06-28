@@ -83,10 +83,7 @@ class User
   embeds_many :social_connects
 
   has_many :posts
-  has_many :links
-  has_many :videos
-  has_many :talks
-  has_many :pictures
+  has_many :post_media, :class_name => 'PostMedia'
   has_many :topics
   has_many :topic_connections
   has_many :comments
@@ -363,10 +360,12 @@ class User
 
   def topic_activity_recalculate
     self.topic_activity = {}
+    self.posts_count = 0
     posts.each do |p|
       p.topic_mention_ids.each do |t|
         topic_activity_add(t)
       end
+      self.posts_count += 1
     end
   end
 
@@ -400,11 +399,13 @@ class User
 
   def topic_likes_recalculate
     self.topic_likes = {}
+    self.likes_count = 0
     likes = Post.where(:like_ids => id)
     likes.each do |p|
       p.topic_mention_ids.each do |t|
         topic_likes_add(t)
       end
+      self.likes_count += 1
     end
   end
 
@@ -432,7 +433,7 @@ class User
   end
 
   def fullname
-    if first_name and last_name then "#{first_name} #{last_name}" else nil end
+    if first_name and last_name then "#{first_name} #{last_name}" else username end
   end
 
   def add_to_soulmate
@@ -508,22 +509,22 @@ class User
   end
 
   def neo4j_create
-    #node = Neo4j.neo.create_node(
-    #        'uuid' => id.to_s,
-    #        'type' => 'user',
-    #        'username' => username,
-    #        'created_at' => created_at.to_i,
-    #        'score' => score
-    #)
-    #Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
-    #self.neo4j_id = node['self'].split('/').last
-    #save
-    #node
+    node = Neo4j.neo.create_node(
+            'uuid' => id.to_s,
+            'type' => 'user',
+            'username' => username,
+            'created_at' => created_at.to_i,
+            'score' => score.to_i
+    )
+    Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
+    self.neo4j_id = node['self'].split('/').last
+    save
+    node
   end
 
   def neo4j_update
     node = Neo4j.neo.get_node_index('users', 'uuid', id.to_s)
-    Neo4j.neo.set_node_properties(node, {'username' => username, 'slug' => slug}) if node
+    Neo4j.neo.set_node_properties(node, {'username' => username, 'score' => score.to_i}) if node
   end
 
   def invite_stuff
@@ -594,13 +595,13 @@ class User
   end
 
   def update_social_denorms
-    object_user_updates = { "object_user.fbuid" => self.fbuid }
-    triggered_by_updates = { "triggered_by.$.fbuid" => self.fbuid }
-    object_user_updates["object_user.twuid"] = self.twuid
-    triggered_by_updates["triggered_by.$.twuid"] = self.twuid
-
-    Notification.where("object_user._id" => id).update_all(object_user_updates)
-    Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
+    #object_user_updates = { "object_user.fbuid" => self.fbuid }
+    #triggered_by_updates = { "triggered_by.$.fbuid" => self.fbuid }
+    #object_user_updates["object_user.twuid"] = self.twuid
+    #triggered_by_updates["triggered_by.$.twuid"] = self.twuid
+    #
+    #Notification.where("object_user._id" => id).update_all(object_user_updates)
+    #Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
   end
 
   def auto_follow (provider)
@@ -682,6 +683,7 @@ class User
     :type => { :definition => lambda { |instance| 'User' }, :properties => :short, :versions => [ :v1 ] },
     :slug => { :properties => :short, :versions => [ :v1 ] },
     :username => { :properties => :short, :versions => [ :v1 ] },
+    :name => { :definition => :fullname, :properties => :short, :versions => [ :v1 ] },
     :first_name => { :properties => :short, :versions => [ :v1 ] },
     :last_name => { :properties => :short, :versions => [ :v1 ] },
     :score => { :properties => :short, :versions => [ :v1 ] },
@@ -711,6 +713,7 @@ class User
 
     def json_images(model)
       {
+        :ratio => model.image_ratio,
         :original => model.image_url(nil, nil, nil, true),
         :fit => {
           :large => model.image_url(:fit, :large),
@@ -762,7 +765,7 @@ class User
           connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
 
           user.social_connects << connect
-          user.use_fb_image = true if omniauth['provider'] == 'facebook' && user.image_versions == 0
+          user.use_fb_image = true if omniauth['provider'] == 'facebook' && user.images.length == 0
           user.update_social_denorms
         end
         # Update the token
@@ -800,7 +803,7 @@ class User
         connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
         user.social_connects << connect
         user.origin = omniauth['provider']
-        user.use_fb_image = true if user.image_versions == 0
+        user.use_fb_image = true if user.images.length == 0
         user.update_social_denorms
       end
 
@@ -864,39 +867,25 @@ class User
 
   def update_denorms
     update = false
-    object_user_updates = {}
-    triggered_by_updates = {}
     if username_changed?
       update = true
-      object_user_updates["object_user.username"] = self.username
-      triggered_by_updates["triggered_by.$.username"] = self.username
       if username_was.blank? && !social_connects.empty?
         Resque.enqueue(AutoFollow, self.id.to_s, social_connects.first.provider.to_s)
       end
     end
     if status_changed?
       update = true
-      object_user_updates["object_user.status"] = self.status
-      triggered_by_updates["triggered_by.$.status"] = self.status
     end
     if first_name_changed?
       update = true
-      object_user_updates["object_user.first_name"] = self.first_name
-      triggered_by_updates["triggered_by.$.first_name"] = self.first_name
     end
     if last_name_changed?
       update = true
-      object_user_updates["object_user.last_name"] = self.last_name
-      triggered_by_updates["triggered_by.$.last_name"] = self.last_name
     end
     if use_fb_image_changed?
       update = true
-      object_user_updates["object_user.use_fb_image"] = self.use_fb_image
-      triggered_by_updates["triggered_by.$.use_fb_image"] = self.use_fb_image
     end
     if update
-      Notification.where("object_user._id" => id).update_all(object_user_updates)
-      Notification.where("triggered_by._id" => id).update_all(triggered_by_updates)
       neo4j_update
       Resque.enqueue(SmCreateUser, id.to_s)
     end

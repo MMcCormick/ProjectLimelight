@@ -13,6 +13,7 @@ class Comment
   field :parent_id
   field :depth, :default => 0
   field :path, :default => ""
+  field :talk_id
 
   belongs_to :post, index: true
   belongs_to :user, index: true
@@ -37,20 +38,25 @@ class Comment
   end
 
   def add_to_count
-    post.response_count = post.response_count.to_i + 1
-    post.update_response_counts(user_id)
+    post.comment_count += 1
     post.save
   end
 
   def send_notifications(user)
     notification = Notification.add(post.user, :comment, true, user, nil, post, post.user, nil)
-    Pusher["#{post.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
+
+    unless post.user.id == user.id
+      Pusher["#{post.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
+    end
+
     siblings = Comment.where(:post_id => post.id)
     used_ids = []
     siblings.each do |sibling|
       unless used_ids.include?(sibling.user_id.to_s) || (post.user_id == sibling.user_id) || (sibling.user_id == user.id)
         notification = Notification.add(sibling.user, :also, true, user, nil, post, post.user, sibling)
-        Pusher["#{sibling.user_id.to_s}_private"].trigger('new_notification', notification.to_json)
+        unless sibling.user.id == user.id
+          Pusher["#{sibling.user_id.to_s}_private"].trigger('new_notification', notification.to_json)
+        end
       end
       used_ids << sibling.user_id.to_s
     end
@@ -60,7 +66,7 @@ class Comment
     :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
     :content => { :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
-    :user => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
+    :user => { :type => :reference, :properties => :short, :versions => [ :v1 ] }
 
 
   class << self

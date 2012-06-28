@@ -236,8 +236,7 @@ class TopicsController < ApplicationController
     authorize! :update, topic
 
     if params[:url]
-      topic.remote_image_url = params[:url]
-      topic.save_remote_image(true)
+      topic.save_remote_image(params[:url], true)
       topic.save
     end
 

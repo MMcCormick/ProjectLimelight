@@ -13,10 +13,7 @@ class LL.Views.PostsFeed extends Backbone.View
     # Default to no specific topic id
     @topic_id = null
 
-    # A tile is the backbone view representing one tile on the feed
-    @tiles = []
-    @columns = []
-
+    @isotope_loaded = false
     @default_text = 'There are no items in this feed'
     @type = null
     @on_add = 'append'
@@ -25,29 +22,37 @@ class LL.Views.PostsFeed extends Backbone.View
 
     LL.App.calculateSiteWidth(true)
 
-    LL.App.on('rearrange_columns', @rearrangeColumns)
-
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).bind 'scroll', (e) ->
       self.loadMore(e)
 
   render: =>
     self = @
+    console.log('render')
 
     if @collection.models.length == 0
       $(@el).append("<div class='none'>#{@default_text}</div>")
     else
       $(@el).remove('.none')
 
-      # we start with no columns
-      @columns = []
-      @minColumnHeight = 0
-      @arrangeColumns()
-
       for root_post in @collection.models
         @appendPost(root_post)
 
       LL.App.calculateSiteWidth()
+
+      setTimeout ->
+        if self.isotope_loaded == true
+          $(self.el).isotope('destroy')
+
+        $(self.el).isotope
+          animationEngine: 'best-available'
+          itemSelector: '.tile'
+          layoutMode: 'masonryColumnShift'
+          masonryColumnShift:
+            columnWidth: 340
+
+        self.isotope_loaded = true
+      , 100
 
     if LL.App.current_user
       view = new LL.Views.PostForm()
@@ -81,48 +86,21 @@ class LL.Views.PostsFeed extends Backbone.View
         else
           post = new LL.Models.RootPost(data)
           self.collection.add(post, {silent: true})
-          self.prependPost(post)
+          self.prependPost(post, true)
 
     @
 
-  rearrangeColumns: =>
-    @columns = []
-    @minColumnHeight = 0
-    @arrangeColumns()
-
-    for tile in @tiles
-      column = @chooseColumn()
-      $(column.el).append(tile.el)
-      column.height = $(column.el).height()
-
-  arrangeColumns: =>
-    column_count = Math.floor($('#feed').width() / 320)
-
-    for num in [1..column_count]
-      column = new LL.Views.FeedColumn()
-      $(@el).append(column.render().el)
-      $(column.el).addClass('last') if num == column_count
-      @columns.unshift(column)
-
-  chooseColumn: =>
-    min_height = 9999999999999
-    for column in @columns
-      if column.height <= min_height
-        chosen = column
-        min_height = column.height
-    chosen
-
   handleNewPost: (root_post) =>
     if @on_add == 'append'
-      @appendPost(root_post)
+      @appendPost(root_post, true)
     else
-      @prependPost(root_post)
+      @prependPost(root_post, true)
 
   addPost: (root_post) =>
     self = @
 
-    if root_post.get('root').get('type') != 'Talk'
-      root_id = root_post.get('root').get('id')
+    if root_post.get('post').get('type') != 'Post'
+      root_id = root_post.get('post').get('id')
 
       channel = LL.App.get_subscription(root_id)
       unless channel
@@ -130,21 +108,22 @@ class LL.Views.PostsFeed extends Backbone.View
 
       unless LL.App.get_event_subscription(root_id, 'new_response')
         channel.bind 'new_response', (data) ->
-          console.log data
-          if root_post.get('root')
+          if root_post.get('post')
             post = new LL.Models.Post(data)
-            root_post.get('feed_responses').unshift(post)
+            root_post.get('posts').unshift(post)
             root_post.trigger('new_response', post)
 
         LL.App.subscribe_event(root_id, 'new_response')
 
-  prependPost: (root_post) =>
-    column = @chooseColumn()
-    tile = new LL.Views.RootPost(model: root_post)
-    @tiles.push tile
-    tile.render()
-    column.prependPost tile
-    $(tile.el).addClass('fade-new').find('.root').animate(backgroundColor: '#FFF', 600000)
+  prependPost: (root_post, single=false) =>
+    tile = new LL.Views.FeedTile(model: root_post)
+    $(@el).prepend($(tile.render().el).addClass('new'))
+
+    if single
+      self = @
+      setTimeout ->
+        $(self.el).isotope('reloadItems').isotope({ sortBy: 'original-order' })
+      , 100
 
     @addPost(root_post)
 
@@ -152,12 +131,17 @@ class LL.Views.PostsFeed extends Backbone.View
 
     @
 
-  appendPost: (root_post) =>
-    column = @chooseColumn()
-    if root_post.get('root')
-      tile = new LL.Views.RootPost(model: root_post)
-      @tiles.push tile
-      column.appendPost tile
+  appendPost: (root_post, single=false) =>
+    if root_post.get('post')
+      tile = new LL.Views.FeedTile(model: root_post)
+
+      if single
+        self = @
+        setTimeout ->
+          $(self.el).isotope('insert', $(tile.render().el))
+        , 100
+      else
+        $(@el).append(tile.render().el)
 
       @addPost(root_post)
 

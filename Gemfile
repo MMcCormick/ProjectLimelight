@@ -8,13 +8,12 @@ gem 'rails', '3.2.6'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'
-gem 'mongoid', '3.0.0.rc', :require => 'mongoid' # MongoDB
+gem 'mongoid', :git => 'git://github.com/mongoid/mongoid.git' #'3.0.0.rc', :require => 'mongoid' # MongoDB
 gem 'devise' # Authentication
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omnicontacts' # for contact import
 gem 'koala', '1.5' # facebook graph api support
 gem 'twitter' # twitter api support
 gem 'resque', '1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
@@ -84,6 +83,7 @@ platforms :ruby do
   #gem 'hirefireapp' # Heroku web/worker auto scaling hirefireapp.com
   gem 'heroku'
   gem 'newrelic_rpm'
+  gem 'newrelic_moped'
   #gem 'rpm_contrib', '2.1.11' # extra instrumentation for the new relic rpm agent
   #gem 'newrelic-redis', '1.3.2' # new relic redis instrumentation
   #gem 'newrelic-faraday'

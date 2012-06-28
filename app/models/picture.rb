@@ -1,4 +1,4 @@
-class Picture < Post
+class Picture < PostMedia
 
   def name
     title

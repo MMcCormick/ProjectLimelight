@@ -58,7 +58,6 @@ class TopicConnection
         Neo4j.neo.set_relationship_properties(rel1, {
                 'connection_id' => connection.id.to_s,
                 'reverse_name' => connection.reverse_name,
-                'inline' => connection.inline,
                 'user_id' => user_id.to_s,
                 'pull' => (pulla.nil? ? connection.pull_from : pulla[:pull]),
                 'reverse_pull' => (pulla.nil? ? connection.reverse_pull_from : pulla[:reverse_pull])

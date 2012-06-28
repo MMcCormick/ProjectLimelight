@@ -77,8 +77,8 @@ class User
   field :unlimited_code_id
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id
-  field :topic_activity, :default => {} # keeps track of how many posts a user has in topics (just counts)
-  field :topic_likes, :default => {} # keeps track of how many likes a user has in topics (just counts)
+  field :topic_activity, :type => Hash, :default => {} # keeps track of how many posts a user has in topics (just counts)
+  field :topic_likes, :type => Hash, :default => {} # keeps track of how many likes a user has in topics (just counts)
 
   embeds_many :social_connects
 
@@ -346,6 +346,7 @@ class User
   end
 
   def topic_activity_add(topic_id)
+    self.topic_activity = {} if topic_activity.blank?
     self.topic_activity[topic_id.to_s] ||= 0
     self.topic_activity[topic_id.to_s] += 1
     self.topic_activity = Hash[topic_activity.sort_by{|id,count| count}.reverse]

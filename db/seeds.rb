@@ -29,7 +29,7 @@ unless marc
           :email => 'marbemac@gmail.com',
           :password => '87yot4',
           :password_confirmation => '87yot4',
-          :invite_code_id => invite_code.id
+          :used_invite_code_id => invite_code.id
   )
   marc.grant_role('admin')
   marc.id = User.marc_id
@@ -50,7 +50,7 @@ unless matt
           :email => 'matt.c.mccormick@gmail.com',
           :password => '87yot4',
           :password_confirmation => '87yot4',
-          :invite_code_id => invite_code.id
+          :used_invite_code_id => invite_code.id
   )
   matt.grant_role('admin')
   matt.id = User.matt_id
@@ -71,7 +71,7 @@ unless limelight_bot
           :email => 'bot@projectlimelight.com',
           :password => '87yot4',
           :password_confirmation => '87yot4',
-          :invite_code_id => invite_code.id
+          :used_invite_code_id => invite_code.id
   )
   limelight_bot.id = User.limelight_user_id
   limelight_bot.save!

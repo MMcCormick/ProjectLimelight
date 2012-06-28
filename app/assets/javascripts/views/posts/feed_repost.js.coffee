@@ -14,12 +14,12 @@ class LL.Views.FeedRepost extends Backbone.View
 
   render: ->
 
-    if @model.get('post').get('media').get('images').width >= 300
+    if @model.get('post').get('media').get('images') && @model.get('post').get('media').get('images').w >= 300
       @img_w = 300
-    else if @model.get('post').get('media').get('images').width
-      @img_w = @model.get('post').get('media').get('images').width
+    else if @model.get('post').get('media').get('images') && @model.get('post').get('media').get('images').w
+      @img_w = @model.get('post').get('media').get('images').w
 
-    if @model.get('post').get('media').get('images').ratio && @img_w
+    if @img_w && @model.get('post').get('media').get('images').ratio
       @img_h = @img_w / @model.get('post').get('media').get('images').ratio
 
     $(@el).html(@template(post: @model.get('post'), img_w: @img_w, img_h: @img_h))

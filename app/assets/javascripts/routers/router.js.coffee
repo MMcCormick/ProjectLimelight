@@ -565,3 +565,7 @@ class LL.Router extends Backbone.Router
           view.placeholder_text = "Suggest something!"
           $('.content-tile section').append(view.render().el)
           view.addTopic($(view.el).find('#post-form-mention1'), "Limelight Feedback", '4ecab6c1cddc7fd77f000106')
+
+  inviteContacts: (provider) ->
+    collection = new LL.Collections.Contacts()
+    console.log(collection)

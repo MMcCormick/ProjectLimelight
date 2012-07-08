@@ -376,7 +376,7 @@ $feedFontColor: $grayDark;
 
   &:hover {
     .mentions {
-      @include opacity(80);
+      @include opacity(90);
     }
     .tlink {
       color: $blue;

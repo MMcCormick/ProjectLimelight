@@ -106,13 +106,13 @@ class LL.Views.UserTutorialTips extends Backbone.View
 
   tutorial16: =>
     @target = $('.navbar .talk')
-    @title = 'What do you want to say?'
+    @title = 'Post a Link'
     @my = 'top middle'
     @at = 'bottom middle'
     @tip = true
     @button = 'Finish'
     @content = '
-      Your post can be text (like a Tweet), or a cool picture, video, or link.
+      On Limelight you post links to things on the web. You can post a link to anything (video, picture, article, blog post, etc).
       <br /><br />
       Tag a topic in your post to and your post will be shown to that topic\'s followers.
     '

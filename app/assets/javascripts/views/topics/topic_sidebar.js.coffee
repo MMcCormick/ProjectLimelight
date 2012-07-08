@@ -12,10 +12,6 @@ class LL.Views.TopicSidebar extends Backbone.View
     # Profile image
     $(@el).append("<img class='profile-image' src='#{@model.get('images').fit.large}' />")
 
-    # Talk form
-#    talk = new LL.Views.TopicSidebarTalk(model: @model)
-#    $(@el).append(talk.render().el)
-
     follow = new LL.Views.FollowButton(model: @model)
     $(@el).append(follow.render().el)
 
@@ -27,7 +23,7 @@ class LL.Views.TopicSidebar extends Backbone.View
       info = new LL.Views.TopicSidebarInfo(model: @model)
       $(@el).append(info.render().el)
 
-    if @model.get('aliases').length > 0
+    if @model.get('visible_alias_count') > 0
       aliases = new LL.Views.TopicSidebarAliases(model: @model)
       $(@el).append(aliases.render().el)
 

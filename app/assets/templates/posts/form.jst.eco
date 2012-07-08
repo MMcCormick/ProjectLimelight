@@ -1,79 +1,9 @@
-<form>
-  <div class='top-bg stripe-hb'></div>
+<div class='top-bg stripe-hb'></div>
 
-  <% if @with_header: %>
-  <div class="modal-header">
-    <% if @modal || @cancel_buttons: %>
-      <a class="close" data-dismiss="modal">×</a>
-    <% end %>
-    <h4>+Post</h4>
-  </div>
-  <% end %>
+<div class="modal-header">
+  <a class="close" data-dismiss="modal">×</a>
+  <h4>+Post</h4>
+</div>
 
-  <div class="modal-body">
-
-    <div class='preview'>
-      <input id="post-form-fetch-url" type="text" placeholder='Paste URL to fetch...' autocomplete='off' />
-      <div class='btn' id='fetch-url-btn'>Fetch URL</div>
-    </div>
-
-    <div class='errors'></div>
-
-    <div class='step one'>
-      <div class='top'>
-        <div class='counter'>1</div>
-        <div class='desc'>What do you want to say? Optionally paste a URL.</div>
-      </div>
-      <div class="main-content">
-        <textarea id="post-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="<%= @placeholder_text %>"><%= @initial_text %></textarea>
-      </div>
-    </div>
-
-    <div class='step two'>
-      <div class='top'>
-        <div class='counter'>2</div>
-        <div class='desc'>What is this about? Tag 1-2 topics.</div>
-      </div>
-      <div class="mentions">
-        <div>
-          <div class='tm-wrap'>
-            <input class='topic-mention' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
-            <input class='topic-mention-id' type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
-          </div>
-        </div>
-        <div>
-          <div class='tm-wrap two'>
-            <input class='topic-mention' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
-            <input class='topic-mention-id' type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <input type="hidden" id="post-form-source-url" name="source_url" />
-    <input type="hidden" id="post-form-source-name" name="source_name" />
-    <input type="hidden" id="post-form-source-vid" name="source_video_id" />
-    <input type="hidden" id="post-form-embed" name="embed_html" />
-    <input type="hidden" id="post-form-type" name="type" value="Post" />
-    <input type="hidden" id="post-form-parent-id" name="post_media_id" />
-    <input type="hidden" id="post-form-remote-image-url" name="remote_image_url" autocomplete="off" />
-    <input type="hidden" id="post-form-image-cache" name="image_cache" autocomplete="off" />
-    <div id="picture_pupB"></div>
-  </div>
-  <div class="modal-footer">
-    <div class='stats'>
-
-      <div class='you'>
-        This post will go to your <%= LL.App.current_user.get('followers_count') %> followers
-        <% if LL.App.current_user.get('followers_count') == 0: %>
-          (hmm, maybe invite a friend?)
-        <% end %>
-      </div>
-      <div class='topic-default'>Tag topics to reach more users</div>
-    </div>
-    <div class="btn btn-success submit" data-loading-text='Submitting...'>Submit</div>
-    <% if @modal || @cancel_buttons: %>
-      <span class="cancel btn">Cancel</span>
-    <% end %>
-  </div>
-</form>
+<div class='fetch'></div>
+<div class='content'></div>

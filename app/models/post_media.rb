@@ -14,15 +14,13 @@ class PostMedia
   field :posted_ids, :default => [] # ids of users that have posted this
   field :posts_count, :default => 0 # how many reposts
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
-  field :comment_count, :default => 0 # deprecated
   field :neo4j_id
   field :status, :default => 'active'
-  field :embed_html # video embeds deprecated
 
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
 
   belongs_to :user, :index => true
-  has_many :posts#, :index => true
+  has_many :posts
 
   validate :title_length, :unique_source
 

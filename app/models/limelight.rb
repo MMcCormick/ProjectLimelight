@@ -570,8 +570,8 @@ module Limelight #:nodoc:
     def throttle_check
       unless persisted? || user_id.to_s == User.limelight_user_id
         last = Kernel.const_get(self.class.name).where(:user_id => user_id).desc(:_id).first
-        if last && Time.now - last.created_at < 15
-          errors.add(:limited, "You must wait at least 10 sections before posting again")
+        if last && Time.now - last.created_at < 10
+          errors.add(:limited, "You must wait at least 10 seconds before posting again")
         end
       end
     end

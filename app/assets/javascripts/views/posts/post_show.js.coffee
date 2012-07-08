@@ -63,12 +63,8 @@ class LL.Views.PostShow extends Backbone.View
       return
 
     view = new LL.Views.PostForm()
-    view.cancel_buttons = true
-    view.modal = true
-    view.with_header = false
-    view.close_callback = @closePost
+    view.setModel(@model)
     view.render()
-    view.preview.setResponse(@model.get('media'))
 
   navBack: (e) =>
     history.back()

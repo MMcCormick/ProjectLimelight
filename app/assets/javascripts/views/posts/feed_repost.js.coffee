@@ -51,7 +51,6 @@ class LL.Views.FeedRepost extends Backbone.View
         form = new LL.Views.CommentForm(model: @model.get('post'))
         form.minimal = true
         $(@el).find('.bottom').append(form.render().el).append(@comments_view.render().el)
-        console.log @model.get('post')
         @model.get('post').fetchComments()
 
       $(@el).addClass('open', 100).find('.bottom').slideDown 100, ->
@@ -73,12 +72,8 @@ class LL.Views.FeedRepost extends Backbone.View
       return
 
     view = new LL.Views.PostForm()
-    view.cancel_buttons = true
-    view.modal = true
-    view.with_header = false
-    view.close_callback = @closePost
+    view.setModel(@model.get('post'))
     view.render()
-    view.preview.setResponse(@model.get('post').get('media'))
 
   closePost: (form) =>
     $(form.el).remove();

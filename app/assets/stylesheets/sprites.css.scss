@@ -153,3 +153,8 @@
   width: 26px;
   height: 14px;
 }
+.ll-arrow-r-dark {
+  @include icon-sprite(arrow-right-dark);
+  width: 16px;
+  height: 10px;
+}

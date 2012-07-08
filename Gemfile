@@ -8,7 +8,7 @@ gem 'rails', '3.2.6'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'
-gem 'mongoid', :git => 'git://github.com/mongoid/mongoid.git' #'3.0.0.rc', :require => 'mongoid' # MongoDB
+gem 'mongoid', '3.0.0', :require => 'mongoid' # MongoDB
 gem 'devise' # Authentication
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'

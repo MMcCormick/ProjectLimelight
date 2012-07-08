@@ -92,11 +92,6 @@ $feedFontColor: $grayDark;
   width: 300px;
   float: left;
 
-  .post,
-  .repost {
-    @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
-    background: #FFF;
-  }
   &.column-fixed {
     margin-top: 23px;
     #post-form {
@@ -104,7 +99,9 @@ $feedFontColor: $grayDark;
     }
   }
   &.new {
-    border: 1px dotted red;
+    .meat {
+      border: 1px dotted red;
+    }
   }
   .reasons {
     position: absolute;
@@ -144,18 +141,29 @@ $feedFontColor: $grayDark;
     }
   }
   .mentions {
-    position: relative;
-    padding: 0 0 2px 0;
+    @include opacity(35);
 
+    position: relative;
+    margin: 0 3px;
+    padding: 0 12px 0 35px;
+    background: #E7E7E7;
+
+    .ll-arrow-r-dark {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
     > span {
       position: relative;
+      padding: 5px 3px;
+      display: inline-block;
     }
     .tlink {
       white-space: nowrap;
       display: inline-block;
       padding: 0 15px 0 0;
       font-size: 12px;
-      color: #999;
+      color: #000;
       &:hover {
         color: $blue !important;
         text-decoration: underline;
@@ -165,14 +173,14 @@ $feedFontColor: $grayDark;
       cursor: pointer;
       display: none;
       position: absolute;
-      top: 4px;
-      right: 5px;
+      top: 10px;
+      right: 0;
     }
     .add {
       cursor: pointer;
       position: absolute;
-      top: 8px;
-      right: 4px;
+      top: 11px;
+      right: 5px;
       display: none;
     }
     .mention-add-form {
@@ -203,50 +211,8 @@ $feedFontColor: $grayDark;
     background: #FFF;
     border-bottom: 1px solid #CCC;
   }
-  .post {
-    padding: 0;
-    min-height: 59px;
-    position: relative;
-    cursor: pointer;
-    background: #FFF;
-
-    .when {
-      color: $grayLight;
-      font-size: 11px;
-      a {
-        color: $grayDark;
-      }
-    }
-
-    .top {
-      padding: 11px 15px 10px 77px;
-      min-height: 40px;
-
-      > img {
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        top: 15px;
-        left: 15px;
-      }
-      .ulink {
-        font-size: 13px;
-      }
-      p {
-        font-size: 13px;
-        margin: 3px 0;
-        line-height: 16px;
-      }
-      .when {
-        position: absolute;
-        top: 12px;
-        right: 15px;
-      }
-    }
-  }
 
   .reposts {
-    background: #FFF;
     padding: 0 1px 0 1px;
     cursor: pointer;
 
@@ -255,13 +221,16 @@ $feedFontColor: $grayDark;
       list-style: none;
     }
     .repost {
-      padding: 0 0 10px 0;
 
+      .meat {
+        @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
+        background: #FFF;
+        padding: 0 0 10px 0;
+      }
       .top {
         position: relative;
         margin: 0 13px;
-        padding: 0 2px 8px 2px;
-        border-bottom: 1px solid #EEE;
+        padding: 0 2px 0 2px;
 
         .source {
           font-size: 11px;
@@ -406,10 +375,9 @@ $feedFontColor: $grayDark;
   }
 
   &:hover {
-    //.post,
-    //.reposts {
-    //  background: #F9F9F9;
-    //}
+    .mentions {
+      @include opacity(80);
+    }
     .tlink {
       color: $blue;
     }

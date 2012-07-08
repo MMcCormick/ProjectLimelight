@@ -3,76 +3,86 @@ class LL.Views.PostForm extends Backbone.View
   id: 'post-form'
 
   events:
-      "focus textarea": "changeMinimal"
       "click .submit": "createPost"
       "click .cancel": "destroyForm"
+      "click .find-url": "findUrl"
+      'keypress .url': 'catchUrlEnter'
+      "blur .url": 'blurUrl'
 #      "click .close": "destroyForm"
-      "click .icons .icon:not(.cancel-preview)": "activateType"
-      "click .icons .cancel-preview": "removeEmbedly"
-      "click #fetch-url-btn": "fetchEmbedly"
-      "keyup #post-form-content": "monitorSpacebarUrl"
-      "keypress #post-form-fetch-url": "monitorUrlEnter"
-      "paste #post-form-content": "checkUrl"
-      "paste #post-form-fetch-url": "fetchEmbedly"
+      #"click #fetch-url-btn": "fetchEmbedly"
+      #"keyup #post-form-content": "monitorSpacebarUrl"
+      #"keypress #post-form-fetch-url": "monitorUrlEnter"
+      #"paste #post-form-content": "checkUrl"
+      #"paste #post-form-fetch-url": "fetchEmbedly"
       "blur .topic-mention": "clearTopic"
 
   initialize: ->
     @collection = new LL.Collections.Posts()
-
-    @modal = false # display in a modal box?
-    @with_header = true # show the header
-    @cancel_buttons = false # display close/cancel buttons?
     @close_callback = null # optional close callback, must be a function
-    @show_preview = true # show post previews? (links, pictures, videos)
-    @minimal = false # only show the input field
-    @initial_text = '' # initial text to show in the textarea
-    @placeholder_text = '280 character limit...' # initial placeholder text to show in the text area
-
-    @model = new LL.Models.PostForm()
-    @model.on('change', @updateFields)
-    @model.on('change:type', @updateType)
-
-    @embedly_collection = new LL.Collections.Embedly
-    @preview = new LL.Views.PostFormPreview({collection: @embedly_collection, post_form_model: @model})
-    @preview.post_form_model = @model
+    @model = null # represents the link
+    @fetch_form = null
+    @content_form = null
+    @url = null
 
   render: =>
-    $(@el).html(@template(modal: @modal, cancel_buttons: @cancel_buttons, with_header: @with_header, initial_text: @initial_text, placeholder_text: @placeholder_text))
-    @preview.target = $(@el).find('.preview')
-    @preview.post_form = @el
+    $(@el).html(@template())
 
-    # setTimeout to wait for the modal animation so that the autocomplete can position itself correctly
     self = @
+    $(@el).addClass('modal fade').modal()
 
-    if @modal
-      $(@el).addClass('modal fade')
-      $(@el).modal()
-
-    setTimeout ->
-      $(self.el).find('input.topic-mention').each (i,val) ->
-        $(val).soulmate
-          url:            '/autocomplete/search',
-          types:          ['topic'],
-          minQueryLength: 2,
-          maxResults:     10,
-          allowNew:       true,
-          selectFirst:    true,
-          renderCallback: (term, data, type) ->
-            html = term
-            if data.data && data.data.type
-              html += "<div class='topic-type'>#{data.data.type}</div>"
-            html
-          selectCallback: (term, data, type) ->
-            name = if data.data then data.data.slug else 'new'
-            self.addTopic($(val), data.term, data.id, name)
-    , 1200
+    if @model
+      @showContent()
+      for topic,i in @model.post.get('topic_mentions')
+        @content_form.addTopic($(@el).find("#post-form-mention#{i+1}"), topic.get('name'), topic.get('id'), topic.get('slug'))
+      $(@el).find('.fetch').remove()
+    else
+      @fetch_form = new LL.Views.PostFormFetch()
+      $(@el).find('.fetch').html(@fetch_form.render().el)
 
     $(@el).updatePolyfill()
 
-    if @minimal
-      $(@el).addClass('minimal')
-
     @
+
+  catchUrlEnter: (e) =>
+    key = if e.charCode then e.charCode else if e.keyCode then e.keyCode else 0
+    if key == 13
+      $(@el).find('.find-url').click()
+
+  blurUrl: (e) =>
+    if ($(e.currentTarget).get(0).setSelectionRange)
+      $(e.currentTarget).get(0).setSelectionRange(0, 0)
+    else if ($(e.currentTarget).get(0).createTextRange)
+      range = $(e.currentTarget).get(0).createTextRange()
+      range.collapse(true)
+      range.moveEnd('character', 0)
+      range.moveStart('character', 0)
+      range.select()
+
+  findUrl: (e) =>
+    @url = $(@el).find('.url').val()
+
+    return if !@url || $.trim(@url).length == 0
+
+    $(@el).find('.url').blur()
+
+    $(@el).find('.find-url').addClass('disabled').text('Working...')
+
+    self = @
+
+    $.ajax '/embed',
+      type: 'GET',
+      data: {url: @url}
+      success: (data) ->
+        self.model = data
+        if data.existing
+          self.model.existing = new LL.Models.PostMedia(data.existing)
+        self.showContent()
+        $(self.el).find('.find-url').removeClass('disabled').text('Find URL')
+      error: (jqXHR, textStatus, errorThrown) ->
+
+  showContent: () =>
+    @content_form = new LL.Views.PostFormContent(model: @model)
+    $(@el).find('.content').html(@content_form.render().el)
 
   createPost: (e) =>
     return if $(@el).find('.btn-success').hasClass('disabled') || e.keyCode == 13 || e.keyCode == 89
@@ -108,70 +118,10 @@ class LL.Views.PostForm extends Backbone.View
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
 
   destroyForm: ->
-    if @modal
-      $(@el).modal('hide')
-    else if @minimal
-      $(@el).addClass('minimal')
-      @render()
-    else if @close_callback
+    if @close_callback
       @close_callback(@)
-
-
-  updateFields: =>
-    $(@el).find('#post-form-source-url').val(@model.get('source_url'))
-    $(@el).find('#post-form-source-name').val(@model.get('provider_name'))
-    $(@el).find('#post-form-source-vid').val(@model.get('source_vid'))
-    $(@el).find('#post-form-embed').val(@model.get('embed'))
-    $(@el).find('#post-form-parent-id').val(@model.get('parent_id'))
-    $(@el).find('#post-form-remote-image-url').val(@model.get('remote_image_url'))
-    $(@el).find('#post-form-image-cache').val(@model.get('image_cache'))
-
-  addTopic: (target, name, id) =>
-    target.val(name).next().val(id)
-    self = @
-    if id != "0"
-      topic = new LL.Models.Topic({id: id})
-      if topic.get('followers_count')
-        @addTopicStat(topic)
-      else
-        topic.fetch(success: (model, response) -> self.addTopicStat(model))
-
-  addTopicStat: (topic) =>
-    $(@el).find(".topic-default").hide()
-    unless $(@el).find(".stats .t-#{topic.get('id')}").length > 0
-      $(@el).find(".stats").append("<div class='topic-stat t-#{topic.get('id')}'>+#{topic.get('followers_count')} user#{if topic.get('followers_count') != 1 then 's' else ''} following #{topic.get('name')}</div>")
-
-  removeTopicStat: (topic) =>
-    $(@el).find(".stats .t-#{topic.get('id')}").remove()
-    if $(@el).find('.stats .topic-stat').length == 0
-      $(@el).find(".topic-default").show()
-
-  updateType: =>
-    $(@el).find('#post-form-type').val(@model.get('type'))
-    $(@el).find('.icons .icon').removeClass('on')
-
-    if @model.get('type') == 'Post' && !@model.get('parent_id')
-      $(@el).find('.icons').removeClass('on').find('.cancel-preview').hide()
-      $(@el).find('#post-form-fetch-url').val('').parent().hide()
     else
-      $(@el).find('.icons .cancel-preview').show()
-      switch @model.get('type')
-        when 'Link'
-          flag = true
-          $(@el).find('.ll-icon-link').addClass('on')
-        when 'Picture'
-          flag = true
-          $(@el).find('.ll-icon-picture').addClass('on')
-        when 'Video'
-          flag = true
-          $(@el).find('.ll-icon-video').addClass('on')
-
-  activateType: (e) =>
-    # if we have not started a preview
-    if $(@el).find('.preview:visible,.preview-data').length == 0
-      $(@el).find('.preview').show()
-
-    @model.set('type', $(e.target).data('type'))
+      $(@el).modal('hide')
 
   clearTopic: (e) =>
     if $.trim($(e.currentTarget).val()) == ''
@@ -179,58 +129,8 @@ class LL.Views.PostForm extends Backbone.View
       @removeTopicStat(topic)
       $(e.currentTarget).next().val('')
 
-  removeEmbedly: =>
-    @preview.cancelPreview()
-
-  checkUrl: (e) =>
-    self = @
-
-    # Need to use a timeout to wait until the paste content is in the input
-    setTimeout ->
-      urls = self.validateUrl($(e.target).val())
-
-      if urls && urls[0]
-        $(e.target).val($(e.target).val().replace(urls[0], ''))
-        $(self.el).find('.ll-icon-link').click()
-        $(self.el).find('#post-form-fetch-url').val(urls[0])
-        self.fetchEmbedly()
-
-    , 0
-
-
-  monitorSpacebarUrl: (e) =>
-    if e.keyCode == 32 # spacebar
-      @checkUrl(e)
-
-  fetchEmbedly: =>
-    self = @
-
-    # Need to use a timeout to wait until the paste content is in the input
-    setTimeout ->
-      $(self.el).find('.preview').show()
-
-      return if $('#fetch-url-btn').hasClass('disabled')
-
-      return unless $(self.el).find('#post-form-fetch-url').val().length > 5
-
-      $('#fetch-url-btn').addClass('disabled').text('Fetching...')
-      self.embedly_collection.fetch({data: {url: $(self.el).find('#post-form-fetch-url').val()}})
-    , 0
-
-  monitorUrlEnter: (e) =>
-    if e.keyCode == 13 # enter keycode
-      e.preventDefault()
-      $(@el).find('#fetch-url-btn').click()
-      return false
-
-  focusTalk: =>
-    $(@el).find('#post-form-content').focus()
-    v = $(@el).find('#post-form-content').val()
-    $(@el).find('#post-form-content').val('').val(v)
-
-  validateUrl: (val) =>
-    # http://stackoverflow.com/questions/6927719/url-regex-does-not-work-in-javascript
-    val.match(/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/i)
-
-  changeMinimal: (e) =>
-    $(@el).removeClass('minimal')
+  setModel: (model) =>
+    @model = {
+      post: model
+      existing: model.get('media')
+    }

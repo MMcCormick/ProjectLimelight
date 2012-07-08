@@ -78,5 +78,8 @@ form {
   @include border-radius(0px);
 }
 .modal-backdrop {
-  background: #666;
+  background: #F9F9F9;
+  &.fade.in {
+    @include opacity(95);
+  }
 }

@@ -1,0 +1,2 @@
+<input type='text' class='url' placeholder='http://' />
+<div class='find-url btn'>Find URL</div>

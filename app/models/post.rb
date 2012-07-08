@@ -13,15 +13,10 @@ class Post
 
   field :content
 
-  field :_type # deprecated
-  field :root_type # deprecated
-  field :title # deprecated
-  field :description # deprecated
   field :response_to_id
   field :category
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
   field :neo4j_id
-  field :response_count # deprecated
   field :comment_count, :default => 0
 
   field :status, :default => 'active'
@@ -30,16 +25,14 @@ class Post
 
   has_many   :comments
   belongs_to :post_media, :class_name => 'PostMedia'
-  #belongs_to :response_to, :class_name => 'Post', index: true deprecated
   belongs_to :user, :index => true
   has_and_belongs_to_many :likes, :inverse_of => nil, :class_name => 'User', :index => true
 
   validates :user, :status, :presence => true
   validate :content_length
+  validate :solo_repost, :on => :create
 
   attr_accessible :content
-
-  #default_scope where('status' => 'active')
 
   before_create :current_user_own
   after_create :neo4j_create, :update_response_counts, :feed_post_create, :action_log_create, :add_initial_pop, :update_user_topic_activity
@@ -82,6 +75,13 @@ class Post
     end
     if content && content.length > 280
       errors.add(:content, "Content cannot be more than 280 characters long")
+    end
+  end
+
+  def solo_repost
+    found = Post.where(:user_id => user_id, :post_media_id => post_media_id).first
+    if found
+      errors.add(:post_media, "You have already posted this URL.")
     end
   end
 

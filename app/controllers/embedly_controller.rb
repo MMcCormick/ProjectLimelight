@@ -22,7 +22,7 @@ class EmbedlyController < ApplicationController
             :provider_name => result['provider_name'],
             :url => result['url'],
             :title => result['title'],
-            :limelight_post => nil
+            :existing => nil
     }
 
     if result['object']
@@ -37,10 +37,10 @@ class EmbedlyController < ApplicationController
 
     post = result && result['url'] ? PostMedia.where('sources.url' => result['url']).first : nil
     if post
-      response = post.to_json(:user => current_user)
+      response[:existing] = post.to_json(:user => current_user)
     end
 
-    render json: response
+    render :json => response
 
   end
 

@@ -27,7 +27,7 @@ class LL.Views.TopicSidebar extends Backbone.View
       info = new LL.Views.TopicSidebarInfo(model: @model)
       $(@el).append(info.render().el)
 
-    if @model.get('aliases').length > 0
+    if @model.get('visible_alias_count') > 0
       aliases = new LL.Views.TopicSidebarAliases(model: @model)
       $(@el).append(aliases.render().el)
 

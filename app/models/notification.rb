@@ -33,11 +33,27 @@ class Notification
       when :mention
         "mentioned you in a post"
       when :repost
-        "liked \"#{object.short_name}\""
+        "liked "
+        if object.short_name.length > 0
+          text += "\"#{object.short_name}\""
+        else
+          text += "your post"
+        end
+        text
       when :comment
-        "commented on \"#{object.short_name}\""
+        text = "commented on "
+        if object.short_name.length > 0
+          text += "\"#{object.short_name}\""
+        else
+          text += "your post"
+        end
+        text
       when :also # also signifies that someone has also responded to something your responded to
-        "also commented on #{object_user.username}'s post \"#{object.short_name}\""
+        text = "also commented on #{object_user.username}'s post"
+        if object.short_name.length > 0
+          text += " \"#{object.short_name}\""
+        end
+        text
       else
         "did something weird... this is a mistake and the Limelight team has been notified to fix it!"
     end

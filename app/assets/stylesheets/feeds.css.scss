@@ -105,14 +105,14 @@ $feedFontColor: $grayDark;
   }
   .reasons {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 1px;
+    left: 1px;
 
     .earmark {
-      @include border-radius(1px);
+      @include border-radius(2px);
       display: none;
       position: absolute;
-      left: 277px;
+      left: 276px;
       top: -4px;
       background: #BDB5B1;
       background: rgba(189, 181, 177, 0.95);
@@ -130,7 +130,7 @@ $feedFontColor: $grayDark;
       position: absolute;
       z-index: 110;
       list-style: none;
-      width: 278px;
+      width: 276px;
       border-bottom: 1px solid #DDD;
 
       li {
@@ -153,13 +153,14 @@ $feedFontColor: $grayDark;
     @include border-radius(2px 2px 0 0);
 
     position: relative;
-    margin: 0 2px;
-    padding: 5px 12px 5px 37px;
+    margin: 0 3px;
+    padding: 5px 12px 5px 35px;
+    background: #E7E7E7;
 
     .ll-arrow-r-dark {
       position: absolute;
       top: 10px;
-      left: 14px;
+      left: 13px;
     }
     > span {
       position: relative;
@@ -231,17 +232,21 @@ $feedFontColor: $grayDark;
     .repost {
 
       .meat {
+        @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
+        @include border-radius(0 0 2px 2px);
         padding: 0 0 10px 0;
+        background: #FFF;
       }
       .media {
-        @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
+
         position: relative;
         margin: 0;
-        background: #FFF;
 
         h5 {
           font-size: 13px;
           padding: 10px 15px;
+          border-bottom: 1px solid #DDD;
+          margin-bottom: 10px;
           &:hover {
             color: $blue;
           }
@@ -282,6 +287,8 @@ $feedFontColor: $grayDark;
           }
         }
         &.with-image {
+          margin: 0 0 10px 0;
+
           h5 {
             @include single-text-shadow(#666, 0, 1px);
             @include background-image(linear-gradient(transparent, rgba(0, 0, 0, 0.1) 15%,rgba(0, 0, 0, 0.2) 25%, rgba(0, 0, 0, 0.4) 50%,rgba(0, 0, 0, 0.6) 75%, rgba(0, 0, 0, 0.8)));
@@ -292,23 +299,16 @@ $feedFontColor: $grayDark;
             padding: 25px 15px 10px 15px;
             width: 268px;
             color: #FFF;
+            border-bottom: none;
+            margin-bottom: 0px;
           }
         }
       }
     }
-  }
-
-  .bottom {
-    @include border-radius(0 0 2px 2px);
-    margin: 0 1px;
-    padding: 10px 0 10px 0;
-    border: 1px solid #E9E9E9;
-    border-top: none;
-    background: #FFF;
 
     .top {
       position: relative;
-      margin: 0 13px;
+      margin: 0 15px;
       padding: 0;
 
       .source {
@@ -337,7 +337,7 @@ $feedFontColor: $grayDark;
   }
 
   .actions {
-    padding: 6px 13px 0 13px;
+    padding: 6px 15px 0 15px;
     font-size: 12px;
     color: #999;
 
@@ -354,7 +354,7 @@ $feedFontColor: $grayDark;
     }
   }
 
-  .comment-area {
+  .bottom {
     display: none;
     padding: 2px 15px 1px 15px;
     margin: 12px 0 5px 0;
@@ -389,7 +389,6 @@ $feedFontColor: $grayDark;
     }
     .mentions {
       @include opacity(90);
-      background: #E7E7E7;
     }
     .tlink {
       color: $blue;

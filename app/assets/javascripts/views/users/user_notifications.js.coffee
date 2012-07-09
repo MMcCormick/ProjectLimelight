@@ -17,7 +17,7 @@ class LL.Views.UserNotifications extends Backbone.View
       $('body').append($(@el))
 
     if @collection.models.length == 0
-      $(@el).find('.section').append("<div class='none'>Hmm, there's nothing to show here</div>")
+      $(@el).append("<div class='none'>Hmm, there's nothing to show here</div>")
     else
       for notification,i in @collection.models
         @appendNotification(notification)
@@ -29,6 +29,9 @@ class LL.Views.UserNotifications extends Backbone.View
     self = @
 
     @
+
+  showLoading: =>
+    $(@el).find('.none').text('Loading...')
 
   appendNotification: (notification) =>
     view = new LL.Views.UserNotification(model: notification)
@@ -46,15 +49,17 @@ class LL.Views.UserNotifications extends Backbone.View
       @showPanel()
 
   showPanel: =>
-    $(@el).show('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
-    difference = $('body').width() - ($('#feed').offset().left + $('#feed').width())
-    offset = 245 - difference
-    if offset > 0
-      $('body').animate({left: "-#{offset}px"}, 500, 'easeOutExpo')
+    unless $(@el).is(':visible')
+      $(@el).show('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+      difference = $('body').width() - ($('#feed').offset().left + $('#feed').width())
+      offset = 245 - difference
+      if offset > 0
+        $('body').animate({left: "-#{offset}px"}, 500, 'easeOutExpo')
 
   hidePanel: =>
-    $(@el).hide('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
-    $('body').animate({left: '0px'}, 500, 'easeOutExpo')
+    unless $(@el).is(':hidden')
+      $(@el).hide('slide', {direction:'right', easing: 'easeOutExpo'}, 500)
+      $('body').animate({left: '0px'}, 500, 'easeOutExpo')
 
   clearNotifications: =>
     if LL.App.current_user.get('unread_notification_count') > 0

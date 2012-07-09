@@ -18,11 +18,7 @@ class LL.Views.UserHeaderNav extends Backbone.View
 
     $(@el).html(@template(user: @model))
 
-    # only if the user is signed in
     if @model
-#      score = new LL.Views.Score(model: @model)
-#      $(@el).find('.numbers').append(score.render().el)
-
       # listen for notifications
       channel = LL.App.get_subscription("#{self.model.get('id')}_private")
       unless LL.App.get_event_subscription("#{self.model.get('id')}_private", 'new_notification')
@@ -42,6 +38,8 @@ class LL.Views.UserHeaderNav extends Backbone.View
     else
       collection = new LL.Collections.UserNotifications
       @notifications = new LL.Views.UserNotifications(collection: collection)
+      @notifications.render()
+      @notifications.showLoading()
       collection.fetch()
 
   updateNotificationCount: =>

@@ -96,23 +96,26 @@ class LL.Views.PostsFeed extends Backbone.View
         LL.App.subscribe_event(root_id, 'new_response')
 
   prependPost: (root_post, single=false) =>
-    tile = new LL.Views.FeedTile(model: root_post)
-    $(@el).prepend($(tile.render().el).addClass('new'))
+    if root_post.get('post') && root_post.get('post').get('media')
 
-    if single
-      self = @
-      setTimeout ->
-        $(self.el).isotope('reloadItems').isotope({ sortBy: 'original-order' })
-      , 100
+      tile = new LL.Views.FeedTile(model: root_post)
+      $(@el).prepend($(tile.render().el).addClass('new'))
 
-    @addPost(root_post)
+      if single
+        self = @
+        setTimeout ->
+          $(self.el).isotope('reloadItems').isotope({ sortBy: 'original-order' })
+        , 100
 
-    @prependNext = false
+      @addPost(root_post)
+
+      @prependNext = false
 
     @
 
   appendPost: (root_post, single=false) =>
-    if root_post.get('post')
+    if root_post.get('post') && root_post.get('post').get('media')
+
       tile = new LL.Views.FeedTile(model: root_post)
 
       if single

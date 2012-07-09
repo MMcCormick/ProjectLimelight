@@ -30,7 +30,7 @@ class LL.Views.FeedRepost extends Backbone.View
     $(@el).find('.when').prepend(prettyTime.render().el)
 
     mentions = new LL.Views.PostMentions(model: @model.get('post'))
-    $(@el).find('.top').append(mentions.render().el)
+    $(@el).prepend(mentions.render().el)
 
     like = new LL.Views.LikeButton(model: @model.get('post'))
     $(@el).find('.actions').prepend(like.render().el)

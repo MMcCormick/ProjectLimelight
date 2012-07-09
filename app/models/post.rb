@@ -100,6 +100,19 @@ class Post
     FeedLikeItem.post_destroy(self)
     FeedContributeItem.post_destroy(self)
 
+    # reduce post count by one
+    user.posts_count -= 1
+    user.save
+
+    # reduce all users that liked this by one
+    like_ids.each do |lid|
+      liker = User.find(lid)
+      if liker
+        liker.likes_count -= 1
+        liker.save
+      end
+    end
+
     # remove from popularity actions
     actions = PopularityAction.where("pop_snippets._id" => id)
     actions.each do |a|
@@ -228,17 +241,6 @@ class Post
   def personal_mention?
     user_mention_ids.length > 0 && content.strip[0] == '@'
   end
-
-  #def disable
-  #  self.status = 'disabled'
-  #  Resque.enqueue(PushPostDisable, id.to_s)
-  #end
-  #
-  #def push_disable
-  #  FeedUserItem.post_disable(self, (self.class.name == 'Talk' && !is_popular))
-  #  FeedTopicItem.post_disable(self) unless response_to_id || topic_mention_ids.empty?
-  #  FeedContributeItem.disable(self)
-  #end
 
   def root_id
     post_media_id ? post_media_id : id

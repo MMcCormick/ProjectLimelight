@@ -24,6 +24,7 @@ class LL.Views.UserHoverTab extends Backbone.View
         classes: 'ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-limelight hover-tab'
       show:
         ready: true
+        solo: true
       hide:
         fixed: true
         delay: 200

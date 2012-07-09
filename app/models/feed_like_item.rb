@@ -78,8 +78,17 @@ class FeedLikeItem
     end
 
     def post_destroy(post)
-      root_id = post.root_type == 'Topic' ? post.id : post.root_id
-      FeedLikeItem.where(:root_id => root_id).destroy
+      FeedLikeItem.collection.find({:root_id => post.root_id}).
+                  update_all({
+                    "$inc" => {
+                      :strength => -1,
+                    },
+                    "$pull" => {
+                      :responses => post.id
+                    }
+                  })
+
+      FeedLikeItem.where(:root_id => post.root_id, :strength => 0).destroy
     end
   end
 end

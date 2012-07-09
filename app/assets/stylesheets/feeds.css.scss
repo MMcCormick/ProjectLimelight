@@ -92,11 +92,6 @@ $feedFontColor: $grayDark;
   width: 300px;
   float: left;
 
-  .post,
-  .repost {
-    @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
-    background: #FFF;
-  }
   &.column-fixed {
     margin-top: 23px;
     #post-form {
@@ -104,28 +99,38 @@ $feedFontColor: $grayDark;
     }
   }
   &.new {
-    border: 1px dotted red;
+    .meat {
+      border: 1px dotted red;
+    }
   }
   .reasons {
     position: absolute;
     top: 1px;
     left: 1px;
 
-    .ll-tan-earmark {
+    .earmark {
+      @include border-radius(2px);
+      display: none;
       position: absolute;
-      top: 0px;
-      left: 302px;
+      left: 276px;
+      top: -4px;
+      background: #BDB5B1;
+      background: rgba(189, 181, 177, 0.95);
+      border: 1px solid #EEE;
+      color: #FFF;
+      z-index: 111;
+      padding: 3px 8px;
     }
     ul {
       display: none;
       background: #BDB5B1;
       background: rgba(189, 181, 177, 0.95);
-      padding: 0 10px;
+      padding: 0 10px !important;
       color: #FFF;
       position: absolute;
       z-index: 110;
       list-style: none;
-      width: 298px;
+      width: 276px;
       border-bottom: 1px solid #DDD;
 
       li {
@@ -144,18 +149,30 @@ $feedFontColor: $grayDark;
     }
   }
   .mentions {
-    position: relative;
-    padding: 0 0 2px 0;
+    @include opacity(40);
+    @include border-radius(2px 2px 0 0);
 
+    position: relative;
+    margin: 0 3px;
+    padding: 5px 12px 5px 35px;
+    background: #E7E7E7;
+
+    .ll-arrow-r-dark {
+      position: absolute;
+      top: 10px;
+      left: 13px;
+    }
     > span {
       position: relative;
+      padding: 0 3px;
+      display: inline-block;
     }
     .tlink {
       white-space: nowrap;
       display: inline-block;
       padding: 0 15px 0 0;
       font-size: 12px;
-      color: #999;
+      color: #000;
       &:hover {
         color: $blue !important;
         text-decoration: underline;
@@ -165,14 +182,14 @@ $feedFontColor: $grayDark;
       cursor: pointer;
       display: none;
       position: absolute;
-      top: 4px;
-      right: 5px;
+      top: 5px;
+      right: 0;
     }
     .add {
       cursor: pointer;
       position: absolute;
-      top: 8px;
-      right: 4px;
+      top: 11px;
+      right: 5px;
       display: none;
     }
     .mention-add-form {
@@ -197,56 +214,14 @@ $feedFontColor: $grayDark;
   }
   .ulink {
     font-weight: bold;
-    color: $feedFontColor;
+    color: #999;
   }
   #post-form {
     background: #FFF;
     border-bottom: 1px solid #CCC;
   }
-  .post {
-    padding: 0;
-    min-height: 59px;
-    position: relative;
-    cursor: pointer;
-    background: #FFF;
-
-    .when {
-      color: $grayLight;
-      font-size: 11px;
-      a {
-        color: $grayDark;
-      }
-    }
-
-    .top {
-      padding: 11px 15px 10px 77px;
-      min-height: 40px;
-
-      > img {
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        top: 15px;
-        left: 15px;
-      }
-      .ulink {
-        font-size: 13px;
-      }
-      p {
-        font-size: 13px;
-        margin: 3px 0;
-        line-height: 16px;
-      }
-      .when {
-        position: absolute;
-        top: 12px;
-        right: 15px;
-      }
-    }
-  }
 
   .reposts {
-    background: #FFF;
     padding: 0 1px 0 1px;
     cursor: pointer;
 
@@ -255,45 +230,23 @@ $feedFontColor: $grayDark;
       list-style: none;
     }
     .repost {
-      padding: 0 0 10px 0;
 
-      .top {
-        position: relative;
-        margin: 0 13px;
-        padding: 0 2px 8px 2px;
-        border-bottom: 1px solid #EEE;
-
-        .source {
-          font-size: 11px;
-          color: #999;
-
-          a {
-            color: #999;
-            &:hover {
-              color: $blue;
-            }
-          }
-        }
-
-        .when {
-          position: absolute;
-          top: 0;
-          right: 0;
-          color: #999;
-          font-size: 11px;
-        }
-
-        .mentions {
-          padding: 1px 0 0 0;
-        }
+      .meat {
+        @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
+        @include border-radius(0 0 1px 1px);
+        padding: 0 0 10px 0;
+        background: #FFF;
       }
       .media {
+
         position: relative;
-        margin: 0 0 10px 0;
+        margin: 0;
 
         h5 {
           font-size: 13px;
-          padding: 9px 15px 0 15px;
+          padding: 10px 15px;
+          border-bottom: 1px solid #DDD;
+          margin-bottom: 10px;
           &:hover {
             color: $blue;
           }
@@ -334,6 +287,8 @@ $feedFontColor: $grayDark;
           }
         }
         &.with-image {
+          margin: 0 0 10px 0;
+
           h5 {
             @include single-text-shadow(#666, 0, 1px);
             @include background-image(linear-gradient(transparent, rgba(0, 0, 0, 0.1) 15%,rgba(0, 0, 0, 0.2) 25%, rgba(0, 0, 0, 0.4) 50%,rgba(0, 0, 0, 0.6) 75%, rgba(0, 0, 0, 0.8)));
@@ -344,25 +299,45 @@ $feedFontColor: $grayDark;
             padding: 25px 15px 10px 15px;
             width: 268px;
             color: #FFF;
+            border-bottom: none;
+            margin-bottom: 0px;
           }
         }
       }
-      .actions {
-        padding: 10px 15px 0 15px;
+    }
+
+    .top {
+      position: relative;
+      margin: 0 15px;
+      padding: 0;
+
+      .source {
+        font-size: 11px;
+        color: #999;
+
+        a {
+          color: #999;
+          &:hover {
+            color: $blue;
+          }
+        }
       }
-      .bottom {
-        .comment-form {
-          margin: 12px 0 5px 0;
-        }
-        .comment-list {
-          margin: 10px 0 0 0;
-        }
+
+      .when {
+        position: absolute;
+        top: 1px;
+        right: 0;
+        color: #999;
+        font-size: 11px;
+      }
+      p {
+        margin: 4px 0 0 0;
       }
     }
   }
 
   .actions {
-    padding: 0;
+    padding: 6px 15px 0 15px;
     font-size: 12px;
     color: #999;
 
@@ -382,12 +357,13 @@ $feedFontColor: $grayDark;
   .bottom {
     display: none;
     padding: 2px 15px 1px 15px;
+    margin: 12px 0 5px 0;
 
     .comment-form {
       border: 1px solid #CEDCDF;
       padding: 5px 7px;
       background: #FFF;
-      margin: 0 0 15px 0;
+      margin: 0;
 
       textarea {
         @include border-radius(0);
@@ -401,15 +377,19 @@ $feedFontColor: $grayDark;
       }
     }
     .comment-list {
-      margin: -10px 0 0 0;
+      margin: 10px 0 -5px 0;
     }
   }
 
   &:hover {
-    //.post,
-    //.reposts {
-    //  background: #F9F9F9;
-    //}
+    .reasons {
+      .earmark {
+        display: block;
+      }
+    }
+    .mentions {
+      @include opacity(90);
+    }
     .tlink {
       color: $blue;
     }

@@ -30,6 +30,10 @@ class LL.Views.LikeButton extends Backbone.View
         $(self.el).addClass('disabled')
       success: (data) ->
         self.model.set('liked', !self.model.get('liked'))
+        if self.model.get('liked')
+          LL.App.current_user.set('likes_count', LL.App.current_user.get('likes_count') + 1)
+        else
+          LL.App.current_user.set('likes_count', LL.App.current_user.get('likes_count') - 1)
       error: (jqXHR, textStatus, errorThrown) ->
         $(self.el).removeClass('disabled')
         globalError(jqXHR)

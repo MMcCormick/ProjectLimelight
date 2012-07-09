@@ -366,8 +366,8 @@ class User
       p.topic_mention_ids.each do |t|
         topic_activity_add(t)
       end
-      self.posts_count += 1
     end
+    self.posts_count = posts.length
   end
 
   def topics_by_activity
@@ -406,8 +406,8 @@ class User
       p.topic_mention_ids.each do |t|
         topic_likes_add(t)
       end
-      self.likes_count += 1
     end
+    self.likes_count = likes.length
   end
 
   def topics_by_likes

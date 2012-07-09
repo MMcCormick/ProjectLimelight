@@ -60,8 +60,31 @@ class FeedTopicItem
     end
 
     def post_destroy(post)
-      # TODO: needs to work with root media versus posts
-      FeedTopicItem.where(:root_id => post.id).delete if post.root_id == post.id
+      FeedTopicItem.collection.find({:root_id => post.root_id}).
+                  update_all({
+                    "$inc" => {
+                      :strength => -1,
+                    },
+                    "$pull" => {
+                      :responses => post.id
+                    }
+                  })
+
+      FeedTopicItem.where(:root_id => post.root_id, :strength => 0).destroy
+
+      items = FeedTopicItem.where(:root_id => post.root_id)
+      items.each do |item|
+
+        post.topic_mention_ids.each do |tid|
+          item.mentions.delete(tid)
+        end
+
+        if item.mentions.length == 0
+          item.delete
+        else
+          item.save
+        end
+      end
     end
 
     def topic_destroy(topic)

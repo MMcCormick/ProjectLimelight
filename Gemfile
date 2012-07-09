@@ -8,7 +8,7 @@ gem 'rails', '3.2.6'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'
-gem 'mongoid', :git => 'git://github.com/mongoid/mongoid.git' #'3.0.0.rc', :require => 'mongoid' # MongoDB
+gem 'mongoid', '3.0.0', :require => 'mongoid' # MongoDB
 gem 'devise' # Authentication
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
@@ -17,7 +17,7 @@ gem 'omniauth-twitter'
 #gem 'omnicontacts'
 gem 'koala', '1.5' # facebook graph api support
 gem 'twitter' # twitter api support
-gem 'resque', '1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
+gem 'resque', '1.21.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
 gem 'resque-scheduler', '2.0.0.h', :require => 'resque_scheduler' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'resque_mailer'
@@ -35,6 +35,7 @@ gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem "rack-timeout"
 gem 'switch_user'
+gem 'omnicontacts'
 #gem 'mongoid_collection_snapshot'
 
 

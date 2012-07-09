@@ -142,20 +142,21 @@ $feedFontColor: $grayDark;
   }
   .mentions {
     @include opacity(35);
+    @include border-radius(2px 2px 0 0);
 
     position: relative;
-    margin: 0 3px;
-    padding: 0 12px 0 35px;
+    margin: 0 2px;
+    padding: 5px 12px 5px 37px;
     background: #E7E7E7;
 
     .ll-arrow-r-dark {
       position: absolute;
       top: 10px;
-      left: 10px;
+      left: 14px;
     }
     > span {
       position: relative;
-      padding: 5px 3px;
+      padding: 0 3px;
       display: inline-block;
     }
     .tlink {
@@ -173,7 +174,7 @@ $feedFontColor: $grayDark;
       cursor: pointer;
       display: none;
       position: absolute;
-      top: 10px;
+      top: 5px;
       right: 0;
     }
     .add {
@@ -205,7 +206,7 @@ $feedFontColor: $grayDark;
   }
   .ulink {
     font-weight: bold;
-    color: $feedFontColor;
+    color: #999;
   }
   #post-form {
     background: #FFF;
@@ -223,46 +224,17 @@ $feedFontColor: $grayDark;
     .repost {
 
       .meat {
-        @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
-        background: #FFF;
         padding: 0 0 10px 0;
       }
-      .top {
-        position: relative;
-        margin: 0 13px;
-        padding: 0 2px 0 2px;
-
-        .source {
-          font-size: 11px;
-          color: #999;
-
-          a {
-            color: #999;
-            &:hover {
-              color: $blue;
-            }
-          }
-        }
-
-        .when {
-          position: absolute;
-          top: 0;
-          right: 0;
-          color: #999;
-          font-size: 11px;
-        }
-
-        .mentions {
-          padding: 1px 0 0 0;
-        }
-      }
       .media {
+        @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
         position: relative;
-        margin: 0 0 10px 0;
+        margin: 0;
+        background: #FFF;
 
         h5 {
           font-size: 13px;
-          padding: 9px 15px 0 15px;
+          padding: 10px 15px;
           &:hover {
             color: $blue;
           }
@@ -316,22 +288,49 @@ $feedFontColor: $grayDark;
           }
         }
       }
-      .actions {
-        padding: 10px 15px 0 15px;
+    }
+  }
+
+  .bottom {
+    @include border-radius(0 0 2px 2px);
+    margin: 0 1px;
+    padding: 10px 0 10px 0;
+    border: 1px solid #E9E9E9;
+    border-top: none;
+    background: #FFF;
+
+    .top {
+      position: relative;
+      margin: 0 13px;
+      padding: 0;
+
+      .source {
+        font-size: 11px;
+        color: #999;
+
+        a {
+          color: #999;
+          &:hover {
+            color: $blue;
+          }
+        }
       }
-      .bottom {
-        .comment-form {
-          margin: 12px 0 5px 0;
-        }
-        .comment-list {
-          margin: 10px 0 0 0;
-        }
+
+      .when {
+        position: absolute;
+        top: 1px;
+        right: 0;
+        color: #999;
+        font-size: 11px;
+      }
+      p {
+        margin: 4px 0 0 0;
       }
     }
   }
 
   .actions {
-    padding: 0;
+    padding: 6px 13px 0 13px;
     font-size: 12px;
     color: #999;
 
@@ -348,15 +347,16 @@ $feedFontColor: $grayDark;
     }
   }
 
-  .bottom {
+  .comment-area {
     display: none;
     padding: 2px 15px 1px 15px;
+    margin: 12px 0 5px 0;
 
     .comment-form {
       border: 1px solid #CEDCDF;
       padding: 5px 7px;
       background: #FFF;
-      margin: 0 0 15px 0;
+      margin: 0;
 
       textarea {
         @include border-radius(0);
@@ -370,7 +370,7 @@ $feedFontColor: $grayDark;
       }
     }
     .comment-list {
-      margin: -10px 0 0 0;
+      margin: 10px 0 -5px 0;
     }
   }
 

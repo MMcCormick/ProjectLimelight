@@ -42,18 +42,18 @@ class LL.Views.FeedRepost extends Backbone.View
 
     self = @
 
-    if $(@el).find('.bottom').is(':visible')
-      $(@el).removeClass('open', 200).find('.bottom').slideUp 100, ->
+    if $(@el).find('.comment-area').is(':visible')
+      $(@el).removeClass('open', 200).find('.comment-area').slideUp 100, ->
         $('#feed').isotope('shiftColumnOfItem', $(self.el).parents('.tile:first').get(0))
     else
       if $(@el).find('.comment-list').length == 0
         @comments_view = new LL.Views.CommentList(model: @model.get('post'))
         form = new LL.Views.CommentForm(model: @model.get('post'))
         form.minimal = true
-        $(@el).find('.bottom').append(form.render().el).append(@comments_view.render().el)
+        $(@el).find('.comment-area').append(form.render().el).append(@comments_view.render().el)
         @model.get('post').fetchComments()
 
-      $(@el).addClass('open', 100).find('.bottom').slideDown 100, ->
+      $(@el).addClass('open', 100).find('.comment-area').slideDown 100, ->
         $('#feed').isotope('shiftColumnOfItem', $(self.el).parents('.tile:first').get(0))
 
   incrementComment: =>

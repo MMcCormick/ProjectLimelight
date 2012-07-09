@@ -217,6 +217,7 @@ class LL.Router extends Backbone.Router
     LL.App.renderScreen('settings', 0)
 
     view = new LL.Views.UserSettings()
+    view.render()
 
   userUsers: (id) ->
     user = new LL.Models.User(current_object)

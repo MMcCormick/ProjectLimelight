@@ -8,4 +8,8 @@ class LL.Views.UserTutorial1 extends Backbone.View
 
   render: ->
     $(@el).html(@template(user: @model))
+
+    settings = new LL.Views.SocialSettings(model: @model)
+    $(@el).append(settings.render().el)
+
     @

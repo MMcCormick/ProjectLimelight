@@ -1,0 +1,76 @@
+<div class='help'>
+  <p>
+    Connect existing social networks to enhance your experience on Limelight.
+  </p>
+  <p>
+    We want to be as transparent as possible about what we do (and don't do) with your other networks.
+    Turn on only the settings you want below. We will <b>never</b> post to any other social network unless the relevant setting
+    is turned on below.
+  </p>
+  <p>
+    Move your mouse over the question marks to see exactly what each settings means.
+  </p>
+  <p>
+    You can always adjust these options after the tutorial in the "Settings" area of your account.
+  </p>
+</div>
+
+<div class='channels'>
+  <div class='empty-channel'></div>
+
+  <div class='channel facebook <%= "on" if @user.get('facebook_id') %>'>
+    <a href="<%= if @user.get('facebook_id') then '#' else '/users/auth/facebook' %>" class='connect'>
+      <div class='head'><%= if @user.get('facebook_id') then 'Connected' else 'Click to connect Facebook' %></div>
+      <img src="/assets/images/facebook_circle_<%= if @user.get('facebook_id') then 'on' else 'off' %>.png" />
+    </a>
+  </div>
+
+  <div class='channel twitter <%= "on" if @user.get('twitter_id') %>'>
+    <a href="<%= if @user.get('twitter_id') then '#' else '/users/auth/twitter' %>" class='connect'>
+      <div class='head'><%= if @user.get('twitter_id') then 'Connected' else 'Click to connect Twitter' %></div>
+      <img src="/assets/images/twitter_circle_<%= if @user.get('twitter_id') then 'on' else 'off' %>.png" />
+    </a>
+  </div>
+</div>
+
+<ul class='options unstyled'>
+  <li>
+    <div class='desc'>Auto Follow <div class='qm auto_follow'>?</div></div>
+
+    <div class='option'>
+      <div class="btn-group">
+        <div class="btn radio-btn <%= "disabled" unless @user.get('facebook_id') %> <%= "btn-info" if @user.get('facebook_id') && @user.get('auto_follow_fb') %>" name="auto_follow_fb" data-value="true">On</div>
+        <div class="btn radio-btn <%= "disabled" unless @user.get('facebook_id') %> <%= "btn-info" if @user.get('facebook_id') && !@user.get('auto_follow_fb') %>" name="auto_follow_fb" data-value="false">Off</div>
+      </div>
+    </div>
+
+    <div class='option'>
+      <div class="btn-group">
+        <div class="btn radio-btn <%= "disabled" unless @user.get('twitter_id') %> <%= "btn-info" if @user.get('twitter_id') && @user.get('auto_follow_tw') %>" name="auto_follow_tw" data-value="true">On</div>
+        <div class="btn radio-btn <%= "disabled" unless @user.get('twitter_id') %> <%= "btn-info" if @user.get('twitter_id') && !@user.get('auto_follow_tw') %>" name="auto_follow_tw" data-value="false">Off</div>
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class='desc'>Post Stuff I Follow <div class='qm og_follows'>?</div></div>
+
+    <div class='option'>
+      <div class="btn-group">
+        <div class="btn radio-btn <%= "disabled" unless @user.get('facebook_id') %> <%= "btn-info" if @user.get('facebook_id') && @user.get('og_follows') %>" name="og_follows" data-value="true">On</div>
+        <div class="btn radio-btn <%= "disabled" unless @user.get('facebook_id') %> <%= "btn-info" if @user.get('facebook_id') && !@user.get('og_follows') %>" name="og_follows" data-value="false">Off</div>
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class='desc'>Post Stuff I Like <div class='qm og_likes'>?</div></div>
+
+    <div class='option'>
+      <div class="btn-group">
+        <div class="btn radio-btn <%= "disabled" unless @user.get('facebook_id') %> <%= "btn-info" if @user.get('facebook_id') && @user.get('og_likes') %>" name="og_likes" data-value="true">On</div>
+        <div class="btn radio-btn <%= "disabled" unless @user.get('facebook_id') %> <%= "btn-info" if @user.get('facebook_id') && !@user.get('og_likes') %>" name="og_likes" data-value="false">Off</div>
+      </div>
+    </div>
+  </li>
+</ul>

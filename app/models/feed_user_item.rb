@@ -141,12 +141,12 @@ class FeedUserItem
       end
 
       # push through sources
-      if post.post_media_id
-        post.post_media.sources.each do |source|
-          topic = Topic.find(source.id)
-          push_post_through_topic(post, topic) if topic
-        end
-      end
+      #if post.post_media_id
+      #  post.post_media.sources.each do |source|
+      #    topic = Topic.find(source.id)
+      #    push_post_through_topic(post, topic) if topic
+      #  end
+      #end
     end
 
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)

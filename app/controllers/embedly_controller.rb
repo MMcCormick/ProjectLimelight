@@ -14,11 +14,19 @@ class EmbedlyController < ApplicationController
     # convert JSON data into a hash
     result = JSON.parse(buffer)
 
+    # clean images (discard small ones)
+    clean_images = []
+    result['images'].each do |i|
+      if i['width'] >= 200
+        clean_images << i
+      end
+    end
+
     response = {
             :type => 'Link',
             :video => nil,
             :photo => nil,
-            :images => result['images'],
+            :images => clean_images,
             :provider_name => result['provider_name'],
             :url => result['url'],
             :title => result['title'],

@@ -33,7 +33,7 @@ class Notification
       when :mention
         "mentioned you in a post"
       when :repost
-        "liked "
+        text = "liked "
         if object.short_name.length > 0
           text += "\"#{object.short_name}\""
         else

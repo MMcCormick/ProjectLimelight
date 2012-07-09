@@ -28,6 +28,10 @@ class LL.Views.PageHeader extends Backbone.View
         link_html.find('a').append('<div class="ll-ph-carrot"></div>')
       $(@el).find('.links').append(link_html)
 
+    unless LL.App.current_user
+      invite = new LL.Views.RequestInvite()
+      $(@el).height(195).prepend(invite.render().el).find('.container').css('padding-top': 80)
+
   handleLinkClick: (e) =>
     if $(e.currentTarget).hasClass('on')
       e.preventDefault()

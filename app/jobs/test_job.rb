@@ -5,9 +5,15 @@ class TestJob
   def self.perform()
 
     Post.all.each do |p|
-      unless p.post_media_id
+      unless p.post_media
         p.destroy
       end
+    end
+
+    User.all.each do |u|
+      u.topic_activity_recalculate
+      u.topic_likes_recalculate
+      u.save
     end
 
   end

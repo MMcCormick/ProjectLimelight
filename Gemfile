@@ -16,7 +16,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'koala', '1.5' # facebook graph api support
 gem 'twitter' # twitter api support
-gem 'resque', '1.20.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
+gem 'resque', '1.21.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
 gem 'resque-scheduler', '2.0.0.h', :require => 'resque_scheduler' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'resque_mailer'
@@ -34,6 +34,7 @@ gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem "rack-timeout"
 gem 'switch_user'
+gem 'omnicontacts'
 #gem 'mongoid_collection_snapshot'
 
 

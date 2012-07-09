@@ -52,13 +52,13 @@ class LL.Views.UserPageHeader extends Backbone.View
     @
 
   updatePostsCount: =>
-    $('#page-header').find('.posts a').animate {color: 'red'}, 1500, ->
-      $(@).animate {color: 'black'}, 1500
+    $('#page-header').find('.posts a').animate {color: 'red'}, 2000, ->
+      $(@).animate {color: 'black'}, 2000
 
     $('#page-header').find('.posts span').text(@model.get('posts_count'))
 
   updateLikesCount: =>
-    $('#page-header').find('.likes a').animate {color: 'red'}, 1500, ->
-      $(@).animate {color: 'black'}, 1500
+    $('#page-header').find('.likes a').animate {color: 'red'}, 2000, ->
+      $(@).animate {color: 'black'}, 2000
 
     $('#page-header').find('.likes span').text(@model.get('likes_count'))

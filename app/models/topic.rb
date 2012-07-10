@@ -401,8 +401,8 @@ class Topic
   def set_primary_type(primary_name, primary_id)
     topic = Topic.find(primary_id)
     if topic
-      self.primary_type = primary_name
-      self.primary_type_id = primary_id
+      self.primary_type = topic.name
+      self.primary_type_id = topic.id
       topic.is_topic_type = true
       topic.save
       Resque.enqueue(SmCreateTopic, id.to_s)

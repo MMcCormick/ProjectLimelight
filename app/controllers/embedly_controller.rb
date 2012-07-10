@@ -30,7 +30,8 @@ class EmbedlyController < ApplicationController
             :provider_name => result['provider_name'],
             :url => result['url'],
             :title => result['title'],
-            :existing => nil
+            :existing => nil,
+            :topic_suggestions => []
     }
 
     if result['object']
@@ -46,6 +47,8 @@ class EmbedlyController < ApplicationController
     post = result && result['url'] ? PostMedia.where('sources.url' => result['url']).first : nil
     if post
       response[:existing] = post.to_json(:user => current_user)
+    else
+      response[:topic_suggestions] = Topic.suggestions_by_url(result['url'], result['title'])
     end
 
     render :json => response

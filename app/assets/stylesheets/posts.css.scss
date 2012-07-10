@@ -36,6 +36,7 @@ $postFontColor: $grayDark;
   .errors {
     padding: 0;
     margin: 5px 0 10px 0;
+    display: none;
 
     .alert {
       @include border-radius(0px);
@@ -92,17 +93,69 @@ $postFontColor: $grayDark;
       float: left;
       margin: 0 0 20px 25px;
     }
+    .say-something {
+      color: $blue;
+      margin: 0 0 0 10px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-block;
+
+      &:hover {
+        color: $blueDarker;
+      }
+    }
     #post-form-content {
       @include box-sizing(border-box);
-      height: 80px;
+      height: 53px;
       width: 260px;
       padding: 7px;
       border: 1px solid #DDD;
+      display: none;
+    }
+  }
+  .type {
+    @include clearfix();
+    margin: 0 0 15px 0;
+
+    span {
+      font-size: 13px;
+      float: left;
+      margin: 4px 15px 0 3px;
+      font-weight: bold;
+      cursor: default;
+    }
+    .link,
+    .picture,
+    .video {
+      @include border-radius(1px);
+
+      float: left;
+      margin: 0 5px 0 0;
+      padding: 4px 12px;
+      cursor: pointer;
+      color: #333;
+
+      &:hover {
+        background: #cceef3;
+      }
+      &.on {
+        background: #2F96B4;
+        color: #FFF;
+        cursor: default;
+      }
+      &.disabled {
+        @include opacity(60);
+        text-decoration: line-through;
+
+        &:hover {
+          background: transparent;
+        }
+      }
     }
   }
   .preview {
     position: relative;
-    margin: 33px 0 25px 20px;
+    margin: 26px 0 25px 20px;
     width: 300px;
     display: inline-block;
     min-height: 130px;
@@ -209,14 +262,13 @@ $postFontColor: $grayDark;
   }
   .mentions {
     @include clearfix();
-    margin: 0 0 10px 0;
+    margin: 0 0 7px 0;
 
     .desc {
-      @include single-text-shadow(#CCC, 0, 1px);
       font-size: 13px;
       margin: 0 0 5px 3px;
-      color: #666;
       cursor: default;
+      font-weight: bold;
     }
     .topic-mention {
       border: 1px solid #DDD;
@@ -227,6 +279,34 @@ $postFontColor: $grayDark;
         border-left: none;
         margin: 0 0 0 -4px;
         width: 115px;
+      }
+    }
+  }
+  .mention-suggestions {
+    background: #F9F9F9;
+    margin: -7px 3px 7px 3px;
+    padding: 5px 7px;
+
+    .head {
+      font-size: 11px;
+      color: #999;
+      cursor: default;
+      margin: 0 0 3px 0;
+    }
+    ul {
+      @include clearfix();
+      list-style: none;
+    }
+    li {
+      float: left;
+      color: $blue;
+      margin: 0 20px 0 0;
+      white-space: nowrap;
+      cursor: pointer;
+      font-size: 12px;
+
+      &:hover {
+        color: $blueDarker;
       }
     }
   }
@@ -243,19 +323,6 @@ $postFontColor: $grayDark;
     cursor: default;
     text-align: left;
     margin: 0 0 15px 2px;
-  }
-
-  &.minimal {
-    .mentions,
-    .preview,
-    .modal-footer,
-    .close
-     {
-       display: none;
-     }
-    #post-form-content {
-      height: 20px;
-    }
   }
 }
 

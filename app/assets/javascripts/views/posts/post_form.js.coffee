@@ -14,7 +14,6 @@ class LL.Views.PostForm extends Backbone.View
       #"keypress #post-form-fetch-url": "monitorUrlEnter"
       #"paste #post-form-content": "checkUrl"
       #"paste #post-form-fetch-url": "fetchEmbedly"
-      "blur .topic-mention": "clearTopic"
 
   initialize: ->
     @collection = new LL.Collections.Posts()
@@ -75,7 +74,7 @@ class LL.Views.PostForm extends Backbone.View
       success: (data) ->
         self.model = data
         if data.existing
-          self.model.existing = new LL.Models.PostMedia(data.existing)
+          self.model.existing = new LL.Models.PostMedia($.parseJSON(data.existing))
         self.showContent()
         $(self.el).find('.find-url').removeClass('disabled').text('Find URL')
       error: (jqXHR, textStatus, errorThrown) ->
@@ -123,12 +122,6 @@ class LL.Views.PostForm extends Backbone.View
       @close_callback(@)
     else
       $(@el).modal('hide')
-
-  clearTopic: (e) =>
-    if $.trim($(e.currentTarget).val()) == ''
-      topic = new LL.Models.Topic({id: $(e.currentTarget).next().val()})
-      @removeTopicStat(topic)
-      $(e.currentTarget).next().val('')
 
   setModel: (model) =>
     @model = {

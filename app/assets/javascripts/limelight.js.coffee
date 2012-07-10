@@ -68,7 +68,7 @@ jQuery ->
                 errors_container.append("<div>#{error}</div>")
             else
               errors_container.append("<div>#{errors}</div>")
-          target.find('.errors').prepend(errors_container)
+          target.find('.errors').show().prepend(errors_container)
 
   # Use gritter to create 'growl' notifications.
   # @param bool persistent Are the growl notifications persistent or do they fade after time?

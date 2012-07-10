@@ -808,6 +808,87 @@ class Topic
       response
     end
 
+    # clean and get all word combinations in a string
+    def combinalities(string)
+      return [] unless string && !string.blank?
+
+      # generate the word combinations in the tweet (to find topics based on) and remove short words
+      words = (string.split - Topic.stop_words).join(' ').gsub('-', ' ').downcase.gsub("'s", '').gsub(/[^a-z0-9 ]/, '').split.select { |w| w.length > 2 || w.match(/[0-9]/) }.join(' ')
+      words = words.split(" ")
+      #singular_words = words.map{|w| w.singularize}
+      #words = singular_words
+      combinaties = []
+      i=0
+      while i <= words.length-1
+        combinaties << words[i].downcase
+        unless i == words.length-1
+          words[(i+1)..(words.length-1)].each{|volgend_element|
+            combinaties<<(combinaties.last.dup<<" #{volgend_element}")
+          }
+        end
+        i+=1
+      end
+      combinaties
+    end
+
+    # use alchemy api and limelight to produce topic suggestions for a given url
+    def suggestions_by_url(url, title=nil, limit=5)
+      suggestions = []
+
+      if title
+        combinations = Topic.combinalities(title)
+        topics = Topic.where("aliases.slug" => {"$in" => combinations.map{|c| c.parameterize}}).desc(:response_count)
+        topics.each do |t|
+          suggestions << { :id => t.id.to_s, :name => t.name }
+        end
+      end
+
+      postData = Net::HTTP.post_form(
+              URI.parse("http://access.alchemyapi.com/calls/url/URLGetRankedNamedEntities"),
+              {
+                      :url => url,
+                      :apikey => '1deee8afa82d7ba26ce5c5c7ceda960691f7e1b8',
+                      :outputMode => 'json',
+                      #:sourceText => 'cleaned',
+                      :maxRetrieve => 10
+              }
+      )
+
+      entities = JSON.parse(postData.body)['entities']
+
+      if entities
+        entities.each do |e|
+          if e['relevance'].to_f >= 0.60
+
+            # try to find the topic in Limelight
+            if e['disambiguated'] && (e['disambiguated']['freebase'] || e['relevance'].to_f >= 0.80)
+
+              topic = false
+
+              if e['disambiguated']['freebase']
+                topic = Topic.where(:freebase_guid => e['disambiguated']['freebase'].split('.').last).first
+
+                # didn't find the topic with the freebase guid, check names
+                unless topic
+                  topic = Topic.where("aliases.slug" => e['disambiguated']['name'].parameterize, :primary_type_id => {'$exists' => true}).desc(:response_count).first
+                  topic.freebase_guid = e['disambiguated']['freebase'].split('.').last if topic
+                end
+              end
+
+              if topic
+                suggestions << { :id => topic.id.to_s, :name => topic.name }
+              else
+                suggestions << { :id => 0, :name => e['text'] }
+              end
+            end
+          end
+        end
+      end
+
+      suggestions.uniq! {|s| s[:name] }
+      suggestions[0..limit]
+    end
+
   end
 
   protected

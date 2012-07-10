@@ -41,7 +41,10 @@ class LL.Views.PostFormContent extends Backbone.View
     $(@el).find('#post-form-remote-image-url').val(@model.remote_image_url)
     $(@el).find('#post-form-image-cache').val(@model.image_cache)
 
-    @setType(@model.type)
+    if @model.type
+      @setType(@model.type)
+    else
+      @hidePostType()
 
     if @model.type == 'Video'
       @disableTypes(['Link', 'Picture'])
@@ -73,6 +76,9 @@ class LL.Views.PostFormContent extends Backbone.View
     return if $(e.currentTarget).hasClass('on') || $(e.currentTarget).hasClass('disabled')
 
     @setType($(e.currentTarget).data('type'))
+
+  hidePostType: =>
+    $(@el).find('.type').hide()
 
   rotateImageLeft: =>
     visible = $(@el).find('.media img:visible')

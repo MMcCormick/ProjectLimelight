@@ -55,18 +55,21 @@ class LL.Views.PostFormContent extends Backbone.View
     unless @model.source_vid || @model.type == 'Video'
       @disableTypes(['Video'])
 
-    if @model.images && @model.images.length > 0
-      found = false
+    if @model.only_picture
+      @disableTypes(['Link','Video'])
+    else
+      if @model.images && @model.images.length > 0
+        found = false
 
-      for image in @model.images
-        if image.width >= 300
-          found = true
+        for image in @model.images
+          if image.width >= 300
+            found = true
 
-      unless found
+        unless found
+          @disableTypes(['Picture'])
+
+      else if @model.images
         @disableTypes(['Picture'])
-
-    else if @model.images
-      @disableTypes(['Picture'])
 
     if @model.existing
       $(@el).find('#post-form-parent-id').val(@model.existing.id)

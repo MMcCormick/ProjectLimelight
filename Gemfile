@@ -14,7 +14,6 @@ gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-#gem 'omnicontacts'
 gem 'koala', '1.5' # facebook graph api support
 gem 'twitter' # twitter api support
 gem 'resque', '1.21.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
@@ -35,7 +34,7 @@ gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem "rack-timeout"
 gem 'switch_user'
-gem 'omnicontacts'
+gem 'omnicontacts', :git => 'git://github.com/marbemac/omnicontacts.git'
 #gem 'mongoid_collection_snapshot'
 
 

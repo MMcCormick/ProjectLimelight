@@ -117,8 +117,10 @@ class TopicConnection
         types = Neo4j.neo.execute_query(query)
         if types['data'].length > 0 && topic1.primary_type == topic2.name
           topic1.primary_type = types['data'][0][1]['data']['name']
+          topic1.primary_type_id = types['data'][0][1]['data']['uuid']
         elsif types['data'].length == 0
           topic1.primary_type = nil
+          topic1.primary_type_id = nil
         end
         topic1.save
         Resque.enqueue(SmCreateTopic, topic1.id.to_s)

@@ -6,7 +6,7 @@ class InviteCode
   include Mongoid::Timestamps::Updated
 
   field :code
-  field :allotted, :type => Integer, :default => 3
+  field :allotted, :type => Integer, :default => 20
   field :used, :type => Integer, :default => 0
 
   validates_presence_of :code, :allotted

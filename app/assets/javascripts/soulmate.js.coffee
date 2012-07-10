@@ -20,7 +20,8 @@ class Query
     @emptyValues.push( @value )
 
   willHaveResults: ->
-    @_isValid() && !@_isEmpty()
+    firstWord = @value.split(' ')[0]
+    @_isValid() && !@_isEmpty() && !((firstWord in ['vs', 'at', 'the']) && @value.length < firstWord.length + 3)
 
   _isValid: ->
     @value.length >= @minLength

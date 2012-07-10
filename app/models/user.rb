@@ -109,7 +109,7 @@ class User
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff, :send_personal_email
   before_update :update_slug
   after_update :update_denorms
-  before_destroy :remove_from_soulmate
+  before_destroy :remove_from_soulmate, :destroy_triggered_notifications
 
   index({ :slug => 1 })
   index({ :email => 1 })
@@ -650,6 +650,10 @@ class User
         save :validate => false
       end
     end
+  end
+
+  def destroy_triggered_notifications
+    Notification.destroy_all("triggered_by_id" => id)
   end
 
   ##########

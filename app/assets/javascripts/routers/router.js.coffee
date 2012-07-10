@@ -16,7 +16,7 @@ class LL.Router extends Backbone.Router
     'pages/admin/posts/stream': 'adminPostStream'
     'pages/admin/users/index': 'userIndex'
     'pages/:name': 'staticPage'
-    'omnicontacts/:provider/callback': 'inviteContacts'
+    'contacts/:provider/callback': 'inviteContacts'
     'settings': 'settings'
     'activity/:topic_id': 'myTopicActivity'
     'activity': 'activityFeed'
@@ -561,4 +561,12 @@ class LL.Router extends Backbone.Router
       when "contact"
         foo = "bar"
       when "help"
-        foo = "bar"
+        if LL.App.current_user
+          view = new LL.Views.PostForm()
+          view.placeholder_text = "Suggest something!"
+          $('.content-tile section').append(view.render().el)
+          view.addTopic($(view.el).find('#post-form-mention1'), "Limelight Feedback", '4ecab6c1cddc7fd77f000106')
+
+  inviteContacts: (provider) ->
+    view = new LL.Views.ShowContacts()
+    $('body').append(view.render().el)

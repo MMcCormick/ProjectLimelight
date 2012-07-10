@@ -1,0 +1,6 @@
+<script type="text/javascript" charset="utf-8">
+  //<![CDATA[
+  var current_user = <%= raw current_user.to_json(:properties => :public).gsub('/', '\/') %>;
+  var contacts = <%= raw @contacts.to_json.gsub('/', '\/') %>;
+  // ]]>
+</script>

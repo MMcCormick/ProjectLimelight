@@ -14,6 +14,7 @@ gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+#gem 'omnicontacts'
 gem 'koala', '1.5' # facebook graph api support
 gem 'twitter' # twitter api support
 gem 'resque', '1.21.0'#, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'

@@ -12,6 +12,11 @@ module SoulmateHelper
               }
     }
 
+    if user.first_name && !user.first_name.blank? && user.last_name && !user.last_name.blank?
+      nugget['data']['name'] = user.fullname
+      nugget['aliases'] = [user.fullname]
+    end
+
     nugget
   end
 

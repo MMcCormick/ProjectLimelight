@@ -141,10 +141,13 @@ class LL.Views.PostsFeed extends Backbone.View
       if @collection.topic_id
         data['topic_id'] = @collection.topic_id
 
+      @showLoading()
       @on_add = 'append'
       @collection.fetch({add: true, data: data, success: @incrementPage})
 
   incrementPage: (collection, response) =>
+    @hideLoading()
+
     if response.length > 0
       collection.page += 1
     else
@@ -155,5 +158,8 @@ class LL.Views.PostsFeed extends Backbone.View
     @tiles = []
     $(@el).html('')
 
-  # TODO: Show a loading spinner or something here if we want to after a certain amount of time
-  loading: =>
+  showLoading: =>
+    $('body').append('<div id="feed-loading">Loading...</div>').fadeIn(500)
+
+  hideLoading: =>
+    $('body').find('#feed-loading').remove()

@@ -20,7 +20,7 @@ class RootPost
         when 'fu' # followed user posted this post
           pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> posted this"
         when 'fut' # followed user posted a talk about this post
-          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> posted about this"
+          pretty_reasons << "<a href='/users/#{item['s']}' class='ulink' data-id='#{item['id']}'>#{item['n']}</a> posted this"
         when 'ft' # followed topic mentioned
           pretty_reasons << "You follow <a href='#{item['s']}' class='tlink' data-id='#{item['id']}'>#{item['n']}</a>"
         when 'frt' # topic related to a followed topic mentioned (pull from relation only)

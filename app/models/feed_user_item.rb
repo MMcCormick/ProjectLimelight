@@ -212,7 +212,7 @@ class FeedUserItem
 
     # used when a topic is removed from a post
     def unpush_post_through_topic(post, unpush_topic, single_user=nil)
-      return if post.class.name == 'Talk'
+      return unless unpush_topic
 
       neo4j_topic_ids = Neo4j.pulled_from_ids([unpush_topic.neo4j_id])
       topics = Topic.where(:_id => {"$in" => [unpush_topic.id] + neo4j_topic_ids.map{|t| t[1]}})

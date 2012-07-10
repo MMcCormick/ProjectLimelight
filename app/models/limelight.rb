@@ -401,7 +401,10 @@ module Limelight #:nodoc:
     def remove_topic_mention(topic)
       mention = self.topic_mention_ids.delete(topic.id)
       if mention
-        Resque.enqueue(PostRemoveTopic, self.id.to_s, topic.id.to_s)
+        FeedUserItem.unpush_post_through_topic(self, topic)
+        FeedTopicItem.unpush_post_through_topic(self, topic)
+        FeedLikeItem.update_post_topics(self)
+        FeedContributeItem.update_post_topics(self)
         Neo4j.post_remove_topic_mention(self, topic)
       end
     end

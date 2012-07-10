@@ -128,13 +128,14 @@ class PostMedia
   end
 
   def disconnect
-    # remove from neo4j
-    node = Neo4j.neo.get_node_index('posts', 'uuid', id.to_s)
-    Neo4j.neo.delete_node!(node)
+    # destroy posts connected to this post
+    posts.each do |p|
+      p.destroy
+    end
 
-    FeedTopicItem.post_destroy(self)
-    FeedLikeItem.post_destroy(self)
-    FeedContributeItem.post_destroy(self)
+    # remove from neo4j
+    node = Neo4j.neo.get_node_index('post_media', 'uuid', id.to_s)
+    Neo4j.neo.delete_node!(node)
   end
 
   ##########

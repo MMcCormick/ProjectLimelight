@@ -5,7 +5,7 @@ class TestJob
   def self.perform()
 
     Post.all.each do |p|
-      if p.user_id == User.limelight_user_id
+      if p.user_id.to_s == User.limelight_user_id
         p.destroy
       end
     end

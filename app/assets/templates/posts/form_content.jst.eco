@@ -2,22 +2,37 @@
   <form>
     <div class='errors'></div>
 
-    <div class="mentions">
-      <div class='desc'>What is this about? Tag 1-2 topics.</div>
-      <input class='topic-mention one' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
-      <input class='topic-mention-id' type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
-      <input class='topic-mention two' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
-      <input class='topic-mention-id' type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
-    </div>
-
-    <textarea id="post-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Optionally say something about this..."></textarea>
-
     <div class='type'>
       <span>This Is A</span>
       <div class='link' data-type='Link'>Link</div>
       <div class='picture' data-type='Picture'>Picture</div>
       <div class='video' data-type='Video'>Video</div>
     </div>
+
+    <div class="mentions">
+      <input class='topic-mention one' type="text" id="post-form-mention1" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
+      <input class='topic-mention-id' type="hidden" id="post-form-mention1-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
+      <input class='topic-mention two' type="text" id="post-form-mention2" spellcheck="false" autocomplete="off" name="mention_name[]" placeholder="Tag topic..." />
+      <input class='topic-mention-id' type="hidden" id="post-form-mention2-id" spellcheck="false" autocomplete="off" name="mention_id[]" />
+    </div>
+
+    <% if @post.topic_suggestions: %>
+      <div class='mention-suggestions'>
+        <div class='head'>SUGGESTIONS</div>
+        <% if @post.topic_suggestions.length > 0: %>
+          <ul>
+            <% for suggestion in @post.topic_suggestions: %>
+              <li data-id='<%= suggestion.id %>'><%= suggestion.name %></li>
+            <% end %>
+          </ul>
+        <% else: %>
+          <div class='none'>None, but you can add new topics by typing them in the boxes above!</div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class='say-something'>Add Comment</div>
+    <textarea id="post-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Optionally say something about this..."></textarea>
 
     <input type="hidden" id="post-form-source-url" name="source_url" />
     <input type="hidden" id="post-form-source-name" name="source_name" />

@@ -6,6 +6,9 @@ class LL.Views.PostFormContent extends Backbone.View
     "click .switcher .right": "rotateImageRight"
     "click .switcher .cancel-image": "cancelImage"
     "click .type div": "handleTypeClick"
+    "click .say-something": "showSaySomething"
+    "click .mention-suggestions li": "useMentionSuggestion"
+    "blur .topic-mention": "clearTopic"
 
   initialize: ->
 
@@ -52,6 +55,19 @@ class LL.Views.PostFormContent extends Backbone.View
     unless @model.source_vid || @model.type == 'Video'
       @disableTypes(['Video'])
 
+    if @model.images && @model.images.length > 0
+      found = false
+
+      for image in @model.images
+        if image.width >= 300
+          found = true
+
+      unless found
+        @disableTypes(['Picture'])
+
+    else if @model.images
+      @disableTypes(['Picture'])
+
     if @model.existing
       $(@el).find('#post-form-parent-id').val(@model.existing.id)
 
@@ -80,6 +96,25 @@ class LL.Views.PostFormContent extends Backbone.View
   hidePostType: =>
     $(@el).find('.type').hide()
 
+  showSaySomething: =>
+    $(@el).find('.say-something').hide().next().show()
+
+  useMentionSuggestion: (e) =>
+    target = false
+    $(@el).find('.mentions .topic-mention').each (i,val) ->
+      if !target && $.trim($(val).val()) == ''
+        target = $(val)
+
+    unless target
+      return
+
+    @addTopic(target, $(e.currentTarget).text(), $(e.currentTarget).data('id'))
+
+    $(e.currentTarget).remove()
+
+    if $(@el).find('.mention-suggestions li').length == 0
+      $(@el).find('.mention-suggestions').remove()
+
   rotateImageLeft: =>
     visible = $(@el).find('.media img:visible')
     prev = if visible.prev().length then visible.prev() else $(@el).find('.media img:last')
@@ -99,16 +134,24 @@ class LL.Views.PostFormContent extends Backbone.View
     $(@el).find('.switcher').hide()
     $(@el).find('#post-form-remote-image-url').val('')
 
+  clearTopic: (e) =>
+    if $.trim($(e.currentTarget).val()) == ''
+      topic = new LL.Models.Topic({id: $(e.currentTarget).next().val()})
+      @removeTopicStat(topic)
+      $(e.currentTarget).next().val('')
+
   addTopicStat: (topic) =>
     $(@el).find(".topic-default").hide()
     unless $(@el).find(".stats .t-#{topic.get('id')}").length > 0
       $(@el).find(".stats").append("<div class='topic-stat t-#{topic.get('id')}'>+#{topic.get('followers_count')} #{if topic.get('followers_count') != 1 then 'people' else 'person'} following #{topic.get('name')}</div>")
 
+  removeTopicStat: (topic) =>
+    $(@el).find(".stats .t-#{topic.get('id')}").remove()
 
   addTopic: (target, name, id) =>
     target.val(name).next().val(id)
     self = @
-    if id != "0"
+    if parseInt(id) != 0
       topic = new LL.Models.Topic({id: id})
       if topic.get('followers_count')
         @addTopicStat(topic)

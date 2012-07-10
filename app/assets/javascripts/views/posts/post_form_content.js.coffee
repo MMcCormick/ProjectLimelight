@@ -5,6 +5,7 @@ class LL.Views.PostFormContent extends Backbone.View
     "click .switcher .left": "rotateImageLeft"
     "click .switcher .right": "rotateImageRight"
     "click .switcher .cancel-image": "cancelImage"
+    "click .type div": "handleTypeClick"
 
   initialize: ->
 
@@ -35,11 +36,18 @@ class LL.Views.PostFormContent extends Backbone.View
   setData: =>
     $(@el).find('#post-form-source-url').val(@model.url)
     $(@el).find('#post-form-source-name').val(@model.provider_name)
-    $(@el).find('#post-form-source-vid').val(@model.source_vid)
+    $(@el).find('#post-form-source-vid').val(@model.video)
     $(@el).find('#post-form-embed').val(@model.video)
     $(@el).find('#post-form-remote-image-url').val(@model.remote_image_url)
     $(@el).find('#post-form-image-cache').val(@model.image_cache)
-    $(@el).find('#post-form-type').val(@model.type)
+
+    @setType(@model.type)
+
+    if @model.type == 'Video'
+      @disableTypes(['Link', 'Picture'])
+
+    unless @model.source_vid || @model.type == 'Video'
+      @disableTypes(['Video'])
 
     if @model.existing
       $(@el).find('#post-form-parent-id').val(@model.existing.id)
@@ -51,6 +59,20 @@ class LL.Views.PostFormContent extends Backbone.View
         $(@el).find('.switcher').show() # show the switcher
 
       $(@el).find('#post-form-remote-image-url').val($(@el).find('.media img:first').attr('src'))
+
+  disableTypes: (types) =>
+    for type in types
+      $(@el).find(".type .#{type.toLowerCase()}").addClass('disabled').attr('title', 'This post type is disabled for this URL')
+
+  setType: (type) =>
+    $(@el).find('#post-form-type').val(type)
+    $(@el).find('.type div').removeClass('on')
+    $(@el).find(".type .#{type.toLowerCase()}").addClass('on')
+
+  handleTypeClick: (e) =>
+    return if $(e.currentTarget).hasClass('on') || $(e.currentTarget).hasClass('disabled')
+
+    @setType($(e.currentTarget).data('type'))
 
   rotateImageLeft: =>
     visible = $(@el).find('.media img:visible')

@@ -14,7 +14,7 @@ class PostsController < ApplicationController
     not_found("Post not found") unless @this
 
     media = @this.post_media
-    @title = @this.name
+    @title = @this.media_name
     @description = @this.content
     url = post_url(:id => @this.id)
     image_url = media.image_url(:fit, :large)

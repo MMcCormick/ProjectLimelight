@@ -5,8 +5,15 @@ class TestJob
   def self.perform()
 
     Post.all.each do |p|
-      unless p.post_media_id && p.post_media
+      if p.user_id == User.limelight_user_id
         p.destroy
+      end
+    end
+
+    PostMedia.all.each do |pm|
+      post = Post.where(:post_media_id => pm.id).first
+      unless post
+        pm.destroy
       end
     end
 

@@ -94,10 +94,50 @@ $postFontColor: $grayDark;
     }
     #post-form-content {
       @include box-sizing(border-box);
-      height: 80px;
+      height: 52px;
       width: 260px;
       padding: 7px;
       border: 1px solid #DDD;
+    }
+  }
+  .type {
+    @include clearfix();
+    margin: 10px 0 0 0;
+
+    span {
+      font-size: 13px;
+      float: left;
+      margin: 4px 15px 0 3px;
+      font-weight: bold;
+      cursor: default;
+    }
+    .link,
+    .picture,
+    .video {
+      @include border-radius(1px);
+
+      float: left;
+      margin: 0 5px 0 0;
+      padding: 4px 12px;
+      cursor: pointer;
+      color: #333;
+
+      &:hover {
+        background: #cceef3;
+      }
+      &.on {
+        background: #2F96B4;
+        color: #FFF;
+        cursor: default;
+      }
+      &.disabled {
+        @include opacity(60);
+        text-decoration: line-through;
+
+        &:hover {
+          background: transparent;
+        }
+      }
     }
   }
   .preview {
@@ -212,11 +252,10 @@ $postFontColor: $grayDark;
     margin: 0 0 10px 0;
 
     .desc {
-      @include single-text-shadow(#CCC, 0, 1px);
       font-size: 13px;
       margin: 0 0 5px 3px;
-      color: #666;
       cursor: default;
+      font-weight: bold;
     }
     .topic-mention {
       border: 1px solid #DDD;

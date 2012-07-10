@@ -12,6 +12,13 @@
 
     <textarea id="post-form-content" spellcheck="false" autocomplete="off" autocomplete='off' name="content" placeholder="Optionally say something about this..."></textarea>
 
+    <div class='type'>
+      <span>This Is A</span>
+      <div class='link' data-type='Link'>Link</div>
+      <div class='picture' data-type='Picture'>Picture</div>
+      <div class='video' data-type='Video'>Video</div>
+    </div>
+
     <input type="hidden" id="post-form-source-url" name="source_url" />
     <input type="hidden" id="post-form-source-name" name="source_name" />
     <input type="hidden" id="post-form-source-vid" name="source_video_id" />

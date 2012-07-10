@@ -32,7 +32,7 @@ class TopicConnectionsController < ApplicationController
     # If type of, use
     con = params[:type_of] == "true" ? TopicConnection.find(Topic.type_of_id) : TopicConnection.find(Topic.related_to_id)
 
-    if !topic1.has_alias?(params[:topic1_name]) || !topic2.has_alias?(params[:topic2_name])
+    if !topic1 || !topic2
       response = build_ajax_response(:error, nil, "Please select / create topics from the drop down")
       status = 400
     else

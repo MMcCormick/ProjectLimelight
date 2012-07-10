@@ -12,12 +12,5 @@ end
 
 Dir["#{Rails.root}/app/jobs/*.rb"].each { |file| require file }
 
-Resque::Failure::Airbrake.configure do |config|
-  config.api_key = ENV['AIRBRAKE_API_KEY']
-  config.secure = true
-end
-Resque::Failure::Multiple.classes = [Resque::Failure::Redis, Resque::Failure::Airbrake]
-Resque::Failure.backend = Resque::Failure::Multiple
-
-Resque::Scheduler.dynamic = true
-Resque.schedule = YAML.load_file(File.join('config/resque_schedule.yml'))
+#Resque::Scheduler.dynamic = true
+Resque.schedule = YAML.load_file(File.join(Rails.root, 'config/resque_schedule.yml'))

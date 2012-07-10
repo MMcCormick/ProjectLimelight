@@ -27,7 +27,6 @@ class LL.Views.FeedTile extends Backbone.View
 
     $(@el).append(root_view.render().el)
 
-    console.log @model
     if @model.get('reasons').length > 0
       reason_div = $('<div/>').addClass('reasons').html("<div class='earmark'>?</div><ul></ul>")
       first = 'first'

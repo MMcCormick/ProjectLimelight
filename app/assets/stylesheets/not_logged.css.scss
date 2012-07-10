@@ -1,0 +1,29 @@
+.request-invite {
+  padding: 20px;
+  width: 500px;
+  margin: 0 0 0 -385px;
+  border: 1px solid #DDD;
+  border-top: none;
+  background: #FFF;
+  position: absolute;
+  left: 50%;
+
+  .head {
+    @include single-text-shadow(#DDDDDD, 0, 1px);
+    font-size: 21px;
+    margin: 0 0 8px 0;
+    cursor: default;
+  }
+  .sub {
+    font-size: 17px;
+    cursor: default;
+  }
+  .btn {
+    position: absolute;
+    font-size: 18px;
+    right: 20px;
+    top: 23px;
+    padding: 9px 14px;
+    z-index: 10;
+  }
+}

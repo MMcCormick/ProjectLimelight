@@ -3,9 +3,14 @@ class LL.Views.UserSettings extends Backbone.View
 
   events:
     'click .s-btn': 'updateSetting'
-    'click .radio-btn': 'updateRadioSetting'
+    'click .email-settings .radio-btn': 'updateRadioSetting'
+    'click .image-settings .radio-btn': 'updateRadioSetting'
 
   initialize: ->
+
+  render: =>
+    settings = new LL.Views.SocialSettings(model: LL.App.current_user)
+    $(@el).find('.social .meat').html(settings.render().el)
 
   updateSetting: (e) =>
     button = $(e.target)
@@ -32,6 +37,8 @@ class LL.Views.UserSettings extends Backbone.View
 
   updateRadioSetting: (e) =>
     button = $(e.target)
+
+    return if $(e.currentTarget).hasClass('disabled')
 
     data = {}
     data[button.attr('name')] = button.data('value')

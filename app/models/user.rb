@@ -712,7 +712,11 @@ class User
     :tutorial_step => { :properties => :public, :versions => [ :v1 ] },
     :tutorial1_step => { :properties => :public, :versions => [ :v1 ] },
     :username_reset => { :properties => :public, :versions => [ :v1 ] },
-    :invite_code => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
+    :invite_code => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
+    :auto_follow_fb => { :properties => :public, :versions => [ :v1 ] },
+    :auto_follow_tw => { :properties => :public, :versions => [ :v1 ] },
+    :og_likes => { :properties => :public, :versions => [ :v1 ] },
+    :og_follows => { :properties => :public, :versions => [ :v1 ] }
 
   class << self
 

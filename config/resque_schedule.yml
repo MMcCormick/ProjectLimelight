@@ -16,10 +16,10 @@ recalculate_clout:
   args:
   description: "This job recalculates user clout"
 
-crawl_sources:
-  every: 15m
-  class: CrawlerGo
-  description: "This job invokes the Limelight crawler to re-crawl all of it's sources and push posts"
+#crawl_sources:
+#  every: 15m
+#  class: CrawlerGo
+#  description: "This job invokes the Limelight crawler to re-crawl all of it's sources and push posts"
 
 daily_notifications:
   cron: "0 14 * * *"

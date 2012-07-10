@@ -237,3 +237,111 @@
     float: right;
   }
 }
+
+.social-settings {
+  @include clearfix();
+
+  .help {
+    margin: 0 0 30px 0;
+
+    p {
+      margin: 10px 0;
+    }
+  }
+
+  .channels {
+    @include clearfix();
+  }
+
+  .empty-channel {
+    float: left;
+    width: 150px;
+    height: 100px;
+  }
+
+  .channel {
+    float: left;
+    width: 100px;
+    padding: 0 10px;
+
+    .connect {
+      .head {
+        height: 40px;
+        text-align: center;
+        font-weight: bold;
+        width: 120px;
+        margin: 0 0 0 -10px;
+      }
+      img {
+        @include opacity(80);
+        width: 100px;
+      }
+      &:hover {
+        img {
+          @include opacity(100);
+        }
+      }
+    }
+
+    &.on {
+      .connect {
+        cursor: default;
+        .head {
+          cursor: default;
+          color: $green;
+        }
+        img {
+          @include opacity(100);
+        }
+      }
+    }
+  }
+
+  .options {
+    text-align: center;
+    padding: 15px 0 0 0;
+
+    li {
+      @include clearfix();
+      margin: 10px 0;
+    }
+    .desc {
+      width: 130px;
+      float: left;
+      text-align: right;
+      font-weight: bold;
+      margin: 5px 20px 0 0;
+      cursor: default;
+      position: relative;
+      font-size: 13px;
+    }
+    .option {
+      width: 100px;
+      float: left;
+      padding: 0 10px;
+
+      &.off {
+        @include opacity(50);
+        .btn {
+          cursor: default;
+        }
+      }
+    }
+    .btn-group {
+      margin: 0 auto;
+      display: inline-block;
+    }
+    .qm {
+      @include border-radius(2px);
+      @include opacity(80);
+      font-size: 13px;
+      padding: 0px 4px;
+      background: $green;
+      color: #FFF;
+      cursor: pointer;
+      position: absolute;
+      top: 0px;
+      right: -23px;
+    }
+  }
+}

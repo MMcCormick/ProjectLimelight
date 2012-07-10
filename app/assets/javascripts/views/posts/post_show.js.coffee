@@ -48,6 +48,10 @@ class LL.Views.PostShow extends Backbone.View
     if LL.App.Feed
       $(@el).addClass('modal')
       $(@el).addClass('modal').append('<div class="close">x</div>')
+    else
+      unless LL.App.current_user
+        invite = new LL.Views.RequestInvite()
+        $('#page-header').prepend($(invite.render().el).css('margin-left': -250)).show()
 
     @
 

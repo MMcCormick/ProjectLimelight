@@ -49,6 +49,7 @@ class LL.Views.UserPageHeader extends Backbone.View
 #      header.showSorting = true
 
     header.render()
+
     @
 
   updatePostsCount: =>

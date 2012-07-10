@@ -126,6 +126,8 @@ class CrawlerPushPost
       #end
       #topics.delete_if {|t| delete_at_ids.include?(t.id)} if delete_at_ids.length > 0
 
+      return unless link_data['title']
+
       # Build the initial post data structure
       response = {
         :type => 'Link',

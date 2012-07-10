@@ -48,7 +48,7 @@ class Post
   end
 
   def name
-    content
+    content && !content.blank? ? content : "@#{user.username}: #{post_media.title}"
   end
 
   # short version of the contnet "foo bar foo bar..." used in notifications etc.

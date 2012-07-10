@@ -43,58 +43,13 @@
     </div>
   </div>
 
-  <div class="section social-settings">
+  <div class="section social">
     <div class="top">
       <h4>Social Settings</h4>
     </div>
 
     <div class='meat'>
-      <div class="field">
-        <div class="setting-text">Auto-follow Twitter friends on Limelight</div>
-        <% if current_user.twuid %>
-          <div class="btn-group">
-            <div class="btn radio-btn <%= "btn-info" if current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="true">On</div>
-            <div class="btn radio-btn <%= "btn-info" unless current_user.auto_follow_tw %>" name="auto_follow_tw" data-value="false">Off</div>
-          </div>
-        <% else %>
-          <div class='social-connect twitter'>
-            <a href="/users/auth/twitter" class='twitter'>
-              <img src="/assets/images/twitter-connect-button.gif" />
-            </a>
-          </div>
-        <% end %>
-      </div>
 
-      <div class="field">
-        <div class="setting-text">Auto-follow Facebook friends on Limelight</div>
-        <% if current_user.fbuid %>
-          <div class="btn-group">
-            <div class="btn radio-btn <%= "btn-info" if current_user.auto_follow_fb %>" name="auto_follow_fb" data-value="true">On</div>
-            <div class="btn radio-btn <%= "btn-info" unless current_user.auto_follow_fb %>" name="auto_follow_fb" data-value="false">Off</div>
-          </div>
-        <% else %>
-          <div class='social-connect facebook'>
-              <a href="/users/auth/facebook" class='facebook'>
-                <img src="/assets/images/facebook-connect-button.gif" />
-              </a>
-          </div>
-        <% end %>
-      </div>
-
-      <div class="field">
-        <div class="setting-text">Post users/topics I follow on Limelight to Facebook (occasionally)</div>
-        <div class="btn-group">
-          <div class="btn radio-btn <%= "disabled" unless current_user.fbuid %> <%= "btn-info" if current_user.og_follows %>" name="og_follows" data-value="true">On</div>
-          <div class="btn radio-btn <%= "disabled" unless current_user.fbuid %> <%= "btn-info" unless current_user.og_follows %>" name="og_follows" data-value="false">Off</div>
-        </div>
-      </div>
-      <div class="field">
-        <div class="setting-text">Post my Limelight likes to Facebook (occasionally)</div>
-        <div class="btn-group">
-          <div class="btn radio-btn <%= "disabled" unless current_user.fbuid %> <%= "btn-info" if current_user.og_likes %>" name="og_likes" data-value="true">On</div>
-          <div class="btn radio-btn <%= "disabled" unless current_user.fbuid %> <%= "btn-info" unless current_user.og_likes %>" name="og_likes" data-value="false">Off</div>
-        </div>
-      </div>
     </div>
   </div>
 

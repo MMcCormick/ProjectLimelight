@@ -10,7 +10,5 @@ class PostRemoveTopic
     FeedTopicItem.unpush_post_through_topic(post, topic)
     FeedLikeItem.update_post_topics(post)
     FeedContributeItem.update_post_topics(post)
-
-
   end
 end

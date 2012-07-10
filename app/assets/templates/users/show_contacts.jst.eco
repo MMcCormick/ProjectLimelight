@@ -1,0 +1,15 @@
+<h2>Invite Contacts</h2>
+
+<div class="update"></div>
+<ul class="unstyled contact-list">
+  <li class="check-all"><input type="checkbox">Check All</li>
+  <% for contact, i in @contacts: %>
+    <li class="contact" data-index="<%= i %>">
+      <input type="checkbox">
+      <%= contact.email %>
+      <div class="name"><%= contact.name if contact.name != contact.email && contact.name %></div>
+    </li>
+  <% end %>
+</ul>
+
+<div class="btn btn-success submit">Submit</div>

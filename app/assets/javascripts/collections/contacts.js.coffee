@@ -1,3 +1,3 @@
 class LL.Collections.Contacts extends Backbone.Collection
-  url: '/api/contacts'
+  url: '/api/users/contacts'
   model: LL.Models.Contact

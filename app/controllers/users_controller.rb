@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings, :topic_finder, :invite_by_email]
+  before_filter :authenticate_user!, :only => [:settings, :update, :picture_update, :update_settings, :topic_finder, :invite_by_email, :show_contacts]
   include ModelUtilitiesHelper
   include ImageHelper
 
@@ -264,15 +264,24 @@ class UsersController < ApplicationController
     params[:emails].each do |email|
       UserMailer.invite(current_user.id.to_s, email, unlimited_code.code).deliver
     end
-    render json: build_ajax_response(:ok), status: 201
+    render json: build_ajax_response(:ok, nil, "Thanks! You have invited #{params[:emails].length} #{params[:emails].length == 1 ? "contact" : "contacts"}. Redirecting..."), status: 201
   end
 
-  def contacts
-    contacts = request.env['omnicontacts.contacts']
-    if contacts.blank?
-      render json: build_ajax_response(:error, nil, "No contacts found"), status: 400
+  def show_contacts
+    @contacts = request.env['omnicontacts.contacts']
+    if @contacts.blank?
+      flash[:alert] = "No contacts found"
+      redirect_to :root
     else
-      render json: build_ajax_response(:ok, nil, nil, nil, :data => contacts.as_json), status: 200
+      contact_emails = @contacts.map{|c| c[:email].downcase}
+      users = User.where("email" => {"$in" => contact_emails})
+      user_emails = users.map{|u| u.email}
+      @contacts.delete_if{|c| user_emails.include?(c[:email].downcase)}
+      render :layout => "blank"
     end
+  end
+
+  def contacts_failure
+    render :layout => "blank"
   end
 end

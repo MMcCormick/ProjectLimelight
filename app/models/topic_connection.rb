@@ -92,33 +92,72 @@ class TopicConnection
     end
 
     def remove(connection, topic1, topic2)
-      rel1 = Neo4j.neo.get_relationship_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}")
-      Neo4j.neo.delete_relationship(rel1)
-      Neo4j.neo.remove_relationship_from_index('topics', rel1)
+      node = Neo4j.neo.get_node(topic1.neo4j_id)
 
-      rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}")
+      rel1 = Neo4j.neo.get_relationship_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}")
       if rel1
         Neo4j.neo.delete_relationship(rel1)
         Neo4j.neo.remove_relationship_from_index('topics', rel1)
+      else # find the relationship manually
+        outgoing = Neo4j.neo.get_node_relationships(node, "out", connection.name)
+        if outgoing
+          outgoing.each do |rel|
+            if Neo4j.parse_id(rel['end']).to_i == topic2.neo4j_id.to_i
+              Neo4j.neo.delete_relationship(rel)
+            end
+          end
+        end
       end
 
-      rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}")
-      if rel1
-        Neo4j.neo.delete_relationship(rel1)
-        Neo4j.neo.remove_relationship_from_index('topics', rel1)
+      # check to see if we should remove the pull connections
+      outgoing = Neo4j.neo.get_node_relationships(node, "out", connection.name)
+      incoming = Neo4j.neo.get_node_relationships(node, "in", connection.name)
+      pull = false
+      reverse_pull = false
+
+      if outgoing
+        outgoing.each do |o|
+          pull = true if o['data']['pull']
+          reverse_pull = true if o['data']['reverse_pull']
+        end
+      end
+
+      if incoming
+        incoming.each do |o|
+          pull = true if o['data']['reverse_pull']
+          reverse_pull = true if o['data']['pull']
+        end
+      end
+
+      unless pull
+        rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}")
+        if rel1
+          Neo4j.neo.delete_relationship(rel1)
+          Neo4j.neo.remove_relationship_from_index('topics', rel1)
+        end
+      end
+
+      unless reverse_pull
+        rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}")
+        if rel1
+          Neo4j.neo.delete_relationship(rel1)
+          Neo4j.neo.remove_relationship_from_index('topics', rel1)
+        end
       end
 
       if connection.id.to_s == Topic.type_of_id
+        # check to see if there are other type of connections we can replace this one with
         query = "
           START topic=node:topics(uuid = '#{topic1.id.to_s}')
           MATCH topic-[r1:`Type Of`]->topic2
+          WHERE
           RETURN r1,topic2
         "
         types = Neo4j.neo.execute_query(query)
-        if types['data'].length > 0 && topic1.primary_type == topic2.name
+        if types && types['data'].length > 0 && topic1.primary_type == topic2.name
           topic1.primary_type = types['data'][0][1]['data']['name']
           topic1.primary_type_id = types['data'][0][1]['data']['uuid']
-        elsif types['data'].length == 0
+        elsif !types || types['data'].length == 0
           topic1.primary_type = nil
           topic1.primary_type_id = nil
         end

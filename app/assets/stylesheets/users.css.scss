@@ -197,18 +197,63 @@
   }
 }
 
+.invite-options {
+  .close {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+  }
+  h4 {
+    margin: 20px 0 10px 0;
+  }
+  .twitter-share-button {
+    margin: 8px 20px 0 0;
+  }
+  .facebook-share-button {
+    margin: 8px 0 0 0;
+  }
+  .emails {
+    width: 330px;
+    height: 50px;
+    display: block;
+  }
+  .message {
+    width: 330px;
+    height: 50px;
+    display: block;
+  }
+  .submit {
+
+  }
+}
+
 .contacts {
-  @include border-radius(3px);
-  width: 500px;
-  margin-left: -250px;
-  left: 50%;
-  top: 50px;
-  position: absolute;
-  border: 1px solid $grayDark;
-  margin-bottom: 50px;
-  background: #FFF;
-  h2 {
-    margin: 10px;
+  text-align: center;
+  padding: 50px 0;
+
+  .content-tile {
+    position: relative;
+  }
+  .meat {
+    padding: 20px 15px 10px 15px !important;
+  }
+  .check-all {
+    margin-bottom: 10px;
+    padding: 3px 10px;
+    input {
+      margin: -3px 5px 0 0;
+    }
+  }
+  .filter {
+    position: absolute;
+    top: 68px;
+    right: 26px;
+  }
+  ul {
+    max-height: 300px;
+    min-height: 50px;
+    overflow: auto;
+    border: 1px solid #DDD;
   }
   li {
     position: relative;
@@ -222,20 +267,25 @@
     input {
       margin: -3px 5px 0 0;
     }
-    &.check-all {
-      margin-bottom: 10px;
-    }
     &.on {
       background: $greenDarker;
       color: #FFF;
     }
+    .data {
+      display: none;
+    }
+  }
+  h5 {
+    margin: 20px 0 2px 2px;
+  }
+  .message {
+    width: 300px;
+    height: 100px;
+    display: block;
   }
   .submit,
   .text {
-    margin: 10px;
-  }
-  .submit {
-    float: right;
+    margin: 10px 0;
   }
 }
 

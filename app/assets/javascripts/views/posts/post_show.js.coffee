@@ -46,7 +46,6 @@ class LL.Views.PostShow extends Backbone.View
     @loaded = true
 
     if LL.App.Feed
-      $(@el).addClass('modal')
       $(@el).addClass('modal').append('<div class="close">x</div>')
     else
       unless LL.App.current_user

@@ -6,6 +6,7 @@ class LL.Views.ShowContacts extends Backbone.View
     'click .submit': 'inviteContacts'
     'click .contact': 'contactOn'
     'click .check-all': 'checkAll'
+    'keyup .filter': 'filterContacts'
 
   initialize: ->
 
@@ -35,26 +36,30 @@ class LL.Views.ShowContacts extends Backbone.View
       $('.contact.on').click()
 
   inviteContacts: (e) =>
+    return if $(e.currentTarget).hasClass('disabled')
+
     button = $(e.currentTarget)
-    data = []
+    payload = {
+      message: $(@el).find('.message').val()
+      emails: []
+    }
+
     $('li.on').each (i, val) ->
-      data.push contacts[parseInt($(val).data("index"))]["email"]
-    console.log(data)
+      payload.emails.push contacts[parseInt($(val).data("index"))]["email"]
+
+    return if payload.emails.length == 0
 
     $.ajax
       url: '/api/users/invite_by_email'
       type: 'post'
       dataType: 'json'
-      data: {emails: data}
+      data: payload
       beforeSend: ->
-        button.oneTime 500, 'loading', ->
-          button.button('loading')
+        button.addClass('disabled').text('Sending...')
       complete: ->
-        button.stopTime 'loading'
-        button.button('reset')
+        button.removeClass('disabled').text('Send Invites')
       success: (data) ->
-        $('.contact-list').html('')
-        $('.submit').remove()
+        $('.submit,.contact-list,.check-all,.filter,h5,.message').remove()
         $('.update').html(data.flash)
         setTimeout ->
           window.location = '/'
@@ -62,3 +67,12 @@ class LL.Views.ShowContacts extends Backbone.View
       error: (jqXHR, textStatus, errorThrown) ->
         $(self.el).removeClass('disabled')
         globalError(jqXHR)
+
+  filterContacts: (e) =>
+    filter = $(e.currentTarget).val()
+    if (filter)
+      console.log filter
+      $(@el).find(".data:not(:Contains(" + filter + "))").parent().hide()
+      $(@el).find(".data:Contains(" + filter + ")").parent().show()
+    else
+      $(@el).find("li").show()

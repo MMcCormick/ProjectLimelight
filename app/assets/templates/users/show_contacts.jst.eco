@@ -1,15 +1,28 @@
-<h2>Invite Contacts</h2>
+<div class='content-tile'>
+  <div class="section">
+    <div class='top'>
+      <h2>Invite Friends</h2>
+    </div>
 
-<div class="update"></div>
-<ul class="unstyled contact-list">
-  <li class="check-all"><input type="checkbox">Check All</li>
-  <% for contact, i in @contacts: %>
-    <li class="contact" data-index="<%= i %>">
-      <input type="checkbox">
-      <%= contact.email %>
-      <div class="name"><%= contact.name if contact.name != contact.email && contact.name %></div>
-    </li>
-  <% end %>
-</ul>
+    <div class='meat'>
+      <div class="update"></div>
+      <div class="check-all"><input type="checkbox">Check All</div>
+      <input class='filter' type='text' placeholder='Search by name or email...' />
+      <ul class="unstyled contact-list">
+        <% for contact, i in @contacts: %>
+          <li class="contact" data-index="<%= i %>">
+            <input type="checkbox">
+            <%= contact.email %>
+            <div class="name"><%= contact.name if contact.name != contact.email && contact.name %></div>
+            <div class='data'><%= contact.email + (" " + contact.name if contact.name != contact.email && contact.name)  %></div>
+          </li>
+        <% end %>
+      </ul>
 
-<div class="btn btn-success submit">Submit</div>
+      <h5>Message</h5>
+      <textarea class='message' placeholder='Optional message...' length='300'></textarea>
+
+      <div class="btn btn-success submit">Send Invites</div>
+    </div>
+  </div>
+</div>

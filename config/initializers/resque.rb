@@ -1,7 +1,4 @@
 require 'resque_scheduler'
-require 'resque/failure/multiple'
-require 'resque/failure/airbrake'
-require 'resque/failure/redis'
 
 if ENV["REDISTOGO_URL"]
   uri = URI.parse(ENV["REDISTOGO_URL"])

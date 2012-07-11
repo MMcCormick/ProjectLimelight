@@ -98,7 +98,7 @@ class ApplicationController < ActionController::Base
     og_tags << ["og:title", title]
     og_tags << ["og:type", type]
     og_tags << ["og:url", url]
-    og_tags << ["og:image", image]
+    og_tags << ["og:image", image] if image && !image.blank?
     og_tags << ["og:description", desc]
     extra.each do |k,e|
       og_tags << [k, e]

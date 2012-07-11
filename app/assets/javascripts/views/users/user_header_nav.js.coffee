@@ -6,6 +6,7 @@ class LL.Views.UserHeaderNav extends Backbone.View
   events:
     'click .notifications': 'showNotifications'
     'click .login': 'showLogin'
+    'click .invite': 'showInvite'
 
 
   initialize: ->
@@ -48,3 +49,8 @@ class LL.Views.UserHeaderNav extends Backbone.View
 
   showLogin: =>
     LL.LoginBox.showModal()
+
+  showInvite: (e) =>
+    view = new LL.Views.UserInviteOptions(model: @model)
+    view.modal = true
+    view.render()

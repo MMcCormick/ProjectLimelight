@@ -116,14 +116,19 @@
       }
       .invite-code,
       .account {
-        color: #333;
+        color: $blue;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 15px;
         float: left;
         clear: both;
+        font-weight: bold;
+        padding: 5px 0;
+        &:hover {
+          color: $blueDarker;
+        }
       }
       .invite-code {
-        margin: 40px 0 5px 0;
+        margin: 35px 0 5px 0;
       }
       .account {
 

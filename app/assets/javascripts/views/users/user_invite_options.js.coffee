@@ -10,7 +10,7 @@ class LL.Views.UserInviteOptions extends Backbone.View
 
   render: =>
 
-    $(@el).html(@template(user: @model))
+    $(@el).html(@template(user: @model, modal: @modal))
     if @modal
       $(@el).addClass('modal fade').modal()
 

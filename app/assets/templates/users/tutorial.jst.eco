@@ -11,7 +11,7 @@
     <div class="modal-footer">
       <div class="social">
         <div class="fb-like" data-href="http://www.facebook.com/DiscoverLimelight" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
-        <a href="https://twitter.com/share?url=http://projectlimelight.com&text=I just signed up for Limelight, a new way to follow the topics I care about. @limelight_team" class="twitter-share-button" data-lang="en">Tweet</a>
+        <a href="https://twitter.com/share?url=http://projectlimelight.com&text=Just signed up to beta test Limelight. It's invite only but you can get access with this code <%= @user.get('invite_code').code %> @limelight_team" class="twitter-share-button" data-lang="en">Tweet</a>
         <div class="google">
           <div class="g-plusone" data-size="medium" data-href="http://projectlimelight.com"></div>
         </div>

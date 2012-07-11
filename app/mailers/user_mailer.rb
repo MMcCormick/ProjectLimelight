@@ -21,8 +21,9 @@ class UserMailer < ActionMailer::Base
     mail(:to => 'support@projectlimelight.com', :subject => "[limelight invite request] #{email} requested an invite!")
   end
 
-  def invite(user_id, email, code)
+  def invite(user_id, email, message, code)
     @user = User.find(user_id)
+    @message = message
     @code = code
     mail(:to => email, :subject => "#{@user.first_or_username} invited you to Limelight!")
   end

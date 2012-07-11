@@ -1,0 +1,38 @@
+<% if @modal: %>
+<div class='modal-header'>
+  <h3>Invite Friends</h3>
+  <button type="button" class="close" data-dismiss="modal">×</button>
+</div>
+
+<div class='modal-body'>
+<% end %>
+
+  <p>
+    There are three way to invite friends to Limelight.
+    <br />
+
+    <h4>1. Share your invite code</h4>
+    <div>
+      Use this URL: <b>http://projectlimelight.com/invited?code=<%= @user.get('invite_code').code %></b>
+      <div>
+        <a href="https://twitter.com/share?url=<%= encodeURI("http://projectlimelight.com/invited?code="+@user.get('invite_code').code) %>&text=Just signed up to beta test Limelight. It's invite only but you can get access with this link @limelight_team" target='_blank' class="twitter-share-btn" data-lang="en">Share on Twitter</a>
+        <a href="http://www.facebook.com/dialog/feed?app_id=185721368181340&link=http://projectlimelight.com&redirect_uri=http://projectlimelight.com" class="facebook-share-button" target='_blank'>Share on Facebook</a>
+      </div>
+    </div>
+
+    <h4>2. Invite contacts through Gmail.</h4>
+    <div>
+      <a href="/contacts/gmail" target='_blank' class='gmail'>Use Gmail</a>
+    </div>
+
+    <h4>3. Invite individual emails.</h4>
+    <div>
+      <textarea placeholder='Emails comma separated. For example: a@example.com, b@example.com, c@example.com' class='emails'></textarea>
+      <textarea class='message' placeholder='Optional email message...'></textarea>
+      <div class='btn btn-success submit'>Send Invites</div>
+    </div>
+  </p>
+
+<% if @modal: %>
+</div>
+<% end %>

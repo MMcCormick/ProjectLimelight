@@ -20,6 +20,7 @@ gem 'resque', '1.21.0'#, :git => 'https://github.com/hone/resque.git', :branch =
 gem 'resque-scheduler', '2.0.0.h', :require => 'resque_scheduler' # scheduled resque jobs
 gem 'resque-loner' # Unique resque jobs
 gem 'resque_mailer'
+gem 'redis', '2.2.2'
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
 gem 'airbrake' # Exception notification

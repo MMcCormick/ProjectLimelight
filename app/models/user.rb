@@ -518,7 +518,7 @@ class User
             'score' => score.to_i
     )
     Neo4j.neo.add_node_to_index('users', 'uuid', id.to_s, node)
-    self.neo4j_id = node['self'].split('/').last
+    self.neo4j_id = Neo4j.parse_id(node['self'])
     save
     node
   end

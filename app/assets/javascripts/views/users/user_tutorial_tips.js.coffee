@@ -114,7 +114,7 @@ class LL.Views.UserTutorialTips extends Backbone.View
     @content = '
       On Limelight you post links to things on the web. You can post a link to anything (video, picture, article, blog post, etc).
       <br /><br />
-      Tag a topic in your post to and your post will be shown to that topic\'s followers.
+      Tag 1-2 topics to organize your post. Your post will also be shown to the tagged topic\'s followers.
     '
 
   renderTip: =>

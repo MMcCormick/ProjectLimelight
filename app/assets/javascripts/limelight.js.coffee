@@ -95,3 +95,7 @@ jQuery ->
         # the manual_close param determined if they closed it by clicking the "x"
       # (function | optional) function called after it closes
       after_close: ->
+
+  # case insensitive contains selector
+  jQuery.expr[':'].Contains = (a, i, m) ->
+    return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0

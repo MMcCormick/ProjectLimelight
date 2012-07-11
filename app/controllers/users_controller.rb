@@ -261,8 +261,10 @@ class UsersController < ApplicationController
   def invite_by_email
     unlimited_code = current_user.get_unlimited_code
     unlimited_code.increment_allotted(params[:emails].length)
+    mixpanel_data = current_user.mixpanel_data
     params[:emails].each do |email|
-      UserMailer.invite(current_user.id.to_s, email, unlimited_code.code).deliver
+      track_mixpanel("New User Invite", mixpanel_data.merge({:email => email}))
+      UserMailer.invite(current_user.id.to_s, email, params[:message], unlimited_code.code).deliver
     end
     render json: build_ajax_response(:ok, nil, "Thanks! You have invited #{params[:emails].length} #{params[:emails].length == 1 ? "contact" : "contacts"}. Redirecting..."), status: 201
   end
@@ -273,10 +275,10 @@ class UsersController < ApplicationController
       flash[:alert] = "No contacts found"
       redirect_to :root
     else
-      contact_emails = @contacts.map{|c| c[:email].downcase}
-      users = User.where("email" => {"$in" => contact_emails})
-      user_emails = users.map{|u| u.email}
-      @contacts.delete_if{|c| user_emails.include?(c[:email].downcase)}
+      #contact_emails = @contacts.map{|c| c[:email].downcase}
+      #users = User.where("email" => {"$in" => contact_emails})
+      #user_emails = users.map{|u| u.email}
+      #@contacts.delete_if{|c| user_emails.include?(c[:email].downcase)}
       render :layout => "blank"
     end
   end

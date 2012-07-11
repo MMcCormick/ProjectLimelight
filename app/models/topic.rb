@@ -510,7 +510,7 @@ class Topic
   def neo4j_create
     node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'topic', 'name' => name, 'created_at' => created_at.to_i, 'score' => score.to_i)
     Neo4j.neo.add_node_to_index('topics', 'uuid', id.to_s, node)
-    self.neo4j_id = node['self'].split('/').last
+    self.neo4j_id = Neo4j.parse_id(node['self'])
     save
     node
   end

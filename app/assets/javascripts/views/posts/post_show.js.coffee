@@ -9,8 +9,6 @@ class LL.Views.PostShow extends Backbone.View
     "click .add-comment": "focusCommentForm"
 
   initialize: ->
-    @responsesCollection = new LL.Collections.PostResponses()
-    @responses = new LL.Views.PostShowResponses(collection: @responsesCollection)
     @loaded = null
     @model.on('new_comment', @incrementComment)
 
@@ -46,7 +44,6 @@ class LL.Views.PostShow extends Backbone.View
     @loaded = true
 
     if LL.App.Feed
-      $(@el).addClass('modal')
       $(@el).addClass('modal').append('<div class="close">x</div>')
     else
       unless LL.App.current_user

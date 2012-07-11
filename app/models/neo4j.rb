@@ -6,6 +6,10 @@ class Neo4j
       @neo ||= ENV['NEO4J_URL'] ? Neography::Rest.new(ENV['NEO4J_URL']) : Neography::Rest.new
     end
 
+    def parse_id(string)
+      string.split('/').last
+    end
+
     # called for post actions (like, favorite, etc)
     def post_like(user_id, post_id)
       node1 = Neo4j.neo.get_node_index('users', 'uuid', user_id)
@@ -92,7 +96,7 @@ class Neo4j
 
       post_node = Neo4j.neo.get_node_index('post_media', 'uuid', post_media.id.to_s)
 
-      post_media.neo4j_id = post_node[0]['self'].split('/').last
+      post_media.neo4j_id = parse_id(post_node[0]['self'])
       post_media.save
     end
 
@@ -101,7 +105,7 @@ class Neo4j
 
       post_node = Neo4j.neo.get_node_index('posts', 'uuid', post.id.to_s)
 
-      post.neo4j_id = post_node[0]['self'].split('/').last
+      post.neo4j_id = parse_id(post_node[0]['self'])
       post.save
 
       # connect it to it's overall category if present

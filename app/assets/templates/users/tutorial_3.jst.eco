@@ -1,14 +1,3 @@
 <div>
-  Limelight is better with friends. <b>You</b> can help build the Limelight community in a big
-  way by sharing your invite code with your friends and your social networks!
-</div>
-
-<h4>Your Invite Code (you can access this code later)</h4>
-<div class='code'>
-  <%= @user.get('invite_code').code %>
-</div>
-
-<div>
-  If you have questions, you can type @Marc or @Matt in a Limelight post, or email us at marc@projectlimelight.com or matt@projectlimelight.com.
-  Welcome to the Limelight community!
+  Limelight is better with friends.
 </div>

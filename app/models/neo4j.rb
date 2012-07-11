@@ -7,7 +7,7 @@ class Neo4j
     end
 
     def parse_id(string)
-      string.split('/').last
+      string.split('/').last.to_i
     end
 
     # called for post actions (like, favorite, etc)

@@ -76,7 +76,7 @@ class User
   field :used_invite_code_id
   field :unlimited_code_id
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
-  field :neo4j_id
+  field :neo4j_id, :type => Integer
   field :topic_activity, :type => Hash, :default => {} # keeps track of how many posts a user has in topics (just counts)
   field :topic_likes, :type => Hash, :default => {} # keeps track of how many likes a user has in topics (just counts)
 

@@ -33,7 +33,6 @@ gem 'mixpanel' # analytics
 gem 'feedzirra'
 gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
-gem "rack-timeout"
 gem 'switch_user'
 gem 'omnicontacts', :git => 'git://github.com/marbemac/omnicontacts.git'
 #gem 'mongoid_collection_snapshot'
@@ -55,7 +54,7 @@ group :assets do
 end
 
 group :production do
-
+  gem "rack-timeout"
 end
 
 group :development do

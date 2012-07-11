@@ -14,7 +14,7 @@ class PostMedia
   field :posted_ids, :default => [] # ids of users that have posted this
   field :posts_count, :default => 0 # how many reposts
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
-  field :neo4j_id
+  field :neo4j_id, :type => Integer
   field :status, :default => 'active'
 
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'

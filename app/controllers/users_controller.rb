@@ -278,10 +278,6 @@ class UsersController < ApplicationController
       flash[:alert] = "No contacts found"
       redirect_to :root
     else
-      #contact_emails = @contacts.map{|c| c[:email].downcase}
-      #users = User.where("email" => {"$in" => contact_emails})
-      #user_emails = users.map{|u| u.email}
-      #@contacts.delete_if{|c| user_emails.include?(c[:email].downcase)}
       render :layout => "blank"
     end
   end

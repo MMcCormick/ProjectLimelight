@@ -56,7 +56,7 @@ class Topic
   field :wikipedia
   field :website
   field :websites_extra, :default => []
-  field :neo4j_id
+  field :neo4j_id, :type => Integer
   field :is_category, :default => false
   field :category_ids, :default => []
 

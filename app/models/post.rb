@@ -16,7 +16,7 @@ class Post
   field :response_to_id
   field :category
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
-  field :neo4j_id
+  field :neo4j_id, :type => Integer
   field :comment_count, :default => 0
 
   field :status, :default => 'active'

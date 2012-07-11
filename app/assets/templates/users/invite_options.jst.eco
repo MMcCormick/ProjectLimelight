@@ -10,7 +10,6 @@
   <p>
     There are three way to invite friends to Limelight.
     <br />
-    <br />
 
     <h4>1. Share your invite code</h4>
     <div>
@@ -20,7 +19,6 @@
         <a href="http://www.facebook.com/dialog/feed?app_id=185721368181340&link=http://projectlimelight.com&redirect_uri=http://projectlimelight.com" class="facebook-share-button" target='_blank'>Share on Facebook</a>
       </div>
     </div>
-
 
     <h4>2. Invite contacts through Gmail.</h4>
     <div>

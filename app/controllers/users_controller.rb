@@ -263,8 +263,11 @@ class UsersController < ApplicationController
     unlimited_code.increment_allotted(params[:emails].length)
     mixpanel_data = current_user.mixpanel_data
     params[:emails].each do |email|
-      track_mixpanel("New User Invite", mixpanel_data.merge({:email => email}))
-      UserMailer.invite(current_user.id.to_s, email, params[:message], unlimited_code.code).deliver
+      found = User.where(:email => email.downcase).first
+      unless found
+        track_mixpanel("New User Invite", mixpanel_data.merge({:email => email}))
+        UserMailer.invite(current_user.id.to_s, email, params[:message], unlimited_code.code).deliver
+      end
     end
     render json: build_ajax_response(:ok, nil, "Thanks! You have invited #{params[:emails].length} #{params[:emails].length == 1 ? "contact" : "contacts"}. Redirecting..."), status: 201
   end

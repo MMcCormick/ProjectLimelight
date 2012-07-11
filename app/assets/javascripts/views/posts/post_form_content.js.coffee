@@ -74,13 +74,16 @@ class LL.Views.PostFormContent extends Backbone.View
     if @model.existing
       $(@el).find('#post-form-parent-id').val(@model.existing.id)
 
-    # initialize images
+    @initializeImages()
+
+  initializeImages: =>
     if !@model.existing && @model.images.length > 0
       if @model.images.length > 1
         $(@el).find('.media img:gt(0)').hide() # hide all images but the first one
         $(@el).find('.switcher').show() # show the switcher
-      else
-        $(@el).find('.switcher').show().find('.controls').hide() # show the switcher but not the controls
+        $(@el).find('.switcher .cancel-image').hide() if $(@el).find(".type .picture").hasClass('on') # hide don't use an image
+      else if $(@el).find(".type .link").hasClass('on')
+        $(@el).find('.switcher').show().find('.controls').hide() # show the cancel but not the controls
 
       $(@el).find('#post-form-remote-image-url').val($(@el).find('.media img:first').attr('src'))
 
@@ -92,6 +95,7 @@ class LL.Views.PostFormContent extends Backbone.View
     $(@el).find('#post-form-type').val(type)
     $(@el).find('.type div').removeClass('on')
     $(@el).find(".type .#{type.toLowerCase()}").addClass('on')
+    @initializeImages()
 
   handleTypeClick: (e) =>
     return if $(e.currentTarget).hasClass('on') || $(e.currentTarget).hasClass('disabled')

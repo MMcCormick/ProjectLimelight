@@ -11,6 +11,7 @@ class LL.Views.PostFormContent extends Backbone.View
     "blur .topic-mention": "clearTopic"
 
   initialize: ->
+    @hide_image = false
 
   render: =>
     $(@el).html(@template(post: @model))
@@ -77,13 +78,17 @@ class LL.Views.PostFormContent extends Backbone.View
     @initializeImages()
 
   initializeImages: =>
-    if !@model.existing && @model.images.length > 0
+    if !@hide_image && !@model.existing && @model.images.length > 0
       if @model.images.length > 1
         $(@el).find('.media img:gt(0)').hide() # hide all images but the first one
         $(@el).find('.switcher').show() # show the switcher
-        $(@el).find('.switcher .cancel-image').hide() if $(@el).find(".type .picture").hasClass('on') # hide don't use an image
       else if $(@el).find(".type .link").hasClass('on')
         $(@el).find('.switcher').show().find('.controls').hide() # show the cancel but not the controls
+
+      if $(@el).find(".type .picture").hasClass('on')
+        $(@el).find('.switcher .cancel-image').hide()
+      else
+        $(@el).find('.switcher .cancel-image').show()
 
       $(@el).find('#post-form-remote-image-url').val($(@el).find('.media img:first').attr('src'))
 
@@ -142,6 +147,8 @@ class LL.Views.PostFormContent extends Backbone.View
     $(@el).find('.preview').removeClass('with-image')
     $(@el).find('.switcher').hide()
     $(@el).find('#post-form-remote-image-url').val('')
+    @hide_image = true
+    @disableTypes(['Picture','Video'])
 
   clearTopic: (e) =>
     if $.trim($(e.currentTarget).val()) == ''

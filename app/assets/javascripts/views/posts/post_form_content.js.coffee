@@ -4,7 +4,7 @@ class LL.Views.PostFormContent extends Backbone.View
   events:
     "click .switcher .left": "rotateImageLeft"
     "click .switcher .right": "rotateImageRight"
-    "click .switcher .cancel-image": "cancelImage"
+    "click .cancel-image": "cancelImage"
     "click .type div": "handleTypeClick"
     "click .say-something": "showSaySomething"
     "click .mention-suggestions li": "useMentionSuggestion"
@@ -79,6 +79,8 @@ class LL.Views.PostFormContent extends Backbone.View
       if @model.images.length > 1
         $(@el).find('.media img:gt(0)').hide() # hide all images but the first one
         $(@el).find('.switcher').show() # show the switcher
+      else
+        $(@el).find('.switcher').show().find('.controls').hide() # show the switcher but not the controls
 
       $(@el).find('#post-form-remote-image-url').val($(@el).find('.media img:first').attr('src'))
 

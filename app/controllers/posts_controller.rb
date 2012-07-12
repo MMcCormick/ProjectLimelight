@@ -19,7 +19,7 @@ class PostsController < ApplicationController
     url = post_url(:id => @this.id)
     image_url = media.image_url(:fit, :large)
     extra = {"#{og_namespace}:display_name" => @this.class.name, "#{og_namespace}:score" => @this.score.to_i}
-    extra["#{og_namespace}:source"] = media.sources.first.name
+    extra["#{og_namespace}:source"] = media.sources.first.name if media.sources && media.sources.first
     @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, extra)
 
     respond_to do |format|

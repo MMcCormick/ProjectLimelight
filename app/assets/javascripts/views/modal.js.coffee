@@ -20,7 +20,7 @@ class LL.Views.Modal extends Backbone.View
 
   show: =>
     if @activeScreen
-      $(@el).fadeIn(250).html(@activeScreen.render().el)
+      $(@el).fadeIn(250).html(@activeScreen.el)
 
   get: (id) =>
     @screens[id]

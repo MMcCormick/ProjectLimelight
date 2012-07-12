@@ -29,6 +29,17 @@ class LL.Models.Post extends Backbone.Model
         comments.push(new LL.Models.Comment(comment))
     @set('comments', comments)
 
+    channel = LL.App.get_subscription("#{@get('id')}")
+    unless channel
+      channel = LL.App.subscribe("#{@get('id')}")
+
+    # listen to the channel for new comments
+    self = @
+    unless LL.App.get_event_subscription("#{@get('id')}", 'new_comment')
+      channel.bind 'new_comment', (data) ->
+        comment = new LL.Models.Comment(data)
+        self.addComment(comment)
+
   scorePretty: ->
     parseInt @get('score')
 

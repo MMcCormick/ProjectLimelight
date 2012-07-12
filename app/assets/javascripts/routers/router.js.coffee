@@ -366,7 +366,7 @@ class LL.Router extends Backbone.Router
 
   postShow: (id) ->
     if typeof current_object != 'undefined' && _.include(['Post','Video','Link','Picture'], current_object.type)
-      data = new LL.Models.Post(current_object)
+      data = current_object
     else
       data = {'id':id}
 

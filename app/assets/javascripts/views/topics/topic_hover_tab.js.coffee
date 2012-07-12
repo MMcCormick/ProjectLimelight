@@ -8,13 +8,8 @@ class LL.Views.TopicHoverTab extends Backbone.View
 
   render: =>
     self = @
-#    score = new LL.Views.Score(model: @model)
 
     destroy = new LL.Views.TopicDestroyButton(model: @model)
-
-    talk = new LL.Views.TalkButton()
-    talk.topic1 = @model
-    talk.button = true
 
     follow = new LL.Views.FollowButton(model: @model)
 
@@ -36,9 +31,10 @@ class LL.Views.TopicHoverTab extends Backbone.View
         text: (api) ->
           $(self.el).html(self.template(topic: self.model))
 
-#          $(self.el).find('.stat1').html(score.render().el)
+          if LL.App.current_user && LL.App.current_user.hasRole('admin')
+            $(self.el).find('.bottom').append(destroy.render().el)
 
-          $(self.el).find('.bottom').append(destroy.render().el).append(talk.render().el).append(follow.render().el)
+          $(self.el).find('.bottom').append(follow.render().el)
           $(self.el)
       events:
         hide: (e,api) ->
@@ -51,4 +47,5 @@ class LL.Views.TopicHoverTab extends Backbone.View
 
   loadEditModal: (e) =>
     view = new LL.Views.TopicEdit(model: @model)
+    view.render()
     LL.App.Modal.add("topic_edit", view).setActive("topic_edit").show()

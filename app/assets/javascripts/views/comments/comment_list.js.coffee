@@ -6,18 +6,7 @@ class LL.Views.CommentList extends Backbone.View
   initialize: ->
     @model.on('reset_comments', @render)
     @model.on('new_comment', @appendComment)
-
     self = @
-
-    # listen to the channel for new comments
-    channel = LL.App.get_subscription("#{@model.get('id')}")
-    unless channel
-      channel = LL.App.subscribe("#{@model.get('id')}")
-
-    unless LL.App.get_event_subscription("#{@model.get('id')}", 'new_comment')
-      channel.bind 'new_comment', (data) ->
-        comment = new LL.Models.Comment(data)
-        self.model.addComment(comment)
 
   render: =>
     $(@el).html(@template())

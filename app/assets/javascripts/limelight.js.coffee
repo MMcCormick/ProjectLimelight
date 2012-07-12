@@ -26,6 +26,13 @@ window.LL =
 
 jQuery ->
 
+  $('#post-feed-url').live 'click', ->
+    $('.navbar .talk').click()
+    setTimeout ->
+      $('#post-form:visible .url').focus()
+    , 500
+
+
   $('.freebase-autocomplete').livequery ->
     $(@).each (i,val) ->
       $(val).suggest(

@@ -105,6 +105,16 @@ $feedFontColor: $grayDark;
   }
 }
 
+#post-feed-url {
+  padding: 8px 10px;
+  font-size: 18px;
+  margin: 25px auto 0px auto;
+  display: block;
+  width: 300px;
+  color: #AAA;
+  border-color: #DDD;
+}
+
 .tile {
   margin-bottom: $feedColumnMargin + 10;
   position: relative;

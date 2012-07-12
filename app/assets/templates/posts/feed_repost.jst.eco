@@ -32,7 +32,9 @@
       </a>
     <% end %>
 
-    <span class='source'>via <a target="_blank" href="<%= @post.get('media').get('primary_source').url %>"><%= @post.get('media').get('primary_source').name %></a></span>
+    <% if @post.get('media').get('primary_source'): %>
+      <span class='source'>via <a target="_blank" href="<%= @post.get('media').get('primary_source').url %>"><%= @post.get('media').get('primary_source').name %></a></span>
+    <% end %>
     <div class='when'></div>
 
     <p><%= @post.get('content') %></p>

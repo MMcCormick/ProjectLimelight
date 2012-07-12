@@ -11,7 +11,7 @@
       <% end %>
     </span>
 
-    <% if @post.get('media'): %>
+    <% if @post.get('media') && @post.get('media').get('primary_source'): %>
       <span class='source'>via <a target="_blank" href="<%= @post.get('media').get('primary_source').url %>"><%= @post.get('media').get('primary_source').name %></a></span>
     <% end %>
 
@@ -38,14 +38,16 @@
 
     <div class='top'>
       <% if @post.get('media').get('primary_source'): %>
-          <% if @post.get('media').get('title'): %>
+          <% if @post.get('media').get('title') && @post.get('media').get('primary_source'): %>
             <h1 class="title">
               <a target="_blank" href="<%= @post.get('media').get('primary_source').url %>"><%= @post.get('media').get('title') %></a>
             </h1>
           <% end %>
-          <a class="source" target="_blank" href="<%= @post.get('media').get('primary_source').url %>">
-            View on <span><%= @post.get('media').get('primary_source').name %></span>
-          </a>
+          <% if @post.get('media').get('primary_source'): %>
+            <a class="source" target="_blank" href="<%= @post.get('media').get('primary_source').url %>">
+              View on <span><%= @post.get('media').get('primary_source').name %></span>
+            </a>
+          <% end %>
       <% else: %>
         <h1 class="title"><%= @post.get('media').get('title') %></h1>
       <% end %>

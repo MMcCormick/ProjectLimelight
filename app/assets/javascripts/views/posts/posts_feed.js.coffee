@@ -29,7 +29,7 @@ class LL.Views.PostsFeed extends Backbone.View
   render: =>
     self = @
 
-#    $(@el).before("<input type='text' placeholder='Post a URL...' id='post-feed-url' />")
+    $(@el).before("<input type='text' placeholder='Post a URL...' id='post-feed-url' />")
 
     if @collection.models.length == 0
       $(@el).append("<div class='none'>#{@default_text}</div>")

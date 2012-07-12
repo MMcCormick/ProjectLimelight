@@ -497,13 +497,12 @@ class User
   def twitter
     provider = get_social_connect('twitter')
     if provider
-      Twitter.configure do |config|
+      @twitter ||= Twitter.configure do |config|
         config.consumer_key = ENV['TWITTER_KEY']
         config.consumer_secret = ENV['TWITTER_SECRET']
         config.oauth_token = provider.token
         config.oauth_token_secret = provider.secret
       end
-      @twitter ||= Twitter.new
     else
       nil
     end

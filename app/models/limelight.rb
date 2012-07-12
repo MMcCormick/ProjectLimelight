@@ -391,8 +391,6 @@ module Limelight #:nodoc:
     def add_topic_mention(topic)
       unless topic_mention_ids.include?(topic.id)
         self.topic_mentions << topic
-        #pre_mention = pre_mentions.find(topic.id)
-        #pre_mention.destroy if pre_mention
         Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
         Neo4j.post_add_topic_mention(self, topic)
       end

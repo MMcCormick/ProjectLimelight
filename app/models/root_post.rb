@@ -2,7 +2,7 @@ class RootPost
   include Mongoid::Document
   include Mongoid::CachedJson
 
-  # push_item is the pushed post FeedUserItem, FeedLikeItem, etc
+  # push_item is the pushed post FeedUserItem, etc
   attr_accessor :post, :push_item
 
   def initialize

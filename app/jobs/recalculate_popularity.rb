@@ -66,7 +66,6 @@ class RecalculatePopularity
       end
 
       FeedTopicItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
-      FeedLikeItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
       FeedContributeItem.where(:root_id => doc["_id"]).update_all("p" => normalized_value)
 
       FeedUserItem.where(:root_id => doc["_id"]).each do |item|

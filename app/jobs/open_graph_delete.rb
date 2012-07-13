@@ -11,8 +11,6 @@ class OpenGraphDelete
         case action
           when 'follow' && user.og_follows
             ll_action = ActionFollow.where(:fid => user.id, :tid => target.id, :a => 'create').desc(:_id).first
-          when 'like' && user.og_likes
-            ll_action = ActionLike.where(:fid => user.id, :tid => target.id, :a => 'create').desc(:_id).first
           else
             ll_action = nil
         end

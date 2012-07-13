@@ -113,16 +113,6 @@ class PostsController < ApplicationController
     render :json => posts.map {|p| p.as_json(:properties => :short)}
   end
 
-  # The user like feed
-  def like_feed
-    user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
-    not_found("User not found") unless user
-    page = params[:p] ? params[:p].to_i : 1
-    topic = params[:topic_id] && params[:topic_id] != "0" ? Topic.where(:slug_pretty => params[:topic_id].parameterize).first : nil
-    posts = Post.like_feed(user.id, page, topic)
-    render :json => posts.map {|p| p.as_json()}
-  end
-
   # The user activity feed
   def activity_feed
     user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user

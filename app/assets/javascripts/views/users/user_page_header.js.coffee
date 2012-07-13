@@ -2,7 +2,6 @@ class LL.Views.UserPageHeader extends Backbone.View
 
   initialize: =>
     @model.on('change:posts_count', @updatePostsCount)
-    @model.on('change:likes_count', @updateLikesCount)
 
   render: =>
     header = new LL.Views.PageHeader(model: @model)
@@ -14,12 +13,6 @@ class LL.Views.UserPageHeader extends Backbone.View
         content: "<span>#{@model.get('posts_count')}</span> Posts"
         url: (if LL.App.current_user == @model then '/activity' else "#{@model.get('url')}")
         on: (if @page == 'posts' then true else false)
-      }
-      {
-        class: 'likes'
-        content: "<span>#{@model.get('likes_count')}</span> Likes"
-        url: (if LL.App.current_user == @model then '/likes' else "#{@model.get('url')}/likes")
-        on: (if @page == 'likes' then true else false)
       }
       {
         class: 'topics'
@@ -57,9 +50,3 @@ class LL.Views.UserPageHeader extends Backbone.View
       $(@).animate {color: 'black'}, 2000
 
     $('#page-header').find('.posts span').text(@model.get('posts_count'))
-
-  updateLikesCount: =>
-    $('#page-header').find('.likes a').animate {color: 'red'}, 2000, ->
-      $(@).animate {color: 'black'}, 2000
-
-    $('#page-header').find('.likes span').text(@model.get('likes_count'))

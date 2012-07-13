@@ -464,32 +464,6 @@ class Topic
       end
     end
 
-    # PUSH FEEDS
-    # NOTE!!!! When merge is re-done, cannot use the queries below because of mongoid 3.0
-    #FeedTopicItem.collection.update(
-    #        { "mentions" => aliased_topic.id },
-    #        {
-    #                "$set" => { "mentions.$" => id },
-    #                "$rename" => {"responses."+aliased_topic.id.to_s => "responses."+id.to_s}
-    #        },
-    #        {:multi => true}
-    #)
-    #FeedTopicItem.collection.update(
-    #        { "root_mentions" => aliased_topic.id},
-    #        { "$set" => {"root_mentions.$" => id}},
-    #        {:multi => true}
-    #)
-    #FeedLikeItem.collection.update(
-    #        { "root_id" => aliased_topic.id },
-    #        { "$set" => {:root_id => id}},
-    #        {:multi => true}
-    #)
-    #FeedContributeItem.collection.update(
-    #        { "root_id" => aliased_topic.id },
-    #        { "$set" => {:root_id => id}},
-    #        {:multi => true}
-    #)
-
     # Update primary_type_id's on other topics
     Topic.where(:primary_type_id => aliased_topic.id).update_all(:primary_type_id => id, :primary_type => name)
 

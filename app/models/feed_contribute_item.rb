@@ -70,7 +70,7 @@ class FeedContributeItem
     end
 
     def update_post_topics(post)
-      items = FeedLikeItem.where(:root_id => post.root_id)
+      items = FeedContributeItem.where(:root_id => post.root_id)
       items.each do |i|
         i.reset_topic_ids
         i.save

@@ -49,25 +49,6 @@ class LL.Views.SocialSettings extends Backbone.View
            <img width='500' src='/assets/images/fb_follow_example.png' />
           "
 
-    $(@el).find('.qm.og_likes').qtip
-      overwrite: false
-      position:
-        my: 'middle left'
-        at: 'middle right'
-        viewport: $(window)
-      style:
-        tip: true
-        classes: 'ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-light'
-      show:
-        solo: true
-      content:
-        text: (api) ->
-          "
-           When you like a post on Limelight we will add to the limelight area of your Facebook Timeline. Example:
-           <br /><br />
-           <img width='500' src='/assets/images/fb_like_example.png' />
-          "
-
     @
 
   updateRadioSetting: (e) =>

@@ -373,6 +373,18 @@ $postFontColor: $grayDark;
       cursor: default;
       color: #999;
     }
+    .mentions {
+      position: relative;
+      padding: 10px 0 0 25px;
+      .ll-arrow-r-dark {
+        position: absolute;
+        top: 15px;
+        left: 0px;
+      }
+      .tlink {
+        margin: 0 15px 0 0;
+      }
+    }
   }
   .media {
     position: relative;

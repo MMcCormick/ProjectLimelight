@@ -401,7 +401,6 @@ module Limelight #:nodoc:
       if mention
         FeedUserItem.unpush_post_through_topic(self, topic)
         FeedTopicItem.unpush_post_through_topic(self, topic)
-        FeedLikeItem.update_post_topics(self)
         FeedContributeItem.update_post_topics(self)
         Neo4j.post_remove_topic_mention(self, topic)
       end

@@ -29,9 +29,6 @@
       <a href="<%= "/activity" %>">My Posts</a>
     </li>
     <li>
-      <a href="<%= "/likes" %>">My Likes</a>
-    </li>
-    <li>
       <a href="/settings">Settings</a>
     </li>
     <li class="divider"></li>

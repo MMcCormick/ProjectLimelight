@@ -56,7 +56,6 @@ class User
   field :following_topics, :default => []
   field :followers_count, :type => Integer, :default => 0
   field :posts_count, :default => 0
-  field :likes_count, :type => Integer, :default => 0
   field :unread_notification_count, :type => Integer, :default => 0
   field :clout, :default => 1
   field :bio
@@ -72,13 +71,11 @@ class User
   field :auto_follow_fb, :default => true
   field :auto_follow_tw, :default => true
   field :og_follows, :default => true # whether to push follows to open graph
-  field :og_likes, :default => true # ^ for likes
   field :used_invite_code_id
   field :unlimited_code_id
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id, :type => Integer
   field :topic_activity, :type => Hash, :default => {} # keeps track of how many posts a user has in topics (just counts)
-  field :topic_likes, :type => Hash, :default => {} # keeps track of how many likes a user has in topics (just counts)
 
   embeds_many :social_connects
 
@@ -385,46 +382,6 @@ class User
     results
   end
 
-  def topic_likes_add(topic_id)
-    self.topic_likes[topic_id.to_s] ||= 0
-    self.topic_likes[topic_id.to_s] += 1
-    self.topic_likes = Hash[topic_likes.sort_by{|id,count| count}.reverse]
-  end
-
-  def topic_likes_subtract(topic_id)
-    if topic_likes[topic_id.to_s]
-      self.topic_likes[topic_id.to_s] -= 1
-      self.topic_likes = Hash[topic_likes.sort_by{|id,count| count}.reverse]
-    end
-  end
-
-  def topic_likes_recalculate
-    self.topic_likes = {}
-    self.likes_count = 0
-    likes = Post.where(:like_ids => id)
-    likes.each do |p|
-      p.topic_mention_ids.each do |t|
-        topic_likes_add(t)
-      end
-    end
-    self.likes_count = likes.length
-  end
-
-  def topics_by_likes
-    topics = Topic.where(:_id => {"$in" => topic_likes.map{|k,v| k}})
-    results = []
-    topic_likes.each do |id,count|
-      topic = topics.find(id)
-      if topic
-        results << {
-                :count => count,
-                :topic => topic
-        }
-      end
-    end
-    results
-  end
-
   def name
     username
   end
@@ -695,7 +652,6 @@ class User
     :following_topics_count => { :properties => :short, :versions => [ :v1 ] },
     :followers_count => { :properties => :short, :versions => [ :v1 ] },
     :posts_count => { :properties => :short, :versions => [ :v1 ] },
-    :likes_count => { :properties => :short, :versions => [ :v1 ] },
     :unread_notification_count => { :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| User.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
     :status => { :properties => :short, :versions => [ :v1 ] },
@@ -714,7 +670,6 @@ class User
     :invite_code => { :type => :reference, :properties => :public, :versions => [ :v1 ] },
     :auto_follow_fb => { :properties => :public, :versions => [ :v1 ] },
     :auto_follow_tw => { :properties => :public, :versions => [ :v1 ] },
-    :og_likes => { :properties => :public, :versions => [ :v1 ] },
     :og_follows => { :properties => :public, :versions => [ :v1 ] }
 
   class << self

@@ -8,7 +8,6 @@ class PostAddTopic
 
     FeedUserItem.push_post_through_topic(post, topic)
     FeedTopicItem.push_post_through_topic(post, topic)
-    FeedLikeItem.update_post_topics(post)
     FeedContributeItem.update_post_topics(post)
 
 

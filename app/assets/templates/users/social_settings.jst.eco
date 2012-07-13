@@ -53,15 +53,4 @@
       </div>
     </div>
   </li>
-
-  <li>
-    <div class='desc'>Post Stuff I Like <div class='qm og_likes'>?</div></div>
-
-    <div class='option'>
-      <div class="btn-group">
-        <div class="btn radio-btn <%= "disabled" unless @user.get('facebook_id') %> <%= "btn-info" if @user.get('facebook_id') && @user.get('og_likes') %>" name="og_likes" data-value="true">On</div>
-        <div class="btn radio-btn <%= "disabled" unless @user.get('facebook_id') %> <%= "btn-info" if @user.get('facebook_id') && !@user.get('og_likes') %>" name="og_likes" data-value="false">Off</div>
-      </div>
-    </div>
-  </li>
 </ul>

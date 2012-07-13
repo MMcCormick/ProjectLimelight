@@ -8,18 +8,11 @@ class LL.Views.FeedTopicRibbonItem extends Backbone.View
   render: =>
     image = @item.get('topic').get('images').square.normal
 
-    if @type == 'likes'
-      @base = 'Like'
-      if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id')
-        @url = "/likes#{@item.get('topic').get('url')}"
-      else
-        @url = "#{@model.get('url')}/likes#{@item.get('topic').get('url')}"
+    @base = 'Post'
+    if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id')
+      @url = "/activity#{@item.get('topic').get('url')}"
     else
-      @base = 'Post'
-      if LL.App.current_user && LL.App.current_user.get('id') == @model.get('id')
-        @url = "/activity#{@item.get('topic').get('url')}"
-      else
-        @url = "#{@model.get('url')}#{@item.get('topic').get('url')}"
+      @url = "#{@model.get('url')}#{@item.get('topic').get('url')}"
 
     $(@el).addClass("ribbon-#{@item.get('topic').get('url_pretty')}").html(@template(base: @base, url: @url, model: @model, item: @item, image: image))
 

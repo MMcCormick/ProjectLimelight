@@ -26,7 +26,6 @@ class Post
   has_many   :comments
   belongs_to :post_media, :class_name => 'PostMedia'
   belongs_to :user, :index => true
-  has_and_belongs_to_many :likes, :inverse_of => nil, :class_name => 'User', :index => true
 
   validates :user, :status, :presence => true
   validate :content_length
@@ -101,21 +100,11 @@ class Post
     Neo4j.neo.delete_node!(node)
 
     FeedTopicItem.post_destroy(self)
-    FeedLikeItem.post_destroy(self)
     FeedContributeItem.post_destroy(self)
 
     # reduce post count by one
     user.posts_count -= 1
     user.save
-
-    # reduce all users that liked this by one
-    like_ids.each do |lid|
-      liker = User.find(lid)
-      if liker
-        liker.likes_count -= 1
-        liker.save
-      end
-    end
 
     # remove from popularity actions
     actions = PopularityAction.where("pop_snippets._id" => id)
@@ -123,58 +112,6 @@ class Post
       a.pop_snippets.find(id).delete
       a.save
     end
-  end
-
-  # Likes
-  def liked_by?(user_id)
-    like_ids.include?(user_id)
-  end
-
-  def add_to_likes(add_user)
-    unless user_id == add_user.id || liked_by?(add_user.id)
-      self.likes << add_user
-      add_user.likes_count += 1
-      amount = add_pop_action(:lk, :a, add_user)
-
-      Resque.enqueue(Neo4jPostLike, add_user.id.to_s, id.to_s)
-      Resque.enqueue(PushLike, id.to_s, add_user.id.to_s)
-
-      unless topic_mention_ids.empty?
-        topic_mention_ids.each do |t|
-          add_user.topic_likes_add(t)
-        end
-      end
-
-      amount
-    end
-  end
-
-  def push_like(user)
-    ActionLike.create(:action => 'create', :from_id => user.id, :to_id => id, :to_type => self.class.name)
-    FeedLikeItem.create(user, self)
-  end
-
-  def remove_from_likes(remove_user)
-    if liked_by?(remove_user.id)
-      self.like_ids.delete(remove_user.id)
-      remove_user.likes_count -= 1
-      add_pop_action(:lk, :r, remove_user)
-      Resque.enqueue(Neo4jPostUnlike, remove_user.id.to_s, id.to_s)
-      Resque.enqueue(PushUnlike, id.to_s, remove_user.id.to_s)
-
-      unless topic_mention_ids.empty?
-        topic_mention_ids.each do |t|
-          remove_user.topic_likes_subtract(t)
-        end
-      end
-
-      true
-    end
-  end
-
-  def push_unlike(user)
-    ActionLike.create(:action => 'destroy', :from_id => user.id, :to_id => id, :to_type => self.class.name)
-    FeedLikeItem.destroy(user, self)
   end
 
   def initialize_media(params)
@@ -302,11 +239,9 @@ class Post
     :type => { :definition => lambda { |instance| 'Post' }, :properties => :short, :versions => [ :v1 ] },
     :content => { :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
-    :likes => { :definition => lambda { |instance| instance.like_ids }, :properties => :short, :versions => [ :v1 ] },
     :user => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :topic_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :user_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
-    :recent_likes => { :type => :reference, :definition => lambda { |instance| instance.likes.limit(5) }, :properties => :short, :versions => [ :v1 ] },
     :comment_count => { :properties => :short, :versions => [ :v1 ] },
     :media => { :definition => :post_media, :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :comments => { :type => :reference, :properties => :public, :versions => [ :v1 ] }
@@ -419,17 +354,6 @@ class Post
       build_activity_feed(items)
     end
 
-    def like_feed(feed_id, page, topic=nil)
-      if topic
-        items = FeedLikeItem.where(:feed_id => feed_id, :topic_ids => topic.id)
-      else
-        items = FeedLikeItem.where(:feed_id => feed_id)
-      end
-      items = items.skip((page-1)*20).limit(20)
-
-      build_like_feed(items)
-    end
-
     def topic_feed(feed_ids, user_id, sort, page)
       items = FeedTopicItem.where(:mentions => {'$in' => feed_ids})
 
@@ -484,33 +408,6 @@ class Post
     end
 
     def build_activity_feed(items)
-      item_ids = items.map {|i| i.root_type == 'Post' ? i.root_id : i.responses.last }
-
-      posts = {}
-      tmp_posts = Post.where(:_id => {'$in' => item_ids})
-      tmp_posts.each {|p| posts[p.id.to_s] = p }
-
-      return_objects = []
-      items.each do |i|
-        root_post = RootPost.new
-
-        if i.root_type == 'Post'
-          root_post.post = posts[i.root_id.to_s]
-        else
-          root_post.post = posts[i.responses.last.to_s]
-        end
-
-        next unless root_post.post
-
-        #root_post.public_talking = root_post.root.response_count
-
-        return_objects << root_post
-      end
-
-      return_objects
-    end
-
-    def build_like_feed(items)
       item_ids = items.map {|i| i.root_type == 'Post' ? i.root_id : i.responses.last }
 
       posts = {}

@@ -10,11 +10,11 @@ recalculate_averages:
   args:
   description: "This job recalculates popularity averages for each root type"
 
-recalculate_clout:
-  every: 45m
-  class: RecalculateClout
-  args:
-  description: "This job recalculates user clout"
+#recalculate_clout:
+#  every: 45m
+#  class: RecalculateClout
+#  args:
+#  description: "This job recalculates user clout"
 
 #crawl_sources:
 #  every: 15m

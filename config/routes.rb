@@ -23,7 +23,6 @@ ProjectLimelight::Application.routes.draw do
       get 'influencer_topics' => 'users#influencer_topics'
       get 'almost_influencer_topics' => 'users#almost_influencer_topics'
       get ':id/topic_activity' => 'users#topic_activity'
-      get ':id/topic_likes' => 'users#topic_likes'
       post '' => 'users#create'
       put '' => 'users#update'
       get '' => 'users#show'
@@ -65,7 +64,6 @@ ProjectLimelight::Application.routes.draw do
       post '' => 'posts#create'
       get 'stream' => 'posts#stream'
       get 'user_feed' => 'posts#user_feed'
-      get 'like_feed' => 'posts#like_feed'
       get 'activity_feed' => 'posts#activity_feed'
       get 'topic_feed' => 'posts#topic_feed'
       get 'responses' => 'posts#responses'
@@ -79,11 +77,6 @@ ProjectLimelight::Application.routes.draw do
       get '' => 'comments#index'
       post '' => 'comments#create'
       delete '' => 'comments#destroy'
-    end
-
-    scope 'likes' do
-      post '' => 'likes#create'
-      delete '' => 'likes#destroy'
     end
 
     scope 'invite_codes' do
@@ -134,8 +127,6 @@ ProjectLimelight::Application.routes.draw do
   scope 'users' do
     get ':slug/users' => 'users#show', :as => :user_topics
     get ':slug/topics' => 'users#show', :as => :user_users
-    get ':slug/likes/:topic_id' => 'users#show', :as => :user_topic_likes
-    get ':slug/likes' => 'users#show', :as => :user_likes
     get ':slug/feed' => 'users#show', :as => :user_feed
     get ':slug/:topic_id' => 'users#show', :as => :user_topic_activity
     get ':slug' => 'users#show', :as => :user, :show_og => true
@@ -144,8 +135,6 @@ ProjectLimelight::Application.routes.draw do
   get 'settings' => 'users#settings', :as => :user_settings
   get 'activity/:topic_id' => 'users#show'
   get 'activity' => 'users#show'
-  get 'likes/:topic_id' => 'users#show'
-  get 'likes/' => 'users#show'
   get 'users' => 'users#show'
   get 'topics' => 'users#show'
   get 'posts/:id' => 'posts#show', :as => :post

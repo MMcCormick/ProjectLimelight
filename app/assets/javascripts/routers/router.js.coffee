@@ -2,9 +2,6 @@ class LL.Router extends Backbone.Router
   routes:
     'users/:id/topics': 'userTopics'
     'users/:id/users': 'userUsers'
-    'users/:id/likes': 'likeFeed'
-    'users/:id/likes/:id': 'likeFeed'
-    'users/:id/influence': 'userInfluence'
     'users/:id/feed': 'userFeed'
     'users/:id/:topic_id': 'activityFeed'
     'users/:id': 'activityFeed'
@@ -20,8 +17,6 @@ class LL.Router extends Backbone.Router
     'settings': 'settings'
     'activity/:topic_id': 'myTopicActivity'
     'activity': 'activityFeed'
-    'likes/:topic_id': 'myTopicLikes'
-    'likes': 'likeFeed'
     'topics': 'userTopics'
     'users': 'userUsers'
     ':id/users': 'topicUsers'
@@ -128,78 +123,6 @@ class LL.Router extends Backbone.Router
       collection.page = 1
       collection.topic_id = topic_id
       collection.fetch({data: {id: user.get('id'), topic_id: topic_id}})
-
-  myTopicLikes: (topic_id=0) ->
-    @likeFeed(0, topic_id)
-
-  likeFeed: (id=0, topic_id=0) ->
-    @hideModal()
-
-    if id == 0
-      user = LL.App.current_user
-    else
-      user = new LL.Models.User(current_object)
-
-    if LL.App.findScreen('like_feed', user.get('id'))
-      LL.App.showScreen('like_feed', user.get('id'))
-    else
-      screen = LL.App.newScreen('like_feed', user.get('id'))
-
-      page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'likes'
-      screen['components'].push(page_header)
-
-      sidebar = LL.App.findSidebar('user', user.get('id'))
-      unless sidebar
-        sidebar = LL.App.createSidebar('user', user.get('id'), user)
-      screen['sidebar'] = sidebar
-
-      LL.App.renderScreen('like_feed', user.get('id'))
-
-      topic_likes_collection = new LL.Collections.UserTopicLikes
-      topic_likes_collection.user = user
-      topic_likes = new LL.Views.PostsFeedTopicRibbon(collection: topic_likes_collection, model: user)
-      topic_likes.active = topic_id
-      topic_likes.type = 'likes'
-      screen['components'].push(topic_likes)
-      topic_likes_collection.fetch(data: {topic_id: topic_id})
-
-      collection = new LL.Collections.LikeFeed
-      feed = new LL.Views.PostsFeed(collection: collection)
-      feed.channel = "#{user.get('id')}_likes"
-      LL.App.Feed = feed
-      screen['components'].push(feed)
-
-      collection.id = user.get('id')
-      collection.page = 1
-      collection.topic_id = topic_id
-      collection.fetch({data: {id: user.get('id'), topic_id: topic_id}})
-
-  userInfluence: (id=0) ->
-    if id == 0
-      user = LL.App.current_user
-    else
-      user = new LL.Models.User(current_object)
-
-    if LL.App.findScreen('user_influence', user.get('id'))
-      LL.App.showScreen('user_influence', user.get('id'))
-    else
-      screen = LL.App.newScreen('user_influence', user.get('id'))
-
-      page_header = new LL.Views.UserPageHeader(model: user)
-      page_header.page = 'influence'
-      screen['components'].push(page_header)
-
-      sidebar = LL.App.findSidebar('user', user.get('id'))
-      unless sidebar
-        sidebar = LL.App.createSidebar('user', user.get('id'), user)
-      screen['sidebar'] = sidebar
-
-      view = new LL.Views.UserInfluence()
-      view.user = user
-      screen['components'].push(view)
-
-      LL.App.renderScreen('user_influence', user.get('id'))
 
   settings: ->
     user = LL.App.current_user

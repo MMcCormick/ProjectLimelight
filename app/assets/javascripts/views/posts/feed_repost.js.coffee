@@ -32,13 +32,10 @@ class LL.Views.FeedRepost extends Backbone.View
     mentions = new LL.Views.PostMentions(model: @model.get('post'))
     $(@el).prepend(mentions.render().el)
 
-    like = new LL.Views.LikeButton(model: @model.get('post'))
-    $(@el).find('.actions').prepend(like.render().el)
-
     @
 
   postShow: (e) =>
-    return if $(e.target).is('a,h5,input,textarea,.bg,.img,img,.like,.repost-btn')
+    return if $(e.target).is('a,h5,input,textarea,.bg,.img,img,.repost-btn')
 
     self = @
 

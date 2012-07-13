@@ -125,6 +125,6 @@ class LL.Views.PostForm extends Backbone.View
 
   setModel: (model) =>
     @model = {
-      post: model
-      existing: model.get('media')
+      share: model.get('share')
+      existing: model
     }

@@ -342,7 +342,18 @@ class Post
 
     def activity_feed(feed_id, page, topic=nil)
 
-      PostMedia.where("shares.user_id" => feed_id).desc(:_id).skip((page-1)*20).limit(20)
+      data = []
+
+      posts = PostMedia.where("shares.user_id" => feed_id).desc(:_id).skip((page-1)*20).limit(20)
+      posts.each do |p|
+        share = p.shares.where(:user_id => feed_id).first
+        data << {
+                :post => p,
+                :share => share
+        }
+      end
+
+      data
 
       #if topic
       #  items = FeedContributeItem.where(:feed_id => feed_id, :topic_ids => topic.id)

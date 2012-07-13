@@ -10,15 +10,13 @@ class LL.Views.FeedTile extends Backbone.View
     "mouseleave .reasons": "hideReasons"
     "click .mentions .delete": "deleteMention"
     "click .mentions .add": "showAddMention"
+    "click .share-btn": "loadPostForm"
 
   initialize: ->
     @responses = null
     @hovering = false
     @opened = false
     @addMentionForm = null
-
-    @model.on('move_to_top', @moveToTop)
-    @model.on('new_response', @prependResponse)
 
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
@@ -40,9 +38,8 @@ class LL.Views.FeedTile extends Backbone.View
     if @model.get('comments').length > 0
       $(@el).find('.bottom').show()
 
-#    root_view = new LL.Views.FeedMediaShares(model: @model)
-#
-#    $(@el).append(root_view.render().el)
+#    mentions = new LL.Views.PostMentions(model: @model.get('post'))
+#    $(@el).prepend(mentions.render().el)
 
 #    if @model.get('reasons').length > 0
 #      reason_div = $('<div/>').addClass('reasons').html("<div class='earmark'>?</div><ul></ul>")
@@ -56,14 +53,6 @@ class LL.Views.FeedTile extends Backbone.View
 
   postShow: =>
     LL.Router.navigate("posts/#{@model.get('id')}", trigger: true)
-
-  moveToTop: =>
-    $(@el).html('')
-    @render()
-    if $(@column.el).offset().top == $(@el).offset().top
-      @renderResponses()
-    else
-      @column.prependPost @
 
   cancelNewAnimation: (e) =>
     # remove the red border that slowly fades out after a new post is pushed
@@ -97,8 +86,11 @@ class LL.Views.FeedTile extends Backbone.View
 
     $(@addMentionForm.el).fadeToggle(200)
 
-  prependResponse: (post) =>
-    if @responses
-      @responses.prependResponse(post)
-    else
-      @renderResponses()
+  loadPostForm: =>
+    unless LL.App.current_user
+      LL.LoginBox.showModal()
+      return
+
+    view = new LL.Views.PostForm()
+    view.setModel(@model)
+    view.render()

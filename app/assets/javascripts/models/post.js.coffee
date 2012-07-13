@@ -3,12 +3,23 @@ class LL.Models.Post extends Backbone.Model
   name: 'post'
   urlRoot: "/api/posts"
 
+  parse: (response) ->
+    console.log response
+
+    if response.share
+      response.post.share = response.share
+
+    response.post
+
   initialize: ->
     mentions = []
     if @get('topic_mentions')
       for mention in @get('topic_mentions')
         mentions.push(new LL.Models.Topic(mention))
     @set('topic_mentions', mentions)
+
+    if @get('share')
+      @set('share', new LL.Models.Share(@get('share')))
 
     comments = []
     if @get('comments')

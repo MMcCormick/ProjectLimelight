@@ -341,14 +341,18 @@ $feedFontColor: $grayDark;
     &.with-comments {
       border-bottom: none;
     }
+    .share-count {
+      cursor: default;
+    }
     span {
       color: #999;
       font-weight: normal;
       margin: 0 10px 0 0;
       font-size: 12px;
       display: inline-block;
-      .share-btn:hover,
-      .comment-btn:hover {
+
+      &.share-btn:hover,
+      &.comment-btn:hover {
         cursor: pointer;
         text-decoration: underline;
       }

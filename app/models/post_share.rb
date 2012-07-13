@@ -1,6 +1,7 @@
 # Embeddable core object snippet that holds useful (denormalized) core object info
 class PostShare
   include Mongoid::Document
+  include Mongoid::CachedJson
   include Limelight::Mentions
 
   field :content
@@ -16,13 +17,13 @@ class PostShare
     id.generation_time
   end
 
-  def as_json
-    {
-            :id => :_id,
-            :user_id => user_id,
-            :content => content,
-            :mediums => mediums,
-            :created_at => created_at
-    }
-  end
+  json_fields \
+    :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
+    :user_id => { :properties => :short, :versions => [ :v1 ] },
+    :status => { :properties => :short, :versions => [ :v1 ] },
+    :content => { :properties => :short, :versions => [ :v1 ] },
+    :mediums => { :properties => :short, :versions => [ :v1 ] },
+    :created_at => { :definition => :created_at, :properties => :short, :versions => [ :v1 ] },
+    :topic_mentions => { :type => :reference, :definition => :topic_mentions, :properties => :short, :versions => [ :v1 ] }
+
 end

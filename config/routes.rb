@@ -137,6 +137,7 @@ ProjectLimelight::Application.routes.draw do
   get 'activity' => 'users#show'
   get 'users' => 'users#show'
   get 'topics' => 'users#show'
+  get 'posts/new' => 'posts#new', :as => :new_post
   get 'posts/:id' => 'posts#show', :as => :post
 
   # Pages

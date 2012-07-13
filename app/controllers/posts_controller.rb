@@ -66,6 +66,16 @@ class PostsController < ApplicationController
     end
   end
 
+  def new
+    if signed_in?
+      @url_to_post = params[:u]
+    else
+      session[:return_to] = request.url
+    end
+
+    render :layout => "blank_with_user"
+  end
+
   def edit
   end
 

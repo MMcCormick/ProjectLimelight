@@ -12,12 +12,15 @@ class LL.Views.PostFormContent extends Backbone.View
 
   initialize: ->
     @hide_image = false
+    @bookmarklet = false
 
   render: =>
     $(@el).html(@template(post: @model))
 
     @setData()
-    
+
+    $(@el).find('.cancel').hide() if @bookmarklet
+
     self = @
     $(@el).find('input.topic-mention').each (i,val) ->
       $(val).soulmate

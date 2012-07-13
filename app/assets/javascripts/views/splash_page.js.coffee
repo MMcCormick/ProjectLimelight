@@ -24,6 +24,12 @@ class LL.Views.SplashPage extends Backbone.View
   showModal: =>
     $(@el).addClass('modal fade').modal()
 
+  showOnlyLogin: =>
+    $(@el).show()
+    self = @
+    $(@el).find('.middle > div:visible').hide()
+    $(self.el).find('.beta-login').show()
+
   hideAll: =>
     $(@el).find('.middle > div:visible').slideUp(300)
 

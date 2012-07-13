@@ -22,12 +22,14 @@ class LL.Views.PostForm extends Backbone.View
     @fetch_form = null
     @content_form = null
     @url = null
+    @modal = true
+    @bookmarklet = false
 
   render: =>
     $(@el).html(@template())
 
     self = @
-    $(@el).addClass('modal fade').modal()
+    $(@el).addClass('modal fade').modal() if @modal
 
     if @model
       @showContent()
@@ -39,6 +41,9 @@ class LL.Views.PostForm extends Backbone.View
       $(@el).find('.fetch').html(@fetch_form.render().el)
 
     $(@el).updatePolyfill()
+
+
+    $(@el).find('.close, .cancel').hide() if @bookmarklet
 
     @
 
@@ -78,9 +83,16 @@ class LL.Views.PostForm extends Backbone.View
         self.showContent()
         $(self.el).find('.find-url').removeClass('disabled').text('Find URL')
       error: (jqXHR, textStatus, errorThrown) ->
+        globalError(jqXHR)
+
+  findThis: (url) =>
+    console.log(url)
+    $(@el).find('.url').val(url)
+    $('.find-url').click()
 
   showContent: () =>
     @content_form = new LL.Views.PostFormContent(model: @model)
+    @content_form.bookmarklet = true if @bookmarklet
     $(@el).find('.content').html(@content_form.render().el)
 
   createPost: (e) =>

@@ -5,6 +5,7 @@ class LL.Router extends Backbone.Router
     'users/:id/feed': 'userFeed'
     'users/:id/:topic_id': 'activityFeed'
     'users/:id': 'activityFeed'
+    'posts/new': 'newPost'
     'posts/:id': 'postShow'
     'pages/admin': 'adminHome'
     'topics/new': 'adminManageTopics'
@@ -307,6 +308,20 @@ class LL.Router extends Backbone.Router
       $('body').addClass('no-sidebar')
       $('#feed').html(view.el)
       view.render()
+
+  newPost: ->
+    if LL.App.current_user
+      view = new LL.Views.PostForm()
+      view.modal = false
+      view.with_header = false
+      view.bookmarklet = true
+      view.close_callback = ->
+        $(view.el).find('.fetch, .content').hide()
+        $(view.el).append('<div class="bookmarklet-success">Your post has been submitted!</div>')
+      $('body').append(view.render().el)
+      view.findThis($('#url-to-post').text())
+    else
+      LL.LoginBox.showOnlyLogin()
 
   #######
   # ADMIN

@@ -342,16 +342,18 @@ class Post
 
     def activity_feed(feed_id, page, topic=nil)
 
-      if topic
-        items = FeedContributeItem.where(:feed_id => feed_id, :topic_ids => topic.id)
-      else
-        items = FeedContributeItem.where(:feed_id => feed_id)
-      end
+      PostMedia.where("shares.user_id" => feed_id).desc(:_id).skip((page-1)*20).limit(20)
 
-      items = items.desc(:last_response_time)
-      items = items.skip((page-1)*20).limit(20)
-
-      build_activity_feed(items)
+      #if topic
+      #  items = FeedContributeItem.where(:feed_id => feed_id, :topic_ids => topic.id)
+      #else
+      #  items = FeedContributeItem.where(:feed_id => feed_id)
+      #end
+      #
+      #items = items.desc(:last_response_time)
+      #items = items.skip((page-1)*20).limit(20)
+      #
+      #build_activity_feed(items)
     end
 
     def topic_feed(feed_ids, user_id, sort, page)

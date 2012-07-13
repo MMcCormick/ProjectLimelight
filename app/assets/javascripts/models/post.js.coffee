@@ -4,11 +4,6 @@ class LL.Models.Post extends Backbone.Model
   urlRoot: "/api/posts"
 
   initialize: ->
-    @set('user', new LL.Models.User(@get('user')))
-
-    if @get('media')
-      @set('media', new LL.Models.PostMedia(@get('media')))
-
     mentions = []
     if @get('topic_mentions')
       for mention in @get('topic_mentions')

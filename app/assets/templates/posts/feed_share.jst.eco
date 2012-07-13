@@ -40,7 +40,7 @@
     <p><%= @post.get('content') %></p>
   </div>
 
-  <div class='actions'>
+  <div class='actions <%= "with-comments" if @post.get('comment_count') > 0 %>'>
     <span class='add-comment'>
       Comment
       <% if @post.get('comment_count') > 0: %>

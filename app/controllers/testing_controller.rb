@@ -20,6 +20,30 @@ class TestingController < ApplicationController
     #  [10]
     #]
 
+    PostMedia.each do |pm|
+      pm.shares = []
+      pm.ll_score = 0
+      pm.comments = []
+      pm.comment_count = 0
+      pm.save
+    end
+
+    Post.all.each do |p|
+      media = p.post_media
+
+      unless media
+        p.destroy
+        next
+      end
+
+      media.add_share(p.user_id, p.content, p.topic_mention_ids, [], {:limelight => nil})
+
+      p.comments.each do |c|
+        media.add_comment(c.user_id, c.content)
+      end
+      media.save
+    end
+
   end
 
 end

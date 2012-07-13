@@ -23,17 +23,34 @@ class LL.Views.FeedTile extends Backbone.View
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
   render: ->
-    root_view = new LL.Views.FeedMediaShares(model: @model)
+    if @model.get('images') && @model.get('images').w >= 300
+      @img_w = 300
+    else if @model.get('images') && @model.get('images').w
+      @img_w = @model.get('images').w
 
-    $(@el).append(root_view.render().el)
+    if @img_w && @model.get('images').ratio
+      @img_h = @img_w / @model.get('images').ratio
 
-    if @model.get('reasons').length > 0
-      reason_div = $('<div/>').addClass('reasons').html("<div class='earmark'>?</div><ul></ul>")
-      first = 'first'
-      for reason in @model.get('reasons')
-        reason_div.find('ul').append("<li class='#{first}'>#{reason}</li>")
-        first = ''
-      $(@el).find('.media').append(reason_div)
+    $(@el).html(@template(post: @model, img_w: @img_w, img_h: @img_h))
+
+    @comments_view = new LL.Views.CommentList(model: @model)
+#    form = new LL.Views.CommentForm(model: @model.get('post'))
+#    form.minimal = true
+    $(@el).find('.bottom').html(@comments_view.render().el)
+    if @model.get('comments').length > 0
+      $(@el).find('.bottom').show()
+
+#    root_view = new LL.Views.FeedMediaShares(model: @model)
+#
+#    $(@el).append(root_view.render().el)
+
+#    if @model.get('reasons').length > 0
+#      reason_div = $('<div/>').addClass('reasons').html("<div class='earmark'>?</div><ul></ul>")
+#      first = 'first'
+#      for reason in @model.get('reasons')
+#        reason_div.find('ul').append("<li class='#{first}'>#{reason}</li>")
+#        first = ''
+#      $(@el).find('.media').append(reason_div)
 
     @
 

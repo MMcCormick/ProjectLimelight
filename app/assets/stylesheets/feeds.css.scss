@@ -121,62 +121,54 @@ $feedFontColor: $grayDark;
   width: 300px;
   float: left;
 
-  &.column-fixed {
-    margin-top: 23px;
-    #post-form {
-      padding: 0px;
-    }
-  }
   &.new {
-    .meat {
-      border: 1px dotted red;
-    }
+    border: 1px dotted red;
   }
-  .reasons {
-    position: absolute;
-    top: 1px;
-    left: 1px;
-
-    .earmark {
-      @include border-radius(2px);
-      display: none;
-      position: absolute;
-      left: 276px;
-      top: -4px;
-      background: #BDB5B1;
-      background: rgba(189, 181, 177, 0.95);
-      border: 1px solid #EEE;
-      color: #FFF;
-      z-index: 111;
-      padding: 3px 8px;
-    }
-    ul {
-      display: none;
-      background: #BDB5B1;
-      background: rgba(189, 181, 177, 0.95);
-      padding: 0 10px !important;
-      color: #FFF;
-      position: absolute;
-      z-index: 110;
-      list-style: none;
-      width: 276px;
-      border-bottom: 1px solid #DDD;
-
-      li {
-        cursor: default;
-        padding: 7px 0;
-        border-top: 1px solid #DDD;
-
-        &.first {
-          border-top: none;
-        }
-        a {
-          font-weight: bold;
-          color: #FFF;
-        }
-      }
-    }
-  }
+  //.reasons {
+  //  position: absolute;
+  //  top: 1px;
+  //  left: 1px;
+  //
+  //  .earmark {
+  //    @include border-radius(2px);
+  //    display: none;
+  //    position: absolute;
+  //    left: 276px;
+  //    top: -4px;
+  //    background: #BDB5B1;
+  //    background: rgba(189, 181, 177, 0.95);
+  //    border: 1px solid #EEE;
+  //    color: #FFF;
+  //    z-index: 111;
+  //    padding: 3px 8px;
+  //  }
+  //  ul {
+  //    display: none;
+  //    background: #BDB5B1;
+  //    background: rgba(189, 181, 177, 0.95);
+  //    padding: 0 10px !important;
+  //    color: #FFF;
+  //    position: absolute;
+  //    z-index: 110;
+  //    list-style: none;
+  //    width: 276px;
+  //    border-bottom: 1px solid #DDD;
+  //
+  //    li {
+  //      cursor: default;
+  //      padding: 7px 0;
+  //      border-top: 1px solid #DDD;
+  //
+  //      &.first {
+  //        border-top: none;
+  //      }
+  //      a {
+  //        font-weight: bold;
+  //        color: #FFF;
+  //      }
+  //    }
+  //  }
+  //}
   .mentions {
     @include opacity(40);
     @include border-radius(2px 2px 0 0);
@@ -241,142 +233,122 @@ $feedFontColor: $grayDark;
       }
     }
   }
-  .ulink {
-    font-weight: bold;
-    color: #999;
-  }
-  #post-form {
+
+  .media {
+    @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
+    @include border-radius(0 0 1px 1px);
     background: #FFF;
-    border-bottom: 1px solid #CCC;
+    position: relative;
+    margin: 0;
+
+    h5 {
+      font-size: 13px;
+      padding: 10px 15px;
+      border-bottom: 1px solid #DDD;
+      margin-bottom: 10px;
+      &:hover {
+        color: $blue;
+      }
+    }
+    .img {
+      position: relative;
+      cursor: pointer;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 700px;
+      min-height: 50px;
+      padding: 0px;
+
+      img {
+        max-width: 300px;
+        display: block;
+        margin: auto;
+      }
+      .ll-video-play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -19px 0 0 -19px;
+      }
+      .bg {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255, 0.1);
+        display: none;
+      }
+      &:hover {
+        .bg {
+          display: block;
+        }
+      }
+    }
+    &.with-image {
+      h5 {
+        @include single-text-shadow(#666, 0, 1px);
+        @include background-image(linear-gradient(transparent, rgba(0, 0, 0, 0.1) 15%,rgba(0, 0, 0, 0.2) 25%, rgba(0, 0, 0, 0.4) 50%,rgba(0, 0, 0, 0.6) 75%, rgba(0, 0, 0, 0.8)));
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        z-index: 5;
+        padding: 25px 15px 10px 15px;
+        width: 270px;
+        color: #FFF;
+        border-bottom: none;
+        margin-bottom: 0px;
+      }
+    }
   }
 
-  .shares {
-    padding: 0 1px 0 1px;
-    cursor: pointer;
+  .top {
+    position: relative;
+    margin: 0 15px;
+    padding: 0;
 
-    ul {
-      padding: 1px 0 0 0;
-      list-style: none;
-    }
-    .share {
+    .source {
+      font-size: 11px;
+      color: #999;
 
-      .meat {
-        @include single-box-shadow(rgba(34, 25, 25, 0.5), 0px, 1px, 2px);
-        @include border-radius(0 0 1px 1px);
-        padding: 0 0 10px 0;
-        background: #FFF;
-      }
-      .media {
-
-        position: relative;
-        margin: 0;
-
-        h5 {
-          font-size: 13px;
-          padding: 10px 15px;
-          border-bottom: 1px solid #DDD;
-          margin-bottom: 10px;
-          &:hover {
-            color: $blue;
-          }
-        }
-        .img {
-          position: relative;
-          cursor: pointer;
-          overflow-y: auto;
-          overflow-x: hidden;
-          max-height: 700px;
-          min-height: 50px;
-          padding: 0px;
-
-          img {
-            max-width: 300px;
-            display: block;
-            margin: auto;
-          }
-          .ll-video-play {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin: -19px 0 0 -19px;
-          }
-          .bg {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255, 0.1);
-            display: none;
-          }
-          &:hover {
-            .bg {
-              display: block;
-            }
-          }
-        }
-        &.with-image {
-          margin: 0 0 10px 0;
-
-          h5 {
-            @include single-text-shadow(#666, 0, 1px);
-            @include background-image(linear-gradient(transparent, rgba(0, 0, 0, 0.1) 15%,rgba(0, 0, 0, 0.2) 25%, rgba(0, 0, 0, 0.4) 50%,rgba(0, 0, 0, 0.6) 75%, rgba(0, 0, 0, 0.8)));
-            position: absolute;
-            bottom: 0px;
-            left: 0px;
-            z-index: 5;
-            padding: 25px 15px 10px 15px;
-            width: 268px;
-            color: #FFF;
-            border-bottom: none;
-            margin-bottom: 0px;
-          }
+      a {
+        color: #999;
+        &:hover {
+          color: $blue;
         }
       }
     }
 
-    .top {
-      position: relative;
-      margin: 0 15px;
-      padding: 0;
-
-      .source {
-        font-size: 11px;
-        color: #999;
-
-        a {
-          color: #999;
-          &:hover {
-            color: $blue;
-          }
-        }
-      }
-
-      .when {
-        position: absolute;
-        top: 1px;
-        right: 0;
-        color: #999;
-        font-size: 11px;
-      }
-      p {
-        margin: 4px 0 0 0;
-      }
+    .when {
+      position: absolute;
+      top: 1px;
+      right: 0;
+      color: #999;
+      font-size: 11px;
+    }
+    p {
+      margin: 4px 0 0 0;
     }
   }
 
   .actions {
-    padding: 6px 15px 0 15px;
+    padding: 10px 15px;
     font-size: 12px;
     color: #999;
+    background: #FFF;
+    border: 1px solid #DDD;
 
-    > span {
+    &.with-comments {
+      border-bottom: none;
+    }
+    span {
       color: #999;
       font-weight: normal;
-      margin: 0 8px 0 0;
+      margin: 0 10px 0 0;
       font-size: 12px;
       display: inline-block;
-      &:hover {
+      .share-btn:hover,
+      .comment-btn:hover {
         cursor: pointer;
         text-decoration: underline;
       }
@@ -386,7 +358,10 @@ $feedFontColor: $grayDark;
   .bottom {
     display: none;
     padding: 2px 15px 1px 15px;
-    margin: 12px 0 5px 0;
+    margin: 0 0 5px 0;
+    background: #FFF;
+    border: 1px solid #DDD;
+    border-top: none;
 
     .comment-form {
       border: 1px solid #CEDCDF;
@@ -406,7 +381,7 @@ $feedFontColor: $grayDark;
       }
     }
     .comment-list {
-      margin: 10px 0 -5px 0;
+      margin: 0;
     }
   }
 
@@ -423,7 +398,8 @@ $feedFontColor: $grayDark;
       color: $blue;
     }
     .actions {
-      span {
+      .share-btn,
+      .comment-btn {
         color: $greenDarker;
       }
     }

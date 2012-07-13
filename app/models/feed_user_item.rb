@@ -248,31 +248,6 @@ class FeedUserItem
       post.save
     end
 
-    def post_disable(post, unpopular_talk=false)
-      #if post.is_root?
-      #  FeedUserItem.destroy_all(conditions: { :root_id => post.id })
-      #else
-      #  feed_items = FeedUserItem.where(:responses => post.id)
-      #  foobar = feed_items.map{ |f| f.feed_id }
-      #  user_feed_users = User.only(:id, :following_topics, :following_users).where(:_id => { '$in' => foobar })
-      #
-      #  user_feed_users.each do |u|
-      #    unless u.id == post.user_snippet.id
-      #      strength = 0
-      #      strength -= 1 if u.is_following_user?(post.user_snippet.id)
-      #      strength -= 1 if post.user_mentions.detect{ |us| us.id == u.id }
-      #      strength -= 1 if post.likes.detect{ |l| u.is_following_user?(l.id) }
-      #
-      #      updates = {"$inc" => { :strength => strength, :ds => strength }}
-      #      updates["$pull"] = { :responses => post.id }
-      #
-      #      FeedUserItem.collection.update({:feed_id => u.id, :root_id => post.root_id}, updates, {:upsert => true})
-      #    end
-      #  end
-      #  FeedUserItem.destroy_all(conditions: { :root_id => post.root_id, :strength => {"$lte" => 0} })
-      #end
-    end
-
     def follow(user, target)
       if target.class.name == 'Topic'
         core_objects = Post.where(:topic_mention_ids => target.id).limit(10)

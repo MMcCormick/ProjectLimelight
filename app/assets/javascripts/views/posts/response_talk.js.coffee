@@ -16,12 +16,6 @@ class LL.Views.ResponseTalk extends Backbone.View
     prettyTime.time = @model.get('created_at')
     $(@el).find('.when').prepend(prettyTime.render().el)
 
-    like = new LL.Views.LikeButton(model: @model)
-    $(@el).find('.actions').prepend(like.render().el)
-
-#    score = new LL.Views.Score(model: @model)
-#    $(@el).find('.actions').prepend(score.render().el)
-
     mentions = new LL.Views.PostMentions(model: @model.get('topic_mentions'))
     $(@el).find('p').after(mentions.render().el)
 

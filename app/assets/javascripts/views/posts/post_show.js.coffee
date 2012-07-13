@@ -16,22 +16,10 @@ class LL.Views.PostShow extends Backbone.View
     return unless @model
     $(@el).html(@template(post: @model))
 
-    like = new LL.Views.LikeButton(model: @model)
-    $(@el).find('.actions').prepend(like.render().el)
-
     prettyTime = new LL.Views.PrettyTime()
     prettyTime.format = 'extended'
     prettyTime.time = @model.get('created_at')
     $(@el).find('.when').html(prettyTime.render().el)
-
-    topic_section = new LL.Views.TopicSectionList()
-    topic_section.topics = @model.get('topic_mentions')
-    $(@el).find('.half-sections').append(topic_section.render().el)
-
-    user_section = new LL.Views.UserSectionList()
-    user_section.users = @model.get('recent_likes')
-    user_section.count = @model.get('likes').length
-    $(@el).find('.half-sections').append(user_section.render().el)
 
     @comments_view = new LL.Views.CommentList(model: @model)
     form = new LL.Views.CommentForm(model: @model)

@@ -32,14 +32,6 @@ class Notification
         'is following you'
       when :mention
         "mentioned you in a post"
-      when :repost
-        text = "liked "
-        if object.short_name.length > 0
-          text += "\"#{object.short_name}\""
-        else
-          text += "your post"
-        end
-        text
       when :comment
         text = "commented on "
         if object.short_name.length > 0

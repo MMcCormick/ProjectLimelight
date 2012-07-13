@@ -10,68 +10,6 @@ class Neo4j
       string.split('/').last.to_i
     end
 
-    # called for post actions (like, favorite, etc)
-    def post_like(user_id, post_id)
-      node1 = Neo4j.neo.get_node_index('users', 'uuid', user_id)
-      post_node = Neo4j.neo.get_node_index('posts', 'uuid', post_id)
-      post = Post.find(post_id)
-
-      if node1 && post_node && post
-        # create like
-        like = self.neo.create_relationship('like', node1, post_node)
-        self.neo.add_relationship_to_index('users', 'like', "#{user_id}-#{post_id}", like) if like
-
-        # increase affinity to the post creator unless submitted by bot
-        unless post.user_id.to_s == User.limelight_user_id || user_id == post.user_id
-          node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
-          Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, 1, false, nil) if node1 && node2
-        end
-
-        # increase affinity to mentioned users
-        post.user_mentions.each do |m|
-          node2 = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
-          Neo4j.update_affinity(user_id, m.id.to_s, node1, node2, 1, false, nil) if node1 && node2
-        end
-
-        # increase affinity to mentioned topics
-        post.topic_mentions.each do |m|
-          node2 = Neo4j.neo.get_node_index('topics', 'uuid', m.id.to_s)
-          Neo4j.update_affinity(user_id, m.id.to_s, node1, node2, 1, false, nil) if node1 && node2
-        end
-      end
-    end
-
-    def post_unlike(user_id, post_id)
-      node1 = Neo4j.neo.get_node_index('users', 'uuid', user_id)
-      post_node = Neo4j.neo.get_node_index('posts', 'uuid', post_id)
-      post = Post.find(post_id)
-
-      if node1 && post_node && post
-        # destroy like
-        rel1 = Neo4j.neo.get_relationship_index('users', 'like', "#{user_id}-#{post_id}")
-        Neo4j.neo.delete_relationship(rel1)
-        Neo4j.neo.remove_relationship_from_index('users', rel1)
-
-        # decrease affinity to the post creator
-        unless post.user_id.to_s == User.limelight_user_id || user_id == post.user_id
-          node2 = Neo4j.neo.get_node_index('users', 'uuid', post.user_id.to_s)
-          Neo4j.update_affinity(user_id, post.user_id.to_s, node1, node2, -1, false, nil) if node1 && node2
-        end
-
-        # decrease affinity to mentioned users
-        post.user_mentions.each do |m|
-          node2 = Neo4j.neo.get_node_index('users', 'uuid', m.id.to_s)
-          Neo4j.update_affinity(user_id, m.id.to_s, node1, node2, -1, false, nil) if node1 && node2
-        end
-
-        # decrease affinity to mentioned topics
-        post.topic_mentions.each do |m|
-          node2 = Neo4j.neo.get_node_index('topics', 'uuid', m.id.to_s)
-          Neo4j.update_affinity(user_id, m.id.to_s, node1, node2, -1, false, nil) if node1 && node2
-        end
-      end
-    end
-
     def find_or_create_category(name)
       topic = Topic.where("aliases.slug" => name.parameterize).first
 

@@ -20,6 +20,17 @@
 
     <p><%= @post.get('content') %></p>
 
+    <div class='mentions'>
+      <div class='ll-arrow-r-dark'></div>
+      <% for mention in @post.get('topic_mentions'): %>
+        <span>
+          <a class="tlink" data-id='<%= mention.get('id') %>' href="<%= mention.get('url') %>">
+            <%= mention.get('name') %>
+          </a>
+        </span>
+      <% end %>
+    </div>
+
     <% unless @post.get('media'): %>
       <div class='actions'>
         <span class='add-comment'>

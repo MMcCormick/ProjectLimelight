@@ -1,7 +1,0 @@
-<div class='top'>
-  <h5>+Post</h5>
-</div>
-
-<div class='meat'>
-  <input type="text" spellcheck="false" autocomplete="off" placeholder="<%= @placeholder %>" />
-</div>

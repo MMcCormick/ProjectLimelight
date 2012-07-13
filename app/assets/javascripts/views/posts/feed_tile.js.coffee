@@ -23,7 +23,7 @@ class LL.Views.FeedTile extends Backbone.View
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
   render: ->
-    root_view = new LL.Views.FeedMediaReposts(model: @model)
+    root_view = new LL.Views.FeedMediaShares(model: @model)
 
     $(@el).append(root_view.render().el)
 

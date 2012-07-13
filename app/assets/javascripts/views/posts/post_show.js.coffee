@@ -5,7 +5,7 @@ class LL.Views.PostShow extends Backbone.View
 
   events:
     "click .close": "navBack"
-    "click .repost-btn": "loadPostForm"
+    "click .share-btn": "loadPostForm"
     "click .add-comment": "focusCommentForm"
 
   initialize: ->

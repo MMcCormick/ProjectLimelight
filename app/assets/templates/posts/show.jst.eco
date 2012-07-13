@@ -71,7 +71,7 @@
           <% end %>
         </span>
         <% if @post.get('media'): %>
-          <span class='repost-btn'>Repost</span>
+          <span class='share-btn'>+Share</span>
         <% end %>
       </div>
     </div>

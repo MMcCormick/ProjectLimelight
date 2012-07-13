@@ -47,7 +47,7 @@
         <b>(<span><%= @post.get('comment_count') %></span>)</b>
       <% end %>
     </span>
-    <span class='repost-btn'>Repost</span>
+    <span class='share-btn'>+Share</span>
   </div>
 
   <div class='bottom'></div>

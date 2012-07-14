@@ -3,7 +3,6 @@ source 'http://rubygems.org'
 ruby '1.9.3'
 
 gem 'bundler', '1.2.0.pre.1'
-gem 'thin'
 gem 'rails', '3.2.6'
 gem 'jquery-rails'
 gem 'rack'
@@ -53,8 +52,9 @@ group :assets do
   gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
 
-group :production do
+group :production, :staging do
   gem "rack-timeout"
+  gem 'puma'
 end
 
 group :development do
@@ -94,6 +94,7 @@ platforms :ruby do
     gem "foreman"
     gem 'pry-rails'
     gem 'ruby-prof'
+    gem 'thin'
   end
 end
 

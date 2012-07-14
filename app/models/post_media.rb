@@ -7,6 +7,7 @@ class PostMedia
   include Limelight::Acl
   include Limelight::Images
   include Limelight::Popularity
+  include ModelUtilitiesHelper
 
   field :title
   field :description # if a link, the pulled description from the url
@@ -50,6 +51,21 @@ class PostMedia
 
   def name
     title
+  end
+
+  # short version of the contnet "foo bar foo bar..." used in notifications etc.
+  def short_name
+    return '' if title.nil? || title.blank?
+
+    short = title[0..30]
+    if title.length > 30
+      short += '...'
+    end
+    short
+  end
+
+  def og_type
+    og_namespace + ":post"
   end
 
   def set_source_snippet
@@ -124,6 +140,9 @@ class PostMedia
 
   # SHARES
   def add_share(user_id, content, topic_ids=[], topic_names=[], mediums={})
+    existing = shares.where(:user_id => user_id).first
+    return existing if existing
+
     share = PostShare.new(:content => content, :topic_mention_ids => topic_ids, :topic_mention_names => topic_names, :mediums => mediums)
     share.user_id = user_id
 

@@ -15,7 +15,7 @@
   <% end %>
 </div>
 
-<div class='actions <%= "with-comments" if @post.get('comments').length > 0 %>''>
+<div class='actions <%= "with-comments" if @post.get('comments') && @post.get('comments').length > 0 %>'>
   <% if @post.get('primary_source'): %>
     <div class='source'>view on <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a></div>
   <% end %>

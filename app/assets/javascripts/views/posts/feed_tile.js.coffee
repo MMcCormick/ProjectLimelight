@@ -18,6 +18,7 @@ class LL.Views.FeedTile extends Backbone.View
     @hovering = false
     @opened = false
     @addMentionForm = null
+    @model.on('new_comment', @showComments)
 
   # This renders a root post
   # It adds the root to the top, followed by responses if there are any
@@ -36,11 +37,14 @@ class LL.Views.FeedTile extends Backbone.View
     form = new LL.Views.CommentForm(model: @model)
     form.minimal = true
     $(@el).find('.bottom').append($(form.render().el).hide()).append(@comments_view.render().el)
-    if @model.get('comments').length > 0
+    if @model.get('comments') && @model.get('comments').length > 0
       $(@el).find('.bottom').show()
 
     if @model.get('share') && @model.get('share').get('topic_mentions').length > 0
       mentions = new LL.Views.PostMentions(model: @model.get('share'))
+      $(@el).prepend(mentions.render().el)
+    else if @model.get('topic_mentions').length > 0
+      mentions = new LL.Views.PostMentions(model: @model)
       $(@el).prepend(mentions.render().el)
 
 #    if @model.get('reasons').length > 0
@@ -111,4 +115,10 @@ class LL.Views.FeedTile extends Backbone.View
         $('#feed').isotope('shiftColumnOfItem', $(self.el).get(0))
     else
       target.slideDown 100, ->
+        $('#feed').isotope('shiftColumnOfItem', $(self.el).get(0))
+
+  showComments: =>
+    if $(@el).find('.bottom:visible').length == 0
+      self = @
+      $(self.el).find('.bottom').slideDown 100, ->
         $('#feed').isotope('shiftColumnOfItem', $(self.el).get(0))

@@ -23,14 +23,10 @@
   </div>
 
   <div class='top'>
-    <% if @post.get('user').get('username') == 'limelight_bot': %>
-      <b>Limelight</b>
-    <% else: %>
-      <a class="ulink" data-id="<%= @post.get('user').get('id') %>" href="<%= @post.get('user').get('url') %>">
-        <%= @post.get('user').get('name') %>
-        <span>@<%= @post.get('user').get('username') %></span>
-      </a>
-    <% end %>
+    <a class="ulink" data-id="<%= @post.get('user').get('id') %>" href="<%= @post.get('user').get('url') %>">
+      <%= @post.get('user').get('name') %>
+      <span>@<%= @post.get('user').get('username') %></span>
+    </a>
 
     <% if @post.get('media').get('primary_source'): %>
       <span class='source'>via <a target="_blank" href="<%= @post.get('media').get('primary_source').url %>"><%= @post.get('media').get('primary_source').name %></a></span>

@@ -169,65 +169,6 @@ ProjectLimelight::Application.routes.draw do
 
   root :to => 'users#feed'
 
-  #scope 'users' do
-  #  get 'settings' => 'users#settings', :as => :user_settings
-  #  put 'picture' => "users#picture_update", :as => :user_picture_update
-  #  put 'update_settings' => 'users#update_settings', :as => :update_settings
-  #  get ':id/following/users' => 'users#following_users', :as => :user_following_users
-  #  get ':id/following/topics' => 'users#following_topics', :as => :user_following_topics
-  #  get ':id/followers' => 'users#followers', :as => :user_followers
-  #  get ':id' => 'users#feed', :as => :user_feed
-  #  get ':id/hover' => 'users#hover' , :as => :user_hover
-  #  get ':id/picture' => 'users#default_picture', :as => :user_default_picture
-  #end
-
-  #scope 'sentiment' do
-  #  post ':sentiment' => 'sentiments#create', :as => :sentiment_create
-  #end
-
-  # Moderate
-  #scope 'moderate' do
-  #  get 'connections' => 'topic_con_sugs#new', :as => :moderate_connections
-  #end
-
-  # Topics
-  #resources :topics, :except => [:edit, :show, :update, :index, :destroy]
-  #get '/topics/by_health' => 'topics#by_health', :as => :topics_by_health
-  #get 'topics/mention_suggestion' => 'topics#mention_suggestion', :as => :mention_suggestion
-  #get '/:id/edit' => 'topics#edit', :as => :edit_topic
-  #get '/:id/connected' => 'topics#connected', :as => :connected_topics
-  #get '/:id/hover' => 'topics#hover' , :as => :topic_hover
-  #put '/:id/picture' => 'topics#picture_update', :as => :topic_picture_update
-  #get '/:id/picture' => 'topics#default_picture', :as => :topic_default_picture
-  #get '/:id/followers' => 'topics#followers', :as => :topic_followers
-  #post '/:id/merge' => 'topics#merge', :as => :merge_topic
-  #put '/:id/aliases' => 'topics#update_alias', :as => :update_topic_alias
-  #delete '/:id/aliases' => 'topics#destroy_alias', :as => :destroy_topic_alias
-  #post '/:id/aliases' => 'topics#add_alias', :as => :add_topic_alias
-  #get '/:id/freebase_lookup' => 'topics#freebase_lookup', :as => :freebase_lookup
-  #post ':id/freebase_update' => 'topics#freebase_update', :as => :freebase_update
-  #put '/:id/lock_slug' => 'topics#lock_slug', :as => :lock_topic_slug
-  #get '/:id/pull_from' => 'topics#pull_from', :as => :topic_pull_from
-  #get '/:id/google_images' => 'topics#google_images', :as => :topic_google_images
-  #get '/:id' => 'topics#show', :as => :topic
-  #delete '/:id' => 'topics#destroy', :as => :topic
-
-  # Topic Connection Suggestions
-  #resources :topic_con_sugs, :only => [:create]
-  #get 'topic_con_sugs/list' => 'topic_con_sugs#list', :as => :list_topic_con_sugs
-
-  # Topic Connections
-  #resources :topic_connections, :only => [:create, :new]
-  #post 'topic_connections/add' => 'topic_connections#add', :as => :add_connection
-  #delete 'topic_connections/remove' => 'topic_connections#remove', :as => :remove_connection
-  #put 'topic_connections/toggle_primary' => 'topic_connections#toggle_primary', :as => :toggle_primary
-
-  # Pages
-  #get '/pages/everything' => 'pages#everything', :as => :everything
-  #get '/pages/admin' => 'pages#admin', :as => :admin_dashboard
-  #get '/pages/splash' => 'pages#splash', :as => :splash
-  #root :to => 'users#feed'
-
 
 
 

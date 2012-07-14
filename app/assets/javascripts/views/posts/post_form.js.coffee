@@ -33,9 +33,10 @@ class LL.Views.PostForm extends Backbone.View
 
     if @model
       @showContent()
-      for topic,i in @model.share.get('topic_mentions')
-        @content_form.addTopic($(@el).find("#post-form-mention#{i+1}"), topic.get('name'), topic.get('id'), topic.get('slug'))
       $(@el).find('.fetch').remove()
+      if @model.share
+        for topic,i in @model.share.get('topic_mentions')
+          @content_form.addTopic($(@el).find("#post-form-mention#{i+1}"), topic.get('name'), topic.get('id'), topic.get('slug'))
     else
       @fetch_form = new LL.Views.PostFormFetch()
       $(@el).find('.fetch').html(@fetch_form.render().el)
@@ -79,7 +80,7 @@ class LL.Views.PostForm extends Backbone.View
       success: (data) ->
         self.model = data
         if data.existing
-          self.model.existing = new LL.Models.PostMedia($.parseJSON(data.existing))
+          self.model.existing = new LL.Models.PostMedia(data.existing)
         self.showContent()
         $(self.el).find('.find-url').removeClass('disabled').text('Find URL')
       error: (jqXHR, textStatus, errorThrown) ->

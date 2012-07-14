@@ -203,7 +203,7 @@ class Post
   #  _type == "Talk" && !response_to_id
   #end
 
-  def og_type
+  def ogpe
     og_namespace + ":post"
   end
 

@@ -62,11 +62,9 @@ class LL.Views.PostsFeed extends Backbone.View
 
     unless LL.App.get_event_subscription(@channel, 'new_post')
       channel.bind 'new_post', (data) ->
-        post = self.collection.get(data.id)
-        if post
-          post.trigger('move_to_top')
-        else
-          post = new LL.Models.RootPost(data)
+        post = self.collection.get(data.post.id)
+        unless post
+          post = new LL.Models.Post(data.post)
           self.collection.add(post, {silent: true})
           self.prependPost(post, true)
 

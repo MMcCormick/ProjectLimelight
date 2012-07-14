@@ -60,7 +60,7 @@ class EmbedlyController < ApplicationController
 
     post = result && result['url'] ? PostMedia.where('sources.url' => result['url']).first : nil
     if post
-      response[:existing] = post.to_json(:user => current_user)
+      response[:existing] = post.as_json(:user => current_user)
     elsif !response[:only_picture]
       response[:topic_suggestions] = Topic.suggestions_by_url(result['url'], result['title'])
     end

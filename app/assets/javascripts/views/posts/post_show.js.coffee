@@ -14,6 +14,7 @@ class LL.Views.PostShow extends Backbone.View
 
   render: =>
     return unless @model
+    console.log @model
     $(@el).html(@template(post: @model))
 
     prettyTime = new LL.Views.PrettyTime()
@@ -25,9 +26,6 @@ class LL.Views.PostShow extends Backbone.View
     form = new LL.Views.CommentForm(model: @model)
     form.minimal = true
     $(@el).find('.comments .meat').append(form.render().el).append(@comments_view.render().el)
-
-    if @model.get('comments').length == 0 && !@loaded
-      @model.fetchComments()
 
     @loaded = true
 

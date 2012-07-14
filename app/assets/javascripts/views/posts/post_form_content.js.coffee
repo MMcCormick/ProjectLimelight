@@ -48,35 +48,36 @@ class LL.Views.PostFormContent extends Backbone.View
     $(@el).find('#post-form-remote-image-url').val(@model.remote_image_url)
     $(@el).find('#post-form-image-cache').val(@model.image_cache)
 
-    if @model.type
-      @setType(@model.type)
-    else
-      @hidePostType()
-
-    if @model.type == 'Video'
-      @disableTypes(['Link', 'Picture'])
-
-    unless @model.source_vid || @model.type == 'Video'
-      @disableTypes(['Video'])
-
-    if @model.only_picture
-      @disableTypes(['Link','Video'])
-    else
-      if @model.images && @model.images.length > 0
-        found = false
-
-        for image in @model.images
-          if image.width >= 300
-            found = true
-
-        unless found
-          @disableTypes(['Picture'])
-
-      else if @model.images
-        @disableTypes(['Picture'])
-
     if @model.existing
       $(@el).find('#post-form-parent-id').val(@model.existing.id)
+      @hidePostType()
+    else
+      if @model.type
+        @setType(@model.type)
+      else
+        @hidePostType()
+
+      if @model.type == 'Video'
+        @disableTypes(['Link', 'Picture'])
+
+      unless @model.source_vid || @model.type == 'Video'
+        @disableTypes(['Video'])
+
+      if @model.only_picture
+        @disableTypes(['Link','Video'])
+      else
+        if @model.images && @model.images.length > 0
+          found = false
+
+          for image in @model.images
+            if image.width >= 300
+              found = true
+
+          unless found
+            @disableTypes(['Picture'])
+
+        else if @model.images
+          @disableTypes(['Picture'])
 
     @initializeImages()
 

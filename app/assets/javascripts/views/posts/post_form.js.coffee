@@ -33,7 +33,7 @@ class LL.Views.PostForm extends Backbone.View
 
     if @model
       @showContent()
-      for topic,i in @model.post.get('topic_mentions')
+      for topic,i in @model.share.get('topic_mentions')
         @content_form.addTopic($(@el).find("#post-form-mention#{i+1}"), topic.get('name'), topic.get('id'), topic.get('slug'))
       $(@el).find('.fetch').remove()
     else
@@ -86,7 +86,6 @@ class LL.Views.PostForm extends Backbone.View
         globalError(jqXHR)
 
   findThis: (url) =>
-    console.log(url)
     $(@el).find('.url').val(url)
     $('.find-url').click()
 

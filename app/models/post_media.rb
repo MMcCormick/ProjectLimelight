@@ -142,6 +142,10 @@ class PostMedia
 
     share
   end
+
+  def get_share(user_id)
+    shares.where(:user_id => user_id).first
+  end
   # END SHARES
 
   # COMMENTS

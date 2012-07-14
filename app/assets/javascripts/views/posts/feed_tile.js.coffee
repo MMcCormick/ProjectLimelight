@@ -11,6 +11,7 @@ class LL.Views.FeedTile extends Backbone.View
     "click .mentions .delete": "deleteMention"
     "click .mentions .add": "showAddMention"
     "click .share-btn": "loadPostForm"
+    "click .comment-btn": "toggleCommentForm"
 
   initialize: ->
     @responses = null
@@ -32,14 +33,15 @@ class LL.Views.FeedTile extends Backbone.View
     $(@el).html(@template(post: @model, img_w: @img_w, img_h: @img_h))
 
     @comments_view = new LL.Views.CommentList(model: @model)
-#    form = new LL.Views.CommentForm(model: @model.get('post'))
-#    form.minimal = true
-    $(@el).find('.bottom').html(@comments_view.render().el)
+    form = new LL.Views.CommentForm(model: @model)
+    form.minimal = true
+    $(@el).find('.bottom').append($(form.render().el).hide()).append(@comments_view.render().el)
     if @model.get('comments').length > 0
       $(@el).find('.bottom').show()
 
-#    mentions = new LL.Views.PostMentions(model: @model.get('post'))
-#    $(@el).prepend(mentions.render().el)
+    if @model.get('share') && @model.get('share').get('topic_mentions').length > 0
+      mentions = new LL.Views.PostMentions(model: @model.get('share'))
+      $(@el).prepend(mentions.render().el)
 
 #    if @model.get('reasons').length > 0
 #      reason_div = $('<div/>').addClass('reasons').html("<div class='earmark'>?</div><ul></ul>")
@@ -94,3 +96,19 @@ class LL.Views.FeedTile extends Backbone.View
     view = new LL.Views.PostForm()
     view.setModel(@model)
     view.render()
+
+  toggleCommentForm: =>
+    self = @
+
+    if $(@el).find('.comment-list li').length == 0
+      target = $(@el).find('.bottom')
+      target.find('.comment-form').show()
+    else
+      target = $(@el).find('.comment-form')
+
+    if $(@el).find('.comment-form').is(':visible')
+      target.slideUp 100, ->
+        $('#feed').isotope('shiftColumnOfItem', $(self.el).get(0))
+    else
+      target.slideDown 100, ->
+        $('#feed').isotope('shiftColumnOfItem', $(self.el).get(0))

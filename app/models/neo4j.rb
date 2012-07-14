@@ -293,7 +293,6 @@ class Neo4j
       query = "
         START n=node:topics(uuid = '#{topic_id}')
         MATCH n-[:pull*]->x
-        WHERE x.uuid != '#{topic_id}'
         RETURN distinct x.uuid
       "
       ids = Neo4j.neo.execute_query(query)

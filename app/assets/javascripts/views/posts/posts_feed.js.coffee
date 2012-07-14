@@ -37,7 +37,6 @@ class LL.Views.PostsFeed extends Backbone.View
       $(@el).remove('.none')
 
       for post in @collection.models
-        console.log post
         @appendPost(post)
 
       LL.App.calculateSiteWidth()

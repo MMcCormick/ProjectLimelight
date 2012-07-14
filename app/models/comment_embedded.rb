@@ -35,7 +35,7 @@ class CommentEmbedded
     siblings = _parent.comments
     used_ids = []
     siblings.each do |sibling|
-      unless used_ids.include?(sibling.user_id) || (post.user_id == sibling.user_id) || (sibling.user_id == user.id)
+      unless used_ids.include?(sibling.user_id) || (_parent.user_id == sibling.user_id) || (sibling.user_id == user.id)
         notification = Notification.add(sibling.user, :also, true, user, nil, _parent, _parent.user, sibling)
         unless sibling.user_id == user_id
           Pusher["#{sibling.user_id.to_s}_private"].trigger('new_notification', notification.to_json)

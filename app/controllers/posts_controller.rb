@@ -29,41 +29,42 @@ class PostsController < ApplicationController
   end
 
   def create
+
     @post = current_user.posts.new(params)
-    if params[:type] != 'Post' || params[:post_media_id]
-      @post.initialize_media(params)
-    end
-
-    if @post.valid? && (!@post.post_media_id || @post.post_media.valid?)
-      @post.save
-
-      FeedUserItem.push_post_through_users(@post, current_user, false)
-
-      if @post.post_media
-        @post.post_media.save
-      end
-
-      track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.mixpanel_data))
-      track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.post_media.mixpanel_data)) if @post.post_media_id
-
-      if @post.post_media_id
-        Pusher[@post.post_media_id.to_s].trigger('new_response', @post.to_json(:properties => :public))
-      end
-
-      # send mention notifications
-      @post.user_mentions.each do |u|
-        notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
-        if notification
-          Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.as_json)
-        end
-      end
-
-      render :json => build_ajax_response(:ok, nil, "Your post has been submitted"), :status => 201
-    else
-      errors = @post.post_media_id ? Hash[@post.post_media.errors].merge!(Hash[@post.errors]) : @post.errors
-      response = build_ajax_response(:error, nil, "Post could not be created", errors)
-      render :json => response, :status => :unprocessable_entity
-    end
+    #if params[:type] != 'Post' || params[:post_media_id]
+    #  @post.initialize_media(params)
+    #end
+    #
+    #if @post.valid? && (!@post.post_media_id || @post.post_media.valid?)
+    #  @post.save
+    #
+    #  FeedUserItem.push_post_through_users(@post, current_user, false)
+    #
+    #  if @post.post_media
+    #    @post.post_media.save
+    #  end
+    #
+    #  track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.mixpanel_data))
+    #  track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.post_media.mixpanel_data)) if @post.post_media_id
+    #
+    #  if @post.post_media_id
+    #    Pusher[@post.post_media_id.to_s].trigger('new_response', @post.to_json(:properties => :public))
+    #  end
+    #
+    #  # send mention notifications
+    #  @post.user_mentions.each do |u|
+    #    notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
+    #    if notification
+    #      Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.as_json)
+    #    end
+    #  end
+    #
+    #  render :json => build_ajax_response(:ok, nil, "Your post has been submitted"), :status => 201
+    #else
+    #  errors = @post.post_media_id ? Hash[@post.post_media.errors].merge!(Hash[@post.errors]) : @post.errors
+    #  response = build_ajax_response(:error, nil, "Post could not be created", errors)
+    #  render :json => response, :status => :unprocessable_entity
+    #end
   end
 
   def new
@@ -140,7 +141,7 @@ class PostsController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     topic_ids = Neo4j.pull_from_ids(topic.id).to_a
-    posts = Post.topic_feed(topic_ids << topic.id, (signed_in? ? current_user.id : nil), params[:sort], page)
+    posts = Post.topic_feed(topic_ids << topic.id, params[:sort], page)
     render :json => posts.map {|p| p.as_json(:properties => :short)}
   end
 

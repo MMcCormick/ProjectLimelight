@@ -1,21 +1,19 @@
 class FeedUserItem
   include Mongoid::Document
 
-  field :feed_id
-  field :root_id
-  field :root_type
+  field :user_id
+  field :post_id
+  field :post_type
   field :ds, :default => 0
   field :dt, :default => Time.now
-  field :responses, :default => [], :type => Array
-  field :last_response_time, :type => DateTime
   field :p, :default => 0
   field :rel, :default => 0
   field :reasons, :default => []
+  field :created_at
 
-  index({ :root_id => -1, :feed_id => -1 }, { :unique => true })
-  index({ :feed_id => -1, :last_response_time => -1 })
-  index({ :feed_id => -1, :rel => -1 })
-  index({ :responses => -1 })
+  index({ :post_id => -1, :user_id => -1 }, { :unique => true })
+  index({ :user_id => -1, :created_at => -1 })
+  index({ :user_id => -1, :rel => -1 })
 
   def created_at
     id.generation_time
@@ -52,9 +50,7 @@ class FeedUserItem
 
   class << self
 
-    def push_post_through_users(post, single_user=nil, backlog=false)
-      user_mention_ids = post.user_mention_ids
-
+    def push_post_through_users(post, poster, single_user=nil, backlog=false)
       # make the root post
       root_post = RootPost.new
       root_post.post = post
@@ -64,57 +60,28 @@ class FeedUserItem
       if single_user
         user_feed_users = [single_user]
       else
-        # if the post starts with a user mention, only push it to the creator and the mentioned users
-        if post.personal_mention?
-          user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}).to_a
-        else
-          user_feed_users = User.only(:id, :following_topics, :following_users).any_of({:_id => {'$in' => user_mention_ids}}, {:following_users => post.user_id}).to_a
-        end
-
-        user_feed_users << post.user # add this post to this users own feed
+        user_feed_users = User.only(:id, :following_topics, :following_users).where(:following_users => poster.id).to_a
+        user_feed_users << poster # add this post to this users own feed
       end
 
       # push to these users
       user_feed_users.each do |u|
-        item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
+        item = FeedUserItem.where(:user_id => u.id, :post_id => post.id).first
 
         new_item = false
         unless item
-          if post.user_id != u.id
-            post.pushed_users_count += 1
-            if post.post_media_id
-              post.post_media.pushed_users_count += 1
-              post.post_media.save
-            end
-          end
-          item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
-          item.root_type = post.root_type
+          post.pushed_users_count += 1
+          item = FeedUserItem.new(:user_id => u.id, :post_id => post.id)
+          item.post_type = post._type
+          item.created_at = backlog ? post.created_at : Time.now
           new_item = true
         end
 
-        # don't update this items response time to now if it's just a user responding to a post already in their feed
-        if post.user_id != u.id || new_item == true
-          item.last_response_time = backlog ? post.created_at : Time.now
-        end
-        item.responses ||= []
-        item.responses << post.id unless post.is_root? || item.responses.include?(post.id)
-
-        if post.is_root?
-          # add following user reason
-          item.add_reason('fu', post.user) if u.following_users.include?(post.user_id)
-
-          # add mentioned reason
-          item.add_reason('m', post.user) if user_mention_ids.include?(u.id)
-        else
-          # add following user who is talking reason
-          item.add_reason('fut', post.user) if u.following_users.include?(post.user_id)
-
-          # add mentioned by a user talking about this reason
-          item.add_reason('mt', post.user) if user_mention_ids.include?(u.id)
-        end
+        # add following user reason
+        item.add_reason('fu', poster) if u.following_users.include?(poster.id)
 
         # add created reason
-        item.add_reason('c', post.user) if u.id == post.user_id
+        item.add_reason('c', poster) if u.id == poster.id
 
         next if item.reasons.length == 0
 
@@ -123,7 +90,7 @@ class FeedUserItem
         root_post.push_item = item
 
         # if it's a new feed post
-        unless backlog || (!new_item && post.user_id == u.id)
+        unless backlog || (!new_item && poster.id == u.id)
           Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.as_json(:properties => :public))
         end
       end
@@ -132,37 +99,21 @@ class FeedUserItem
     end
 
     def push_post_through_topics(post)
-      # if the post starts with a user mention, don't push it to topics
-      return if post.personal_mention?
-
       # push through topics
-      post.topic_mentions.each do |topic|
+      post.topics.each do |topic|
         push_post_through_topic(post, topic)
       end
-
-      # push through sources
-      #if post.post_media_id
-      #  post.post_media.sources.each do |source|
-      #    topic = Topic.find(source.id)
-      #    push_post_through_topic(post, topic) if topic
-      #  end
-      #end
     end
 
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)
     # optionally push for a single user
     def push_post_through_topic(post, push_topic, single_user=nil, backlog=false)
-      # if the post starts with a user mention, don't push it to topics
-      return if post.personal_mention?
-
       neo4j_topic_ids = Neo4j.pulled_from_ids([push_topic.neo4j_id])
       topics = Topic.where(:_id => {"$in" => [push_topic.id] + neo4j_topic_ids.map{|t| t[1]}})
 
       # make the root post
       root_post = RootPost.new
       root_post.post = post
-
-      #root_post.public_talking = root_post.root.response_count
 
       topics.each do |topic|
         # the potential users this post can be pushed to
@@ -173,19 +124,16 @@ class FeedUserItem
         end
 
         user_feed_users.each do |u|
-          next if u.id == post.user_id # don't distribute posters own posts based on the topics they're following
+          next if post.get_share(u.id) # don't distribute posters own posts based on the topics they're following
 
-          item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
+          item = FeedUserItem.where(:user_id => u.id, :post_id => post.id).first
 
           unless item
             post.pushed_users_count += 1
-            item = FeedUserItem.new(:feed_id => u.id, :root_id => post.root_id)
-            item.last_response_time = backlog ? post.created_at : Time.now
-            item.root_type = post.root_type
+            item = FeedUserItem.new(:user_id => u.id, :post_id => post.id)
+            item.created_at = backlog ? post.created_at : Time.now
+            item.post_type = post._type
           end
-
-          item.responses ||= []
-          item.responses << post.id unless post.is_root? || item.responses.include?(post.id)
 
           # add following topic reason
           if push_topic.id == topic.id && u.following_topics && u.following_topics.include?(topic.id)
@@ -226,9 +174,9 @@ class FeedUserItem
         end
 
         user_feed_users.each do |u|
-          next if u.id == post.user_id # don't distribute posters own posts based on the topics they're following
+          next if post.get_share(u.id) # don't distribute posters own posts based on the topics they're following
 
-          item = FeedUserItem.where(:feed_id => u.id, :root_id => post.root_id).first
+          item = FeedUserItem.where(:user_id => u.id, :post_id => post.id).first
 
           next unless item
 
@@ -250,17 +198,15 @@ class FeedUserItem
 
     def follow(user, target)
       if target.class.name == 'Topic'
-        core_objects = Post.where(:topic_mention_ids => target.id).limit(10)
+        core_objects = PostMedia.where(:topic_ids => target.id).limit(20)
       else
-        core_objects = Post.any_of({:user_id => target.id}, {:likes_ids => target.id}).limit(10)
+        core_objects = Post.where("shares.user_id" => target.id).limit(20)
       end
       core_objects.each do |post|
-        next if post.personal_mention?
-
         if target.class.name == 'Topic'
           push_post_through_topic(post, target, user, true)
         else
-          push_post_through_users(post, user, true)
+          push_post_through_users(post, target, user, true)
         end
       end
     end

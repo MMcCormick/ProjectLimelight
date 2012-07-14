@@ -1,5 +1,4 @@
 <div class='media <%= if @post.get('images') then 'with-image' else '' %>'>
-
   <% if @post.get('title'): %>
     <h5><%= @post.get('title') %></h5>
   <% end %>
@@ -17,6 +16,10 @@
 </div>
 
 <div class='actions <%= "with-comments" if @post.get('comments').length > 0 %>''>
+  <% if @post.get('primary_source'): %>
+    <div class='source'>view on <a target="_blank" href="<%= @post.get('primary_source').url %>"><%= @post.get('primary_source').name %></a></div>
+  <% end %>
+
   <span class='share-count'><%= @post.get('share_count') %> share<%= 's' unless @post.get('share_count') == 1 %></span>
   <span class='share-btn'>+Share</span>
   <span class='comment-btn'>Comment</span>

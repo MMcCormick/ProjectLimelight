@@ -1,6 +1,6 @@
 require "limelight"
 
-class Comment
+class Comment  # deprecated
   include Mongoid::Document
   include Mongoid::Timestamps::Updated
   include Mongoid::CachedJson

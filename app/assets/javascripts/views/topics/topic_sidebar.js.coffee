@@ -39,4 +39,5 @@ class LL.Views.TopicSidebar extends Backbone.View
 
   loadEditModal: (e) =>
     view = new LL.Views.TopicEdit(model: @model)
+    view.render()
     LL.App.Modal.add("topic_edit", view).setActive("topic_edit").show()

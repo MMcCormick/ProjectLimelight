@@ -7,10 +7,10 @@ class PostShare
   field :content
   field :mediums, :default => {}
   field :status, :default => 'active'
-  field :user_id
 
   attr_accessible :content
 
+  belongs_to :user
   embedded_in :post_media
 
   def created_at

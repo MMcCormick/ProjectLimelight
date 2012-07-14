@@ -78,15 +78,15 @@ class LL.Views.UserTutorialTips extends Backbone.View
 
   tutorial15: =>
     @target = $('.navbar .talk')
-    @title = 'Post a Link'
+    @title = 'Share a Link'
     @my = 'top middle'
     @at = 'bottom middle'
     @tip = true
     @button = 'Finish'
     @content = '
-      On Limelight you post links to things on the web. You can post a link to anything (video, picture, article, blog post, etc).
+      On Limelight you share links to things on the web. You can share a link to anything (video, picture, article, blog post, etc).
       <br /><br />
-      Tag 1-2 topics to organize your post. Your post will also be shown to the tagged topic\'s followers.
+      Tag 1-2 topics to organize your post. Posts you share will also be shown to the tagged topic\'s followers.
     '
 
   renderTip: =>

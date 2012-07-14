@@ -1,4 +1,4 @@
-<a href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='http://localhost:3000/bookmarklet.js';})();">+Post</a>
+<a class="btn btn-success" onclick="alert('Drag me to the bookmarks bar!'); return false" href="javascript:(function(){window.open('<%= root_url %>/posts/new?u='+window.location, 'll-bookmarklet-form', 'width=630,height=500,scrollbars=yes');})();">+Share</a>
 
 <div>
   Count1: <%= @count1 %>

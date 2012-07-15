@@ -1,7 +1,7 @@
 class LL.Views.UserPageHeader extends Backbone.View
 
   initialize: =>
-    @model.on('change:posts_count', @updatePostsCount)
+    @model.on('change:share_count', @updateShareCount)
 
   render: =>
     header = new LL.Views.PageHeader(model: @model)
@@ -10,7 +10,7 @@ class LL.Views.UserPageHeader extends Backbone.View
     header.links = [
       {
         class: 'posts'
-        content: "<span>#{@model.get('posts_count')}</span> Posts"
+        content: "<span>#{@model.get('share_count')}</span> Shares"
         url: (if LL.App.current_user == @model then '/activity' else "#{@model.get('url')}")
         on: (if @page == 'posts' then true else false)
       }
@@ -45,8 +45,8 @@ class LL.Views.UserPageHeader extends Backbone.View
 
     @
 
-  updatePostsCount: =>
+  updateShareCount: =>
     $('#page-header').find('.posts a').animate {color: 'red'}, 2000, ->
       $(@).animate {color: 'black'}, 2000
 
-    $('#page-header').find('.posts span').text(@model.get('posts_count'))
+    $('#page-header').find('.posts span').text(@model.get('share_count'))

@@ -38,7 +38,7 @@ class PostMedia
   before_validation :set_source_snippet
   before_create :current_user_own
   after_create :neo4j_create, :action_log_create, :process_images
-  #after_save :update_denorms
+  after_save :update_denorms
   before_destroy :disconnect
 
   index({ :user_id => -1, :_id => -1 })
@@ -207,6 +207,30 @@ class PostMedia
     Neo4j.neo.delete_node!(node)
   end
 
+  def update_denorms
+    # TODO: do we have to do this?
+    #if topic_ids_changed?
+    #
+    #  # new topic ids?
+    #  if topic_ids.length > topic_ids_was?
+    #    change = topic_ids - topic_ids_was?
+    #
+    #
+    #  # removed topic ids?
+    #  else
+    #    change = topic_ids_was? - topic_ids
+    #
+    #
+    #  end
+    #
+    #
+    #  change = topic_ids_was? - topic_ids
+    #  if change.length > 0
+    #
+    #  end
+    #end
+  end
+
   ##########
   # JSON
   ##########
@@ -214,7 +238,7 @@ class PostMedia
   def mixpanel_data(extra=nil)
     {
             "Post Type" => _type,
-            "Media Reposts" => posts_count,
+            "Post Shares" => ll_score,
             "Post Created At" => created_at,
     }
   end

@@ -55,7 +55,8 @@ class User
   field :following_topics_count, :type => Integer, :default => 0
   field :following_topics, :default => []
   field :followers_count, :type => Integer, :default => 0
-  field :posts_count, :default => 0
+  field :posts_count, :default => 0 # deprecated
+  field :share_count, :default => 0
   field :unread_notification_count, :type => Integer, :default => 0
   field :clout, :default => 1
   field :bio
@@ -358,13 +359,17 @@ class User
 
   def topic_activity_recalculate
     self.topic_activity = {}
-    self.posts_count = 0
-    posts.each do |p|
-      p.topic_mention_ids.each do |t|
-        topic_activity_add(t)
+    self.share_count = 0
+    shares = PostMedia.where("shares.user_id" => id)
+    shares.each do |p|
+      share = p.get_share(id)
+      if share
+        share.topic_mention_ids.each do |t|
+          topic_activity_add(t)
+        end
       end
     end
-    self.posts_count = posts.length
+    self.share_count = shares.length
   end
 
   def topics_by_activity
@@ -651,7 +656,7 @@ class User
     :following_users_count => { :properties => :short, :versions => [ :v1 ] },
     :following_topics_count => { :properties => :short, :versions => [ :v1 ] },
     :followers_count => { :properties => :short, :versions => [ :v1 ] },
-    :posts_count => { :properties => :short, :versions => [ :v1 ] },
+    :share_count => { :properties => :short, :versions => [ :v1 ] },
     :unread_notification_count => { :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| User.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
     :status => { :properties => :short, :versions => [ :v1 ] },

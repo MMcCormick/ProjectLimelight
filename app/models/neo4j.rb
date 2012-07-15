@@ -30,12 +30,44 @@ class Neo4j
     end
 
     def post_media_create(post_media)
-      creator_node = Neo4j.neo.get_node_index('users', 'uuid', post_media.user_id.to_s)
-
       post_node = Neo4j.neo.get_node_index('post_media', 'uuid', post_media.id.to_s)
 
       post_media.neo4j_id = parse_id(post_node[0]['self'])
       post_media.save
+    end
+
+    def share_create(post, user)
+      share = post.get_share(user.id)
+      return unless share
+
+      post_node = Neo4j.neo.get_node_index('post_media', 'uuid', post.id.to_s)
+      user_node = Neo4j.neo.get_node_index('users', 'uuid', user.id.to_s)
+
+      # add share relationship between user and post
+      rel1 = Neo4j.neo.create_relationship('shared', user_node, post_node)
+      Neo4j.neo.add_relationship_to_index('users', 'shared', "#{user.id.to_s}-#{post.id.to_s}", rel1)
+
+      # increase affinity between mentioned topics and the sharer
+      share.topic_mentions.each do |t|
+        topic_node = Neo4j.neo.get_node_index('topics', 'uuid', t.id.to_s)
+        Neo4j.update_affinity(user.id.to_s, t.id.to_s, user_node, topic_node, 1)
+      end
+
+      # increase affinity between mentioned topics and each other
+      if share.topic_mentions.length > 1
+        topics = share.topic_mentions.to_a
+        topic1_node = Neo4j.neo.get_node_index('topics', 'uuid', topics[0].id.to_s)
+        topic2_node = Neo4j.neo.get_node_index('topics', 'uuid', topics[1].id.to_s)
+        Neo4j.update_affinity(topics[0].id.to_s, topics[1].id.to_s, topic1_node, topic2_node, 1, true, nil)
+      end
+    end
+
+    def post_add_topics(topics)
+
+    end
+
+    def post_remove_topics(topics)
+
     end
 
     def post_create(post)

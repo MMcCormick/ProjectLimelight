@@ -13,8 +13,19 @@ class PostShare
   belongs_to :user
   embedded_in :post_media
 
+  after_create :update_user_share, :neo4j_create
+
   def created_at
     id.generation_time
+  end
+
+  def update_user_share
+    user.share_count += 1
+    user.save
+  end
+
+  def neo4j_create
+    Resque.enqueue(Neo4jShareCreate, _parent.id.to_s, user_id.to_s)
   end
 
   json_fields \

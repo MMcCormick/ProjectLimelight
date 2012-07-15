@@ -121,7 +121,7 @@ class LL.Views.PostForm extends Backbone.View
         $(self.el).find('.btn-success').addClass('disabled').text('Submitting...')
       success: (data) ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
-        LL.App.current_user.set('posts_count', LL.App.current_user.get('posts_count') + 1)
+        LL.App.current_user.set('share_count', LL.App.current_user.get('share_count') + 1)
         self.destroyForm()
       error: (jqXHR, textStatus, errorThrown) ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')

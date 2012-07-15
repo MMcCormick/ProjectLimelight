@@ -99,12 +99,12 @@ class Post
     node = Neo4j.neo.get_node_index('posts', 'uuid', id.to_s)
     Neo4j.neo.delete_node!(node)
 
-    FeedTopicItem.post_destroy(self)
-    FeedContributeItem.post_destroy(self)
+    #FeedTopicItem.post_destroy(self)
+    #FeedContributeItem.post_destroy(self)
 
     # reduce post count by one
-    user.posts_count -= 1
-    user.save
+    #user.posts_count -= 1
+    #user.save
 
     # remove from popularity actions
     actions = PopularityAction.where("pop_snippets._id" => id)

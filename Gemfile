@@ -7,7 +7,7 @@ gem 'rails', '3.2.6'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'
-gem 'mongoid', '3.0.0', :require => 'mongoid' # MongoDB
+gem 'mongoid', '>= 3.0.1'
 gem 'devise' # Authentication
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
@@ -33,7 +33,7 @@ gem 'feedzirra'
 gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem 'switch_user'
-gem 'omnicontacts', :git => 'git://github.com/marbemac/omnicontacts.git'
+gem 'omnicontacts'
 #gem 'mongoid_collection_snapshot'
 
 

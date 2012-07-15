@@ -11,7 +11,7 @@ class LL.Views.CommentList extends Backbone.View
   render: =>
     $(@el).html(@template())
 
-    if @model.get('comments').length > 0
+    if @model.get('comments') && @model.get('comments').length > 0
       $(@el).fadeIn(200)
       for comment in @model.get('comments')
         @prependComment(comment)

@@ -1,11 +1,11 @@
-class LL.Views.FeedRepost extends Backbone.View
+class LL.Views.FeedShare extends Backbone.View
   tagName: 'div'
-  className: 'repost'
-  template: JST['posts/feed_repost']
+  className: 'share'
+  template: JST['posts/feed_share']
 
   events:
     'click': 'postShow'
-    "click .repost-btn": "loadPostForm"
+    "click .share-btn": "loadPostForm"
 
   initialize: ->
     @model.get('post').on('new_comment', @incrementComment)
@@ -35,7 +35,7 @@ class LL.Views.FeedRepost extends Backbone.View
     @
 
   postShow: (e) =>
-    return if $(e.target).is('a,h5,input,textarea,.bg,.img,img,.repost-btn')
+    return if $(e.target).is('a,h5,input,textarea,.bg,.img,img,.share-btn')
 
     self = @
 

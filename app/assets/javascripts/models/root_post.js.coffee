@@ -1,6 +1,5 @@
 class LL.Models.RootPost extends Backbone.Model
 
   initialize: ->
-    used_ids = []
+#    @ = LL.Models.Post(@get('post'))
 
-    @set('post', new LL.Models.Post(@get('post')))

@@ -3,17 +3,21 @@ class LL.Models.Post extends Backbone.Model
   name: 'post'
   urlRoot: "/api/posts"
 
+  parse: (response) ->
+    if response.share
+      response.post.share = response.share
+
+    response.post
+
   initialize: ->
-    @set('user', new LL.Models.User(@get('user')))
-
-    if @get('media')
-      @set('media', new LL.Models.PostMedia(@get('media')))
-
     mentions = []
     if @get('topic_mentions')
       for mention in @get('topic_mentions')
         mentions.push(new LL.Models.Topic(mention))
     @set('topic_mentions', mentions)
+
+    if @get('share')
+      @set('share', new LL.Models.Share(@get('share')))
 
     comments = []
     if @get('comments')

@@ -286,16 +286,14 @@ module Limelight #:nodoc:
     extend ActiveSupport::Concern
 
     included do
-      embeds_many :pre_mentions, as: :topic_mentionable, :class_name => "TopicMention"
-
       has_and_belongs_to_many :topic_mentions, :inverse_of => nil, :class_name => 'Topic'
-      has_and_belongs_to_many :user_mentions, :inverse_of => nil, :class_name => 'User'
+      #has_and_belongs_to_many :user_mentions, :inverse_of => nil, :class_name => 'User'
 
-      attr_accessor :topic_mention_names, :first_response, :primary_topic_pm
-      attr_accessible :topic_mention_ids, :user_mention_ids, :topic_mention_names, :first_response
+      attr_accessor :topic_mention_names
+      attr_accessible :topic_mention_ids, :topic_mention_names#, :user_mention_ids
 
-      before_validation :set_mentions
-      validates :topic_mention_ids, :on => :create, :length => { :minimum => 1, :maximum => 2, :message => 'You must add 1-2 topics to your post.' }
+      before_validation :set_mentions, :on => :create
+      #validates :topic_mention_ids, :on => :create, :length => { :minimum => 1, :maximum => 2, :message => 'You must add 1-2 topics to your post.' }
     end
 
     def mentions_topic?(id)
@@ -308,7 +306,7 @@ module Limelight #:nodoc:
 
     def set_mentions
       unless persisted?
-        set_user_mentions
+        #set_user_mentions
         set_topic_mentions
       end
     end
@@ -362,30 +360,6 @@ module Limelight #:nodoc:
 
         self.topic_mentions << found_topic if found_topic
       end
-    end
-
-    def bubble_up
-      #if post_media_id
-      #  topic_mentions.each do |topic|
-      #    post_media.suggest_mention(topic)
-      #  end
-      #  post_media.save
-      #end
-    end
-
-    def suggest_mention(topic)
-      #unless topic_mention_ids.include?(topic.id)
-      #  root_pre_mention = pre_mentions.find(topic.id)
-      #  if root_pre_mention
-      #    root_pre_mention.score += 1
-      #    if root_pre_mention.score >= TopicMention.threshold
-      #      add_topic_mention(topic)
-      #    end
-      #  else
-      #    pre_m = self.pre_mentions.build(topic.attributes)
-      #    pre_m.id = topic.id
-      #  end
-      #end
     end
 
     def add_topic_mention(topic)

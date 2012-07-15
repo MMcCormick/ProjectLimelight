@@ -1,9 +1,9 @@
-class LL.Views.FeedMediaReposts extends Backbone.View
+class LL.Views.FeedMediaShares extends Backbone.View
   tagName: 'div'
-  className: 'reposts'
+  className: 'shares'
 
   render: ->
-    view = new LL.Views.FeedRepost(model: @model)
+    view = new LL.Views.FeedShare(model: @model)
     view.media = @model.get('media')
     $(@el).append(view.render().el)
 

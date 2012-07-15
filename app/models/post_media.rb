@@ -7,20 +7,28 @@ class PostMedia
   include Limelight::Acl
   include Limelight::Images
   include Limelight::Popularity
+  include ModelUtilitiesHelper
 
   field :title
-  field :content
   field :description # if a link, the pulled description from the url
-  field :posted_ids, :default => [] # ids of users that have posted this
-  field :posts_count, :default => 0 # how many reposts
+  field :posted_ids, :default => [] # ids of users that have posted this DEPRECATED
+  field :posts_count, :default => 0 # how many reposts DEPRECATED
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
+  field :comment_count, :default => 0
+  field :ll_score, :default => 0
+  field :tw_score, :default => 0
+  field :fb_score, :default => 0
   field :neo4j_id, :type => Integer
   field :status, :default => 'active'
 
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
+  embeds_many :comments, :class_name => 'CommentEmbedded'
+  embeds_many :shares, :class_name => 'PostShare'
 
   belongs_to :user, :index => true
-  has_many :posts
+
+  has_many :posts # deprecated
+  has_and_belongs_to_many :topics, :inverse_of => nil, :index => true
 
   validate :title_length, :unique_source
 
@@ -30,8 +38,13 @@ class PostMedia
   before_validation :set_source_snippet
   before_create :current_user_own
   after_create :neo4j_create, :action_log_create, :process_images
-  #after_save :update_denorms
+  after_save :update_denorms
   before_destroy :disconnect
+
+  index({ :user_id => -1, :_id => -1 })
+  index({ "shares.user_id" => 1, :_id => -1 })
+  index({ :topic_ids => 1, :_id => -1 })
+  index({ :topic_ids => 1, :ll_score => -1 })
 
   def to_param
     id.to_s
@@ -43,6 +56,21 @@ class PostMedia
 
   def name
     title
+  end
+
+  # short version of the contnet "foo bar foo bar..." used in notifications etc.
+  def short_name
+    return '' if title.nil? || title.blank?
+
+    short = title[0..30]
+    if title.length > 30
+      short += '...'
+    end
+    short
+  end
+
+  def og_type
+    og_namespace + ":post"
   end
 
   def set_source_snippet
@@ -115,6 +143,47 @@ class PostMedia
     end
   end
 
+  # SHARES
+  def add_share(user_id, content, topic_ids=[], topic_names=[], mediums={})
+    existing = shares.where(:user_id => user_id).first
+    return existing if existing
+
+    share = PostShare.new(:content => content, :topic_mention_ids => topic_ids, :topic_mention_names => topic_names, :mediums => mediums)
+    share.user_id = user_id
+
+    if share.valid?
+
+      self.shares << share
+      self.ll_score += 1
+      share.save
+
+      share.topic_mention_ids.each do |t|
+        self.topic_ids << t
+      end
+
+      self.topic_ids.uniq!
+    end
+
+    share
+  end
+
+  def get_share(user_id)
+    shares.where(:user_id => user_id).first
+  end
+  # END SHARES
+
+  # COMMENTS
+  def add_comment(commenter_id, content)
+    comment = CommentEmbedded.new(:content => content)
+    comment.user_id = commenter_id
+
+    self.comments << comment
+    self.comment_count += 1
+
+    comment
+  end
+  # END COMMENTS
+
   def current_user_own
     grant_owner(user.id)
   end
@@ -138,6 +207,30 @@ class PostMedia
     Neo4j.neo.delete_node!(node)
   end
 
+  def update_denorms
+    # TODO: do we have to do this?
+    #if topic_ids_changed?
+    #
+    #  # new topic ids?
+    #  if topic_ids.length > topic_ids_was?
+    #    change = topic_ids - topic_ids_was?
+    #
+    #
+    #  # removed topic ids?
+    #  else
+    #    change = topic_ids_was? - topic_ids
+    #
+    #
+    #  end
+    #
+    #
+    #  change = topic_ids_was? - topic_ids
+    #  if change.length > 0
+    #
+    #  end
+    #end
+  end
+
   ##########
   # JSON
   ##########
@@ -145,7 +238,7 @@ class PostMedia
   def mixpanel_data(extra=nil)
     {
             "Post Type" => _type,
-            "Media Reposts" => posts_count,
+            "Post Shares" => ll_score,
             "Post Created At" => created_at,
     }
   end
@@ -155,13 +248,14 @@ class PostMedia
     :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
     :type => { :definition => :_type, :properties => :short, :versions => [ :v1 ] },
     :title => { :properties => :short, :versions => [ :v1 ] },
-    :user_id => { :properties => :short, :versions => [ :v1 ] },
-    :posts_count => { :properties => :short, :versions => [ :v1 ] },
+    :share_count => { :definition => :ll_score, :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
-    :primary_source => { :type => :reference, :definition => :primary_source, :properties => :short, :versions => [ :v1 ] }
+    :primary_source => { :type => :reference, :definition => :primary_source, :properties => :short, :versions => [ :v1 ] },
+    :comments => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
+    :topic_mentions => { :type => :reference, :definition => :topics, :properties => :short, :versions => [ :v1 ] }
 
   def json_video(autoplay=nil)
     unless _type != 'Video' || embed_html.blank?

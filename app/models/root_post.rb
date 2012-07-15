@@ -32,7 +32,6 @@ class RootPost
 
   def as_json(options={})
     data = {
-            :id => post.id.to_s,
             :post => post.as_json(options),
             :reasons => push_item ? generate_reasons(push_item.reasons) : []
     }

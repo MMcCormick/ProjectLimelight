@@ -99,12 +99,12 @@ class Post
     node = Neo4j.neo.get_node_index('posts', 'uuid', id.to_s)
     Neo4j.neo.delete_node!(node)
 
-    FeedTopicItem.post_destroy(self)
-    FeedContributeItem.post_destroy(self)
+    #FeedTopicItem.post_destroy(self)
+    #FeedContributeItem.post_destroy(self)
 
     # reduce post count by one
-    user.posts_count -= 1
-    user.save
+    #user.posts_count -= 1
+    #user.save
 
     # remove from popularity actions
     actions = PopularityAction.where("pop_snippets._id" => id)
@@ -203,7 +203,7 @@ class Post
   #  _type == "Talk" && !response_to_id
   #end
 
-  def og_type
+  def ogpe
     og_namespace + ":post"
   end
 
@@ -300,138 +300,63 @@ class Post
     # @param { options } Options TODO: Fill out these options
     #
     # @return [ Posts ]
-    def feed(feed_id, sort, page)
-      items = FeedUserItem.where(:feed_id => feed_id)
+    def feed(user_id, sort, page)
+      data = []
+
+      items = FeedUserItem.where(:user_id => user_id)
       if sort == 'newest'
-        items = items.desc(:last_response_time)
+        items = items.desc(:created_at)
       else
         items = items.desc(:rel)
       end
-      items = items.skip((page-1)*20).limit(20).to_a
+      items = items.skip((page-1)*20).limit(20)
 
-      build_user_feed(items)
-    end
-
-    def build_user_feed(items)
-      item_ids = items.map {|i| i.root_type == 'Post' ? i.root_id : i.responses.last }
-
-      posts = {}
-      tmp_posts = Post.where(:_id => {'$in' => item_ids})
-      tmp_posts.each {|p| posts[p.id.to_s] = p }
-
-      return_objects = []
-      items.each do |i|
-        root_post = RootPost.new
-        root_post.push_item = i
-
-        if i.root_type == 'Post'
-          root_post.post = posts[i.root_id.to_s]
-        else
-          root_post.post = posts[i.responses.last.to_s]
-        end
-
-        next unless root_post.post
-
-        #root_post.public_talking = root_post.root.response_count
-
-        return_objects << root_post
+      posts = PostMedia.where(:_id => {"$in" => items.map{|i| i.post_id}})
+      posts.each do |p|
+        item = items.detect{|i| i.post_id = p.id}
+        data << {
+                :post => p,
+                :pushed_at => item.created_at.to_i
+        }
       end
 
-      return_objects
+      data.sort_by{|d| d[:pushed_at]}.reverse
     end
 
     def activity_feed(feed_id, page, topic=nil)
+      data = []
 
-      if topic
-        items = FeedContributeItem.where(:feed_id => feed_id, :topic_ids => topic.id)
-      else
-        items = FeedContributeItem.where(:feed_id => feed_id)
+      posts = PostMedia.where("shares.user_id" => feed_id).desc(:_id).skip((page-1)*20).limit(20)
+      posts.each do |p|
+        share = p.shares.where(:user_id => feed_id).first
+        data << {
+                :post => p,
+                :share => share
+        }
       end
 
-      items = items.desc(:last_response_time)
-      items = items.skip((page-1)*20).limit(20)
-
-      build_activity_feed(items)
+      data
     end
 
-    def topic_feed(feed_ids, user_id, sort, page)
-      items = FeedTopicItem.where(:mentions => {'$in' => feed_ids})
+    def topic_feed(feed_ids, sort, page)
+      data = []
+      posts = PostMedia.where(:topic_ids => {'$in' => feed_ids})
 
       if sort == 'newest'
-        items = items.desc(:last_response_time)
+        posts = posts.desc(:_id)
       else
-        items = items.desc(:p)
+        posts = posts.desc(:ll_score)
       end
 
-      items = items.skip((page-1)*20).limit(20)
-      items = items.to_a
+      posts = posts.skip((page-1)*20).limit(20)
 
-      build_topic_feed(items)
-    end
-
-    def build_topic_feed(items)
-      post_ids = []
-      media_ids = []
-      items.each do |i|
-        if i.root_type == 'Post'
-          post_ids << i.root_id
-        else
-          media_ids << i.root_id
-        end
+      posts.each do |p|
+        data << {
+                :post => p
+        }
       end
 
-      posts = {}
-      tmp_posts = Post.where(:_id => {'$in' => post_ids})
-      tmp_posts.each {|p| posts[p.id.to_s] = p }
-      media = {}
-      tmp_media = PostMedia.where(:_id => {'$in' => media_ids})
-      tmp_media.each {|p| media[p.id.to_s] = p }
-
-      return_objects = []
-      items.each do |i|
-        root_post = RootPost.new
-
-        if i.root_type == 'Post'
-          root_post.post = posts[i.root_id.to_s]
-        else
-          root_post.post = Post.where(:post_media_id => i.root_id).first
-        end
-
-        next unless root_post.post
-
-        #root_post.public_talking = root_post.root.response_count
-
-        return_objects << root_post
-      end
-
-      return_objects
-    end
-
-    def build_activity_feed(items)
-      item_ids = items.map {|i| i.root_type == 'Post' ? i.root_id : i.responses.last }
-
-      posts = {}
-      tmp_posts = Post.where(:_id => {'$in' => item_ids})
-      tmp_posts.each {|p| posts[p.id.to_s] = p }
-
-      return_objects = []
-      items.each do |i|
-        root_post = RootPost.new
-
-        if i.root_type == 'Post'
-          root_post.post = posts[i.root_id.to_s]
-        else
-          root_post.post = posts[i.responses.last.to_s]
-        end
-
-        next unless root_post.post
-
-        #root_post.public_talking = root_post.root.response_count
-
-        return_objects << root_post
-      end
-
-      return_objects
+      data
     end
   end
 

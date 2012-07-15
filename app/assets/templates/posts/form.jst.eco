@@ -2,7 +2,7 @@
 
 <div class="modal-header">
   <a class="close" data-dismiss="modal">×</a>
-  <h4>+Post</h4>
+  <h4>+Share</h4>
 </div>
 
 <div class='fetch'></div>

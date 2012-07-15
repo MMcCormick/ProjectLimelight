@@ -9,17 +9,16 @@ class PostsController < ApplicationController
   end
 
   def show
-    @this = Post.find(params[:id])
+    @this = PostMedia.find(params[:id])
 
     not_found("Post not found") unless @this
 
-    media = @this.post_media
-    @title = @this.media_name
-    @description = @this.content
+    @title = @this.title
+    @description = @this.description
     url = post_url(:id => @this.id)
-    image_url = media.image_url(:fit, :large)
-    extra = {"#{og_namespace}:display_name" => @this.class.name, "#{og_namespace}:score" => @this.score.to_i}
-    extra["#{og_namespace}:source"] = media.sources.first.name if media.sources && media.sources.first
+    image_url = @this.image_url(:fit, :large)
+    extra = {"#{og_namespace}:display_name" => @this.class.name}
+    extra["#{og_namespace}:source"] = @this.primary_source
     @og_tags = build_og_tags(@title, @this.og_type, url, image_url, @description, extra)
 
     respond_to do |format|
@@ -29,39 +28,50 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = current_user.posts.new(params)
-    if params[:type] != 'Post' || params[:post_media_id]
-      @post.initialize_media(params)
+
+    if params[:post_id] && !params[:post_id].blank?
+      @post = PostMedia.find(params[:post_id])
+    else
+      params[:type] = params[:type] && ['Link','Picture','Video'].include?(params[:type]) ? params[:type] : 'Link'
+      @post = Kernel.const_get(params[:type]).new(params)
+      @post.user_id = current_user.id
     end
 
-    if @post.valid? && (!@post.post_media_id || @post.post_media.valid?)
-      @post.save
+    if @post
 
-      FeedUserItem.push_post_through_users(@post, current_user, false)
+      if @post.get_share(current_user.id)
+        response = build_ajax_response(:error, nil, nil, {:duplicate => 'You have already shared this post!'})
+        render :json => response, :status => :unprocessable_entity
+      else
 
-      if @post.post_media
-        @post.post_media.save
-      end
+        if params[:content] && !params[:content].blank?
+          comment = @post.add_comment(current_user.id, params[:content])
+        else
+          comment = nil
+        end
 
-      track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.mixpanel_data))
-      track_mixpanel("New Post", current_user.mixpanel_data.merge(@post.post_media.mixpanel_data)) if @post.post_media_id
+        if !comment || comment.valid?
+          @post.add_share(current_user.id, params[:content], params[:topic_mention_ids], params[:topic_mention_names])
 
-      if @post.post_media_id
-        Pusher[@post.post_media_id.to_s].trigger('new_response', @post.to_json(:properties => :public))
-      end
+          if @post.valid?
+            @post.save
 
-      # send mention notifications
-      @post.user_mentions.each do |u|
-        notification = Notification.add(u, :mention, true, current_user, nil, @post, @post.user)
-        if notification
-          Pusher["#{u.id.to_s}_private"].trigger('new_notification', notification.as_json)
+            track_mixpanel("New Share", current_user.mixpanel_data.merge(@post.mixpanel_data))
+
+            FeedUserItem.push_post_through_users(@post, current_user, current_user)
+
+            render :json => build_ajax_response(:ok, nil, "Shared Post Successfully"), :status => 201
+          else
+            response = build_ajax_response(:error, nil, "Share could not be created", @post.errors)
+            render :json => response, :status => :unprocessable_entity
+          end
+        else
+          response = build_ajax_response(:error, nil, "Share could not be created", comment.errors)
+          render :json => response, :status => :unprocessable_entity
         end
       end
-
-      render :json => build_ajax_response(:ok, nil, "Your post has been submitted"), :status => 201
     else
-      errors = @post.post_media_id ? Hash[@post.post_media.errors].merge!(Hash[@post.errors]) : @post.errors
-      response = build_ajax_response(:error, nil, "Post could not be created", errors)
+      response = build_ajax_response(:error, nil, "Hmm we couldn't find the post you are trying to share.")
       render :json => response, :status => :unprocessable_entity
     end
   end
@@ -140,7 +150,7 @@ class PostsController < ApplicationController
 
     page = params[:p] ? params[:p].to_i : 1
     topic_ids = Neo4j.pull_from_ids(topic.id).to_a
-    posts = Post.topic_feed(topic_ids << topic.id, (signed_in? ? current_user.id : nil), params[:sort], page)
+    posts = Post.topic_feed(topic_ids << topic.id, params[:sort], page)
     render :json => posts.map {|p| p.as_json(:properties => :short)}
   end
 

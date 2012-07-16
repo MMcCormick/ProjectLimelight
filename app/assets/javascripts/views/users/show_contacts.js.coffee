@@ -71,7 +71,6 @@ class LL.Views.ShowContacts extends Backbone.View
   filterContacts: (e) =>
     filter = $(e.currentTarget).val()
     if (filter)
-      console.log filter
       $(@el).find(".data:not(:Contains(" + filter + "))").parent().hide()
       $(@el).find(".data:Contains(" + filter + ")").parent().show()
     else

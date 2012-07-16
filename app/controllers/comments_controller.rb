@@ -7,11 +7,11 @@ class CommentsController < ApplicationController
   end
 
   def create
-    post = Post.find(params[:post_id])
-    comment = current_user.comments.new(params)
-    comment.post_id = post.id
+    post = PostMedia.find(params[:post_id])
+    comment = post.add_comment(current_user.id, params[:content])
 
-    if comment.save
+    if comment.valid? && post.valid?
+      post.save
       track_mixpanel("New Comment", current_user.mixpanel_data)
       Pusher[post.id.to_s].trigger('new_comment', comment.as_json(:properties => :all))
       comment.send_notifications(current_user)

@@ -33,9 +33,10 @@ class LL.Views.PostForm extends Backbone.View
 
     if @model
       @showContent()
-      for topic,i in @model.post.get('topic_mentions')
-        @content_form.addTopic($(@el).find("#post-form-mention#{i+1}"), topic.get('name'), topic.get('id'), topic.get('slug'))
       $(@el).find('.fetch').remove()
+      if @model.share
+        for topic,i in @model.share.get('topic_mentions')
+          @content_form.addTopic($(@el).find("#post-form-mention#{i+1}"), topic.get('name'), topic.get('id'), topic.get('slug'))
     else
       @fetch_form = new LL.Views.PostFormFetch()
       $(@el).find('.fetch').html(@fetch_form.render().el)
@@ -79,14 +80,13 @@ class LL.Views.PostForm extends Backbone.View
       success: (data) ->
         self.model = data
         if data.existing
-          self.model.existing = new LL.Models.PostMedia($.parseJSON(data.existing))
+          self.model.existing = new LL.Models.PostMedia(data.existing)
         self.showContent()
         $(self.el).find('.find-url').removeClass('disabled').text('Find URL')
       error: (jqXHR, textStatus, errorThrown) ->
         globalError(jqXHR)
 
   findThis: (url) =>
-    console.log(url)
     $(@el).find('.url').val(url)
     $('.find-url').click()
 
@@ -121,7 +121,7 @@ class LL.Views.PostForm extends Backbone.View
         $(self.el).find('.btn-success').addClass('disabled').text('Submitting...')
       success: (data) ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
-        LL.App.current_user.set('posts_count', LL.App.current_user.get('posts_count') + 1)
+        LL.App.current_user.set('share_count', LL.App.current_user.get('share_count') + 1)
         self.destroyForm()
       error: (jqXHR, textStatus, errorThrown) ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
@@ -137,6 +137,6 @@ class LL.Views.PostForm extends Backbone.View
 
   setModel: (model) =>
     @model = {
-      post: model
-      existing: model.get('media')
+      share: model.get('share')
+      existing: model
     }

@@ -29,15 +29,15 @@ class LL.Views.PostsFeed extends Backbone.View
   render: =>
     self = @
 
-    $(@el).before("<input type='text' placeholder='Post a URL...' id='post-feed-url' />")
+    $(@el).before("<input type='text' placeholder='Share a URL...' id='post-feed-url' />")
 
     if @collection.models.length == 0
       $(@el).append("<div class='none'>#{@default_text}</div>")
     else
       $(@el).remove('.none')
 
-      for root_post in @collection.models
-        @appendPost(root_post)
+      for post in @collection.models
+        @appendPost(post)
 
       LL.App.calculateSiteWidth()
 
@@ -62,11 +62,9 @@ class LL.Views.PostsFeed extends Backbone.View
 
     unless LL.App.get_event_subscription(@channel, 'new_post')
       channel.bind 'new_post', (data) ->
-        post = self.collection.get(data.id)
-        if post
-          post.trigger('move_to_top')
-        else
-          post = new LL.Models.RootPost(data)
+        post = self.collection.get(data.post.id)
+        unless post
+          post = new LL.Models.Post(data.post)
           self.collection.add(post, {silent: true})
           self.prependPost(post, true)
 
@@ -78,57 +76,37 @@ class LL.Views.PostsFeed extends Backbone.View
     else
       @prependPost(root_post, true)
 
-  addPost: (root_post) =>
+  addPost: (post) =>
     self = @
 
-    if root_post.get('post').get('type') != 'Post'
-      root_id = root_post.get('post').get('id')
+  prependPost: (post, single=false) =>
+    tile = new LL.Views.FeedTile(model: post)
+    $(@el).prepend($(tile.render().el).addClass('new'))
 
-      channel = LL.App.get_subscription(root_id)
-      unless channel
-        channel = LL.App.subscribe(root_id)
+    if single
+      self = @
+      setTimeout ->
+        $(self.el).isotope('reloadItems').isotope({ sortBy: 'original-order' })
+      , 100
 
-      unless LL.App.get_event_subscription(root_id, 'new_response')
-        channel.bind 'new_response', (data) ->
-          if root_post.get('post')
-            post = new LL.Models.Post(data)
-            root_post.get('posts').unshift(post)
-            root_post.trigger('new_response', post)
+    @addPost(post)
 
-        LL.App.subscribe_event(root_id, 'new_response')
-
-  prependPost: (root_post, single=false) =>
-    if root_post.get('post') && root_post.get('post').get('media')
-
-      tile = new LL.Views.FeedTile(model: root_post)
-      $(@el).prepend($(tile.render().el).addClass('new'))
-
-      if single
-        self = @
-        setTimeout ->
-          $(self.el).isotope('reloadItems').isotope({ sortBy: 'original-order' })
-        , 100
-
-      @addPost(root_post)
-
-      @prependNext = false
+    @prependNext = false
 
     @
 
-  appendPost: (root_post, single=false) =>
-    if root_post.get('post') && root_post.get('post').get('media')
+  appendPost: (post, single=false) =>
+    tile = new LL.Views.FeedTile(model: post)
 
-      tile = new LL.Views.FeedTile(model: root_post)
+    if single
+      self = @
+      setTimeout ->
+        $(self.el).isotope('insert', $(tile.render().el))
+      , 100
+    else
+      $(@el).append(tile.render().el)
 
-      if single
-        self = @
-        setTimeout ->
-          $(self.el).isotope('insert', $(tile.render().el))
-        , 100
-      else
-        $(@el).append(tile.render().el)
-
-      @addPost(root_post)
+    @addPost(post)
 
     @
 

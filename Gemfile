@@ -3,12 +3,11 @@ source 'http://rubygems.org'
 ruby '1.9.3'
 
 gem 'bundler', '1.2.0.pre.1'
-gem 'thin'
 gem 'rails', '3.2.6'
 gem 'jquery-rails'
 gem 'rack'
 gem 'rack-contrib'
-gem 'mongoid', '3.0.0', :require => 'mongoid' # MongoDB
+gem 'mongoid', '>= 3.0.1'
 gem 'devise' # Authentication
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
@@ -34,7 +33,7 @@ gem 'feedzirra'
 gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem 'switch_user'
-gem 'omnicontacts', :git => 'git://github.com/marbemac/omnicontacts.git'
+gem 'omnicontacts'
 #gem 'mongoid_collection_snapshot'
 
 
@@ -53,8 +52,9 @@ group :assets do
   gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
 
-group :production do
+group :production, :staging do
   gem "rack-timeout"
+  gem 'puma'
 end
 
 group :development do
@@ -94,6 +94,7 @@ platforms :ruby do
     gem "foreman"
     gem 'pry-rails'
     gem 'ruby-prof'
+    gem 'thin'
   end
 end
 

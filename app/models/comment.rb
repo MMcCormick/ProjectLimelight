@@ -1,6 +1,6 @@
 require "limelight"
 
-class Comment
+class Comment  # deprecated
   include Mongoid::Document
   include Mongoid::Timestamps::Updated
   include Mongoid::CachedJson
@@ -9,20 +9,20 @@ class Comment
   include ModelUtilitiesHelper
 
   field :content
+  field :parent_id # deprecated
+  field :depth, :default => 0 # deprecated
+  field :path, :default => "" # deprecated
+  field :talk_id # deprecated
   field :status, :default => "active"
-  field :parent_id
-  field :depth, :default => 0
-  field :path, :default => ""
-  field :talk_id
 
-  belongs_to :post, index: true
-  belongs_to :user, index: true
+  belongs_to :post, index: true # deprecated
+  belongs_to :user, :index => true
 
-  validates :post, :presence => true
+  validates :post, :presence => true # deprecated
   validates :content, :length => { :minimum => 3, :maximum => 500, :message => :length }
-  validates :depth, :numericality => { :less_than_or_equal_to => 5 }
+  validates :depth, :numericality => { :less_than_or_equal_to => 5 } # deprecated
 
-  before_validation :set_path
+  before_validation :set_path # deprecated
   before_create :current_user_own
   after_create :add_to_count, :action_log_create
 

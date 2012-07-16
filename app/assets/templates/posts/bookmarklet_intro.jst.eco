@@ -1,4 +1,4 @@
-<a class="btn btn-success" id="ll-bookmarklet" onclick="alert('Drag me to the bookmarks bar!'); return false" href="javascript:(function(){window.open('http://<%= window.location.host %>/posts/new?u='+window.location, 'll-bookmarklet-form', 'width=630,height=500,scrollbars=yes');})();">+Share</a>
+<a class="btn btn-info" id="ll-bookmarklet" onclick="alert('Drag me to the bookmarks bar!'); return false" href="javascript:(function(){window.open('http://<%= window.location.host %>/posts/new?u='+window.location, 'll-bookmarklet-form', 'width=630,height=500,scrollbars=yes');})();">+Share</a>
 
 <ol>
   <li>Drag the "+Share" button to your bookmarks bar</li>

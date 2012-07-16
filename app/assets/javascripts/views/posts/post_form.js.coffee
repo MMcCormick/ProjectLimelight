@@ -39,6 +39,7 @@ class LL.Views.PostForm extends Backbone.View
           @content_form.addTopic($(@el).find("#post-form-mention#{i+1}"), topic.get('name'), topic.get('id'), topic.get('slug'))
     else
       @fetch_form = new LL.Views.PostFormFetch()
+      @fetch_form.bookmarklet = true if @bookmarklet
       $(@el).find('.fetch').html(@fetch_form.render().el)
 
     $(@el).updatePolyfill()

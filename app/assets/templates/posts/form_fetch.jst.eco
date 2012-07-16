@@ -1,2 +1,5 @@
+<% unless @bookmarklet: %>
+  <div class="bookmarklet-link">Get the <a href="/pages/bookmarklet">Bookmarklet</a></div>
+<% end %>
 <input type='text' class='url' placeholder='http://' />
 <div class='find-url btn'>Find URL</div>

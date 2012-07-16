@@ -245,6 +245,7 @@ $feedFontColor: $grayDark;
       font-size: 13px;
       padding: 10px 15px;
       border-bottom: 1px solid #DDD;
+      cursor: pointer;
       &:hover {
         color: $blue;
       }

@@ -51,12 +51,12 @@ class PostsController < ApplicationController
         end
 
         if !comment || comment.valid?
-          @post.add_share(current_user.id, params[:content], params[:topic_mention_ids], params[:topic_mention_names])
+          @share = @post.add_share(current_user.id, params[:content], params[:topic_mention_ids], params[:topic_mention_names], {}, !params[:from_bookmarklet].blank?)
 
           if @post.valid?
             @post.save
 
-            track_mixpanel("New Share", current_user.mixpanel_data.merge(@post.mixpanel_data))
+            track_mixpanel("New Share", current_user.mixpanel_data.merge(@post.mixpanel_data).merge(@share.mixpanel_data))
 
             FeedUserItem.push_post_through_users(@post, current_user, current_user)
 

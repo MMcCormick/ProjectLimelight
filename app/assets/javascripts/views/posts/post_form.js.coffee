@@ -113,6 +113,8 @@ class LL.Views.PostForm extends Backbone.View
       else if $(input).val() && $(input).val() != ''
         attributes['topic_mention_names'].push $(input).val()
 
+    attributes['from_bookmarklet'] = true if @bookmarklet
+
     self = @
 
     @collection.create attributes,

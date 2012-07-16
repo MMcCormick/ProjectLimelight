@@ -6,24 +6,7 @@ class TopicsController < ApplicationController
 
   def index
     @topics = Topic.all
-    if params[:sort]
-      if params[:sort][1] == 'desc'
-        @topics = @topics.desc(params[:sort][0])
-      else
-        @topics = @topics.asc(params[:sort][0])
-      end
-
-    end
-
-    if params[:limit] && params[:limit].to_i < 100
-      @topics = @topics.limit(params[:limit])
-    else
-      @topics = @topics.limit(100)
-    end
-
-    if params[:page]
-      @topics = @topics.skip(params[:limit].to_i * (params[:page].to_i-1))
-    end
+    @topics = Topic.parse_filters(@topics, params)
 
     @title = "All Topics"
     @description = "A list of all the topics on Limelight."
@@ -36,7 +19,7 @@ class TopicsController < ApplicationController
     if params[:slug]
       @this = Topic.where(:slug_pretty => params[:slug].parameterize).first
     else
-      @this = Topic.find(params[:id])
+      @this = Topic.find_by_slug_id(params[:id])
     end
 
     not_found("Topic not found") unless @this
@@ -51,6 +34,22 @@ class TopicsController < ApplicationController
       format.json { render :json => @this.to_json(:properties => :public) }
     end
 
+  end
+
+  def children
+    topic = Topic.find_by_slug_id(params[:id])
+    topic_ids = Neo4j.pull_from_ids(topic.id, params[:depth] ? params[:depth] : 1).to_a
+    @topics = Topic.where(:_id => {"$in" => topic_ids})
+    @topics = Topic.parse_filters(@topics, params)
+    render :json => @topics.map {|t| t.as_json(:properties => :public)}
+  end
+
+  def parents
+    topic = Topic.find_by_slug_id(params[:id])
+    topic_ids = Neo4j.pulled_from_ids(topic.id, params[:depth] ? params[:depth] : 20).to_a
+    @topics = Topic.where(:_id => {"$in" => topic_ids})
+    @topics = Topic.parse_filters(@topics, params)
+    render :json => @topics.map {|t| t.as_json(:properties => :public)}
   end
 
   def new

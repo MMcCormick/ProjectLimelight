@@ -33,7 +33,7 @@ class PostMedia
   validate :title_length, :unique_source
 
   attr_accessible :title, :source_name, :source_url, :source_video_id, :source_title, :source_content, :embed_html
-  attr_accessor :source_name, :source_url, :source_video_id, :source_title, :source_content
+  attr_accessor :source_name, :source_url, :source_video_id, :source_title, :source_content, :individual_share
 
   before_validation :set_source_snippet
   before_create :current_user_own
@@ -253,6 +253,7 @@ class PostMedia
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
+    :share => { :definition => :individual_share, :properties => :short, :versions => [ :v1 ] },
     :primary_source => { :type => :reference, :definition => :primary_source, :properties => :short, :versions => [ :v1 ] },
     :comments => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :topic_mentions => { :type => :reference, :definition => :topics, :properties => :short, :versions => [ :v1 ] }

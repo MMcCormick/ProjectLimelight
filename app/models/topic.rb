@@ -645,6 +645,46 @@ class Topic
     # END JSON
     ##########
 
+    # find a topic by slug or id
+    def find_by_slug_id(id)
+      if Moped::BSON::ObjectId.legal?(id)
+        Topic.find(id)
+      else
+        Topic.where(:slug_pretty => id.parameterize).first
+      end
+    end
+
+    # takes a hash of filters to narrow down a topic query
+    def parse_filters(topics, filters)
+      if filters[:sort]
+        if filters[:sort][1] == 'desc'
+          topics = topics.desc(filters[:sort][0])
+        else
+          topics = topics.asc(filters[:sort][0])
+        end
+      else
+        topics = topics.asc(:slug)
+      end
+
+      if filters[:limit] && filters[:limit].to_i < 100
+        topics = topics.limit(filters[:limit])
+      else
+        topics = topics.limit(100)
+      end
+
+      if filters[:page]
+        topics = topics.skip(filters[:limit].to_i * (filters[:page].to_i-1))
+      end
+
+      if filters[:type]
+        if filters[:type] == 'category'
+          topics = topics.where(:is_category => true)
+        end
+      end
+
+      topics
+    end
+
     def top_by_category(limit)
       categories = Topic.where(:is_category => true).asc(:slug)
       topics = Topic.where(:category_ids => {"$in" => categories.map{|c| c.id}}).desc(:score).limit(100).to_a
@@ -852,7 +892,7 @@ class Topic
               if topic
                 suggestions << { :id => topic.id.to_s, :name => topic.name }
               else
-                suggestions << { :id => 0, :name => e['text'] }
+                suggestions << { :id => 0, :name => e['disambiguated']['name'] }
               end
             end
           end

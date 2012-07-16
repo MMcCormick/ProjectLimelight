@@ -320,11 +320,11 @@ class Neo4j
       returnable
     end
 
-    # get a topics pull from ids
-    def pull_from_ids(topic_id)
+    # get a topics pull from ids (aka the children)
+    def pull_from_ids(topic_id, depth=20)
       query = "
         START n=node:topics(uuid = '#{topic_id}')
-        MATCH n-[:pull*]->x
+        MATCH n-[:pull*1..#{depth}]->x
         RETURN distinct x.uuid
       "
       ids = Neo4j.neo.execute_query(query)
@@ -337,18 +337,18 @@ class Neo4j
       pull_from
     end
 
-    # get the topics that pull from the given topics
-    def pulled_from_ids(topic_neo4j_ids)
+    # get the topics that pull from the given topics (aka the parents)
+    def pulled_from_ids(topic_id, depth=20)
       query = "
-        START n=node(#{topic_neo4j_ids.join(',')})
-        MATCH n<-[:pull*]-x
-        RETURN distinct n.uuid, x.uuid
+        START n=node:topics(uuid = '#{topic_id}')
+        MATCH n<-[:pull*1..#{depth}]-x
+        RETURN distinct x.uuid
       "
       ids = Neo4j.neo.execute_query(query)
       pull_from = []
       if ids
         ids['data'].each do |id|
-          pull_from << [Moped::BSON::ObjectId(id[0]),Moped::BSON::ObjectId(id[1])]
+          pull_from << Moped::BSON::ObjectId(id[0])
         end
       end
       pull_from

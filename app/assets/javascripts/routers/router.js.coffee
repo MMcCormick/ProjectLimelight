@@ -502,7 +502,7 @@ class LL.Router extends Backbone.Router
         foo = "bar"
       when "bookmarklet"
         view = new LL.Views.BookmarkletIntro()
-        $('#feed').append(view.render().el)
+        $('.section.static-page').append(view.render().el)
 
   inviteContacts: (provider) ->
     view = new LL.Views.ShowContacts()

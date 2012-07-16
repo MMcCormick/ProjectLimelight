@@ -18,7 +18,7 @@
       </div>
       <div class='btn btn-large btn-success next'>Next</div>
       <div class='step-count'>
-        step <span><%= @step %></span> of 3
+        step <span><%= @step %></span> of 4
       </div>
     </div>
   </div>

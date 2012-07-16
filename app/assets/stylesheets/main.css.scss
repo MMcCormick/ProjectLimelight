@@ -711,13 +711,16 @@ header {
     }
   }
   .static-page {
+    font-size: 15px;
+    line-height: 18px;
     span {
       font-weight: bold;
     }
     p {
-      font-size: 15px;
-      line-height: 18px;
       padding: 5px 0 10px;
+    }
+    ol {
+      padding: 5px 0 10px 20px;
     }
     #post-form {
       @include border-radius(6px);
@@ -729,6 +732,9 @@ header {
         background-color: transparent;
         border: none;
       }
+    }
+    #ll-bookmarklet {
+      margin: 10px 0;
     }
   }
   &.half {

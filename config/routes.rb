@@ -156,6 +156,7 @@ ProjectLimelight::Application.routes.draw do
     get 'privacy' => 'pages#privacy', :as => :privacy
     get 'terms' => 'pages#terms', :as => :terms
     get 'help' => 'pages#help', :as => :help
+    get 'bookmarklet' => 'pages#bookmarklet', :as => :bookmarklet
     get 'admin' => 'pages#admin', :as => :admin, :require_admin => true
     get 'admin/users/index' => 'users#show', :as => :user_index, :require_admin => true
     get 'admin/topics/duplicates' => 'topics#duplicates', :as => :admin_topic_duplicates

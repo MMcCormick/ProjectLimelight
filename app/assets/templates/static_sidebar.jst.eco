@@ -11,6 +11,11 @@
       </a>
     </li>
     <li>
+      <a class='<%= 'on' if @page == 'bookmarklet' %>' href="/pages/bookmarklet">
+        Bookmarklet<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
       <a class='<%= 'on' if @page == 'help' %>' href="/pages/help">
         Help<i class="icon icon-chevron-right"></i>
       </a>

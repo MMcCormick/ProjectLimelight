@@ -7,8 +7,9 @@ class PostShare
   field :content
   field :mediums, :default => {}
   field :status, :default => 'active'
+  field :from_bookmarklet, :default => false
 
-  attr_accessible :content
+  attr_accessible :content, :mediums, :from_bookmarklet
 
   belongs_to :user
   embedded_in :post_media
@@ -26,6 +27,16 @@ class PostShare
 
   def neo4j_create
     Resque.enqueue(Neo4jShareCreate, _parent.id.to_s, user_id.to_s)
+  end
+
+  ##########
+  # JSON
+  ##########
+
+  def mixpanel_data(extra=nil)
+    {
+        "From Bookmarklet?" => from_bookmarklet,
+    }
   end
 
   json_fields \

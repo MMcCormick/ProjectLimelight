@@ -1,0 +1,8 @@
+<a class="btn btn-info" id="ll-bookmarklet" onclick="alert('Drag me to the bookmarks bar!'); return false" href="javascript:(function(){window.open('http://<%= window.location.host %>/posts/new?u='+window.location, 'll-bookmarklet-form', 'width=630,height=500,scrollbars=yes');})();">+Share</a>
+
+<ol>
+  <li>Drag the "+Share" button to your bookmarks bar</li>
+  <li>When you're browsing the web, click the +Post button to post that page to Limelight</li>
+</ol>
+
+<p>It's that simple! You'll be able to tag topics and add a comment, and we'll always credit the original source.</p>

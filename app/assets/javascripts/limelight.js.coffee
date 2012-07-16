@@ -11,7 +11,7 @@ window.LL =
       @LoginBox = new LL.Views.SplashPage()
 
     # hack because facebook login appends stupid things to the url
-    if LL.App.current_user && (window.location.hash == '#_=_' || window.location.pathname == '/_=_')
+    if LL.App.current_user && window.location.pathname != '/posts/new' && (window.location.hash == '#_=_' || window.location.pathname == '/_=_')
       window.location = '/'
 
     @Router = new LL.Router()

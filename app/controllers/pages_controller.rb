@@ -41,4 +41,10 @@ class PagesController < ApplicationController
     @site_style = 'narrow'
     @feedback_topic = Topic.find(Topic.limelight_feedback_id)
   end
+
+  def bookmarklet
+    @title = 'Bookmarklet'
+    @description = "A how-to for using the Share bookmarklet"
+    @site_style = 'narrow'
+  end
 end

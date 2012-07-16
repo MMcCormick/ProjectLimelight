@@ -144,11 +144,11 @@ class PostMedia
   end
 
   # SHARES
-  def add_share(user_id, content, topic_ids=[], topic_names=[], mediums={})
+  def add_share(user_id, content, topic_ids=[], topic_names=[], mediums={}, from_bookmarklet=false)
     existing = shares.where(:user_id => user_id).first
     return existing if existing
 
-    share = PostShare.new(:content => content, :topic_mention_ids => topic_ids, :topic_mention_names => topic_names, :mediums => mediums)
+    share = PostShare.new(:content => content, :topic_mention_ids => topic_ids, :topic_mention_names => topic_names, :mediums => mediums, :from_bookmarklet => from_bookmarklet)
     share.user_id = user_id
 
     if share.valid?

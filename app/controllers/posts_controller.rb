@@ -5,7 +5,30 @@ class PostsController < ApplicationController
   respond_to :html, :json
 
   def index
+    if params[:user_id]
+      user = User.find_by_slug_id(params[:user_id])
+      @posts = PostMedia.where("shares.user_id" => user.id)
+    elsif params[:topic_id]
+      topic = Topic.find_by_slug_id(params[:topic_id])
+      topic_ids = Neo4j.pull_from_ids(topic.id.to_s).to_a
+      @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids << topic.id}).limit(20)
+    else
+      @posts = PostMedia.all.limit(20)
+    end
 
+    @posts = @posts.skip(20*(params[:page].to_i-1)) if params[:page]
+
+    data = @posts.map do |p|
+      response = p.to_json(:properties => :public)
+      if params[:user_id]
+        response = Yajl::Parser.parse(response)
+        response['share'] = p.get_share(user.id)
+        response = Yajl::Encoder.encode(response)
+      end
+      response
+    end
+
+    render :json => data
   end
 
   def show

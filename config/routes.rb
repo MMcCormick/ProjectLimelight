@@ -33,11 +33,13 @@ ProjectLimelight::Application.routes.draw do
         post '' => 'follows#create', :type => 'Topic'
         delete '' => 'follows#destroy', :type => 'Topic'
       end
+
       scope 'connections' do
         post '' => 'topic_connections#add'
         get '' => 'topic_connections#index'
         delete '' => 'topic_connections#remove'
       end
+
       scope 'aliases' do
         post '' => 'topics#add_alias'
         put '' => 'topics#update_alias'
@@ -50,14 +52,20 @@ ProjectLimelight::Application.routes.draw do
       get 'index' => 'topics#index'
       get 'categories' => 'topics#categories'
       get 'top_by_category' => 'topics#top_by_category'
-      put ':id/freebase' => 'topics#update_freebase'
-      delete ':id/freebase' => 'topics#delete_freebase'
+
+      scope ':id' do
+        put 'freebase' => 'topics#update_freebase'
+        delete 'freebase' => 'topics#delete_freebase'
+        put 'categories' => 'topics#add_category'
+        get 'children' => 'topics#children'
+        get 'parents' => 'topics#parents'
+        get '' => 'topics#show'
+      end
+
       delete '' => 'topics#destroy'
       post '' => 'topics#create', :as => :topics
       put '' => 'topics#update'
-      put ':id/categories' => 'topics#add_category'
-      get ':id' => 'topics#show'
-      get '' => 'topics#show'
+      get '' => 'topics#index'
     end
 
     scope 'posts' do
@@ -70,7 +78,8 @@ ProjectLimelight::Application.routes.draw do
       put 'disable' => 'posts#disable'
       delete 'mentions' => 'posts#delete_mention'
       post 'mentions' => 'posts#create_mention'
-      get '' => 'posts#show'
+      get ':id' => 'posts#show'
+      get '' => 'posts#index'
     end
 
     scope 'comments' do

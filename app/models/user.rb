@@ -700,6 +700,15 @@ class User
   # END JSON
   ##########
 
+    # find a user by slug or id
+    def find_by_slug_id(id)
+      if Moped::BSON::ObjectId.legal?(id)
+        User.find(id)
+      else
+        User.where(:slug => id.parameterize).first
+      end
+    end
+
     # Omniauth providers
     def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil, request_env=nil)
       new_user = false

@@ -892,7 +892,7 @@ class Topic
               if topic
                 suggestions << { :id => topic.id.to_s, :name => topic.name }
               else
-                suggestions << { :id => 0, :name => e['text'] }
+                suggestions << { :id => 0, :name => e['disambiguated']['name'] }
               end
             end
           end

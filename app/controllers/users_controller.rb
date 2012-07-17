@@ -96,6 +96,16 @@ class UsersController < ApplicationController
   def topics
     user = User.find_by_slug_id(params[:id])
 
+    #data = []
+    #topic_ids = Neo4j.user_topics(user.id)
+    #topics = Topic.where(:_id => {"$in" => topic_ids})
+    #topics.each do |t|
+    #  data << {
+    #      :topic => t,
+    #      :count => 0
+    #  }
+    #end
+
     data = {}
     topics = Topic.where(:_id => {"$in" => user.topic_activity.map{|k,v| k}})
     topics.each do |t|
@@ -115,6 +125,7 @@ class UsersController < ApplicationController
     end
 
     render :json => data.map{|k,d| d}.sort_by{|d| d[:count] * -1}
+    #render :json => data
   end
 
   # get the children a user is talking about of a certain topic

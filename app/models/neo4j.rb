@@ -395,6 +395,22 @@ class Neo4j
       children_ids
     end
 
+    def user_topics(user_id)
+      query = "
+        START n=node:users(uuid = '#{user_id}')
+        MATCH n-[:talking]->x<-[:pull*0..]-y
+        RETURN distinct y.uuid
+      "
+      ids = Neo4j.neo.execute_query(query)
+      topic_ids = []
+      if ids
+        ids['data'].each do |id|
+          topic_ids << Moped::BSON::ObjectId(id[0])
+        end
+      end
+      topic_ids
+    end
+
     # user interests, used in the user sidebar
     #def user_interests(user_id, limit)
     #  interests = {:general => [], :specific => []}

@@ -39,12 +39,9 @@ class TopicConnectionsController < ApplicationController
       if con
         # if admin, create connection
         if current_user.role?('admin')
-          if params[:pull] || params[:reverse_pull]
-            pulla = {}
-            pulla[:pull] = params[:pull] == "true" ? true : false
-            pulla[:reverse_pull] = params[:reverse_pull] == "true" ? true : false
-          end
-          if TopicConnection.add(con, topic1, topic2, current_user.id, pulla)
+          pull = params[:pull] == "true" ? true : false
+          reverse_pull = params[:reverse_pull] == "true" ? true : false
+          if TopicConnection.add(con, topic1, topic2, current_user.id, {:pull => pull, :reverse_pull => reverse_pull})
             response = build_ajax_response(:ok, nil, "Your connection has been saved, admin!")
             status = 201
           else

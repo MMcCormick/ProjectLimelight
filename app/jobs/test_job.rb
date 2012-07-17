@@ -6,6 +6,9 @@ class TestJob
     users = User.all
 
     users.each do |user|
+      user.topic_activity_recalculate()
+      user.save
+
       shares = PostMedia.where("shares.user_id" => user.id)
       shares.each do |share|
         s = share.get_share(user.id)

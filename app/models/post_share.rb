@@ -22,6 +22,9 @@ class PostShare
 
   def update_user_share
     user.share_count += 1
+    topic_mention_ids.each do |tid|
+      user.topic_activity_add(tid)
+    end
     user.save
   end
 

@@ -54,7 +54,7 @@ end
 
 group :production, :staging do
   gem "rack-timeout"
-  gem 'puma'
+  gem 'thin'
 end
 
 group :development do

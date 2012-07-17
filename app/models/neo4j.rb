@@ -381,8 +381,8 @@ class Neo4j
     def user_topic_children(user_id, topic_id)
       query = "
         START n=node:topics(uuid = '#{topic_id}')
-        MATCH n-[:pull]->x<-[:pull|talking*1..20]-y
-        WHERE y.uuid = '#{user_id}'
+        MATCH n-[:pull]->x-[:pull*0..20]->y<-[:talking]-z
+        WHERE z.uuid = '#{user_id}'
         RETURN distinct x.uuid
       "
       ids = Neo4j.neo.execute_query(query)

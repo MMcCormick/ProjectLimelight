@@ -38,11 +38,16 @@ class LL.Views.TopicConnectionEdit extends Backbone.View
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
 
   makePrimary: (e) =>
-    return if $(e.currentTarget).hasClass('disabled') || $(e.currentTarget).hasClass('on')
+    return if $(e.currentTarget).hasClass('disabled')
 
     e.preventDefault()
 
-    attributes = { id: @topic.get('id'), primary_type_id: @model.uuid }
+    attributes = { id: @topic.get('id') }
+
+    if $(e.currentTarget).hasClass('on')
+      attributes['primary_type_id'] = 0
+    else
+      attributes['primary_type_id'] = @model.uuid
 
     self = @
     $.ajax '/api/topics',

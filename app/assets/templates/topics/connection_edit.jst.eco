@@ -1,1 +1,1 @@
-<%= @connection.name %> <div class="delete">[delete]</div> <div class="primary <%= 'on' if @connection.uuid == @topic.get('primary_type_id') %>">[<%= if @connection.uuid == @topic.get('primary_type_id') then 'is primary' else 'make primary' %>]</div>
+<%= @connection.name %> <div class="delete">[delete]</div> <div class="primary <%= 'on' if @connection.uuid == @topic.get('primary_type_id') %>">[<%= if @connection.uuid == @topic.get('primary_type_id') then 'unset primary' else 'make primary' %>]</div>

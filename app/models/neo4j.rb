@@ -398,7 +398,8 @@ class Neo4j
     def user_topics(user_id)
       query = "
         START n=node:users(uuid = '#{user_id}')
-        MATCH n-[:talking]->x<-[:pull*0..]-y
+        MATCH n-[:talking]->x<-[:pull*0..]-y<-[?:pull]-z
+        WHERE z is null
         RETURN distinct y.uuid
       "
       ids = Neo4j.neo.execute_query(query)

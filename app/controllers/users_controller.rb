@@ -100,36 +100,36 @@ class UsersController < ApplicationController
   def topics
     user = User.find_by_slug_id(params[:id])
 
-    #data = []
-    #topic_ids = Neo4j.user_topics(user.id)
-    #topics = Topic.where(:_id => {"$in" => topic_ids})
-    #topics.each do |t|
-    #  data << {
-    #      :topic => t,
-    #      :count => 0
-    #  }
-    #end
-
-    data = {}
-    topics = Topic.where(:_id => {"$in" => user.topic_activity.map{|k,v| k}})
+    data = []
+    topic_ids = Neo4j.user_topics(user.id)
+    topics = Topic.where(:_id => {"$in" => topic_ids})
     topics.each do |t|
-      if t.primary_type_id
-        data[t.primary_type_id] ||= {
-            :topic => Topic.find(t.primary_type_id),
-            :count => 0
-        }
-        data[t.primary_type_id][:count] += user.topic_activity[t.id.to_s]
-      else
-        data[t.id] ||= {
-            :topic => t,
-            :count => 0
-        }
-        data[t.id][:count] += user.topic_activity[t.id.to_s]
-      end
+      data << {
+          :topic => t,
+          :count => 0
+      }
     end
 
-    render :json => data.map{|k,d| d}.sort_by{|d| d[:count] * -1}
-    #render :json => data
+    #data = {}
+    #topics = Topic.where(:_id => {"$in" => user.topic_activity.map{|k,v| k}})
+    #topics.each do |t|
+    #  if t.primary_type_id
+    #    data[t.primary_type_id] ||= {
+    #        :topic => Topic.find(t.primary_type_id),
+    #        :count => 0
+    #    }
+    #    data[t.primary_type_id][:count] += user.topic_activity[t.id.to_s]
+    #  else
+    #    data[t.id] ||= {
+    #        :topic => t,
+    #        :count => 0
+    #    }
+    #    data[t.id][:count] += user.topic_activity[t.id.to_s]
+    #  end
+    #end
+
+    #render :json => data.map{|k,d| d}.sort_by{|d| d[:count] * -1}
+    render :json => data
   end
 
   # get the children a user is talking about of a certain topic

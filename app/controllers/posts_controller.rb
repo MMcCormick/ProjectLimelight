@@ -10,17 +10,17 @@ class PostsController < ApplicationController
       if params[:topic_id]
         topic = Topic.find_by_slug_id(params[:topic_id])
         topic_ids = Neo4j.pull_from_ids(topic.id).to_a
-        @posts = PostMedia.where("shares.user_id" => user.id, "shares.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20)
+        @posts = PostMedia.where("shares.user_id" => user.id, "shares.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20).desc("shares._id")
       else
-        @posts = PostMedia.where("shares.user_id" => user.id).limit(20)
+        @posts = PostMedia.where("shares.user_id" => user.id).limit(20).desc("shares._id")
       end
 
     elsif params[:topic_id]
       topic = Topic.find_by_slug_id(params[:topic_id])
       topic_ids = Neo4j.pull_from_ids(topic.id.to_s).to_a
-      @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids << topic.id}).limit(20)
+      @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids << topic.id}).limit(20).desc("shares._id")
     else
-      @posts = PostMedia.all.limit(20)
+      @posts = PostMedia.all.limit(20).desc("shares._id")
     end
 
     @posts = @posts.skip(20*(params[:page].to_i-1)) if params[:page]

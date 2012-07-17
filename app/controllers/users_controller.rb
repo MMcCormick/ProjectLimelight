@@ -14,7 +14,11 @@ class UsersController < ApplicationController
   def show
     authorize! :manage, :all if params[:require_admin]
 
-    @this = params[:id] && params[:id] != "0" ? User.find_by_slug_id(params[:id]) : current_user
+    if params[:slug]
+      @this = User.where(:slug => params[:slug].parameterize).first
+    else
+      @this = params[:id] && params[:id] != "0" ? User.find_by_slug_id(params[:id]) : current_user
+    end
 
     not_found("User not found") unless @this
 

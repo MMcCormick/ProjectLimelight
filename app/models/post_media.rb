@@ -126,6 +126,10 @@ class PostMedia
     sources.first
   end
 
+  def topic_count
+    topic_ids.length
+  end
+
   def neo4j_create
     node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post_media', 'subtype' => self.class.name, 'created_at' => created_at.to_i, 'score' => score.to_i)
     Neo4j.neo.add_node_to_index('post_media', 'uuid', id.to_s, node)
@@ -248,7 +252,8 @@ class PostMedia
     :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
     :type => { :definition => :_type, :properties => :short, :versions => [ :v1 ] },
     :title => { :properties => :short, :versions => [ :v1 ] },
-    :share_count => { :definition => :ll_score, :properties => :short, :versions => [ :v1 ] },
+    :topic_count => { :definition => :ll_score, :properties => :short, :versions => [ :v1 ] },
+    :share_count => { :definition => :topic_count, :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },

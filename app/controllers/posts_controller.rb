@@ -7,7 +7,14 @@ class PostsController < ApplicationController
   def index
     if params[:user_id]
       user = User.find_by_slug_id(params[:user_id])
-      @posts = PostMedia.where("shares.user_id" => user.id)
+      if params[:topic_id]
+        topic = Topic.find_by_slug_id(params[:topic_id])
+        topic_ids = Neo4j.pull_from_ids(topic.id).to_a
+        @posts = PostMedia.where("shares.user_id" => user.id, "shares.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20)
+      else
+        @posts = PostMedia.where("shares.user_id" => user.id).limit(20)
+      end
+
     elsif params[:topic_id]
       topic = Topic.find_by_slug_id(params[:topic_id])
       topic_ids = Neo4j.pull_from_ids(topic.id.to_s).to_a

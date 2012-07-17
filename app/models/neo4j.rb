@@ -47,18 +47,54 @@ class Neo4j
       rel1 = Neo4j.neo.create_relationship('shared', user_node, post_node)
       Neo4j.neo.add_relationship_to_index('users', 'shared', "#{user.id.to_s}-#{post.id.to_s}", rel1)
 
+      topic_node1 = nil
+      topic_node2 = nil
+
       # increase affinity between mentioned topics and the sharer
-      share.topic_mentions.each do |t|
-        topic_node = Neo4j.neo.get_node_index('topics', 'uuid', t.id.to_s)
-        Neo4j.update_affinity(user.id.to_s, t.id.to_s, user_node, topic_node, 1)
+      # increase the talk count between the user and mentioned topics
+      share.topic_mentions.each_with_index do |t,i|
+        if i == 0
+          topic_node1 = Neo4j.neo.get_node_index('topics', 'uuid', t.id.to_s)
+          Neo4j.update_affinity(user.id.to_s, t.id.to_s, user_node, topic_node1, 1)
+          Neo4j.update_talk_count(user, t, 1, user_node, topic_node1)
+        else
+          topic_node2 = Neo4j.neo.get_node_index('topics', 'uuid', t.id.to_s)
+          Neo4j.update_affinity(user.id.to_s, t.id.to_s, user_node, topic_node2, 1)
+          Neo4j.update_talk_count(user, t, 1, user_node, topic_node2)
+        end
       end
 
       # increase affinity between mentioned topics and each other
       if share.topic_mentions.length > 1
         topics = share.topic_mentions.to_a
-        topic1_node = Neo4j.neo.get_node_index('topics', 'uuid', topics[0].id.to_s)
-        topic2_node = Neo4j.neo.get_node_index('topics', 'uuid', topics[1].id.to_s)
-        Neo4j.update_affinity(topics[0].id.to_s, topics[1].id.to_s, topic1_node, topic2_node, 1, true, nil)
+        Neo4j.update_affinity(topics[0].id.to_s, topics[1].id.to_s, topic_node1, topic_node1, 1, true, nil)
+      end
+    end
+
+    # update the talk relationship between a user and a topic
+    def update_talk_count(user, topic, change, user_node=nil, topic_node=nil)
+      talking = Neo4j.neo.get_relationship_index('talking', 'nodes', "#{user.id.to_s}-#{topic.id.to_s}")
+      if talking
+        payload = {}
+        properties = Neo4j.neo.get_relationship_properties(talking)
+        weight = properties && properties['weight'] ? properties['weight'] : 0
+        if weight + change == 0
+          Neo4j.neo.delete_relationship(talking)
+          Neo4j.neo.remove_relationship_from_index('talking', talking)
+        else
+          payload['weight'] = weight+change
+        end
+
+        Neo4j.neo.set_relationship_properties(talking, payload) if payload.length > 0
+      else
+        user_node = Neo4j.neo.get_node_index('users', 'uuid', user.id.to_s) unless user_node
+        topic_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless topic_node
+
+        talking = Neo4j.neo.create_relationship('talking', user_node, topic_node)
+        Neo4j.neo.set_relationship_properties(talking, {
+            'weight' => change
+        })
+        Neo4j.neo.add_relationship_to_index('talking', 'nodes', "#{user.id.to_s}-#{topic.id.to_s}", talking)
       end
     end
 
@@ -265,60 +301,48 @@ class Neo4j
     end
 
     # get a topic's relationships. sort them into two groups, outgoing and incoming
-    def get_topic_relationships(topic_id)
-      query = "
-        START n=node:topics(uuid = '#{topic_id.to_s}')
-        MATCH (n)-[r]->(x)
-        WHERE has(r.connection_id)
-        RETURN r,x
-      "
-      outgoing = Neo4j.neo.execute_query(query)
-
-      query = "
-        START n=node:topics(uuid = '#{topic_id.to_s}')
-        MATCH (n)<-[r]-(x)
-        WHERE has(r.connection_id)
-        RETURN r,x
-      "
-      incoming = Neo4j.neo.execute_query(query)
-
-      organized = {}
-
-      if outgoing
-        outgoing['data'].each do |c|
-          type = c[0]['type']
-          organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
-          organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
-        end
-      end
-
-      if incoming
-        incoming['data'].each do |c|
-          type = c[0]['data']['reverse_name'].blank? ? c[0]['type'] : c[0]['data']['reverse_name']
-          organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
-          organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
-          #organized[type] ||= {'relationship' => c[0]['data'], 'connection_id' => c[0]['data']['connection_id'], 'connections' => []}
-          #organized[type]['connections'] << c[1]['data']
-        end
-      end
-
-      # commented out for beta
-      # sort by number of connected topics
-      #organized = organized.sort do |a,b|
-      #  b[1]["connections"].length <=> a[1]["connections"].length
-      #end
-
-      # put type at the beginning
-      #type_of_index = organized.index{ |con| con["connection_id"] == Topic.type_of_id }
-      #organized.unshift(organized.delete_at(type_of_index)) if type_of_index
-
-      returnable = []
-      organized.each do |type, data|
-        returnable << {:name => type}.merge(data)
-      end
-
-      returnable
-    end
+    #def get_topic_relationships(topic_id)
+    #  query = "
+    #    START n=node:topics(uuid = '#{topic_id.to_s}')
+    #    MATCH (n)-[r]->(x)
+    #    WHERE has(r.connection_id)
+    #    RETURN r,x
+    #  "
+    #  outgoing = Neo4j.neo.execute_query(query)
+    #
+    #  query = "
+    #    START n=node:topics(uuid = '#{topic_id.to_s}')
+    #    MATCH (n)<-[r]-(x)
+    #    WHERE has(r.connection_id)
+    #    RETURN r,x
+    #  "
+    #  incoming = Neo4j.neo.execute_query(query)
+    #
+    #  organized = {}
+    #
+    #  if outgoing
+    #    outgoing['data'].each do |c|
+    #      type = c[0]['type']
+    #      organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
+    #      organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
+    #    end
+    #  end
+    #
+    #  if incoming
+    #    incoming['data'].each do |c|
+    #      type = c[0]['data']['reverse_name'].blank? ? c[0]['type'] : c[0]['data']['reverse_name']
+    #      organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
+    #      organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
+    #    end
+    #  end
+    #
+    #  returnable = []
+    #  organized.each do |type, data|
+    #    returnable << {:name => type}.merge(data)
+    #  end
+    #
+    #  returnable
+    #end
 
     # get a topics pull from ids (aka the children)
     def pull_from_ids(topic_id, depth=20)
@@ -354,55 +378,72 @@ class Neo4j
       pull_from
     end
 
-    # user interests, used in the user sidebar
-    def user_interests(user_id, limit)
-      interests = {:general => [], :specific => []}
-
-      # tally up what types are generally connected to topics this user likes
-      #query = "
-      #  START n=node:users(uuid = '#{user_id}')
-      #  MATCH n-[:affinity]->topic-[r2:`Type Of`]->type
-      #  WHERE topic.type = 'topic'
-      #  RETURN type, COUNT(r2)
-      #  ORDER BY count(r2) desc
-      #  LIMIT 10
-      #"
-      #ids = self.neo.execute_query(query)
-      #if ids
-      #  ids['data'].each do |n|
-      #    n[0]['data']['id'] = n[0]['data']['uuid']
-      #    interests[:general] << {
-      #            :data => n[0]['data'],
-      #            :weight => n[1]
-      #    }
-      #  end
-      #end
-
-      # tally up a users specific interests
+    def user_topic_children(user_id, topic_id)
       query = "
-        START n=node:users(uuid = '#{user_id}')
-        MATCH n-[r1:affinity]->topic
-        WHERE topic.type = 'topic' and r1.weight! >= 50
-        RETURN topic, r1.weight
-        ORDER BY r1.weight desc
-        LIMIT #{limit}
+        START n=node:topics(uuid = '#{topic_id}')
+        MATCH n-[:pull]->x<-[:pull|talking*1..20]-y
+        WHERE y.uuid = '#{user_id}'
+        RETURN distinct x.uuid
       "
-      ids = self.neo.execute_query(query)
+      ids = Neo4j.neo.execute_query(query)
+      children_ids = []
       if ids
-        ids['data'].each do |n|
-          n[0]['data']['id'] = n[0]['data']['uuid']
-          interests[:specific] << {
-                  :data => n[0]['data'],
-                  :weight => n[1]
-          }
+        ids['data'].each do |id|
+          children_ids << Moped::BSON::ObjectId(id[0])
         end
       end
-
-      interests
+      children_ids
     end
 
+    # user interests, used in the user sidebar
+    #def user_interests(user_id, limit)
+    #  interests = {:general => [], :specific => []}
+    #
+    #  # tally up what types are generally connected to topics this user likes
+    #  #query = "
+    #  #  START n=node:users(uuid = '#{user_id}')
+    #  #  MATCH n-[:affinity]->topic-[r2:`Type Of`]->type
+    #  #  WHERE topic.type = 'topic'
+    #  #  RETURN type, COUNT(r2)
+    #  #  ORDER BY count(r2) desc
+    #  #  LIMIT 10
+    #  #"
+    #  #ids = self.neo.execute_query(query)
+    #  #if ids
+    #  #  ids['data'].each do |n|
+    #  #    n[0]['data']['id'] = n[0]['data']['uuid']
+    #  #    interests[:general] << {
+    #  #            :data => n[0]['data'],
+    #  #            :weight => n[1]
+    #  #    }
+    #  #  end
+    #  #end
+    #
+    #  # tally up a users specific interests
+    #  query = "
+    #    START n=node:users(uuid = '#{user_id}')
+    #    MATCH n-[r1:affinity]->topic
+    #    WHERE topic.type = 'topic' and r1.weight! >= 50
+    #    RETURN topic, r1.weight
+    #    ORDER BY r1.weight desc
+    #    LIMIT #{limit}
+    #  "
+    #  ids = self.neo.execute_query(query)
+    #  if ids
+    #    ids['data'].each do |n|
+    #      n[0]['data']['id'] = n[0]['data']['uuid']
+    #      interests[:specific] << {
+    #              :data => n[0]['data'],
+    #              :weight => n[1]
+    #      }
+    #    end
+    #  end
+    #
+    #  interests
+    #end
+
     # topic suggestions, used in the user sidebar and topic finder
-    def user_topic_suggestions(user_id, limit)
+    #def user_topic_suggestions(user_id, limit)
       #query = "
       #  START user=node:users(uuid = '#{user_id}')
       #  MATCH user-[r1:affinity]->topic<-[r2:affinity]-user2-[r3:affinity]->suggestion, user-[r4?:affinity]->suggestion, user-[r5?:follow]->suggestion
@@ -420,49 +461,49 @@ class Neo4j
       #  end
       #end
       #suggestions
-    end
+    #end
 
-    def topic_similarity(topics)
-      start_query = []
-      match_query = []
-      letter = "a"
-      topics.each do |t|
-        start_query << "#{letter}=node(#{t.neo4j_id})"
-        match_query << "p#{letter}=shortestPath(:RELATED|TYPE_OF)"
-        letter = letter.succ
-      end
-
-      query = "
-        START #{combos}}
-        MATCH topic-[r:affinity]-related
-        WHERE related.type = 'topic' and has(r.weight)
-        RETURN related, SUM(r.weight)
-        orDER BY SUM(r.weight) desc
-        LIMIT #{limit}
-      "
-      ids = self.neo.execute_query(query)
-    end
+    #def topic_similarity(topics)
+    #  start_query = []
+    #  match_query = []
+    #  letter = "a"
+    #  topics.each do |t|
+    #    start_query << "#{letter}=node(#{t.neo4j_id})"
+    #    match_query << "p#{letter}=shortestPath(:RELATED|TYPE_OF)"
+    #    letter = letter.succ
+    #  end
+    #
+    #  query = "
+    #    START #{combos}}
+    #    MATCH topic-[r:affinity]-related
+    #    WHERE related.type = 'topic' and has(r.weight)
+    #    RETURN related, SUM(r.weight)
+    #    orDER BY SUM(r.weight) desc
+    #    LIMIT #{limit}
+    #  "
+    #  ids = self.neo.execute_query(query)
+    #end
 
     # related topic, used in the topic sidebar
-    def topic_related(topic_id, limit)
-      query = "
-        START topic=node:topics(uuid = '#{topic_id}')
-        MATCH topic-[r:affinity]-related
-        WHERE related.type = 'topic' and has(r.weight)
-        RETURN related, SUM(r.weight)
-        orDER BY SUM(r.weight) desc
-        LIMIT #{limit}
-      "
-      ids = self.neo.execute_query(query)
-      suggestions = []
-      if ids
-        ids['data'].each do |n|
-          n[0]['data']['id'] = n[0]['data']['uuid']
-          suggestions << n[0]['data']
-        end
-      end
-      suggestions
-    end
+    #def topic_related(topic_id, limit)
+    #  query = "
+    #    START topic=node:topics(uuid = '#{topic_id}')
+    #    MATCH topic-[r:affinity]-related
+    #    WHERE related.type = 'topic' and has(r.weight)
+    #    RETURN related, SUM(r.weight)
+    #    orDER BY SUM(r.weight) desc
+    #    LIMIT #{limit}
+    #  "
+    #  ids = self.neo.execute_query(query)
+    #  suggestions = []
+    #  if ids
+    #    ids['data'].each do |n|
+    #      n[0]['data']['id'] = n[0]['data']['uuid']
+    #      suggestions << n[0]['data']
+    #    end
+    #  end
+    #  suggestions
+    #end
 
     def get_sentiment(node1_id, node2_id)
       self.neo.get_relationship_index('sentiment', 'name', "#{node1_id}-#{node2_id}")

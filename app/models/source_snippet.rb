@@ -6,4 +6,12 @@ class SourceSnippet
   field :video_id # for video submissions
 
   embedded_in :has_source, polymorphic: true
+
+  def to_json
+    {
+        :name => name,
+        :url => URI.escape(url),
+        :video_id => video_id
+    }
+  end
 end

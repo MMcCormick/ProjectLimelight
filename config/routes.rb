@@ -23,8 +23,12 @@ ProjectLimelight::Application.routes.draw do
       get 'influencer_topics' => 'users#influencer_topics'
       get 'almost_influencer_topics' => 'users#almost_influencer_topics'
       get ':id/topic_activity' => 'users#topic_activity'
+      get ':id/topics/:topic_id/children' => 'users#topic_children'
+      get ':id/topics/:topic_id/parents' => 'users#topic_parents'
+      get ':id/topics' => 'users#topics'
       post '' => 'users#create'
       put '' => 'users#update'
+      get ':id' => 'users#show'
       get '' => 'users#show'
     end
 

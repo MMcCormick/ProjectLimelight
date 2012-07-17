@@ -14,11 +14,7 @@ class UsersController < ApplicationController
   def show
     authorize! :manage, :all if params[:require_admin]
 
-    if params[:slug]
-      @this = User.where(:slug => params[:slug].parameterize).first
-    else
-      @this = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
-    end
+    @this = params[:id] && params[:id] != "0" ? User.find_by_slug_id(params[:id]) : current_user
 
     not_found("User not found") unless @this
 
@@ -30,7 +26,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.js { render :json => @this.as_json(:properties => :public) }
+      format.json { render :json => @this.as_json(:properties => :public) }
     end
   end
 
@@ -94,6 +90,49 @@ class UsersController < ApplicationController
     end
 
     render json: response, status: status
+  end
+
+  # get the topics a user is talking about
+  def topics
+    user = User.find_by_slug_id(params[:id])
+
+    data = {}
+    topics = Topic.where(:_id => {"$in" => user.topic_activity.map{|k,v| k}})
+    topics.each do |t|
+      if t.primary_type_id
+        data[t.primary_type_id] ||= {
+            :topic => Topic.find(t.primary_type_id),
+            :count => 0
+        }
+        data[t.primary_type_id][:count] += user.topic_activity[t.id.to_s]
+      else
+        data[t.id] ||= {
+            :topic => t,
+            :count => 0
+        }
+        data[t.id][:count] += user.topic_activity[t.id.to_s]
+      end
+    end
+
+    render :json => data.map{|k,d| d}.sort_by{|d| d[:count] * -1}
+  end
+
+  # get the children a user is talking about of a certain topic
+  def topic_children
+    user = User.find_by_slug_id(params[:id])
+    topic = Topic.find_by_slug_id(params[:topic_id])
+    topic_ids = Neo4j.user_topic_children(user.id, topic.id)
+    topics = Topic.where(:_id => {"$in" => topic_ids})
+    data = []
+    topics.each do |t|
+      shares = PostMedia.where("shares.user_id" => user.id, "shares.topic_mention_ids" => t.id)
+      data << {
+          :topic => t,
+          :count => shares.length
+      }
+    end
+
+    render :json => data.sort_by{|d| d[:count] * -1}
   end
 
   def user_influence_increases

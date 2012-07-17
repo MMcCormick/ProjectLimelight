@@ -65,15 +65,21 @@ class TopicConnection
         Neo4j.neo.add_relationship_to_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}", rel1)
 
         if (pulla.nil? && connection.pull_from == true) || (!pulla.nil? && pulla[:pull])
-          rel1 = Neo4j.neo.create_relationship('pull', node1, node2)
-          Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}", rel1)
-          action_log[:pull_from] = true
+          rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}")
+          unless rel1
+            rel1 = Neo4j.neo.create_relationship('pull', node1, node2)
+            Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}", rel1)
+            action_log[:pull_from] = true
+          end
         end
 
         if (pulla.nil? && connection.reverse_pull_from == true) || (!pulla.nil? && pulla[:reverse_pull])
-          rel1 = Neo4j.neo.create_relationship('pull', node2, node1)
-          Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}", rel1)
-          action_log[:reverse_pull_from] = true
+          rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}")
+          unless rel1
+            rel1 = Neo4j.neo.create_relationship('pull', node2, node1)
+            Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}", rel1)
+            action_log[:reverse_pull_from] = true
+          end
         end
 
         if connection.id.to_s == Topic.type_of_id && !topic1.primary_type_id
@@ -104,6 +110,7 @@ class TopicConnection
           outgoing.each do |rel|
             if Neo4j.parse_id(rel['end']).to_i == topic2.neo4j_id.to_i
               Neo4j.neo.delete_relationship(rel)
+              break
             end
           end
         end
@@ -117,7 +124,7 @@ class TopicConnection
 
       if outgoing
         outgoing.each do |o|
-          if Neo4j.parse_id(o['end']) == topic2.neo4j_id
+          if Neo4j.parse_id(o['end']) == topic2.neo4j_id.to_i
             pull = true if o['data']['pull']
             reverse_pull = true if o['data']['reverse_pull']
           end
@@ -126,7 +133,7 @@ class TopicConnection
 
       if incoming
         incoming.each do |o|
-          if Neo4j.parse_id(o['end']) == topic2.neo4j_id
+          if Neo4j.parse_id(o['end']) == topic2.neo4j_id.to_i
             pull = true if o['data']['reverse_pull']
             reverse_pull = true if o['data']['pull']
           end
@@ -136,16 +143,36 @@ class TopicConnection
       unless pull
         rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}")
         if rel1
-          Neo4j.neo.delete_relationship(rel1)
-          Neo4j.neo.remove_relationship_from_index('topics', rel1)
+          rel1 = [rel1] unless rel1.kind_of?(Array)
+          rel1.each do |rel|
+            Neo4j.neo.delete_relationship(rel)
+            Neo4j.neo.remove_relationship_from_index('topics', rel)
+          end
+        else # look for it manually
+          outgoing = Neo4j.neo.get_node_relationships(node, "out", 'pull')
+          if outgoing
+            outgoing.each do |rel|
+              Neo4j.neo.delete_relationship(rel)
+            end
+          end
         end
       end
 
       unless reverse_pull
         rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic2.id.to_s}-#{topic1.id.to_s}")
         if rel1
-          Neo4j.neo.delete_relationship(rel1)
-          Neo4j.neo.remove_relationship_from_index('topics', rel1)
+          rel1 = [rel1] unless rel1.kind_of?(Array)
+          rel1.each do |rel|
+            Neo4j.neo.delete_relationship(rel)
+            Neo4j.neo.remove_relationship_from_index('topics', rel)
+          end
+        else # look for it manually
+          incoming = Neo4j.neo.get_node_relationships(node, "in", 'pull')
+          if incoming
+            incoming.each do |rel|
+              Neo4j.neo.delete_relationship(rel)
+            end
+          end
         end
       end
 

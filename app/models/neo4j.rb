@@ -301,48 +301,48 @@ class Neo4j
     end
 
     # get a topic's relationships. sort them into two groups, outgoing and incoming
-    #def get_topic_relationships(topic_id)
-    #  query = "
-    #    START n=node:topics(uuid = '#{topic_id.to_s}')
-    #    MATCH (n)-[r]->(x)
-    #    WHERE has(r.connection_id)
-    #    RETURN r,x
-    #  "
-    #  outgoing = Neo4j.neo.execute_query(query)
-    #
-    #  query = "
-    #    START n=node:topics(uuid = '#{topic_id.to_s}')
-    #    MATCH (n)<-[r]-(x)
-    #    WHERE has(r.connection_id)
-    #    RETURN r,x
-    #  "
-    #  incoming = Neo4j.neo.execute_query(query)
-    #
-    #  organized = {}
-    #
-    #  if outgoing
-    #    outgoing['data'].each do |c|
-    #      type = c[0]['type']
-    #      organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
-    #      organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
-    #    end
-    #  end
-    #
-    #  if incoming
-    #    incoming['data'].each do |c|
-    #      type = c[0]['data']['reverse_name'].blank? ? c[0]['type'] : c[0]['data']['reverse_name']
-    #      organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
-    #      organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
-    #    end
-    #  end
-    #
-    #  returnable = []
-    #  organized.each do |type, data|
-    #    returnable << {:name => type}.merge(data)
-    #  end
-    #
-    #  returnable
-    #end
+    def get_topic_relationships(topic_id)
+      query = "
+        START n=node:topics(uuid = '#{topic_id.to_s}')
+        MATCH (n)-[r]->(x)
+        WHERE has(r.connection_id)
+        RETURN r,x
+      "
+      outgoing = Neo4j.neo.execute_query(query)
+
+      query = "
+        START n=node:topics(uuid = '#{topic_id.to_s}')
+        MATCH (n)<-[r]-(x)
+        WHERE has(r.connection_id)
+        RETURN r,x
+      "
+      incoming = Neo4j.neo.execute_query(query)
+
+      organized = {}
+
+      if outgoing
+        outgoing['data'].each do |c|
+          type = c[0]['type']
+          organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
+          organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
+        end
+      end
+
+      if incoming
+        incoming['data'].each do |c|
+          type = c[0]['data']['reverse_name'].blank? ? c[0]['type'] : c[0]['data']['reverse_name']
+          organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
+          organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
+        end
+      end
+
+      returnable = []
+      organized.each do |type, data|
+        returnable << {:name => type}.merge(data)
+      end
+
+      returnable
+    end
 
     # get a topics pull from ids (aka the children)
     def pull_from_ids(topic_id, depth=20)

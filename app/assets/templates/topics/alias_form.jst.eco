@@ -5,7 +5,7 @@
 <div class="meat">
   <% for topic_alias in @topic.get('aliases'): %>
     <div class="alias">
-      <div class='name'><%= topic_alias.name %></div>
+      <%= topic_alias.name %>
       <div class="ooac-btn" data-val="<%= if topic_alias.hidden == true then "false" else "true" %>" data-id='<%= topic_alias._id %>'>
         <%= if topic_alias.hidden == true then "[make visible]" else "[make hidden]" %>
       </div>

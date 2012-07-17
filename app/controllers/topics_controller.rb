@@ -94,6 +94,11 @@ class TopicsController < ApplicationController
     @topic.summary = params[:summary] if params[:summary]
     @topic.url_pretty = params[:url_pretty] if params[:url_pretty]
 
+    if params[:primary_type_id]
+      type = Topic.find(params[:primary_type_id])
+      @topic.set_primary_type(type.name, type.id) if type
+    end
+
     if @topic.save
       render json: build_ajax_response(:ok, (original_slug != @topic.slug_pretty) ? topic_path(@topic) : nil, 'Topic was successfully updated.'), :status => :ok
     else

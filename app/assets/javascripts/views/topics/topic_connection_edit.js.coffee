@@ -5,11 +5,12 @@ class LL.Views.TopicConnectionEdit extends Backbone.View
 
   events:
     'click .delete': 'deleteConnection'
+    'click .primary': 'makePrimary'
 
   initialize: ->
 
   render: =>
-    $(@el).html(@template(connection: @model))
+    $(@el).html(@template(connection: @model, topic: @topic))
 
     @
 
@@ -35,3 +36,23 @@ class LL.Views.TopicConnectionEdit extends Backbone.View
         globalError(textStatus, $(self.el))
       complete: ->
         $(self.el).find('.btn-success').removeClass('disabled').text('Submit')
+
+  makePrimary: (e) =>
+    return if $(e.currentTarget).hasClass('disabled') || $(e.currentTarget).hasClass('on')
+
+    e.preventDefault()
+
+    attributes = { id: @topic.get('id'), primary_type_id: @model.uuid }
+
+    self = @
+    $.ajax '/api/topics',
+      type: 'put'
+      data: attributes
+      beforeSend: ->
+        $(e.currentTarget).addClass('disabled').text('Submitting...')
+      success: (data) ->
+        createGrowl false, "Topic updated", 'Success', 'green'
+        globalSuccess(data)
+      error: (jqXHR, textStatus, errorThrown) ->
+        $(e.currentTarget).removeClass('disabled').text('make primary')
+        globalError(textStatus, $(self.el))

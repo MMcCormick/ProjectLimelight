@@ -611,6 +611,7 @@ class Topic
     :score => { :properties => :short, :versions => [ :v1 ] },
     :followers_count => { :properties => :short, :versions => [ :v1 ] },
     :primary_type => { :properties => :short, :versions => [ :v1 ] },
+    :primary_type_id => { :properties => :short, :versions => [ :v1 ] },
     :category_ids => { :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| Topic.json_images(instance) }, :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },

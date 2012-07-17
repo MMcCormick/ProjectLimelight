@@ -95,26 +95,24 @@
   }
   .alias,
   .topic-connection {
+    @include clearfix();
     margin-bottom: 5px;
     position: relative;
-    @include clearfix();
-    //>div {
-    //  float: left;
-    //}
-    .ooac-btn,
-    .delete {
-      cursor: pointer;
-      margin-left: 15px;
-      position: absolute;
-      top: 0px;
+    width: 350px;
+
+    >div {
+      float: right;
     }
+    .primary,
+    .delete,
     .ooac-btn {
-      left: 80px;
-      color: $blue;
-    }
-    .delete {
-      left: 230px;
+      cursor: pointer;
       color: $red;
+      margin-left: 20px;
+      &.on {
+        color: #999;
+        cursor: default;
+      }
     }
   }
 }

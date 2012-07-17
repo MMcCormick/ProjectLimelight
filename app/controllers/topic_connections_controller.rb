@@ -29,7 +29,7 @@ class TopicConnectionsController < ApplicationController
     topic1 = params[:topic1_id] == "0" ? Topic.find_untyped_or_create(params[:topic1_name], current_user) : Topic.find(params[:topic1_id])
     topic2 = params[:topic2_id] == "0" ? Topic.find_untyped_or_create(params[:topic2_name], current_user) : Topic.find(params[:topic2_id])
 
-    # If type of, use
+    # If type of, use Topic.type_of_id
     con = params[:type_of] == "true" ? TopicConnection.find(Topic.type_of_id) : TopicConnection.find(Topic.related_to_id)
 
     if !topic1 || !topic2
@@ -39,9 +39,12 @@ class TopicConnectionsController < ApplicationController
       if con
         # if admin, create connection
         if current_user.role?('admin')
-          pull = params[:pull] == "true" ? true : false
-          reverse_pull = params[:reverse_pull] == "true" ? true : false
-          if TopicConnection.add(con, topic1, topic2, current_user.id, {:pull => pull, :reverse_pull => reverse_pull})
+          if params[:pull] || params[:reverse_pull]
+            pulla = {}
+            pulla[:pull] = params[:pull] == "true" ? true : false
+            pulla[:reverse_pull] = params[:reverse_pull] == "true" ? true : false
+          end
+          if TopicConnection.add(con, topic1, topic2, current_user.id, pulla)
             response = build_ajax_response(:ok, nil, "Your connection has been saved, admin!")
             status = 201
           else

@@ -110,22 +110,26 @@ class TopicConnection
       end
 
       # check to see if we should remove the pull connections
-      outgoing = Neo4j.neo.get_node_relationships(node, "out", connection.name)
-      incoming = Neo4j.neo.get_node_relationships(node, "in", connection.name)
+      outgoing = Neo4j.neo.get_node_relationships(node, "out")
+      incoming = Neo4j.neo.get_node_relationships(node, "in")
       pull = false
       reverse_pull = false
 
       if outgoing
         outgoing.each do |o|
-          pull = true if o['data']['pull']
-          reverse_pull = true if o['data']['reverse_pull']
+          if Neo4j.parse_id(o['end']) == topic2.neo4j_id
+            pull = true if o['data']['pull']
+            reverse_pull = true if o['data']['reverse_pull']
+          end
         end
       end
 
       if incoming
         incoming.each do |o|
-          pull = true if o['data']['reverse_pull']
-          reverse_pull = true if o['data']['pull']
+          if Neo4j.parse_id(o['end']) == topic2.neo4j_id
+            pull = true if o['data']['reverse_pull']
+            reverse_pull = true if o['data']['pull']
+          end
         end
       end
 

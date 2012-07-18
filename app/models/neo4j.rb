@@ -413,70 +413,78 @@ class Neo4j
 
     # get a topics pull from ids (aka the children)
     def pull_from_ids(topic_id, depth=20)
-      query = "
-        START n=node:topics(uuid = '#{topic_id}')
-        MATCH n-[:pull*1..#{depth}]->x
-        RETURN distinct x.uuid
-      "
-      ids = Neo4j.neo.execute_query(query)
-      pull_from = []
-      if ids
-        ids['data'].each do |id|
-          pull_from << Moped::BSON::ObjectId(id[0])
+      Rails.cache.fetch("neo4j-#{topic_id}-pulling-#{depth}", :expires_in => 1.day) do
+        query = "
+          START n=node:topics(uuid = '#{topic_id}')
+          MATCH n-[:pull*1..#{depth}]->x
+          RETURN distinct x.uuid
+        "
+        ids = Neo4j.neo.execute_query(query)
+        pull_from = []
+        if ids
+          ids['data'].each do |id|
+            pull_from << Moped::BSON::ObjectId(id[0])
+          end
         end
+        pull_from
       end
-      pull_from
     end
 
     # get the topics that pull from the given topics (aka the parents)
     def pulled_from_ids(topic_id, depth=20)
-      query = "
-        START n=node:topics(uuid = '#{topic_id}')
-        MATCH n<-[:pull*1..#{depth}]-x
-        RETURN distinct x.uuid
-      "
-      ids = Neo4j.neo.execute_query(query)
-      pull_from = []
-      if ids
-        ids['data'].each do |id|
-          pull_from << Moped::BSON::ObjectId(id[0])
+      Rails.cache.fetch("neo4j-#{topic_id}-pushing-#{depth}", :expires_in => 1.day) do
+        query = "
+          START n=node:topics(uuid = '#{topic_id}')
+          MATCH n<-[:pull*1..#{depth}]-x
+          RETURN distinct x.uuid
+        "
+        ids = Neo4j.neo.execute_query(query)
+        pull_from = []
+        if ids
+          ids['data'].each do |id|
+            pull_from << Moped::BSON::ObjectId(id[0])
+          end
         end
+        pull_from
       end
-      pull_from
     end
 
     def user_topic_children(user_id, topic_id)
-      query = "
-        START n=node:topics(uuid = '#{topic_id}')
-        MATCH n-[:pull]->x-[:pull*0..20]->y<-[:talking]-z
-        WHERE z.uuid = '#{user_id}'
-        RETURN distinct x.uuid
-      "
-      ids = Neo4j.neo.execute_query(query)
-      children_ids = []
-      if ids
-        ids['data'].each do |id|
-          children_ids << Moped::BSON::ObjectId(id[0])
+      Rails.cache.fetch("neo4j-#{user_id}-#{topic_id}-pulling", :expires_in => 1.day) do
+        query = "
+          START n=node:topics(uuid = '#{topic_id}')
+          MATCH n-[:pull]->x-[:pull*0..20]->y<-[:talking]-z
+          WHERE z.uuid = '#{user_id}'
+          RETURN distinct x.uuid
+        "
+        ids = Neo4j.neo.execute_query(query)
+        children_ids = []
+        if ids
+          ids['data'].each do |id|
+            children_ids << Moped::BSON::ObjectId(id[0])
+          end
         end
+        children_ids
       end
-      children_ids
     end
 
     def user_topics(user_id)
-      query = "
-        START n=node:users(uuid = '#{user_id}')
-        MATCH n-[:talking]->x<-[:pull*0..]-y<-[?:pull]-z
-        WHERE z is null
-        RETURN distinct y.uuid
-      "
-      ids = Neo4j.neo.execute_query(query)
-      topic_ids = []
-      if ids
-        ids['data'].each do |id|
-          topic_ids << Moped::BSON::ObjectId(id[0])
+      Rails.cache.fetch("neo4j-#{user_id}-topics", :expires_in => 1.day) do
+        query = "
+          START n=node:users(uuid = '#{user_id}')
+          MATCH n-[:talking]->x<-[:pull*0..]-y<-[?:pull]-z
+          WHERE z is null
+          RETURN distinct y.uuid
+        "
+        ids = Neo4j.neo.execute_query(query)
+        topic_ids = []
+        if ids
+          ids['data'].each do |id|
+            topic_ids << Moped::BSON::ObjectId(id[0])
+          end
         end
+        topic_ids
       end
-      topic_ids
     end
 
     # user interests, used in the user sidebar

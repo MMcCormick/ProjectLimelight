@@ -5,6 +5,7 @@ class PostsController < ApplicationController
   respond_to :html, :json
 
   def index
+
     if params[:user_id]
       user = User.find_by_slug_id(params[:user_id])
 
@@ -31,7 +32,6 @@ class PostsController < ApplicationController
       if params[:user_id]
         response = Yajl::Parser.parse(response)
         response['share'] = p.get_share(user.id)
-        response = Yajl::Encoder.encode(response)
       end
       response
     end

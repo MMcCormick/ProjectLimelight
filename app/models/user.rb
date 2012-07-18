@@ -77,6 +77,8 @@ class User
   field :origin # what did the user use to originally signup (limelight, facebook, etc)
   field :neo4j_id, :type => Integer
   field :topic_activity, :type => Hash, :default => {} # keeps track of how many posts a user has in topics (just counts)
+  field :stub_user, :default => false
+  field :twitter_handle
 
   embeds_many :social_connects
 
@@ -90,7 +92,8 @@ class User
   has_one  :invite_code
 
   attr_accessor :login
-  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me, :login, :bio, :used_invite_code_id
+  attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me,
+                  :login, :bio, :used_invite_code_id, :stub_user
 
   with_options :if => :is_active? do |user|
     user.validates :username, :uniqueness => { :case_sensitive => false, :message => 'Username is already taken' },
@@ -136,7 +139,7 @@ class User
   end
 
   def is_active?
-    status == 'active'
+    status == 'active' && !stub_user
   end
 
   # Overrides devise methods
@@ -836,6 +839,15 @@ class User
   end
 
   protected
+
+  # Devise hacks for stub users
+  def password_required?
+    !stub_user
+  end
+
+  def email_required?
+    !stub_user
+  end
 
   class << self
     def find_for_database_authentication(conditions)

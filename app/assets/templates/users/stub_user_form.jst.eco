@@ -1,0 +1,10 @@
+<label for="handle">Twitter Handle</label>
+<input type="text" name="handle">
+
+<label for="first_name">First Name</label>
+<input type="text" name="first_name">
+
+<label for="last_name">Last Name</label>
+<input type="text" name="last_name">
+
+<div class="submit btn btn-success">Create Stub User</div>

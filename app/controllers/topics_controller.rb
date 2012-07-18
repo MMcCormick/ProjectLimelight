@@ -129,6 +129,13 @@ class TopicsController < ApplicationController
     render :json => build_ajax_response(:ok, nil, "Topic deleted"), :status => 200
   end
 
+  def for_connection
+    authorize! :manage, :all
+    @topics = Topic.all
+    @topics = Topic.parse_filters(@topics, params)
+    render :json => @topics.map {|t| t.as_json(:properties => :public)}
+  end
+
   def suggestions
     @user = params[:id] ? User.where(:username => params[:id]).first : current_user
 

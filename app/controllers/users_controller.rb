@@ -59,6 +59,16 @@ class UsersController < ApplicationController
     end
   end
 
+  def create_stub
+    authorize! :manage, :all
+    user = User.create!(:stub_user => true, :username => params[:handle], :twitter_handle => params[:handle], :first_name => params[:first_name], :last_name => params[:last_name])
+    if user
+      render json: build_ajax_response(:ok, nil, "Stub user created!", nil, user.as_json), status: 201
+    else
+      render json: build_ajax_response(:ok, nil, "Stub user created!", user.errors), status: 422
+    end
+  end
+
   def update
     # Post signup tutorial updates
     if params['tutorial_step'] && current_user.tutorial_step != params['tutorial_step']

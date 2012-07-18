@@ -12,6 +12,9 @@ ProjectLimelight::Application.routes.draw do
         post '' => 'follows#create', :type => 'User'
         delete '' => 'follows#destroy', :type => 'User'
       end
+      scope 'stubs' do
+        post '' => 'users#create_stub'
+      end
 
       post 'invite_by_email' => 'users#invite_by_email'
       get 'index' => 'users#index'
@@ -56,6 +59,7 @@ ProjectLimelight::Application.routes.draw do
       get 'index' => 'topics#index'
       get 'categories' => 'topics#categories'
       get 'top_by_category' => 'topics#top_by_category'
+      get 'for_connection' => 'topics#for_connection'
 
       scope ':id' do
         put 'freebase' => 'topics#update_freebase'
@@ -161,10 +165,14 @@ ProjectLimelight::Application.routes.draw do
     get 'terms' => 'pages#terms', :as => :terms
     get 'help' => 'pages#help', :as => :help
     get 'bookmarklet' => 'pages#bookmarklet', :as => :bookmarklet
-    get 'admin' => 'pages#admin', :as => :admin, :require_admin => true
-    get 'admin/users/index' => 'users#show', :as => :user_index, :require_admin => true
-    get 'admin/topics/duplicates' => 'topics#duplicates', :as => :admin_topic_duplicates
-    get 'admin/posts/stream' => 'users#show', :as => :admin_post_stream, :require_admin => true
+    scope 'admin' do
+      get '' => 'pages#admin', :as => :admin, :require_admin => true
+      get 'users/index' => 'users#show', :as => :user_index, :require_admin => true
+      get 'users/new_stub' => 'users#show', :as => :new_stub_user, :require_admin => true
+      get 'topics/duplicates' => 'topics#duplicates', :as => :admin_topic_duplicates
+      get 'topics/for_connection' => 'users#show', :as => :topics_for_connection, :require_admin => true
+      get 'posts/stream' => 'users#show', :as => :admin_post_stream, :require_admin => true
+    end
   end
 
   # Invites

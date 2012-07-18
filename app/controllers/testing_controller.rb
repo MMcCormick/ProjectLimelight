@@ -8,7 +8,7 @@ class TestingController < ApplicationController
     #@count1 = 0
     #@count2 = 0
 
-    Resque.enqueue(TestJob)
+    #Resque.enqueue(TestJob)
 
     #data = [
     #  [[2,3,4],[2,3,5]],

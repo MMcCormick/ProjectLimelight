@@ -11,8 +11,10 @@ class LL.Router extends Backbone.Router
     'topics/new': 'adminManageTopics'
     'crawler_sources': 'adminManageCrawlers'
     'pages/admin/topics/duplicates': 'adminTopicDuplicates'
+    'pages/admin/topics/for_connection': 'topicsForConnection'
     'pages/admin/posts/stream': 'adminPostStream'
     'pages/admin/users/index': 'userIndex'
+    'pages/admin/users/new_stub': 'newStubUser'
     'pages/:name': 'staticPage'
     'contacts/:provider/callback': 'inviteContacts'
     'settings': 'settings'
@@ -445,12 +447,13 @@ class LL.Router extends Backbone.Router
         stream.fetch {add: true}
 
   userIndex: (id) ->
-    user = new LL.Models.User(current_object)
+    user = LL.App.current_user
+    id = user.get('id')
 
-    if LL.App.findScreen('user_index', user.get('id'))
-      LL.App.showScreen('user_index', user.get('id'))
+    if LL.App.findScreen('user_index', id)
+      LL.App.showScreen('user_index', id)
     else
-      screen = LL.App.newScreen('user_index', user.get('id'))
+      screen = LL.App.newScreen('user_index', id)
 
       sidebar = LL.App.findSidebar('admin', id)
       unless sidebar
@@ -461,11 +464,55 @@ class LL.Router extends Backbone.Router
       feed = new LL.Views.UserList(collection: collection, model: user)
       screen['components'].push(feed)
 
-      LL.App.renderScreen('user_index', user.get('id'))
+      LL.App.renderScreen('user_index', id)
 
-      collection.id = user.get('id')
+      collection.id = id
       collection.page = 1
       collection.fetch()
+
+  newStubUser: () ->
+    user = LL.App.current_user
+    id = user.get('id')
+
+    if LL.App.findScreen('new_stub_user', id)
+      LL.App.showScreen('new_stub_user', id)
+    else
+      screen = LL.App.newScreen('new_stub_user', id)
+
+      sidebar = LL.App.findSidebar('admin', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('admin', id, user)
+      screen['sidebar'] = sidebar
+
+      view = new LL.Views.StubUserForm()
+      screen['components'].push(view)
+
+      LL.App.renderScreen('new_stub_user', id)
+
+  topicsForConnection: () ->
+    user = LL.App.current_user
+    id = user.get('id')
+
+    if LL.App.findScreen('topics_for_connection', id)
+      LL.App.showScreen('topics_for_connection', id)
+    else
+      screen = LL.App.newScreen('topics_for_connection', id)
+
+      sidebar = LL.App.findSidebar('admin', id)
+      unless sidebar
+        sidebar = LL.App.createSidebar('admin', id, user)
+      screen['sidebar'] = sidebar
+
+      collection = new LL.Collections.TopicsForConnection()
+      feed = new LL.Views.TopicList(collection: collection, model: user)
+      feed.pageTitle = "Topics for Connection"
+      screen['components'].push(feed)
+
+      LL.App.renderScreen('topics_for_connection', id)
+
+      collection.id = id
+      collection.page = 1
+      collection.fetch({data: {id: id}})
 
   #######
   # MISC

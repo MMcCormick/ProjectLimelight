@@ -11,6 +11,11 @@
       </a>
     </li>
     <li>
+      <a class='<%= 'on' if @page == 'topics_for_connection' %>' href="/pages/admin/topics/for_connection">
+        Topics For Connection<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
       <a class='<%= 'on' if @page == 'admin_manage_crawlers' %>' href="/crawler_sources">
         Manage Crawler Sources<i class="icon icon-chevron-right"></i>
       </a>
@@ -23,6 +28,11 @@
     <li>
       <a class='<%= 'on' if @page == 'user_index' %>' href="/pages/admin/users/index">
         All Users<i class="icon icon-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a class='<%= 'on' if @page == 'new_stub_user' %>' href="/pages/admin/users/new_stub">
+        New Stub User<i class="icon icon-chevron-right"></i>
       </a>
     </li>
   </ul>

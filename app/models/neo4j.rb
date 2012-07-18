@@ -399,7 +399,7 @@ class Neo4j
               'inline' => 'push',
               'connections' => []
           }
-          organized[type]['connections'] << { 'pull' => true }.merge(c[1]['data'])
+          organized[type]['connections'] << { 'reverse_pull' => true }.merge(c[1]['data'])
         end
       end
 

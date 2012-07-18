@@ -32,8 +32,10 @@ class PostsController < ApplicationController
       if params[:user_id]
         response = Yajl::Parser.parse(response)
         response['share'] = p.get_share(user.id)
+        response
+      else
+        Yajl::Parser.parse(response)
       end
-      response
     end
 
     render :json => data

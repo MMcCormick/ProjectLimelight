@@ -2,11 +2,11 @@
 
 <% unless @connection_id == 'pull' || @connection_id == 'push': %>
     <div data-type='@connection.id' class="delete">[delete]</div>
+<% end %>
 
-    <% if @connection_id == '4eb82a1caaf9060120000081': %>
-        <div  class="primary <%= 'on' if @connection.uuid == @topic.get('primary_type_id') %>">[<%= if @connection.uuid == @topic.get('primary_type_id') then 'unset primary' else 'make primary' %>]</div>
-    <% end %>
+<% if @connection_id == '4eb82a1caaf9060120000081' && @connection.uuid == @topic.get('primary_type_id'): %>
+    <div  class="primary <%= 'on' if @connection.uuid == @topic.get('primary_type_id') %>">[<%= if @connection.uuid == @topic.get('primary_type_id') then 'unset primary' else 'make primary' %>]</div>
+    <div data-type='push' class="push <%= if @connection.reverse_pull then 'on' else 'off' %>">[<%= if @connection.reverse_pull then 'stop push' else 'start push' %>]</div>
 <% end %>
 
 <div data-type='pull' class="pull <%= if @connection.pull then 'on' else 'off' %>">[<%= if @connection.pull then 'stop pull' else 'start pull' %>]</div>
-<div data-type='push' class="push <%= if @connection.reverse_pull then 'on' else 'off' %>">[<%= if @connection.reverse_pull then 'stop push' else 'start push' %>]</div>

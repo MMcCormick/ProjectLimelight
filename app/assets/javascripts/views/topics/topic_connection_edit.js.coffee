@@ -24,7 +24,10 @@ class LL.Views.TopicConnectionEdit extends Backbone.View
     e.preventDefault()
 
     if $(e.currentTarget).hasClass('delete')
-      attributes = { topic1_id: @topic.get('id'), topic2_id: @model.uuid, id: @connection_id }
+      if $(e.currentTarget).parents('ul:first').find('h4').text() == 'Instance'
+        attributes = { topic1_id: @model.uuid, topic2_id: @topic.get('id'), id: @connection_id }
+      else
+        attributes = { topic1_id: @topic.get('id'), topic2_id: @model.uuid, id: @connection_id }
     else if $(e.currentTarget).hasClass('push')
       attributes = { topic1_id: @model.uuid, topic2_id: @topic.get('id'), id: 'pull' }
     else

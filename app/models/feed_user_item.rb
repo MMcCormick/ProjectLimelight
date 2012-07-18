@@ -108,7 +108,7 @@ class FeedUserItem
     # used when a topic is added to a post (or by push_post_through_topics which goes through each topic mention and pushes through it)
     # optionally push for a single user
     def push_post_through_topic(post, push_topic, single_user=nil, backlog=false)
-      neo4j_topic_ids = Neo4j.pulled_from_ids([push_topic.neo4j_id])
+      neo4j_topic_ids = Neo4j.pulled_from_ids(push_topic.neo4j_id)
       topics = Topic.where(:_id => {"$in" => [push_topic.id] + neo4j_topic_ids.map{|t| t[1]}})
 
       # make the root post
@@ -162,7 +162,7 @@ class FeedUserItem
     def unpush_post_through_topic(post, unpush_topic, single_user=nil)
       return unless unpush_topic
 
-      neo4j_topic_ids = Neo4j.pulled_from_ids([unpush_topic.neo4j_id])
+      neo4j_topic_ids = Neo4j.pulled_from_ids(unpush_topic.neo4j_id)
       topics = Topic.where(:_id => {"$in" => [unpush_topic.id] + neo4j_topic_ids.map{|t| t[1]}})
 
       topics.each do |topic|

@@ -101,49 +101,31 @@ class UsersController < ApplicationController
     user = User.find_by_slug_id(params[:id])
 
     data = []
-    topic_ids = Neo4j.user_topics(user.id)
+    topic_ids = Neo4j.user_topics(user.neo4j_id)
     topics = Topic.where(:_id => {"$in" => topic_ids})
     topics.each do |t|
+      talk_count = Neo4j.user_topic_share_count(user.id, t.neo4j_id)
       data << {
           :topic => t,
-          :count => 0
+          :count => talk_count
       }
     end
 
-    #data = {}
-    #topics = Topic.where(:_id => {"$in" => user.topic_activity.map{|k,v| k}})
-    #topics.each do |t|
-    #  if t.primary_type_id
-    #    data[t.primary_type_id] ||= {
-    #        :topic => Topic.find(t.primary_type_id),
-    #        :count => 0
-    #    }
-    #    data[t.primary_type_id][:count] += user.topic_activity[t.id.to_s]
-    #  else
-    #    data[t.id] ||= {
-    #        :topic => t,
-    #        :count => 0
-    #    }
-    #    data[t.id][:count] += user.topic_activity[t.id.to_s]
-    #  end
-    #end
-
-    #render :json => data.map{|k,d| d}.sort_by{|d| d[:count] * -1}
-    render :json => data
+    render :json => data.sort_by{|d| d[:count] * -1}
   end
 
   # get the children a user is talking about of a certain topic
   def topic_children
     user = User.find_by_slug_id(params[:id])
     topic = Topic.find_by_slug_id(params[:topic_id])
-    topic_ids = Neo4j.user_topic_children(user.id, topic.id)
-    topics = Topic.where(:_id => {"$in" => topic_ids})
+    topic_ids = Neo4j.user_topic_children(user.id, topic.neo4j_id)
+    topics = Topic.where(:_id => {"$in" => topic_ids}).to_a
     data = []
     topics.each do |t|
-      shares = PostMedia.where("shares.user_id" => user.id, "shares.topic_mention_ids" => t.id)
+      talk_count = Neo4j.user_topic_share_count(user.id, t.neo4j_id)
       data << {
           :topic => t,
-          :count => shares.length
+          :count => talk_count
       }
     end
 

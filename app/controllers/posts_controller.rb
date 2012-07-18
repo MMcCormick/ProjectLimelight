@@ -11,15 +11,15 @@ class PostsController < ApplicationController
 
       if params[:topic_id]
         topic = Topic.find_by_slug_id(params[:topic_id])
-        topic_ids = Neo4j.pull_from_ids(topic.id).to_a
-        @posts = PostMedia.where("shares.user_id" => user.id, "shares.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20).desc("shares.0._id")
+        topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
+        @posts = PostMedia.where("shares.user_id" => user.id, "shares.0.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20).desc("shares.0._id")
       else
         @posts = PostMedia.where("shares.user_id" => user.id).limit(20).desc("shares.0._id")
       end
 
     elsif params[:topic_id]
       topic = Topic.find_by_slug_id(params[:topic_id])
-      topic_ids = Neo4j.pull_from_ids(topic.id.to_s).to_a
+      topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
       @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids << topic.id}).limit(20).desc("_id")
     else
       @posts = PostMedia.all.limit(20).desc("_id")
@@ -182,7 +182,7 @@ class PostsController < ApplicationController
     not_found("Topic not found") unless topic
 
     page = params[:p] ? params[:p].to_i : 1
-    topic_ids = Neo4j.pull_from_ids(topic.id).to_a
+    topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
     posts = Post.topic_feed(topic_ids << topic.id, params[:sort], page)
     render :json => posts.map {|p| p.as_json(:properties => :short)}
   end

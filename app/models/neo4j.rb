@@ -72,7 +72,7 @@ class Neo4j
     end
 
     # update the talk relationship between a user and a topic
-    def update_talk_count(user, topic, change, user_node=nil, topic_node=nil)
+    def update_talk_count(user, topic, change, user_node=nil, topic_node=nil, post_id=nil)
       talking = Neo4j.neo.get_relationship_index('talking', 'nodes', "#{user.id.to_s}-#{topic.id.to_s}")
       if talking
         payload = {}
@@ -85,15 +85,22 @@ class Neo4j
           payload['weight'] = weight+change
         end
 
+        if post_id
+          payload['shares'] = properties['shares'] ? (properties['shares'] << post_id.to_s).uniq : [post_id.to_s]
+        end
+
         Neo4j.neo.set_relationship_properties(talking, payload) if payload.length > 0
       else
         user_node = Neo4j.neo.get_node_index('users', 'uuid', user.id.to_s) unless user_node
         topic_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless topic_node
 
+        payload = {'weight' => change}
+        if post_id
+          payload['shares'] = [post_id.to_s]
+        end
+
         talking = Neo4j.neo.create_relationship('talking', user_node, topic_node)
-        Neo4j.neo.set_relationship_properties(talking, {
-            'weight' => change
-        })
+        Neo4j.neo.set_relationship_properties(talking, payload)
         Neo4j.neo.add_relationship_to_index('talking', 'nodes', "#{user.id.to_s}-#{topic.id.to_s}", talking)
       end
     end
@@ -412,10 +419,10 @@ class Neo4j
     end
 
     # get a topics pull from ids (aka the children)
-    def pull_from_ids(topic_id, depth=20)
-      Rails.cache.fetch("neo4j-#{topic_id}-pulling-#{depth}", :expires_in => 1.day) do
+    def pull_from_ids(topic_neo_id, depth=20)
+      #Rails.cache.fetch("neo4j-#{topic_neo_id}-pulling-#{depth}", :expires_in => 1.day) do
         query = "
-          START n=node:topics(uuid = '#{topic_id}')
+          START n=node(#{topic_neo_id})
           MATCH n-[:pull*1..#{depth}]->x
           RETURN distinct x.uuid
         "
@@ -427,14 +434,14 @@ class Neo4j
           end
         end
         pull_from
-      end
+      #end
     end
 
     # get the topics that pull from the given topics (aka the parents)
-    def pulled_from_ids(topic_id, depth=20)
-      Rails.cache.fetch("neo4j-#{topic_id}-pushing-#{depth}", :expires_in => 1.day) do
+    def pulled_from_ids(topic_neo_id, depth=20)
+      #Rails.cache.fetch("neo4j-#{topic_neo_id}-pushing-#{depth}", :expires_in => 1.day) do
         query = "
-          START n=node:topics(uuid = '#{topic_id}')
+          START n=node(#{topic_neo_id})
           MATCH n<-[:pull*1..#{depth}]-x
           RETURN distinct x.uuid
         "
@@ -446,13 +453,13 @@ class Neo4j
           end
         end
         pull_from
-      end
+      #end
     end
 
-    def user_topic_children(user_id, topic_id)
-      Rails.cache.fetch("neo4j-#{user_id}-#{topic_id}-pulling", :expires_in => 1.day) do
+    def user_topic_children(user_id, topic_neo_id)
+      #Rails.cache.fetch("neo4j-#{user_id}-#{topic_id}-pulling", :expires_in => 1.day) do
         query = "
-          START n=node:topics(uuid = '#{topic_id}')
+          START n=node(#{topic_neo_id})
           MATCH n-[:pull]->x-[:pull*0..20]->y<-[:talking]-z
           WHERE z.uuid = '#{user_id}'
           RETURN distinct x.uuid
@@ -465,14 +472,14 @@ class Neo4j
           end
         end
         children_ids
-      end
+      #end
     end
 
-    def user_topics(user_id)
-      Rails.cache.fetch("neo4j-#{user_id}-topics", :expires_in => 1.day) do
+    def user_topics(user_neo_id)
+      #Rails.cache.fetch("neo4j-#{user_id}-topics", :expires_in => 1.day) do
         query = "
-          START n=node:users(uuid = '#{user_id}')
-          MATCH n-[:talking]->x<-[:pull*0..]-y<-[?:pull]-z
+          START n=node(#{user_neo_id})
+          MATCH n-[:talking]->x<-[:pull*0..20]-y<-[?:pull]-z
           WHERE z is null
           RETURN distinct y.uuid
         "
@@ -484,7 +491,29 @@ class Neo4j
           end
         end
         topic_ids
-      end
+      #end
+    end
+
+    # get the # of shares a user has in this topic and it's children
+    def user_topic_share_count(user_id, topic_neo_id)
+      #Rails.cache.fetch("neo4j-#{user_id}-#{topic_id}-share_count", :expires_in => 1.day) do
+        count = 0
+        query = "
+          START n=node(#{topic_neo_id})
+          MATCH n-[:pull*0..20]->x<-[r:talking]-y
+          WHERE y.uuid = '#{user_id}'
+          RETURN r.shares
+        "
+        data = Neo4j.neo.execute_query(query)
+        ids = []
+        if data && data['data']
+          data['data'].each do |d|
+            ids += d[0]
+          end
+          count = ids.uniq.length
+        end
+        count
+      #end
     end
 
     # user interests, used in the user sidebar

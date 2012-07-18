@@ -516,15 +516,6 @@ class Topic
     end
 
     # update those users following this topic
-    #User.where(:following_topics => id).
-    #    update_all(
-    #      "$inc" => {
-    #        :following_topics_count => -1,
-    #      },
-    #      "$pull" => {
-    #        :following_topics => id
-    #      }
-    #    )
     User.collection.find({ :following_topics => id }).
             update_all({
                   "$inc" => {
@@ -534,9 +525,6 @@ class Topic
                     :following_topics => id
                   }
             })
-
-    # remove from topic feeds
-    FeedTopicItem.topic_destroy(self)
 
     # remove from popularity actions
     actions = PopularityAction.where("pop_snippets._id" => id)

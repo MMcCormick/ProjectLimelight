@@ -72,7 +72,7 @@ class Neo4j
     end
 
     # update the talk relationship between a user and a topic
-    def update_talk_count(user, topic, change, user_node=nil, topic_node=nil)
+    def update_talk_count(user, topic, change, user_node=nil, topic_node=nil, post_id=nil)
       talking = Neo4j.neo.get_relationship_index('talking', 'nodes', "#{user.id.to_s}-#{topic.id.to_s}")
       if talking
         payload = {}
@@ -85,15 +85,22 @@ class Neo4j
           payload['weight'] = weight+change
         end
 
+        if post_id
+          payload['shares'] = properties['shares'] ? (properties['shares'] << post_id.to_s).uniq : [post_id.to_s]
+        end
+
         Neo4j.neo.set_relationship_properties(talking, payload) if payload.length > 0
       else
         user_node = Neo4j.neo.get_node_index('users', 'uuid', user.id.to_s) unless user_node
         topic_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless topic_node
 
+        payload = {'weight' => change}
+        if post_id
+          payload['shares'] = [post_id.to_s]
+        end
+
         talking = Neo4j.neo.create_relationship('talking', user_node, topic_node)
-        Neo4j.neo.set_relationship_properties(talking, {
-            'weight' => change
-        })
+        Neo4j.neo.set_relationship_properties(talking, payload)
         Neo4j.neo.add_relationship_to_index('talking', 'nodes', "#{user.id.to_s}-#{topic.id.to_s}", talking)
       end
     end
@@ -301,9 +308,9 @@ class Neo4j
     end
 
     # get a topic's relationships. sort them into two groups, outgoing and incoming
-    def get_topic_relationships(topic_id)
+    def get_topic_relationships(topic)
       query = "
-        START n=node:topics(uuid = '#{topic_id.to_s}')
+        START n=node:topics(uuid = '#{topic.id}')
         MATCH (n)-[r]->(x)
         WHERE has(r.connection_id)
         RETURN r,x
@@ -311,12 +318,26 @@ class Neo4j
       outgoing = Neo4j.neo.execute_query(query)
 
       query = "
-        START n=node:topics(uuid = '#{topic_id.to_s}')
+        START n=node:topics(uuid = '#{topic.id}')
         MATCH (n)<-[r]-(x)
         WHERE has(r.connection_id)
         RETURN r,x
       "
       incoming = Neo4j.neo.execute_query(query)
+
+      query = "
+        START n=node:topics(uuid = '#{topic.id}')
+        MATCH (n)-[r:pull]->(x)
+        RETURN r,x
+      "
+      pulls = Neo4j.neo.execute_query(query)
+
+      query = "
+        START n=node:topics(uuid = '#{topic.id}')
+        MATCH (n)<-[r:pull]-(x)
+        RETURN r,x
+      "
+      pushes = Neo4j.neo.execute_query(query)
 
       organized = {}
 
@@ -324,7 +345,7 @@ class Neo4j
         outgoing['data'].each do |c|
           type = c[0]['type']
           organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
-          organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
+          organized[type]['connections'] << c[0]['data'].select{|key,value|['user_id'].include?(key)}.merge(c[1]['data'])
         end
       end
 
@@ -332,7 +353,60 @@ class Neo4j
         incoming['data'].each do |c|
           type = c[0]['data']['reverse_name'].blank? ? c[0]['type'] : c[0]['data']['reverse_name']
           organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
-          organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
+          data = c[0]['data'].select{|key,value|['user_id'].include?(key)}.merge(c[1]['data'])
+          organized[type]['connections'] << data
+        end
+      end
+
+      if pulls
+        pulls['data'].each do |c|
+
+          found = nil
+
+          organized.each do |k,o|
+            found = o['connections'].detect{|con| con['uuid'] == c[1]['data']['uuid'] }
+            break if found
+          end
+
+          if found
+            found['pull'] = true
+            next
+          end
+
+          type = 'Pull'
+          organized[type] ||= {
+              'connection_id' => 'pull',
+              'reverse_name' => 'pull',
+              'inline' => 'pull',
+              'connections' => []
+          }
+          organized[type]['connections'] << { 'pull' => true }.merge(c[1]['data'])
+        end
+      end
+
+      if pushes
+        pushes['data'].each do |c|
+
+          found = nil
+
+          organized.each do |k,o|
+            found = o['connections'].detect{|con| con['uuid'] == c[1]['data']['uuid'] }
+            break if found
+          end
+
+          if found
+            found['reverse_pull'] = true
+            next
+          end
+
+          type = 'Push'
+          organized[type] ||= {
+              'connection_id' => 'push',
+              'reverse_name' => 'push',
+              'inline' => 'push',
+              'connections' => []
+          }
+          organized[type]['connections'] << { 'reverse_pull' => true }.merge(c[1]['data'])
         end
       end
 
@@ -345,71 +419,101 @@ class Neo4j
     end
 
     # get a topics pull from ids (aka the children)
-    def pull_from_ids(topic_id, depth=20)
-      query = "
-        START n=node:topics(uuid = '#{topic_id}')
-        MATCH n-[:pull*1..#{depth}]->x
-        RETURN distinct x.uuid
-      "
-      ids = Neo4j.neo.execute_query(query)
-      pull_from = []
-      if ids
-        ids['data'].each do |id|
-          pull_from << Moped::BSON::ObjectId(id[0])
+    def pull_from_ids(topic_neo_id, depth=20)
+      #Rails.cache.fetch("neo4j-#{topic_neo_id}-pulling-#{depth}", :expires_in => 1.day) do
+        query = "
+          START n=node(#{topic_neo_id})
+          MATCH n-[:pull*1..#{depth}]->x
+          RETURN distinct x.uuid
+        "
+        ids = Neo4j.neo.execute_query(query)
+        pull_from = []
+        if ids
+          ids['data'].each do |id|
+            pull_from << Moped::BSON::ObjectId(id[0])
+          end
         end
-      end
-      pull_from
+        pull_from
+      #end
     end
 
     # get the topics that pull from the given topics (aka the parents)
-    def pulled_from_ids(topic_id, depth=20)
-      query = "
-        START n=node:topics(uuid = '#{topic_id}')
-        MATCH n<-[:pull*1..#{depth}]-x
-        RETURN distinct x.uuid
-      "
-      ids = Neo4j.neo.execute_query(query)
-      pull_from = []
-      if ids
-        ids['data'].each do |id|
-          pull_from << Moped::BSON::ObjectId(id[0])
+    def pulled_from_ids(topic_neo_id, depth=20)
+      #Rails.cache.fetch("neo4j-#{topic_neo_id}-pushing-#{depth}", :expires_in => 1.day) do
+        query = "
+          START n=node(#{topic_neo_id})
+          MATCH n<-[:pull*1..#{depth}]-x
+          RETURN distinct x.uuid
+        "
+        ids = Neo4j.neo.execute_query(query)
+        pull_from = []
+        if ids
+          ids['data'].each do |id|
+            pull_from << Moped::BSON::ObjectId(id[0])
+          end
         end
-      end
-      pull_from
+        pull_from
+      #end
     end
 
-    def user_topic_children(user_id, topic_id)
-      query = "
-        START n=node:topics(uuid = '#{topic_id}')
-        MATCH n-[:pull]->x-[:pull*0..20]->y<-[:talking]-z
-        WHERE z.uuid = '#{user_id}'
-        RETURN distinct x.uuid
-      "
-      ids = Neo4j.neo.execute_query(query)
-      children_ids = []
-      if ids
-        ids['data'].each do |id|
-          children_ids << Moped::BSON::ObjectId(id[0])
+    def user_topic_children(user_id, topic_neo_id)
+      #Rails.cache.fetch("neo4j-#{user_id}-#{topic_id}-pulling", :expires_in => 1.day) do
+        query = "
+          START n=node(#{topic_neo_id})
+          MATCH n-[:pull]->x-[:pull*0..20]->y<-[:talking]-z
+          WHERE z.uuid = '#{user_id}'
+          RETURN distinct x.uuid
+        "
+        ids = Neo4j.neo.execute_query(query)
+        children_ids = []
+        if ids
+          ids['data'].each do |id|
+            children_ids << Moped::BSON::ObjectId(id[0])
+          end
         end
-      end
-      children_ids
+        children_ids
+      #end
     end
 
-    def user_topics(user_id)
-      query = "
-        START n=node:users(uuid = '#{user_id}')
-        MATCH n-[:talking]->x<-[:pull*0..]-y<-[?:pull]-z
-        WHERE z is null
-        RETURN distinct y.uuid
-      "
-      ids = Neo4j.neo.execute_query(query)
-      topic_ids = []
-      if ids
-        ids['data'].each do |id|
-          topic_ids << Moped::BSON::ObjectId(id[0])
+    def user_topics(user_neo_id)
+      #Rails.cache.fetch("neo4j-#{user_id}-topics", :expires_in => 1.day) do
+        query = "
+          START n=node(#{user_neo_id})
+          MATCH n-[:talking]->x<-[:pull*0..20]-y<-[?:pull]-z
+          WHERE z is null
+          RETURN distinct y.uuid
+        "
+        ids = Neo4j.neo.execute_query(query)
+        topic_ids = []
+        if ids
+          ids['data'].each do |id|
+            topic_ids << Moped::BSON::ObjectId(id[0])
+          end
         end
-      end
-      topic_ids
+        topic_ids
+      #end
+    end
+
+    # get the # of shares a user has in this topic and it's children
+    def user_topic_share_count(user_id, topic_neo_id)
+      #Rails.cache.fetch("neo4j-#{user_id}-#{topic_id}-share_count", :expires_in => 1.day) do
+        count = 0
+        query = "
+          START n=node(#{topic_neo_id})
+          MATCH n-[:pull*0..20]->x<-[r:talking]-y
+          WHERE y.uuid = '#{user_id}'
+          RETURN r.shares
+        "
+        data = Neo4j.neo.execute_query(query)
+        ids = []
+        if data && data['data']
+          data['data'].each do |d|
+            ids += d[0]
+          end
+          count = ids.uniq.length
+        end
+        count
+      #end
     end
 
     # user interests, used in the user sidebar

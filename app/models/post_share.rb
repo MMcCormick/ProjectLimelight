@@ -14,7 +14,7 @@ class PostShare
   belongs_to :user
   embedded_in :post_media
 
-  after_create :update_user_share, :neo4j_create
+  after_create :update_user_share, :neo4j_create, :feed_post_create
 
   def created_at
     id.generation_time
@@ -26,6 +26,16 @@ class PostShare
       user.topic_activity_add(tid)
     end
     user.save
+  end
+
+  def feed_post_create
+    return unless status == 'active'
+    Resque.enqueue(PushPostToFeeds, _parent.id.to_s, user_id.to_s)
+  end
+
+  def push_to_feeds
+    FeedUserItem.push_post_through_users(_parent, user)
+    FeedUserItem.push_post_through_topics(_parent)
   end
 
   def neo4j_create

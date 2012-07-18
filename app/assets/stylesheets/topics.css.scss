@@ -98,14 +98,16 @@
     @include clearfix();
     margin-bottom: 5px;
     position: relative;
-    width: 350px;
+    width: 500px;
 
     >div {
       float: right;
     }
     .primary,
     .delete,
-    .ooac-btn {
+    .ooac-btn,
+    .pull,
+    .push {
       cursor: pointer;
       color: $red;
       margin-left: 20px;

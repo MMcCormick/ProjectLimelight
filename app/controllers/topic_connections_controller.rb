@@ -1,7 +1,8 @@
 class TopicConnectionsController < ApplicationController
 
   def index
-    connections = Neo4j.get_topic_relationships(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
+    connections = Neo4j.get_topic_relationships(topic)
 
     render json: connections
   end
@@ -30,7 +31,11 @@ class TopicConnectionsController < ApplicationController
     topic2 = params[:topic2_id] == "0" ? Topic.find_untyped_or_create(params[:topic2_name], current_user) : Topic.find(params[:topic2_id])
 
     # If type of, use Topic.type_of_id
-    con = params[:type_of] == "true" ? TopicConnection.find(Topic.type_of_id) : TopicConnection.find(Topic.related_to_id)
+    if params[:id] == 'pull'
+      con = true
+    else
+      con = params[:type_of] == "true" ? TopicConnection.find(Topic.type_of_id) : TopicConnection.find(Topic.related_to_id)
+    end
 
     if !topic1 || !topic2
       response = build_ajax_response(:error, nil, "Please select / create topics from the drop down")
@@ -39,39 +44,19 @@ class TopicConnectionsController < ApplicationController
       if con
         # if admin, create connection
         if current_user.role?('admin')
-          pull = params[:pull] == "true" ? true : false
-          reverse_pull = params[:reverse_pull] == "true" ? true : false
-          if TopicConnection.add(con, topic1, topic2, current_user.id, {:pull => pull, :reverse_pull => reverse_pull})
+          if params[:id] == 'pull'
+            success = TopicConnection.add_pull(topic1, topic2)
+          else
+            pull = params[:pull] == "true" ? true : false
+            reverse_pull = params[:reverse_pull] == "true" ? true : false
+            success = TopicConnection.add(con, topic1, topic2, current_user.id, {:pull => pull, :reverse_pull => reverse_pull})
+          end
+
+          if success
             response = build_ajax_response(:ok, nil, "Your connection has been saved, admin!")
             status = 201
           else
             response = build_ajax_response(:error, nil, "Connection already exists (admin)", topic1.errors)
-            status = 422
-          end
-          # if non-admin, create suggestion
-        else
-          attr = params.merge({ :name => con.name, :reverse_name => con.reverse_name,
-                                :topic1_slug => topic1.slug, :topic2_slug => topic2.slug,
-                                :topic1_id => topic1.id, :topic2_id => topic2.id, :con_id => con.id,
-                                :topic1_name => topic1.name, :topic2_name => topic2.name })
-          sug = current_user.topic_con_sugs.build(attr)
-          if sug.save
-            ActionConnection.create(
-                :action => 'suggest',
-                :from_id => current_user.id,
-                :to_id => con.id,
-                :from_topic => topic1.id,
-                :to_topic => topic2.id,
-                :pull_from => params[:pull_from],
-                :reverse_pull_from => params[:reverse_pull_from]
-            )
-            #topic1.expire_caches BETA REMOVE
-            #topic2.expire_caches BETA REMOVE
-            html = render_to_string :partial => 'teaser', :locals => { :sug => sug }
-            response = build_ajax_response(:ok, nil, "Your connection has been submitted!", nil, :teaser => html)
-            status = 201
-          else
-            response = build_ajax_response(:error, nil, "Connection could not be submitted", sug.errors)
             status = 422
           end
         end
@@ -86,12 +71,20 @@ class TopicConnectionsController < ApplicationController
 
   def remove
     topic1 = Topic.find(params[:topic1_id])
-    authorize! :update, topic1
-    connection = TopicConnection.find(params[:connection_id])
     topic2 = Topic.find(params[:topic2_id])
 
+    authorize! :update, topic1
+    authorize! :update, topic2
+
+    connection = params[:id] == 'pull' ? true : TopicConnection.find_by_slug_id(params[:id])
+
     if topic1 && topic2 && connection
-      TopicConnection.remove(connection, topic1, topic2)
+      if params[:id] == 'pull'
+        TopicConnection.remove_pull(topic1, topic2)
+      else
+        TopicConnection.remove(connection, topic1, topic2)
+      end
+
       if topic1.save
         response = build_ajax_response(:ok, nil, "Connection removed!")
         status = 201

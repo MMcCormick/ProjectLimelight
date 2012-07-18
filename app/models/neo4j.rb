@@ -301,9 +301,9 @@ class Neo4j
     end
 
     # get a topic's relationships. sort them into two groups, outgoing and incoming
-    def get_topic_relationships(topic_id)
+    def get_topic_relationships(topic)
       query = "
-        START n=node:topics(uuid = '#{topic_id.to_s}')
+        START n=node:topics(uuid = '#{topic.id}')
         MATCH (n)-[r]->(x)
         WHERE has(r.connection_id)
         RETURN r,x
@@ -311,12 +311,26 @@ class Neo4j
       outgoing = Neo4j.neo.execute_query(query)
 
       query = "
-        START n=node:topics(uuid = '#{topic_id.to_s}')
+        START n=node:topics(uuid = '#{topic.id}')
         MATCH (n)<-[r]-(x)
         WHERE has(r.connection_id)
         RETURN r,x
       "
       incoming = Neo4j.neo.execute_query(query)
+
+      query = "
+        START n=node:topics(uuid = '#{topic.id}')
+        MATCH (n)-[r:pull]->(x)
+        RETURN r,x
+      "
+      pulls = Neo4j.neo.execute_query(query)
+
+      query = "
+        START n=node:topics(uuid = '#{topic.id}')
+        MATCH (n)<-[r:pull]-(x)
+        RETURN r,x
+      "
+      pushes = Neo4j.neo.execute_query(query)
 
       organized = {}
 
@@ -324,7 +338,7 @@ class Neo4j
         outgoing['data'].each do |c|
           type = c[0]['type']
           organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
-          organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
+          organized[type]['connections'] << c[0]['data'].select{|key,value|['user_id'].include?(key)}.merge(c[1]['data'])
         end
       end
 
@@ -332,7 +346,60 @@ class Neo4j
         incoming['data'].each do |c|
           type = c[0]['data']['reverse_name'].blank? ? c[0]['type'] : c[0]['data']['reverse_name']
           organized[type] ||= c[0]['data'].select{|key,value|['connection_id','reverse_name','inline'].include?(key)}.merge({'connections' => []})
-          organized[type]['connections'] << c[0]['data'].select{|key,value|['pull','reverse_pull','user_id'].include?(key)}.merge(c[1]['data'])
+          data = c[0]['data'].select{|key,value|['user_id'].include?(key)}.merge(c[1]['data'])
+          organized[type]['connections'] << data
+        end
+      end
+
+      if pulls
+        pulls['data'].each do |c|
+
+          found = nil
+
+          organized.each do |k,o|
+            found = o['connections'].detect{|con| con['uuid'] == c[1]['data']['uuid'] }
+            break if found
+          end
+
+          if found
+            found['pull'] = true
+            next
+          end
+
+          type = 'Pull'
+          organized[type] ||= {
+              'connection_id' => 'pull',
+              'reverse_name' => 'pull',
+              'inline' => 'pull',
+              'connections' => []
+          }
+          organized[type]['connections'] << { 'pull' => true }.merge(c[1]['data'])
+        end
+      end
+
+      if pushes
+        pushes['data'].each do |c|
+
+          found = nil
+
+          organized.each do |k,o|
+            found = o['connections'].detect{|con| con['uuid'] == c[1]['data']['uuid'] }
+            break if found
+          end
+
+          if found
+            found['reverse_pull'] = true
+            next
+          end
+
+          type = 'Push'
+          organized[type] ||= {
+              'connection_id' => 'push',
+              'reverse_name' => 'push',
+              'inline' => 'push',
+              'connections' => []
+          }
+          organized[type]['connections'] << { 'pull' => true }.merge(c[1]['data'])
         end
       end
 

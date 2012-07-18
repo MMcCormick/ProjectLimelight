@@ -29,6 +29,15 @@ class TopicConnection
 
   class << self
 
+    # find a topic by slug or id
+    def find_by_slug_id(id)
+      if Moped::BSON::ObjectId.legal?(id)
+        TopicConnection.find(id)
+      else
+        TopicConnection.where(:name => id).first
+      end
+    end
+
     # pulla is a hash of format { :pull => Boolean, :reverse_pull => Boolean }
     # TODO: improve error detection - return false and don't save topics if no connection was created?
     # TODO: use batch operations
@@ -95,6 +104,19 @@ class TopicConnection
       else
         false
       end
+    end
+
+    # add a pull connection from topic1 -> topic2
+    def add_pull(topic1, topic2)
+      rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}")
+      unless rel1
+        node1 = Neo4j.neo.get_node(topic1.neo4j_id)
+        node2 = Neo4j.neo.get_node(topic2.neo4j_id)
+
+        rel1 = Neo4j.neo.create_relationship('pull', node1, node2)
+        Neo4j.neo.add_relationship_to_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}", rel1)
+      end
+      true
     end
 
     def remove(connection, topic1, topic2)
@@ -197,6 +219,26 @@ class TopicConnection
       end
 
       Neo4j.update_affinity(topic1.id.to_s, topic2.id.to_s, nil, nil, -10, true, false)
+    end
+
+    # remove a pull connection from topic1 -> topic2
+    def remove_pull(topic1, topic2)
+      rel1 = Neo4j.neo.get_relationship_index('topics', 'pull', "#{topic1.id.to_s}-#{topic2.id.to_s}")
+      if rel1
+        Neo4j.neo.delete_relationship(rel1)
+        Neo4j.neo.remove_relationship_from_index('topics', rel1)
+      else # find the relationship manually
+        node = Neo4j.neo.get_node(topic1.neo4j_id)
+        outgoing = Neo4j.neo.get_node_relationships(node, "out", 'pull')
+        if outgoing
+          outgoing.each do |rel|
+            if Neo4j.parse_id(rel['end']).to_i == topic2.neo4j_id.to_i
+              Neo4j.neo.delete_relationship(rel)
+              break
+            end
+          end
+        end
+      end
     end
   end
 end

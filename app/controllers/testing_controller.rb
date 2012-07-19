@@ -7,7 +7,7 @@ class TestingController < ApplicationController
     users = User.where(:twitter_handle => {"$exists" => true})
     users.each do |user|
       # Get user's tweets
-      tweets = Twitter.user_timeline(user.twitter_handle, :count => 30, :exclude_replies => true, :include_entities => true)
+      tweets = Twitter.user_timeline(user.twitter_handle, :count => 30, :exclude_replies => true, :include_entities => true, :since_id => user.latest_tweet_id)
       tweets.each do |tweet|
         # Grab first url from tweet if it exists
         if tweet.urls.first
@@ -41,7 +41,9 @@ class TestingController < ApplicationController
             end
           end
         end
+        user.latest_tweet_id = tweet.id
       end
+      user.save
     end
 
     #authorize! :manage, :all

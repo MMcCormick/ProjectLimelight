@@ -14,7 +14,13 @@ class PostsController < ApplicationController
         topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
         @posts = PostMedia.where("shares.user_id" => user.id, "shares.0.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20).desc("shares.0._id")
       else
-        @posts = PostMedia.where("shares.user_id" => user.id).limit(20).desc("shares.0._id")
+        foo = current_user
+        if signed_in? && (user.id == current_user.id || current_user.role?("admin"))
+          @posts = PostMedia.unscoped
+        else
+          @posts = PostMedia
+        end
+        @posts = @posts.where("shares.user_id" => user.id).limit(20).desc("shares.0._id")
       end
 
     elsif params[:topic_id]

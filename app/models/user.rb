@@ -79,6 +79,7 @@ class User
   field :topic_activity, :type => Hash, :default => {} # keeps track of how many posts a user has in topics (just counts)
   field :stub_user, :default => false
   field :twitter_handle
+  field :latest_tweet_id, :default => 1
 
   embeds_many :social_connects
 
@@ -93,7 +94,7 @@ class User
 
   attr_accessor :login
   attr_accessible :username, :first_name, :last_name, :email, :password, :password_confirmation, :remember_me,
-                  :login, :bio, :used_invite_code_id, :stub_user
+                  :login, :bio, :used_invite_code_id, :stub_user, :twitter_handle
 
   with_options :if => :is_active? do |user|
     user.validates :username, :uniqueness => { :case_sensitive => false, :message => 'Username is already taken' },
@@ -403,7 +404,7 @@ class User
   end
 
   def add_to_soulmate
-    Resque.enqueue(SmCreateUser, id.to_s)
+    Resque.enqueue(SmCreateUser, id.to_s) unless stub_user
   end
 
   def remove_from_soulmate

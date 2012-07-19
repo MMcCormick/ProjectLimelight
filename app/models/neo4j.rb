@@ -86,7 +86,12 @@ class Neo4j
         end
 
         if post_id
-          payload['shares'] = properties['shares'] ? (properties['shares'] << post_id.to_s).uniq : [post_id.to_s]
+          if change > 0
+            payload['shares'] = properties['shares'] ? (properties['shares'] << post_id.to_s).uniq : [post_id.to_s]
+          elsif properties['shares']
+            properties['shares'].delete(post_id.to_s)
+            payload['shares'] = properties['shares'] if properties['shares'].length > 0
+          end
         end
 
         Neo4j.neo.set_relationship_properties(talking, payload) if payload.length > 0

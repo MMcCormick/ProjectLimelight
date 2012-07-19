@@ -174,6 +174,17 @@ class PostMedia
     share
   end
 
+  def delete_share(user_id)
+    share = get_share(user_id)
+    if share
+      share.topic_mentions.each do |t|
+        Neo4j.update_talk_count(share.user, t, -1, nil, nil, id)
+      end
+      self.shares.delete(share)
+      reset_topic_ids
+    end
+  end
+
   def get_share(user_id)
     shares.unscoped.where(:user_id => user_id).first
   end
@@ -191,6 +202,15 @@ class PostMedia
   end
   # END COMMENTS
 
+  # goes through all shares and re-calculates the topic_ids that should be on this post
+  def reset_topic_ids
+    topic_ids = []
+    shares.each do |s|
+      topic_ids += s.topic_mention_ids
+    end
+    self.topic_ids = topic_ids.uniq
+  end
+
   def current_user_own
     grant_owner(user.id)
   end
@@ -204,10 +224,8 @@ class PostMedia
   end
 
   def disconnect
-    # destroy posts connected to this post
-    posts.each do |p|
-      p.destroy
-    end
+    # remove from user feeds
+    FeedUserItem.where(:post_id => id).delete
 
     # remove from neo4j
     node = Neo4j.neo.get_node_index('post_media', 'uuid', id.to_s)
@@ -261,8 +279,13 @@ class PostMedia
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
+<<<<<<< HEAD
     :images => { :definition => lambda { |instance| instance.status == "pending" ? instance.pending_images : instance.json_images }, :properties => :short, :versions => [ :v1 ] },
     :share => { :definition => :individual_share, :properties => :short, :versions => [ :v1 ] },
+=======
+    :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
+    :share => { :type => :reference, :definition => :individual_share, :properties => :short, :versions => [ :v1 ] },
+>>>>>>> f25f319b8aeb82770e0757166c812d3aef45ec68
     :primary_source => { :type => :reference, :definition => :primary_source, :properties => :short, :versions => [ :v1 ] },
     :comments => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :topic_mentions => { :type => :reference, :definition => :topics, :properties => :short, :versions => [ :v1 ] }

@@ -36,8 +36,7 @@ class LL.Views.PostFormContent extends Backbone.View
             html += "<div class='topic-type'>#{data.data.type}</div>"
           html
         selectCallback: (term, data, type) ->
-          name = if data.data then data.data.slug else 'new'
-          self.addTopic($(val), data.term, data.id, name)
+          self.addTopic($(val), data.term, data.id)
     @
 
   setData: =>
@@ -184,4 +183,3 @@ class LL.Views.PostFormContent extends Backbone.View
         @addTopicStat(topic)
       else
         topic.fetch(success: (model, response) -> self.addTopicStat(model))
-

@@ -170,6 +170,17 @@ class PostMedia
     share
   end
 
+  def delete_share(user_id)
+    share = get_share(user_id)
+    if share
+      share.topic_mentions.each do |t|
+        Neo4j.update_talk_count(share.user, t, -1, nil, nil, id)
+      end
+      self.shares.delete(share)
+      reset_topic_ids
+    end
+  end
+
   def get_share(user_id)
     shares.where(:user_id => user_id).first
   end
@@ -209,10 +220,8 @@ class PostMedia
   end
 
   def disconnect
-    # destroy posts connected to this post
-    posts.each do |p|
-      p.destroy
-    end
+    # remove from user feeds
+    FeedUserItem.where(:post_id => id).delete
 
     # remove from neo4j
     node = Neo4j.neo.get_node_index('post_media', 'uuid', id.to_s)

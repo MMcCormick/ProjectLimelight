@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_filter :authenticate_user!, :only => [:create,:edit,:update,:destroy,:disable,:stream,:publish_share]
+  before_filter :authenticate_user!, :only => [:create,:edit,:update,:destroy,:disable,:stream,:publish_share,:discard_share]
   include ModelUtilitiesHelper
 
   respond_to :html, :json
@@ -140,6 +140,25 @@ class PostsController < ApplicationController
       else
         render :json => build_ajax_response(:error, nil, "Could not Publish Post.", post.errors, nil), :status => 400
       end
+    else
+      render :json => build_ajax_response(:error, nil, "Could not find post.'", nil, nil), :status => 404
+    end
+  end
+
+  def discard_share
+    post = PostMedia.find(params[:id])
+    if post
+
+      post.delete_share(current_user.id)
+
+      if post.status == 'pending' && post.shares.length == 0
+        post.destroy
+      else
+        post.save
+      end
+
+      render :json => build_ajax_response(:ok, nil, "Share Discarded"), :status => 201
+
     else
       render :json => build_ajax_response(:error, nil, "Could not find post.'", nil, nil), :status => 404
     end

@@ -31,7 +31,6 @@ module EmbedlyHelper
       response[:only_picture] = true
     else
       embedly_key = 'ca77b5aae56d11e0a9544040d3dc5c07'
-
       begin
         buffer = open("http://api.embed.ly/1/preview?key=#{embedly_key}&url=#{CGI.escape(url)}&format=json", "UserAgent" => "Ruby-Wget").read
       rescue

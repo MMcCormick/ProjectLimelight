@@ -32,7 +32,11 @@ class PullTweets
           end
 
           if post && !post.get_share(user.id)
-            share = post.add_share(user.id, tweet.text)
+            text_without_url = tweet.text
+            tweet.urls.each do |u|
+              text_without_url.slice!(u.url)
+            end
+            share = post.add_share(user.id, text_without_url)
             share.status = "pending"
             share.add_medium({:source => "Twitter", :id => tweet.id, :url => "https://twitter.com/#{user.twitter_handle}/statuses/#{tweet.id}"})
 

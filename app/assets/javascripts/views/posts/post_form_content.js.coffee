@@ -46,6 +46,7 @@ class LL.Views.PostFormContent extends Backbone.View
     $(@el).find('#post-form-source-vid').val(@model.video)
     $(@el).find('#post-form-embed').val(@model.video)
     $(@el).find('#post-form-remote-image-url').val(@model.remote_image_url)
+    $(@el).find('#post-form-description').val(@model.description)
     $(@el).find('#post-form-image-cache').val(@model.image_cache)
 
     if @model.existing

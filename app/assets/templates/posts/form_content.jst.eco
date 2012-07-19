@@ -39,6 +39,7 @@
     <input type="hidden" id="post-form-source-vid" name="source_video_id" />
     <input type="hidden" id="post-form-embed" name="embed_html" />
     <input type="hidden" id="post-form-type" name="type" value="Post" />
+    <input type="hidden" id="post-form-description" name="description" />
     <input type="hidden" id="post-form-parent-id" name="post_id" />
     <input type="hidden" id="post-form-remote-image-url" name="remote_image_url" autocomplete="off" />
     <input type="hidden" id="post-form-image-cache" name="image_cache" autocomplete="off" />

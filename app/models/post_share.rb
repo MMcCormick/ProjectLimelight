@@ -8,6 +8,7 @@ class PostShare
   field :mediums, :default => {}
   field :status, :default => 'active'
   field :from_bookmarklet, :default => false
+  field :mediums, :default => []
 
   attr_accessible :content, :mediums, :from_bookmarklet
 
@@ -21,11 +22,13 @@ class PostShare
   end
 
   def update_user_share
-    user.share_count += 1
-    topic_mention_ids.each do |tid|
-      user.topic_activity_add(tid)
+    if status == "active"
+      user.share_count += 1
+      topic_mention_ids.each do |tid|
+        user.topic_activity_add(tid)
+      end
+      user.save
     end
-    user.save
   end
 
   def feed_post_create
@@ -40,6 +43,10 @@ class PostShare
 
   def neo4j_create
     Resque.enqueue(Neo4jShareCreate, _parent.id.to_s, user_id.to_s)
+  end
+
+  def add_medium(medium)
+    self.mediums << medium
   end
 
   ##########

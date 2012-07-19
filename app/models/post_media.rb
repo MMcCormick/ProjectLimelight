@@ -20,6 +20,7 @@ class PostMedia
   field :fb_score, :default => 0
   field :neo4j_id, :type => Integer
   field :status, :default => 'active'
+  field :pending_images
 
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
   embeds_many :comments, :class_name => 'CommentEmbedded'
@@ -31,9 +32,12 @@ class PostMedia
   has_and_belongs_to_many :topics, :inverse_of => nil, :index => true
 
   validate :title_length, :unique_source
+  validates :description, :length => {:maximum => 1500}
 
-  attr_accessible :title, :source_name, :source_url, :source_video_id, :source_title, :source_content, :embed_html
+  attr_accessible :title, :source_name, :source_url, :source_video_id, :source_title, :source_content, :embed_html, :description, :pending_images
   attr_accessor :source_name, :source_url, :source_video_id, :source_title, :source_content, :individual_share
+
+  default_scope where(:status => "active")
 
   before_validation :set_source_snippet
   before_create :current_user_own
@@ -147,11 +151,11 @@ class PostMedia
   end
 
   # SHARES
-  def add_share(user_id, content, topic_ids=[], topic_names=[], mediums={}, from_bookmarklet=false)
+  def add_share(user_id, content, topic_ids=[], topic_names=[], from_bookmarklet=false)
     existing = shares.where(:user_id => user_id).first
     return existing if existing
 
-    share = PostShare.new(:content => content, :topic_mention_ids => topic_ids, :topic_mention_names => topic_names, :mediums => mediums, :from_bookmarklet => from_bookmarklet)
+    share = PostShare.new(:content => content, :topic_mention_ids => topic_ids, :topic_mention_names => topic_names, :from_bookmarklet => from_bookmarklet)
     share.user_id = user_id
 
     if share.valid?
@@ -251,8 +255,9 @@ class PostMedia
     :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
     :type => { :definition => :_type, :properties => :short, :versions => [ :v1 ] },
     :title => { :properties => :short, :versions => [ :v1 ] },
-    :topic_count => { :definition => :ll_score, :properties => :short, :versions => [ :v1 ] },
-    :share_count => { :definition => :topic_count, :properties => :short, :versions => [ :v1 ] },
+    :topic_count => { :properties => :short, :versions => [ :v1 ] },
+    :share_count => { :properties => :short, :versions => [ :v1 ] },
+    :status => { :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },

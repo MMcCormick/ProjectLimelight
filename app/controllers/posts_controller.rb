@@ -84,7 +84,7 @@ class PostsController < ApplicationController
         end
 
         if !comment || comment.valid?
-          @share = @post.add_share(current_user.id, params[:content], params[:topic_mention_ids], params[:topic_mention_names], {}, !params[:from_bookmarklet].blank?)
+          @share = @post.add_share(current_user.id, params[:content], params[:topic_mention_ids], params[:topic_mention_names], !params[:from_bookmarklet].blank?)
 
           if @post.valid?
             @post.save

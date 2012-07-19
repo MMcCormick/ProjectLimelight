@@ -200,7 +200,7 @@ class FeedUserItem
       if target.class.name == 'Topic'
         core_objects = PostMedia.where(:topic_ids => target.id).limit(20)
       else
-        core_objects = Post.where("shares.user_id" => target.id).limit(20)
+        core_objects = PostMedia.where("shares.user_id" => target.id).limit(20)
       end
       core_objects.each do |post|
         if target.class.name == 'Topic'

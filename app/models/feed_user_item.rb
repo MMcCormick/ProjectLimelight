@@ -91,7 +91,7 @@ class FeedUserItem
 
         # if it's a new feed post
         unless backlog || (!new_item && poster.id == u.id)
-          Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.as_json(:properties => :public))
+          Pusher["#{u.username}_realtime"].trigger('new_post', root_post.as_json(:properties => :public))
         end
       end
 
@@ -149,7 +149,7 @@ class FeedUserItem
 
             # if it's a new feed post, push it to the users feed
             unless backlog
-              Pusher["#{u.id.to_s}_realtime"].trigger('new_post', root_post.as_json(:properties => :short))
+              Pusher["#{u.username}_realtime"].trigger('new_post', root_post.as_json(:properties => :short))
             end
           end
         end

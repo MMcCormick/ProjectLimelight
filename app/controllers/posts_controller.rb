@@ -159,7 +159,7 @@ class PostsController < ApplicationController
 
   # The main user feed
   def user_feed
-    user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
+    user = params[:id] && params[:id] != "0" ? User.find_by_slug_id(params[:id]) : current_user
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     posts = Post.feed(user.id, params[:sort], page)
@@ -168,7 +168,7 @@ class PostsController < ApplicationController
 
   # The user activity feed
   def activity_feed
-    user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
+    user = params[:id] && params[:id] != "0" ? User.find_by_slug_id(params[:id]) : current_user
     not_found("User not found") unless user
     page = params[:p] ? params[:p].to_i : 1
     topic = params[:topic_id] && params[:topic_id] != "0" ? Topic.where(:slug_pretty => params[:topic_id].parameterize).first : nil
@@ -178,7 +178,7 @@ class PostsController < ApplicationController
 
   # Topic feeds...
   def topic_feed
-    topic = Topic.unscoped.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     not_found("Topic not found") unless topic
 
     page = params[:p] ? params[:p].to_i : 1
@@ -199,7 +199,7 @@ class PostsController < ApplicationController
     post = Post.find(params[:id])
     not_found("Post not found") unless post
 
-    topic = Topic.find(params[:topic_id])
+    topic = Topic.find_by_slug_id(params[:topic_id])
     not_found("Topic not found") unless topic
 
     authorize! :update, post

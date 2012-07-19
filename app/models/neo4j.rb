@@ -56,11 +56,11 @@ class Neo4j
         if i == 0
           topic_node1 = Neo4j.neo.get_node_index('topics', 'uuid', t.id.to_s)
           Neo4j.update_affinity(user.id.to_s, t.id.to_s, user_node, topic_node1, 1)
-          Neo4j.update_talk_count(user, t, 1, user_node, topic_node1)
+          Neo4j.update_talk_count(user, t, 1, user_node, topic_node1, post.id)
         else
           topic_node2 = Neo4j.neo.get_node_index('topics', 'uuid', t.id.to_s)
           Neo4j.update_affinity(user.id.to_s, t.id.to_s, user_node, topic_node2, 1)
-          Neo4j.update_talk_count(user, t, 1, user_node, topic_node2)
+          Neo4j.update_talk_count(user, t, 1, user_node, topic_node2, post.id)
         end
       end
 

@@ -589,7 +589,8 @@ class Topic
   end
 
   json_fields \
-    :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
+    :_id => { :properties => :short, :versions => [ :v1 ] },
+    :id => { :definition => :url_pretty, :properties => :short, :versions => [ :v1 ] },
     :slug => { :properties => :short, :versions => [ :v1 ] },
     :url_pretty => { :properties => :short, :versions => [ :v1 ] },
     :url => { :definition => lambda { |instance| "/#{instance.to_param}" }, :properties => :short, :versions => [ :v1 ] },

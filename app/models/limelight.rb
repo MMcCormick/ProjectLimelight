@@ -453,7 +453,7 @@ module Limelight #:nodoc:
           user.score += amt # the post's user (creator)
           user.save
           Resque.enqueue_in(10.minutes, ScoreUpdate, 'User', user_id.to_s)
-          Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => amt})
+          #Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => amt})
         end
 
         # Update mentioned topics if applicable
@@ -467,7 +467,7 @@ module Limelight #:nodoc:
               affected_topic_ids << topic.id
 
               action.pop_snippets.new(:amount => topic_amt, :id => topic.id, :object_type => "Topic")
-              Pusher[topic.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
+              #Pusher[topic.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
 
               if topic.score >= 0 && topic.influencers.length >= 3
                 Resque.enqueue_in(10.minutes, RecalculateInfluence, topic.id.to_s)
@@ -484,7 +484,7 @@ module Limelight #:nodoc:
               increase.topic = topic
               increase.id = topic.name
 
-              Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
+              #Pusher[user_id.to_s].trigger('influence_change', increase.to_json(:properties => :public))
             end
           end
 
@@ -524,7 +524,7 @@ module Limelight #:nodoc:
     def change_pop(amt)
       self.score += amt
       Resque.enqueue_in(10.minutes, ScoreUpdate, 'Post', id.to_s)
-      Pusher[id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
+      #Pusher[id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
     end
   end
 

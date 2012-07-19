@@ -174,12 +174,12 @@ class Neo4j
       node2 = self.neo.get_node_index(node2_index, 'uuid', node2_id)
 
       unless node1
-        target = Kernel.const_get(node1_index.singularize.capitalize).find(node1_id)
+        target = Kernel.const_get(node1_index.singularize.capitalize).find_by_slug_id(node1_id)
         node1 = target.neo4j_create
       end
 
       unless node2
-        target = Kernel.const_get(node2_index.singularize.capitalize).find(node2_id)
+        target = Kernel.const_get(node2_index.singularize.capitalize).find_by_slug_id(node2_id)
         node2 = target.neo4j_create
       end
 

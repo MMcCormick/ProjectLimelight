@@ -6,7 +6,7 @@ class FollowsController < ApplicationController
 
   def create
     if ['User', 'Topic'].include? params[:type]
-      target = Kernel.const_get(params[:type]).find(params[:id])
+      target = Kernel.const_get(params[:type]).find_by_slug_id(params[:id])
       if current_user && target
         if current_user.follow_object(target)
           if params[:type] == 'User'
@@ -50,7 +50,7 @@ class FollowsController < ApplicationController
 
   def destroy
     if ['User', 'Topic'].include? params[:type]
-      target = Kernel.const_get(params[:type]).find(params[:id])
+      target = Kernel.const_get(params[:type]).find_by_slug_id(params[:id])
       if current_user && target
         if current_user.unfollow_object(target)
           if params[:type] == 'User'

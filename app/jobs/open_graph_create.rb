@@ -27,7 +27,7 @@ class OpenGraphCreate
     return if Rails.env.development?
 
     user = User.find(user_id)
-    target = Kernel.const_get(target_type).find(target_id)
+    target = Kernel.const_get(target_type).find_by_slug_id(target_id)
     if user && target
       fb = user.facebook
       if fb

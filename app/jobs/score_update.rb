@@ -5,7 +5,7 @@ class ScoreUpdate
   @queue = :slow
 
   def self.perform(target_type, target_id)
-    target = Kernel.const_get(target_type).find(target_id)
+    target = Kernel.const_get(target_type).find_by_slug_id(target_id)
     if target
       if target.class.name == 'Topic'
         Resque.enqueue(SmCreateTopic, target.id.to_s)

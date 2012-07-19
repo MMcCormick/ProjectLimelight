@@ -3,8 +3,8 @@ class OpenGraphDelete
   @queue = :medium
 
   def self.perform(user_id, target_id, target_type, action)
-    user = User.find(user_id)
-    target = Kernel.const_get(target_type).find(target_id)
+    user = User.find_by_slug_id(user_id)
+    target = Kernel.const_get(target_type).find_by_slug_id(target_id)
     if user && target
       fb = user.facebook
       if fb

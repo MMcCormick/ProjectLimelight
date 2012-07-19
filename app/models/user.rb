@@ -844,7 +844,7 @@ class User
 
   # Devise hacks for stub users
   def password_required?
-    !stub_user
+    !stub_user && (!persisted? || !password.nil? || !password_confirmation.nil?)
   end
 
   def email_required?

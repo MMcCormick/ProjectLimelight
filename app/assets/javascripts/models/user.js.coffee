@@ -9,9 +9,9 @@ class LL.Models.User extends Backbone.Model
 
   following: (model) ->
     if model.get('type') == 'User'
-      _.include(@get('following_users'), model.get('id'))
+      _.include(@get('following_users'), model.get('_id'))
     else if model.get('type') == 'Topic'
-      _.include(@get('following_topics'), model.get('id'))
+      _.include(@get('following_topics'), model.get('_id'))
     else
       false
 

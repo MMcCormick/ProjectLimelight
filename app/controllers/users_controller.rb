@@ -143,7 +143,7 @@ class UsersController < ApplicationController
   end
 
   def user_influence_increases
-    @user = params[:id] && params[:id] != "0" ? User.find(params[:id]) : current_user
+    @user = params[:id] && params[:id] != "0" ? User.find_by_slug_id(params[:id]) : current_user
     not_found("User not found") unless @user
     increases = @user.influence_increases(params[:limit].to_i, params[:with_post] == "true")
     render :json => increases.map {|i| i.as_json(:user => current_user)}
@@ -165,7 +165,7 @@ class UsersController < ApplicationController
   end
 
   def followers
-    @user = User.find(params[:id])
+    @user = User.find_by_slug_id(params[:id])
     not_found("User not found") unless @user
 
     @title = (signed_in? && current_user.id == @user.id ? 'Your' : @user.username + "'s") + " followers"
@@ -175,7 +175,7 @@ class UsersController < ApplicationController
   end
 
   def following_users
-    @user = User.find(params[:id])
+    @user = User.find_by_slug_id(params[:id])
     not_found("User not found") unless @user
 
     @title = "Users " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
@@ -185,7 +185,7 @@ class UsersController < ApplicationController
   end
 
   def following_topics
-    @user = User.find(params[:id])
+    @user = User.find_by_slug_id(params[:id])
     not_found("User not found") unless @user
 
     @title = "Topics " + (signed_in? && current_user.id == @user.id ? 'you are' : @user.username+' is') + " following"
@@ -207,7 +207,7 @@ class UsersController < ApplicationController
   # Includes core objects mentioning this user
   def feed
     if signed_in?
-      @user = params[:id] && params[:id] != "0" ? User.where(:slug => params[:id]).first : current_user
+      @user = params[:id] && params[:id] != "0" ? User.find_by_slug_id(params[:id]) : current_user
 
       not_found("User not found") unless @user
 
@@ -250,7 +250,7 @@ class UsersController < ApplicationController
   end
 
   def topic_activity
-    user = params[:id] && params[:id] != "0" ? User.where(:slug => params[:id]).first : current_user
+    user = params[:id] && params[:id] != "0" ? User.find_by_slug_id(params[:id]) : current_user
 
     not_found("User not found") unless user
 

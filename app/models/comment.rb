@@ -46,7 +46,7 @@ class Comment  # deprecated
     notification = Notification.add(post.user, :comment, true, user, nil, post, post.user, nil)
 
     unless post.user.id == user.id
-      Pusher["#{post.user.id.to_s}_private"].trigger('new_notification', notification.to_json)
+      Pusher["#{post.user.username}_private"].trigger('new_notification', notification.to_json)
     end
 
     siblings = Comment.where(:post_id => post.id)
@@ -55,7 +55,7 @@ class Comment  # deprecated
       unless used_ids.include?(sibling.user_id.to_s) || (post.user_id == sibling.user_id) || (sibling.user_id == user.id)
         notification = Notification.add(sibling.user, :also, true, user, nil, post, post.user, sibling)
         unless sibling.user.id == user.id
-          Pusher["#{sibling.user_id.to_s}_private"].trigger('new_notification', notification.to_json)
+          Pusher["#{sibling.user.username}_private"].trigger('new_notification', notification.to_json)
         end
       end
       used_ids << sibling.user_id.to_s

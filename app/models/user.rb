@@ -585,7 +585,7 @@ class User
           if self.auto_follow_fb
             if follow_user(friend)
               notification = Notification.add(friend, :follow, true, self)
-              Pusher["#{friend.id.to_s}_private"].trigger('new_notification', notification.to_json) if notification
+              Pusher["#{friend.username}_private"].trigger('new_notification', notification.to_json) if notification
             end
           end
         end
@@ -607,7 +607,7 @@ class User
           registeredFollowing.each do |following|
             if follow_user(following)
               notification = Notification.add(following, :follow, true, self)
-              Pusher["#{following.id.to_s}_private"].trigger('new_notification', notification.to_json) if notification
+              Pusher["#{following.username}_private"].trigger('new_notification', notification.to_json) if notification
             end
           end
         end
@@ -648,7 +648,8 @@ class User
   end
 
   json_fields \
-    :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
+    :_id => { :properties => :short, :versions => [ :v1 ] },
+    :id => { :definition => :username, :properties => :short, :versions => [ :v1 ] },
     :type => { :definition => lambda { |instance| 'User' }, :properties => :short, :versions => [ :v1 ] },
     :slug => { :properties => :short, :versions => [ :v1 ] },
     :username => { :properties => :short, :versions => [ :v1 ] },

@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
     if comment.valid? && post.valid?
       post.save
       track_mixpanel("New Comment", current_user.mixpanel_data)
-      Pusher[post.id.to_s].trigger('new_comment', comment.as_json(:properties => :all))
+      Pusher[post.username.to_s].trigger('new_comment', comment.as_json(:properties => :all))
       comment.send_notifications(current_user)
       response = build_ajax_response(:ok, nil, "Comment created!")
       render json: response, :status => 201

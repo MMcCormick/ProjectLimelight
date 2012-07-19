@@ -14,7 +14,6 @@ class LL.Views.PostShow extends Backbone.View
 
   render: =>
     return unless @model
-    console.log @model
     $(@el).html(@template(post: @model))
 
     prettyTime = new LL.Views.PrettyTime()

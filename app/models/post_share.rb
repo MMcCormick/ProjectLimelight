@@ -15,6 +15,8 @@ class PostShare
   belongs_to :user
   embedded_in :post_media
 
+  default_scope where(:status => "active")
+
   after_create :update_user_share, :neo4j_create, :feed_post_create
 
   def created_at

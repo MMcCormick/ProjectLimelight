@@ -49,7 +49,7 @@
 
     <div class='provider'><%= @post.provider_name %>:</div>
 
-    <% if @post.existing: %>
+    <% if @post.existing && @post.existing.get('status') == "active": %>
 
       <div class="media">
         <% if @post.existing.get('images'): %>

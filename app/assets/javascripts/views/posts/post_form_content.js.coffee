@@ -83,8 +83,14 @@ class LL.Views.PostFormContent extends Backbone.View
     @initializeImages()
 
   initializeImages: =>
-    if !@hide_image && !@model.existing && @model.images.length > 0
-      if @model.images.length > 1
+    images = null
+    if @model.existing && @model.existing.get('status') == 'pending'
+      images = @model.existing.get('images')
+    else if !@hide_image && !@model.existing && @model.images.length > 0
+      images = @model.images
+    if images
+      console.log(images)
+      if images.length > 1
         $(@el).find('.media img:gt(0)').hide() # hide all images but the first one
         $(@el).find('.switcher').show() # show the switcher
       else if $(@el).find(".type .link").hasClass('on')

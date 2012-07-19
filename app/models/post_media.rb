@@ -175,7 +175,7 @@ class PostMedia
   end
 
   def get_share(user_id)
-    shares.where(:user_id => user_id).first
+    shares.unscoped.where(:user_id => user_id).first
   end
   # END SHARES
 
@@ -256,12 +256,12 @@ class PostMedia
     :type => { :definition => :_type, :properties => :short, :versions => [ :v1 ] },
     :title => { :properties => :short, :versions => [ :v1 ] },
     :topic_count => { :properties => :short, :versions => [ :v1 ] },
-    :share_count => { :properties => :short, :versions => [ :v1 ] },
+    :share_count => { :definition => :ll_score, :properties => :short, :versions => [ :v1 ] },
     :status => { :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
-    :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
+    :images => { :definition => lambda { |instance| instance.status == "pending" ? instance.pending_images : instance.json_images }, :properties => :short, :versions => [ :v1 ] },
     :share => { :definition => :individual_share, :properties => :short, :versions => [ :v1 ] },
     :primary_source => { :type => :reference, :definition => :primary_source, :properties => :short, :versions => [ :v1 ] },
     :comments => { :type => :reference, :properties => :short, :versions => [ :v1 ] },

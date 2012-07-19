@@ -7,7 +7,7 @@ class TestingController < ApplicationController
     users = User.where(:twitter_handle => {"$exists" => true})
     users.each do |user|
       # Get user's tweets
-      tweets = Twitter.user_timeline(user.twitter_handle, :count => 10, :exclude_replies => true, :include_entities => true)
+      tweets = Twitter.user_timeline(user.twitter_handle, :count => 30, :exclude_replies => true, :include_entities => true)
       tweets.each do |tweet|
         # Grab first url from tweet if it exists
         if tweet.urls.first
@@ -32,15 +32,12 @@ class TestingController < ApplicationController
           end
 
           if post && !post.get_share(user.id)
-            comment = post.add_comment(user.id, tweet.text)
+            share = post.add_share(user.id, tweet.text)
+            share.status = "pending"
+            share.add_medium({:source => "Twitter", :id => tweet.id, :url => "https://twitter.com/#{user.twitter_handle}/statuses/#{tweet.id}"})
 
-            if !comment || comment.valid?
-              share = post.add_share(user.id, tweet.text)
-              share.add_medium({:source => "Twitter", :id => tweet.id, :url => "https://twitter.com/#{user.twitter_handle}/statuses/#{tweet.id}"})
-
-              if post.valid?
-                post.save
-              end
+            if post.valid?
+              post.save
             end
           end
         end

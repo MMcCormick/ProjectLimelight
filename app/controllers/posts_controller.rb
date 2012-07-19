@@ -63,7 +63,12 @@ class PostsController < ApplicationController
   def create
 
     if params[:post_id] && !params[:post_id].blank?
-      @post = PostMedia.find(params[:post_id])
+      @post = PostMedia.unscoped.find(params[:post_id])
+      if @post && @post.status == "pending"
+        @post.remote_image_url = params[:remote_image_url] if params[:remote_image_url]
+        @post.title = params[:title]
+        @post.status = "active"
+      end
     else
       params[:type] = params[:type] && ['Link','Picture','Video'].include?(params[:type]) ? params[:type] : 'Link'
       @post = Kernel.const_get(params[:type]).new(params)
@@ -84,9 +89,12 @@ class PostsController < ApplicationController
         end
 
         if !comment || comment.valid?
-          @share = @post.add_share(current_user.id, params[:content], params[:topic_mention_ids], params[:topic_mention_names], !params[:from_bookmarklet].blank?)
-
           if @post.valid?
+            @share = @post.add_share(current_user.id, params[:content], params[:topic_mention_ids], params[:topic_mention_names], !params[:from_bookmarklet].blank?)
+            @post.process_images if @post.status == "pending"
+            @share.status = "active"
+            @post.status = "active"
+
             @post.save
 
             track_mixpanel("New Share", current_user.mixpanel_data.merge(@post.mixpanel_data).merge(@share.mixpanel_data))

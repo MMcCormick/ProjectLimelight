@@ -1,5 +1,7 @@
 module EmbedlyHelper
-
+  include VideosHelper
+  include ImageHelper
+  include ApplicationHelper
   include ActionView::Helpers::DateHelper
 
   def fetch_url(url)

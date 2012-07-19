@@ -1,7 +1,4 @@
 class EmbedlyController < ApplicationController
-  include VideosHelper
-  include ImageHelper
-  include ApplicationHelper
   include EmbedlyHelper
 
   def show

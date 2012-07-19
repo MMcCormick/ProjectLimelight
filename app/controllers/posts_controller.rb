@@ -222,6 +222,7 @@ class PostsController < ApplicationController
         post.save
         post.publish_shares
         post.save
+        post.expire_cached_json
 
         if params[:remote_image_url]
           post.process_images

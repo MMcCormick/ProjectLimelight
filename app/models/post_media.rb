@@ -194,6 +194,7 @@ class PostMedia
   def publish_shares
     self.shares.where(:status => 'pending').each do |share|
       share.status = 'active'
+      share.expire_cached_json
       share.feed_post_create
     end
   end

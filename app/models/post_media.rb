@@ -253,6 +253,7 @@ class PostMedia
     :title => { :properties => :short, :versions => [ :v1 ] },
     :topic_count => { :definition => :ll_score, :properties => :short, :versions => [ :v1 ] },
     :share_count => { :definition => :topic_count, :properties => :short, :versions => [ :v1 ] },
+    :status => { :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },

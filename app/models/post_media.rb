@@ -244,7 +244,7 @@ class PostMedia
 
   # if this post has new topics and didn't have any before, add them to pending shares
   def update_shares_topics
-    if topic_ids_was != topic_ids && topic_ids_was.length == 0
+    if topic_ids_was != topic_ids && (!topic_ids_was || topic_ids_was.length == 0)
       target_shares = self.shares.where(:status => 'pending')
       target_topics = Topic.where(:_id => {"$in" => topic_ids.first(2)})
       target_shares.each do |s|

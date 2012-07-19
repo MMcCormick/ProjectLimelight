@@ -74,6 +74,9 @@ class Neo4j
     # update the talk relationship between a user and a topic
     def update_talk_count(user, topic, change, user_node=nil, topic_node=nil, post_id=nil)
       talking = Neo4j.neo.get_relationship_index('talking', 'nodes', "#{user.id.to_s}-#{topic.id.to_s}")
+      user_node = Neo4j.neo.get_node_index('users', 'uuid', user.id.to_s) unless user_node
+      topic_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless topic_node
+
       if talking
         payload = {}
         properties = Neo4j.neo.get_relationship_properties(talking)
@@ -96,9 +99,6 @@ class Neo4j
 
         Neo4j.neo.set_relationship_properties(talking, payload) if payload.length > 0
       else
-        user_node = Neo4j.neo.get_node_index('users', 'uuid', user.id.to_s) unless user_node
-        topic_node = Neo4j.neo.get_node_index('topics', 'uuid', topic.id.to_s) unless topic_node
-
         payload = {'weight' => change}
         if post_id
           payload['shares'] = [post_id.to_s]
@@ -108,6 +108,8 @@ class Neo4j
         Neo4j.neo.set_relationship_properties(talking, payload)
         Neo4j.neo.add_relationship_to_index('talking', 'nodes', "#{user.id.to_s}-#{topic.id.to_s}", talking)
       end
+
+      Neo4j.update_affinity(user.id.to_s, topic.id.to_s, user_node, topic_node, change, true)
     end
 
     def post_add_topics(topics)

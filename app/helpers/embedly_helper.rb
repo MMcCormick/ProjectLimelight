@@ -22,7 +22,7 @@ module EmbedlyHelper
     # check if it's an image
     begin
       str = open(url)
-    rescue OpenURI::HTTPError
+    rescue
       return nil
     end
     if str && str.content_type.include?('image')
@@ -31,7 +31,12 @@ module EmbedlyHelper
       response[:only_picture] = true
     else
       embedly_key = 'ca77b5aae56d11e0a9544040d3dc5c07'
-      buffer = open("http://api.embed.ly/1/preview?key=#{embedly_key}&url=#{CGI.escape(url)}&format=json", "UserAgent" => "Ruby-Wget").read
+
+      begin
+        buffer = open("http://api.embed.ly/1/preview?key=#{embedly_key}&url=#{CGI.escape(url)}&format=json", "UserAgent" => "Ruby-Wget").read
+      rescue
+        return nil
+      end
 
       # convert JSON data into a hash
       result = JSON.parse(buffer)

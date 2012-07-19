@@ -14,21 +14,30 @@ class PostsController < ApplicationController
         topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
         @posts = PostMedia.where("shares.user_id" => user.id, "shares.0.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20).desc("shares.0._id")
       else
-        foo = current_user
         if signed_in? && (user.id == current_user.id || current_user.role?("admin"))
           @posts = PostMedia.unscoped
         else
           @posts = PostMedia
         end
-        @posts = @posts.where("shares.user_id" => user.id).limit(20).desc("shares.0._id")
+        @posts = @posts.where("shares.user_id" => user.id).limit(20).desc("shares.0._id").limit(20)
       end
 
     elsif params[:topic_id]
+
       topic = Topic.find_by_slug_id(params[:topic_id])
       topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
       @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids << topic.id}).limit(20).desc("_id")
+
     else
+
       @posts = PostMedia.all.limit(20).desc("_id")
+
+    end
+
+    if params[:status]
+      if params[:status] && params[:status] == 'pending'
+        @posts = @posts.unscoped.any_of({:status => 'pending'}, {"shares.status" => 'pending'}).desc("_id").limit(20)
+      end
     end
 
     @posts = @posts.skip(20*(params[:page].to_i-1)) if params[:page]
@@ -38,6 +47,10 @@ class PostsController < ApplicationController
       if params[:user_id]
         response = Yajl::Parser.parse(response)
         response['share'] = p.get_share(user.id)
+        response
+      elsif params[:status] && params[:status] == 'pending'
+        response = Yajl::Parser.parse(response)
+        response['shares'] = p.shares.where('status' => 'pending').to_a
         response
       else
         Yajl::Parser.parse(response)
@@ -178,6 +191,66 @@ class PostsController < ApplicationController
     end
   end
 
+  def publish
+    authorize! :manage, :all
+
+    post = PostMedia.unscoped.find(params[:id])
+    if post
+      post.title = params[:title] if params[:title]
+
+      if params[:remote_image_url]
+        post.remote_image_url = params[:remote_image_url]
+      end
+
+      if post.valid?
+
+        if params[:topic_mention_ids]
+          topics = Topic.where(:_id => {"$in" => params[:topic_mention_ids]})
+          topics.each do |t|
+            post.topic_ids << t.id
+          end
+        end
+        if params[:topic_mention_names]
+          topics = Topic.search_or_create(params[:topic_mention_names], current_user)
+          topics.each do |t|
+            post.topic_ids << t.id
+          end
+        end
+        post.topic_ids.uniq!
+        post.status = 'active'
+        post.update_shares_topics
+        post.save
+        post.publish_shares
+        post.save
+
+        if params[:remote_image_url]
+          post.process_images
+        end
+
+        response = post.to_json(:properties => :public)
+        response = Yajl::Parser.parse(response)
+
+        render :json => build_ajax_response(:ok, nil, "Published Post Successfully", nil, nil, response), :status => 201
+      else
+        render :json => build_ajax_response(:error, nil, "Could not Publish Post.", post.errors, nil), :status => 400
+      end
+    else
+      render :json => build_ajax_response(:error, nil, "Could not find post.'", nil, nil), :status => 404
+    end
+  end
+
+  def destroy
+    authorize! :manage, :all
+
+    post = PostMedia.unscoped.find(params[:id])
+    if post
+      post.destroy
+      render :json => build_ajax_response(:ok, nil, "Deleted Post Successfully", nil), :status => 201
+    else
+      render :json => build_ajax_response(:error, nil, "Could not find post.'", nil, nil), :status => 404
+    end
+  end
+
   def new
     if signed_in?
       @url_to_post = params[:u]
@@ -192,9 +265,6 @@ class PostsController < ApplicationController
   end
 
   def update
-  end
-
-  def destroy
   end
 
   def disable

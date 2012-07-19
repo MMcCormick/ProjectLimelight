@@ -333,34 +333,9 @@ module Limelight #:nodoc:
 
     # takes an array of new topic names
     def save_new_topic_mentions(topic_mention_names)
-      # See if any of the new topic slugs are already in the DB. Check through topic aliases! Only connect to topics without a type assigned.
-      new_topic_mentions = topic_mention_names.map {|name| [name, name.parameterize]}
-
-      topic_slugs = new_topic_mentions.map {|data| data[1]}
-      # topics with matching aliases that are NOT already typed
-      topics = Topic.where("aliases.slug" => {'$in' => topic_slugs}, "primary_type_id" => {"$exists" => false}).to_a
-
-      new_topic_mentions.each do |topic_mention|
-        next unless topic_mention[1].length > 2
-
-        found_topic = false
-        # Do we already have an *untyped* DB topic for this mention?
-        topics.each do |topic|
-          if topic.has_alias? topic_mention[1]
-            found_topic = topic
-          end
-        end
-        unless found_topic
-          # If we did not find the topic, create it and save it if it is valid
-          found_topic = user.topics.build({name: topic_mention[0]})
-          if found_topic.valid?
-            found_topic.save
-          else
-            found_topic = false
-          end
-        end
-
-        self.topic_mention_ids << found_topic.id if found_topic
+      topics = Topic.search_or_create(topic_mention_names, user)
+      topics.each do |t|
+        self.topic_mention_ids << t.id
       end
     end
 
@@ -369,6 +344,7 @@ module Limelight #:nodoc:
         self.topic_mention_ids << topic.id
         Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
         Neo4j.post_add_topic_mention(self, topic)
+        Neo4j.update_talk_count(user, topic, 1, nil, nil, _parent.id)
       end
     end
 
@@ -377,6 +353,7 @@ module Limelight #:nodoc:
       if mention
         FeedUserItem.unpush_post_through_topic(self, topic)
         Neo4j.post_remove_topic_mention(self, topic)
+        Neo4j.update_talk_count(user, topic, -1, nil, nil, _parent.id)
       end
     end
 

@@ -41,7 +41,7 @@ class PostMedia
 
   before_validation :set_source_snippet
   before_create :current_user_own
-  after_create :neo4j_create, :action_log_create, :process_images
+  after_create :neo4j_create, :action_log_create, :process_images, :update_shares_topics
   after_save :update_denorms
   before_destroy :disconnect
 
@@ -188,6 +188,15 @@ class PostMedia
   def get_share(user_id)
     shares.where(:user_id => user_id).first
   end
+
+  # sets all shares status to active
+  # sets all their topic_ids to the first two topic ids on this post if found
+  def publish_shares
+    self.shares.where(:status => 'pending').each do |share|
+      share.status = 'active'
+      share.feed_post_create
+    end
+  end
   # END SHARES
 
   # COMMENTS
@@ -232,6 +241,19 @@ class PostMedia
     Neo4j.neo.delete_node!(node)
   end
 
+  # if this post has new topics and didn't have any before, add them to pending shares
+  def update_shares_topics
+    if topic_ids_was != topic_ids && topic_ids_was.length == 0
+      target_shares = self.shares.where(:status => 'pending')
+      target_topics = Topic.where(:_id => {"$in" => topic_ids.first(2)})
+      target_shares.each do |s|
+        target_topics.each do |t|
+          s.add_topic_mention(t)
+        end
+      end
+    end
+  end
+
   def update_denorms
     # TODO: do we have to do this?
     #if topic_ids_changed?
@@ -273,6 +295,7 @@ class PostMedia
     :slug => { :definition => :to_param, :properties => :short, :versions => [ :v1 ] },
     :type => { :definition => :_type, :properties => :short, :versions => [ :v1 ] },
     :title => { :properties => :short, :versions => [ :v1 ] },
+    :description => { :properties => :short, :versions => [ :v1 ] },
     :topic_count => { :properties => :short, :versions => [ :v1 ] },
     :share_count => { :definition => :ll_score, :properties => :short, :versions => [ :v1 ] },
     :status => { :properties => :short, :versions => [ :v1 ] },
@@ -315,5 +338,16 @@ class PostMedia
   ##########
   # END JSON
   ##########
+
+  class << self
+    # find a topic by slug or id
+    def find_by_slug_id(id)
+      if Moped::BSON::ObjectId.legal?(id)
+        Topic.find(id)
+      else
+        Topic.where(:slug => id.parameterize).first
+      end
+    end
+  end
 
 end

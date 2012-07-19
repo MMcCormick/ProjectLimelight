@@ -86,6 +86,7 @@ ProjectLimelight::Application.routes.draw do
       put 'disable' => 'posts#disable'
       delete 'mentions' => 'posts#delete_mention'
       post 'mentions' => 'posts#create_mention'
+      post ':id/share' => 'posts#publish_share'
       get ':id' => 'posts#show'
       get '' => 'posts#index'
     end

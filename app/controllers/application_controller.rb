@@ -71,11 +71,12 @@ class ApplicationController < ActionController::Base
     Resque.enqueue(MixpanelTrackEvent, name, params, request.env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
   end
 
-  def build_ajax_response(status, redirect=nil, flash=nil, errors=nil, extra=nil)
+  def build_ajax_response(status, redirect=nil, flash=nil, errors=nil, extra=nil, object=nil)
     response = {:status => status, :event => "#{params[:controller]}_#{params[:action]}"}
     response[:redirect] = redirect if redirect
     response[:flash] = flash if flash
     response[:errors] = errors if errors
+    response[:object] = object if object
     response.merge!(extra) if extra
     response
   end

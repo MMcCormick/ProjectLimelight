@@ -187,6 +187,15 @@ class PostMedia
   end
   # END COMMENTS
 
+  # goes through all shares and re-calculates the topic_ids that should be on this post
+  def reset_topic_ids
+    topic_ids = []
+    shares.each do |s|
+      topic_ids += s.topic_mention_ids
+    end
+    self.topic_ids = topic_ids.uniq
+  end
+
   def current_user_own
     grant_owner(user.id)
   end
@@ -258,7 +267,7 @@ class PostMedia
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| instance.json_images }, :properties => :short, :versions => [ :v1 ] },
-    :share => { :definition => :individual_share, :properties => :short, :versions => [ :v1 ] },
+    :share => { :type => :reference, :definition => :individual_share, :properties => :short, :versions => [ :v1 ] },
     :primary_source => { :type => :reference, :definition => :primary_source, :properties => :short, :versions => [ :v1 ] },
     :comments => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :topic_mentions => { :type => :reference, :definition => :topics, :properties => :short, :versions => [ :v1 ] }

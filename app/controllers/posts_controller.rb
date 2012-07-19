@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_filter :authenticate_user!, :only => [:create,:edit,:update,:destroy,:disable,:stream]
+  before_filter :authenticate_user!, :only => [:create,:edit,:update,:destroy,:disable,:stream,:publish_share]
   include ModelUtilitiesHelper
 
   respond_to :html, :json
@@ -106,6 +106,42 @@ class PostsController < ApplicationController
     else
       response = build_ajax_response(:error, nil, "Hmm we couldn't find the post you are trying to share.")
       render :json => response, :status => :unprocessable_entity
+    end
+  end
+
+  def publish_share
+    post = PostMedia.find(params[:id])
+    if post
+
+      if post.status == 'pending'
+        post.title = params[:title]
+      end
+
+      if post.valid?
+        share = post.get_share(current_user.id)
+
+        if share
+          share.reset_topics(params[:topic_mention_ids], params[:topic_mention_names])
+          share.content = params[:comment]
+        else
+          share = post.add_share(current_user.id, params[:comment], params[:topic_ids], params[:topic_names])
+        end
+        share.status = 'active'
+
+        post.reset_topic_ids
+        post.status = 'active'
+        post.save
+
+        response = post.to_json(:properties => :public)
+        response = Yajl::Parser.parse(response)
+        response['share'] = Yajl::Parser.parse(share.to_json(:properties => :public))
+
+        render :json => build_ajax_response(:ok, nil, "Shared Post Successfully", nil, nil, response), :status => 201
+      else
+        render :json => build_ajax_response(:error, nil, "Could not Publish Post.", post.errors, nil), :status => 400
+      end
+    else
+      render :json => build_ajax_response(:error, nil, "Could not find post.'", nil, nil), :status => 404
     end
   end
 

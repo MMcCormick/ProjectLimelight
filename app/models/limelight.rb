@@ -341,6 +341,8 @@ module Limelight #:nodoc:
       topics = Topic.where("aliases.slug" => {'$in' => topic_slugs}, "primary_type_id" => {"$exists" => false}).to_a
 
       new_topic_mentions.each do |topic_mention|
+        next unless topic_mention[1].length > 2
+
         found_topic = false
         # Do we already have an *untyped* DB topic for this mention?
         topics.each do |topic|
@@ -358,13 +360,13 @@ module Limelight #:nodoc:
           end
         end
 
-        self.topic_mentions << found_topic if found_topic
+        self.topic_mention_ids << found_topic.id if found_topic
       end
     end
 
     def add_topic_mention(topic)
       unless topic_mention_ids.include?(topic.id)
-        self.topic_mentions << topic
+        self.topic_mention_ids << topic.id
         Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
         Neo4j.post_add_topic_mention(self, topic)
       end
@@ -374,10 +376,37 @@ module Limelight #:nodoc:
       mention = self.topic_mention_ids.delete(topic.id)
       if mention
         FeedUserItem.unpush_post_through_topic(self, topic)
-        FeedTopicItem.unpush_post_through_topic(self, topic)
-        FeedContributeItem.update_post_topics(self)
         Neo4j.post_remove_topic_mention(self, topic)
       end
+    end
+
+    def reset_topics(topic_ids, topic_names)
+      topic_ids = [] unless topic_ids && topic_ids.is_a?(Array)
+      topic_names = [] unless topic_names && topic_names.is_a?(Array)
+
+      topic_ids.uniq!
+      topic_names.uniq!
+
+      self.topic_mentions.each do |t|
+        Neo4j.update_talk_count(user, t, -1, nil, nil, _parent.id)
+      end
+      self.topic_mention_ids = []
+
+      topic_ids.each do |t|
+        topic = Topic.find(t)
+        if topic
+          add_topic_mention(topic)
+          Neo4j.update_talk_count(user, topic, 1, nil, nil, _parent.id)
+        end
+      end
+
+      topic_names.each do |t|
+        self.save_new_topic_mentions([t])
+        topic = Topic.where("aliases.slug" => t.parameterize, "primary_type_id" => {"$exists" => false}).first
+        Neo4j.update_talk_count(user, topic, 1, nil, nil, _parent.id) if topic
+      end
+
+      self.expire_cached_json
     end
   end
 

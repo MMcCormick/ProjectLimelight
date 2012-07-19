@@ -160,7 +160,7 @@ class PostsController < ApplicationController
   end
 
   def discard_share
-    post = PostMedia.find(params[:id])
+    post = PostMedia.unscoped.find(params[:id])
     if post
 
       post.delete_share(current_user.id)

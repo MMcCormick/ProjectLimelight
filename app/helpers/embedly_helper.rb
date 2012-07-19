@@ -20,7 +20,11 @@ module EmbedlyHelper
     }
 
     # check if it's an image
-    str = open(url)
+    begin
+      str = open(url)
+    rescue OpenURI::HTTPError
+      return nil
+    end
     if str && str.content_type.include?('image')
       response[:type] = 'Picture'
       response[:images] = [{:url => url}]

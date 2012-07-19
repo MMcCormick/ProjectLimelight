@@ -32,3 +32,9 @@ daily_notifications:
   #  class: WeeklyEmail
   #  args:
   #  description: "This job sends users a periodic content-you-might-like email"
+
+pull_tweets:
+    every: 10m
+    class: PullTweets
+    args:
+    description: "This job pulls tweets from users with a twitter handle"

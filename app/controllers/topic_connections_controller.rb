@@ -27,8 +27,8 @@ class TopicConnectionsController < ApplicationController
   end
 
   def add
-    topic1 = params[:topic1_id] == "0" ? Topic.find_untyped_or_create(params[:topic1_name], current_user) : Topic.find(params[:topic1_id])
-    topic2 = params[:topic2_id] == "0" ? Topic.find_untyped_or_create(params[:topic2_name], current_user) : Topic.find(params[:topic2_id])
+    topic1 = params[:topic1_id] == "0" ? Topic.find_untyped_or_create(params[:topic1_name], current_user) : Topic.find_by_slug_id(params[:topic1_id])
+    topic2 = params[:topic2_id] == "0" ? Topic.find_untyped_or_create(params[:topic2_name], current_user) : Topic.find_by_slug_id(params[:topic2_id])
 
     # If type of, use Topic.type_of_id
     if params[:id] == 'pull'
@@ -70,8 +70,8 @@ class TopicConnectionsController < ApplicationController
   end
 
   def remove
-    topic1 = Topic.find(params[:topic1_id])
-    topic2 = Topic.find(params[:topic2_id])
+    topic1 = Topic.find_by_slug_id(params[:topic1_id])
+    topic2 = Topic.find_by_slug_id(params[:topic2_id])
 
     authorize! :update, topic1
     authorize! :update, topic2

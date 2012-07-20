@@ -111,7 +111,7 @@ class User
   after_create :neo4j_create, :add_to_soulmate, :follow_limelight_topic, :save_profile_image, :invite_stuff, :send_personal_email
   before_update :update_slug
   after_update :update_denorms
-  before_destroy :remove_from_soulmate, :destroy_triggered_notifications
+  before_destroy :remove_from_soulmate, :destroy_triggered_notifications, :disconnect
 
   index({ :slug => 1 })
   index({ :email => 1 })
@@ -162,6 +162,21 @@ class User
     else
       @attributes['username']
     end
+  end
+
+  def disconnect
+
+    # remove this users shares
+    posts = PostMedia.where("shares.user_id" => id)
+    posts.each do |p|
+      p.delete_share(id)
+      if p.shares.length == 0
+        p.destroy
+      else
+        p.save
+      end
+    end
+
   end
 
   def follow_limelight_topic

@@ -355,7 +355,7 @@ class PostsController < ApplicationController
     authorize! :update, post
 
     if params[:topic_id] != '0'
-      topic = Topic.find(params[:topic_id])
+      topic = Topic.find_by_slug_id(params[:topic_id])
       not_found("Topic not found") unless topic
     else
       topic = Topic.where("aliases.slug" => params[:topic_name].parameterize, "primary_type_id" => {"$exists" => false}).first

@@ -7,7 +7,7 @@ class PullTweets
     users.each do |user|
       # Get user's tweets
       tweets = Twitter.user_timeline(user.twitter_handle, :count => 50, :exclude_replies => true, :include_entities => true, :since_id => user.latest_tweet_id)
-      tweets.each do |tweet|
+      tweets.reverse.each do |tweet|
         # Grab first url from tweet if it exists
         if tweet.urls.first
           response = fetch_url(tweet.urls.first.expanded_url)

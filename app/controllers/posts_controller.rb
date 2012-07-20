@@ -198,10 +198,6 @@ class PostsController < ApplicationController
     if post
       post.title = params[:title] if params[:title]
 
-      if params[:remote_image_url]
-        post.remote_image_url = params[:remote_image_url]
-      end
-
       if post.valid?
 
         if params[:topic_mention_ids]
@@ -219,13 +215,16 @@ class PostsController < ApplicationController
         post.topic_ids.uniq!
         post.status = 'active'
         post.update_shares_topics
+
+        if params[:remote_image_url]
+          post.remote_image_url = params[:remote_image_url]
+          post.process_images
+        end
+
         post.save
         post.publish_shares
         post.save
-
-        if params[:remote_image_url]
-          post.process_images
-        end
+        post.expire_cached_json
 
         response = post.to_json(:properties => :public)
         response = Yajl::Parser.parse(response)
@@ -356,7 +355,7 @@ class PostsController < ApplicationController
     authorize! :update, post
 
     if params[:topic_id] != '0'
-      topic = Topic.find(params[:topic_id])
+      topic = Topic.find_by_slug_id(params[:topic_id])
       not_found("Topic not found") unless topic
     else
       topic = Topic.where("aliases.slug" => params[:topic_name].parameterize, "primary_type_id" => {"$exists" => false}).first

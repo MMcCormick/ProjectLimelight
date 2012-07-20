@@ -77,7 +77,7 @@ class PostMedia
   end
 
   def set_source_snippet
-    if (@source_name && !@source_name.blank?) && (@source_url && !@source_url.blank?)
+    if (@source_url && !@source_url.blank?)
       source = SourceSnippet.new
       source.name = @source_name
       source.url = @source_url
@@ -85,11 +85,13 @@ class PostMedia
       #source.content = @source_content unless @source_content.blank?
       source.video_id = @source_video_id unless @source_video_id.blank?
 
-      topic = Topic.where(:slug => @source_name.parameterize).first
-      unless topic
-        topic = user.topics.create(:name => @source_name)
+      if @source_name && !@source_name.blank?
+        topic = Topic.where(:slug => @source_name.parameterize).first
+        unless topic
+          topic = user.topics.create(:name => @source_name)
+        end
+        source.id = topic.id
       end
-      source.id = topic.id
 
       add_source(source)
     end
@@ -194,6 +196,7 @@ class PostMedia
   def publish_shares
     self.shares.where(:status => 'pending').each do |share|
       share.status = 'active'
+      share.expire_cached_json
       share.feed_post_create
     end
   end
@@ -244,7 +247,7 @@ class PostMedia
   def update_shares_topics
     if topic_ids_was != topic_ids
       # if this post has new topics and didn't have any before, add them to pending shares
-      if topic_ids_was.length == 0
+      if !topic_ids_was || topic_ids_was.length == 0
         target_shares = self.shares.where(:status => 'pending')
         target_topics = Topic.where(:_id => {"$in" => topic_ids.first(2)})
         target_shares.each do |s|

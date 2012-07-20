@@ -5,13 +5,9 @@ class TopicsController < ApplicationController
   respond_to :html, :json
 
   def index
-    @topics = Topic.all
-    @topics = Topic.parse_filters(@topics, params)
+    topics = Topic.parse_filters(Topic.all, params)
 
-    @title = "All Topics"
-    @description = "A list of all the topics on Limelight."
-
-    render :json => @topics.map {|t| t.as_json(:properties => :public)}
+    render :json => topics
   end
 
   def show
@@ -39,17 +35,17 @@ class TopicsController < ApplicationController
   def children
     topic = Topic.find_by_slug_id(params[:id])
     topic_ids = Neo4j.pull_from_ids(topic.neo4j_id, params[:depth] ? params[:depth] : 1).to_a
-    @topics = Topic.where(:_id => {"$in" => topic_ids})
-    @topics = Topic.parse_filters(@topics, params)
-    render :json => @topics.map {|t| t.as_json(:properties => :public)}
+    topics = Topic.where(:_id => {"$in" => topic_ids})
+    topics = Topic.parse_filters(topics, params)
+    render :json => topics
   end
 
   def parents
     topic = Topic.find_by_slug_id(params[:id])
     topic_ids = Neo4j.pulled_from_ids(topic.neo4j_id, params[:depth] ? params[:depth] : 20).to_a
-    @topics = Topic.where(:_id => {"$in" => topic_ids})
-    @topics = Topic.parse_filters(@topics, params)
-    render :json => @topics.map {|t| t.as_json(:properties => :public)}
+    topics = Topic.where(:_id => {"$in" => topic_ids})
+    topics = Topic.parse_filters(topics, params)
+    render :json => topics
   end
 
   def new
@@ -86,7 +82,7 @@ class TopicsController < ApplicationController
   end
 
   def update
-    @topic = Topic.find(params[:id])
+    @topic = Topic.find_by_slug_id(params[:id])
     authorize! :update, @topic
 
     original_slug = @topic.slug_pretty
@@ -95,7 +91,7 @@ class TopicsController < ApplicationController
     @topic.url_pretty = params[:url_pretty] if params[:url_pretty]
 
     if params[:primary_type_id]
-      type = Topic.find(params[:primary_type_id])
+      type = Topic.find_by_slug_id(params[:primary_type_id])
       @topic.set_primary_type(type.name, type.id) if type
     end
 
@@ -109,12 +105,12 @@ class TopicsController < ApplicationController
   def destroy
     authorize! :manage, :all
     if params[:id]
-      topic = Topic.find(params[:id])
+      topic = Topic.find_by_slug_id(params[:id])
       not_found("Topic not found") unless topic
       topic.destroy!
     elsif params[:ids]
       topics = Topic.where(:_id => {"$in" => params[:ids]})
-      merge = params[:merge] ? Topic.find(params[:merge]) : nil
+      merge = params[:merge] ? Topic.find_by_slug_id(params[:merge]) : nil
       topics.each do |topic|
         if merge
           posts = Post.where(:topic_mention_ids => topic.id)
@@ -145,7 +141,7 @@ class TopicsController < ApplicationController
   end
 
   def followers
-    @topic = Topic.find(params[:id])
+    @topic = Topic.find_by_slug_id(params[:id])
     not_found("Topic not found") unless @topic
 
     @title = @topic.name + " followers"
@@ -155,7 +151,7 @@ class TopicsController < ApplicationController
   end
 
   def lock_slug
-    topic = Topic.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     authorize! :update, topic
 
     original_slug = topic.slug
@@ -174,7 +170,7 @@ class TopicsController < ApplicationController
   end
 
   def add_alias
-    topic = Topic.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     authorize! :update, topic
 
     ooac = params[:ooac] && params[:ooac] == "true" ? true : false
@@ -198,7 +194,7 @@ class TopicsController < ApplicationController
   end
 
   def update_alias
-    topic = Topic.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     authorize! :update, topic
 
     ooac = params[:ooac] && params[:ooac] == 'true' ? true : false
@@ -222,7 +218,7 @@ class TopicsController < ApplicationController
   end
 
   def destroy_alias
-    topic = Topic.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     authorize! :update, topic
 
     if topic.remove_alias(params[:name])
@@ -242,7 +238,7 @@ class TopicsController < ApplicationController
   end
 
   def update_image
-    topic = Topic.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     authorize! :update, topic
 
     if params[:url]
@@ -255,7 +251,7 @@ class TopicsController < ApplicationController
   end
 
   def update_freebase
-    topic = Topic.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     not_found("Topic not found") unless topic
     authorize! :update, topic
 
@@ -272,7 +268,7 @@ class TopicsController < ApplicationController
   end
 
   def delete_freebase
-    topic = Topic.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     not_found("Topic not found") unless topic
     authorize! :update, topic
 
@@ -283,7 +279,7 @@ class TopicsController < ApplicationController
   end
 
   def merge
-    topic = Topic.find(params[:target_id])
+    topic = Topic.find_by_slug_id(params[:target_id])
     authorize! :update, topic
     aliased_topic = Topic.where(:slug_pretty => params[:id].parameterize).first
 
@@ -345,7 +341,7 @@ class TopicsController < ApplicationController
   end
 
   def add_category
-    topic = Topic.find(params[:id])
+    topic = Topic.find_by_slug_id(params[:id])
     authorize! :update, topic
 
     category = Topic.find(params[:category_id])

@@ -76,7 +76,7 @@ class TopicConnectionsController < ApplicationController
     authorize! :update, topic1
     authorize! :update, topic2
 
-    connection = params[:id] == 'pull' ? true : TopicConnection.find_by_slug_id(params[:id])
+    connection = params[:id] == 'pull' ? true : TopicConnection.find(params[:id])
 
     if topic1 && topic2 && connection
       if params[:id] == 'pull'

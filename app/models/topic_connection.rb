@@ -123,6 +123,9 @@ class TopicConnection
       node = Neo4j.neo.get_node(topic1.neo4j_id)
 
       rel1 = Neo4j.neo.get_relationship_index('topics', connection.id.to_s, "#{topic1.id.to_s}-#{topic2.id.to_s}")
+      unless rel1
+        rel1 = Neo4j.neo.get_relationship_index('topics', connection.id.to_s, "#{topic2.id.to_s}-#{topic1.id.to_s}")
+      end
       if rel1
         Neo4j.neo.delete_relationship(rel1)
         Neo4j.neo.remove_relationship_from_index('topics', rel1)
@@ -155,7 +158,7 @@ class TopicConnection
 
       if incoming
         incoming.each do |o|
-          if Neo4j.parse_id(o['end']) == topic2.neo4j_id.to_i
+          if Neo4j.parse_id(o['start']) == topic2.neo4j_id.to_i
             pull = true if o['data']['reverse_pull']
             reverse_pull = true if o['data']['pull']
           end
@@ -174,7 +177,9 @@ class TopicConnection
           outgoing = Neo4j.neo.get_node_relationships(node, "out", 'pull')
           if outgoing
             outgoing.each do |rel|
-              Neo4j.neo.delete_relationship(rel)
+              if Neo4j.parse_id(rel['end']) == topic2.neo4j_id.to_i
+                Neo4j.neo.delete_relationship(rel)
+              end
             end
           end
         end
@@ -192,7 +197,9 @@ class TopicConnection
           incoming = Neo4j.neo.get_node_relationships(node, "in", 'pull')
           if incoming
             incoming.each do |rel|
-              Neo4j.neo.delete_relationship(rel)
+              if Neo4j.parse_id(rel['start']) == topic2.neo4j_id.to_i
+                Neo4j.neo.delete_relationship(rel)
+              end
             end
           end
         end

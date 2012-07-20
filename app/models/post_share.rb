@@ -16,6 +16,7 @@ class PostShare
   embedded_in :post_media
 
   after_create :update_user_share, :neo4j_create, :feed_post_create
+  after_save :check_status
 
   def created_at
     id.generation_time
@@ -47,6 +48,15 @@ class PostShare
 
   def add_medium(medium)
     self.mediums << medium
+  end
+
+  # if the status changed from pending to active, push it out to feeds
+  def check_status
+    if status_was && status_was != status
+      if status_was == 'pending' && status == 'active'
+        feed_post_create
+      end
+    end
   end
 
   ##########

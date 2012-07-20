@@ -207,7 +207,11 @@ module Limelight #:nodoc:
 
       AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
 
-      i = Magick::Image::read("#{S3['image_prefix']}/#{current_filepath}/original.png").first
+      begin
+        i = Magick::Image::read("#{S3['image_prefix']}/#{current_filepath}/original.png").first
+      rescue => e
+        return
+      end
 
       self.images << {
               :remote_url => url,
@@ -335,7 +339,7 @@ module Limelight #:nodoc:
     def save_new_topic_mentions(topic_mention_names)
       topics = Topic.search_or_create(topic_mention_names, user)
       topics.each do |t|
-        self.topic_mention_ids << t.id
+        add_topic_mention(t)
       end
     end
 
@@ -345,6 +349,8 @@ module Limelight #:nodoc:
         Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
         Neo4j.post_add_topic_mention(self, topic)
         Neo4j.update_talk_count(user, topic, 1, nil, nil, _parent.id)
+        _parent.topic_ids << topic.id
+        _parent.topic_ids.uniq!
       end
     end
 
@@ -354,6 +360,8 @@ module Limelight #:nodoc:
         FeedUserItem.unpush_post_through_topic(self, topic)
         Neo4j.post_remove_topic_mention(self, topic)
         Neo4j.update_talk_count(user, topic, -1, nil, nil, _parent.id)
+        _parent.topic_ids.delete(topic.id)
+        _parent.topic_ids.uniq!
       end
     end
 

@@ -165,7 +165,7 @@ class FeedUserItem
       return unless post && unpush_topic
 
       neo4j_topic_ids = Neo4j.pulled_from_ids(unpush_topic.neo4j_id)
-      topics = Topic.where(:_id => {"$in" => [unpush_topic.id] + neo4j_topic_ids.map{|t| t[1]}})
+      topics = Topic.where(:_id => {"$in" => [unpush_topic.id] + neo4j_topic_ids.map{|t| t}}).to_a
 
       topics.each do |topic|
         # the potential users this post can be pushed to
@@ -176,7 +176,6 @@ class FeedUserItem
         end
 
         user_feed_users.each do |u|
-          next if post.get_share(u.id) # don't distribute posters own posts based on the topics they're following
 
           item = FeedUserItem.where(:user_id => u.id, :post_id => post.id).first
 

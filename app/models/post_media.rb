@@ -77,7 +77,7 @@ class PostMedia
   end
 
   def set_source_snippet
-    if (@source_url && !@source_url.blank?)
+    if @source_url && !@source_url.blank?
       source = SourceSnippet.new
       source.name = @source_name
       source.url = @source_url
@@ -98,7 +98,7 @@ class PostMedia
   end
 
   def add_source(source)
-    unless sources.find(source.id)
+    unless sources.where(:url => source.url).first
       self.sources << source
     end
   end
@@ -244,8 +244,21 @@ class PostMedia
     Neo4j.neo.delete_node!(node)
   end
 
+  def push_to_feeds(topic=nil)
+    if topic
+      FeedUserItem.push_post_through_topic(self, topic)
+    else
+      FeedUserItem.push_post_through_topics(self)
+    end
+  end
+
   def update_shares_topics
     if topic_ids_was != topic_ids
+      removed = topic_ids_was ? topic_ids_was - topic_ids : []
+      added = topic_ids_was ? topic_ids - topic_ids_was : topic_ids
+
+      return if removed.length == 0 && added.length == 0
+
       # if this post has new topics and didn't have any before, add them to pending shares
       if !topic_ids_was || topic_ids_was.length == 0
         target_shares = self.shares.where(:status => 'pending')
@@ -256,11 +269,26 @@ class PostMedia
           end
         end
       end
+
       # update post counts on topics
-      removed = topic_ids_was ? topic_ids_was - topic_ids : []
-      added = topic_ids_was ? topic_ids - topic_ids_was : topic_ids
       Topic.where(:id => {"$in" => removed}).inc(:post_count, -1)
       Topic.where(:id => {"$in" => added}).inc(:post_count, 1)
+
+      # push to new feeds
+      added.each do |i|
+        topic = Topic.find(i)
+        if topic
+          Resque.enqueue(PushPostToFeeds, id.to_s, nil, topic.id.to_s)
+        end
+      end
+
+      # remove from feeds
+      removed.each do |i|
+        topic = Topic.find(i)
+        if topic
+          Resque.enqueue(UnpushPostThroughTopic, id.to_s, topic.id.to_s)
+        end
+      end
     end
   end
 

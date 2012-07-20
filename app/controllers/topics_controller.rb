@@ -127,7 +127,7 @@ class TopicsController < ApplicationController
 
   def for_connection
     authorize! :manage, :all
-    @topics = Topic.topics_for_connection.desc(:response_count).limit(50)
+    @topics = Topic.topics_for_connection.desc(:post_count).limit(50)
     render :json => @topics.map {|t| t.as_json(:properties => :public)}
   end
 

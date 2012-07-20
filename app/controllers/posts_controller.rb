@@ -335,7 +335,7 @@ class PostsController < ApplicationController
   end
 
   def delete_mention
-    post = Post.find(params[:id])
+    post = PostMedia.find(params[:id])
     not_found("Post not found") unless post
 
     topic = Topic.find_by_slug_id(params[:topic_id])
@@ -343,14 +343,14 @@ class PostsController < ApplicationController
 
     authorize! :update, post
 
-    post.remove_topic_mention(topic)
+    post.topic_ids.delete(topic.id)
     post.save
 
     render :json => build_ajax_response(:ok)
   end
 
   def create_mention
-    post = Post.find(params[:id])
+    post = PostMedia.find(params[:id])
     not_found("Post not found") unless post
 
     authorize! :update, post
@@ -366,7 +366,7 @@ class PostsController < ApplicationController
       end
     end
 
-    post.add_topic_mention(topic)
+    post.topic_ids << topic.id
     post.save
 
     render :json => build_ajax_response(:ok)

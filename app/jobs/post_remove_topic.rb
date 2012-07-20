@@ -7,7 +7,5 @@ class PostRemoveTopic
     topic = Topic.find(topic_id)
 
     FeedUserItem.unpush_post_through_topic(post, topic)
-    FeedTopicItem.unpush_post_through_topic(post, topic)
-    FeedContributeItem.update_post_topics(post)
   end
 end

@@ -59,6 +59,7 @@ class Topic
   field :neo4j_id, :type => Integer
   field :is_category, :default => false
   field :category_ids, :default => []
+  field :post_count, :default => 0
 
   belongs_to :user, :index => true
   embeds_many :aliases, :as => :has_alias, :class_name => 'TopicAlias'
@@ -928,6 +929,13 @@ class Topic
 
       suggestions.uniq! {|s| s[:name] }
       suggestions[0..limit]
+    end
+
+    def topics_for_connection
+      categories = Topic.where(:is_category => true)
+      neo_ids = categories.map{|t| t.neo4j_id}.join(", ")
+      connected_ids = Neo4j.pull_from_ids(neo_ids)
+      where(:_id => {"$nin" => connected_ids})
     end
 
   end

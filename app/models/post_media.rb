@@ -41,8 +41,8 @@ class PostMedia
 
   before_validation :set_source_snippet
   before_create :current_user_own
-  after_create :neo4j_create, :action_log_create, :process_images, :update_shares_topics
-  after_save :update_denorms
+  after_create :neo4j_create, :action_log_create, :process_images
+  after_save :update_denorms, :update_shares_topics
   before_destroy :disconnect
 
   index({ "shares.user_id" => 1, "shares._id" => -1, "shares.topic_mention_ids" => 1 })
@@ -241,16 +241,23 @@ class PostMedia
     Neo4j.neo.delete_node!(node)
   end
 
-  # if this post has new topics and didn't have any before, add them to pending shares
   def update_shares_topics
-    if topic_ids_was != topic_ids && topic_ids_was.length == 0
-      target_shares = self.shares.where(:status => 'pending')
-      target_topics = Topic.where(:_id => {"$in" => topic_ids.first(2)})
-      target_shares.each do |s|
-        target_topics.each do |t|
-          s.add_topic_mention(t)
+    if topic_ids_was != topic_ids
+      # if this post has new topics and didn't have any before, add them to pending shares
+      if topic_ids_was.length == 0
+        target_shares = self.shares.where(:status => 'pending')
+        target_topics = Topic.where(:_id => {"$in" => topic_ids.first(2)})
+        target_shares.each do |s|
+          target_topics.each do |t|
+            s.add_topic_mention(t)
+          end
         end
       end
+      # update post counts on topics
+      removed = topic_ids_was - topic_ids
+      added = topic_ids - topic_ids_was
+      Topic.where(:id => {"$in" => removed}).inc(:post_count, -1)
+      Topic.where(:id => {"$in" => added}).inc(:post_count, 1)
     end
   end
 

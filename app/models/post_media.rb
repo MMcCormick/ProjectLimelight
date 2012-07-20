@@ -257,8 +257,8 @@ class PostMedia
         end
       end
       # update post counts on topics
-      removed = topic_ids_was - topic_ids
-      added = topic_ids - topic_ids_was
+      removed = topic_ids_was ? topic_ids_was - topic_ids : []
+      added = topic_ids_was ? topic_ids - topic_ids_was : topic_ids
       Topic.where(:id => {"$in" => removed}).inc(:post_count, -1)
       Topic.where(:id => {"$in" => added}).inc(:post_count, 1)
     end

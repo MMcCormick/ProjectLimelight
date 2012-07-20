@@ -683,13 +683,7 @@ class Topic
 
     # takes a hash of filters to narrow down a topic query
     def parse_filters(topics, filters)
-      if filters[:sort]
-        if filters[:sort][1] == 'desc'
-          topics = topics.desc(filters[:sort][0])
-        else
-          topics = topics.asc(filters[:sort][0])
-        end
-      else
+      unless filters[:sort]
         topics = topics.asc(:slug)
       end
 
@@ -707,6 +701,20 @@ class Topic
         if filters[:type] == 'category'
           topics = topics.where(:is_category => true)
         end
+      end
+
+      if filters[:sort] && filters[:sort] == 'popularity'
+        topics = topics.map do |t|
+          topic_ids = Neo4j.pull_from_ids(t.neo4j_id).to_a
+          shares = PostMedia.where(:topic_ids => {"$in" => topic_ids << t.id})
+          {
+              :topic => t.as_json(:properties => :public),
+              :count => shares.length
+          }
+        end
+        topics.sort_by!{|t| t[:count] * -1}
+      else
+        topics = topics.map {|t| {:topic => t.as_json(:properties => :public)}}
       end
 
       topics

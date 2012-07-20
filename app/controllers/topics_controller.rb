@@ -5,13 +5,9 @@ class TopicsController < ApplicationController
   respond_to :html, :json
 
   def index
-    @topics = Topic.all
-    @topics = Topic.parse_filters(@topics, params)
+    topics = Topic.parse_filters(Topic.all, params)
 
-    @title = "All Topics"
-    @description = "A list of all the topics on Limelight."
-
-    render :json => @topics.map {|t| t.as_json(:properties => :public)}
+    render :json => topics
   end
 
   def show
@@ -39,17 +35,17 @@ class TopicsController < ApplicationController
   def children
     topic = Topic.find_by_slug_id(params[:id])
     topic_ids = Neo4j.pull_from_ids(topic.neo4j_id, params[:depth] ? params[:depth] : 1).to_a
-    @topics = Topic.where(:_id => {"$in" => topic_ids})
-    @topics = Topic.parse_filters(@topics, params)
-    render :json => @topics.map {|t| t.as_json(:properties => :public)}
+    topics = Topic.where(:_id => {"$in" => topic_ids})
+    topics = Topic.parse_filters(topics, params)
+    render :json => topics
   end
 
   def parents
     topic = Topic.find_by_slug_id(params[:id])
     topic_ids = Neo4j.pulled_from_ids(topic.neo4j_id, params[:depth] ? params[:depth] : 20).to_a
-    @topics = Topic.where(:_id => {"$in" => topic_ids})
-    @topics = Topic.parse_filters(@topics, params)
-    render :json => @topics.map {|t| t.as_json(:properties => :public)}
+    topics = Topic.where(:_id => {"$in" => topic_ids})
+    topics = Topic.parse_filters(topics, params)
+    render :json => topics
   end
 
   def new

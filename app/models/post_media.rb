@@ -189,6 +189,7 @@ class PostMedia
         Neo4j.update_talk_count(share.user, t, -1, nil, nil, id)
       end
       self.shares.delete(share)
+      self.ll_score -= 1
       reset_topic_ids
     end
   end

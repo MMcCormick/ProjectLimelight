@@ -1,5 +1,5 @@
 recalculate_popularity:
-  every: 10m
+  every: 20m
   class: RecalculatePopularity
   args:
   description: "This job recalculates popularity scores"

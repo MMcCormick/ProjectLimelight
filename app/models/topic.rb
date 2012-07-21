@@ -941,7 +941,7 @@ class Topic
 
     def topics_for_connection
       categories = Topic.where(:is_category => true)
-      neo_ids = categories.map{|t| t.neo4j_id}.join(", ")
+      neo_ids = categories.map{|t| t.neo4j_id}.join(",")
       connected_ids = Neo4j.pull_from_ids(neo_ids)
       where(:_id => {"$nin" => connected_ids}, :is_category => false)
     end

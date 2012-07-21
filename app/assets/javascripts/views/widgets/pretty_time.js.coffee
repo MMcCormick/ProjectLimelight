@@ -1,5 +1,4 @@
 class LL.Views.PrettyTime extends Backbone.View
-  template: JST['widgets/pretty_time']
   className: 'pretty-time'
   tagName: 'span'
 

@@ -1,14 +1,14 @@
-recalculate_popularity:
-  every: 20m
-  class: RecalculatePopularity
-  args:
-  description: "This job recalculates popularity scores"
+#recalculate_popularity:
+#  every: 20m
+#  class: RecalculatePopularity
+#  args:
+#  description: "This job recalculates popularity scores"
 
-recalculate_averages:
-  every: 1h
-  class: RecalculateAverages
-  args:
-  description: "This job recalculates popularity averages for each root type"
+#recalculate_averages:
+#  every: 1h
+#  class: RecalculateAverages
+#  args:
+#  description: "This job recalculates popularity averages for each root type"
 
 #recalculate_clout:
 #  every: 45m
@@ -34,7 +34,13 @@ daily_notifications:
   #  description: "This job sends users a periodic content-you-might-like email"
 
 pull_tweets:
-    every: 10m
+    every: 20m
     class: PullTweets
     args:
     description: "This job pulls tweets from users with a twitter handle"
+
+pull_tweets:
+    every: 10m
+    class: RecalculatePostScores
+    args:
+    description: "This job recalculates each post's master score"

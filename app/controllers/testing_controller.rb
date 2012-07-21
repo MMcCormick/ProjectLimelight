@@ -7,7 +7,8 @@ class TestingController < ApplicationController
 
     authorize! :manage, :all
 
-    foo = PostMedia.find('500869cf5ae18c36680000d8')
+    post = PostMedia.first
+    post.set_base_score
     bar = 'foo'
     #PullTweets.perform
     #@count1 = 0

@@ -15,9 +15,15 @@ class PostMedia
   field :posts_count, :default => 0 # how many reposts DEPRECATED
   field :pushed_users_count, :default => 0 # the number of users this post has been pushed to
   field :comment_count, :default => 0
+  field :score, :default => 0
   field :ll_score, :default => 0
-  field :tw_score, :default => 0
-  field :fb_score, :default => 0
+  field :tw_base, :default => 0
+  field :fb_base, :default => 0
+  field :google_base, :default => 0
+  field :pinterest_base, :default => 0
+  field :linkedin_base, :default => 0
+  field :delicious_base, :default => 0
+  field :stumble_base, :default => 0
   field :neo4j_id, :type => Integer
   field :status, :default => 'active'
   field :pending_images
@@ -41,13 +47,13 @@ class PostMedia
 
   before_validation :set_source_snippet
   before_create :current_user_own
-  after_create :neo4j_create, :action_log_create, :process_images
+  after_create :neo4j_create, :action_log_create, :process_images, :call_set_base_scores
   after_save :update_denorms, :update_shares_topics
   before_destroy :disconnect
 
   index({ "shares.user_id" => 1, "shares._id" => -1, "shares.topic_mention_ids" => 1 })
   index({ :topic_ids => 1, :_id => -1 })
-  index({ :topic_ids => 1, :ll_score => -1 })
+  index({ :topic_ids => 1, :score => -1 })
 
   def to_param
     id.to_s
@@ -213,6 +219,32 @@ class PostMedia
     comment
   end
   # END COMMENTS
+
+  def call_set_base_scores
+    Resque.enqueue(PostSetBaseScores, id.to_s)
+  end
+
+  # calls the sharedcount api to set all the base social media counts
+  def set_base_scores
+    begin
+      content = Yajl::Parser.parse(open("http://api.sharedcount.com/?url=#{URI.escape(primary_source.url)}").read)
+      self.tw_base = content['Twitter']
+      self.fb_base = content['Facebook']['total_count']
+      self.google_base = content['GooglePlusOne']
+      self.pinterest_base = content['Pinterest']
+      self.linkedin_base = content['LinkedIn']
+      self.delicious_base = content['Delicious']
+      self.stumble_base = content['StumbleUpon']
+    rescue => e
+      return
+    end
+  end
+
+  # uses a simple time decay function to calculate this posts score
+  # number of shares / (t + 2) ^ 1.5 where t is the number of hours since the item was posted to limelight
+  def calculate_score
+    self.score = (ll_score + tw_base + fb_base + google_base + pinterest_base + linkedin_base + delicious_base + stumble_base) / (Math.log((Time.now - created_at) / 1.hour) + 3) ** 1.5
+  end
 
   # goes through all shares and re-calculates the topic_ids that should be on this post
   def reset_topic_ids

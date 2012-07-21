@@ -12,7 +12,7 @@ class PostsController < ApplicationController
       if params[:topic_id]
         topic = Topic.find_by_slug_id(params[:topic_id])
         topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
-        @posts = PostMedia.where("shares.user_id" => user.id, "shares.0.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20).desc("shares.0._id")
+        @posts = PostMedia.where("shares.user_id" => user.id, "shares.0.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20)
       else
         if signed_in? && (user.id == current_user.id || current_user.role?("admin"))
           @posts = PostMedia.unscoped
@@ -26,12 +26,22 @@ class PostsController < ApplicationController
 
       topic = Topic.find_by_slug_id(params[:topic_id])
       topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
-      @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids << topic.id}).limit(20).desc("_id")
+      @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids << topic.id}).limit(20)
 
     else
 
-      @posts = PostMedia.all.limit(20).desc("_id")
+      @posts = PostMedia.all.limit(20)
 
+    end
+
+    if params[:sort] && params[:sort] == 'popularity'
+      @posts = @posts.desc("score")
+    else
+      if params[:user_id] && params[:topic_id]
+        @posts = @posts.desc("shares.0._id")
+      else
+        @posts = @posts.desc("_id")
+      end
     end
 
     if params[:status]

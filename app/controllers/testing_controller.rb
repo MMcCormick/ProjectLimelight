@@ -7,14 +7,14 @@ class TestingController < ApplicationController
 
     authorize! :manage, :all
 
-    post = PostMedia.first
-    post.set_base_scores
-    bar = 'foo'
+    #tweets = Twitter.user_timeline('garrytan', :count => 50, :exclude_replies => true, :include_entities => true)
+    #post = PostMedia.first
+    #post.set_base_scores
     #PullTweets.perform
     #@count1 = 0
     #@count2 = 0
 
-    #Resque.enqueue(TestJob)
+    Resque.enqueue(TestJob)
 
   end
 

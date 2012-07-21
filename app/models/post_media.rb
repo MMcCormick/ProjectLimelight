@@ -51,7 +51,7 @@ class PostMedia
   after_save :update_denorms, :update_shares_topics
   before_destroy :disconnect
 
-  index({ "shares.user_id" => 1, "shares._id" => -1, "shares.topic_mention_ids" => 1 })
+  index({ "shares.user_id" => 1, "shares.created_at" => -1, "shares.topic_mention_ids" => 1 })
   index({ :topic_ids => 1, :_id => -1 })
   index({ :topic_ids => 1, :score => -1 })
 

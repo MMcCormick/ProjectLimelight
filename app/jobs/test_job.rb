@@ -3,26 +3,21 @@ class TestJob
   @queue = :fast
 
   def self.perform()
-    users = User.all
-
-    users.each do |user|
-      user.topic_activity_recalculate()
-      user.save
-
-      node = Neo4j.neo.get_node(user.neo4j_id)
-      rels = Neo4j.neo.get_node_relationships(node, 'out', 'talking')
-      if rels
-        rels.each do |rel|
-          Neo4j.neo.delete_relationship(rel)
-        end
-      end
-      PostMedia.where("shares.user_id" => user.id).each do |pm|
-        share = pm.get_share(user.id)
-        share.topic_mentions.each do |t|
-          Neo4j.update_talk_count(user, t, 1, node, nil, pm.id)
+    posts = PostMedia.where("shares.mediums.id" => {"$exists" => true})
+    posts.each do |p|
+      begin
+        tweet = Twitter.status(p.shares[0]['mediums'][0]['id'].to_i)
+        p.shares[0]['mediums'][0]['id'] = tweet.id.to_i
+        p.shares[0].created_at = tweet.created_at
+        p.save
+      rescue => e
+        p.delete_share(p.shares[0].user_id)
+        if p.status == 'pending' && p.shares.length == 0
+          p.destroy
+        else
+          p.save
         end
       end
     end
-
   end
 end

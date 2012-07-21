@@ -38,7 +38,8 @@ class PullTweets
             end
             share = post.add_share(user.id, text_without_url)
             share.status = "pending"
-            share.add_medium({:source => "Twitter", :id => tweet.id, :url => "https://twitter.com/#{user.twitter_handle}/statuses/#{tweet.id}"})
+            share.created_at = tweet.created_at
+            share.add_medium({:source => "Twitter", :id => tweet.id.to_i, :url => "https://twitter.com/#{user.twitter_handle}/statuses/#{tweet.id.to_i}"})
 
             if post.valid?
               post.save

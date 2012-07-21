@@ -9,6 +9,7 @@ class PostShare
   field :status, :default => 'active'
   field :from_bookmarklet, :default => false
   field :mediums, :default => []
+  field :created_at, :default => Time.now
 
   attr_accessible :content, :mediums, :from_bookmarklet
 

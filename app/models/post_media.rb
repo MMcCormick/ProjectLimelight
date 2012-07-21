@@ -229,7 +229,7 @@ class PostMedia
     begin
       content = Yajl::Parser.parse(open("http://api.sharedcount.com/?url=#{URI.escape(primary_source.url)}").read)
       self.tw_base = content['Twitter']
-      self.fb_base = content['Facebook']['total_count']
+      self.fb_base = content['Facebook']['share_count']
       self.google_base = content['GooglePlusOne']
       self.pinterest_base = content['Pinterest']
       self.linkedin_base = content['LinkedIn']
@@ -243,7 +243,7 @@ class PostMedia
   # uses a simple time decay function to calculate this posts score
   # number of shares / (t + 2) ^ 1.5 where t is the number of hours since the item was posted to limelight
   def calculate_score
-    self.score = (ll_score + tw_base + fb_base + google_base + pinterest_base + linkedin_base + delicious_base + stumble_base) / (Math.log((Time.now - created_at) / 1.hour) + 3) ** 1.5
+    self.score = (ll_score + tw_base + fb_base + google_base + pinterest_base + linkedin_base + delicious_base + stumble_base) / (((Time.now - created_at) / 1.hour) + 2 ** 3.0)
   end
 
   # goes through all shares and re-calculates the topic_ids that should be on this post
@@ -368,6 +368,7 @@ class PostMedia
     :description => { :properties => :short, :versions => [ :v1 ] },
     :topic_count => { :properties => :short, :versions => [ :v1 ] },
     :share_count => { :definition => :ll_score, :properties => :short, :versions => [ :v1 ] },
+    :score => { :definition => lambda { |instance| instance.score.to_i }, :properties => :short, :versions => [ :v1 ] },
     :status => { :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => lambda { |instance| instance.created_at.to_i }, :properties => :short, :versions => [ :v1 ] },
     :video => { :definition => lambda { |instance| instance.json_video }, :properties => :short, :versions => [ :v1 ] },

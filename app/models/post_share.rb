@@ -66,11 +66,22 @@ class PostShare
     }
   end
 
+  def mediums_json
+    mediums.map do |m|
+      {
+          # need to return the id as a string, because javascript doesn't like huge ints returned by some places
+          :id => m['id'].to_s,
+          :source => m['source'],
+          :url => m['url']
+      }
+    end
+  end
+
   json_fields \
     :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
     :status => { :properties => :short, :versions => [ :v1 ] },
     :content => { :properties => :short, :versions => [ :v1 ] },
-    :mediums => { :properties => :short, :versions => [ :v1 ] },
+    :mediums => { :properties => :short, :definition => :mediums_json, :versions => [ :v1 ] },
     :created_at => { :definition => :created_at, :properties => :short, :versions => [ :v1 ] },
     :user => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :topic_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] }

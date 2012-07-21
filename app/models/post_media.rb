@@ -27,6 +27,7 @@ class PostMedia
   field :neo4j_id, :type => Integer
   field :status, :default => 'active'
   field :pending_images
+  field :created_at, :default => Time.now
 
   embeds_many :sources, :as => :has_source, :class_name => 'SourceSnippet'
   embeds_many :comments, :class_name => 'CommentEmbedded'
@@ -57,10 +58,6 @@ class PostMedia
 
   def to_param
     id.to_s
-  end
-
-  def created_at
-    id.generation_time
   end
 
   def name
@@ -376,6 +373,7 @@ class PostMedia
     :video_autoplay => { :definition => lambda { |instance| instance.json_video(true) }, :properties => :short, :versions => [ :v1 ] },
     :images => { :definition => lambda { |instance| instance.status == "pending" ? instance.pending_images : instance.json_images }, :properties => :short, :versions => [ :v1 ] },
     :share => { :definition => :individual_share, :properties => :short, :versions => [ :v1 ] },
+    :shares => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :primary_source => { :type => :reference, :definition => :primary_source, :properties => :short, :versions => [ :v1 ] },
     :comments => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
     :topic_mentions => { :type => :reference, :definition => :topics, :properties => :short, :versions => [ :v1 ] }

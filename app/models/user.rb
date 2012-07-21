@@ -686,6 +686,7 @@ class User
     :created_at_short => { :definition => lambda { |instance| instance.short_time(instance.created_at) }, :properties => :short, :versions => [ :v1 ] },
     :facebook_id => { :definition => :fbuid, :properties => :short, :versions => [ :v1 ] },
     :twitter_id => { :definition => :twuid, :properties => :short, :versions => [ :v1 ] },
+    :twitter_handle => { :properties => :short, :versions => [ :v1 ] },
     :roles => { :properties => :short, :versions => [ :v1 ] },
     :following_topics => { :properties => :public, :versions => [ :v1 ] },
     :following_users => { :properties => :public, :versions => [ :v1 ] },

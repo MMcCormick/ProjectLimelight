@@ -19,10 +19,6 @@ class PostShare
   after_create :update_user_share, :neo4j_create, :feed_post_create
   after_save :check_status
 
-  def created_at
-    id.generation_time
-  end
-
   def update_user_share
     if status == "active"
       user.share_count += 1
@@ -72,11 +68,11 @@ class PostShare
 
   json_fields \
     :id => { :definition => :_id, :properties => :short, :versions => [ :v1 ] },
-    :user_id => { :properties => :short, :versions => [ :v1 ] },
     :status => { :properties => :short, :versions => [ :v1 ] },
     :content => { :properties => :short, :versions => [ :v1 ] },
     :mediums => { :properties => :short, :versions => [ :v1 ] },
     :created_at => { :definition => :created_at, :properties => :short, :versions => [ :v1 ] },
-    :topic_mentions => { :type => :reference, :definition => :topic_mentions, :properties => :short, :versions => [ :v1 ] }
+    :user => { :type => :reference, :properties => :short, :versions => [ :v1 ] },
+    :topic_mentions => { :type => :reference, :properties => :short, :versions => [ :v1 ] }
 
 end

@@ -17,8 +17,9 @@ class UserMailer < ActionMailer::Base
     mail(:to => email, :subject => "Thanks for signing up for the Limelight Beta!")
   end
 
-  def beta_signup_email_admins(email)
-    mail(:to => 'support@projectlimelight.com', :subject => "[limelight invite request] #{email} requested an invite!")
+  def beta_signup_email_admins(email, id)
+    @signup = BetaSignup.find(id)
+    mail(:to => 'support@projectlimelight.com', :subject => "[#{@signup.source} invite request] #{email} requested an invite!")
   end
 
   def invite(user_id, email, message, code)

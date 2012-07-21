@@ -5,8 +5,9 @@ class BetaSignup
   field :invite_code_id
   field :emailed_invite, :default => false
   field :referer
+  field :source, :default => 'Limelight'
 
-  attr_accessible :email, :referer
+  attr_accessible :email, :referer, :source
 
   validates_uniqueness_of :email, :message => "That email is already taken"
   validates_presence_of :email, :message => "You must supply an email"
@@ -15,6 +16,7 @@ class BetaSignup
 
   def mixpanel_data
     {
+        "Source" => source,
         "Referer" => referer,
         "Referer Host" => referer == "none" ? "none" : URI(referer).host
     }

@@ -39,8 +39,8 @@ pull_tweets:
     args:
     description: "This job pulls tweets from users with a twitter handle"
 
-pull_tweets:
-    every: 10m
-    class: RecalculatePostScores
-    args:
-    description: "This job recalculates each post's master score"
+#recalculate_post_scores:
+#    every: 10m
+#    class: RecalculatePostScores
+#    args:
+#    description: "This job recalculates each post's master score"

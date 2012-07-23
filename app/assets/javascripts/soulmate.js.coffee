@@ -292,7 +292,7 @@ class Soulmate
       url: @url
       dataType: 'jsonp'
       timeout: @timeout
-      cache: true
+      cache: false
       data: {
         term: @query.getValue()
         types: @types

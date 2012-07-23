@@ -24,7 +24,7 @@ gem 'redis', '2.2.2'
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
 gem 'airbrake' # Exception notification
-gem 'soulmate', :git => 'git://github.com/marbemac/soulmate.git', :require => 'soulmate/server' # Redis based autocomplete storage
+gem 'soulmate', '0.1.3', :require => 'soulmate/server' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
 gem 'neography', '0.0.27' # neo4j graph database
@@ -35,7 +35,7 @@ gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem 'switch_user'
 gem 'omnicontacts'
-gem 'cloudinary'
+
 #gem 'mongoid_collection_snapshot'
 
 

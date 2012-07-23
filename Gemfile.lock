@@ -7,16 +7,6 @@ GIT
       extlib
       json
 
-GIT
-  remote: git://github.com/marbemac/soulmate.git
-  revision: ebd7b222d3c830979cc0fcea4f0369c4160886db
-  specs:
-    soulmate (0.1.3)
-      multi_json (>= 1.0)
-      redis (>= 2.0)
-      sinatra (>= 1.0)
-      vegas (>= 0.1.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -88,8 +78,6 @@ GEM
     chronic (0.6.7)
     chunky_png (1.2.5)
     closure-compiler (1.1.6)
-    cloudinary (1.0.31)
-      rest-client
     coderay (1.0.7)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -359,6 +347,11 @@ GEM
       rack-protection (~> 1.2)
       tilt (~> 1.3, >= 1.3.3)
     slop (3.3.2)
+    soulmate (0.1.3)
+      multi_json (>= 1.0)
+      redis (>= 2.0)
+      sinatra (>= 1.0)
+      vegas (>= 0.1.0)
     sprockets (2.1.3)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -407,7 +400,6 @@ DEPENDENCIES
   cancan
   chronic
   closure-compiler
-  cloudinary
   coffee-rails (~> 3.2.1)
   compass-rails
   dalli
@@ -442,7 +434,7 @@ DEPENDENCIES
   rspec-rails
   ruby-prof
   sass-rails (~> 3.2.3)
-  soulmate!
+  soulmate (= 0.1.3)
   switch_user
   thin
   tweetstream

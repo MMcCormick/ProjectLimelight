@@ -25,8 +25,8 @@ class PostsController < ApplicationController
     elsif params[:topic_id]
 
       topic = Topic.find_by_slug_id(params[:topic_id])
-      topic_ids = topic ? Neo4j.pull_from_ids(topic.neo4j_id).to_a : []
-      @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids << topic.id}).limit(20)
+      topic_ids = topic ? Neo4j.pull_from_ids(topic.neo4j_id).to_a << topic.id : []
+      @posts = PostMedia.where(:topic_ids => {"$in" => topic_ids}).limit(20)
 
     else
 

@@ -111,6 +111,8 @@ class PostsController < ApplicationController
         render :json => response, :status => :unprocessable_entity
       else
 
+        @post.save
+
         if params[:content] && !params[:content].blank?
           comment = @post.add_comment(current_user.id, params[:content])
         else

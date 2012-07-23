@@ -167,7 +167,7 @@ class PostMedia
 
       self.shares << share
       self.ll_score += 1
-      share.save
+      share.set_mentions
 
       share.topic_mention_ids.each do |t|
         self.topic_ids << t

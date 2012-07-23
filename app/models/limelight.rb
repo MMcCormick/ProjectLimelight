@@ -230,7 +230,7 @@ module Limelight #:nodoc:
       attr_accessor :topic_mention_names
       attr_accessible :topic_mention_ids, :topic_mention_names#, :user_mention_ids
 
-      before_validation :set_mentions, :on => :create
+      #before_validation :set_mentions, :on => :create
       #validates :topic_mention_ids, :on => :create, :length => { :minimum => 1, :maximum => 2, :message => 'You must add 1-2 topics to your post.' }
     end
 

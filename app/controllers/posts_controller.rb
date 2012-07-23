@@ -225,6 +225,9 @@ class PostsController < ApplicationController
         post.topic_ids.uniq!
         post.status = 'publishing'
         post.update_shares_topics
+        post.shares.each do |s|
+          s.status = 'publishing'
+        end
 
         if params[:remote_image_url]
           post.remote_image_url = params[:remote_image_url]

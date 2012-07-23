@@ -198,7 +198,7 @@ class PostMedia
   # sets all shares status to active
   # sets all their topic_ids to the first two topic ids on this post if found
   def publish_shares
-    self.shares.where(:status => 'pending').each do |share|
+    self.shares.where(:status => 'publishing').each do |share|
       share.status = 'active'
       share.expire_cached_json
       share.feed_post_create
@@ -349,7 +349,6 @@ class PostMedia
   def publish
     self.created_at = Time.now
     self.status = 'active'
-    publish_shares
   end
 
   ##########

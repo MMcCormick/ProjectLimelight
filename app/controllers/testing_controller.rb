@@ -7,8 +7,8 @@ class TestingController < ApplicationController
 
     authorize! :manage, :all
 
-    #tweets = Twitter.user_timeline('garrytan', :count => 50, :exclude_replies => true, :include_entities => true)
     #post = PostMedia.first
+    #foo = 'bar'
     #post.set_base_scores
     #PullTweets.perform
     #@count1 = 0

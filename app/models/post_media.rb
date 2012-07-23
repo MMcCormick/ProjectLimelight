@@ -346,6 +346,12 @@ class PostMedia
     #end
   end
 
+  def publish
+    self.created_at = Time.now
+    self.status = 'active'
+    publish_shares
+  end
+
   ##########
   # JSON
   ##########

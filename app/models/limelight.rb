@@ -92,18 +92,6 @@ module Limelight #:nodoc:
       attr_accessible :remote_image_url
     end
 
-    def size_dimensions
-      {:small => 75, :normal => 150, :large => 500}
-    end
-
-    def available_sizes
-      [:small, :normal, :large]
-    end
-
-    def available_modes
-      [:square, :fit]
-    end
-
     def image_ratio(version=nil)
       return nil if self.class.name == 'User' && use_fb_image
       return nil if self.class.name == 'Topic' && use_freebase_image
@@ -140,16 +128,26 @@ module Limelight #:nodoc:
       end
     end
 
-    def filepath
-      if self.class.name == 'User'
-        path = 'users'
-      elsif self.class.name == 'Topic'
-        path = 'topics'
-      else
-        path = self.class.name.downcase.pluralize
-      end
+    def size_dimensions
+      {:small => 75, :normal => 150, :large => 500}
+    end
 
-      "#{path}/#{id.to_s}"
+    def available_sizes
+      [:small, :normal, :large]
+    end
+
+    def available_modes
+      [:square, :fit]
+    end
+
+    def filepath
+      if Rails.env.production?
+        path = "http://res.cloudinary.com/0lmhydab/image"
+      elsif Rails.env.staging?
+        path = "http://res.cloudinary.com/0lmhydab/image"
+      else
+        path = "http://res.cloudinary.com/limelight/image"
+      end
     end
 
     def current_filepath
@@ -160,55 +158,50 @@ module Limelight #:nodoc:
       version = active_image_version unless version
       if self.class.name == 'User' && use_fb_image
         if mode == :square
-          "http://graph.facebook.com/#{fbuid}/picture?type=square"
+          "#{filepath}/facebook/w_#{size_dimensions[size]},h_#{size_dimensions[size]},c_thumb,g_faces/#{fbuid}.jpg"
         else
-          "http://graph.facebook.com/#{fbuid}/picture?type=#{size}"
+          "#{filepath}/facebook/w_#{size_dimensions[size]}/#{fbuid}.jpg"
         end
       else
         if version == 0
           if self.class.name == 'User'
-            "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
+            if twitter_handle
+              if mode == :square
+                "#{filepath}/twitter_name/w_#{size_dimensions[size]},h_#{size_dimensions[size]},c_thumb,g_faces/#{twitter_handle}.jpg"
+              else
+                "#{filepath}/twitter_name/w_#{size_dimensions[size]}/#{fbuid}.jpg"
+              end
+            else
+              "http://www.gravatar.com/avatar?d=mm&f=y&s=#{size_dimensions[size]}"
+            end
           elsif self.class.name == 'Topic'
             if use_freebase_image
               "https://usercontent.googleapis.com/freebase/v1/image#{freebase_id}?maxheight=#{size_dimensions[size]}&maxwidth=#{size_dimensions[size]}&mode=#{mode == :fit ? 'fit' : 'fillcropmid'}&pad=true"
             else
               "#{S3['image_prefix']}/defaults/topics/#{size}.gif"
             end
-          elsif !remote_image_url.blank?
-            "#{remote_image_url}"
           end
         else
-          if processing_image
-            "#{S3['image_prefix']}/#{filepath}/#{version.to_i}/original.png"
+          if mode == :square
+            "#{filepath}/upload/w_#{size_dimensions[size]},h_#{size_dimensions[size]},c_thumb,g_faces/#{id}_#{active_image_version}.jpg"
           else
-            if original
-              "#{S3['image_prefix']}/#{filepath}/#{version.to_i}/original.png"
-            else
-              "#{S3['image_prefix']}/#{filepath}/#{version.to_i}/#{mode}_#{size}.png"
-            end
+            "#{filepath}/upload/w_#{size_dimensions[size]},c_fit/#{id}_#{active_image_version}.jpg"
           end
+
         end
       end
     end
 
-    # Saves a new set of images from the remote_image_url currently specified on the model
-    def save_remote_image(url, force=false)
-      target = "#{filepath}/#{active_image_version.to_i+1}/original.png"
-
+    # Saves a new image from the remote_image_url currently specified on the model
+    def save_remote_image(url)
       begin
-        AWS::S3::S3Object.store(
-          target,
-          open(url).read,
-          S3['image_bucket']
-        )
+        i = Magick::Image::read(url).first
       rescue => e
         return
       end
 
-      AWS::S3::S3Object.copy target, "#{current_filepath}/original.png", S3['image_bucket']
-
       begin
-        i = Magick::Image::read("#{S3['image_prefix']}/#{current_filepath}/original.png").first
+        Cloudinary::Uploader.upload(url, :public_id => "#{id}_#{self.images.length+1}")
       rescue => e
         return
       end
@@ -218,70 +211,15 @@ module Limelight #:nodoc:
               :w => i.columns,
               :h => i.rows
       }
-      self.active_image_version = self.images.length
-      self.processing_image = true
 
-      if force
-        process_version(active_image_version)
-        self.processing_image = false
-      end
+      self.active_image_version = self.images.length
+
       save
     end
 
     def process_images
-      if processing_image || (!remote_image_url.blank? && active_image_version == 0)
-        Resque.enqueue(ProcessImages, id.to_s, self.class.name, 0, remote_image_url)
-      end
-    end
-
-    def process_version(version)
-      i = Magick::Image::read("#{S3['image_prefix']}/#{filepath}/#{version}/original.png").first
-      if i
-        original_w = i.columns
-        original_h = i.rows
-
-        # Generate all the image versions we need
-        available_sizes.each do |size|
-          available_modes.each do |mode|
-            # is it already on S3?
-            unless AWS::S3::S3Object.exists? "#{filepath}/#{version}/#{mode}_#{size}.png", S3['image_bucket']
-              dimensions = size_dimensions
-              width = dimensions[size]
-              height = mode == :fit ? 999999 : dimensions[size]
-
-              # we don't resize larger than the original image. if the original is smaller, use that max size and mantain the ratio
-              if original_w < width
-                width = original_w
-                unless mode == :fit
-                  height = original_h
-                end
-              end
-
-              case mode
-                when :square
-                  new_image = i.resize_to_fill(width, height)
-                when :fit
-                  new_image = i.resize_to_fit(width, height)
-                else
-                  new_image = nil
-              end
-
-              # upload to s3
-              if new_image
-                target = "#{filepath}/#{version}/#{mode}_#{size}.png"
-                AWS::S3::S3Object.store(
-                  target,
-                  new_image.to_blob,
-                  S3['image_bucket'],
-                  :access => :public_read
-                )
-              end
-            end
-          end
-        end
-        true
-      else
-        nil
+      if !remote_image_url.blank? && active_image_version == 0
+        save_remote_image(remote_image_url)
       end
     end
   end

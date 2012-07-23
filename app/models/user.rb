@@ -712,6 +712,8 @@ class User
           :small => model.image_url(:fit, :small)
         },
         :square => {
+          :large => model.image_url(:square, :large),
+          :normal => model.image_url(:square, :normal),
           :small => model.image_url(:square, :small)
         }
       }

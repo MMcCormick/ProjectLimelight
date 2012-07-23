@@ -3,18 +3,25 @@ class TestJob
   @queue = :fast
 
   def self.perform()
-    posts = PostMedia.where("shares.mediums.id" => {"$exists" => true})
-    posts.each do |p|
-      begin
-        tweet = Twitter.status(p.shares[0]['mediums'][0]['id'].to_i)
-        p.shares[0]['mediums'][0]['id'] = tweet.id.to_i
-        p.shares[0].created_at = tweet.created_at
-        p.save
-      rescue => e
-        p.delete_share(p.shares[0].user_id)
-        if p.status == 'pending' && p.shares.length == 0
-          p.destroy
-        else
+    PostMedia.all.each do |p|
+      p.images.each_with_index do |i,k|
+        begin
+          Cloudinary::Uploader.upload(i['remote_url'], :public_id => "#{p.id}_#{k+1}")
+        rescue => e
+          p.images.delete_at(k)
+          p.active_image_version = p.images.length
+          p.save
+        end
+      end
+    end
+
+    Topic.all.each do |p|
+      p.images.each_with_index do |i,k|
+        begin
+          Cloudinary::Uploader.upload(i['remote_url'], :public_id => "#{p.id}_#{k+1}")
+        rescue => e
+          p.images.delete_at(k)
+          p.active_image_version = p.images.length
           p.save
         end
       end

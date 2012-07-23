@@ -223,8 +223,7 @@ class PostsController < ApplicationController
           end
         end
         post.topic_ids.uniq!
-        post.status = 'active'
-        post.created_at = Time.now
+        post.status = 'publishing'
         post.update_shares_topics
 
         if params[:remote_image_url]
@@ -233,14 +232,14 @@ class PostsController < ApplicationController
         end
 
         post.save
-        post.publish_shares
-        post.save
-        post.expire_cached_json
+
+        # publish it sometime in the next 6 hours
+        Resque.enqueue_in(rand(21600), PostPublish, post.id.to_s)
 
         response = post.to_json(:properties => :public)
         response = Yajl::Parser.parse(response)
 
-        render :json => build_ajax_response(:ok, nil, "Published Post Successfully", nil, nil, response), :status => 201
+        render :json => build_ajax_response(:ok, nil, "Published Scheduled Successfully", nil, nil, response), :status => 201
       else
         render :json => build_ajax_response(:error, nil, "Could not Publish Post.", post.errors, nil), :status => 400
       end

@@ -653,8 +653,8 @@ class Topic
         new_topic_mentions = topic_mention_names.map {|name| [name, name.parameterize]}
 
         topic_slugs = new_topic_mentions.map {|data| data[1]}
-        # topics with matching aliases that are NOT already typed
-        topics = Topic.where("aliases.slug" => {'$in' => topic_slugs}, "primary_type_id" => {"$exists" => false}).to_a
+        # topics with matching aliases that are NOT already typed and are not categories
+        topics = Topic.any_of({"aliases.slug" => {'$in' => topic_slugs}, "primary_type_id" => {"$exists" => false}}, {"aliases.slug" => {'$in' => topic_slugs}, :is_category => true}).to_a
 
         new_topic_mentions.each do |topic_mention|
           next unless topic_mention[1].length > 2

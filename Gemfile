@@ -24,7 +24,7 @@ gem 'redis', '2.2.2'
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
 gem 'airbrake' # Exception notification
-gem 'soulmate', '0.1.3', :require => 'soulmate/server' # Redis based autocomplete storage
+gem 'soulmate', :git => 'git://github.com/marbemac/soulmate.git', :require => 'soulmate/server' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
 gem 'neography', '0.0.27' # neo4j graph database

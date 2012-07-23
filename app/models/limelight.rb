@@ -1,7 +1,3 @@
-#require 'RMagick'
-#include Magick
-
-# encoding: utf-8
 module Limelight #:nodoc:
 
   # Include this module to get ACL functionality for root level documents.
@@ -142,11 +138,11 @@ module Limelight #:nodoc:
 
     def filepath
       if Rails.env.production?
-        path = "http://res.cloudinary.com/0lmhydab/image"
+        "http://res.cloudinary.com/0lmhydab/image"
       elsif Rails.env.staging?
-        path = "http://res.cloudinary.com/xpgzvxkw/image"
+        "http://res.cloudinary.com/xpgzvxkw/image"
       else
-        path = "http://res.cloudinary.com/limelight/image"
+        "http://res.cloudinary.com/limelight/image"
       end
     end
 

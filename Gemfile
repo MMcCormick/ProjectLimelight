@@ -35,7 +35,7 @@ gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
 gem 'mongoid-cached-json'
 gem 'switch_user'
 gem 'omnicontacts'
-
+gem 'cloudinary'
 #gem 'mongoid_collection_snapshot'
 
 

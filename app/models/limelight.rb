@@ -282,6 +282,7 @@ module Limelight #:nodoc:
     end
 
     def add_topic_mention(topic)
+      return unless topic
       unless topic_mention_ids.include?(topic.id)
         self.topic_mention_ids << topic.id
         Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
@@ -293,6 +294,7 @@ module Limelight #:nodoc:
     end
 
     def remove_topic_mention(topic)
+      return unless topic
       mention = self.topic_mention_ids.delete(topic.id)
       if mention
         FeedUserItem.unpush_post_through_topic(self, topic)

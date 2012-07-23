@@ -207,9 +207,9 @@ module Limelight #:nodoc:
       end
 
       self.images << {
-              :remote_url => url,
-              :w => i.columns,
-              :h => i.rows
+              'remote_url' => url,
+              'w' => i.columns,
+              'h' => i.rows
       }
 
       self.active_image_version = self.images.length

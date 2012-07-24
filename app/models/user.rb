@@ -445,29 +445,29 @@ class User
     end
   end
 
-  def get_social_connect provider
+  def get_social_connect(provider, source='Limelight')
     social_connects.each do |social|
-      return social if social.provider == provider
+      return social if social.provider == provider && social.source == source
     end
     nil
   end
 
-  def fbuid
-    facebook = get_social_connect('facebook')
+  def fbuid(source='Limelight')
+    facebook = get_social_connect('facebook', source)
     if facebook
       facebook.uid
     end
   end
 
-  def twuid
-    twitter = get_social_connect('twitter')
+  def twuid(source='Limelight')
+    twitter = get_social_connect('twitter', source)
     if twitter
       twitter.uid
     end
   end
 
-  def facebook
-    connection = social_connects.detect{|connection| connection.provider == 'facebook'}
+  def facebook(source='Limelight')
+    connection = social_connects.detect{|connection| connection.provider == 'facebook' && source == source}
     if connection
       @fb_user ||= Koala::Facebook::API.new(connection.token)
     else
@@ -475,8 +475,8 @@ class User
     end
   end
 
-  def twitter
-    provider = get_social_connect('twitter')
+  def twitter(source='Limelight')
+    provider = get_social_connect('twitter', source)
     if provider
       @twitter ||= Twitter.configure do |config|
         config.consumer_key = ENV['TWITTER_KEY']
@@ -748,13 +748,13 @@ class User
     end
 
     # Omniauth providers
-    def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil, request_env=nil)
+    def find_by_omniauth(omniauth, signed_in_resource=nil, invite_code=nil, request_env=nil, source='Limelight')
       new_user = false
       login = false
       info = omniauth['info']
       extra = omniauth['extra']['raw_info']
 
-      existing_user = User.where("social_connects.uid" => omniauth['uid'], 'social_connects.provider' => omniauth['provider']).first
+      existing_user = User.where("social_connects.uid" => omniauth['uid'], 'social_connects.provider' => omniauth['provider'], 'social_connects.source' => source).first
       # Try to get via email if user not found and email provided
       unless existing_user || !info['email']
         existing_user = User.where(:email => info['email']).first
@@ -774,16 +774,15 @@ class User
 
       # If we found the user, update their token
       if user
-        connect = user.social_connects.detect{|connection| connection.uid == omniauth['uid'] && connection.provider == omniauth['provider']}
+        connect = user.social_connects.detect{|connection| connection.uid == omniauth['uid'] && connection.provider == omniauth['provider'] && connection.source == source}
         # Is this a new connection?
         unless connect
           new_connect = true
-          connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :image => info['image'])
+          connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :image => info['image'], :source => source)
           connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
 
           user.social_connects << connect
           user.use_fb_image = true if omniauth['provider'] == 'facebook' && user.images.length == 0
-          user.update_social_denorms
         end
         # Update the token
         connect.token = omniauth['credentials']['token']
@@ -792,8 +791,8 @@ class User
           login = true
         end
 
-      # If an invite code is in the session, create a new user with a stub password.
-      elsif invite && invite.usable?
+        # If an invite code is in the session, create a new user with a stub password.
+      elsif (invite && invite.usable?) || source == 'ThisThat'
         new_user = true
         new_connect = true
         if extra["gender"] && !extra["gender"].blank?
@@ -810,18 +809,17 @@ class User
         #end
 
         user = User.new(
-                :username => username, :used_invite_code_id => invite.id,
-                :first_name => extra["first_name"], :last_name => extra["last_name"],
-                :gender => gender, :email => info["email"], :password => Devise.friendly_token[0,20]
+            :username => username, :used_invite_code_id => invite.id,
+            :first_name => extra["first_name"], :last_name => extra["last_name"],
+            :gender => gender, :email => info["email"], :password => Devise.friendly_token[0,20]
         )
         user.username_reset = true
         user.birthday = Chronic.parse(extra["birthday"]) if extra["birthday"]
-        connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'])
+        connect = SocialConnect.new(:uid => omniauth["uid"], :provider => omniauth['provider'], :token => omniauth['credentials']['token'], :source => source)
         connect.secret = omniauth['credentials']['secret'] if omniauth['credentials'].has_key?('secret')
         user.social_connects << connect
         user.origin = omniauth['provider']
         user.use_fb_image = true if user.images.length == 0
-        user.update_social_denorms
       end
 
       if user && !user.confirmed?
@@ -832,7 +830,7 @@ class User
       user.slug = user.id.to_s if new_user # set a temporary slug
       user.save :validate => false if user
 
-      if user && new_connect
+      if user && new_connect && source == 'Limelight'
         Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s) unless user.username.blank?
 
         if connect.provider == 'facebook'

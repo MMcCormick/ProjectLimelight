@@ -492,7 +492,7 @@ class User
   def tweet_stream
     provider = get_social_connect('twitter')
     if provider
-      @twitter ||= TweetStream.configure do |config|
+      @tweet_stream ||= TweetStream.configure do |config|
         config.consumer_key = ENV['TWITTER_KEY']
         config.consumer_secret = ENV['TWITTER_SECRET']
         config.oauth_token = provider.token

@@ -149,7 +149,7 @@ class PostsController < ApplicationController
   end
 
   def publish_share
-    post = PostMedia.find(params[:id])
+    post = PostMedia.unscoped.find(params[:id])
     if post
 
       if post.status == 'pending'

@@ -14,8 +14,7 @@ class TestingController < ApplicationController
     #@count1 = 0
     #@count2 = 0
 
-    Resque.enqueue(TestJob)
-
+    PullTweets.perform
   end
 
 end

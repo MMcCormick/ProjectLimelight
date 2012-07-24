@@ -489,6 +489,21 @@ class User
     end
   end
 
+  def tweet_stream
+    provider = get_social_connect('twitter')
+    if provider
+      @twitter ||= TweetStream.configure do |config|
+        config.consumer_key = ENV['TWITTER_KEY']
+        config.consumer_secret = ENV['TWITTER_SECRET']
+        config.oauth_token = provider.token
+        config.oauth_token_secret = provider.secret
+      end
+      TweetStream::Client.new
+    else
+      nil
+    end
+  end
+
   def neo4j_create
     node = Neo4j.neo.create_node(
             'uuid' => id.to_s,

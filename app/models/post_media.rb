@@ -415,12 +415,69 @@ class PostMedia
   ##########
 
   class << self
+
     # find a topic by slug or id
     def find_by_slug_id(id)
       if Moped::BSON::ObjectId.legal?(id)
         Topic.find(id)
       else
         Topic.where(:slug => id.parameterize).first
+      end
+    end
+
+    def create_pending(user, url, comment, created_at=Time.now, medium=nil)
+      # Use fetch_url to grab the url and find any existing posts
+      response = fetch_url(url)
+      return nil if response.nil?
+      # If there's already a post
+      if response[:existing]
+        post = response[:existing]
+      # Otherwise create a new post
+      else
+        response[:type] = response[:type] && ['Link','Picture','Video'].include?(response[:type]) ? response[:type] : 'Link'
+        params = {:source_url => response[:url],
+                  :source_name => response[:provider_name],
+                  :embed_html => response[:video],
+                  :title => response[:title],
+                  :type => response[:type],
+                  :description => response[:description],
+                  :pending_images => response[:images]
+        }
+        post = Kernel.const_get(response[:type]).new(params)
+        post.user_id = user.id
+        post.status = "pending"
+        post.created_at = created_at
+      end
+
+      if post && !post.get_share(user.id)
+
+        share = post.add_share(user.id, comment)
+        share.status = "pending"
+        share.created_at = created_at
+        share.add_medium(medium) if medium
+
+        if post.valid?
+          post.save
+        else
+          nil
+        end
+      else
+        nil
+      end
+    end
+
+    def create_pending_from_tweet(user, tweet)
+      # Grab first url from tweet if it exists
+      if tweet.urls.first
+        # Remove urls from text
+        comment = tweet.text
+        tweet.urls.each do |u|
+          comment.slice!(u.url)
+        end
+        url = tweet.urls.first.expanded_url
+        medium = {:source => "Twitter", :id => tweet.id.to_i, :url => "https://twitter.com/#{user.twitter_handle}/statuses/#{tweet.id.to_i}"}
+
+        create_pending(user, url, comment, tweet.created_at, medium)
       end
     end
   end

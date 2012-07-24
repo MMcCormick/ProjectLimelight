@@ -219,7 +219,7 @@ class PostMedia
   # END COMMENTS
 
   def call_set_base_scores
-    Resque.enqueue(PostSetBaseScores, id.to_s)
+    #Resque.enqueue(PostSetBaseScores, id.to_s)
   end
 
   # calls the sharedcount api to set all the base social media counts

@@ -830,6 +830,14 @@ class User
       user.slug = user.id.to_s if new_user # set a temporary slug
       user.save :validate => false if user
 
+      # update the users primary twitter handle
+      if new_connect && connect.provider == 'twitter'
+        begin
+          user.twitter_handle = twitter.current_user.screen_name
+        rescue => e
+        end
+      end
+
       if user && new_connect && source == 'Limelight'
         Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s) unless user.username.blank?
 

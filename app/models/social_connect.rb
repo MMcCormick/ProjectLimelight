@@ -7,6 +7,9 @@ class SocialConnect
   field :secret
   field :username
   field :image
+  field :source, :default => 'Limelight'
+  field :fetch_shares, :default => false
+  field :fetch_likes, :default => false
 
   embedded_in :user
 

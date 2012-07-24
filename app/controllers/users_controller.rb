@@ -106,6 +106,20 @@ class UsersController < ApplicationController
     render json: response, status: status
   end
 
+  def update_network
+    network = current_user.get_social_connect(params[:provider], params[:source])
+    if network
+      network.fetch_shares = params[:value] == "true" if params[:setting] == 'fetch_shares'
+      network.fetch_likes = params[:value] == "true" if params[:setting] == 'fetch_likes'
+      current_user.save
+      response = build_ajax_response(:ok, nil, "Setting updated")
+    else
+      response = build_ajax_response(:error, nil, "You have not connected that network yet")
+    end
+
+    render :json => response
+  end
+
   # get the topics a user is talking about
   def topics
     user = User.find_by_slug_id(params[:id])

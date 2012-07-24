@@ -29,6 +29,7 @@ ProjectLimelight::Application.routes.draw do
       get ':id/topics/:topic_id/children' => 'users#topic_children'
       get ':id/topics/:topic_id/parents' => 'users#topic_parents'
       get ':id/topics' => 'users#topics'
+      put ':id/networks' => 'users#update_network'
       post '' => 'users#create'
       put '' => 'users#update'
       get ':id' => 'users#show'

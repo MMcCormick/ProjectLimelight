@@ -14,12 +14,11 @@ class PostsController < ApplicationController
         topic_ids = Neo4j.pull_from_ids(topic.neo4j_id).to_a
         @posts = PostMedia.where("shares.user_id" => user.id, "shares.0.topic_mention_ids" => {"$in" => topic_ids << topic.id}).limit(20)
       else
-        if signed_in? && (user.id == current_user.id || current_user.role?("admin"))
-          @posts = PostMedia.unscoped
+        if signed_in? && (user.id == current_user.id || current_user.role?("admin")) && params[:status] == 'pending'
+          @posts = PostMedia.unscoped.where("shares.user_id" => user.id, "shares.0.status" => 'pending').limit(20)
         else
-          @posts = PostMedia
+          @posts = PostMedia.where("shares.user_id" => user.id, "shares.0.status" => "active").limit(20)
         end
-        @posts = @posts.where("shares.user_id" => user.id).limit(20)
       end
 
     elsif params[:topic_id]
@@ -31,6 +30,10 @@ class PostsController < ApplicationController
     else
 
       @posts = PostMedia.all.limit(20)
+
+      if params[:status] && params[:status] == 'pending'
+        @posts = @posts.unscoped.any_of({:status => 'pending'}, {"shares.status" => 'pending'}).desc("_id").limit(20)
+      end
 
     end
 
@@ -44,12 +47,6 @@ class PostsController < ApplicationController
       end
     end
 
-    if params[:status]
-      if params[:status] && params[:status] == 'pending'
-        @posts = @posts.unscoped.any_of({:status => 'pending'}, {"shares.status" => 'pending'}).desc("_id").limit(20)
-      end
-    end
-
     @posts = @posts.skip(20*(params[:page].to_i-1)) if params[:page]
 
     data = @posts.map do |p|
@@ -57,6 +54,7 @@ class PostsController < ApplicationController
       if params[:user_id]
         response = Yajl::Parser.parse(response)
         response['share'] = p.get_share(user.id)
+        response['shares'] = p.shares.where('user_id' => user.id).to_a
         response
       elsif params[:status] && params[:status] == 'pending'
         response = Yajl::Parser.parse(response)

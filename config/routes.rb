@@ -112,11 +112,10 @@ ProjectLimelight::Application.routes.draw do
     get 'influence_increases' => 'users#influence_increases'
   end
 
+  # Resque admin
   resque_constraint = lambda do |request|
     request.env['warden'].authenticate? and request.env['warden'].user.role?('admin')
   end
-
-  # Resque admin
   constraints resque_constraint do
     mount Resque::Server, :at => "admin/resque"
   end

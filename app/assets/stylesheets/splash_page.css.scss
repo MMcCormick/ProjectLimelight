@@ -138,6 +138,14 @@
         line-height: 20px;
         font-size: 14px;
       }
+      &.thisthat {
+        p {
+          margin: 0 0 20px 1px;
+        }
+        .thisthat-link {
+          text-align: center;
+        }
+      }
     }
 
     .beta-signup-success {

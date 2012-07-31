@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :init, :set_user_time_zone, :save_referer
+  before_filter :init, :set_user_time_zone, :save_referer, :block_beta
 
   def authenticate_admin_user!
     unless can? :manage, :all
@@ -105,5 +105,11 @@ class ApplicationController < ActionController::Base
       og_tags << [k, e]
     end
     og_tags
+  end
+
+  def block_beta
+    unless signed_in? || request.fullpath == "/" || (request.method_symbol == :post && request.fullpath == "/sign_in")
+      redirect_to root_path
+    end
   end
 end

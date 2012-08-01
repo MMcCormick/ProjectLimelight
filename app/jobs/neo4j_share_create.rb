@@ -1,6 +1,6 @@
 class Neo4jShareCreate
 
-  @queue = :neo4j
+  @queue = :neo4j_limelight
 
   def self.perform(post_id, user_id)
     post = PostMedia.find(post_id)

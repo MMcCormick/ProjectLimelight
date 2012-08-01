@@ -1,6 +1,6 @@
 class PostSetBaseScores
 
-  @queue = :neo4j
+  @queue = :neo4j_limelight
 
   def self.perform(post_id)
     post = PostMedia.unscoped.find(post_id)

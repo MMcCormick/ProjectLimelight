@@ -1,6 +1,6 @@
 class UnpushPostThroughTopic
 
-  @queue = :medium
+  @queue = :medium_limelight
 
   def self.perform(post_id, topic_id)
     post = PostMedia.find(post_id)

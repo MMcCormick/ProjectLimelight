@@ -1,6 +1,6 @@
 class TestJob
   include Resque::Plugins::UniqueJob
-  @queue = :fast
+  @queue = :fast_limelight
 
   def self.perform()
     PostMedia.all.each do |p|

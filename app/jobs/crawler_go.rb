@@ -1,6 +1,6 @@
 class CrawlerGo
 
-  @queue = :fast
+  @queue = :fast_limelight
 
   class << self
 

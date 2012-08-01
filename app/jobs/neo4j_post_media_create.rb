@@ -1,6 +1,6 @@
 class Neo4jPostMediaCreate
 
-  @queue = :neo4j
+  @queue = :neo4j_limelight
 
   def self.perform(post_media_id)
     post_media = PostMedia.find(post_media_id)

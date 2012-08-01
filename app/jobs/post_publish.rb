@@ -1,6 +1,6 @@
 class PostPublish
 
-  @queue = :medium
+  @queue = :medium_limelight
 
   def self.perform(post_id)
     post = PostMedia.unscoped.find(post_id)

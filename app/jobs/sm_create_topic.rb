@@ -1,6 +1,6 @@
 class SmCreateTopic
 
-  @queue = :fast
+  @queue = :fast_limelight
 
   def self.perform(topic_id)
     topic = Topic.find(topic_id)

@@ -1,6 +1,6 @@
 class PostAddTopic
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform(post_id, topic_id)
     post = Post.find(post_id)

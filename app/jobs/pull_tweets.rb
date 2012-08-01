@@ -1,6 +1,6 @@
 class PullTweets
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform
     users = User.where(:twitter_handle => {"$exists" => true})

@@ -1,6 +1,6 @@
 class AddPopAction
 
-  @queue = :medium
+  @queue = :medium_limelight
 
   def self.perform(post_id, type, subtype, user_id, amt)
     post = Post.find(post_id)

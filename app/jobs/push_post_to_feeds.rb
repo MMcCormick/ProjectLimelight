@@ -1,6 +1,6 @@
 class PushPostToFeeds
 
-  @queue = :medium
+  @queue = :medium_limelight
 
   def self.perform(object_id, user_id=nil, topic_id=nil)
     object = PostMedia.find(object_id)

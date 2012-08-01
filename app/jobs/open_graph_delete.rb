@@ -1,6 +1,6 @@
 class OpenGraphDelete
   include Resque::Plugins::UniqueJob
-  @queue = :medium
+  @queue = :medium_limelight
 
   def self.perform(user_id, target_id, target_type, action)
     user = User.find_by_slug_id(user_id)

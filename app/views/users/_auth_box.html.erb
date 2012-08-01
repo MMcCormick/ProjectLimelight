@@ -1,101 +1,25 @@
-<div class='beta-about hide'>
-  <p class='summary'>
-    On the social web today, there are plenty of sites where you see content from other users.
-    Content is distributed based on WHO posted it, not WHAT it's about.
-  </p>
-
-  <p class='summary'>
-    On Limelight, you share and discover the web through topics.
-    You follow both users and topics, and Limelight shows you relevant videos, pictures, and links.
-  </p>
-
-  <div class='why'>Here are some reasons you want an invite</div>
-
-  <div class='reason'>
-    <b>It's smart.</b>
-    Limelight distributes content through the
-    topics the content is about.
-  </div>
-  <div class='reason'>
-    <b>It's simple.</b>
-    Follow topics just like you would follow users.
-  </div>
-  <div class='reason'>
-    <b>It's beautiful.</b>
-    Mmm pretty pictures.
-  </div>
-  <div class='back'>
-    Back <div class='ll-green-arrow-left'></div>
-  </div>
-</div>
-
-<div class='beta-team hide'>
+<div class="beta-signup thisthat">
   <p>
-    We're Marc MacLeod and Matt McCormick. We met as roommates freshman year at Tufts University,
-    because someone in admissions went "Ha! Look at these names."
+    Hi There!
   </p>
   <p>
-    We currently live in New York City, but we started building Limelight while living in Boston.
+    We've gotten a lot of amazing feedback from the Limelight beta, and made some big changes.
+    In fact, we've moved the whole project here:
+  </p>
+  <p class="thisthat-link">
+    <%= link_to "www.getthisthat.com", "http://www.getthisthat.com", :target => "_blank" %>
   </p>
   <p>
-    We spent all this time building Limelight because we're lazy (ironic, right?). We want a quicker
-    way to find and discuss everything that interests us.
-    We don't want to Google everything cool, we just want to follow topics we like and have the content come to us.
-    If that's something that interests you, we look forward to seeing you on Limelight!
+    We're still organizing the web around topics, just taking a different approach. Please go check it out!
   </p>
-
-
-  <div class='email'>
-    <a href="mailto:marc@projectlimelight.com">Marc</a> & <a href="mailto:matt@projectlimelight.com">Matt</a> - The Limelight Team
-  </div>
-
-  <div class='back'>
-    Back <div class='ll-green-arrow-left'></div>
-  </div>
-</div>
-
-<div class="beta-signup <%= 'hide' unless show != :login && show != :register %>">
-  <form id="beta-signup-form">
-    <p>
-      Limelight just launched and is currently invite only.
-      Enter your email below and we'll grant you access in our next wave of invites!
-    </p>
-
-    <div class="errors"></div>
-    <input id="beta-signup-email" name="email" placeholder="Email..." type="text" autocomplete="off" />
-    <input class="btn btn-success" type="submit" value="Request Invite">
-
-    <div>
-      <div class='invite-code'>I have an invite code</div>
-      <div class='account'>I have an account</div>
-    </div>
-  </form>
-
-  <div class='beta-signup-success hide'>
-    <h3>Thanks for signing up for the beta!</h3>
-    <p>
-      We will be letting users onto Limelight in waves.
-      The faster we reach our goal, the faster you get in,
-      so help us spread the word using the buttons below!
-      We will love you forever.
-    </p>
-  </div>
-
-  <div class="social">
-    <div class="fb-like" data-href="http://www.facebook.com/DiscoverLimelight" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
-    <a href="https://twitter.com/share?url=http://projectlimelight.com&text=I just found a new way to follow the topics I care about. It's called Limelight, check it out! @limelight_team" class="twitter-share-button" data-lang="en">Tweet</a>
-    <div class="google">
-      <div class="g-plusone" data-size="medium" data-href="http://projectlimelight.com"></div>
-    </div>
-  </div>
-
-</div>
-
-<div class="invite-form hide">
-  <%= render "invite_codes/redeem_form" %>
-  <div class='back'>
-    Back <div class='ll-green-arrow-left'></div>
-  </div>
+  <p>
+    If you're an existing Limelight user, we'll be sending you an invite to ThisThat soon - don't worry, all your posts are saved!
+    You can always reach us at founders@getthisthat.com with any questions.
+  </p>
+  <p>
+    Best,
+    <br/>Matt and Marc
+  </p>
 </div>
 
 <div class="beta-login <%= 'hide' unless show == :login %>">
@@ -113,36 +37,5 @@
   <%= render "users/sessions/new" %>
   <div class='back'>
     Back <div class='ll-green-arrow-left'></div>
-  </div>
-</div>
-
-<div class="beta-register <%= 'hide' unless show == :register %>">
-  <div class='form'>
-    <div class='invite-code'>
-      Great, your invite worked!
-      You can now register below.
-    </div>
-
-    <a href="<%= user_omniauth_authorize_path(:facebook) %>" class='facebook'>
-      <%= image_tag('facebook-login-button.gif') %>
-    </a>
-    <div class="foot">We do not share your information.</div>
-    <div class="foot">We do not abuse your wall.</div>
-
-    <div class='divider'>
-      <div>OR</div>
-    </div>
-
-    <div class="foot">Register directly with Limelight.</div>
-    <%= render "users/registrations/new" %>
-    <div class='back'>
-      Back <div class='ll-green-arrow-left'></div>
-    </div>
-  </div>
-
-  <div class='confirm hide'>
-    Great, your registration was successful! Please check your
-    email for a confirmation, we'll send it in the next few minutes.
-    Just click the confirmation link in the email and your registration will be complete!
   </div>
 </div>

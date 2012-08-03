@@ -108,6 +108,10 @@ class ApplicationController < ActionController::Base
   end
 
   def block_beta
+    if signed_in? && !current_user.role?('admin') && request.fullpath != destroy_user_session_path
+      redirect_to destroy_user_session_path
+    end
+
     unless signed_in? || request.fullpath == "/" || (request.method_symbol == :post && request.fullpath == "/sign_in")
       redirect_to root_path
     end

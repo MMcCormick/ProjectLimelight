@@ -2,7 +2,7 @@
 class ScoreUpdate
   include Resque::Plugins::UniqueJob
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform(target_type, target_id)
     target = Kernel.const_get(target_type).find_by_slug_id(target_id)

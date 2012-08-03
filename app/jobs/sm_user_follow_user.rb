@@ -1,6 +1,6 @@
 class SmUserFollowUser
 
-  @queue = :fast
+  @queue = :fast_limelight
 
   def self.perform(user1_id, user2_id)
     user2 = User.find(user2_id)

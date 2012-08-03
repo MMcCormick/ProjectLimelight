@@ -1,7 +1,7 @@
 class RecalculateInfluence
   include Resque::Plugins::UniqueJob
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform(topic_id)
     topic = Topic.find(Moped::BSON::ObjectId(topic_id))

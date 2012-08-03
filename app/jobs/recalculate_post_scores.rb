@@ -1,7 +1,7 @@
 class RecalculatePostScores
   include Resque::Plugins::UniqueJob
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform()
     PostMedia.all.each do |p|

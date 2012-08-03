@@ -1,5 +1,5 @@
 class AutoFollow
-  @queue = :fast
+  @queue = :fast_limelight
 
   def self.perform(user_id, provider)
     user = User.find(user_id)

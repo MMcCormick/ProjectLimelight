@@ -1,7 +1,7 @@
 class SendUserNotification
   include Resque::Plugins::UniqueJob
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform(notification_id)
     notification = Notification.find(notification_id)

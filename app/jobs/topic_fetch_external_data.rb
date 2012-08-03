@@ -1,6 +1,6 @@
 class TopicFetchExternalData
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform(topic_id)
     topic = Topic.find(topic_id)

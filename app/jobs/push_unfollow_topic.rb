@@ -1,6 +1,6 @@
 class PushUnfollowTopic
 
-  @queue = :medium
+  @queue = :medium_limelight
 
   def self.perform(user_id, topic_id)
     user = User.find(user_id)

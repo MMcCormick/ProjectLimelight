@@ -1,7 +1,7 @@
 class OpenGraphCreate
   include Resque::Plugins::UniqueJob
   include ModelUtilitiesHelper
-  @queue = :medium
+  @queue = :medium_limelight
 
   def initialize(user, target, action, object_type, object_url, fb)
     return if Rails.env.development?

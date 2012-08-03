@@ -1,6 +1,6 @@
 class CrawlerPushPost
 
-  @queue = :medium
+  @queue = :medium_limelight
 
   class << self
     include VideosHelper

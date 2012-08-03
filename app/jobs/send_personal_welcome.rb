@@ -1,7 +1,7 @@
 class SendPersonalWelcome
   include Resque::Plugins::UniqueJob
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform(user_id, today_or_yesterday)
     coin_toss = rand(2)

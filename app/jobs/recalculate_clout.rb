@@ -1,7 +1,7 @@
 class RecalculateClout
   include Resque::Plugins::UniqueJob
 
-  @queue = :slow
+  @queue = :slow_limelight
 
   def self.perform
     users = User.all.asc(:score)

@@ -1,5 +1,5 @@
 class AutoFollowFBLikes
-  @queue = :fast
+  @queue = :fast_limelight
 
   def self.perform(user_id)
     user = User.find(user_id)

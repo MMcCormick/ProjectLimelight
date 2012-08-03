@@ -1,6 +1,6 @@
 class PushPostDisable
 
-  @queue = :medium
+  @queue = :medium_limelight
 
   def self.perform(object_id)
     object = Post.find(object_id)

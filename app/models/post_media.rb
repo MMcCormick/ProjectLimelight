@@ -393,9 +393,9 @@ class PostMedia
     if images.length > 0 || !remote_image_url.blank?
       {
         :original => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}"),
-        :ratio => images[active_image_version-1]['cloudinary']['width'] / images[active_image_version-1]['cloudinary']['height'],
-        :width => images[active_image_version-1]['cloudinary']['width'],
-        :height => images[active_image_version-1]['cloudinary']['height'],
+        :ratio => images[active_image_version-1]['cloudinary']['width'].to_f / images[active_image_version-1]['cloudinary']['height'].to_f,
+        :w => images[active_image_version-1]['cloudinary']['width'],
+        :h => images[active_image_version-1]['cloudinary']['height'],
         :fit => {
             :large => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", {:width => 600, :crop => :limit}),
             :normal => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", {:width => 300, :crop => :limit}),

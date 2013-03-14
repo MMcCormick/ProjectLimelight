@@ -125,7 +125,7 @@ module Limelight #:nodoc:
     end
 
     def size_dimensions
-      {:small => 75, :normal => 150, :large => 500}
+      {:small => 100, :normal => 20, :large => 600}
     end
 
     def available_sizes
@@ -178,12 +178,15 @@ module Limelight #:nodoc:
             end
           end
         else
+          options = {:width => size_dimensions[size]}
           if mode == :square
-            "#{filepath}/upload/w_#{size_dimensions[size]},h_#{size_dimensions[size]},c_thumb,g_faces/#{id}_#{active_image_version}.jpg"
+            options[:height] = size_dimensions[size]
+            options[:gravity] = :faces
+            options[:crop] = :thumb
           else
-            "#{filepath}/upload/w_#{size_dimensions[size]},c_fit/#{id}_#{active_image_version}.jpg"
+            options[:crop] = :thumb
           end
-
+          Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", options)
         end
       end
     end

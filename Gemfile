@@ -7,9 +7,10 @@ gem 'jquery-rails', '~> 2.0.2'
 gem 'rack'
 gem 'rack-contrib'
 gem 'mongoid', '~> 3.0.1'
-gem 'devise' # Authentication
+gem 'devise', '2.1.2' # Authentication
 gem 'yajl-ruby' # json
 gem 'aws-s3', :require => 'aws/s3'
+gem 'omniauth', '1.1.0'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'koala', '1.5' # facebook graph api support
@@ -26,7 +27,7 @@ gem 'backbone-on-rails', '0.9.2.1'
 gem 'mixpanel' # analytics
 gem 'feedzirra'
 gem 'ken', :git => 'git://github.com/marbemac/ken.git' # freebase
-gem 'mongoid-cached-json'
+gem 'mongoid-cached-json', '1.2.3'
 gem 'switch_user'
 gem 'omnicontacts'
 gem 'cloudinary'

@@ -25,7 +25,7 @@ ProjectLimelight::Application.configure do
 
   config.static_cache_control = "public, max-age=2592000"
 
-  config.action_controller.asset_host = 'http://static.p-li.me'
+  #config.action_controller.asset_host = 'http://static.p-li.me'
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true

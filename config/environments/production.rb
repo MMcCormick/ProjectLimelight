@@ -1,79 +1,65 @@
 ProjectLimelight::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
-  # Code is not reloaded between requests
-  config.cache_classes = true
+  # In the development environment your application's code is reloaded on
+  # every request.  This slows down response time but is perfect for development
+  # since you don't have to restart the web server when you make code changes.
+  config.cache_classes = false
 
-  # Full error reports are disabled and caching is turned on
+  # Log error messages when you accidentally call methods on nil.
+  config.whiny_nils = true
+
+  # Show full error reports and disable caching
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = true
+  config.action_controller.perform_caching = false
 
-  # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_assets = false
+  # Print deprecation notices to the Rails logger
+  config.active_support.deprecation = :log
 
-  # Compress JavaScripts and CSS
-  config.assets.compress = true
+  # Only use best-standards-support built into browsers
+  config.action_dispatch.best_standards_support = :builtin
 
-  # Don't fallback to assets pipeline if a precompiled asset is missing
-  config.assets.compile = false
+  # Do not compress assets
+  config.assets.compress = false
 
-  # Generate digets for assets URLs
-  config.assets.digest = true
+  # Expands the lines which load the assets
+  config.assets.debug = true
 
-  # use the closure library to minify js
-  #config.assets.js_compressor = :closure
-
-  #config.static_cache_control = "public, max-age=2592000"
-
-  #config.action_controller.asset_host = 'http://static.p-li.me'
-
-  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
-
-  # See everything in the log (default is :info)
-  config.log_level = :error
-
-  # Use a different logger for distributed setups
-  # config.logger = SyslogLogger.new
-
-  # Use a different cache store in production
-  config.cache_store = :dalli_store, 'localhost:11211'
-
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server
-  # config.action_controller.asset_host = "http://assets.example.com"
-
-  # Precompile additional assets (application.js, application.css.scss, and all non-JS/CSS are already added)
-  # config.assets.precompile += %w( search.js )
-
-  # Disable delivery errors, bad email addresses will be ignored
-  # config.action_mailer.raise_delivery_errors = false
-
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
-  # the I18n.default_locale when a translation can not be found)
-  config.i18n.fallbacks = true
-
-  # Send deprecation notices to registered listeners
-  config.active_support.deprecation = :notify
+  # Raise exception on mass assignment protection for Active Record models
+  #config.active_record.mass_assignment_sanitizer = :strict
 
   # Enable threaded mode
   #config.threadsafe!
 
+  # Use a different cache store in development
+  #config.cache_store = :torque_box_store
+
+  # Use a different cache store in development
+  #config.cache_store = :torque_box_store
+
+  # Log the query plan for queries taking more than this (works
+  # with SQLite, MySQL, and PostgreSQL)
+  #config.active_record.auto_explain_threshold_in_seconds = 0.5
+
+  config.log_tags = [:uuid, :remote_ip]
+
   # ActionMailer Config
-  # Setup for production - deliveries, no errors raised
+  # Setup for development - deliveries, errors raised
+  ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor)
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default :charset => "utf-8"
   config.action_mailer.default_url_options = {
-          :host => 'limelight.marbemac.com'
+      :host => 'localhost:3000'
   }
   config.action_mailer.smtp_settings = {
-          :domain => 'limelight.marbemac.com',
-          :address => 'smtp.sendgrid.net',
-          :port => 587,
-          :authentication => :plain,
-          :enable_starttls_auto => true,
-          :user_name => 'marbemac',
-          :password => 'giants22'
+      :domain => 'limelight.marbemac.com',
+      :address => 'smtp.sendgrid.net',
+      :port => 587,
+      :authentication => :plain,
+      :enable_starttls_auto => true,
+      :user_name => 'marbemac',
+      :password => 'giants22'
   }
 end

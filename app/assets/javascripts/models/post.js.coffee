@@ -4,6 +4,7 @@ class LL.Models.Post extends Backbone.Model
   urlRoot: "/api/posts"
 
   parse: (response) ->
+    console.log response
     if response.share
       response.post.share = response.share
 

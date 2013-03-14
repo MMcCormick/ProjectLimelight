@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
 
   # Mixpanel
   def track_mixpanel(name, params)
-    Resque.enqueue(MixpanelTrackEvent, name, params, request.env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
+    MixpanelTrackEvent.perform_async(name, params, request.env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
   end
 
   def build_ajax_response(status, redirect=nil, flash=nil, errors=nil, extra=nil, object=nil)

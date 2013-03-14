@@ -191,21 +191,14 @@ module Limelight #:nodoc:
     # Saves a new image from the remote_image_url currently specified on the model
     def save_remote_image(url)
       begin
-        i = Magick::Image::read(url).first
-      rescue => e
-        return
-      end
-
-      begin
-        Cloudinary::Uploader.upload(url, :public_id => "#{id}_#{self.images.length+1}")
+        image = Cloudinary::Uploader.upload(url, :public_id => "#{id}_#{self.images.length+1}")
       rescue => e
         return
       end
 
       self.images << {
-              'remote_url' => url,
-              'w' => i.columns,
-              'h' => i.rows
+          'remote_url' => url,
+          'cloudinary' => image.slice('public_id','version','width','height','format','bytes','url')
       }
 
       self.active_image_version = self.images.length
@@ -243,10 +236,8 @@ module Limelight #:nodoc:
     #
 
     def set_mentions
-      unless persisted?
-        #set_user_mentions
-        set_topic_mentions
-      end
+      #set_user_mentions
+      set_topic_mentions
     end
 
     # Checks @content_raw for user mentions
@@ -281,7 +272,7 @@ module Limelight #:nodoc:
       return unless topic
       unless topic_mention_ids.include?(topic.id)
         self.topic_mention_ids << topic.id
-        Resque.enqueue(PostAddTopic, self.id.to_s, topic.id.to_s)
+        PostAddTopic.perform_async(self.id.to_s, topic.id.to_s)
         Neo4j.post_add_topic_mention(self, topic)
         Neo4j.update_talk_count(user, topic, 1, nil, nil, _parent.id)
         _parent.topic_ids << topic.id
@@ -402,7 +393,7 @@ module Limelight #:nodoc:
           action.pop_snippets.new(:amount => amt, :id => user_id, :object_type => "User")
           user.score += amt # the post's user (creator)
           user.save
-          Resque.enqueue_in(10.minutes, ScoreUpdate, 'User', user_id.to_s)
+          ScoreUpdate.perform_in(10.minutes, 'User', user_id.to_s)
           #Pusher[user_id.to_s].trigger('score_change', {:id => user_id.to_s, :change => amt})
         end
 
@@ -420,7 +411,7 @@ module Limelight #:nodoc:
               #Pusher[topic.id.to_s].trigger('score_change', {:id => id.to_s, :change => topic_amt})
 
               if topic.score >= 0 && topic.influencers.length >= 3
-                Resque.enqueue_in(10.minutes, RecalculateInfluence, topic.id.to_s)
+                 RecalculateInfluence.perform_in(10.minutes, topic.id.to_s)
               end
 
               # send the influence increase
@@ -451,7 +442,7 @@ module Limelight #:nodoc:
                     }
                   })
             affected_topic_ids.each do |tid|
-              Resque.enqueue_in(10.minutes, ScoreUpdate, 'Topic', tid.to_s)
+              ScoreUpdate.perform_in(10.minutes, 'Topic', tid.to_s)
             end
           end
 
@@ -473,7 +464,7 @@ module Limelight #:nodoc:
 
     def change_pop(amt)
       self.score += amt
-      Resque.enqueue_in(10.minutes, ScoreUpdate, 'Post', id.to_s)
+      ScoreUpdate.perform_in(10.minutes, 'Post', id.to_s)
       #Pusher[id.to_s].trigger('score_change', {:id => id.to_s, :change => amt})
     end
   end

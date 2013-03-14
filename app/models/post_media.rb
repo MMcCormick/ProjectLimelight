@@ -142,7 +142,7 @@ class PostMedia
     node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post_media', 'subtype' => self.class.name, 'created_at' => created_at.to_i, 'score' => score.to_i)
     Neo4j.neo.add_node_to_index('post_media', 'uuid', id.to_s, node)
 
-    Resque.enqueue(Neo4jPostMediaCreate, id.to_s)
+    Neo4jPostMediaCreate.perform_async(id.to_s)
 
     node
   end
@@ -308,7 +308,7 @@ class PostMedia
       added.each do |i|
         topic = Topic.find(i)
         if topic
-          Resque.enqueue(PushPostToFeeds, id.to_s, nil, topic.id.to_s)
+          PushPostToFeeds.perform_async(id.to_s, nil, topic.id.to_s)
         end
       end
 
@@ -316,7 +316,7 @@ class PostMedia
       removed.each do |i|
         topic = Topic.find(i)
         if topic
-          Resque.enqueue(UnpushPostThroughTopic, id.to_s, topic.id.to_s)
+          UnpushPostThroughTopic.perform_async(id.to_s, topic.id.to_s)
         end
       end
     end
@@ -392,19 +392,19 @@ class PostMedia
   def json_images
     if images.length > 0 || !remote_image_url.blank?
       {
-        :ratio => image_ratio,
-        :w => image_width,
-        :h => image_height,
-        :original => image_url(nil, nil, nil, true),
+        :original => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}"),
+        :ratio => images[active_image_version-1]['cloudinary']['width'] / images[active_image_version-1]['cloudinary']['height'],
+        :width => images[active_image_version-1]['cloudinary']['width'],
+        :height => images[active_image_version-1]['cloudinary']['height'],
         :fit => {
-            :large => image_url(:fit, :large),
-            :normal => image_url(:fit, :normal),
-            :small => image_url(:fit, :small)
+            :large => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", {:width => 600, :crop => :limit}),
+            :normal => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", {:width => 300, :crop => :limit}),
+            :small => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", {:width => 100, :crop => :limit})
         },
         :square => {
-            :large => image_url(:square, :large),
-            :normal => image_url(:square, :normal),
-            :small => image_url(:square, :small)
+            :large => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", {:width => 600, :crop => :limit}),
+            :normal => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", {:width => 300, :crop => :limit}),
+            :small => Cloudinary::Utils.cloudinary_url("v#{images[active_image_version-1]['cloudinary']['version']}/#{images[active_image_version-1]['cloudinary']['public_id']}.#{images[active_image_version-1]['cloudinary']['format']}", {:width => 100, :crop => :limit})
         }
       }
     end

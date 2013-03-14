@@ -8,8 +8,6 @@ require "rails/test_unit/railtie"
 require "sprockets/railtie"
 require 'coffee_script'
 require "sass-rails"
-require 'resque/server'
-require 'resque-loner'
 require 'uri'
 require 'open-uri'
 require 'chronic'
@@ -66,6 +64,10 @@ module ProjectLimelight
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
+
+    Pusher.app_id = ENV['PUSHER_APP_ID'] || '39070'
+    Pusher.key = ENV['PUSHER_KEY'] || '0ac3571b7c8af608332a'
+    Pusher.secret = ENV['PUSHER_SECRET'] || 'e5b101dbf9ce837559aa'
 
     # Enable the asset pipeline
     config.assets.enabled = true

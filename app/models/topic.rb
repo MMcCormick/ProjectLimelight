@@ -132,7 +132,7 @@ class Topic
   end
 
   def fetch_external_data
-    Resque.enqueue(TopicFetchExternalData, id.to_s) unless skip_fetch_external
+    TopicFetchExternalData.perform_async(id.to_s) unless skip_fetch_external
   end
 
   def freebase
@@ -305,7 +305,7 @@ class Topic
 
     unless get_alias(new_alias)
       self.aliases << TopicAlias.new(:name => new_alias, :slug => new_alias.parameterize, :hash => new_alias.parameterize.gsub('-', ''), :ooac => ooac, :hidden => hidden)
-      Resque.enqueue(SmCreateTopic, id.to_s)
+      SmCreateTopic.perform_async(id.to_s)
       true
     end
   end
@@ -313,7 +313,7 @@ class Topic
   def remove_alias old_alias
     return unless old_alias && !old_alias.blank?
     self.aliases.where(:name => old_alias).delete
-    Resque.enqueue(SmCreateTopic, id.to_s)
+    SmCreateTopic.perform_async(id.to_s)
   end
 
   def update_alias(alias_id, name, ooac, hidden=false)
@@ -332,7 +332,7 @@ class Topic
       found.slug = name.parameterize unless name.blank?
       found.ooac = ooac
       found.hidden = hidden
-      Resque.enqueue(SmCreateTopic, id.to_s)
+      SmCreateTopic.perform_async(id.to_s)
     end
     true
   end
@@ -388,11 +388,11 @@ class Topic
   #
 
   def add_to_soulmate
-    Resque.enqueue(SmCreateTopic, id.to_s)
+    SmCreateTopic.perform_async(id.to_s)
   end
 
   def remove_from_soulmate
-    Resque.enqueue(SmDestroyTopic, id.to_s)
+    SmDestroyTopic.perform_async(id.to_s)
   end
 
   #
@@ -406,14 +406,14 @@ class Topic
       self.primary_type_id = topic.id
       topic.is_topic_type = true
       topic.save
-      Resque.enqueue(SmCreateTopic, id.to_s)
+      SmCreateTopic.perform_async(id.to_s)
     end
   end
 
   def unset_primary_type
     self.primary_type = nil
     self.primary_type_id = nil
-    Resque.enqueue(SmCreateTopic, id.to_s)
+    SmCreateTopic.perform_async(id.to_s)
   end
 
   #
@@ -474,8 +474,8 @@ class Topic
       follower.save
     end
 
-    Resque.enqueue(SmCreateTopic, id.to_s)
-    Resque.enqueue(SmDestroyTopic, aliased_topic.id.to_s)
+    SmCreateTopic.perform_async(id.to_s)
+    SmDestroyTopic.perform_async(aliased_topic.id.to_s)
   end
 
   def raw_image(w,h,m)
@@ -979,11 +979,11 @@ class Topic
 
     if soulmate
       neo4j_update
-      Resque.enqueue(SmCreateTopic, id.to_s)
+      SmCreateTopic.perform_async(id.to_s)
     end
 
     if score_changed?
-      Resque.enqueue_in(10.minutes, ScoreUpdate, 'Topic', id.to_s)
+      ScoreUpdate.perform_in(10.minutes, 'Topic', id.to_s)
     end
   end
 end

@@ -1,1 +1,1 @@
-worker:           bundle exec rake resque:work QUEUE=fast_limelight,neo4j_limelight,medium_limelight,mailer,slow_limelight COUNT=2 RAILS_ENV=production
+worker:           bundle exec sidekiq -c 15 -q fast_limelight,5 -q neo4j_limelight,4 -q medium_limelight,3 -q mailer,2 -q slow_limelight,1

@@ -13,10 +13,10 @@
 
     <h4>1. Share your invite code</h4>
     <div>
-      Use this URL: <b>http://projectlimelight.com/invited?code=<%= @user.get('invite_code').code %></b>
+      Use this URL: <b>http://limelight.marbemac.com/invited?code=<%= @user.get('invite_code').code %></b>
       <div>
-        <a href="https://twitter.com/share?url=<%= encodeURI("http://projectlimelight.com/invited?code="+@user.get('invite_code').code) %>&text=Just signed up to beta test Limelight. It's invite only but you can get access with this link @limelight_team" target='_blank' class="twitter-share-btn" data-lang="en">Share on Twitter</a>
-        <a href="http://www.facebook.com/dialog/feed?app_id=185721368181340&link=http://projectlimelight.com&redirect_uri=http://projectlimelight.com" class="facebook-share-button" target='_blank'>Share on Facebook</a>
+        <a href="https://twitter.com/share?url=<%= encodeURI("http://limelight.marbemac.com/invited?code="+@user.get('invite_code').code) %>&text=Just signed up to beta test Limelight. It's invite only but you can get access with this link @limelight_team" target='_blank' class="twitter-share-btn" data-lang="en">Share on Twitter</a>
+        <a href="http://www.facebook.com/dialog/feed?app_id=185721368181340&link=http://limelight.marbemac.com&redirect_uri=http://limelight.marbemac.com" class="facebook-share-button" target='_blank'>Share on Facebook</a>
       </div>
     </div>
 

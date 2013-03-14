@@ -43,11 +43,6 @@ ProjectLimelight::Application.configure do
 
   config.log_tags = [:uuid, :remote_ip]
 
-  # Pusher
-  Pusher.app_id = 10176
-  Pusher.key = 'da6d3243e3cce708de16'
-  Pusher.secret = 'bdd4c6fd8ff0f27b25f1'
-
   # ActionMailer Config
   # Setup for development - deliveries, errors raised
   ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor)

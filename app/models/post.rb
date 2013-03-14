@@ -152,7 +152,7 @@ class Post
     node = Neo4j.neo.create_node('uuid' => id.to_s, 'type' => 'post', 'created_at' => created_at.to_i, 'score' => score.to_i)
     Neo4j.neo.add_node_to_index('posts', 'uuid', id.to_s, node)
 
-    Resque.enqueue(Neo4jPostCreate, id.to_s)
+    Neo4jPostCreate.perform_async(id.to_s)
 
     node
   end
@@ -168,7 +168,7 @@ class Post
 
   def feed_post_create
     return unless status == 'active'
-    Resque.enqueue(PushPostToFeeds, id.to_s)
+    PushPostToFeeds.perform_async(id.to_s)
   end
 
   def push_to_feeds
@@ -369,7 +369,7 @@ class Post
 
   def update_denorms
     if score_changed?
-      Resque.enqueue_in(10.minutes, ScoreUpdate, 'Post', id.to_s)
+      ScoreUpdate.perform_in(10.minutes, 'Post', id.to_s)
     end
   end
 

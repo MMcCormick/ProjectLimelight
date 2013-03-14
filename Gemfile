@@ -15,17 +15,13 @@ gem 'omniauth-twitter'
 gem 'koala', '1.5' # facebook graph api support
 gem 'twitter' # twitter api support
 gem 'tweetstream' # twitter streaming api support
-gem 'resque', '1.21.0' #, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
-gem 'resque-scheduler', '2.0.0.h', :require => 'resque_scheduler' # scheduled resque jobs
-gem 'resque-loner' # Unique resque jobs
-gem 'resque_mailer'
 gem 'redis'
 gem 'chronic' # Date/Time management
 gem 'cancan' # Authorization
 gem 'soulmate', '1.0.0', :require => 'soulmate/server' # Redis based autocomplete storage
 gem 'dalli' # memcache
 gem 'pusher' # pusher publish/subscribe
-gem 'neography' # neo4j graph database
+gem 'neography', '0.0.27' # neo4j graph database
 gem 'backbone-on-rails', '0.9.2.1'
 gem 'mixpanel' # analytics
 gem 'feedzirra'
@@ -34,6 +30,15 @@ gem 'mongoid-cached-json'
 gem 'switch_user'
 gem 'omnicontacts'
 gem 'cloudinary'
+
+gem 'sidekiq' # background jobs
+gem 'sidekiq-unique-jobs'
+gem 'sinatra' # for sidekiq
+gem 'slim'
+#gem 'resque', '1.21.0' #, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
+#gem 'resque-scheduler', '2.0.0.h', :require => 'resque_scheduler' # scheduled resque jobs
+#gem 'resque-loner' # Unique resque jobs
+#gem 'resque_mailer'
 
 gem 'bson_ext'
 gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol

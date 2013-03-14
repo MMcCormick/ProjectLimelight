@@ -31,7 +31,7 @@ class PostShare
 
   def feed_post_create
     return unless status == 'active'
-    Resque.enqueue(PushPostToFeeds, _parent.id.to_s, user_id.to_s)
+    PushPostToFeeds.perform_async(_parent.id.to_s, user_id.to_s)
   end
 
   def push_to_feeds
@@ -40,7 +40,7 @@ class PostShare
   end
 
   def neo4j_create
-    Resque.enqueue(Neo4jShareCreate, _parent.id.to_s, user_id.to_s)
+    Neo4jShareCreate.perform_async(_parent.id.to_s, user_id.to_s)
   end
 
   def add_medium(medium)

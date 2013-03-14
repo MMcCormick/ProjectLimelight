@@ -24,9 +24,9 @@ class FollowsController < ApplicationController
           fb = current_user.facebook
           if fb
             if params[:type] == 'User'
-              Resque.enqueue(OpenGraphCreate, current_user.id.to_s, target.id.to_s, 'User', 'follow', 'user', user_url(target))
+              OpenGraphCreate.perform_async(current_user.id.to_s, target.id.to_s, 'User', 'follow', 'user', user_url(target))
             else
-              Resque.enqueue(OpenGraphCreate, current_user.id.to_s, target.id.to_s, 'Topic', 'follow', 'topic', topic_url(target))
+              OpenGraphCreate.perform_async(current_user.id.to_s, target.id.to_s, 'Topic', 'follow', 'topic', topic_url(target))
             end
           end
 
@@ -64,7 +64,7 @@ class FollowsController < ApplicationController
           # delete from facebook open graph
           fb = current_user.facebook
           if fb
-            Resque.enqueue(OpenGraphDelete, current_user.id.to_s, target.id.to_s, params[:type], 'follow')
+            OpenGraphDelete.perform_async(current_user.id.to_s, target.id.to_s, params[:type], 'follow')
           end
 
           response = build_ajax_response(:ok, nil, nil, nil, { })

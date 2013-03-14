@@ -281,9 +281,9 @@ class User
       self.following_users << user.id
       self.following_users_count += 1
       user.followers_count += 1
-      Resque.enqueue(Neo4jFollowCreate, id.to_s, user.id.to_s, 'users', 'users')
-      Resque.enqueue(SmUserFollowUser, id.to_s, user.id.to_s)
-      Resque.enqueue(PushFollowUser, id.to_s, user.id.to_s)
+      Neo4jFollowCreate.perform_async(id.to_s, user.id.to_s, 'users', 'users')
+      SmUserFollowUser.perform_async(id.to_s, user.id.to_s)
+      PushFollowUser.perform_async(id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => user.id, :to_type => 'User')
       user.save
 
@@ -301,8 +301,8 @@ class User
       self.following_users.delete(user.id)
       self.following_users_count -= 1
       user.followers_count -= 1
-      Resque.enqueue(Neo4jFollowDestroy, id.to_s, user.id.to_s, 'users', 'users')
-      Resque.enqueue(SmUserUnfollowUser, id.to_s, user.id.to_s)
+      Neo4jFollowDestroy.perform_async(id.to_s, user.id.to_s, 'users', 'users')
+      SmUserUnfollowUser.perform_async(id.to_s, user.id.to_s)
       #Resque.enqueue(PushUnfollowUser, id.to_s, user.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => user.id, :to_type => 'User')
 
@@ -329,8 +329,8 @@ class User
       self.following_topics << topic.id
       self.following_topics_count += 1
       topic.followers_count += 1
-      Resque.enqueue(Neo4jFollowCreate, id.to_s, topic.id.to_s, 'users', 'topics')
-      Resque.enqueue(PushFollowTopic, id.to_s, topic.id.to_s)
+      Neo4jFollowCreate.perform_async(id.to_s, topic.id.to_s, 'users', 'topics')
+      PushFollowTopic.perform_async(id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'create', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       topic.save
 
@@ -347,7 +347,7 @@ class User
       self.following_topics.delete(topic.id)
       self.following_topics_count -= 1
       topic.followers_count -= 1
-      Resque.enqueue(Neo4jFollowDestroy, id.to_s, topic.id.to_s, 'users', 'topics')
+      Neo4jFollowDestroy.perform_async(id.to_s, topic.id.to_s, 'users', 'topics')
       #Resque.enqueue(PushUnfollowTopic, id.to_s, topic.id.to_s)
       ActionFollow.create(:action => 'delete', :from_id => id, :to_id => topic.id, :to_type => 'Topic')
       topic.save
@@ -419,11 +419,11 @@ class User
   end
 
   def add_to_soulmate
-    Resque.enqueue(SmCreateUser, id.to_s) unless stub_user
+    SmCreateUser.perform_async(id.to_s) unless stub_user
   end
 
   def remove_from_soulmate
-    Resque.enqueue(SmDestroyUser, id.to_s)
+    SmDestroyUser.perform_async(id.to_s)
   end
 
   def send_welcome_email
@@ -436,12 +436,12 @@ class User
     variation = rand(7200)
     if hour < 11
       delay = Chronic.parse('Today at 11AM').to_i - Time.now.utc.to_i + variation
-      Resque.enqueue_in(delay, SendPersonalWelcome, id.to_s, "today")
+      SendPersonalWelcome.perform_in(delay, d.to_s, "today")
     elsif hour >= 11 && hour < 18
-      Resque.enqueue_in(1.hours + variation, SendPersonalWelcome, id.to_s, "today")
+      SendPersonalWelcome.perform_in(1.hours + variation, id.to_s, "today")
     else
       delay = Chronic.parse('Tomorrow at 11AM').to_i - Time.now.utc.to_i + variation
-      Resque.enqueue_in(delay, SendPersonalWelcome, id.to_s, "today")
+      SendPersonalWelcome.perform_in(delay, id.to_s, "today")
     end
   end
 
@@ -839,19 +839,19 @@ class User
       end
 
       if user && new_connect && source == 'Limelight'
-        Resque.enqueue(AutoFollow, user.id.to_s, connect.provider.to_s) unless user.username.blank?
+        AutoFollow.perform_async(user.id.to_s, connect.provider.to_s) unless user.username.blank?
 
         if connect.provider == 'facebook'
-          Resque.enqueue(AutoFollowFBLikes, user.id.to_s)
+          AutoFollowFBLikes.perform_async(user.id.to_s)
         end
       end
 
       if new_user && request_env
-        Resque.enqueue(MixpanelTrackEvent, "Signup", user.mixpanel_data, request_env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
+        MixpanelTrackEvent.perform_async("Signup", user.mixpanel_data, request_env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
       end
 
       if login == true && request_env
-        Resque.enqueue(MixpanelTrackEvent, "Login", user.mixpanel_data.merge!("Login Method" => omniauth['provider']), request_env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
+        MixpanelTrackEvent.perform_async("Login", user.mixpanel_data.merge!("Login Method" => omniauth['provider']), request_env.select{|k,v| v.is_a?(String) || v.is_a?(Numeric) })
       end
 
       user
@@ -902,7 +902,7 @@ class User
     if username_changed?
       update = true
       if username_was.blank? && !social_connects.empty?
-        Resque.enqueue(AutoFollow, self.id.to_s, social_connects.first.provider.to_s)
+        AutoFollow.perform_async(self.id.to_s, social_connects.first.provider.to_s)
       end
     end
     if status_changed?
@@ -919,11 +919,11 @@ class User
     end
     if update
       neo4j_update
-      Resque.enqueue(SmCreateUser, id.to_s)
+      SmCreateUser.perform_async(id.to_s)
     end
 
     if score_changed?
-      Resque.enqueue_in(10.minutes, ScoreUpdate, 'User', id.to_s)
+      ScoreUpdate.perform_in(10.minutes, 'User', id.to_s)
     end
   end
 

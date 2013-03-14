@@ -120,7 +120,7 @@ class Notification
             #    notification.save
             #  end
             #else # emailing notification
-            Resque.enqueue_in(5.minutes, SendUserNotification, notification.id.to_s)
+            SendUserNotification.perform_in(5.minutes, notification.id.to_s)
             #end
           end
 

@@ -235,7 +235,7 @@ class UsersController < ApplicationController
       @title = 'Welcome to Limelight!'
       @description = "Limelight is a real-time news and discussion platform where users follow and discuss topics with their social network."
       @show = params[:show] ? params[:show].to_sym : false
-      @og_tags = build_og_tags("Limelight", "website", root_url, "http://static.p-li.me.s3.amazonaws.com/assets/images/splash-logo.png", @description)
+      @og_tags = build_og_tags("Limelight", "website", root_url, "http://static.p-li.me/assets/images/splash-logo.png", @description)
 
       if params[:code]
         session[:invite_code]

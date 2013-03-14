@@ -1,3 +1,4 @@
+require 'sidekiq/web'
 ProjectLimelight::Application.routes.draw do
 
   # redirect to example.com if user goes to www.example.com
@@ -113,11 +114,11 @@ ProjectLimelight::Application.routes.draw do
   end
 
   # Resque admin
-  resque_constraint = lambda do |request|
+  admin_constraint = lambda do |request|
     request.env['warden'].authenticate? and request.env['warden'].user.role?('admin')
   end
-  constraints resque_constraint do
-    mount Resque::Server, :at => "admin/resque"
+  constraints admin_constraint do
+    mount Sidekiq::Web, at: 'admin/workers'
   end
 
   # Soulmate api

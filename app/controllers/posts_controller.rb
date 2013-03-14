@@ -237,7 +237,7 @@ class PostsController < ApplicationController
         post.save
 
         # publish it sometime in the next 6 hours
-        Resque.enqueue_in(rand(21600), PostPublish, post.id.to_s)
+        PostPublish.perform_in(rand(21600), post.id.to_s)
 
         response = post.to_json(:properties => :public)
         response = Yajl::Parser.parse(response)

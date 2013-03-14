@@ -1,8 +1,8 @@
 defaults: &defaults
   fog_provider: "AWS"
   fog_directory: "static.p-li.me"
-  aws_access_key_id: "<%= ENV['AWS_ACCESS_KEY_ID'] %>"
-  aws_secret_access_key: "<%= ENV['AWS_SECRET_ACCESS_KEY'] %>"
+  aws_access_key_id: "AKIAIQDM2Y5J44SJILXA"
+  aws_secret_access_key: "xCxVvzSCaHN+tGBhpO9hnkeqWGa7SmNMDn4Xu8ak"
   # You may need to specify what region your storage bucket is in
   # fog_region: "eu-west-1"
   existing_remote_files: keep # Existing pre-compiled assets on S3 will be kept

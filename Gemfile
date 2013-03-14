@@ -49,7 +49,7 @@ group :assets do
   gem 'coffee-rails', "~> 3.2.1"
   gem 'compass-rails'
 
-  gem 'closure-compiler'
+  gem 'uglifier', '>= 1.0.3'
 
   gem 'anjlab-bootstrap-rails', '2.0.4.4', :require => 'bootstrap-rails'
 end

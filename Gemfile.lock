@@ -273,8 +273,6 @@ GEM
     rmagick (2.13.2)
     ruby-prof (0.13.0)
     rubyzip (0.9.9)
-    rvm-capistrano (1.2.7)
-      capistrano (>= 2.0.0)
     sass (3.2.7)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -378,7 +376,6 @@ DEPENDENCIES
   redis
   rmagick
   ruby-prof
-  rvm-capistrano
   sass-rails (~> 3.2.3)
   sidekiq
   sidekiq-unique-jobs

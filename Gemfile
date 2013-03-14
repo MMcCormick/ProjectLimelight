@@ -41,7 +41,6 @@ gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom
 
 gem 'foreman'
 gem 'capistrano'
-gem 'rvm-capistrano'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'

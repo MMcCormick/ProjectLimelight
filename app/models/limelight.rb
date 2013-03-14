@@ -138,9 +138,9 @@ module Limelight #:nodoc:
 
     def filepath
       if Rails.env.production?
-        "http://res.cloudinary.com/0lmhydab/image"
+        "http://res.cloudinary.com/limelight/image"
       elsif Rails.env.staging?
-        "http://res.cloudinary.com/xpgzvxkw/image"
+        "http://res.cloudinary.com/limelight/image"
       else
         "http://res.cloudinary.com/limelight/image"
       end

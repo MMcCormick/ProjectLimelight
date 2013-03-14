@@ -57,7 +57,7 @@ namespace :deploy do
   end
 
   desc "update permissions"
-  task :precompile_assets, :roles => :app do
+  task :update_permissions, :roles => :app do
     run "cd #{release_path} && chmod -R 777 tmp"
   end
 end

@@ -12,13 +12,13 @@ ProjectLimelight::Application.configure do
   config.serve_static_assets = false
 
   # Compress JavaScripts and CSS
-  config.assets.compress = true
+  config.assets.compress = false
 
   # Don't fallback to assets pipeline if a precompiled asset is missing
-  config.assets.compile = true
+  config.assets.compile = false
 
   # Generate digets for assets URLs
-  config.assets.digest = true
+  config.assets.digest = false
 
   # use the closure library to minify js
   config.assets.js_compressor = :closure

@@ -17,6 +17,7 @@ class LL.Views.PostsFeed extends Backbone.View
     @default_text = 'There are no items in this feed'
     @type = null
     @on_add = 'append'
+    console.log 'initialize posts feed'
     @collection.on('reset', @render)
     @collection.on('add', @handleNewPost)
 

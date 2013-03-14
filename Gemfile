@@ -43,7 +43,6 @@ gem 'slim'
 gem 'bson_ext'
 gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
 
-gem 'capistrano'
 gem 'foreman'
 
 group :assets do
@@ -65,4 +64,6 @@ group :development do
   gem 'pry-rails'
   gem 'ruby-prof'
   gem 'thin'
+  gem 'capistrano'
+  gem 'rvm-capistrano'
 end

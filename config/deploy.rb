@@ -7,7 +7,7 @@ ssh_options[:forward_agent] = true
 set :rails_env, "production"
 set :domain, '198.211.110.136'
 set :application, 'limelight'
-set :repository,  'https://github.com/evario/ProjectLimelight.git'
+set :repository,  'https://marbemac@github.com/evario/ProjectLimelight.git'
 set :branch,  'devshop'
 set :deploy_to, "/var/www/#{application}"
 

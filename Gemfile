@@ -35,15 +35,13 @@ gem 'sidekiq' # background jobs
 gem 'sidekiq-unique-jobs'
 gem 'sinatra' # for sidekiq
 gem 'slim'
-#gem 'resque', '1.21.0' #, :git => 'https://github.com/hone/resque.git', :branch => 'heroku'
-#gem 'resque-scheduler', '2.0.0.h', :require => 'resque_scheduler' # scheduled resque jobs
-#gem 'resque-loner' # Unique resque jobs
-#gem 'resque_mailer'
 
 gem 'bson_ext'
 gem 'rmagick', :require => false # Image manipulation (put rmagick at the bottom because it's a little bitch about everything) #McM: lol
 
 gem 'foreman'
+gem 'capistrano'
+gem 'rvm-capistrano'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'
@@ -64,6 +62,4 @@ group :development do
   gem 'pry-rails'
   gem 'ruby-prof'
   gem 'thin'
-  gem 'capistrano'
-  gem 'rvm-capistrano'
 end

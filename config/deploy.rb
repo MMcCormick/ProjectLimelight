@@ -41,6 +41,7 @@ after 'deploy:setup' do
 end
 
 after "deploy:update_code", "deploy:precompile_assets"
+after "deploy:update_code", "deploy:update_permissions"
 after "deploy:update", "foreman:export"
 after "deploy:update", "foreman:restart"
 
@@ -53,6 +54,11 @@ namespace :deploy do
   desc "precompile the assets"
   task :precompile_assets, :roles => :app do
     run "cd #{release_path} && RAILS_ENV=#{rails_env} bundle exec rake assets:precompile"
+  end
+
+  desc "update permissions"
+  task :precompile_assets, :roles => :app do
+    run "cd #{release_path} && chmod -R 777 tmp"
   end
 end
 

@@ -59,12 +59,12 @@ ProjectLimelight::Application.configure do
           :host => 'localhost:3000'
   }
   config.action_mailer.smtp_settings = {
-          :domain => 'projectlimelight.com',
+          :domain => 'limelight.marbemac.com',
           :address => 'smtp.sendgrid.net',
           :port => 587,
           :authentication => :plain,
           :enable_starttls_auto => true,
-          :user_name => 'app1232528@heroku.com',
-          :password => 'tv3ngda9'
+          :user_name => 'marbemac',
+          :password => 'giants22'
   }
 end

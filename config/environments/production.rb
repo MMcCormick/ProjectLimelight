@@ -71,15 +71,15 @@ ProjectLimelight::Application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default :charset => "utf-8"
   config.action_mailer.default_url_options = {
-          :host => 'projectlimelight.com'
+          :host => 'limelight.marbemac.com'
   }
   config.action_mailer.smtp_settings = {
-          :domain => 'limelight-project.com',
+          :domain => 'limelight.marbemac.com',
           :address => 'smtp.sendgrid.net',
           :port => 587,
           :authentication => :plain,
           :enable_starttls_auto => true,
-          :user_name => ENV['SENDGRID_USERNAME'],
-          :password => ENV['SENDGRID_PASSWORD']
+          :user_name => 'marbemac',
+          :password => 'giants22'
   }
 end

@@ -65,28 +65,12 @@ development:
     # Ensure all times are UTC in the app side. (default: false)
     use_utc: true
 
-staging:
-  sessions:
-    default:
-      hosts:
-        - <%= ENV['MONGOID_HOST'] %>
-      database: <%= ENV['MONGOID_DATABASE'] %>
-      username: <%= ENV['MONGOID_USERNAME'] %>
-      password: <%= ENV['MONGOID_PASSWORD'] %>
-  options:
-    identity_map_enabled: true
-    raise_not_found_error: false
-    use_activesupport_time_zone: false
-    use_utc: true
-
 production:
   sessions:
     default:
       hosts:
-        - <%= ENV['MONGOID_HOST'] %>
-      database: <%= ENV['MONGOID_DATABASE'] %>
-      username: <%= ENV['MONGOID_USERNAME'] %>
-      password: <%= ENV['MONGOID_PASSWORD'] %>
+        - localhost:27017
+      database: limelight_production
   options:
     # identity_map_enabled: true
     raise_not_found_error: false

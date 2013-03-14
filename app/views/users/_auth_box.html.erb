@@ -1,28 +1,4 @@
-<div class="beta-signup thisthat">
-  <p>
-    Hi There!
-  </p>
-  <p>
-    We've gotten a lot of amazing feedback from the Limelight beta, and made some big changes.
-    In fact, we've moved the whole project here:
-  </p>
-  <p class="thisthat-link">
-    <%= link_to "www.getthisthat.com", "http://www.getthisthat.com", :target => "_blank" %>
-  </p>
-  <p>
-    We're still organizing the web around topics, just taking a different approach. Please go check it out!
-  </p>
-  <p>
-    If you're an existing Limelight user, we'll be sending you an invite to ThisThat soon - don't worry, all your posts are saved!
-    You can always reach us at founders@getthisthat.com with any questions.
-  </p>
-  <p>
-    Best,
-    <br/>Matt and Marc
-  </p>
-</div>
-
-<div class="beta-login <%= 'hide' unless show == :login %>">
+<div class="beta-login">
   <a href="<%= user_omniauth_authorize_path(:facebook) %>" class='facebook'>
     <%= image_tag('facebook-login-button.gif') %>
   </a>

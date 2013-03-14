@@ -1,19 +1,14 @@
 ---
 development:
-  cloud_name: limelight
-  api_key: '731949947482814'
-  api_secret: ovYCLOW3Cw86kS8Q_bSvRnDyLVk
+  cloud_name: limelight-development
+  api_key: '374436425711482'
+  api_secret: u8TUKYBrZFBKv_h5ZWIG01E6u9A
   enhance_image_tag: true
   static_image_support: false
+
 production:
-  cloud_name: <%= ENV["CLOUDINARY_CLOUD_NAME"] %>
-  api_key: <%= ENV["CLOUDINARY_API_KEY"] %>
-  api_secret: <%= ENV["CLOUDINARY_API_SECRET"] %>
-  enhance_image_tag: true
-  static_image_support: true
-test:
-  cloud_name: <%= ENV["CLOUDINARY_CLOUD_NAME"] %>
-  api_key: <%= ENV["CLOUDINARY_API_KEY"] %>
-  api_secret: <%= ENV["CLOUDINARY_API_SECRET"] %>
+  cloud_name: limelight-development
+  api_key: '374436425711482'
+  api_secret: u8TUKYBrZFBKv_h5ZWIG01E6u9A
   enhance_image_tag: true
   static_image_support: false

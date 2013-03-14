@@ -23,9 +23,9 @@ ProjectLimelight::Application.configure do
   # use the closure library to minify js
   config.assets.js_compressor = :closure
 
-  config.static_cache_control = "public, max-age=2592000"
+  #config.static_cache_control = "public, max-age=2592000"
 
-  config.action_controller.asset_host = 'http://static.p-li.me'
+  #config.action_controller.asset_host = 'http://static.p-li.me'
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -37,7 +37,7 @@ ProjectLimelight::Application.configure do
   # config.logger = SyslogLogger.new
 
   # Use a different cache store in production
-  config.cache_store = :dalli_store, 'localhost:11211'
+  #config.cache_store = :dalli_store, 'localhost:11211'
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"

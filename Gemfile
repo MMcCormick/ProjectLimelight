@@ -31,7 +31,7 @@ gem 'mongoid-cached-json', '1.2.3'
 gem 'switch_user'
 gem 'omnicontacts'
 gem 'cloudinary'
-gem 'asset_sync'
+#gem 'asset_sync'
 
 gem 'sidekiq' # background jobs
 gem 'sidekiq-unique-jobs'

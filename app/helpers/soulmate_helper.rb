@@ -27,7 +27,7 @@ module SoulmateHelper
               'score' => topic.score,
               'data' => {
                       'slug' => topic.slug,
-                      'url' => topic_path(topic),
+                      'url' => "/#{topic.to_param}",
                       'ooac' => []
               }
     }

@@ -34,7 +34,6 @@ class LL.Router extends Backbone.Router
   #######
 
   userFeed: (id=0) ->
-    console.log 'userfeed start'
     if id == 0 && !LL.App.current_user
       @splashPage()
       return
@@ -69,8 +68,6 @@ class LL.Router extends Backbone.Router
 
       collection = new LL.Collections.UserFeed
       feed = new LL.Views.PostsFeed(collection: collection, model: user)
-      console.log 'create feed'
-      console.log feed
       feed.type = 'user'
       feed.default_text = "Streaming posts from #{user.get('following_topics_count')} topics and #{user.get('following_users_count')} users... Follow more things to expand your feed!"
       feed.channel = "#{user.get('id')}_realtime"

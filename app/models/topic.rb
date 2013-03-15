@@ -615,9 +615,9 @@ class Topic
 
     def json_images(model)
       {
-        :ratio => model.image_ratio,
-        :w => model.image_width,
-        :h => model.image_height,
+        :ratio => model.images[model.active_image_version-1]['cloudinary']['width'].to_f / model.images[model.active_image_version-1]['cloudinary']['height'].to_f,
+        :w => model.images[model.active_image_version-1]['cloudinary']['width'],
+        :h => model.images[model.active_image_version-1]['cloudinary']['height'],
         :original => model.image_url(nil, nil, nil, true),
         :fit => {
           :large => model.image_url(:fit, :large),

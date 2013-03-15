@@ -17,7 +17,7 @@ class LL.Views.PostsFeed extends Backbone.View
     @default_text = 'There are no items in this feed'
     @type = null
     @on_add = 'append'
-    console.log 'initialize posts feed'
+
     @collection.on('reset', @render)
     @collection.on('add', @handleNewPost)
 
@@ -29,8 +29,7 @@ class LL.Views.PostsFeed extends Backbone.View
 
   render: =>
     self = @
-    console.log 'postsfeed'
-    console.log $(@el)
+
     $(@el).before("<input type='text' placeholder='Share a URL...' id='post-feed-url' />")
 
     if @collection.models.length == 0

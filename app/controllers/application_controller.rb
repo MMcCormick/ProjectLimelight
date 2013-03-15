@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :init, :set_user_time_zone, :save_referer, :block_beta
+  before_filter :init, :set_user_time_zone, :save_referer#, :block_beta
 
   def authenticate_admin_user!
     unless can? :manage, :all

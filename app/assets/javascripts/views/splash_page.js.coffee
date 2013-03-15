@@ -2,7 +2,7 @@ class LL.Views.SplashPage extends Backbone.View
   el: '#splash-page'
 
   events:
-    'click .beta': 'showLogin'
+    'click .account': 'showLogin'
     'click .beta-signup .invite-code': 'showInvite'
     'click .middle .back': 'showEnter'
     'click .bottom .about': 'showAbout'

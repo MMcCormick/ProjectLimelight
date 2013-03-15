@@ -2,7 +2,7 @@ require 'sidekiq/web'
 ProjectLimelight::Application.routes.draw do
 
   # redirect to example.com if user goes to www.example.com
-  match '(*any)' => redirect { |p, req| req.url.sub('www.', '') }, :constraints => { :host => /^www\./ }
+  #match '(*any)' => redirect { |p, req| req.url.sub('www.', '') }, :constraints => { :host => /^www\./ }
 
   get 'switch_user', :controller => 'switch_user', :action => 'set_current_user'
 

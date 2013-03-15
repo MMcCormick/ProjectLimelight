@@ -36,8 +36,6 @@ class LL.Views.App extends Backbone.View
       unless channel
         channel = @subscribe("#{@current_user.get('id')}_private")
 
-    console.log 'app'
-
     # needs to be in an initializer to bind it to the window instead of this collection element
     $(window).resize ->
       $('body').stopTime 'resize'

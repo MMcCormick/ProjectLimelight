@@ -344,7 +344,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by_slug_id(params[:id])
     authorize! :update, topic
 
-    category = Topic.find(params[:category_id])
+    category = Topic.find_by_slug_id(params[:category_id])
 
     if category
       topic.add_category(category.id)
